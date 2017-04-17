@@ -1,2 +1,2 @@
-# java-libs
-Java libraries used in SPeCS projects
+# specs-libs
+Java libraries created or extended (-Plus suffix) by SPeCS research group
