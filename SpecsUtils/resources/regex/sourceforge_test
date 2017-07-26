@@ -1,0 +1,1774 @@
+WEBPAGE:
+<!doctype html>
+<!-- Server: sfs-consume-6 -->
+
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]>--> <html lang="en" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        
+        <meta id="webtracker" name="webtracker" content='{"event_id": "564e8954-a783-11e2-b851-0200ac1d1d92", "non_clicker": 0.8790269337612104, "active_tests": ["psp_redirect_immersion"], "clicker": 0.12277670127413656}'>
+
+<link rel="canonical" href="http://sourceforge.net/directory/language%3Amatlab/?q=matlab" />
+
+
+<meta name="description" content="Free, secure and fast downloads from the largest Open Source applications and software directory - SourceForge.net">
+
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+
+Search Results for &#8220;matlab&#8221;: SourceForge
+
+</title>
+        <link rel="shortcut icon" href="http://a.fsdn.com/con/img/sftheme/favicon.ico">
+        <script type="text/javascript">
+            /*global unescape, window, console, jQuery, $, net, SF, COMSCORE, DD_belatedPNG */
+            // Setup our namespace
+            if (!window.SF) { window.SF = {}; }
+            if (!window.net) { window.net = {}; }
+            if (!window.net.sf) { window.net.sf = {}; }
+            SF.cdn = 'http://a.fsdn.com/con';
+            SF.deploy_time = '1366042720';
+        </script>
+        <script src="http://a.fsdn.com/con/js/min/sf.head.js?1366042720" type="text/javascript"></script>
+        
+<!--[if lt IE 7 ]>
+  <script src="http://a.fsdn.com/con/js/sftheme/dd_belatedpng.js"></script>
+  <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
+<![endif]-->
+
+<link href='//fonts.googleapis.com/css?family=Ubuntu:regular' rel='stylesheet' type='text/css'>
+<style type="text/css">
+    @font-face {
+        font-family: "Pictos";
+        src: url('http://a.fsdn.com/con/css/fonts/sftheme/pictos-web.eot');
+        src: local("?"), url('http://a.fsdn.com/con/css/fonts/sftheme/pictos-web.woff') format('woff'), url('http://a.fsdn.com/con/css/fonts/sftheme/pictos-web.ttf') format('truetype'), url('http://a.fsdn.com/con/css/fonts/sftheme/pictos-web.svg') format('svg');
+    }
+</style>
+ <link rel="stylesheet" href="http://a.fsdn.com/con/css/sf.css?1366042720" type="text/css">
+
+    <style type="text/css" >.sfdl { width:100px;height:48px;padding:0;position:relative;font:bold 12px/1.17 sans-serif !important; border:1px solid #aaa;display:inline;float:left;text-decoration:none;-moz-box-shadow:rgba(255, 255, 255, 0.6) 0 1px 0 0;-webkit-box-shadow:rgba(255, 255, 255, 0.6) 0 1px 0 0;-o-box-shadow:rgba(255, 255, 255, 0.6) 0 1px 0 0;box-shadow:rgba(255, 255, 255, 0.6) 0 1px 0 0;-moz-border-radius:4px;-webkit-border-radius:4px;-o-border-radius:4px;-ms-border-radius:4px;-khtml-border-radius:4px;border-radius:4px;background:no-repeat #e5e5e5 8px center url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAANCAYAAABPeYUaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAANFJREFUeNqcUosNgjAUbE0HcARGwAnqZxBxBCbQDXQE2UOkTIAj4AZsgPfMa1JeGqhecimU63HvvepxHFUq6mebY2nAdbi/Ur/hKg0IRv2H3WFvnX/Rj9qRcxH7A+BIjDK2eCYewQy8g2/WDJSk4w8xWDICz2ziUchyvMGLXIVJK9acE0+0VM53PIitE6bTcKJJT0wg6ESSHiwhHpbMDYszjhrDKcVkE5mO5dhZyrwNx72J2i9iGvMmODB372U/aCpV2NSlG0sGVbiBw2VM+BFgALYfPdL6UCEWAAAAAElFTkSuQmCC);background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAANCAYAAABPeYUaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAANFJREFUeNqcUosNgjAUbE0HcARGwAnqZxBxBCbQDXQE2UOkTIAj4AZsgPfMa1JeGqhecimU63HvvepxHFUq6mebY2nAdbi/Ur/hKg0IRv2H3WFvnX/Rj9qRcxH7A+BIjDK2eCYewQy8g2/WDJSk4w8xWDICz2ziUchyvMGLXIVJK9acE0+0VM53PIitE6bTcKJJT0wg6ESSHiwhHpbMDYszjhrDKcVkE5mO5dhZyrwNx72J2i9iGvMmODB372U/aCpV2NSlG0sGVbiBw2VM+BFgALYfPdL6UCEWAAAAAElFTkSuQmCC), -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #fff), color-stop(100%, #ccc));background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAANCAYAAABPeYUaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAANFJREFUeNqcUosNgjAUbE0HcARGwAnqZxBxBCbQDXQE2UOkTIAj4AZsgPfMa1JeGqhecimU63HvvepxHFUq6mebY2nAdbi/Ur/hKg0IRv2H3WFvnX/Rj9qRcxH7A+BIjDK2eCYewQy8g2/WDJSk4w8xWDICz2ziUchyvMGLXIVJK9acE0+0VM53PIitE6bTcKJJT0wg6ESSHiwhHpbMDYszjhrDKcVkE5mO5dhZyrwNx72J2i9iGvMmODB372U/aCpV2NSlG0sGVbiBw2VM+BFgALYfPdL6UCEWAAAAAElFTkSuQmCC), -moz-linear-gradient(top, #fff 0%, #ccc 100%);background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAANCAYAAABPeYUaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAANFJREFUeNqcUosNgjAUbE0HcARGwAnqZxBxBCbQDXQE2UOkTIAj4AZsgPfMa1JeGqhecimU63HvvepxHFUq6mebY2nAdbi/Ur/hKg0IRv2H3WFvnX/Rj9qRcxH7A+BIjDK2eCYewQy8g2/WDJSk4w8xWDICz2ziUchyvMGLXIVJK9acE0+0VM53PIitE6bTcKJJT0wg6ESSHiwhHpbMDYszjhrDKcVkE5mO5dhZyrwNx72J2i9iGvMmODB372U/aCpV2NSlG0sGVbiBw2VM+BFgALYfPdL6UCEWAAAAAElFTkSuQmCC), linear-gradient(top, #fff 0%, #ccc 100%);background-position:8px center, 0 0;margin:0 10px 7px 0;overflow:hidden;color:#555 !important;}.sfdl:hover { cursor:pointer;text-decoration:none;background:8px center no-repeat #eee url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAANCAYAAABPeYUaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAANFJREFUeNqcUosNgjAUbE0HcARGwAnqZxBxBCbQDXQE2UOkTIAj4AZsgPfMa1JeGqhecimU63HvvepxHFUq6mebY2nAdbi/Ur/hKg0IRv2H3WFvnX/Rj9qRcxH7A+BIjDK2eCYewQy8g2/WDJSk4w8xWDICz2ziUchyvMGLXIVJK9acE0+0VM53PIitE6bTcKJJT0wg6ESSHiwhHpbMDYszjhrDKcVkE5mO5dhZyrwNx72J2i9iGvMmODB372U/aCpV2NSlG0sGVbiBw2VM+BFgALYfPdL6UCEWAAAAAElFTkSuQmCC);}.sfdl-lite { background:0 center no-repeat #337733 none;color:white !important;height:auto;padding:0.5em 1em;text-align:center;-moz-border-radius:4px;-webkit-border-radius:4px;-o-border-radius:4px;-ms-border-radius:4px;-khtml-border-radius:4px;border-radius:4px;background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #339933), color-stop(100%, #337733));background-image:-moz-linear-gradient(top, #339933 0%, #337733 100%);background-image:linear-gradient(top, #339933 0%, #337733 100%);}.sfdl-lite:hover { background:0 center no-repeat #339933;}.sfdl span { border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;display:block;margin:3px;margin-left:35px;padding:4px;text-align:left;color:#FFF;background:#363;background-image:-moz-linear-gradient(center top, #393 0%, #373 100%);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0, #393),color-stop(1, #373));background-image:linear-gradient(top, #393 0%, #373 100%);overflow:hidden;height:34px;}.sfdl b { display:block;line-height:17.0px;}.sfdl small { display:block;line-height:17.0px;color:#ADC2AD; font-weight:normal;white-space:nowrap;overflow:hidden;font-size:77%;}</style>
+
+        
+<script type="text/javascript">
+    SF.adblock = true;
+    var immersion_adcode = "";
+</script>
+        <script type="text/javascript" src="http://a.fsdn.com/con/js/adframe.js?1366042720"></script>
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+                _gaq.push(['1._setAccount', 'UA-32013-6']);
+                _gaq.push(['2._setAccount', 'UA-36130941-1']);
+                _gaq.push(['_setAccount', 'UA-36130941-1']);
+                _gaq.push(['1._trackPageview']);
+                _gaq.push(['2._trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' === document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    </head>
+    <body id="pg_search" class="bluesteel search">
+        
+        <div id="busy-spinner"></div>
+        
+<header id="site-header">
+    <div class="wrapper">
+        <a href="/" class="logo">
+            <span>SourceForge</span>
+        </a>
+        <form method="get" action="/directory/">
+            <input type="text" id="words" name="q" placeholder="Search">
+        </form>
+        <!--Switch to {language}-->
+        <nav id="nav-site">
+            <a href="/directory/" title="Browse our software.">Browse</a>
+            <a href="/directory/enterprise" title="Browse our Enterprise software.">Enterprise</a>
+            <a href="/blog/" title="Read the latest news from the SF HQ.">Blog</a>
+            <a href="/support" title="Contact us for help and feedback.">Help</a>
+            <a href="/jobs?source=header" title="Search 80k+ tech jobs." class="featured-link">Jobs</a>
+        </nav>
+        <nav id="nav-account">
+            
+              <div class="logged_out">
+                <a href="https://sourceforge.net/account/login.php">Log In</a>
+                <span>or</span>
+                <a href="https://sourceforge.net/user/registration">Join</a>
+              </div>
+            
+        </nav>
+    </div>
+</header>
+<header id="site-sec-header">
+    <div class="wrapper">
+        <nav id="nav-hubs">
+            <h4>Solution Centers</h4>
+            <a href="http://ibmsmartercommerce.sourceforge.net/">Smarter Commerce</a>
+            <a href="http://goparallel.sourceforge.net/">Go Parallel</a>
+            <a href="http://ibmsmarteritservices.sourceforge.net/">Smarter IT</a>
+        </nav>
+        <nav id="nav-collateral">
+            
+            
+            <a href="https://sourceforge.net/user/registration">Newsletters</a>
+            
+        </nav>
+    </div>
+</header>
+        <div id="bookends_container">
+            
+    
+    
+
+<script type="text/javascript">
+    if ('bookend_left'.indexOf('immersion') > 0) {
+        document.write('<div id="bookend_left" class="ad "><script type="text/javascript" src="http://ad.doubleclick.net/adj/ostg.sourceforge/sf_bookend_left;pg=/search/index.php;psrch=0;logged_in=0;tile=1;sz=150x1060;u=e%3A564e8954-a783-11e2-b851-0200ac1d1d92;ord=1862308469889612?"></'+'script></div>');
+    } else if (!immersion_adcode) {
+        document.write('<iframe id="bookend_left" height="0" class="ad " src="/static/ads/iframe_ad.html?position=bookend_left&amp;ad=http%3A%2F%2Fad.doubleclick.net%2Fadj%2Fostg.sourceforge%2Fsf_bookend_left%3Bpg%3D%2Fsearch%2Findex.php%3Bpsrch%3D0%3Blogged_in%3D0%3Btile%3D1%3Bsz%3D150x1060%3Bu%3De%253A564e8954-a783-11e2-b851-0200ac1d1d92%3Bord%3D1862308469889612%3F&amp;class=" seamless frameborder="0" scrolling="no"></iframe>');
+    }
+</script>
+            
+    
+    
+
+<script type="text/javascript">
+    if ('bookend_right'.indexOf('immersion') > 0) {
+        document.write('<div id="bookend_right" class="ad "><script type="text/javascript" src="http://ad.doubleclick.net/adj/ostg.sourceforge/sf_bookend_right;pg=/search/index.php;psrch=0;logged_in=0;tile=2;sz=150x1060;u=e%3A564e8954-a783-11e2-b851-0200ac1d1d92;ord=1862308469889612?"></'+'script></div>');
+    } else if (!immersion_adcode) {
+        document.write('<iframe id="bookend_right" height="0" class="ad " src="/static/ads/iframe_ad.html?position=bookend_right&amp;ad=http%3A%2F%2Fad.doubleclick.net%2Fadj%2Fostg.sourceforge%2Fsf_bookend_right%3Bpg%3D%2Fsearch%2Findex.php%3Bpsrch%3D0%3Blogged_in%3D0%3Btile%3D2%3Bsz%3D150x1060%3Bu%3De%253A564e8954-a783-11e2-b851-0200ac1d1d92%3Bord%3D1862308469889612%3F&amp;class=" seamless frameborder="0" scrolling="no"></iframe>');
+    }
+</script>
+        </div>
+
+        
+        <div id="messages">
+        </div>
+
+        <div id="page-body">
+<nav id="breadcrumbs">
+    <ul>
+        
+        <li><a href="/">Home</a></li>
+        
+        <li><a href="/directory/">Browse</a></li>
+        
+        <li>Search Results</li>
+        
+    </ul>
+</nav>
+<article id="directory" class="content-wrapper">
+    <section id="main-content">
+    <section id="search">
+        <div class="ads">
+            <div id="afs1"></div>
+            <script src="http://www.google.com/adsense/search/ads.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                /*global google */
+                /*jshint nonew:false */
+                var pageOptions = {
+                  'pubId' : 'partner-ostg',
+                  'query' : 'matlab',
+                  'hl' : 'en',
+                  'siteLinks' : true,
+                  'sellerRatings' : true
+                };
+
+                var adblock1 = {
+                  'container' : 'afs1',
+                  'colorTitleLink' : '#0077aa',
+                  'colorDomainLink' : '#0077aa',
+                  'colorBackground' : '#f5f5f5',
+                  'colorBorder' : '#cccccc',
+                  'longerHeadlines' : true
+                };
+                var adblock2 = {
+                  'container' : 'afs2',
+                  'colorTitleLink' : '#0077aa',
+                  'colorDomainLink' : '#0077aa',
+                  'colorBackground' : '#f5f5f5',
+                  'colorBorder' : '#cccccc',
+                  'longerHeadlines' : true
+                };
+
+                new google.ads.search.Ads(pageOptions, adblock1, adblock2);
+            </script>
+        </div>
+      <form method="GET" action="." id="search_form">
+        <input name="q" placeholder="Search" value="matlab">
+        <b class="search ico ico-search" title="Search" data-icon="s"></b>
+        <a href="#" class="advanced" style="display:none"
+           title="Show advanced search options">Advanced <b class="ico ico-admin" title="Advanced" data-icon="y"></b></a>
+      </form>
+      
+      <section id="search_filters">
+      <header>Filters</header>
+      <ul>
+          
+          
+          <li title="MATLAB ">
+            <span class="filter">Programming Language: <span class="value">MATLAB</span>
+                
+                <a href="./remove_facet_filter?i=0&amp;q=matlab" class="ico-remove">&times;</a>
+                
+              </span>
+          </li>
+          
+          
+      </ul>
+      </section>
+      
+      <div id="advanced_options">
+        
+        <section id="search_facets">
+          <header>Refine your search</header>
+          
+          
+          
+          <div class="facet">
+            <header>Category <span class="ui-icon ui-icon-triangle-1-s"></span></header>
+            <ul>
+              
+              <li>
+                <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering">Scientific/Engineering (619)</a>
+                
+                <span class="ui-icon ui-icon-triangle-1-e"></span>
+                <ul>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Simulations">Simulations (122)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Mathematics">Mathematics (113)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Bio-Informatics">Bio-Informatics (91)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Artificial+Intelligence">Artificial Intelligence (88)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Medical+Science+Apps.">Medical Science Apps. (79)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Physics">Physics (78)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Information+Analysis">Information Analysis (60)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Visualization">Visualization (60)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Robotics">Robotics (34)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Earth+Sciences">Earth Sciences (33)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Test+and+Measurement">Test and Measurement (26)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Chemistry">Chemistry (18)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Molecular+Science">Molecular Science (16)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Mapping">Mapping (15)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Scientific%2FEngineering+%3A%3A+Human+Machine+Interfaces">Human Machine Interfaces (14)</a>
+                    </li>
+                    
+                </ul>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development">Software Development (80)</a>
+                
+                <span class="ui-icon ui-icon-triangle-1-e"></span>
+                <ul>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development+%3A%3A+Algorithms">Algorithms (25)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development+%3A%3A+Modeling">Modeling (10)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development+%3A%3A+User+Interfaces">User Interfaces (9)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development+%3A%3A+Code+Generators">Code Generators (7)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development+%3A%3A+Frameworks">Frameworks (7)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development+%3A%3A+Object+Oriented">Object Oriented (6)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development+%3A%3A+Libraries">Libraries (5)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Software+Development+%3A%3A+Testing">Testing (3)</a>
+                    </li>
+                    
+                </ul>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Multimedia">Multimedia (71)</a>
+                
+                <span class="ui-icon ui-icon-triangle-1-e"></span>
+                <ul>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Multimedia+%3A%3A+Sound%2FAudio">Sound/Audio (35)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Multimedia+%3A%3A+Graphics">Graphics (19)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Multimedia+%3A%3A+Video">Video (17)</a>
+                    </li>
+                    
+                </ul>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Education">Education (62)</a>
+                
+                <span class="ui-icon ui-icon-triangle-1-e"></span>
+                <ul>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Education+%3A%3A+Library">Library (21)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Education+%3A%3A+Testing">Testing (12)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=topic&amp;q=matlab&amp;constraint=Education+%3A%3A+Computer+Aided+Instruction+%28CAI%29">Computer Aided Instruction (8)</a>
+                    </li>
+                    
+                </ul>
+                
+              </li>
+              
+            </ul>
+          </div>
+          
+          
+          
+          <div class="facet">
+            <header>Translations <span class="ui-icon ui-icon-triangle-1-s"></span></header>
+            <ul>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=English">English (193)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Chinese+%28Simplified%29">Chinese (14)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=German">German (12)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Spanish">Spanish (12)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Russian">Russian (9)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=French">French (8)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Brazilian+Portuguese">Brazilian Portuguese (3)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Chinese+%28Traditional%29">Chinese (3)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Dutch">Dutch (3)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Persian">Persian (3)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Portuguese">Portuguese (3)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Catalan">Catalan (2)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Croatian">Croatian (2)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Czech">Czech (2)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=natlanguage&amp;q=matlab&amp;constraint=Danish">Danish (2)</a>
+                
+              </li>
+              
+            </ul>
+          </div>
+          
+          
+          
+          <div class="facet">
+            <header>License <span class="ui-icon ui-icon-triangle-1-s"></span></header>
+            <ul>
+              
+              <li>
+                <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source">OSI-Approved Open Source (676)</a>
+                
+                <span class="ui-icon ui-icon-triangle-1-e"></span>
+                <ul>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+GNU+General+Public+License+version+2.0+%28GPLv2%29">GNU General Public License version 2.0 (364)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+BSD+License">BSD License (78)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+Academic+Free+License+%28AFL%29">Academic Free License (76)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+GNU+General+Public+License+version+3.0+%28GPLv3%29">GNU General Public License version 3.0 (75)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+GNU+Library+or+Lesser+General+Public+License+version+2.0+%28LGPLv2%29">GNU Library or Lesser General Public License version 2.0 (44)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+MIT+License">MIT License (28)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+GNU+Library+or+Lesser+General+Public+License+version+3.0+%28LGPLv3%29">GNU Library or Lesser General Public License version 3.0 (21)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+Apache+License+V2.0">Apache License V2.0 (11)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+Open+Software+License+3.0+%28OSL3.0%29">Open Software License 3.0 (5)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+Common+Public+License+1.0">Common Public License 1.0 (4)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+Educational+Community+License%2C+Version+2.0">Educational Community License, Version 2.0 (4)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+Mozilla+Public+License+1.1+%28MPL+1.1%29">Mozilla Public License 1.1 (4)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+Eclipse+Public+License">Eclipse Public License (3)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+University+of+Illinois%2FNCSA+Open+Source+License">University of Illinois/NCSA Open Source License (3)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=OSI-Approved+Open+Source+%3A%3A+Affero+GNU+Public+License">Affero GNU Public License (2)</a>
+                    </li>
+                    
+                </ul>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=Public+Domain">Public Domain (27)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=Creative+Commons+Attribution+License">Creative Commons Attribution License (21)</a>
+                
+                <span class="ui-icon ui-icon-triangle-1-e"></span>
+                <ul>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=Creative+Commons+Attribution+License+%3A%3A+Creative+Commons+Attribution+Non-Commercial+License+V2.0">Creative Commons Attribution Non-Commercial License V2.0 (5)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=Creative+Commons+Attribution+License+%3A%3A+Creative+Commons+Attribution+ShareAlike+License+V3.0">Creative Commons Attribution ShareAlike License V3.0 (5)</a>
+                    </li>
+                    
+                </ul>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=license&amp;q=matlab&amp;constraint=Other+License">Other License (21)</a>
+                
+              </li>
+              
+            </ul>
+          </div>
+          
+          
+          
+          <div class="facet">
+            <header>Programming Language <span class="ui-icon ui-icon-triangle-1-s"></span></header>
+            <ul>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=C%2B%2B">C++ (188)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=C">C (148)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=Java">Java (97)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=Python">Python (81)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=Perl">Perl (24)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=C%23">C# (22)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=Simulink">Simulink (17)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=Fortran">Fortran (16)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=VHDL%2FVerilog">VHDL/Verilog (16)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=JavaScript">JavaScript (11)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=LabVIEW">LabVIEW (10)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=Unix+Shell">Unix Shell (10)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=Assembly">Assembly (9)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=Visual+Basic+.NET">Visual Basic .NET (9)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=language&amp;q=matlab&amp;constraint=PHP">PHP (8)</a>
+                
+              </li>
+              
+            </ul>
+          </div>
+          
+          
+          
+          <div class="facet">
+            <header>Status <span class="ui-icon ui-icon-triangle-1-s"></span></header>
+            <ul>
+              
+              <li>
+                <a href="add_facet_filter?facet=developmentstatus&amp;q=matlab&amp;constraint=4+-+Beta">4 - Beta (207)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=developmentstatus&amp;q=matlab&amp;constraint=5+-+Production%2FStable">5 - Production/Stable (155)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=developmentstatus&amp;q=matlab&amp;constraint=3+-+Alpha">3 - Alpha (135)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=developmentstatus&amp;q=matlab&amp;constraint=1+-+Planning">1 - Planning (116)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=developmentstatus&amp;q=matlab&amp;constraint=2+-+Pre-Alpha">2 - Pre-Alpha (74)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=developmentstatus&amp;q=matlab&amp;constraint=6+-+Mature">6 - Mature (22)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=developmentstatus&amp;q=matlab&amp;constraint=7+-+Inactive">7 - Inactive (11)</a>
+                
+              </li>
+              
+            </ul>
+          </div>
+          
+          
+          
+          <div class="facet">
+            <header>OS <span class="ui-icon ui-icon-triangle-1-s"></span></header>
+            <ul>
+              
+              <li>
+                <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Windows">Windows (731)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Linux">Linux (693)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Mac">Mac (579)</a>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories">Grouping and Descriptive Categories (397)</a>
+                
+                <span class="ui-icon ui-icon-triangle-1-e"></span>
+                <ul>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+OS+Independent+%28Written+in+an+interpreted+language%29">OS Independent (171)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+All+POSIX+%28Linux%2FBSD%2FUNIX-like+OSes%29">All POSIX (80)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+All+32-bit+MS+Windows+%2895%2F98%2FNT%2F2000%2FXP%29">All 32-bit MS Windows (78)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+OS+Portable+%28Source+code+to+work+with+many+OS+platforms%29">OS Portable (77)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+32-bit+MS+Windows+%28NT%2F2000%2FXP%29">32-bit MS Windows (73)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+64-bit+MS+Windows">64-bit MS Windows (31)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+All+BSD+Platforms+%28FreeBSD%2FNetBSD%2FOpenBSD%2FApple+Mac+OS+X%29">All BSD Platforms (21)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+32-bit+MS+Windows+%2895%2F98%29">32-bit MS Windows (3)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+Project+is+an+Operating+System+Distribution">Project is an Operating System Distribution (3)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+Project+is+an+Operating+System+Kernel">Project is an Operating System Kernel (2)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+Classic+8-bit+Operating+Systems+%28Apple%2C+Atari%2C+Commodore%2C+etc.%29">Classic 8-bit Operating Systems (1)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Grouping+and+Descriptive+Categories+%3A%3A+Project+is+OS+Distribution-Specific">Project is OS Distribution-Specific (1)</a>
+                    </li>
+                    
+                </ul>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems">Modern (183)</a>
+                
+                <span class="ui-icon ui-icon-triangle-1-e"></span>
+                <ul>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems+%3A%3A+Linux">Linux (133)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems+%3A%3A+WinXP">WinXP (71)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems+%3A%3A+OS+X">OS X (59)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems+%3A%3A+Windows+7">Windows 7 (38)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems+%3A%3A+Vista">Vista (20)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems+%3A%3A+Win2K">Win2K (12)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems+%3A%3A+Solaris">Solaris (5)</a>
+                    </li>
+                    
+                    <li>
+                        <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=Modern+%28Vendor-Supported%29+Desktop+Operating+Systems+%3A%3A+FreeBSD">FreeBSD (2)</a>
+                    </li>
+                    
+                </ul>
+                
+              </li>
+              
+              <li>
+                <a href="add_facet_filter?facet=os&amp;q=matlab&amp;constraint=BSD">BSD (76)</a>
+                
+              </li>
+              
+            </ul>
+          </div>
+          
+          
+          
+          <div class="facet">
+            <header>Freshness <span class="ui-icon ui-icon-triangle-1-s"></span></header>
+            <ul>
+              
+              <li>
+                <a href="add_facet_filter?facet=freshness&amp;q=matlab&amp;constraint=Recently+updated">Recently updated (243)</a>
+                
+              </li>
+              
+            </ul>
+          </div>
+          
+          
+          
+          
+          
+          
+        </section>
+        
+      </div>
+      <section id="search_results">
+        <header>
+          
+            <h3>Search Results for "matlab"</h3>
+          
+          <div class="drop-down-menu">
+              <div class="sort-options">
+                  <span>Sort By</span>
+                  <div class="sort-drop-down">
+                      <a href="#">Relevance</a>
+                  </div>
+                  <ul>
+                      
+                          <li><a href="/directory/language%3Amatlab/?q=matlab&amp;sort=score"
+   title="Relevance"
+   class="active">
+     Relevance
+</a></li>
+                      
+                      <li><a href="/directory/language%3Amatlab/?q=matlab&amp;sort=popular"
+   title="Most Popular"
+   class="">
+     Most Popular
+</a></li>
+                      <li><a href="/directory/language%3Amatlab/?q=matlab&amp;sort=update"
+   title="Last Updated"
+   class="">
+     Last Updated
+</a></li>
+                      <li><a href="/directory/language%3Amatlab/?q=matlab&amp;sort=name"
+   title="Name"
+   class="">
+     Name
+</a></li>
+                      <li><a href="/directory/language%3Amatlab/?q=matlab&amp;sort=rating"
+   title="Rating"
+   class="">
+     Rating
+</a></li>
+                  </ul>
+              </div>
+          </div>
+        </header>
+        <section id="result_data">
+            
+<p id="result_count">
+    Showing page 1 of 32.
+</p>
+
+            
+            <ul class="projects">
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/wireless-matlab/?source=directory" title="Find out more about Wireless Network Simulator in Matlab">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/wi/wireless-matlab%40sf.net/wireless-matlab_default.png" alt="Wireless Network Simulator in Matlab Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/wireless-matlab/?source=directory" itemprop="url" title="Find out more about Wireless Network Simulator in Matlab"><span itemprop="name">Wireless Network Simulator in Matlab</span></a></header>
+      <p itemprop="description">A simple but complete mobile wireless network simulator based on Matlab.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:128">128</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/hmm-asr-matlab/?source=directory" title="Find out more about HMM Speech Recognition in Matlab">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/hm/hmm-asr-matlab%40sf.net/hmm-asr-matlab_default.png" alt="HMM Speech Recognition in Matlab Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/hmm-asr-matlab/?source=directory" itemprop="url" title="Find out more about HMM Speech Recognition in Matlab"><span itemprop="name">HMM Speech Recognition in Matlab</span></a></header>
+      <p itemprop="description">A speech recognition system using Matlab/Simulink/Stateflow.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:80">80</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/videoutils/?source=directory" title="Find out more about Matlab VideoUtils">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/allura/p/videoutils/icon" alt="Matlab VideoUtils Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/videoutils/?source=directory" itemprop="url" title="Find out more about Matlab VideoUtils"><span itemprop="name">Matlab VideoUtils</span></a></header>
+      <p itemprop="description">Matlab Toolbox for reading and writing videos.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:39">39</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/matlab-mox/?source=directory" title="Find out more about MoG cov reg">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/matlab-mox%40sf.net/matlab-mox_default.png" alt="MoG cov reg Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/matlab-mox/?source=directory" itemprop="url" title="Find out more about MoG cov reg"><span itemprop="name">MoG cov reg</span></a></header>
+      <p itemprop="description">Matlab and Octave code to fit a mixture of Gaussians with covariance regularization to data using EM update rules.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/matlab-omr/?source=directory" title="Find out more about Open source OMR in MATLAB">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/matlab-omr%40sf.net/matlab-omr_default.png" alt="Open source OMR in MATLAB Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/matlab-omr/?source=directory" itemprop="url" title="Find out more about Open source OMR in MATLAB"><span itemprop="name">Open source OMR in MATLAB</span></a></header>
+      <p itemprop="description">An open-source OMR application written in MATLAB, capable of processing various pen or pencil marked documents. The document form is fully customizable so that common surveying forms as well as academic omr-based exam sheets can be processed.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/manet-matlab/?source=directory" title="Find out more about MANET Simulator in Matlab">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/manet-matlab%40sf.net/manet-matlab_default.png" alt="MANET Simulator in Matlab Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/manet-matlab/?source=directory" itemprop="url" title="Find out more about MANET Simulator in Matlab"><span itemprop="name">MANET Simulator in Matlab</span></a></header>
+      <p itemprop="description">An under-developing mobile ad hoc network simulator based on Matlab.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/classification/?source=directory" title="Find out more about Matlab Classification Toolbox">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/cl/classification%40sf.net/classification_default.png" alt="Matlab Classification Toolbox Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/classification/?source=directory" itemprop="url" title="Find out more about Matlab Classification Toolbox"><span itemprop="name">Matlab Classification Toolbox</span></a></header>
+      <p itemprop="description">Matlab Classification Toolbox contains implementations of the following classifiers: Naive Bayes, Gaussian, Gaussian Mixture Model, Decision Tree and Neural Networks. This toolbox allows users to compare classifiers across various data sets.
+</p>
+      <strong itemprop="interactionCount" content="UserDownloads:89">89</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/matlabhyperspec/?source=directory" title="Find out more about Matlab Hyperspectral Toolbox">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/matlabhyperspec%40sf.net/MediaWikiSidebarLogo.png" alt="Matlab Hyperspectral Toolbox Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/matlabhyperspec/?source=directory" itemprop="url" title="Find out more about Matlab Hyperspectral Toolbox"><span itemprop="name">Matlab Hyperspectral Toolbox</span></a></header>
+      <p itemprop="description">Matlab Hyperspectral Toolbox - Toolbox of advanced algorithms for hyperspectral processing and exploitation.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:39">39</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/qum/?source=directory" title="Find out more about Qu for MATLAB">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/qu/qum%40sf.net/qum_default.png" alt="Qu for MATLAB Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/qum/?source=directory" itemprop="url" title="Find out more about Qu for MATLAB"><span itemprop="name">Qu for MATLAB</span></a></header>
+      <p itemprop="description">Qu is a MATLAB toolbox for the visualization and analysis of N-dimensional datasets targeted to the field of biomedical imaging. It supports several microscopy image formats and offers a plugin mechanism and a consistent API for easy extension.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/matlabcompanion/?source=directory" title="Find out more about Matlab Companion">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/matlabcompanion%40sf.net/matlabcompanion_default.png" alt="Matlab Companion Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/matlabcompanion/?source=directory" itemprop="url" title="Find out more about Matlab Companion"><span itemprop="name">Matlab Companion</span></a></header>
+      <p itemprop="description">A set of Matlab toolboxes to perform signal and image processing.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/precond/?source=directory" title="Find out more about MATLAB preconditioning">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/pr/precond%40sf.net/precond_default.png" alt="MATLAB preconditioning Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/precond/?source=directory" itemprop="url" title="Find out more about MATLAB preconditioning"><span itemprop="name">MATLAB preconditioning</span></a></header>
+      <p itemprop="description">preconditioning using matlab</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/matlabcsharp/?source=directory" title="Find out more about Matlab C#">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/matlabcsharp%40sf.net/matlabcsharp_default.png" alt="Matlab C# Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/matlabcsharp/?source=directory" itemprop="url" title="Find out more about Matlab C#"><span itemprop="name">Matlab C#</span></a></header>
+      <p itemprop="description">Matlab programming in C#. ODE methods and GUI to Matlab (to solving ODE).</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/ltesimulator/?source=directory" title="Find out more about MATLAB LTE System Level Simulator">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/lt/ltesimulator%40sf.net/ltesimulator_default.png" alt="MATLAB LTE System Level Simulator Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/ltesimulator/?source=directory" itemprop="url" title="Find out more about MATLAB LTE System Level Simulator"><span itemprop="name">MATLAB LTE System Level Simulator</span></a></header>
+      <p itemprop="description">The simulator is released under the terms of an academic, non-commercial use license. Please read the license agreement in case of doubt. </p>
+      <strong itemprop="interactionCount" content="UserDownloads:70">70</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/videoio/?source=directory" title="Find out more about videoIO Toolbox for Matlab">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/vi/videoio%40sf.net/videoio_default.png" alt="videoIO Toolbox for Matlab Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/videoio/?source=directory" itemprop="url" title="Find out more about videoIO Toolbox for Matlab"><span itemprop="name">videoIO Toolbox for Matlab</span></a></header>
+      <p itemprop="description">A library providing easy, flexible, and efficient read/write access to video files using a wide variety of codecs in MATLAB on Windows and GNU/Linux platforms, using DirectShow and ffmpeg backends, respectively. Also provided are &#39;load&#39; and &#39;imread&#39; for bulk reading.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:22">22</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/meclipse/?source=directory" title="Find out more about Eclipse RCP for Matlab Programming">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/me/meclipse%40sf.net/meclipse_default.png" alt="Eclipse RCP for Matlab Programming Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/meclipse/?source=directory" itemprop="url" title="Find out more about Eclipse RCP for Matlab Programming"><span itemprop="name">Eclipse RCP for Matlab Programming</span></a></header>
+      <p itemprop="description">Matlab program development environment based on Elicpse.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/cvprtoolbox/?source=directory" title="Find out more about Matlab CVPR toolbox">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/cv/cvprtoolbox%40sf.net/cvprtoolbox_default.png" alt="Matlab CVPR toolbox Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/cvprtoolbox/?source=directory" itemprop="url" title="Find out more about Matlab CVPR toolbox"><span itemprop="name">Matlab CVPR toolbox</span></a></header>
+      <p itemprop="description">This is a MATLAB toolbox implementing Computer Vision and Pattern Recognition related algorithms. Check out http://cvprtoolbox.svn.sourceforge.net/svnroot/cvprtoolbox/. See also http://note.sonots.com/SciSoftware.html</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/matimbre/?source=directory" title="Find out more about MATIMBRE: a Timbre Toolbox for Matlab">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/matimbre%40sf.net/matimbre_default.png" alt="MATIMBRE: a Timbre Toolbox for Matlab Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/matimbre/?source=directory" itemprop="url" title="Find out more about MATIMBRE: a Timbre Toolbox for Matlab"><span itemprop="name">MATIMBRE: a Timbre Toolbox for Matlab</span></a></header>
+      <p itemprop="description">The Matimbre Toolbox for use with Matlab is a collection of functions which aim to provide tools for timbre analysis. The toolbox supports a wide range of timbre descriptors characterizing either temporal, spectral or spectro-temporal aspects of sounds.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/systemidentific/?source=directory" title="Find out more about system identification package for matlab">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/sy/systemidentific%40sf.net/systemidentific_default.png" alt="system identification package for matlab Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/systemidentific/?source=directory" itemprop="url" title="Find out more about system identification package for matlab"><span itemprop="name">system identification package for matlab</span></a></header>
+      <p itemprop="description">the project is aimed for showcase and references for most of the usual methods in system identification. all script is written in m-file and mdl file in Matlab. all scripts are under GPL 2.0 and free for usage.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/clifford/?source=directory" title="Find out more about Clifford Algebras-Mathematica and Matlab">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/cl/clifford%40sf.net/clifford_default.png" alt="Clifford Algebras-Mathematica and Matlab Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/clifford/?source=directory" itemprop="url" title="Find out more about Clifford Algebras-Mathematica and Matlab"><span itemprop="name">Clifford Algebras-Mathematica and Matlab</span></a></header>
+      <p itemprop="description">A package for Clifford algebra of a n-dimensional Euclidean vector space can be a useful computational tool since allows the manipulation of mathematical objects. It includes visualisation elements of a Clifford algebra in the 3-dimensional space.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/chaostoolbox/?source=directory" title="Find out more about Chaos toolbox for matlab">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ch/chaostoolbox%40sf.net/chaostoolbox_default.png" alt="Chaos toolbox for matlab Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/chaostoolbox/?source=directory" itemprop="url" title="Find out more about Chaos toolbox for matlab"><span itemprop="name">Chaos toolbox for matlab</span></a></header>
+      <p itemprop="description">A matlab toolbox for Chaotic charateristics computation and visualization,including phase space reconstruction,prediction,noise reduction, entropy,Recurrent Plot,various dimension,Lyapunov exponent estimation are implemented for academic research.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/matlab2c/?source=directory" title="Find out more about Matlab coder to C++ or C">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/matlab2c%40sf.net/matlab2c_default.png" alt="Matlab coder to C++ or C Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/matlab2c/?source=directory" itemprop="url" title="Find out more about Matlab coder to C++ or C"><span itemprop="name">Matlab coder to C++ or C</span></a></header>
+      <p itemprop="description">MATLAB Coder converting Hello World M script to C or C++</p>
+      <strong itemprop="interactionCount" content="UserDownloads:27">27</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/jmatio/?source=directory" title="Find out more about JMatIO - Matlab&#39;s MAT-file I/O in JAVA">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/jm/jmatio%40sf.net/jmatio_default.png" alt="JMatIO - Matlab&#39;s MAT-file I/O in JAVA Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/jmatio/?source=directory" itemprop="url" title="Find out more about JMatIO - Matlab&#39;s MAT-file I/O in JAVA"><span itemprop="name">JMatIO - Matlab&#39;s MAT-file I/O in JAVA</span></a></header>
+      <p itemprop="description">Matlab&#39;s MAT-file I/O API in JAVA. Supports Matlab 5 MAT-flie format reading and writing. Written in pure JAVA.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:35">35</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/matlabographviz/?source=directory" title="Find out more about MATLAB-GraphViz graph layout library">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/ma/matlabographviz%40sf.net/matlabographviz_default.png" alt="MATLAB-GraphViz graph layout library Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/matlabographviz/?source=directory" itemprop="url" title="Find out more about MATLAB-GraphViz graph layout library"><span itemprop="name">MATLAB-GraphViz graph layout library</span></a></header>
+      <p itemprop="description">This library provides interface between MATLAB and GraphViz - AT&amp;T software
+for sophisticated graph/network layout functionality. Allows to compute a layout in GraphViz then analyze/plot it in Matlab. </p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/ucsp/?source=directory" title="Find out more about Signal Processing Classes for Matlab/C++">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/uc/ucsp%40sf.net/ucsp_default.png" alt="Signal Processing Classes for Matlab/C++ Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/ucsp/?source=directory" itemprop="url" title="Find out more about Signal Processing Classes for Matlab/C++"><span itemprop="name">Signal Processing Classes for Matlab/C++</span></a></header>
+      <p itemprop="description">These classes are useful for signal processing in Matlab or C++. They bring together tools and methods which may be used interchangeably for Matlab and C++. Their initial use is in conjunction with work towards my degree at UC Berkeley.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+  
+  <li itemscope  itemtype="http://schema.org/MobileSoftwareApplication">
+    <a class="project-icon" href="/projects/mrigpu/?source=directory" title="Find out more about MRI Analysis using GPU and MATLAB">
+      
+      <img itemprop="image" width="48" height="48" src="//c.fsdn.com/con/icons/mr/mrigpu%40sf.net/mrigpu.jpg" alt="MRI Analysis using GPU and MATLAB Icon">
+      
+    </a>
+    
+    <div class="project_info">
+      <header><a href="/projects/mrigpu/?source=directory" itemprop="url" title="Find out more about MRI Analysis using GPU and MATLAB"><span itemprop="name">MRI Analysis using GPU and MATLAB</span></a></header>
+      <p itemprop="description">This project uses net resources that is related to GPU and MATLAB to speed up and integrate the MRI related procedures (EPI, DTI, ASL,PASL, pCASL,DASL,fMRI,Anatomical). The goal is to make the GPU technology easily accessible for general users.</p>
+      <strong itemprop="interactionCount" content="UserDownloads:0">0</strong> weekly downloads
+    </div>
+    <span class="ui-icon ui-icon-circle-triangle-s"></span>
+    <div class="more-info" >
+      <div class="busy"></div>
+    </div>
+  </li>
+  
+</ul>
+            
+
+
+
+
+    
+    
+
+<ul class="paging">
+  
+    <li>
+      
+        Back
+      
+    </li>
+    
+    
+    <li>
+      
+        1
+      
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=2">2</a>
+      
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=3">3</a>
+      
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=4">4</a>
+      
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=5">5</a>
+      
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=6">6</a>
+      
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=7">7</a>
+      
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=8">8</a>
+      
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=9">9</a>
+      
+    </li>
+    
+    
+    <li>
+        &hellip;
+    </li>
+    
+    <li>
+      
+        <a href="/directory/language%3Amatlab/?q=matlab&amp;page=2">Next</a>
+      
+    </li>
+  
+</ul>
+        </section>
+        
+      </section>
+      <div class="ads">
+        <div class="ad" id="afs2"></div>
+      </div>
+      </section><!-- #search -->
+    </section><!-- #main-content -->
+    <section id="sidebar">
+        <section class="ads">
+            
+    
+    
+
+<script type="text/javascript">
+    if ('p84_medrec'.indexOf('immersion') > 0) {
+        document.write('<div id="p84_medrec" class="ad medrec"><script type="text/javascript" src="http://ad.doubleclick.net/adj/ostg.sourceforge/cons_mobile_p84_medrec;pg=/search/index.php;psrch=0;logged_in=0;tile=3;sz=300x250;u=e%3A564e8954-a783-11e2-b851-0200ac1d1d92;ord=1862308469889612?"></'+'script></div>');
+    } else if (!immersion_adcode) {
+        document.write('<iframe id="p84_medrec" height="250" class="ad medrec" src="/static/ads/iframe_ad.html?position=p84_medrec&amp;ad=http%3A%2F%2Fad.doubleclick.net%2Fadj%2Fostg.sourceforge%2Fcons_mobile_p84_medrec%3Bpg%3D%2Fsearch%2Findex.php%3Bpsrch%3D0%3Blogged_in%3D0%3Btile%3D3%3Bsz%3D300x250%3Bu%3De%253A564e8954-a783-11e2-b851-0200ac1d1d92%3Bord%3D1862308469889612%3F&amp;class=medrec" seamless frameborder="0" scrolling="no"></iframe>');
+    }
+</script>
+            
+    
+    
+
+<script type="text/javascript">
+    if ('top_medrec'.indexOf('immersion') > 0) {
+        document.write('<div id="top_medrec" class="ad medrec"><script type="text/javascript" src="http://ad.doubleclick.net/adj/ostg.sourceforge/cons_search_top_medrec;pg=/search/index.php;psrch=0;logged_in=0;tile=4;sz=300x250;u=e%3A564e8954-a783-11e2-b851-0200ac1d1d92;ord=1862308469889612?"></'+'script></div>');
+    } else if (!immersion_adcode) {
+        document.write('<iframe id="top_medrec" height="250" class="ad medrec" src="/static/ads/iframe_ad.html?position=top_medrec&amp;ad=http%3A%2F%2Fad.doubleclick.net%2Fadj%2Fostg.sourceforge%2Fcons_search_top_medrec%3Bpg%3D%2Fsearch%2Findex.php%3Bpsrch%3D0%3Blogged_in%3D0%3Btile%3D4%3Bsz%3D300x250%3Bu%3De%253A564e8954-a783-11e2-b851-0200ac1d1d92%3Bord%3D1862308469889612%3F&amp;class=medrec" seamless frameborder="0" scrolling="no"></iframe>');
+    }
+</script>
+            
+    
+    
+
+<script type="text/javascript">
+    if ('google_bottom_medrec'.indexOf('immersion') > 0) {
+        document.write('<div id="google_bottom_medrec" class="ad medrec"><script type="text/javascript" src="http://ad.doubleclick.net/adj/ostg.sourceforge/cons_search_google_bottom_medrec;pg=/search/index.php;psrch=0;logged_in=0;tile=5;sz=300x250;u=e%3A564e8954-a783-11e2-b851-0200ac1d1d92;ord=1862308469889612?"></'+'script></div>');
+    } else if (!immersion_adcode) {
+        document.write('<iframe id="google_bottom_medrec" height="250" class="ad medrec" src="/static/ads/iframe_ad.html?position=google_bottom_medrec&amp;ad=http%3A%2F%2Fad.doubleclick.net%2Fadj%2Fostg.sourceforge%2Fcons_search_google_bottom_medrec%3Bpg%3D%2Fsearch%2Findex.php%3Bpsrch%3D0%3Blogged_in%3D0%3Btile%3D5%3Bsz%3D300x250%3Bu%3De%253A564e8954-a783-11e2-b851-0200ac1d1d92%3Bord%3D1862308469889612%3F&amp;class=medrec" seamless frameborder="0" scrolling="no"></iframe>');
+    }
+</script>
+        </section>
+        
+        
+<aside class="sidebar-widget">
+	<header>
+        <h3>Staff Picks</h3>
+	</header>
+    <ul>
+    
+        <li class="item odd">
+            <a href="/projects/bochs/?source=staffpicks" title="Bochs x86 PC emulator"><img alt="Icon" src="//c.fsdn.com/allura/p/bochs/icon" /></a>
+            <a href="/projects/bochs/?source=staffpicks" title="Learn more about Bochs x86 PC emulator ">Bochs x86 PC emulator</a>
+        </li>
+    
+        <li class="item even">
+            <a href="/projects/convertigo/?source=staffpicks" title="Convertigo "><img alt="Icon" src="//c.fsdn.com/allura/p/convertigo/icon" /></a>
+            <a href="/projects/convertigo/?source=staffpicks" title="Learn more about Convertigo  ">Convertigo </a>
+        </li>
+    
+        <li class="item odd">
+            <a href="/projects/darktable/?source=staffpicks" title="Virtual Lighttable and Darkroom"><img alt="Icon" src="//c.fsdn.com/allura/p/darktable/icon" /></a>
+            <a href="/projects/darktable/?source=staffpicks" title="Learn more about Virtual Lighttable and Darkroom ">Virtual Lighttable and Darkroom</a>
+        </li>
+    
+        <li class="item even">
+            <a href="/projects/itext/?source=staffpicks" title="iText®, a JAVA-PDF library"><img alt="Icon" src="//c.fsdn.com/allura/p/itext/icon" /></a>
+            <a href="/projects/itext/?source=staffpicks" title="Learn more about iText®, a JAVA-PDF library ">iText®, a JAVA-PDF library</a>
+        </li>
+    
+        <li class="item odd">
+            <a href="/projects/kiwix/?source=staffpicks" title="Kiwix"><img alt="Icon" src="//c.fsdn.com/allura/p/kiwix/icon" /></a>
+            <a href="/projects/kiwix/?source=staffpicks" title="Learn more about Kiwix ">Kiwix</a>
+        </li>
+    
+        <li class="item even">
+            <a href="/projects/openfiler/?source=staffpicks" title="Openfiler"><img alt="Icon" src="//c.fsdn.com/con/img/project_default.png" /></a>
+            <a href="/projects/openfiler/?source=staffpicks" title="Learn more about Openfiler ">Openfiler</a>
+        </li>
+    
+        <li class="item odd">
+            <a href="/projects/pmd/?source=staffpicks" title="PMD"><img alt="Icon" src="//c.fsdn.com/allura/p/pmd/icon" /></a>
+            <a href="/projects/pmd/?source=staffpicks" title="Learn more about PMD ">PMD</a>
+        </li>
+    
+        <li class="item even">
+            <a href="/projects/pytables/?source=staffpicks" title="PyTables - Hierarchical datasets"><img alt="Icon" src="//c.fsdn.com/con/icons/py/pytables%40sf.net/pytables-logo-notext.png" /></a>
+            <a href="/projects/pytables/?source=staffpicks" title="Learn more about PyTables - Hierarchical datasets ">PyTables - Hierarchical datasets</a>
+        </li>
+    
+        <li class="item odd last">
+            <a href="/projects/qtpfsgui/?source=staffpicks" title="Luminance HDR"><img alt="Icon" src="//c.fsdn.com/allura/p/qtpfsgui/icon" /></a>
+            <a href="/projects/qtpfsgui/?source=staffpicks" title="Learn more about Luminance HDR ">Luminance HDR</a>
+        </li>
+    
+    </ul>
+</aside>
+
+        
+        <aside class="sidebar-widget" id="top-downloaded-widget">
+            <header>
+            <h3>Top Downloaded</h3>
+            </header>
+            <ul>
+            </ul>
+        </aside>
+        
+<aside class="sidebar-widget jobs-widget">
+    <header>
+        <h3>
+            <span>
+                Powered by
+                <a href="http://www.dice.com/?CMPID=AF_SF_UP_JS_AV_OG_BN_&amp;utm_source=SourceForge&amp;utm_medium=Affiliate&amp;utm_content=&amp;utm_campaign=Advocacy_Ongoing"> <img src="http://a.fsdn.com/con/img/jobs/dice_logo.png" alt="Dice Logo" class="dice-logo"> </a>
+            </span>
+            Latest Tech Jobs
+        </h3>
+    </header>
+    <section>
+        <form action="/jobs/" method="get" id="job-search">
+            <input type="hidden" name="source" value="widget">
+            <input type="text" name="text" placeholder="Senior Java Developer (Job Title)" id="job-title" value="">
+            <input type="submit" name="submit" value="Find" id="job-search-button">
+        </form>
+    </section>
+    <ul id="job-listing">
+        <li class="item odd">
+            <span class="job-link"><a href="/jobs?source=widget">Loading...</a></span>
+            <span class="job-details">The latest tech jobs.</span>
+        </li>
+   </ul>
+   <section class="all-jobs" style="border: none;">
+        <a href="/jobs?source=widget">See All Jobs &rsaquo;&rsaquo;</a>
+    </section>
+</aside>
+
+<script type="text/javascript">
+    /*global Handlebars*/
+    jQuery(function($) {
+        var source = $('#jobwidget-template').html();
+        var template = Handlebars.compile(source);
+
+        Handlebars.registerHelper('stripe', function(array, display_count, random, fn) {
+            var buffer = "";
+            for (var i = 0, len = array.length; i < display_count; i++) {
+                var item = null;
+                if (random === true) {
+                    var ri = Math.floor((Math.random()*array.length)+1);
+                    item = array[ri];
+                } else {
+                    item = array[i];
+                }
+                if (item) {
+                    item.css_class = (i % 2 === 0 ? 'even' : 'odd');
+                }
+                buffer += fn.fn(item);
+            }
+            return buffer;
+        });
+
+        function load_jobBoard() {
+            $.ajax({
+                url:'/jobs/json',
+                success: function(data) {
+                    $('#job-listing').html(template(data));
+                },
+                dataType: 'json'
+            });
+        }
+        load_jobBoard();
+    });
+</script>
+
+<script type="text/x-handlebars-template" id="jobwidget-template">
+    
+    {{#stripe data.jobs 5 true}}
+    <li class="item {{css_class}}">
+    <span class="job-link"><a href="{{ this.url }}">{{ this.title }}</a></span>
+        <span class="job-details">{{ this.company}} - {{ this.location}}</span>
+    </li>
+    {{/stripe}}
+    
+</script>
+
+
+        <section class="ads">
+            
+    
+    
+
+<script type="text/javascript">
+    if ('medrec_bottom'.indexOf('immersion') > 0) {
+        document.write('<div id="medrec_bottom" class="ad medrec"><script type="text/javascript" src="http://ad.doubleclick.net/adj/ostg.sourceforge/cons_pg_directory_medrec_bottom;pg=/search/index.php;psrch=0;logged_in=0;tile=6;sz=300x250;u=e%3A564e8954-a783-11e2-b851-0200ac1d1d92;ord=1862308469889612?"></'+'script></div>');
+    } else if (!immersion_adcode) {
+        document.write('<iframe id="medrec_bottom" height="250" class="ad medrec" src="/static/ads/iframe_ad.html?position=medrec_bottom&amp;ad=http%3A%2F%2Fad.doubleclick.net%2Fadj%2Fostg.sourceforge%2Fcons_pg_directory_medrec_bottom%3Bpg%3D%2Fsearch%2Findex.php%3Bpsrch%3D0%3Blogged_in%3D0%3Btile%3D6%3Bsz%3D300x250%3Bu%3De%253A564e8954-a783-11e2-b851-0200ac1d1d92%3Bord%3D1862308469889612%3F&amp;class=medrec" seamless frameborder="0" scrolling="no"></iframe>');
+    }
+</script>
+        </section>
+    </section>
+</article>
+        </div>
+
+        
+
+          
+<footer id="site-footer">
+    <div class="wrapper">
+        <nav>
+            <h5>SourceForge</h5>
+            <a href="/about">About</a>
+            <a href="/blog/category/sitestatus/">Site Status</a>
+            <a href="http://twitter.com/sfnet_ops">@sfnet_ops</a>
+        </nav>
+        <nav>
+            <h5>Find and Develop Software</h5>
+            <a href="/create/">Create a Project</a>
+            <a href="/directory/">Software Directory</a>
+            <a href="/top">Top Downloaded Projects</a>
+        </nav>
+        <nav>
+            <h5>Community</h5>
+            <a href="/blog/">Blog</a>
+            <a href="http://twitter.com/sourceforge">@sourceforge</a>
+            <a href="/jobs?source=footer">Job Board</a>
+        </nav>
+        <nav>
+            <h5>Help</h5>
+            <a href="http://p.sf.net/sourceforge/docs">Site Documentation</a>
+            <a href="/support">Support Request</a>
+            <a href="http://p.sf.net/sourceforge/irc">Real-Time Support</a>
+        </nav>
+    </div>
+</footer>
+<footer id="site-copyright-footer">
+    <div class="wrapper">
+        <div id="copyright">
+            Copyright &copy; 2013 Dice. All Rights Reserved.<br />
+            SourceForge is a <a href="http://www.diceholdingsinc.com/phoenix.zhtml?c=211152&amp;p=irol-landing">Dice Holdings, Inc.</a> service.
+        </div>
+        <nav>
+            <a href="http://slashdotmedia.com/terms-of-use/">Terms</a>
+            <a href="http://slashdotmedia.com/privacy-statement/">Privacy</a>
+            <a href="http://slashdotmedia.com/opt-out-choices/">Cookies/Opt Out</a>
+            <a href="http://slashdotmedia.com">Advertise</a>
+            <a href="http://sourceforge.jp/">SourceForge.JP</a>
+            <a href="http://ibmsmarteritservices.sourceforge.net/">Smarter IT</a>
+        </nav>
+    </div>
+</footer>
+            <script src="http://a.fsdn.com/con/js/min/sf.js-it.js?1366042720" type="text/javascript"></script>
+        
+        <!-- Begin comScore Tag -->
+        <script type="text/javascript">
+            document.write(unescape("%3Cscript src='" + (document.location.protocol === "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js' %3E%3C/script%3E"));
+        </script>
+        <script type="text/javascript">
+            if (window.COMSCORE) {
+                COMSCORE.beacon({
+                    c1: 2,
+                    c2: 6035546,
+                    c3: "",
+                    c4: "",
+                    c5: "",
+                    c6: "",
+                    c15: ""
+                });
+            }
+        </script>
+        <noscript>
+            <img src="http://b.scorecardresearch.com/p?c1=2&amp;c2=6035546&amp;c3=&amp;c4=&amp;c5=&amp;c6=&amp;c15=&amp;cj=1" alt="comScore2" />
+        </noscript>
+        <!-- End comScore Tag -->
+<script type="text/javascript">
+    $(function() {
+        /*global addCommas */
+        var $top_widget = $('#top-downloaded-widget');
+        $.ajax('/top/top_data', {
+            global: false,
+            success: function(data) {
+                if(data.download_alltime.length) {
+                    $.each(data.download_alltime, function(index, p) {
+                        $top_widget.find('ul').
+                        append('<li><span>{downloads}</span><a href="/projects/{shortname}">{name}</a></li>'.format({
+                            shortname: p.shortname,
+                            name: p.name,
+                            downloads: SF.Humanize.intWord(p.downloads)
+                        }));
+                    });
+                    $top_widget.show();
+                }
+            }
+        });
+    });
+</script>
+    </body>
+</html>
