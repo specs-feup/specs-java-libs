@@ -414,6 +414,27 @@ public class SpecsCollections {
     }
 
     /**
+     * Creates a list with the elements from the given collections.
+     * 
+     * @param collections
+     * @return
+     */
+    @SafeVarargs
+    public static <K> List<K> concatLists(Collection<? extends K>... collections) {
+        int totalSize = 0;
+        for (Collection<?> collection : collections) {
+            totalSize += collection.size();
+        }
+
+        List<K> newList = new ArrayList<>(totalSize);
+        for (Collection<? extends K> collection : collections) {
+            newList.addAll(collection);
+        }
+
+        return newList;
+    }
+
+    /**
      * Converts an array from one type to another.
      * 
      * @param origin
