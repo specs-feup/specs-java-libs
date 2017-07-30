@@ -1757,7 +1757,8 @@ public class SpecsIo {
      * @return
      */
     public static Optional<String> getRelativePath(File file, File baseFile, boolean isStrict) {
-
+        File originalFile = file;
+        File originalBaseFile = baseFile;
         if (!baseFile.isDirectory()) {
             baseFile = baseFile.getParentFile();
             if (baseFile == null) {
@@ -1779,7 +1780,10 @@ public class SpecsIo {
             File absoluteFile = file.getAbsoluteFile();
             file = absoluteFile.getCanonicalFile();
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Could not convert given files to canonical paths.");
+            SpecsLogs.msgWarn(
+                    "Could not convert given files to canonical paths. File: " + originalFile + "; Base file: "
+                            + originalBaseFile,
+                    e);
             return null;
         }
 
