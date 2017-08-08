@@ -639,6 +639,10 @@ public class SpecsCollections {
         return set;
     }
 
+    public static <T> List<T> newArrayList() {
+        return new ArrayList<>();
+    }
+
     public static <K, V> Map<K, V> newHashMap() {
         return new HashMap<>();
     }

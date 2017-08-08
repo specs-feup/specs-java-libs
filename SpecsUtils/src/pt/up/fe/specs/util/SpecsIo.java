@@ -36,7 +36,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -2516,5 +2518,20 @@ public class SpecsIo {
         }
 
         return true;
+    }
+
+    public static boolean isEmptyFolder(File folder) {
+        if (!folder.isDirectory()) {
+            return false;
+        }
+
+        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(folder.toPath())) {
+            boolean hasFile = dirStream.iterator().hasNext();
+            return !hasFile;
+        } catch (IOException e) {
+            SpecsLogs.msgWarn("Could not process path", e);
+        }
+
+        return false;
     }
 }

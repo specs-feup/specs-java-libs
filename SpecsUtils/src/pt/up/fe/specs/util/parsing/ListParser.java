@@ -16,7 +16,9 @@ package pt.up.fe.specs.util.parsing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.Preconditions;
@@ -90,6 +92,27 @@ public class ListParser<T> {
 
         // Update list
         currentList = currentList.subList(1, currentList.size());
+
+        return head;
+    }
+
+    public Optional<T> popSingleIf(Predicate<T> predicate) {
+
+        // Get head of the list
+        T head = peekSingle();
+
+        if (predicate.test(head)) {
+            return Optional.of(popSingle());
+        }
+
+        return Optional.empty();
+    }
+
+    private T peekSingle() {
+        Preconditions.checkArgument(!currentList.isEmpty(), "Tried to peek an element from an empty list");
+
+        // Get head of the list
+        T head = currentList.get(0);
 
         return head;
     }
