@@ -353,8 +353,7 @@ public class KeyFactory {
      * 
      * <p>
      * Can only store instances that have the same concrete type as the given example instance. You should only creating
-     * generic keys of concrete base types (e.g., ArrayList<String>) and avoid interfaces or abstract classes (e.g.,
-     * List<String>).
+     * generic keys of concrete base types (e.g., ArrayList<String>).
      * 
      * @param id
      * @param aClass
@@ -365,9 +364,20 @@ public class KeyFactory {
         return new GenericKey<>(id, exampleInstance);
     }
 
-    public static <T> DataKey<T> generic(String id, Class<T> aClass) {
-        return new NormalKey<>(id, aClass);
-    }
+    /**
+     * *
+     * <p>
+     * Can only store instances that have the same concrete type as the given example instance. You should only creating
+     * generic keys of concrete base types (e.g., ArrayList<String>) and avoid interfaces or abstract classes (e.g.,
+     * List<String>).
+     * 
+     * @param id
+     * @param aClass
+     * @return
+     */
+    // public static <T> DataKey<T> generic(String id, Class<T> aClass) {
+    // return new NormalKey<>(id, aClass);
+    // }
 
     //
     // public static <E extends Enum<E>> DataKey<EnumList<E>> enumList(String id, Class<E> enumClass) {
