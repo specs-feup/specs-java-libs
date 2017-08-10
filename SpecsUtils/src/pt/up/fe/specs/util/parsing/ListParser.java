@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.Preconditions;
+import pt.up.fe.specs.util.SpecsCollections;
 
 public class ListParser<T> {
 
@@ -123,6 +124,15 @@ public class ListParser<T> {
 
     public boolean isEmpty() {
         return currentList.isEmpty();
+    }
+
+    /**
+     * Adds the given elements to the head of the list.
+     * 
+     * @param elements
+     */
+    public void add(List<T> elements) {
+        currentList = SpecsCollections.concat(elements, currentList);
     }
 
 }
