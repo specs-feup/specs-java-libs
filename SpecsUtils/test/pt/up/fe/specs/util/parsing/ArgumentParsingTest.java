@@ -31,7 +31,7 @@ public class ArgumentParsingTest {
 
     @Test
     public void commandLine() {
-        ArgumentsParser parser = ArgumentsParser.newCommandLine();
+        ArgumentsParser parser = ArgumentsParser.newCommandLine(false);
 
         test(parser, "\\u\\ ", "\\u\\ ");
         test(parser, "\\u \\ ", "\\u", "\\ ");
