@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.utilities.StringSlice;
 
@@ -127,7 +128,8 @@ public class ArgumentsParser {
             args.add(currentArg.toString());
         }
 
-        return args;
+        // Trim args
+        return args.stream().map(String::trim).collect(Collectors.toList());
     }
 
     private Optional<String> checkDelimiters(StringSlice slice) {
