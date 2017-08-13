@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -488,17 +489,17 @@ public class SpecsSystem {
      *            The path to add
      */
     public static void addJavaLibraryPath(String path) {
-    System.setProperty("java.library.path",
-    	System.getProperty("java.library.path") + File.pathSeparatorChar + path);
-    Field sysPathsField;
-    try {
-        sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-        sysPathsField.setAccessible(true);
-        sysPathsField.set(null, null);
-    } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-        // Not supposed to happen
-        throw new RuntimeException(e);
-    }
+        System.setProperty("java.library.path",
+                System.getProperty("java.library.path") + File.pathSeparatorChar + path);
+        Field sysPathsField;
+        try {
+            sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
+            sysPathsField.setAccessible(true);
+            sysPathsField.set(null, null);
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            // Not supposed to happen
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -509,30 +510,30 @@ public class SpecsSystem {
      * @return true if the system is 64-bit, false otherwise.
      */
     public static boolean is64Bit() {
-    String arch = System.getenv("PROCESSOR_ARCHITECTURE");
-    String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
-    
-    if (arch == null) {
-        String osArch = System.getProperty("os.arch");
-    
-        if (osArch.endsWith("amd64")) {
-    	return true;
-        } else if (osArch.equals("i386") || osArch.equals("x86")) {
-    	return false;
-        } else {
-    	throw new RuntimeException("Could not determine the bitness of the operating system");
+        String arch = System.getenv("PROCESSOR_ARCHITECTURE");
+        String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
+
+        if (arch == null) {
+            String osArch = System.getProperty("os.arch");
+
+            if (osArch.endsWith("amd64")) {
+                return true;
+            } else if (osArch.equals("i386") || osArch.equals("x86")) {
+                return false;
+            } else {
+                throw new RuntimeException("Could not determine the bitness of the operating system");
+            }
         }
-    }
-    
-    String realArch = arch.endsWith("64")
-    	|| wow64Arch != null && wow64Arch.endsWith("64")
-    	? "64" : "32";
-    
-    if (realArch.equals("32")) {
-        return false;
-    }
-    
-    return true;
+
+        String realArch = arch.endsWith("64")
+                || wow64Arch != null && wow64Arch.endsWith("64")
+                        ? "64" : "32";
+
+        if (realArch.equals("32")) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -563,4 +564,26 @@ public class SpecsSystem {
     return "\n" + ERROR;
     }
      */
+
+    /**
+     * Lauches the weaver in another thread and waits termination.
+     * 
+     * @param args
+     * @return
+     */
+    public static <T> T executeOnThreadAndWait(Callable<T> callable) {
+        // Launch weaver in another thread
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<T> future = executor.submit(callable);
+        executor.shutdown();
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            SpecsLogs.msgInfo("Failed to complete execution on thread, returning null");
+            return null;
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Error while executing thread", e);
+        }
+    }
 }
