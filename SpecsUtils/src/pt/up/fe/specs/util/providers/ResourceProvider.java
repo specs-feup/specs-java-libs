@@ -100,41 +100,6 @@ public interface ResourceProvider extends FileResourceProvider {
         return getResourcesFromEnum(Arrays.asList(enumClasses));
     }
 
-    /*
-    private static List<ResourceProvider> getResourcesFromEnumSingle(Class<? extends ResourceProvider> enumClass) {
-        ResourceProvider[] enums = enumClass.getEnumConstants();
-    
-        Preconditions.checkNotNull(enums, "Class must be an enum");
-    
-        List<ResourceProvider> resources = SpecsFactory.newArrayList(enums.length);
-    
-        for (ResourceProvider anEnum : enums) {
-            resources.add(anEnum);
-        }
-    
-        return resources;
-    }
-    */
-    // @SafeVarargs
-    // public static List<ResourceProvider> getResourcesFromEnumArray(
-    // Class<? extends EnumResourceProvider>... enumClasses) {
-    //
-    // return getResourcesFromEnum(Arrays.asList(enumClasses));
-    // }
-
-    // @SafeVarargs
-    // public static <K extends Enum<K> & ResourceProvider> List<ResourceProvider> getResources(
-    // Class<K>... enumClasses) {
-    //
-    // List<ResourceProvider> resources = new ArrayList<>();
-    //
-    // for (Class<? extends K> enumClass : enumClasses) {
-    // resources.addAll(getResources(enumClass));
-    // }
-    //
-    // return resources;
-    // }
-
     /**
      * Utility method which returns the ResourceProviders in an enumeration that implements ResourceProvider.
      *
