@@ -20,6 +20,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -586,4 +587,87 @@ public class SpecsSystem {
             throw new RuntimeException("Error while executing thread", e);
         }
     }
+
+    public static int executeOnProcessAndWait(Class<?> aClass, String... args) {
+        return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), Arrays.asList(args));
+    }
+
+    // public static int executeOnProcessAndWaitWithExec(Class<?> aClass, String javaExecutable, String... args) {
+    // return executeOnProcessAndWaitWithExec(aClass, javaExecutable, Arrays.asList(args));
+    // }
+
+    /**
+     * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
+     * 
+     * @param aClass
+     * @return
+     */
+    // public static int executeOnProcessAndWaitWithExec(Class<?> aClass, String javaExecutable, List<String> args) {
+    // return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), args);
+    // }
+
+    // public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
+    // List<String> args) {
+    //
+    // return executeOnProcessAndWaitWith(aClass, workingDir, args);
+    //
+    // }
+
+    /**
+     * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
+     * 
+     * @param aClass
+     * @param javaExecutable
+     * @param workingDir
+     * @param args
+     * @return
+     */
+    public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
+            List<String> args) {
+
+        // ((URLClassLoader() Thread.currentThread().getContextClassLoader()).getURL();
+        // Process.exec("java", "-classpath", urls.join(":"), CLASS_TO_BE_EXECUTED)
+        String classpath = System.getProperty("java.class.path");
+        String className = aClass.getCanonicalName();
+
+        List<String> command = new ArrayList<>();
+        command.addAll(Arrays.asList("java", "-cp", classpath, className));
+        command.addAll(args);
+
+        ProcessOutputAsString output = runProcess(command, workingDir, false, true);
+        return output.getReturnValue();
+        // ProcessBuilder builder = new ProcessBuilder("java", "-cp", classpath, className);
+        // Process process;
+        // try {
+        // process = builder.start();
+        // process.waitFor();
+        // return process.exitValue();
+        // } catch (IOException e) {
+        // SpecsLogs.msgWarn("Exception which executing process:\n", e);
+        // } catch (InterruptedException e) {
+        // Thread.currentThread().interrupt();
+        // SpecsLogs.msgInfo("Failed to complete execution on process");
+        // }
+        //
+        // return -1;
+    }
+
+    // public static ProcessBuilder buildJavaProcess(Class<?> aClass, String javaExecutable, List<String> args) {
+    // public static ProcessBuilder buildJavaProcess(Class<?> aClass, List<String> args) {
+    // List<String> command = new ArrayList<>();
+    // command.add("java");
+    //
+    // String classpath = System.getProperty("java.class.path");
+    // String className = aClass.getCanonicalName();
+    //
+    // command.add("-cp");
+    // command.add(classpath);
+    // command.add(className);
+    //
+    // command.addAll(args);
+    //
+    // ProcessBuilder process = new ProcessBuilder(command);
+    //
+    // return process;
+    // }
 }
