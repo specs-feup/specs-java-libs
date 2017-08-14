@@ -39,6 +39,7 @@ import java.net.URLDecoder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1697,6 +1698,26 @@ public class SpecsIo {
         
         return returnValue;
         */
+    }
+
+    /**
+     * Taken from here: https://stackoverflow.com/a/31685610/1189808
+     * 
+     * @param folder
+     * @param pattern
+     * @return
+     */
+    public static List<File> getFilesWithPattern(File folder, String pattern) {
+        List<File> files = new ArrayList<>();
+
+        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
+                Paths.get(folder.getAbsolutePath()), pattern)) {
+            dirStream.forEach(path -> files.add(new File(path.toString())));
+        } catch (IOException e) {
+            SpecsLogs.msgWarn("Error while getting files with pattern: " + e.getMessage());
+        }
+
+        return files;
     }
 
     /**
