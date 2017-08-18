@@ -32,6 +32,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -66,6 +67,19 @@ public class SpecsSystem {
         return runProcess(builder, storeOutput, printOutput);
         // return runProcess(command, workingDir, storeOutput, printOutput, builder);
 
+    }
+
+    public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
+            boolean storeOutput, boolean printOutput, Long timeoutNanos) {
+
+        ProcessBuilder builder = new ProcessBuilder(command);
+        builder.directory(workingDir);
+        Function<InputStream, String> stdout = new StreamToString(printOutput, storeOutput, OutputType.StdOut);
+        Function<InputStream, String> stderr = new StreamToString(printOutput, storeOutput, OutputType.StdErr);
+
+        ProcessOutput<String, String> output = runProcess(builder, stdout, stderr, timeoutNanos);
+
+        return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
     }
 
     /**
@@ -171,6 +185,11 @@ public class SpecsSystem {
      */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
+        return runProcess(builder, outputProcessor, errorProcessor, null);
+    }
+
+    public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
         String commandString = getCommandString(builder.command());
         SpecsLogs.msgLib("Launching Process: " + commandString);
@@ -201,7 +220,7 @@ public class SpecsSystem {
             stdoutThread.shutdown();
             stderrThread.shutdown();
 
-            int returnValue = process.waitFor();
+            int returnValue = executeProcess(process, timeoutNanos);
 
             // Wait 2 seconds
             // stderrThread.awaitTermination(2, TimeUnit.SECONDS);
@@ -230,6 +249,26 @@ public class SpecsSystem {
         }
 
         throw new RuntimeException("Could not execute the process");
+    }
+
+    private static int executeProcess(Process process, Long timeoutNanos) {
+        try {
+            if (timeoutNanos == null) {
+                return process.waitFor();
+            }
+
+            boolean processExited = process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
+
+            if (processExited) {
+                return process.exitValue();
+            }
+
+            SpecsLogs.msgInfo("Process timed out");
+            return -1;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return -1;
+        }
     }
 
     public static ThreadFactory getDaemonThreadFactory() {
@@ -584,7 +623,14 @@ public class SpecsSystem {
             SpecsLogs.msgInfo("Failed to complete execution on thread, returning null");
             return null;
         } catch (ExecutionException e) {
-            throw new RuntimeException("Error while executing thread", e);
+            // Rethrow cause
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+
+            throw new RuntimeException(e.getCause());
+            // throw new RuntimeException("Error while executing thread", e);
         }
     }
 
