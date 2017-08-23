@@ -389,6 +389,7 @@ public class ClasspathParser {
     private UserLibraries getProjectsUserLibraries(String projectName) {
         // Check if there is a defined repo
         Optional<File> repoFolder = eclipseProjects.getProjectRepositoryTry(projectName);
+
         if (!repoFolder.isPresent()) {
             // Map of user libraries should have only one value, return that value
             Preconditions.checkArgument(userLibraries.size() == 1,

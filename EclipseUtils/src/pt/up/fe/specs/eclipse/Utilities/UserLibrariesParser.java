@@ -62,9 +62,6 @@ class UserLibrariesParser {
                     .collect(Collectors.toList());
 
             // It still needs the path for the project
-            System.out.println("FILE:" + userLibrariesFile);
-            System.out.println("FILE PATHS:" + paths);
-
             List<File> filePaths = getFilePaths(paths);
             userLibraries.put(libName, filePaths);
         }
