@@ -31,5 +31,8 @@
 		<!-- for ant -->
 		<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.25"/>
 		
+		<dependency org="com.io7m.xom" name="xom" rev="1.2.10"/>
+		
+		
 	</dependencies>
 </ivy-module>
