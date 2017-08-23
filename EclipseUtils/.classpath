@@ -11,7 +11,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/XStreamPlus"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=EclipseDeployment&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ant"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CommonsLangPlus"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ant"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

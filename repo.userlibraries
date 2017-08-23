@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<eclipse-userlibraries version="2">
+    <library name="ant" systemlibrary="false">
+        <archive path="/Support/libs/ant/ant-1.9.1.jar"/>
+        <archive path="/Support/libs/ant/ant-antlr.jar"/>
+        <archive path="/Support/libs/ant/ant-apache-bcel.jar"/>
+        <archive path="/Support/libs/ant/ant-apache-bsf.jar"/>
+        <archive path="/Support/libs/ant/ant-apache-log4j.jar"/>
+        <archive path="/Support/libs/ant/ant-apache-oro.jar"/>
+        <archive path="/Support/libs/ant/ant-apache-regexp.jar"/>
+        <archive path="/Support/libs/ant/ant-apache-resolver.jar"/>
+        <archive path="/Support/libs/ant/ant-apache-xalan2.jar"/>
+        <archive path="/Support/libs/ant/ant-commons-logging.jar"/>
+        <archive path="/Support/libs/ant/ant-commons-net.jar"/>
+        <archive path="/Support/libs/ant/ant-jai.jar"/>
+        <archive path="/Support/libs/ant/ant-javamail.jar"/>
+        <archive path="/Support/libs/ant/ant-jdepend.jar"/>
+        <archive path="/Support/libs/ant/ant-jmf.jar"/>
+        <archive path="/Support/libs/ant/ant-jsch.jar"/>
+        <archive path="/Support/libs/ant/ant-junit.jar"/>
+        <archive path="/Support/libs/ant/ant-junit4.jar"/>
+        <archive path="/Support/libs/ant/ant-launcher.jar"/>
+        <archive path="/Support/libs/ant/ant-netrexx.jar"/>
+        <archive path="/Support/libs/ant/ant-swing.jar"/>
+        <archive path="/Support/libs/ant/ant-testutil.jar"/>
+        <archive path="/Support/libs/ant/commons-net-3.2.jar"/>
+        <archive path="/Support/libs/ant/jakarta-oro-2.0.8.jar"/>
+        <archive path="/Support/libs/ant/jsch-0.1.50.jar"/>
+        <archive path="/Support/libs/ant/ivy-2.4.0.jar"/>
+    </library>
+</eclipse-userlibraries>
