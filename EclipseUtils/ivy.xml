@@ -28,7 +28,6 @@
 	<dependencies>
 		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="4.0.0.201505050340-m2" />
 		<dependency org="com.google.guava" name="guava" rev="19.0"/>
-		<dependency org="org.apache.ant" name="ant" rev="1.9.1"/>
 	
 		<!-- for ant -->
 		<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.25"/>
