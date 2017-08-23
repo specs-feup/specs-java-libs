@@ -671,16 +671,36 @@ public class SpecsSystem {
     public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
             List<String> args) {
 
+        // File jarPath = SpecsIo.getJarPath(aClass).orElseThrow(
+        // () -> new RuntimeException("Could not locate the JAR file for the class '" + aClass + "'"));
         // ((URLClassLoader() Thread.currentThread().getContextClassLoader()).getURL();
         // Process.exec("java", "-classpath", urls.join(":"), CLASS_TO_BE_EXECUTED)
-        String classpath = System.getProperty("java.class.path");
-        String className = aClass.getCanonicalName();
 
+        String classpath = System.getProperty("java.class.path");
+
+        // System.out.println("CLASSPATH:" + classpath);
+
+        String className = aClass.getCanonicalName();
+        String javaHome = "C:/Program Files/Java/jdk1.8.0_131";
         List<String> command = new ArrayList<>();
-        command.addAll(Arrays.asList("java", "-cp", classpath, className));
+        command.addAll(
+                Arrays.asList("java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
+        // Arrays.asList("cmd", "/c", "java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
+        // command.addAll(Arrays.asList("java", "-cp", "\"" + jarPath.getAbsolutePath() + "\"", className));
         command.addAll(args);
 
-        ProcessOutputAsString output = runProcess(command, workingDir, false, true);
+        ProcessBuilder process = new ProcessBuilder(command);
+        process.directory(workingDir);
+
+        // Set java home
+        // System.setProperty("java.home", javaHome);
+        // System.out.println("JAVA HOME:" + System.getProperty("java.home"));
+        // System.out.println("JAVA HOME BEFORE:" + System.getenv().get("JAVA_HOME"));
+        // System.getenv().put("JAVA_HOME", javaHome);
+        // System.out.println("JAVA HOME AFTER:" + System.getenv().get("JAVA_HOME"));
+        // process.environment().put("JAVA_HOME", javaHome);
+
+        ProcessOutputAsString output = runProcess(process, false, true);
         return output.getReturnValue();
         // ProcessBuilder builder = new ProcessBuilder("java", "-cp", classpath, className);
         // Process process;
