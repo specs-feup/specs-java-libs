@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="resolve_ivy" name="Resolves Ivy dependencies and downloads required JARs" <USE_IVY> >
+
+	<IVY_RESOLVE>
+
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+	<target name="resolve_ivy" <IVY_DEPENDENCIES>>
+
+	</target>
+</project>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="ftp_transfer" name="Upload a file through SSH">
+
+
+	<!--ANT 1.7 is required -->
+	<!-- FTP Transfer -->
+	<target name="ftp_transfer">
+
+  <ftp server="<HOST>"
+      port="21"
+       remotedir="<DESTINATION_FOLDER>"
+       userid="<LOGIN>"
+       password="<PASS>"
+       binary="yes"
+       passive="yes">
+       <fileset file="<FILE>"></fileset>
+    <!--   <fileset dir="C:\temp_output\deploy">
+      <include name="keys.txt"/>
+    </fileset> -->
+  </ftp>
+
+	</target>
+</project>
