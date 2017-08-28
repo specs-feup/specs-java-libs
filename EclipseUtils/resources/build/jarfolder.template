@@ -1,0 +1,3 @@
+	<fileset dir="<FOLDER>">
+		<include name="*.jar"/>
+	</fileset>

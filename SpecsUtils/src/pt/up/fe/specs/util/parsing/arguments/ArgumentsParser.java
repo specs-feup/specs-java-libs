@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.utilities.StringSlice;
 
@@ -25,13 +26,14 @@ public class ArgumentsParser {
     private final List<String> delimiters;
     private final List<Gluer> gluers;
     private final List<Escape> escapes;
-
+    private final boolean trim;
     private Gluer currentGluer;
 
-    public ArgumentsParser(List<String> delimiters, List<Gluer> gluers, List<Escape> escapes) {
+    public ArgumentsParser(List<String> delimiters, List<Gluer> gluers, List<Escape> escapes, boolean trim) {
         this.gluers = gluers;
         this.escapes = escapes;
         this.delimiters = delimiters;
+        this.trim = trim;
         this.currentGluer = null;
     }
 
@@ -42,8 +44,12 @@ public class ArgumentsParser {
      * @return
      */
     public static ArgumentsParser newCommandLine() {
+        return newCommandLine(true);
+    }
+
+    public static ArgumentsParser newCommandLine(boolean trimArgs) {
         return new ArgumentsParser(Arrays.asList(" "), Arrays.asList(Gluer.newDoubleQuote()),
-                Arrays.asList(Escape.newSlashChar()));
+                Arrays.asList(Escape.newSlashChar()), trimArgs);
     }
 
     public List<String> parse(String string) {
@@ -127,7 +133,13 @@ public class ArgumentsParser {
             args.add(currentArg.toString());
         }
 
+        if (trim) {
+            // Trim args
+            return args.stream().map(String::trim).collect(Collectors.toList());
+        }
+
         return args;
+
     }
 
     private Optional<String> checkDelimiters(StringSlice slice) {

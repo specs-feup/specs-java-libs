@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+ <project default="create_run_jar" name="Create Runnable Jar for Eclipse Project, repackaging library JARs">
+
+	<!--ANT 1.7 is required  -->
+	 <target name="create_run_jar">
+	    <jar destfile="<OUTPUT_JAR_FILE>" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="<MAIN_CLASS>" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<FILESET>
+		</jar>
+		
+		<!-- Clean up  -->
+		<DELETE_IVY>
+	</target>
+</project>

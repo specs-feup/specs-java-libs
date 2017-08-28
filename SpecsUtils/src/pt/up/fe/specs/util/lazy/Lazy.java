@@ -13,8 +13,13 @@
 
 package pt.up.fe.specs.util.lazy;
 
+import java.util.function.Supplier;
+
 public interface Lazy<T> {
 
     T get();
 
+    static <T> Lazy<T> newInstance(Supplier<T> supplier) {
+        return new ThreadSafeLazy<>(supplier);
+    }
 }
