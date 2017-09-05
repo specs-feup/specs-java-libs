@@ -2429,6 +2429,13 @@ public class SpecsIo {
 
     }
 
+    /**
+     * Deletes the given folder and all its contents.
+     * 
+     * @param folder
+     *            folder to delete
+     * @return true if both the folder and its contents could be deleted
+     */
     public static boolean deleteFolder(File folder) {
         if (!folder.exists()) {
             return true;

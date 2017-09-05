@@ -34,6 +34,11 @@ public class SynchronizedLazy<T> implements Lazy<T> {
         this.provider = supplier;
     }
 
+    @Override
+    public synchronized boolean isInitialized() {
+        return this.value != null;
+    }
+
     public synchronized T getValue() {
         if (this.value == null) {
             return this.value = this.provider.get();
