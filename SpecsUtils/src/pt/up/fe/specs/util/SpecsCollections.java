@@ -406,11 +406,50 @@ public class SpecsCollections {
     }
 
     public static <K> List<K> concat(Collection<? extends K> list1, Collection<? extends K> list2) {
+
         List<K> newList = new ArrayList<>(list1.size() + list2.size());
         newList.addAll(list1);
         newList.addAll(list2);
 
         return newList;
+    }
+
+    /**
+     * If the list is modifiable, adds directly to it.
+     * 
+     * @param list
+     * @param element
+     * @return
+     */
+    public static <K> List<K> concatList(List<? extends K> list, K element) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<K> castedList = ((List<K>) list);
+            castedList.add(element);
+            return castedList;
+        } catch (UnsupportedOperationException e) {
+            // Fallback to generic copy concat
+            return concat(list, element);
+        }
+    }
+
+    /**
+     * If the first list is modifiable, adds directly to it.
+     * 
+     * @param list1
+     * @param list2
+     * @return
+     */
+    public static <K> List<K> concatList(List<? extends K> list1, List<? extends K> list2) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<K> castedList = ((List<K>) list1);
+            castedList.addAll(list2);
+            return castedList;
+        } catch (UnsupportedOperationException e) {
+            // Fallback to generic copy concat
+            return concat(list1, list2);
+        }
     }
 
     /**
