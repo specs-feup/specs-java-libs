@@ -23,8 +23,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.suikasoft.XStreamPlus.XStreamUtils;
-
 import pt.up.fe.specs.eclipse.Classpath.ClasspathFiles;
 import pt.up.fe.specs.eclipse.Classpath.ClasspathParser;
 import pt.up.fe.specs.util.SpecsIo;
@@ -44,7 +42,7 @@ public class CreateBuildXml {
 
     private static final String IGNORE_FILE_PROJECTS = "projects.buildignore";
     private static final String BENCHMARKER_FILE_PROJECTS = "projects.benchmarker";
-    private static final String FILE_PROJECTS_CACHE = "eclipse_projects.xml";
+    // private static final String FILE_PROJECTS_CACHE = "eclipse_projects.xml";
 
     public static final String JTEST_PROJECT_NAME = "projectName";
 
@@ -95,21 +93,23 @@ public class CreateBuildXml {
         }
 
         // Save classparser
-        XStreamUtils.write(new File(repFolder, CreateBuildXml.FILE_PROJECTS_CACHE), parser);
+        // XStreamUtils.write(new File(repFolder, CreateBuildXml.FILE_PROJECTS_CACHE), parser);
 
         CreateBuildXml buildXml = new CreateBuildXml(repFolder, parser, getIgnoreList(), ivySettingsFile);
         buildXml.execute();
     }
 
+    /*
     public static Optional<ClasspathParser> loadCachedInfo(File folder) {
         File cachedInfo = new File(folder, CreateBuildXml.FILE_PROJECTS_CACHE);
         if (!cachedInfo.isFile()) {
             return Optional.empty();
         }
-
+    
         return Optional
                 .of(XStreamUtils.read(new File(folder, CreateBuildXml.FILE_PROJECTS_CACHE), ClasspathParser.class));
     }
+    */
 
     private static List<String> getIgnoreList() {
         return parseProjectsList(new File(CreateBuildXml.IGNORE_FILE_PROJECTS));
