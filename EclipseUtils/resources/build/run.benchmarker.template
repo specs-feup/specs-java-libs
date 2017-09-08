@@ -6,6 +6,7 @@
   </path>  	
 
 <target name="<BENCHMARKER_TARGET_NAME>" depends="compile">
+  <!-- 'haltonfailure' is 'no' so that other tests are executed even if one fails -->
   <junit haltonfailure="no" failureproperty="test.failed" fork="true" forkmode="once">
    	<jvmarg value="-ea" /> 
     <classpath refid="classpath_junit.base_<PROJECT_NAME>"/>
@@ -14,5 +15,6 @@
     </batchtest>
     <formatter type="xml" usefile="true"/>
   </junit>
+  <fail message="Test failure detected, check test results." if="test.failed" />
 </target>   
   

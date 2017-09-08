@@ -18,6 +18,9 @@ import org.apache.commons.lang3.SystemUtils;
 /**
  * Wrappers around Apache commons-lang utility methods related to system platform identification.
  * 
+ * <p>
+ * TODO: Rename to ApachePlatforms
+ * 
  * @author JoaoBispo
  *
  */
