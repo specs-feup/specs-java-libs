@@ -729,27 +729,4 @@ public class SpecsCollections {
         return Optional.empty();
     }
 
-    /*
-    @SuppressWarnings("resource")
-    public static <T, U> Stream<U> flatStream(Collection<T> elements, Function<T, Stream<U>> mapToStream) {
-        if (elements.size() == 0) {
-            return Stream.empty();
-        }
-    
-        Stream<U> currentStream = null;
-    
-        for (T element : elements) {
-            // If null is the first stream, just create it and continue
-            if (currentStream == null) {
-                currentStream = mapToStream.apply(element);
-                continue;
-            }
-    
-            currentStream = Stream.concat(currentStream, mapToStream.apply(element));
-        }
-    
-        return currentStream;
-    }
-    */
-
 }
