@@ -28,4 +28,7 @@
         <archive path="/SupportJavaLibs/libs/ant/jsch-0.1.50.jar"/>
         <archive path="/SupportJavaLibs/libs/ant/ivy-2.4.0.jar"/>
     </library>
+	<library name="symja" systemlibrary="false">
+        <archive path="/SupportJavaLibs/libs/symja/matheclipse-core-1.0.0-SNAPSHOT-jar-with-dependencies.jar"/>	
+	</library>
 </eclipse-userlibraries>
