@@ -1832,7 +1832,13 @@ public class SpecsIo {
         // find the first different parent
         int nbSimilarParents = 0;
 
-        while (currentFileParents.size() > nbSimilarParents && mainFolderParents.size() > nbSimilarParents
+        int currentFileNumParents = currentFileParents.size();
+        // If current file is a folder, do not consider the last element for comparison
+        if (file.isDirectory()) {
+            currentFileNumParents--;
+        }
+
+        while (currentFileNumParents > nbSimilarParents && mainFolderParents.size() > nbSimilarParents
                 && currentFileParents.get(nbSimilarParents).equals(mainFolderParents.get(nbSimilarParents))) {
             nbSimilarParents++;
         }
@@ -1841,6 +1847,11 @@ public class SpecsIo {
 
         // Writes the relative path
         StringBuilder relativePath = new StringBuilder();
+
+        // If file is a folder, needs to go back an extra time
+        // if (file.isDirectory()) {
+        // nbParentToGoBack++;
+        // }
 
         for (int i = 0; i < nbParentToGoBack; i++) {
             relativePath.append(PREVIOUS_FOLDER);
