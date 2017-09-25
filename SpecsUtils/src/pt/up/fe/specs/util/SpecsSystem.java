@@ -681,10 +681,12 @@ public class SpecsSystem {
         // System.out.println("CLASSPATH:" + classpath);
 
         String className = aClass.getCanonicalName();
-        String javaHome = "C:/Program Files/Java/jdk1.8.0_131";
+        // String javaHome = "C:/Program Files/Java/jdk1.8.0_131/jre";
         List<String> command = new ArrayList<>();
         command.addAll(
-                Arrays.asList("java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
+                Arrays.asList("java", "-cp", classpath, className));
+        // command.addAll(
+        // Arrays.asList("java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
         // Arrays.asList("cmd", "/c", "java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
         // command.addAll(Arrays.asList("java", "-cp", "\"" + jarPath.getAbsolutePath() + "\"", className));
         command.addAll(args);
