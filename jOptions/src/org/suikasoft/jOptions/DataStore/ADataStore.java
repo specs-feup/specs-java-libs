@@ -30,7 +30,7 @@ public abstract class ADataStore implements DataStore {
     // private final SimpleSetup data;
     private final String name;
     private final Map<String, Object> values;
-    private final StoreDefinition definition;
+    private StoreDefinition definition;
 
     // private SetupFile setupFile;
     private boolean strict;
@@ -126,6 +126,11 @@ public abstract class ADataStore implements DataStore {
     @Override
     public Optional<StoreDefinition> getStoreDefinition() {
         return Optional.ofNullable(definition);
+    }
+
+    @Override
+    public void setStoreDefinition(StoreDefinition definition) {
+        this.definition = definition;
     }
 
     /*

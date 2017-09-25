@@ -239,6 +239,11 @@ public class SetupList implements DataStore {
     }
 
     @Override
+    public void setStoreDefinition(StoreDefinition definition) {
+        getPreferredSetup().setStoreDefinition(definition);
+    }
+
+    @Override
     public Collection<String> getKeysWithValues() {
         return getPreferredSetup().getKeysWithValues();
     }

@@ -25,11 +25,15 @@ public class GenericStoreDefinition extends AStoreDefinition {
      * @param options
      */
     GenericStoreDefinition(String appName, List<DataKey<?>> options) {
-	super(appName, options);
+        super(appName, options);
     }
 
     GenericStoreDefinition(String appName, List<StoreSection> sections, DataStore defaultValues) {
-	super(appName, sections, defaultValues);
+        super(appName, sections, defaultValues);
     }
 
+    @Override
+    public String toString() {
+        return getName() + " -> " + getKeys();
+    }
 }

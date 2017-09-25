@@ -144,12 +144,16 @@ public class StoreDefinitionBuilder {
         return new GenericStoreDefinition(appName, sections, defaultData);
     }
 
-    public void addDefinition(StoreDefinition storeDefinition) {
+    public StoreDefinitionBuilder addDefinition(StoreDefinition storeDefinition) {
         addDefinitionPrivate(storeDefinition, false);
+
+        return this;
     }
 
-    public void addNamedDefinition(StoreDefinition storeDefinition) {
+    public StoreDefinitionBuilder addNamedDefinition(StoreDefinition storeDefinition) {
         addDefinitionPrivate(storeDefinition, true);
+
+        return this;
     }
 
     private void addDefinitionPrivate(StoreDefinition storeDefinition, boolean useName) {

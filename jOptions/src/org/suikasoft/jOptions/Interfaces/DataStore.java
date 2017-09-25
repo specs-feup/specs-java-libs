@@ -138,6 +138,8 @@ public interface DataStore {
      */
     Optional<StoreDefinition> getStoreDefinition();
 
+    void setStoreDefinition(StoreDefinition definition);
+
     /**
      * Adds a new key and value.
      * 
