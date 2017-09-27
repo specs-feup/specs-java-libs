@@ -40,7 +40,7 @@ public class JOptionsUtils {
      * @return
      */
     public static DataStore loadDataStore(String optionsFilename, StoreDefinition storeDefinition) {
-	return loadDataStore(optionsFilename, JOptionsUtils.class, storeDefinition);
+        return loadDataStore(optionsFilename, JOptionsUtils.class, storeDefinition);
     }
 
     /**
@@ -61,21 +61,21 @@ public class JOptionsUtils {
      */
 
     public static DataStore loadDataStore(String optionsFilename, Class<?> classForJarPath,
-	    StoreDefinition storeDefinition) {
+            StoreDefinition storeDefinition) {
 
-	DataStore localData = DataStore.newInstance(storeDefinition);
-	XmlPersistence persistence = new XmlPersistence(storeDefinition);
+        DataStore localData = DataStore.newInstance(storeDefinition);
+        XmlPersistence persistence = new XmlPersistence(storeDefinition);
 
-	// Look for options in two places, JAR folder and current folder
-	loadOptionsNearJar(classForJarPath, optionsFilename, localData, storeDefinition, persistence);
+        // Look for options in two places, JAR folder and current folder
+        loadOptionsNearJar(classForJarPath, optionsFilename, localData, storeDefinition, persistence);
 
-	// Try to find local options in current working folder and load them
-	File localOptionsFile = new File(SpecsIo.getWorkingDir(), optionsFilename);
-	if (localOptionsFile.isFile()) {
-	    localData.addAll(persistence.loadData(localOptionsFile));
-	}
+        // Try to find local options in current working folder and load them
+        File localOptionsFile = new File(SpecsIo.getWorkingDir(), optionsFilename);
+        if (localOptionsFile.isFile()) {
+            localData.addAll(persistence.loadData(localOptionsFile));
+        }
 
-	return localData;
+        return localData;
     }
 
     /**
@@ -88,29 +88,34 @@ public class JOptionsUtils {
      * @param persistence
      */
     private static void loadOptionsNearJar(Class<?> classForJarpath, String optionsFilename, DataStore localData,
-	    StoreDefinition storeDefinition, AppPersistence persistence) {
+            StoreDefinition storeDefinition, AppPersistence persistence) {
 
-	// If can find jar path, try to load options near jar
-	Optional<File> jarFolderTry = SpecsIo.getJarPath(classForJarpath);
+        // If can find jar path, try to load options near jar
+        Optional<File> jarFolderTry = SpecsIo.getJarPath(classForJarpath);
 
-	// If cannot find jar folder, just return
-	if (!jarFolderTry.isPresent()) {
-	    return;
-	}
+        // If cannot find jar folder, just return
+        if (!jarFolderTry.isPresent()) {
+            return;
+        }
 
-	File localOptionsFile = new File(jarFolderTry.get(), optionsFilename);
+        File localOptionsFile = new File(jarFolderTry.get(), optionsFilename);
 
-	if (localOptionsFile.isFile()) {
-	    localData.addAll(persistence.loadData(localOptionsFile));
-	} else {
-	    SpecsLogs
-		    .msgInfo("Local options file not found near JAR, creating file:"
-			    + SpecsIo.getCanonicalPath(localOptionsFile));
-	    SpecsLogs.msgInfo("Local options File can also be on working directory.");
-	    DataStore emptyData = DataStore.newInstance(storeDefinition);
-	    persistence.saveData(localOptionsFile, emptyData);
-	}
+        if (localOptionsFile.isFile()) {
+            localData.addAll(persistence.loadData(localOptionsFile));
+        } else {
+            SpecsLogs
+                    .msgInfo("Local options file not found near JAR, creating file:"
+                            + SpecsIo.getCanonicalPath(localOptionsFile));
+            SpecsLogs.msgInfo("Local options File can also be on working directory.");
+            DataStore emptyData = DataStore.newInstance(storeDefinition);
+            persistence.saveData(localOptionsFile, emptyData);
+        }
 
+    }
+
+    public static void saveDataStore(File file, DataStore data) {
+        XmlPersistence persistence = data.getStoreDefinition().map(XmlPersistence::new).orElse(new XmlPersistence());
+        persistence.saveData(file, data);
     }
 
 }
