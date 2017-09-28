@@ -231,7 +231,12 @@ public abstract class ADataStore implements DataStore {
         // throw new RuntimeException("Key '" + key.getName() + "' is not present in DataStore '" + getName() + "'");
         // }
 
-        T value = key.getValueClass().cast(valueRaw);
+        T value = null;
+        try {
+            value = key.getValueClass().cast(valueRaw);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not retrive value from key " + key, e);
+        }
 
         // If value is null, use default value
         if (value == null) {
