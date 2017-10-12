@@ -23,6 +23,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.suikasoft.jOptions.Datakey.DataKey;
+import org.suikasoft.jOptions.Datakey.KeyFactory;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.App;
 
@@ -35,81 +37,89 @@ public class TabbedPane extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
+    private static final DataKey<String> APP_NAME = KeyFactory.string("tabbed pane app name");
+
+    public static DataKey<String> getAppNameKey() {
+        return APP_NAME;
+    }
+
     private final DataStore tabData;
     private final List<GuiTab> tabs;
     private GuiTab currentTab = null;
 
     public TabbedPane(App application) {
-	super(new GridLayout(1, 1));
+        super(new GridLayout(1, 1));
 
-	tabData = DataStore.newInstance("tab data");
+        tabData = DataStore.newInstance("tab data");
 
-	tabs = new ArrayList<>();
+        tabData.add(APP_NAME, application.getName());
 
-	JTabbedPane tabbedPane = new JTabbedPane();
+        tabs = new ArrayList<>();
+        // Preferences.
+        JTabbedPane tabbedPane = new JTabbedPane();
 
-	// New program panel
-	ProgramPanel programPanel = new ProgramPanel(application, tabData);
+        // New program panel
+        ProgramPanel programPanel = new ProgramPanel(application, tabData);
 
-	// Add program tab
-	tabs.add(programPanel);
+        // Add program tab
+        tabs.add(programPanel);
 
-	// New options panel
-	OptionsPanel optionsPanel = new OptionsPanel(application, tabData);
-	tabs.add(optionsPanel);
+        // New options panel
+        OptionsPanel optionsPanel = new OptionsPanel(application, tabData);
+        tabs.add(optionsPanel);
 
-	// Add other panels
-	for (TabProvider provider : application.getOtherTabs()) {
-	    tabs.add(provider.getTab(tabData));
-	}
+        // Add other panels
+        for (TabProvider provider : application.getOtherTabs()) {
+            tabs.add(provider.getTab(tabData));
+        }
 
-	// Check if program uses global options
-	/*
-	if (AppUsesGlobalOptions.class.isInstance(application)) {
-	    GlobalOptionsPanel globalPanel = new GlobalOptionsPanel(
-		    ((AppUsesGlobalOptions) application).getGlobalOptions());
-	
-	    tabs.add(globalPanel);
-	}
-	*/
+        // Check if program uses global options
+        /*
+        if (AppUsesGlobalOptions.class.isInstance(application)) {
+        GlobalOptionsPanel globalPanel = new GlobalOptionsPanel(
+        	    ((AppUsesGlobalOptions) application).getGlobalOptions());
+        
+        tabs.add(globalPanel);
+        }
+        */
 
-	int baseMnemonic = KeyEvent.VK_1;
-	int currentIndex = 0;
-	for (GuiTab tab : tabs) {
-	    tabbedPane.addTab(tab.getTabName(), tab);
-	    tabbedPane.setMnemonicAt(currentIndex, baseMnemonic + currentIndex);
-	    currentIndex += 1;
-	}
+        int baseMnemonic = KeyEvent.VK_1;
+        int currentIndex = 0;
+        for (GuiTab tab : tabs) {
+            tabbedPane.addTab(tab.getTabName(), tab);
+            tabbedPane.setMnemonicAt(currentIndex, baseMnemonic + currentIndex);
+            currentIndex += 1;
+        }
 
-	// Register a change listener
-	tabbedPane.addChangeListener(new ChangeListener() {
-	    // This method is called whenever the selected tab changes
+        // Register a change listener
+        tabbedPane.addChangeListener(new ChangeListener() {
+            // This method is called whenever the selected tab changes
 
-	    @Override
-	    public void stateChanged(ChangeEvent evt) {
-		JTabbedPane pane = (JTabbedPane) evt.getSource();
+            @Override
+            public void stateChanged(ChangeEvent evt) {
+                JTabbedPane pane = (JTabbedPane) evt.getSource();
 
-		// Get selected tab
-		int sel = pane.getSelectedIndex();
+                // Get selected tab
+                int sel = pane.getSelectedIndex();
 
-		// Exit current tab
-		currentTab.exitTab();
-		// Update current tab
-		currentTab = tabs.get(sel);
-		// Enter current tab
-		currentTab.enterTab();
-	    }
-	});
+                // Exit current tab
+                currentTab.exitTab();
+                // Update current tab
+                currentTab = tabs.get(sel);
+                // Enter current tab
+                currentTab.enterTab();
+            }
+        });
 
-	// Set program panel as currentTab
-	currentTab = programPanel;
-	currentTab.enterTab();
+        // Set program panel as currentTab
+        currentTab = programPanel;
+        currentTab.enterTab();
 
-	// Add the tabbed pane to this panel.
-	add(tabbedPane);
+        // Add the tabbed pane to this panel.
+        add(tabbedPane);
 
-	// The following line enables to use scrolling tabs.
-	tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        // The following line enables to use scrolling tabs.
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
     }
 
