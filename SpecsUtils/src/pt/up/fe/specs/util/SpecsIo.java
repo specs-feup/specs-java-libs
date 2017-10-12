@@ -590,7 +590,7 @@ public class SpecsIo {
      * Note: by default follows symlinks.
      * 
      * @param path
-     *            a File representing a folder.
+     *            a File representing a folder or a file.
      * 
      * @param extensions
      *            a set of strings
@@ -605,7 +605,7 @@ public class SpecsIo {
 
     /**
      * @param folder
-     *            a File representing a folder.
+     *            a File representing a folder or a file.
      * 
      * @param extensions
      *            a set of strings
@@ -632,7 +632,7 @@ public class SpecsIo {
      * Note: by default follows symlinks.
      * 
      * @param folder
-     *            a File representing a folder.
+     *            a File representing a folder or a file.
      * @param extension
      *            a string
      * @return all the files inside the given folder, excluding other folders, that have a certain extension.
@@ -644,7 +644,7 @@ public class SpecsIo {
 
     /**
      * @param path
-     *            a File representing a folder.
+     *            a File representing a folder or a file.
      * 
      * @param extension
      *            a string
