@@ -181,4 +181,8 @@ public class MultiMap<K, V> {
     public boolean containsKey(K key) {
         return this.map.containsKey(key);
     }
+
+    public void clear() {
+        map.clear();
+    }
 }
