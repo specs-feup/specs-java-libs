@@ -139,6 +139,17 @@ public class SpecsSystem {
         return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
     }
 
+    /*
+    public static ProcessOutputAsString runProcess(Process process, boolean storeOutput, boolean printOutput) {
+        Function<InputStream, String> stdout = new StreamToString(printOutput, storeOutput, OutputType.StdOut);
+        Function<InputStream, String> stderr = new StreamToString(printOutput, storeOutput, OutputType.StdErr);
+    
+        ProcessOutput<String, String> output = runProcess(process, stdout, stderr, null);
+    
+        return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
+    }
+    */
+
     /**
      * Helper method which receives the command instead of the builder, and launches the process in the current
      * directory.
@@ -188,6 +199,26 @@ public class SpecsSystem {
         return runProcess(builder, outputProcessor, errorProcessor, null);
     }
 
+    /*
+    public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
+    
+        String commandString = getCommandString(builder.command());
+        SpecsLogs.msgLib("Launching Process: " + commandString);
+    
+        Process process = null;
+        try {
+            process = builder.start();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not start process", e);
+        }
+    
+        return runProcess(process, outputProcessor, errorProcessor, timeoutNanos);
+    }
+    
+    public static <O, E> ProcessOutput<O, E> runProcess(Process process,
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
+    */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
@@ -738,4 +769,5 @@ public class SpecsSystem {
     //
     // return process;
     // }
+
 }

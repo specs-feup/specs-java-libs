@@ -12,6 +12,7 @@
  */
 package pt.up.fe.specs.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -40,6 +41,9 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -2572,5 +2576,36 @@ public class SpecsIo {
         }
 
         return false;
+    }
+
+    /**
+     * Based on https://stackoverflow.com/questions/304268/getting-a-files-md5-checksum-in-java
+     * 
+     * @param file
+     * @return
+     */
+    public static String getMd5(File file) {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Could not find MD5 algorithm", e);
+        }
+
+        try (InputStream is = Files.newInputStream(Paths.get(file.getAbsolutePath()));
+                BufferedInputStream bis = new BufferedInputStream(is);
+                DigestInputStream dis = new DigestInputStream(bis, md)) {
+
+            while (dis.read() != -1) {
+
+            }
+            /* Read decorated stream (dis) to EOF as normal... */
+        } catch (IOException e) {
+            throw new RuntimeException("Problems while using file '" + file + "'", e);
+        }
+
+        byte[] digest = md.digest();
+
+        return SpecsStrings.bytesToHex(digest);
     }
 }
