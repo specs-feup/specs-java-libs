@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import pt.up.fe.specs.util.providers.KeyProvider;
@@ -729,4 +730,15 @@ public class SpecsCollections {
         return Optional.empty();
     }
 
+    /**
+     * 
+     * @param list
+     * @return a stream of the elements of the list, in reverse order
+     */
+    public static <T> Stream<T> reverseStream(List<T> list) {
+        int from = 0;
+        int to = list.size();
+
+        return IntStream.range(from, to).map(i -> to - i + from - 1).mapToObj(i -> list.get(i));
+    }
 }
