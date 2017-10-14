@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.util.stringparser;
 
+import java.util.Optional;
+
 import pt.up.fe.specs.util.utilities.StringSlice;
 
 public class ParserResult<T> {
@@ -31,6 +33,10 @@ public class ParserResult<T> {
 
     public T getResult() {
         return result;
+    }
+
+    public static <T> ParserResult<Optional<T>> asOptional(ParserResult<T> parserResult) {
+        return new ParserResult<>(parserResult.getModifiedString(), Optional.of(parserResult.getResult()));
     }
 
 }
