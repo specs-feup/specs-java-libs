@@ -284,20 +284,36 @@ public class SpecsSystem {
 
     private static int executeProcess(Process process, Long timeoutNanos) {
         try {
+            // System.out.println("EXECUTE PROCESS TIMEOUT:" + timeoutNanos + "ns");
+
             if (timeoutNanos == null) {
                 return process.waitFor();
             }
 
             boolean processExited = process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
-
+            // System.out.println("PROCESS EXITED: " + processExited);
+            // System.out.println("PROCESS EXIT VALUE: " + process.exitValue());
             if (processExited) {
                 return process.exitValue();
             }
 
-            SpecsLogs.msgInfo("Process timed out");
+            SpecsLogs.msgLib("SpecsSystem.executeProcess: Killing process...");
+            process.destroyForcibly();
+            SpecsLogs.msgLib("SpecsSystem.executeProcess: Waiting killing...");
+            boolean processDestroyed = process.waitFor(1, TimeUnit.SECONDS);
+            if (processDestroyed) {
+                SpecsLogs.msgLib("SpecsSystem.executeProcess: Destroyed");
+            } else {
+                SpecsLogs.msgInfo("SpecsSystem.executeProcess: Could not destroy process!");
+            }
+
             return -1;
+
+            // SpecsLogs.msgInfo("Process timed out v2");
+            // return -1;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            // SpecsLogs.msgInfo("Process timed out");
             return -1;
         }
     }
