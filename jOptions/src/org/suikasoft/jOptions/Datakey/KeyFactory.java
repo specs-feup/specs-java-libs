@@ -66,7 +66,8 @@ public class KeyFactory {
     public static DataKey<String> string(String id) {
         return new NormalKey<>(id, String.class)
                 .setKeyPanelProvider((key, data) -> new StringPanel(key, data))
-                .setDecoder(s -> s);
+                .setDecoder(s -> s)
+                .setDefault(() -> "");
 
     }
 
