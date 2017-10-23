@@ -51,6 +51,10 @@ public class SpecsPlatforms {
         return SystemUtils.IS_OS_UNIX;
     }
 
+    public static boolean isMac() {
+        return SystemUtils.IS_OS_MAC;
+    }
+
     /*
     public static Process getShell() {
         String cmd = getShellCommand();
