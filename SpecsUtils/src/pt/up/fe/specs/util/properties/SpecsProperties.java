@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsIo;
@@ -191,5 +192,26 @@ public class SpecsProperties {
     @Override
     public String toString() {
         return props.toString();
+    }
+
+    /**
+     * Creates a JSON string equivalent to this properties object.
+     * 
+     * @return
+     */
+    public String toJson() {
+        StringBuilder json = new StringBuilder();
+
+        json.append("{");
+
+        String jsonContents = props.entrySet().stream()
+                .map(entry -> entry.getKey().toString() + ":" + entry.getValue().toString())
+                .collect(Collectors.joining(", "));
+
+        json.append(jsonContents);
+
+        json.append("}");
+
+        return json.toString();
     }
 }
