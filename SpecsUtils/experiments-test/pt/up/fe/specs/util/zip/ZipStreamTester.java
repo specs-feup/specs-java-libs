@@ -34,6 +34,7 @@ public class ZipStreamTester {
 
         try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile));
                 PrintStream zipPrintStream = new PrintStream(out)) {
+
             out.putNextEntry(new ZipEntry("log_test.txt"));
             String test = "Hello\nWorld";
             zipPrintStream.print(test);
