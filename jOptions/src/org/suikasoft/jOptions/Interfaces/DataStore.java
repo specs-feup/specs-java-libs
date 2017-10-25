@@ -245,6 +245,10 @@ public interface DataStore {
      */
     <T> boolean hasValue(DataKey<T> key);
 
+    default boolean hasValueRaw(String key) {
+        return getValuesMap().get(key) != null;
+    }
+
     /**
      * Tries to return a value from the DataStore.
      * 
