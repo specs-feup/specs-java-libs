@@ -249,6 +249,10 @@ public class SpecsCollections {
         return removedElements;
     }
 
+    public static <T, U extends T> List<U> remove(List<T> list, Class<U> targetClass) {
+        return castUnchecked(remove(list, element -> targetClass.isInstance(element)), targetClass);
+    }
+
     /**
      * Returns the first index of object that is an instance of the given class. Returns -1 if no object is found that
      * is instance of the class.
@@ -740,5 +744,18 @@ public class SpecsCollections {
         int to = list.size();
 
         return IntStream.range(from, to).map(i -> to - i + from - 1).mapToObj(i -> list.get(i));
+    }
+
+    /**
+     * Collects all instances of the given class from the stream.
+     * 
+     * @param stream
+     * @param aClass
+     * @return
+     */
+    public static <T> List<T> toList(Stream<? super T> stream, Class<T> aClass) {
+        return stream.filter(aClass::isInstance)
+                .map(aClass::cast)
+                .collect(Collectors.toList());
     }
 }
