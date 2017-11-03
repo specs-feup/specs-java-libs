@@ -30,55 +30,16 @@ public class MultiOutputStream extends OutputStream {
     @Override
     public void write(int b) throws IOException {
         execute(stream -> stream.write(b));
-        // for (OutputStream stream : outputStreams) {
-        // stream.write(b);
-        // }
     }
 
     @Override
     public void close() throws IOException {
         execute(OutputStream::close);
-        /*
-        List<IOException> exceptions = new ArrayList<>();
-        
-        for (OutputStream stream : outputStreams) {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                exceptions.add(e);
-            }
-        }
-        
-        if (!exceptions.isEmpty()) {
-            String exceptionsMessage = exceptions.stream()
-                    .map(IOException::getMessage)
-                    .collect(Collectors.joining("\n - ", " - ", ""));
-            throw new IOException("An exception occurred in one or more streams:\n" + exceptionsMessage);
-        }
-        */
     }
 
     @Override
     public void flush() throws IOException {
         execute(OutputStream::flush);
-        /*
-        List<IOException> exceptions = new ArrayList<>();
-        
-        for (OutputStream stream : outputStreams) {
-            try {
-                stream.flush();
-            } catch (IOException e) {
-                exceptions.add(e);
-            }
-        }
-        
-        if (!exceptions.isEmpty()) {
-            String exceptionsMessage = exceptions.stream()
-                    .map(IOException::getMessage)
-                    .collect(Collectors.joining("\n - ", " - ", ""));
-            throw new IOException("An exception occurred in one or more streams:\n" + exceptionsMessage);
-        }
-        */
     }
 
     private void execute(CheckedConsumer runnable) throws IOException {
