@@ -35,12 +35,24 @@ public class CsvReader implements AutoCloseable {
     private String delimiter;
 
     public CsvReader(File csvFile) {
-        this(LineStream.newInstance(csvFile));
+        this(csvFile, DEFAULT_DELIMITER);
     }
 
-    private CsvReader(LineStream csvLines) {
+    public CsvReader(File csvFile, String delimiter) {
+        this(LineStream.newInstance(csvFile), delimiter);
+    }
+
+    public CsvReader(String csvContents) {
+        this(csvContents, DEFAULT_DELIMITER);
+    }
+
+    public CsvReader(String csvContents, String delimiter) {
+        this(LineStream.newInstance(csvContents), delimiter);
+    }
+
+    private CsvReader(LineStream csvLines, String delimiter) {
         this.csvLines = csvLines;
-        this.delimiter = DEFAULT_DELIMITER;
+        this.delimiter = delimiter;
 
         initHeader();
     }
