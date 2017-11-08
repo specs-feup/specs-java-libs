@@ -2608,4 +2608,18 @@ public class SpecsIo {
 
         return SpecsStrings.bytesToHex(digest);
     }
+
+    public static void closeStreamAfterError(OutputStream stream) {
+        // Do nothing if no stream
+        if (stream == null) {
+            return;
+        }
+
+        // Close the stream
+        try {
+            stream.close();
+        } catch (IOException e) {
+            SpecsLogs.msgWarn("Exception while closing a stream", e);
+        }
+    }
 }
