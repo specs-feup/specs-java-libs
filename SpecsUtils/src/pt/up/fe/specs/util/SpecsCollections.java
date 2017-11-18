@@ -758,4 +758,17 @@ public class SpecsCollections {
                 .map(aClass::cast)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Converts a list of String providers to a String array.
+     * 
+     * @param values
+     * @return
+     */
+    public static <T extends KeyProvider<String>> String[] toStringArray(Collection<T> values) {
+        return values.stream()
+                .map(KeyProvider<String>::getKey)
+                .collect(Collectors.toList())
+                .toArray(new String[0]);
+    }
 }
