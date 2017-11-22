@@ -1,11 +1,11 @@
 /**
  * Copyright 2016 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -22,6 +22,7 @@ import pt.up.fe.specs.util.treenode.transform.transformations.DeleteTransform;
 import pt.up.fe.specs.util.treenode.transform.transformations.MoveAfterTransform;
 import pt.up.fe.specs.util.treenode.transform.transformations.MoveBeforeTransform;
 import pt.up.fe.specs.util.treenode.transform.transformations.ReplaceTransform;
+import pt.up.fe.specs.util.treenode.transform.transformations.SwapTransform;
 
 public class TransformQueue<K extends TreeNode<K>> {
 
@@ -63,8 +64,8 @@ public class TransformQueue<K extends TreeNode<K>> {
     // }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param originalNode
      * @param newNode
      */
@@ -92,4 +93,7 @@ public class TransformQueue<K extends TreeNode<K>> {
         instructions.add(new AddChildTransform<>(originalNode, child, 0));
     }
 
+    public void swap(K firstNode, K secondNode) {
+        instructions.add(new SwapTransform<>(firstNode, secondNode));
+    }
 }
