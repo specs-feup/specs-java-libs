@@ -1,11 +1,11 @@
 /**
  * Copyright 2012 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -23,7 +23,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
@@ -61,7 +61,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * 
+     *
      * @return a mutable view of the children
      */
     @Override
@@ -139,29 +139,29 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         public K setChild(K oldChild, K newChild) {
     	K sanitizedToken = TreeNodeUtils.sanitizeNode(newChild);
     	setAsParentOf(sanitizedToken);
-    
+
     	if (!hasChildren()) {
     	    throw new RuntimeException("Token does not have children, cannot set a child.");
     	}
-    
+
     	ListIterator<K> iterator = getChildrenIterator();
     	// Iterate until it finds the child
     	boolean foundChild = false;
     	while (iterator.hasNext()) {
-    
+
     	    // If not the child, continue
     	    if (iterator.next() != oldChild) {
     		continue;
     	    }
-    
+
     	    // Found the child, replace it
     	    iterator.set(newChild);
     	    foundChild = true;
     	}
-    
+
     	// If no child found, throw exception
     	Preconditions.checkArgument(foundChild, "Could not find given child.");
-    
+
     	return oldChild;
         }
      */
@@ -183,7 +183,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     /*
     protected void eventParentSet() {
-    
+
     }
     */
 
@@ -192,7 +192,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     /*
     protected void eventParentUnset() {
-    
+
     }
     */
 
@@ -284,10 +284,14 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
     /**
      * Returns a new copy of the node with the same content and type, but not children.
-     * 
+     *
      * @return
      */
     protected abstract K copyPrivate();
+
+    public K copyShallow() {
+        return copyPrivate();
+    }
 
     /**
      * Creates a deep copy of the node, including children. No guarantees are made regarding the contents of each node,
@@ -323,9 +327,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
     /**
      * Returns an empty instance of the token (all values can be initialized to null).
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @param token
      * @return
      * @deprecated Replace with copy(). However, copy must be made abstract first
@@ -334,10 +338,10 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
     /**
      * Returns a reference to the object that implements this class.
-     * 
+     *
      * <p>
      * This method is needed because of generics not having information about K.
-     * 
+     *
      * @return
      */
     protected abstract K getThis();
@@ -351,7 +355,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * 
+     *
      * @return the uppermost parent of this node
      */
     @Override
@@ -379,10 +383,10 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.children == null) ? 0 : this.children.hashCode());
-    
+
         String contentString = toContentString();
         result = prime * result + ((contentString == null) ? 0 : contentString.hashCode());
-    
+
         return result;
     }
     */
@@ -410,7 +414,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         } else if (!this.children.equals(other.children)) {
             return false;
         }
-    
+
         String contentString = toContentString();
         String otherContentString = other.toContentString();
         if (contentString == null) {
@@ -420,7 +424,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         } else if (!contentString.equals(otherContentString)) {
             return false;
         }
-    
+
         return true;
     }
     */
@@ -435,7 +439,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
     /**
      * Removes the children that are an instance of the given class.
-     * 
+     *
      * @param token
      * @param type
      */
@@ -456,20 +460,20 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         return TreeNodeIndexUtils.indexesOf(getChildren(), aClass);
         /*
         	List<Integer> indexes = new ArrayList<>();
-        
+
         	for (int i = 0; i < numChildren(); i++) {
         	    if (aClass.isInstance(getChild(i))) {
         		indexes.add(i);
         	    }
         	}
-        
+
         	return indexes;
         	*/
     }
 
     /**
      * Normalizes the token according to a given bypass set. The nodes in the bypass set can have only one child.
-     * 
+     *
      * @param bypassSet
      * @return
      */
