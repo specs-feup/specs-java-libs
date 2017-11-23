@@ -25,7 +25,7 @@ public class MoveAfterTransform<K extends TreeNode<K>> extends TwoOperandTransfo
 
     @Override
     public void execute() {
-        NodeInsertUtils.insertAfter(getBaseNode(), getNewNode(), true);
+        NodeInsertUtils.insertAfter(getNode1(), getNode2(), true);
     }
 
 }

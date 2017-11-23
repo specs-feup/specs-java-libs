@@ -50,7 +50,7 @@ public class SwapTransform<K extends TreeNode<K>> extends TwoOperandTransform<K>
 
     @Override
     public void execute() {
-        NodeInsertUtils.swap(getBaseNode(), getNewNode(), swapSubtrees);
+        NodeInsertUtils.swap(getNode1(), getNode2(), swapSubtrees);
     }
 
 }

@@ -20,23 +20,23 @@ import pt.up.fe.specs.util.treenode.TreeNode;
 public abstract class TwoOperandTransform<K extends TreeNode<K>> extends ANodeTransform<K> {
 
     public TwoOperandTransform(String type, K node1, K node2) {
-	super(type, Arrays.asList(node1, node2));
+        super(type, Arrays.asList(node1, node2));
     }
 
-    public K getBaseNode() {
-	return getOperands().get(0);
+    public K getNode1() {
+        return getOperands().get(0);
     }
 
-    public K getNewNode() {
-	return getOperands().get(1);
+    public K getNode2() {
+        return getOperands().get(1);
     }
 
     @Override
     public String toString() {
-	String baseHex = Integer.toHexString(getBaseNode().hashCode());
-	String newHex = Integer.toHexString(getNewNode().hashCode());
+        String baseHex = Integer.toHexString(getNode1().hashCode());
+        String newHex = Integer.toHexString(getNode2().hashCode());
 
-	return getType() + " base(" + baseHex + ") new(" + newHex + ")";
+        return getType() + " node1(" + baseHex + ") node2(" + newHex + ")";
     }
 
 }
