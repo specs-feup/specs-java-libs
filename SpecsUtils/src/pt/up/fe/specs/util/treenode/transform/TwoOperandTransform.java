@@ -19,8 +19,8 @@ import pt.up.fe.specs.util.treenode.TreeNode;
 
 public abstract class TwoOperandTransform<K extends TreeNode<K>> extends ANodeTransform<K> {
 
-    public TwoOperandTransform(String type, K baseNode, K newNode) {
-	super(type, Arrays.asList(baseNode, newNode));
+    public TwoOperandTransform(String type, K node1, K node2) {
+	super(type, Arrays.asList(node1, node2));
     }
 
     public K getBaseNode() {

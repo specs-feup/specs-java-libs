@@ -93,7 +93,17 @@ public class TransformQueue<K extends TreeNode<K>> {
         instructions.add(new AddChildTransform<>(originalNode, child, 0));
     }
 
+    /**
+     * Helper method which sets 'swapSubtrees' to true, by default.
+     * 
+     * @param firstNode
+     * @param secondNode
+     */
     public void swap(K firstNode, K secondNode) {
-        instructions.add(new SwapTransform<>(firstNode, secondNode));
+        instructions.add(new SwapTransform<>(firstNode, secondNode, true));
+    }
+
+    public void swap(K firstNode, K secondNode, boolean swapSubtrees) {
+        instructions.add(new SwapTransform<>(firstNode, secondNode, swapSubtrees));
     }
 }
