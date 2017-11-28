@@ -519,9 +519,20 @@ public class SpecsCollections {
      * @return
      */
     public static <T, F> List<T> filter(Collection<T> elements, Function<T, F> mapFunction) {
+        return filter(elements.stream(), mapFunction);
+    }
+
+    /**
+     * Filters the elements of a Stream according to a map function over the elements of that collection.
+     * 
+     * @param elements
+     * @param mapFunction
+     * @return
+     */
+    public static <T, F> List<T> filter(Stream<T> elements, Function<T, F> mapFunction) {
 
         Set<F> seenElements = new HashSet<>();
-        return elements.stream()
+        return elements
                 // Add to set. If already in set, will return false and filter the node
                 .filter(element -> seenElements.add(mapFunction.apply(element)))
                 .collect(Collectors.toList());
