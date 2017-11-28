@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public interface TreeNode<K extends TreeNode<K>> {
@@ -423,6 +424,8 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     default <T extends K> T getChild(Class<T> nodeClass, int index) {
         K childNode = getChild(index);
+
+        Preconditions.checkNotNull(childNode, "Index " + index + " of node '" + getClass() + "' has no child");
 
         if (!nodeClass.isInstance(childNode)) {
             throw new RuntimeException("Wanted a '" + nodeClass.getSimpleName() + "' at index '" + index
