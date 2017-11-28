@@ -35,6 +35,18 @@ public class ClassSet<E> {
         this.classMap = new ClassMap<>();
     }
 
+    /**
+     * 
+     * @param classes
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public void addAll(Class<? extends E>... classes) {
+        for (Class<? extends E> aClass : classes) {
+            add(aClass);
+        }
+    }
+
     public boolean add(Class<? extends E> e) {
         return classMap.put(e, ClassSet.PRESENT) == null;
     }
