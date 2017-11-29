@@ -751,10 +751,23 @@ public class SpecsCollections {
      * @return a stream of the elements of the list, in reverse order
      */
     public static <T> Stream<T> reverseStream(List<T> list) {
+        // int from = 0;
+        // int to = list.size();
+        //
+        // return IntStream.range(from, to).map(i -> to - i + from - 1).mapToObj(i -> list.get(i));
+        return reverseIndexStream(list).mapToObj(i -> list.get(i));
+    }
+
+    /**
+     * 
+     * @param list
+     * @return a stream of indexes to the list, in reverse order
+     */
+    public static <T> IntStream reverseIndexStream(List<T> list) {
         int from = 0;
         int to = list.size();
 
-        return IntStream.range(from, to).map(i -> to - i + from - 1).mapToObj(i -> list.get(i));
+        return IntStream.range(from, to).map(i -> to - i + from - 1);
     }
 
     /**
