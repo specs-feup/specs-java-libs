@@ -34,6 +34,11 @@ public final class ThreadSafeLazy<T> implements Lazy<T> {
         this.isInitialized = false;
     }
 
+    @Override
+    public boolean isInitialized() {
+        return isInitialized;
+    }
+
     /**
      * The same as the method get().
      * 

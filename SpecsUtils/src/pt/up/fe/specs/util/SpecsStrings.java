@@ -81,6 +81,8 @@ public class SpecsStrings {
                 block != Character.UnicodeBlock.SPECIALS;
     }
 
+    private final static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
     /**
      * Tries to parse a String into a integer. If an exception happens, warns the user and returns a 0.
      * 
@@ -580,6 +582,7 @@ public class SpecsStrings {
             // Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
 
             Matcher regexMatcher = pattern.matcher(contents);
+
             if (regexMatcher.find()) {
                 int numGroups = regexMatcher.groupCount();
                 List<String> capturedGroups = SpecsFactory.newArrayList();
@@ -1759,6 +1762,22 @@ public class SpecsStrings {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Basen on https://stackoverflow.com/questions/9655181/how-to-convert-a-byte-array-to-a-hex-string-in-java
+     * 
+     * @param bytes
+     * @return
+     */
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
 }

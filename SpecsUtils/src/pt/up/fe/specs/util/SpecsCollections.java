@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import pt.up.fe.specs.util.providers.KeyProvider;
@@ -248,6 +249,10 @@ public class SpecsCollections {
         return removedElements;
     }
 
+    public static <T, U extends T> List<U> remove(List<T> list, Class<U> targetClass) {
+        return castUnchecked(remove(list, element -> targetClass.isInstance(element)), targetClass);
+    }
+
     /**
      * Returns the first index of object that is an instance of the given class. Returns -1 if no object is found that
      * is instance of the class.
@@ -406,9 +411,69 @@ public class SpecsCollections {
     }
 
     public static <K> List<K> concat(Collection<? extends K> list1, Collection<? extends K> list2) {
+
         List<K> newList = new ArrayList<>(list1.size() + list2.size());
         newList.addAll(list1);
         newList.addAll(list2);
+
+        return newList;
+    }
+
+    /**
+     * If the list is modifiable, adds directly to it.
+     * 
+     * @param list
+     * @param element
+     * @return
+     */
+    public static <K> List<K> concatList(List<? extends K> list, K element) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<K> castedList = ((List<K>) list);
+            castedList.add(element);
+            return castedList;
+        } catch (UnsupportedOperationException e) {
+            // Fallback to generic copy concat
+            return concat(list, element);
+        }
+    }
+
+    /**
+     * If the first list is modifiable, adds directly to it.
+     * 
+     * @param list1
+     * @param list2
+     * @return
+     */
+    public static <K> List<K> concatList(List<? extends K> list1, List<? extends K> list2) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<K> castedList = ((List<K>) list1);
+            castedList.addAll(list2);
+            return castedList;
+        } catch (UnsupportedOperationException e) {
+            // Fallback to generic copy concat
+            return concat(list1, list2);
+        }
+    }
+
+    /**
+     * Creates a list with the elements from the given collections.
+     * 
+     * @param collections
+     * @return
+     */
+    @SafeVarargs
+    public static <K> List<K> concatLists(Collection<? extends K>... collections) {
+        int totalSize = 0;
+        for (Collection<?> collection : collections) {
+            totalSize += collection.size();
+        }
+
+        List<K> newList = new ArrayList<>(totalSize);
+        for (Collection<? extends K> collection : collections) {
+            newList.addAll(collection);
+        }
 
         return newList;
     }
@@ -475,9 +540,20 @@ public class SpecsCollections {
      * @return
      */
     public static <T, F> List<T> filter(Collection<T> elements, Function<T, F> mapFunction) {
+        return filter(elements.stream(), mapFunction);
+    }
+
+    /**
+     * Filters the elements of a Stream according to a map function over the elements of that collection.
+     * 
+     * @param elements
+     * @param mapFunction
+     * @return
+     */
+    public static <T, F> List<T> filter(Stream<T> elements, Function<T, F> mapFunction) {
 
         Set<F> seenElements = new HashSet<>();
-        return elements.stream()
+        return elements
                 // Add to set. If already in set, will return false and filter the node
                 .filter(element -> seenElements.add(mapFunction.apply(element)))
                 .collect(Collectors.toList());
@@ -690,4 +766,54 @@ public class SpecsCollections {
         return Optional.empty();
     }
 
+    /**
+     * 
+     * @param list
+     * @return a stream of the elements of the list, in reverse order
+     */
+    public static <T> Stream<T> reverseStream(List<T> list) {
+        // int from = 0;
+        // int to = list.size();
+        //
+        // return IntStream.range(from, to).map(i -> to - i + from - 1).mapToObj(i -> list.get(i));
+        return reverseIndexStream(list).mapToObj(i -> list.get(i));
+    }
+
+    /**
+     * 
+     * @param list
+     * @return a stream of indexes to the list, in reverse order
+     */
+    public static <T> IntStream reverseIndexStream(List<T> list) {
+        int from = 0;
+        int to = list.size();
+
+        return IntStream.range(from, to).map(i -> to - i + from - 1);
+    }
+
+    /**
+     * Collects all instances of the given class from the stream.
+     * 
+     * @param stream
+     * @param aClass
+     * @return
+     */
+    public static <T> List<T> toList(Stream<? super T> stream, Class<T> aClass) {
+        return stream.filter(aClass::isInstance)
+                .map(aClass::cast)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Converts a list of String providers to a String array.
+     * 
+     * @param values
+     * @return
+     */
+    public static <T extends KeyProvider<String>> String[] toStringArray(Collection<T> values) {
+        return values.stream()
+                .map(KeyProvider<String>::getKey)
+                .collect(Collectors.toList())
+                .toArray(new String[0]);
+    }
 }

@@ -15,10 +15,11 @@ package pt.up.fe.specs.util.treenode;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
+import pt.up.fe.specs.util.SpecsCollections;
 import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.SpecsCollections;
 
 /**
  * Utility methods for TokenWithParent.
@@ -309,6 +310,41 @@ public class NodeInsertUtils {
         }
 
         return getParent(token.getParent(), test);
+    }
+
+    /**
+     * Swaps the positions of node1 and node2.
+     * 
+     * <p>
+     * If 'swapSubtrees' is enabled, this transformation is not allowed if any of the nodes is a part of the subtree of
+     * the other.
+     * 
+     * @param node1
+     * @param node2
+     * @param swapSubtrees
+     *            if true, swaps the complete subtrees. Otherwise, swaps only the nodes, and children are kept in place.
+     */
+    public static <K extends TreeNode<K>> void swap(K node1, K node2, boolean swapSubtrees) {
+        // If swap subtrees is enable, check if a node is an ancestor of the other
+        if (swapSubtrees) {
+            Optional<K> ancestorTry = TreeNodeUtils.getAncestor(node1, node2);
+            if (ancestorTry.isPresent()) {
+                K ancestor = ancestorTry.get();
+                K descendent = ancestor == node1 ? node2 : node1;
+                SpecsLogs.msgInfo("Could not swap nodes, node '" + ancestor.getNodeName() + "' is an ancestor of '"
+                        + descendent.getNodeName() + "'");
+                return;
+            }
+        }
+
+        K dummy = node1.copyShallow();
+
+        // Put dummy node in place of node 1
+        NodeInsertUtils.replace(node1, dummy);
+        // Put node 1 in place of node 2
+        NodeInsertUtils.replace(node2, node1);
+        // Put node 2 in place of dummy
+        NodeInsertUtils.replace(dummy, node2);
     }
 
 }

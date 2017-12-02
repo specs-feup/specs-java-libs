@@ -70,6 +70,15 @@ public class ListUtils {
         return tuples;
     }
 
+    @SafeVarargs
+    public static <T> TupleList<T> createTuplesFromList(List<T>... arraysToCombine) {
+        TupleList<T> tuples = TupleList.newInstance();
+        int tupleSize = arraysToCombine.length;
+
+        tuplesFromListAux(Arrays.asList(arraysToCombine), 0, Collections.emptyList(), tuples, tupleSize);
+        return tuples;
+    }
+
     private static <T> void tuplesFromListAux(List<List<T>> arraysToCombine, int position, List<T> tuple,
             TupleList<T> tuples,
             int tupleSize) {

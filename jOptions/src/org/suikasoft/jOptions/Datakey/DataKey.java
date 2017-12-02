@@ -63,6 +63,12 @@ public interface DataKey<T> {
      */
     DataKey<T> setDecoder(StringCodec<T> decoder);
 
+    default T decode(String encodedValue) {
+        return getDecoder()
+                .map(codec -> codec.decode(encodedValue))
+                .orElseThrow(() -> new RuntimeException("No decoder set"));
+    }
+
     /*
      * DEFAULT VALUE
      */

@@ -49,6 +49,10 @@ public class MultiMap<K, V> {
         this.map = new HashMap<>();
     }
 
+    public MultiMap(MultiMap<K, V> other) {
+        this.map = new HashMap<>(other.map);
+    }
+
     public MultiMap(MultiMapProvider<K, V> mapProvider) {
         this.map = mapProvider.newInstance();
     }
@@ -180,5 +184,9 @@ public class MultiMap<K, V> {
 
     public boolean containsKey(K key) {
         return this.map.containsKey(key);
+    }
+
+    public void clear() {
+        map.clear();
     }
 }

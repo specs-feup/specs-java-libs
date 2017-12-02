@@ -25,7 +25,7 @@ public class MoveBeforeTransform<K extends TreeNode<K>> extends TwoOperandTransf
 
     @Override
     public void execute() {
-	NodeInsertUtils.insertBefore(getBaseNode(), getNewNode(), true);
+	NodeInsertUtils.insertBefore(getNode1(), getNode2(), true);
     }
 
 }

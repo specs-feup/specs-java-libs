@@ -20,16 +20,19 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -64,6 +67,19 @@ public class SpecsSystem {
         return runProcess(builder, storeOutput, printOutput);
         // return runProcess(command, workingDir, storeOutput, printOutput, builder);
 
+    }
+
+    public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
+            boolean storeOutput, boolean printOutput, Long timeoutNanos) {
+
+        ProcessBuilder builder = new ProcessBuilder(command);
+        builder.directory(workingDir);
+        Function<InputStream, String> stdout = new StreamToString(printOutput, storeOutput, OutputType.StdOut);
+        Function<InputStream, String> stderr = new StreamToString(printOutput, storeOutput, OutputType.StdErr);
+
+        ProcessOutput<String, String> output = runProcess(builder, stdout, stderr, timeoutNanos);
+
+        return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
     }
 
     /**
@@ -123,6 +139,17 @@ public class SpecsSystem {
         return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
     }
 
+    /*
+    public static ProcessOutputAsString runProcess(Process process, boolean storeOutput, boolean printOutput) {
+        Function<InputStream, String> stdout = new StreamToString(printOutput, storeOutput, OutputType.StdOut);
+        Function<InputStream, String> stderr = new StreamToString(printOutput, storeOutput, OutputType.StdErr);
+    
+        ProcessOutput<String, String> output = runProcess(process, stdout, stderr, null);
+    
+        return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
+    }
+    */
+
     /**
      * Helper method which receives the command instead of the builder, and launches the process in the current
      * directory.
@@ -169,6 +196,31 @@ public class SpecsSystem {
      */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
+        return runProcess(builder, outputProcessor, errorProcessor, null);
+    }
+
+    /*
+    public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
+    
+        String commandString = getCommandString(builder.command());
+        SpecsLogs.msgLib("Launching Process: " + commandString);
+    
+        Process process = null;
+        try {
+            process = builder.start();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not start process", e);
+        }
+    
+        return runProcess(process, outputProcessor, errorProcessor, timeoutNanos);
+    }
+    
+    public static <O, E> ProcessOutput<O, E> runProcess(Process process,
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
+    */
+    public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
         String commandString = getCommandString(builder.command());
         SpecsLogs.msgLib("Launching Process: " + commandString);
@@ -199,7 +251,7 @@ public class SpecsSystem {
             stdoutThread.shutdown();
             stderrThread.shutdown();
 
-            int returnValue = process.waitFor();
+            int returnValue = executeProcess(process, timeoutNanos);
 
             // Wait 2 seconds
             // stderrThread.awaitTermination(2, TimeUnit.SECONDS);
@@ -228,6 +280,42 @@ public class SpecsSystem {
         }
 
         throw new RuntimeException("Could not execute the process");
+    }
+
+    private static int executeProcess(Process process, Long timeoutNanos) {
+        try {
+            // System.out.println("EXECUTE PROCESS TIMEOUT:" + timeoutNanos + "ns");
+
+            if (timeoutNanos == null) {
+                return process.waitFor();
+            }
+
+            boolean processExited = process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
+            // System.out.println("PROCESS EXITED: " + processExited);
+            // System.out.println("PROCESS EXIT VALUE: " + process.exitValue());
+            if (processExited) {
+                return process.exitValue();
+            }
+
+            SpecsLogs.msgLib("SpecsSystem.executeProcess: Killing process...");
+            process.destroyForcibly();
+            SpecsLogs.msgLib("SpecsSystem.executeProcess: Waiting killing...");
+            boolean processDestroyed = process.waitFor(1, TimeUnit.SECONDS);
+            if (processDestroyed) {
+                SpecsLogs.msgLib("SpecsSystem.executeProcess: Destroyed");
+            } else {
+                SpecsLogs.msgInfo("SpecsSystem.executeProcess: Could not destroy process!");
+            }
+
+            return -1;
+
+            // SpecsLogs.msgInfo("Process timed out v2");
+            // return -1;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            // SpecsLogs.msgInfo("Process timed out");
+            return -1;
+        }
     }
 
     public static ThreadFactory getDaemonThreadFactory() {
@@ -488,17 +576,17 @@ public class SpecsSystem {
      *            The path to add
      */
     public static void addJavaLibraryPath(String path) {
-    System.setProperty("java.library.path",
-    	System.getProperty("java.library.path") + File.pathSeparatorChar + path);
-    Field sysPathsField;
-    try {
-        sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-        sysPathsField.setAccessible(true);
-        sysPathsField.set(null, null);
-    } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-        // Not supposed to happen
-        throw new RuntimeException(e);
-    }
+        System.setProperty("java.library.path",
+                System.getProperty("java.library.path") + File.pathSeparatorChar + path);
+        Field sysPathsField;
+        try {
+            sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
+            sysPathsField.setAccessible(true);
+            sysPathsField.set(null, null);
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            // Not supposed to happen
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -509,30 +597,30 @@ public class SpecsSystem {
      * @return true if the system is 64-bit, false otherwise.
      */
     public static boolean is64Bit() {
-    String arch = System.getenv("PROCESSOR_ARCHITECTURE");
-    String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
-    
-    if (arch == null) {
-        String osArch = System.getProperty("os.arch");
-    
-        if (osArch.endsWith("amd64")) {
-    	return true;
-        } else if (osArch.equals("i386") || osArch.equals("x86")) {
-    	return false;
-        } else {
-    	throw new RuntimeException("Could not determine the bitness of the operating system");
+        String arch = System.getenv("PROCESSOR_ARCHITECTURE");
+        String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
+
+        if (arch == null) {
+            String osArch = System.getProperty("os.arch");
+
+            if (osArch.endsWith("amd64")) {
+                return true;
+            } else if (osArch.equals("i386") || osArch.equals("x86")) {
+                return false;
+            } else {
+                throw new RuntimeException("Could not determine the bitness of the operating system");
+            }
         }
-    }
-    
-    String realArch = arch.endsWith("64")
-    	|| wow64Arch != null && wow64Arch.endsWith("64")
-    	? "64" : "32";
-    
-    if (realArch.equals("32")) {
-        return false;
-    }
-    
-    return true;
+
+        String realArch = arch.endsWith("64")
+                || wow64Arch != null && wow64Arch.endsWith("64")
+                        ? "64" : "32";
+
+        if (realArch.equals("32")) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -563,4 +651,139 @@ public class SpecsSystem {
     return "\n" + ERROR;
     }
      */
+
+    /**
+     * Lauches the weaver in another thread and waits termination.
+     * 
+     * @param args
+     * @return
+     */
+    public static <T> T executeOnThreadAndWait(Callable<T> callable) {
+        // Launch weaver in another thread
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<T> future = executor.submit(callable);
+        executor.shutdown();
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            SpecsLogs.msgInfo("Failed to complete execution on thread, returning null");
+            return null;
+        } catch (ExecutionException e) {
+            // Rethrow cause
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+
+            throw new RuntimeException(e.getCause());
+            // throw new RuntimeException("Error while executing thread", e);
+        }
+    }
+
+    public static int executeOnProcessAndWait(Class<?> aClass, String... args) {
+        return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), Arrays.asList(args));
+    }
+
+    // public static int executeOnProcessAndWaitWithExec(Class<?> aClass, String javaExecutable, String... args) {
+    // return executeOnProcessAndWaitWithExec(aClass, javaExecutable, Arrays.asList(args));
+    // }
+
+    /**
+     * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
+     * 
+     * @param aClass
+     * @return
+     */
+    // public static int executeOnProcessAndWaitWithExec(Class<?> aClass, String javaExecutable, List<String> args) {
+    // return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), args);
+    // }
+
+    // public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
+    // List<String> args) {
+    //
+    // return executeOnProcessAndWaitWith(aClass, workingDir, args);
+    //
+    // }
+
+    /**
+     * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
+     * 
+     * @param aClass
+     * @param javaExecutable
+     * @param workingDir
+     * @param args
+     * @return
+     */
+    public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
+            List<String> args) {
+
+        // File jarPath = SpecsIo.getJarPath(aClass).orElseThrow(
+        // () -> new RuntimeException("Could not locate the JAR file for the class '" + aClass + "'"));
+        // ((URLClassLoader() Thread.currentThread().getContextClassLoader()).getURL();
+        // Process.exec("java", "-classpath", urls.join(":"), CLASS_TO_BE_EXECUTED)
+
+        String classpath = System.getProperty("java.class.path");
+
+        // System.out.println("CLASSPATH:" + classpath);
+
+        String className = aClass.getCanonicalName();
+        // String javaHome = "C:/Program Files/Java/jdk1.8.0_131/jre";
+        List<String> command = new ArrayList<>();
+        command.addAll(
+                Arrays.asList("java", "-cp", classpath, className));
+        // command.addAll(
+        // Arrays.asList("java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
+        // Arrays.asList("cmd", "/c", "java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
+        // command.addAll(Arrays.asList("java", "-cp", "\"" + jarPath.getAbsolutePath() + "\"", className));
+        command.addAll(args);
+
+        ProcessBuilder process = new ProcessBuilder(command);
+        process.directory(workingDir);
+
+        // Set java home
+        // System.setProperty("java.home", javaHome);
+        // System.out.println("JAVA HOME:" + System.getProperty("java.home"));
+        // System.out.println("JAVA HOME BEFORE:" + System.getenv().get("JAVA_HOME"));
+        // System.getenv().put("JAVA_HOME", javaHome);
+        // System.out.println("JAVA HOME AFTER:" + System.getenv().get("JAVA_HOME"));
+        // process.environment().put("JAVA_HOME", javaHome);
+
+        ProcessOutputAsString output = runProcess(process, false, true);
+        return output.getReturnValue();
+        // ProcessBuilder builder = new ProcessBuilder("java", "-cp", classpath, className);
+        // Process process;
+        // try {
+        // process = builder.start();
+        // process.waitFor();
+        // return process.exitValue();
+        // } catch (IOException e) {
+        // SpecsLogs.msgWarn("Exception which executing process:\n", e);
+        // } catch (InterruptedException e) {
+        // Thread.currentThread().interrupt();
+        // SpecsLogs.msgInfo("Failed to complete execution on process");
+        // }
+        //
+        // return -1;
+    }
+
+    // public static ProcessBuilder buildJavaProcess(Class<?> aClass, String javaExecutable, List<String> args) {
+    // public static ProcessBuilder buildJavaProcess(Class<?> aClass, List<String> args) {
+    // List<String> command = new ArrayList<>();
+    // command.add("java");
+    //
+    // String classpath = System.getProperty("java.class.path");
+    // String className = aClass.getCanonicalName();
+    //
+    // command.add("-cp");
+    // command.add(classpath);
+    // command.add(className);
+    //
+    // command.addAll(args);
+    //
+    // ProcessBuilder process = new ProcessBuilder(command);
+    //
+    // return process;
+    // }
+
 }

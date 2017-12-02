@@ -1,11 +1,11 @@
 /**
  * Copyright 2014 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -24,12 +24,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public interface TreeNode<K extends TreeNode<K>> {
 
     /**
-     * 
+     *
      * @return a mutable view of the children
      */
     List<K> getChildrenMutable();
@@ -48,7 +49,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Prints the node.
-     * 
+     *
      * @return
      */
     default String toNodeString() {
@@ -64,7 +65,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns the child token at the specified position.
-     * 
+     *
      * @param index
      * @return
      */
@@ -108,7 +109,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * 
+     *
      * @param targetType
      * @return all descendants that are an instance of the given class
      */
@@ -119,7 +120,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * 
+     *
      * @param targetType
      * @return list with all descendants
      */
@@ -129,7 +130,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * TODO: Rename to getChildren when current getChildren gets renamed.
-     * 
+     *
      * @param targetType
      * @return
      */
@@ -158,7 +159,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * 
+     *
      * @param index1
      * @param index2
      * @param indexes
@@ -168,8 +169,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     default K getChild(int index1, int index2, int... indexes) {
         K currentChild = getChild(index1);
         currentChild = currentChild.getChild(index2);
-        for (int i = 0; i < indexes.length; i++) {
-            currentChild = currentChild.getChild(indexes[i]);
+        for (int indexe : indexes) {
+            currentChild = currentChild.getChild(indexe);
         }
 
         return currentChild;
@@ -177,17 +178,17 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns an unmodifiable view of the children of the token.
-     * 
+     *
      * <p>
      * To modify the children of the token use methods such as addChild() or removeChild().
-     * 
+     *
      * @return the children
      */
     List<K> getChildren();
 
     /**
      * TODO: Rename to castChildren.
-     * 
+     *
      * @param aClass
      * @return
      */
@@ -200,7 +201,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns all children that are an instance of the given class.
-     * 
+     *
      * @param aClass
      * @return
      */
@@ -218,14 +219,14 @@ public interface TreeNode<K extends TreeNode<K>> {
     // Object getContent();
 
     /**
-     * 
+     *
      * @return a string representing the contents of the node
      */
     String toContentString();
 
     /**
      * If getContent() returns null, this method returns an empty string.
-     * 
+     *
      * @return
      */
     // default String toContentString() {
@@ -244,7 +245,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     void setChildren(Collection<? extends K> children);
 
     /**
-     * 
+     *
      * @return the number of children in the node
      */
     default int getNumChildren() {
@@ -257,12 +258,12 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Removes the child at the specified position.
-     * 
+     *
      * <p>
      * Puts the parent of the child as null.
-     * 
+     *
      * TODO: should remove all it's children recursively?
-     * 
+     *
      * @param index
      * @return
      */
@@ -288,22 +289,22 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Replaces the token at the specified position in this list with the specified token.
-     * 
+     *
      * @param index
      * @param token
      */
     K setChild(int index, K token);
 
     /**
-     * 
+     *
      * @param child
      * @return
      */
     boolean addChild(K child);
 
     /**
-     * 
-     * 
+     *
+     *
      * @param index
      * @param child
      * @return
@@ -322,12 +323,19 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns a deep copy of the current token.
-     * 
+     *
      * TODO: This should be abstract; Remove return empty instance
-     * 
+     *
      * @return
      */
     K copy();
+
+    /**
+     * Returns a new copy of the node with the same content and type, but not children.
+     *
+     * @return
+     */
+    K copyShallow();
 
     /**
      * @return the first ancestor of the given type
@@ -337,6 +345,29 @@ public interface TreeNode<K extends TreeNode<K>> {
     default <T extends K> T getAncestor(Class<T> type) {
         return getAncestorTry(type)
                 .orElseThrow(() -> new RuntimeException("Could not find ancestor of type '" + type + "'"));
+    }
+
+    /**
+     * Tests whether the given node is an ancestor of this node.
+     *
+     * @param node
+     *            the node to test
+     * @return true if it is ancestor, false otherwise
+     */
+    default boolean isAncestor(K node) {
+
+        K currentAncestor = getParent();
+
+        while (currentAncestor != null) {
+            if (node == currentAncestor) {
+                return true;
+            }
+
+            currentAncestor = currentAncestor.getParent();
+        }
+
+        return false;
+
     }
 
     default <T extends K> Optional<T> getAncestorTry(Class<T> type) {
@@ -356,7 +387,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * 
+     *
      * @return the uppermost parent of this node
      */
     public K getRoot();
@@ -377,7 +408,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * 
+     *
      * @param nodeClass
      * @return the index of the first child that is an instance of the given class, or -1 if none is found
      */
@@ -393,6 +424,8 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     default <T extends K> T getChild(Class<T> nodeClass, int index) {
         K childNode = getChild(index);
+
+        Preconditions.checkNotNull(childNode, "Index " + index + " of node '" + getClass() + "' has no child");
 
         if (!nodeClass.isInstance(childNode)) {
             throw new RuntimeException("Wanted a '" + nodeClass.getSimpleName() + "' at index '" + index
@@ -410,7 +443,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * By default, returns the name of the class.
-     * 
+     *
      * @return
      */
     default String getNodeName() {
@@ -419,8 +452,8 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Removes the children in the given index range.
-     * 
-     * 
+     *
+     *
      * @param token
      * @param startIndex
      *            (inclusive)
@@ -449,10 +482,10 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      * Sets 'newChild' in 'token' at the position 'startIndex', and removes tokens from startIndex+1 (inclusive) to
      * endIndex (exclusive).
-     * 
+     *
      * <p>
      * If startIndex+1 is equal to endIndex, no tokens are removed from the list.
-     * 
+     *
      * @param newChild
      * @param tokens
      * @param startIndex
@@ -470,7 +503,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * 
+     *
      * @param child
      * @return the index of the given child, or -1 if no child was found
      */
@@ -495,7 +528,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns an Iterator of the children of the node.
-     * 
+     *
      * @return a ListIterator over the children of the node. The iterator supports methods that modify the node (set,
      *         remove, insert...)
      */
@@ -515,7 +548,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Sets this node as the parent of the given node. If the given node already has a parent, throws an exception.
-     * 
+     *
      * @param childToken
      */
     void setAsParentOf(K childToken);

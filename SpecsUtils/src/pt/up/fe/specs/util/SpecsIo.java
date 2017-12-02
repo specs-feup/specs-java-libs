@@ -12,6 +12,7 @@
  */
 package pt.up.fe.specs.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,6 +40,10 @@ import java.net.URLDecoder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -589,7 +594,7 @@ public class SpecsIo {
      * Note: by default follows symlinks.
      * 
      * @param path
-     *            a File representing a folder.
+     *            a File representing a folder or a file.
      * 
      * @param extensions
      *            a set of strings
@@ -604,7 +609,7 @@ public class SpecsIo {
 
     /**
      * @param folder
-     *            a File representing a folder.
+     *            a File representing a folder or a file.
      * 
      * @param extensions
      *            a set of strings
@@ -631,7 +636,7 @@ public class SpecsIo {
      * Note: by default follows symlinks.
      * 
      * @param folder
-     *            a File representing a folder.
+     *            a File representing a folder or a file.
      * @param extension
      *            a string
      * @return all the files inside the given folder, excluding other folders, that have a certain extension.
@@ -643,7 +648,7 @@ public class SpecsIo {
 
     /**
      * @param path
-     *            a File representing a folder.
+     *            a File representing a folder or a file.
      * 
      * @param extension
      *            a string
@@ -1700,6 +1705,26 @@ public class SpecsIo {
     }
 
     /**
+     * Taken from here: https://stackoverflow.com/a/31685610/1189808
+     * 
+     * @param folder
+     * @param pattern
+     * @return
+     */
+    public static List<File> getFilesWithPattern(File folder, String pattern) {
+        List<File> files = new ArrayList<>();
+
+        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
+                Paths.get(folder.getAbsolutePath()), pattern)) {
+            dirStream.forEach(path -> files.add(new File(path.toString())));
+        } catch (IOException e) {
+            SpecsLogs.msgWarn("Error while getting files with pattern: " + e.getMessage());
+        }
+
+        return files;
+    }
+
+    /**
      * Returns true if the folder contains at least one file having the extension "extension".
      * 
      * @param folder
@@ -1811,7 +1836,13 @@ public class SpecsIo {
         // find the first different parent
         int nbSimilarParents = 0;
 
-        while (currentFileParents.size() > nbSimilarParents && mainFolderParents.size() > nbSimilarParents
+        int currentFileNumParents = currentFileParents.size();
+        // If current file is a folder, do not consider the last element for comparison
+        if (file.isDirectory()) {
+            currentFileNumParents--;
+        }
+
+        while (currentFileNumParents > nbSimilarParents && mainFolderParents.size() > nbSimilarParents
                 && currentFileParents.get(nbSimilarParents).equals(mainFolderParents.get(nbSimilarParents))) {
             nbSimilarParents++;
         }
@@ -1820,6 +1851,11 @@ public class SpecsIo {
 
         // Writes the relative path
         StringBuilder relativePath = new StringBuilder();
+
+        // If file is a folder, needs to go back an extra time
+        // if (file.isDirectory()) {
+        // nbParentToGoBack++;
+        // }
 
         for (int i = 0; i < nbParentToGoBack; i++) {
             relativePath.append(PREVIOUS_FOLDER);
@@ -2408,6 +2444,13 @@ public class SpecsIo {
 
     }
 
+    /**
+     * Deletes the given folder and all its contents.
+     * 
+     * @param folder
+     *            folder to delete
+     * @return true if both the folder and its contents could be deleted
+     */
     public static boolean deleteFolder(File folder) {
         if (!folder.exists()) {
             return true;
@@ -2533,5 +2576,50 @@ public class SpecsIo {
         }
 
         return false;
+    }
+
+    /**
+     * Based on https://stackoverflow.com/questions/304268/getting-a-files-md5-checksum-in-java
+     * 
+     * @param file
+     * @return
+     */
+    public static String getMd5(File file) {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Could not find MD5 algorithm", e);
+        }
+
+        try (InputStream is = Files.newInputStream(Paths.get(file.getAbsolutePath()));
+                BufferedInputStream bis = new BufferedInputStream(is);
+                DigestInputStream dis = new DigestInputStream(bis, md)) {
+
+            while (dis.read() != -1) {
+
+            }
+            /* Read decorated stream (dis) to EOF as normal... */
+        } catch (IOException e) {
+            throw new RuntimeException("Problems while using file '" + file + "'", e);
+        }
+
+        byte[] digest = md.digest();
+
+        return SpecsStrings.bytesToHex(digest);
+    }
+
+    public static void closeStreamAfterError(OutputStream stream) {
+        // Do nothing if no stream
+        if (stream == null) {
+            return;
+        }
+
+        // Close the stream
+        try {
+            stream.close();
+        } catch (IOException e) {
+            SpecsLogs.msgWarn("Exception while closing a stream", e);
+        }
     }
 }

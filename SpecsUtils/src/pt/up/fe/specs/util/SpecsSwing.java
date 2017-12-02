@@ -17,6 +17,7 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.TableModel;
 
@@ -61,8 +63,11 @@ public class SpecsSwing {
      */
     public static boolean setSystemLookAndFeel() {
         try {
+            String lookAndFeel = getSystemLookAndFeel();
+
             // Set System L&F
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(lookAndFeel);
+
             // "com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             // "com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             return true;
@@ -81,6 +86,49 @@ public class SpecsSwing {
         }
 
         return false;
+    }
+
+    public static String getSystemLookAndFeel() {
+        // Get System L&F
+        String systemLookAndFeel = UIManager.getSystemLookAndFeelClassName();
+
+        // Avoid Metal
+        if (!systemLookAndFeel.endsWith(".MetalLookAndFeel")) {
+            return systemLookAndFeel;
+        }
+
+        // // ... unless it is the only one available
+        // if (UIManager.getInstalledLookAndFeels().length == 1) {
+        // return systemLookAndFeel;
+        // }
+
+        SpecsLogs.msgLib("Default system look and feel is Metal, trying to use another one");
+
+        // Map<String, String> lookAndFeels = Arrays.stream(UIManager.getInstalledLookAndFeels())
+        // .collect(Collectors.toMap(info -> info.getName(), info -> info.getClassName()));
+
+        // Build look and feels map
+        Map<String, String> lookAndFeels = new LinkedHashMap<>();
+        for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            lookAndFeels.put(info.getName(), info.getClassName());
+        }
+
+        // Check if GTK+ is available
+        String gtkLookAndFeel = lookAndFeels.get("GTK+");
+        if (gtkLookAndFeel != null) {
+            return gtkLookAndFeel;
+        }
+
+        // Return first that is not Metal
+        String alternativeLookAndFeel = lookAndFeels.values().stream()
+                .filter(lookAndFeel -> !lookAndFeel.endsWith(".MetalLookAndFeel"))
+                .findFirst().orElse(systemLookAndFeel);
+
+        if (!alternativeLookAndFeel.equals(systemLookAndFeel)) {
+            SpecsLogs.msgInfo("Setting 'Look & Feel' to " + alternativeLookAndFeel);
+        }
+
+        return alternativeLookAndFeel;
     }
 
     /**

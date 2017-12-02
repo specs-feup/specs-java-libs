@@ -30,41 +30,41 @@ public class IoUtilsTest {
         assertEquals("../../b/c", ResourceUtils.getRelativePath("/a/b/c", "/a/x/y/", "/"));
         assertEquals("../../b/c", ResourceUtils.getRelativePath("/m/n/o/a/b/c", "/m/n/o/a/x/y/", "/"));
     }
-
-
+    
+    
     public void testGetRelativePathDirectoryToFile() {
         String target = "C:\\Windows\\Boot\\Fonts\\chs_boot.ttf";
         String base = "C:\\Windows\\Speech\\Common\\";
-
+    
         String relPath = ResourceUtils.getRelativePath(target, base, "\\");
         assertEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", relPath);
     }
-
+    
     public void testGetRelativePathFileToDirectory() {
         String target = "C:\\Windows\\Boot\\Fonts";
         String base = "C:\\Windows\\Speech\\Common\\foo.txt";
-
+    
         String relPath = ResourceUtils.getRelativePath(target, base, "\\");
         assertEquals("..\\..\\Boot\\Fonts", relPath);
     }
-
+    
     public void testGetRelativePathDirectoryToDirectory() {
         String target = "C:\\Windows\\Boot\\";
         String base = "C:\\Windows\\Speech\\Common\\";
         String expected = "..\\..\\Boot";
-
+    
         String relPath = ResourceUtils.getRelativePath(target, base, "\\");
         assertEquals(expected, relPath);
     }
-
+    
     public void testGetRelativePathDifferentDriveLetters() {
         String target = "D:\\sources\\recovery\\RecEnv.exe";
         String base = "C:\\Java\\workspace\\AcceptanceTests\\Standard test data\\geo\\";
-
+    
         try {
             ResourceUtils.getRelativePath(target, base, "\\");
             fail();
-
+    
         } catch (PathResolutionException ex) {
             // expected exception
         }
@@ -82,38 +82,45 @@ public class IoUtilsTest {
 
     @Test
     public void testGetRelativePathFileToFile() {
-	File target = new File("Windows/Boot/Fonts/chs_boot.ttf");
-	File base = new File("Windows/Speech/Common/sapisvr.exe");
+        File target = new File("Windows/Boot/Fonts/chs_boot.ttf");
+        File base = new File("Windows/Speech/Common/sapisvr.exe");
 
-	String relPath = SpecsIo.getRelativePath(target, base);
-	assertEquals("../../Boot/Fonts/chs_boot.ttf", relPath);
+        String relPath = SpecsIo.getRelativePath(target, base);
+        assertEquals("../../Boot/Fonts/chs_boot.ttf", relPath);
     }
 
     @Test
     public void testGetRelativePathRelativeFile() {
-	File target = new File("SharedLibrary/../a/b/test.dat");
-	File base = new File("./");
+        File target = new File("SharedLibrary/../a/b/test.dat");
+        File base = new File("./");
 
-	String relPath = SpecsIo.getRelativePath(target, base);
-	assertEquals("a/b/test.dat", relPath);
+        String relPath = SpecsIo.getRelativePath(target, base);
+        assertEquals("a/b/test.dat", relPath);
     }
 
     @Test
     public void testGetRelativePathRelativeSameFolder() {
-	File target = new File("lib/b.h");
-	File base = new File("lib/a.h");
+        File target = new File("lib/b.h");
+        File base = new File("lib/a.h");
 
-	String relPath = SpecsIo.getRelativePath(target, base);
-	assertEquals("b.h", relPath);
+        String relPath = SpecsIo.getRelativePath(target, base);
+        assertEquals("b.h", relPath);
     }
 
     @Test
     public void testGetRelativePathRelativeDiffFolder() {
-	File target = new File("lib/b.h");
-	File base = new File("lib2/a.h");
+        File target = new File("lib/b.h");
+        File base = new File("lib2/a.h");
 
-	String relPath = SpecsIo.getRelativePath(target, base);
-	assertEquals("../lib/b.h", relPath);
+        String relPath = SpecsIo.getRelativePath(target, base);
+        assertEquals("../lib/b.h", relPath);
+    }
+
+    public void testMd5() {
+        System.out.println(
+                "MD5:" + SpecsIo
+                        .getMd5(new File("C:\\Users\\JoaoBispo\\Desktop\\jstest\\auto-doc\\assets\\anchor.js")));
+        // assertEquals("../lib/b.h", relPath);
     }
 
     /*
@@ -135,7 +142,7 @@ public class IoUtilsTest {
     	System.out.println(IoUtils.getResourceString(line));
         }
     }
-
+    
     assertTrue(true);
     }
      */

@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.providers;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -88,24 +89,15 @@ public interface ResourceProvider extends FileResourceProvider {
         List<ResourceProvider> resources = new ArrayList<>();
 
         for (Class<? extends ResourceProvider> provider : providers) {
-            resources.addAll(getResourcesFromEnum(provider));
+            resources.addAll(ProvidersSupport.getResourcesFromEnumSingle(provider));
         }
 
         return resources;
     }
 
-    public static List<ResourceProvider> getResourcesFromEnum(Class<? extends ResourceProvider> enumClass) {
-        Preconditions.checkArgument(enumClass.getEnumConstants() != null, "Class must be an enum");
-
-        ResourceProvider[] enums = enumClass.getEnumConstants();
-
-        List<ResourceProvider> resources = SpecsFactory.newArrayList(enums.length);
-
-        for (ResourceProvider anEnum : enums) {
-            resources.add(anEnum);
-        }
-
-        return resources;
+    @SafeVarargs
+    public static List<ResourceProvider> getResourcesFromEnum(Class<? extends ResourceProvider>... enumClasses) {
+        return getResourcesFromEnum(Arrays.asList(enumClasses));
     }
 
     /**
@@ -114,7 +106,8 @@ public interface ResourceProvider extends FileResourceProvider {
      * @param enumClass
      * @return
      */
-    public static <K extends Enum<K> & ResourceProvider> List<ResourceProvider> getResources(Class<K> enumClass) {
+    public static <K extends Enum<K> & ResourceProvider> List<ResourceProvider> getResources(
+            Class<? extends K> enumClass) {
 
         K[] enums = enumClass.getEnumConstants();
 

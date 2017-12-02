@@ -58,7 +58,7 @@ public class FilePanel extends KeyPanel<File> {
      * @param data
      */
     public FilePanel(DataKey<File> key, DataStore data) {
-	this(key, data, JFileChooser.FILES_AND_DIRECTORIES, Collections.emptyList());
+        this(key, data, JFileChooser.FILES_AND_DIRECTORIES, Collections.emptyList());
     }
 
     /**
@@ -69,161 +69,162 @@ public class FilePanel extends KeyPanel<File> {
      *            JFileChooser option
      */
     public FilePanel(DataKey<File> key, DataStore data, int fileChooserMode, Collection<String> extensions) {
-	super(key, data);
-	setOnFileOpened(this::openFile);
-	textField = new JTextField();
-	browseButton = new JButton();
+        super(key, data);
+        setOnFileOpened(this::openFile);
+        textField = new JTextField();
+        browseButton = new JButton();
 
-	// Init file chooser
-	fc = new JFileChooser();
-	fc.setFileSelectionMode(fileChooserMode);
+        // Init file chooser
+        fc = new JFileChooser();
+        fc.setFileSelectionMode(fileChooserMode);
 
-	// Set extensions
-	if (!extensions.isEmpty()) {
-	    String extensionsString = extensions.stream().collect(Collectors.joining(", *.", "*.", ""));
-	    FileFilter filter = new FileNameExtensionFilter(key.getLabel() + " files (" + extensionsString + ")",
-		    extensions.toArray(new String[0]));
+        // Set extensions
+        if (!extensions.isEmpty()) {
+            String extensionsString = extensions.stream().collect(Collectors.joining(", *.", "*.", ""));
+            FileFilter filter = new FileNameExtensionFilter(key.getLabel() + " files (" + extensionsString + ")",
+                    extensions.toArray(new String[0]));
 
-	    fc.setFileFilter(filter);
-	}
+            fc.setFileFilter(filter);
+        }
 
-	// Init browse button
-	browseButton.setText("Browse...");
-	browseButton.addActionListener(this::browseButtonActionPerformed);
+        // Init browse button
+        browseButton.setText("Browse...");
+        browseButton.addActionListener(this::browseButtonActionPerformed);
 
-	setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
-	add(textField, BorderLayout.CENTER);
-	add(browseButton, BorderLayout.EAST);
+        add(textField, BorderLayout.CENTER);
+        add(browseButton, BorderLayout.EAST);
 
     }
 
     public void setText(String text) {
-	textField.setText(text);
+        textField.setText(text);
     }
 
     public String getText() {
-	return textField.getText();
+        return textField.getText();
     }
 
     private void browseButtonActionPerformed(ActionEvent evt) {
 
-	File currentFile = getFile(textField.getText(), getKey(), getData());
-	if (currentFile.getPath().isEmpty()) {
-	    Optional<String> currentFolderPath = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
-	    if (currentFolderPath.isPresent()) {
-		currentFile = SpecsIo.getCanonicalFile(new File(currentFolderPath.get()));
-	    }
-	}
+        File currentFile = getFile(textField.getText(), getKey(), getData());
+        if (currentFile.getPath().isEmpty()) {
+            Optional<String> currentFolderPath = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+            if (currentFolderPath.isPresent()) {
+                currentFile = SpecsIo.getCanonicalFile(new File(currentFolderPath.get()));
+            }
+        }
 
-	fc.setCurrentDirectory(currentFile);
-	int returnVal = fc.showOpenDialog(this);
+        fc.setCurrentDirectory(currentFile);
+        int returnVal = fc.showOpenDialog(this);
 
-	if (returnVal != JFileChooser.APPROVE_OPTION) {
-	    return;
-	}
+        if (returnVal != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
 
-	File file = fc.getSelectedFile();
+        File file = fc.getSelectedFile();
 
-	// Try to make path relative to current setup file
-	Optional<String> currentFolderPath = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
-	if (currentFolderPath.isPresent()) {
-	    String relativePath = SpecsIo.getRelativePath(file, new File(currentFolderPath.get()));
-	    // Always using relative path if setup file is defined, should be more useful
-	    textField.setText(relativePath);
+        // Try to make path relative to current setup file
+        Optional<String> currentFolderPath = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        if (currentFolderPath.isPresent()) {
+            String relativePath = SpecsIo.getRelativePath(file, new File(currentFolderPath.get()));
 
-	} else {
-	    textField.setText(file.getAbsolutePath());
-	}
+            // Always using relative path if setup file is defined, should be more useful
+            textField.setText(relativePath);
 
-	fileOpener.onOpenFile(file);
+        } else {
+            textField.setText(file.getAbsolutePath());
+        }
+
+        fileOpener.onOpenFile(file);
     }
 
     private static File getFile(String fieldValue, DataKey<File> key, DataStore data) {
 
-	Optional<String> currentFolderPath = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
-	if (!currentFolderPath.isPresent()) {
-	    // LoggingUtils.msgWarn("CHECK THIS CASE, WHEN CONFIG IS NOT DEFINED");
-	    return new File(fieldValue);
-	}
+        Optional<String> currentFolderPath = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        if (!currentFolderPath.isPresent()) {
+            // LoggingUtils.msgWarn("CHECK THIS CASE, WHEN CONFIG IS NOT DEFINED");
+            return new File(fieldValue);
+        }
 
-	DataStore tempData = DataStore.newInstance("FilePanelTemp", data);
-	// When reading a value from the GUI to the user DataStore, use absolute path
+        DataStore tempData = DataStore.newInstance("FilePanelTemp", data);
+        // When reading a value from the GUI to the user DataStore, use absolute path
 
-	tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, currentFolderPath.get());
-	tempData.set(JOptionKeys.USE_RELATIVE_PATHS, false);
-	tempData.setString(key, fieldValue);
+        tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, currentFolderPath.get());
+        tempData.set(JOptionKeys.USE_RELATIVE_PATHS, false);
+        tempData.setString(key, fieldValue);
 
-	File value = tempData.get(key);
+        File value = tempData.get(key);
 
-	return value;
+        return value;
 
     }
 
     @Override
     public File getValue() {
-	return getFile(textField.getText(), getKey(), getData());
+        return getFile(textField.getText(), getKey(), getData());
     }
 
     private static String processFile(DataStore data, File file) {
-	// If empty path, set empty text field
-	if (file.getPath().isEmpty()) {
-	    return "";
-	}
+        // If empty path, set empty text field
+        if (file.getPath().isEmpty()) {
+            return "";
+        }
 
-	File currentValue = file;
+        File currentValue = file;
 
-	// When showing the path in the GUI, make it relative to the current setup file
+        // When showing the path in the GUI, make it relative to the current setup file
 
-	Optional<String> currentFolder = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
-	// System.out.println("GUI SET ENTRY VALUE:" + currentValue);
-	// System.out.println("GUI SET CURRENT FOLDER:" + currentFolder);
-	if (currentFolder.isPresent()) {
-	    String relativePath = SpecsIo.getRelativePath(currentValue, new File(currentFolder.get()));
-	    currentValue = new File(relativePath);
-	}
+        Optional<String> currentFolder = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        // System.out.println("GUI SET ENTRY VALUE:" + currentValue);
+        // System.out.println("GUI SET CURRENT FOLDER:" + currentFolder);
+        if (currentFolder.isPresent()) {
+            String relativePath = SpecsIo.getRelativePath(currentValue, new File(currentFolder.get()));
+            currentValue = new File(relativePath);
+        }
 
-	// System.out.println("CURRENT FOLDER:" + currentFolder);
-	// If path is absolute, make it canonical
-	if (currentValue.isAbsolute()) {
-	    return SpecsIo.getCanonicalFile(currentValue).getPath();
-	}
+        // System.out.println("CURRENT FOLDER:" + currentFolder);
+        // If path is absolute, make it canonical
+        if (currentValue.isAbsolute()) {
+            return SpecsIo.getCanonicalFile(currentValue).getPath();
+        }
 
-	return currentValue.getPath();
+        return currentValue.getPath();
     }
 
     @Override
     public <ET extends File> void setValue(ET value) {
-	setText(processFile(getData(), value));
-	/*
-	// If empty path, set empty text field
-	if (value.getPath().isEmpty()) {
-	    setText("");
-	    return;
-	}
-	
-	File currentValue = value;
-	
-	// When showing the path in the GUI, make it relative to the current setup file
-	
-	Optional<String> currentFolder = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
-	// System.out.println("GUI SET ENTRY VALUE:" + currentValue);
-	// System.out.println("GUI SET CURRENT FOLDER:" + currentFolder);
-	if (currentFolder.isPresent()) {
-	    String relativePath = IoUtils.getRelativePath(currentValue, new File(currentFolder.get()));
-	    currentValue = new File(relativePath);
-	}
-	
-	// System.out.println("CURRENT FOLDER:" + currentFolder);
-	// If path is absolute, make it canonical
-	if (currentValue.isAbsolute()) {
-	    setText(IoUtils.getCanonicalFile(currentValue).getPath());
-	} else {
-	    setText(currentValue.getPath());
-	}
-	
-	// System.out.println("GUI SET VALUE:" + currentValue);
-	*/
+        setText(processFile(getData(), value));
+        /*
+        // If empty path, set empty text field
+        if (value.getPath().isEmpty()) {
+        setText("");
+        return;
+        }
+        
+        File currentValue = value;
+        
+        // When showing the path in the GUI, make it relative to the current setup file
+        
+        Optional<String> currentFolder = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        // System.out.println("GUI SET ENTRY VALUE:" + currentValue);
+        // System.out.println("GUI SET CURRENT FOLDER:" + currentFolder);
+        if (currentFolder.isPresent()) {
+        String relativePath = IoUtils.getRelativePath(currentValue, new File(currentFolder.get()));
+        currentValue = new File(relativePath);
+        }
+        
+        // System.out.println("CURRENT FOLDER:" + currentFolder);
+        // If path is absolute, make it canonical
+        if (currentValue.isAbsolute()) {
+        setText(IoUtils.getCanonicalFile(currentValue).getPath());
+        } else {
+        setText(currentValue.getPath());
+        }
+        
+        // System.out.println("GUI SET VALUE:" + currentValue);
+        */
     }
 
     /**
@@ -235,10 +236,10 @@ public class FilePanel extends KeyPanel<File> {
     }
 
     public void setOnFileOpened(FileOpener opener) {
-	fileOpener = opener;
+        fileOpener = opener;
     }
 
     public interface FileOpener {
-	public void onOpenFile(File f);
+        public void onOpenFile(File f);
     }
 }

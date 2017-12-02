@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.utilities.StringSlice;
@@ -255,6 +256,73 @@ public class StringParsers {
         StringSlice modifiedString = string.substring(prefix.length());
 
         return new ParserResult<>(modifiedString, prefix);
+    }
+
+    /**
+     * Parses a string between the given begin and end characters, trims the slice in the end.
+     * 
+     * @param string
+     * @param begin
+     * @param end
+     * @param endPredicate
+     * @return
+     */
+    public static ParserResult<String> parseNested(StringSlice string, char begin, char end,
+            BiPredicate<StringSlice, Integer> endPredicate) {
+    
+        // string = string.trim();
+    
+        Preconditions.checkArgument(!string.isEmpty());
+    
+        if (string.charAt(0) != begin) {
+            return new ParserResult<>(string, "");
+        }
+    
+        int counter = 1;
+        int endIndex = 0;
+        while (counter > 0) {
+            endIndex++;
+    
+            // If found end char, decrement
+            // if (string.charAt(endIndex) == end) {
+            if (endPredicate.test(string, endIndex)) {
+                counter--;
+                continue;
+            }
+    
+            // If found start char, increment
+            if (string.charAt(endIndex) == begin) {
+                counter++;
+                continue;
+            }
+        }
+    
+        // Return string without separators
+        String result = string.substring(1, endIndex).toString();
+    
+        // Cut string from parser
+        if (endIndex < string.length() - 1) {
+            string = string.substring(endIndex + 1);
+        } else {
+            string = new StringSlice("");
+        }
+    
+        return new ParserResult<>(string, result);
+    }
+
+    /**
+     * Parses a string inside primes ('), separated by spaces.
+     * <p>
+     * Receives a string starting with "'{element}' ( '{element}')*", returns a list with the elements, without the
+     * primes.
+     * 
+     * @param string
+     * @return
+     */
+    public static ParserResult<String> parseNested(StringSlice string, char begin, char end) {
+        BiPredicate<StringSlice, Integer> endPredicate = (slice, endIndex) -> slice.charAt(endIndex) == end;
+    
+        return parseNested(string, begin, end, endPredicate);
     }
 
 }

@@ -30,7 +30,7 @@ public abstract class ADataStore implements DataStore {
     // private final SimpleSetup data;
     private final String name;
     private final Map<String, Object> values;
-    private final StoreDefinition definition;
+    private StoreDefinition definition;
 
     // private SetupFile setupFile;
     private boolean strict;
@@ -126,6 +126,11 @@ public abstract class ADataStore implements DataStore {
     @Override
     public Optional<StoreDefinition> getStoreDefinition() {
         return Optional.ofNullable(definition);
+    }
+
+    @Override
+    public void setStoreDefinition(StoreDefinition definition) {
+        this.definition = definition;
     }
 
     /*
@@ -226,7 +231,12 @@ public abstract class ADataStore implements DataStore {
         // throw new RuntimeException("Key '" + key.getName() + "' is not present in DataStore '" + getName() + "'");
         // }
 
-        T value = key.getValueClass().cast(valueRaw);
+        T value = null;
+        try {
+            value = key.getValueClass().cast(valueRaw);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not retrive value from key " + key, e);
+        }
 
         // If value is null, use default value
         if (value == null) {

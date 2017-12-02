@@ -13,8 +13,23 @@
 
 package pt.up.fe.specs.util.lazy;
 
+import java.util.function.Supplier;
+
 public interface Lazy<T> {
 
+    /**
+     * 
+     * @return the value encapsulated by the Lazy object
+     */
     T get();
 
+    /**
+     * 
+     * @return true if the value encapsulated by the Lazy object has been initialized
+     */
+    boolean isInitialized();
+
+    static <T> Lazy<T> newInstance(Supplier<T> supplier) {
+        return new ThreadSafeLazy<>(supplier);
+    }
 }

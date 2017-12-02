@@ -31,33 +31,33 @@ public class TreeNodeUtils {
      */
     // public static <E extends Enum<E>, K extends TreeNode<E, K>> K sanitizeToken(K token) {
     public static <K extends TreeNode<K>> K sanitizeNode(K token) {
-	if (!token.hasParent()) {
-	    return token;
-	}
+        if (!token.hasParent()) {
+            return token;
+        }
 
-	// Copy token
-	K tokenCopy = token.copy();
-	return tokenCopy;
+        // Copy token
+        K tokenCopy = token.copy();
+        return tokenCopy;
     }
 
     // public static <K extends TreeNode<E, K>, E extends Enum<E>> String toString(K token, String prefix) {
     public static <K extends TreeNode<K>> String toString(K token, String prefix) {
-	StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
 
-	// builder.append(prefix).append(token.getType());
-	builder.append(prefix);
-	// builder.append(token.toNodeString() + "(" + token.getClass().getSimpleName() + ")");
-	builder.append(token.toNodeString());
+        // builder.append(prefix).append(token.getType());
+        builder.append(prefix);
+        // builder.append(token.toNodeString() + "(" + token.getClass().getSimpleName() + ")");
+        builder.append(token.toNodeString());
 
-	builder.append("\n");
+        builder.append("\n");
 
-	if (token.hasChildren()) {
-	    for (K child : token.getChildren()) {
-		builder.append(toString(child, prefix + "  "));
-	    }
-	}
+        if (token.hasChildren()) {
+            for (K child : token.getChildren()) {
+                builder.append(toString(child, prefix + "  "));
+            }
+        }
 
-	return builder.toString();
+        return builder.toString();
     }
 
     /**
@@ -68,11 +68,11 @@ public class TreeNodeUtils {
      * @return
      */
     public static <I extends K, O extends K, K extends TreeNode<K>> List<O> getDescendants(Class<O> aClass,
-	    Collection<I> nodes) {
+            Collection<I> nodes) {
 
-	return nodes.stream()
-		.map(st -> st.getDescendants(aClass))
-		.reduce(new ArrayList<>(), SpecsCollections::add);
+        return nodes.stream()
+                .map(st -> st.getDescendants(aClass))
+                .reduce(new ArrayList<>(), SpecsCollections::add);
     }
 
     /**
@@ -84,11 +84,11 @@ public class TreeNodeUtils {
      * @return
      */
     public static <I extends K, O extends K, K extends TreeNode<K>> List<O> getDescendantsAndSelves(Class<O> aClass,
-	    Collection<I> nodes) {
+            Collection<I> nodes) {
 
-	return nodes.stream()
-		.map(st -> st.getDescendantsAndSelf(aClass))
-		.reduce(new ArrayList<>(), SpecsCollections::add);
+        return nodes.stream()
+                .map(st -> st.getDescendantsAndSelf(aClass))
+                .reduce(new ArrayList<>(), SpecsCollections::add);
     }
 
     /**
@@ -99,38 +99,58 @@ public class TreeNodeUtils {
      * @return
      */
     public static <K extends TreeNode<K>> Optional<K> lastNodeExcept(List<K> nodes,
-	    Collection<Class<? extends K>> exceptions) {
+            Collection<Class<? extends K>> exceptions) {
 
-	Optional<Integer> index = TreeNodeIndexUtils.lastIndexExcept(nodes, exceptions);
-	if (!index.isPresent()) {
-	    return Optional.empty();
-	}
+        Optional<Integer> index = TreeNodeIndexUtils.lastIndexExcept(nodes, exceptions);
+        if (!index.isPresent()) {
+            return Optional.empty();
+        }
 
-	return Optional.of(nodes.get(index.get()));
+        return Optional.of(nodes.get(index.get()));
 
-	/*
-		return currentTokens.get(index);
-	
-		int currentIndex = nodes.size() - 1;
-		while (currentIndex >= 0) {
-		    K token = nodes.get(currentIndex);
-	
-		    boolean isException = false;
-		    for (Class<?> exception : exceptions) {
-			if (exception.isInstance(token)) {
-			    isException = true;
-			}
-		    }
-	
-		    if (!isException) {
-			return Optional.of(nodes.get(currentIndex));
-		    }
-	
-		    currentIndex -= 1;
-		}
-	
-		return Optional.empty();
-		*/
+        /*
+        	return currentTokens.get(index);
+        
+        	int currentIndex = nodes.size() - 1;
+        	while (currentIndex >= 0) {
+        	    K token = nodes.get(currentIndex);
+        
+        	    boolean isException = false;
+        	    for (Class<?> exception : exceptions) {
+        		if (exception.isInstance(token)) {
+        		    isException = true;
+        		}
+        	    }
+        
+        	    if (!isException) {
+        		return Optional.of(nodes.get(currentIndex));
+        	    }
+        
+        	    currentIndex -= 1;
+        	}
+        
+        	return Optional.empty();
+        	*/
+    }
+
+    /**
+     * Tests two nodes, to check if one is ancestor of the other. If this is the case, returns the ancestor, otherwise
+     * returns Optional.empty().
+     * 
+     * @param node1
+     * @param node2
+     * @return
+     */
+    public static <K extends TreeNode<K>> Optional<K> getAncestor(K node1, K node2) {
+        if (node1.isAncestor(node2)) {
+            return Optional.of(node2);
+        }
+
+        if (node2.isAncestor(node1)) {
+            return Optional.of(node1);
+        }
+
+        return Optional.empty();
     }
 
 }

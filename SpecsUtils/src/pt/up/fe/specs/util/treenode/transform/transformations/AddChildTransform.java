@@ -33,11 +33,11 @@ public class AddChildTransform<K extends TreeNode<K>> extends TwoOperandTransfor
     @Override
     public void execute() {
         if (position == null) {
-            getBaseNode().addChild(getNewNode());
+            getNode1().addChild(getNode2());
             return;
         }
 
-        getBaseNode().addChild(position, getNewNode());
+        getNode1().addChild(position, getNode2());
     }
 
 }

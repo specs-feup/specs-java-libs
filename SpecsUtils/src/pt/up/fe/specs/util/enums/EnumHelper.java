@@ -49,9 +49,19 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
     }
 
     public T valueOf(String name) {
-        return valueOfTry(name).orElseThrow(() -> new IllegalArgumentException(
-                "Enum '" + enumClass.getSimpleName() + "' does not contain an enum with the name '" + name
-                        + "'. Available enums: " + translationMap));
+        return valueOfTry(name).orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name)));
+    }
+
+    // public T valueOfOrNull(String name) {
+    // T value = valueOfTry(name).orElse(null);
+    // if(value == null) {
+    //
+    // }
+    // }
+
+    private String getErrorMessage(String name) {
+        return "Enum '" + enumClass.getSimpleName() + "' does not contain an enum with the name '" + name
+                + "'. Available enums: " + translationMap;
     }
 
     public Optional<T> valueOfTry(String name) {
