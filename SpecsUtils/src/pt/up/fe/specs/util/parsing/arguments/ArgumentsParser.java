@@ -76,9 +76,15 @@ public class ArgumentsParser {
             if (currentGluer == null) {
                 Optional<Gluer> gluer = checkGluerStart(slice);
                 if (gluer.isPresent()) {
-                    // Discard the gluer characters
+
                     // Activate gluer
                     currentGluer = gluer.get();
+
+                    // Save delimiters, otherwise discard the gluer characters
+                    if (currentGluer.keepDelimiters()) {
+                        currentArg.append(currentGluer.getGluerStart());
+                    }
+
                     // Update slice
                     slice = slice.substring(currentGluer.getGluerStart().length());
                     continue;
@@ -87,6 +93,11 @@ public class ArgumentsParser {
             // There is a Gluer active, check if this is the end of the Gluer
             else {
                 if (slice.startsWith(currentGluer.getGluerEnd())) {
+                    // Save delimiters, otherwise discard the gluer characters
+                    if (currentGluer.keepDelimiters()) {
+                        currentArg.append(currentGluer.getGluerEnd());
+                    }
+
                     // Update slice
                     slice = slice.substring(currentGluer.getGluerEnd().length());
                     currentGluer = null;

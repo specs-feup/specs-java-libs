@@ -17,10 +17,17 @@ public class Gluer {
 
     private final String delimiterStart;
     private final String delimiterEnd;
+    private final boolean keepDelimiters;
 
     public Gluer(String start, String end) {
+        this(start, end, false);
+    }
+
+    public Gluer(String start, String end, boolean keepDelimiters) {
         this.delimiterStart = start;
         this.delimiterEnd = end;
+        this.keepDelimiters = keepDelimiters;
+
     }
 
     /**
@@ -31,11 +38,23 @@ public class Gluer {
         return new Gluer("\"", "\"");
     }
 
+    /**
+     * 
+     * @return a new Gluer that start with < ends with >
+     */
+    public static Gluer newTag() {
+        return new Gluer("<", ">", true);
+    }
+
     public String getGluerStart() {
         return delimiterStart;
     }
 
     public String getGluerEnd() {
         return delimiterEnd;
+    }
+
+    public boolean keepDelimiters() {
+        return keepDelimiters;
     }
 }
