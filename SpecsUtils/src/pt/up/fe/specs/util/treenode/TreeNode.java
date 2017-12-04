@@ -423,16 +423,22 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     default <T extends K> T getChild(Class<T> nodeClass, int index) {
+        return getChildTry(nodeClass, index)
+                .orElseThrow(
+                        () -> new RuntimeException("Wanted a '" + nodeClass.getSimpleName() + "' at index '" + index
+                                + "', but is was a '" + getChild(index).getClass().getSimpleName() + "':\n" + this));
+    }
+
+    default <T extends K> Optional<T> getChildTry(Class<T> nodeClass, int index) {
         K childNode = getChild(index);
 
         Preconditions.checkNotNull(childNode, "Index " + index + " of node '" + getClass() + "' has no child");
 
         if (!nodeClass.isInstance(childNode)) {
-            throw new RuntimeException("Wanted a '" + nodeClass.getSimpleName() + "' at index '" + index
-                    + "', but is was a '" + childNode.getClass().getSimpleName() + "':\n" + this);
+            return Optional.empty();
         }
 
-        return nodeClass.cast(childNode);
+        return Optional.of(nodeClass.cast(childNode));
     }
 
     /*
