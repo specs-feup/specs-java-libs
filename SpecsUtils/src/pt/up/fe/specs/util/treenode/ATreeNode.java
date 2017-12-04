@@ -383,10 +383,10 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.children == null) ? 0 : this.children.hashCode());
-
+    
         String contentString = toContentString();
         result = prime * result + ((contentString == null) ? 0 : contentString.hashCode());
-
+    
         return result;
     }
     */
@@ -414,7 +414,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         } else if (!this.children.equals(other.children)) {
             return false;
         }
-
+    
         String contentString = toContentString();
         String otherContentString = other.toContentString();
         if (contentString == null) {
@@ -424,7 +424,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         } else if (!contentString.equals(otherContentString)) {
             return false;
         }
-
+    
         return true;
     }
     */
