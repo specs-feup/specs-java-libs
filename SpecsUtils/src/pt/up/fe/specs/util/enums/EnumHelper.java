@@ -81,6 +81,11 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
                 .collect(Collectors.joining(", "));
     }
 
+    public EnumHelper<T> addAlias(String alias, T anEnum) {
+        translationMap.put(alias, anEnum);
+        return this;
+    }
+
     public static <T extends Enum<T> & StringProvider> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum) {
         return newLazyHelper(anEnum, Collections.emptyList());
     }
