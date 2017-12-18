@@ -22,6 +22,7 @@ package org.suikasoft.jOptions.Datakey;
  * @author JoaoBispo
  *
  * @param <T>
+ * @FunctionalInterface
  */
 public interface StringCodec<T> {
 
@@ -40,6 +41,6 @@ public interface StringCodec<T> {
      * @return
      */
     default String encode(T value) {
-	return value.toString();
+        return value.toString();
     }
 }

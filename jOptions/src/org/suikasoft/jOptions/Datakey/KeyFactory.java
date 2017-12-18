@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.swing.JFileChooser;
@@ -37,6 +39,9 @@ import org.suikasoft.jOptions.gui.panels.option.StringPanel;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionProvider;
 import org.suikasoft.jOptions.values.SetupList;
+
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -330,9 +335,29 @@ public class KeyFactory {
 
         return object(id, DataStore.class)
                 .setStoreDefinition(definition)
-                .setDecoder(s -> {
-                    throw new RuntimeException("No decoder for DataStore");
-                });
+                // .setDecoder(s -> {
+                // throw new RuntimeException("No decoder for DataStore");
+                // });
+                .setDecoder(string -> KeyFactory.dataStoreDecoder(string, definition));
+    }
+
+    private static DataStore dataStoreDecoder(String string, StoreDefinition definition) {
+        Gson gson = new Gson();
+        Map<String, String> map = gson.fromJson(string, new TypeToken<Map<String, String>>() {
+        }.getType());
+
+        DataStore dataStore = DataStore.newInstance(definition);
+        for (Entry<String, String> entry : map.entrySet()) {
+            // Determine key
+            DataKey<?> key = definition.getKey(entry.getKey());
+
+            // Decode value
+            Object value = key.decode(entry.getValue());
+
+            dataStore.setRaw(key, value);
+        }
+
+        return dataStore;
     }
 
     // public static <T extends DataStoreProvider> DataKey<T> dataStoreProvider(String id, Class<T> aClass,
