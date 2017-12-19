@@ -16,9 +16,13 @@ package org.suikasoft.jOptions.cli;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.suikasoft.jOptions.GenericImplementations.DummyPersistence;
@@ -33,6 +37,7 @@ import org.suikasoft.jOptions.test.storedefinitions.TestConfig;
 import org.suikasoft.jOptions.test.values.MultipleChoices;
 
 import pt.up.fe.specs.util.SpecsFactory;
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.properties.SpecsProperty;
 import pt.up.fe.specs.util.utilities.StringList;
@@ -43,132 +48,188 @@ import pt.up.fe.specs.util.utilities.StringList;
  */
 public class CommandLineTester {
 
+    private final List<Supplier<String>> cliArgs;
+    private final List<Consumer<DataStore>> cliTests;
+
+    public CommandLineTester() {
+        this.cliArgs = new ArrayList<>();
+        this.cliTests = new ArrayList<>();
+    }
+
     @BeforeClass
     public static void runBeforeClass() {
-	SpecsSystem.programStandardInit();
+        SpecsSystem.programStandardInit();
 
-	SpecsProperty.ShowStackTrace.applyProperty("true");
+        SpecsProperty.ShowStackTrace.applyProperty("true");
+
+        // Create test files
+        getTestFiles().stream().forEach(file -> SpecsIo.write(file, "dummy"));
+
+    }
+
+    @AfterClass
+    public static void runAfterClass() {
+        // Delete test files
+        getTestFiles().stream().forEach(SpecsIo::delete);
+    }
+
+    private static List<File> getTestFiles() {
+        File testFolder = SpecsIo.mkdir("testFolder");
+
+        List<File> testFiles = new ArrayList<>();
+        testFiles.add(new File(testFolder, "file1.txt"));
+        testFiles.add(new File(testFolder, "file2.txt"));
+
+        return testFiles;
+    }
+
+    private void addTest(Supplier<String> arg, Consumer<DataStore> test) {
+        this.cliArgs.add(arg);
+        this.cliTests.add(test);
     }
 
     @Test
     public void test() {
-	// Create arguments
-	List<String> args = SpecsFactory.newArrayList();
 
-	// String arg
-	String stringValue = "test_string";
-	String stringArg = TestKeys.A_STRING.getName() + "=" + stringValue;
-	args.add(stringArg);
+        CliTester tester = new CliTester();
 
-	// Boolean arg
-	Boolean booleanValue = Boolean.TRUE;
-	String booleanArg = TestKeys.A_BOOLEAN.getName() + "=" + booleanValue.toString();
-	args.add(booleanArg);
+        // String
+        tester.addTest(() -> TestKeys.A_STRING.getName() + "=test string",
+                dataStore -> assertEquals("test string", dataStore.get(TestKeys.A_STRING)));
 
-	// StringList arg
-	StringList stringListValue = new StringList(Arrays.asList("list1", "list2"));
-	String stringListArg = TestKeys.A_STRINGLIST.getName() + "=" + "list1;list2";
-	args.add(stringListArg);
+        // DataStore
+        Supplier<String> datastoreSupplier = () -> TestKeys.A_SETUP.getName()
+                + "={\"ANOTHER_String\": \"another string\"}";
 
-	// FileList
-	String fileListName = TestKeys.A_FILELIST.getName();
+        Consumer<DataStore> datastoreConsumer = dataStore -> assertEquals("another string",
+                dataStore.get(TestKeys.A_SETUP).get(AnotherTestKeys.ANOTHER_STRING));
+        tester.addTest(datastoreSupplier, datastoreConsumer);
 
-	// FileList values
-	String folderName = "testFolder";
-	String fileListValues = folderName + ";file1.txt;file2.txt";
+        tester.test();
+    }
 
-	String fileListArg = fileListName + "=" + fileListValues;
-	args.add(fileListArg);
-	// A folder arg
+    @Test
+    public void test_old() {
 
-	// String folderArg = fileListName + "/"
-	// + FileList.getFolderOptionName() + "=" + folderName;
-	// args.add(folderArg);
-	//
-	// // Files arg
-	// String filenames = "file1.txt;file2.txt";
-	// String filesArg = fileListName + "/"
-	// + FileList.getFilesOptionName() + "=" + filenames;
-	// args.add(filesArg);
+        // Create arguments
+        List<String> args = SpecsFactory.newArrayList();
 
-	// Inner String arg
-	String innerString = "inner_string";
-	String innerArg = TestKeys.A_SETUP.getName() + "/" + AnotherTestKeys.ANOTHER_STRING.getName() + "="
-		+ innerString;
-	args.add(innerArg);
+        // String arg
+        String stringValue = "test_string";
+        String stringArg = TestKeys.A_STRING.getName() + "=" + stringValue;
+        args.add(stringArg);
 
-	// Setup list arg
-	Boolean setupListBool = Boolean.TRUE;
-	String setupListArg = TestKeys.A_SETUP_LIST.getName() + "/"
-		+ InnerOptions2.getSetupName() + "/"
-		+ AnotherTestKeys.ANOTHER_BOOLEAN.getName() + "="
-		+ setupListBool.toString();
-	args.add(setupListArg);
+        // Boolean arg
+        Boolean booleanValue = Boolean.TRUE;
+        String booleanArg = TestKeys.A_BOOLEAN.getName() + "=" + booleanValue.toString();
+        args.add(booleanArg);
 
-	// Set preferred index of setup list
-	String preferredIndexArg = TestKeys.A_SETUP_LIST.getName() + "=" + InnerOptions2.getSetupName();
-	args.add(preferredIndexArg);
+        // StringList arg
+        StringList stringListValue = new StringList(Arrays.asList("list1", "list2"));
+        String stringListArg = TestKeys.A_STRINGLIST.getName() + "=" + "list1;list2";
+        args.add(stringListArg);
 
-	MultipleChoices choice = MultipleChoices.CHOICE2;
-	String choiceArg = TestKeys.A_MULTIPLE_OPTION.getName() + "="
-		+ choice.name();
-	args.add(choiceArg);
+        // FileList
+        String fileListName = TestKeys.A_FILELIST.getName();
 
-	// System.out.println("ARGS:"+args);
+        // FileList values
+        String folderName = "testFolder";
+        String fileListValues = folderName + ";file1.txt;file2.txt";
 
-	// Create and launch app
-	TestKernel kernel = new TestKernel();
+        String fileListArg = fileListName + "=" + fileListValues;
+        args.add(fileListArg);
+        // A folder arg
 
-	StoreDefinition setupDef = new TestConfig().getStoreDefinition();
-	AppPersistence persistence = new DummyPersistence(setupDef);
+        // String folderArg = fileListName + "/"
+        // + FileList.getFolderOptionName() + "=" + folderName;
+        // args.add(folderArg);
+        //
+        // // Files arg
+        // String filenames = "file1.txt;file2.txt";
+        // String filesArg = fileListName + "/"
+        // + FileList.getFilesOptionName() + "=" + filenames;
+        // args.add(filesArg);
 
-	App app = new GenericApp("TestApp", setupDef, persistence, kernel);
+        // Inner String arg
+        String innerString = "inner_string";
+        String innerArg = TestKeys.A_SETUP.getName() + "/" + AnotherTestKeys.ANOTHER_STRING.getName() + "="
+                + innerString;
+        args.add(innerArg);
 
-	AppLauncher launcher = new AppLauncher(app);
-	// AppLauncher launcher = new AppLauncher(kernel, "TestApp", TestOption.class, persistence);
+        // Setup list arg
+        Boolean setupListBool = Boolean.TRUE;
+        String setupListArg = TestKeys.A_SETUP_LIST.getName() + "/"
+                + InnerOptions2.getSetupName() + "/"
+                + AnotherTestKeys.ANOTHER_BOOLEAN.getName() + "="
+                + setupListBool.toString();
+        args.add(setupListArg);
 
-	// SimpleApp.main(args.toArray(new String[args.size()]));
-	launcher.launch(args);
+        // Set preferred index of setup list
+        String preferredIndexArg = TestKeys.A_SETUP_LIST.getName() + "=" + InnerOptions2.getSetupName();
+        args.add(preferredIndexArg);
 
-	// Get options, verify contents
-	DataStore setup = kernel.getSetup();
+        MultipleChoices choice = MultipleChoices.CHOICE2;
+        String choiceArg = TestKeys.A_MULTIPLE_OPTION.getName() + "="
+                + choice.name();
+        args.add(choiceArg);
 
-	assertEquals(stringValue, setup.get(TestKeys.A_STRING));
-	assertEquals(booleanValue, setup.get(TestKeys.A_BOOLEAN));
-	assertEquals(stringListValue, setup.get(TestKeys.A_STRINGLIST));
+        // System.out.println("ARGS:"+args);
 
-	// File List
-	List<File> files = setup.get(TestKeys.A_FILELIST).getFiles();
+        // Create and launch app
+        TestKernel kernel = new TestKernel();
 
-	// Verify it is two files
-	assertTrue(files.size() == 2);
+        StoreDefinition setupDef = new TestConfig().getStoreDefinition();
+        AppPersistence persistence = new DummyPersistence(setupDef);
 
-	// Verify if files exist
-	for (File file : files) {
-	    assertTrue(file.isFile());
-	}
+        App app = new GenericApp("TestApp", setupDef, persistence, kernel);
 
-	// assertEquals(innerString, setup.get(TestKeys.A_SETUP).get(AnotherTestKeys.ANOTHER_STRING));
+        AppLauncher launcher = new AppLauncher(app);
+        // AppLauncher launcher = new AppLauncher(kernel, "TestApp", TestOption.class, persistence);
 
-	// // Accessing setup list by name
-	// assertEquals(setupListBool, setup.get(TestKeys.A_SETUP_LIST).getSetup(InnerOptions2.getSetupName())
-	// .get(AnotherTestKeys.ANOTHER_BOOLEAN));
-	//
-	// // Accessing setup list by preferred index
-	// assertEquals(setupListBool, setup.get(TestKeys.A_SETUP_LIST).get(AnotherTestKeys.ANOTHER_BOOLEAN));
-	//
-	// assertEquals(choice, setup.get(TestKeys.A_MULTIPLE_OPTION));
+        // SimpleApp.main(args.toArray(new String[args.size()]));
+        launcher.launch(args);
 
-	// Check that setup files of inner and outer setup are the same
+        // Get options, verify contents
+        DataStore setup = kernel.getSetup();
 
-	// assertEquals(setup.getSetupFile().get().getFile(),
-	// setup.get(TestKeys.A_SETUP_LIST).getSetup(InnerOptions2.getSetupName()).getSetupFile().get().getFile());
-	//
-	// assertEquals(setup.getSetupFile().get().getFile(),
-	// setup.get(TestKeys.A_SETUP_LIST).getSetup(InnerOptions.getSetupName()).getSetupFile().get().getFile());
-	//
-	// assertEquals(setup.getSetupFile().get().getFile(),
-	// setup.get(TestKeys.A_SETUP_LIST).getSetupFile().get().getFile());
+        assertEquals(stringValue, setup.get(TestKeys.A_STRING));
+        assertEquals(booleanValue, setup.get(TestKeys.A_BOOLEAN));
+        assertEquals(stringListValue, setup.get(TestKeys.A_STRINGLIST));
+
+        // File List
+        List<File> files = setup.get(TestKeys.A_FILELIST).getFiles();
+
+        // Verify it is two files
+        assertTrue(files.size() == 2);
+
+        // Verify if files exist.
+        for (File file : files) {
+            assertTrue(file.isFile());
+        }
+
+        System.out.println("Setup:" + setup.get(TestKeys.A_SETUP));
+
+        // assertEquals(innerString, setup.get(TestKeys.A_SETUP).get(AnotherTestKeys.ANOTHER_STRING));
+
+        // // Accessing setup list by name
+        // assertEquals(setupListBool, setup.get(TestKeys.A_SETUP_LIST).getSetup(InnerOptions2.getSetupName())
+        // .get(AnotherTestKeys.ANOTHER_BOOLEAN));
+        //
+        // // Accessing setup list by preferred index
+        // assertEquals(setupListBool, setup.get(TestKeys.A_SETUP_LIST).get(AnotherTestKeys.ANOTHER_BOOLEAN));
+        //
+        // assertEquals(choice, setup.get(TestKeys.A_MULTIPLE_OPTION));
+
+        // Check that setup files of inner and outer setup are the same
+
+        // assertEquals(setup.getSetupFile().get().getFile(),
+        // setup.get(TestKeys.A_SETUP_LIST).getSetup(InnerOptions2.getSetupName()).getSetupFile().get().getFile());
+        //
+        // assertEquals(setup.getSetupFile().get().getFile(),
+        // setup.get(TestKeys.A_SETUP_LIST).getSetup(InnerOptions.getSetupName()).getSetupFile().get().getFile());
+        //
+        // assertEquals(setup.getSetupFile().get().getFile(),
+        // setup.get(TestKeys.A_SETUP_LIST).getSetupFile().get().getFile());
 
     }
 }
