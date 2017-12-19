@@ -94,25 +94,30 @@ public class CommandLineUtils {
      * @param app
      * @param args
      */
-    public static void launch(App app, String... args) {
+    // public static boolean launch(App app, String... args) {
+    // return launch(app, Arrays.asList(args));
+    // }
+
+    public static boolean launch(App app, List<String> args) {
 
         // Check for some special commands
         boolean accepted = processSpecialCommands(app, args);
         if (accepted) {
-            return;
+            return true;
         }
 
         // If at least one argument, launch application.
-        if (args.length > 0) {
+        // if (args.length > 0) {
+        if (!args.isEmpty()) {
             AppLauncher launcher = new AppLauncher(app);
-            launcher.launch(args);
-            return;
+            return launcher.launch(args);
         }
 
         // Show help message
         SpecsLogs.msgInfo(app.getName());
         SpecsLogs.msgInfo(CommandLineUtils.getHelp(app.getDefinition()));
 
+        return false;
     }
 
     /**
@@ -120,13 +125,18 @@ public class CommandLineUtils {
      * @param args
      * @return
      */
-    private static boolean processSpecialCommands(App app, String... args) {
-        if (args.length == 0) {
+    // private static boolean processSpecialCommands(App app, String... args) {
+    // return processSpecialCommands(app, Arrays.asList(args));
+    // }
+
+    private static boolean processSpecialCommands(App app, List<String> args) {
+        // if (args.length == 0) {
+        if (args.isEmpty()) {
             return false;
         }
 
         // Check if first argument is WRITE
-        if (args[0].toLowerCase().equals(CommandLineUtils.ARG_WRITE)) {
+        if (args.get(0).toLowerCase().equals(CommandLineUtils.ARG_WRITE)) {
             File config = new File("default.matisse");
 
             app.getPersistence().saveData(config, DataStore.newInstance(app.getDefinition()), false);

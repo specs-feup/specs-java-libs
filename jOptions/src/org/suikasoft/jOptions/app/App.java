@@ -71,4 +71,10 @@ public interface App {
         return new GenericApp(name, definition, persistence, kernel);
     }
 
+    static GenericApp newInstance(StoreDefinition definition,
+            AppPersistence persistence, AppKernel kernel) {
+
+        return newInstance(definition.getName(), definition, persistence, kernel);
+    }
+
 }

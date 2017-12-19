@@ -14,10 +14,14 @@
 package org.suikasoft.jOptions;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.app.App;
 import org.suikasoft.jOptions.app.AppPersistence;
+import org.suikasoft.jOptions.cli.CommandLineUtils;
+import org.suikasoft.jOptions.gui.SimpleGui;
 import org.suikasoft.jOptions.persistence.XmlPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
@@ -116,6 +120,26 @@ public class JOptionsUtils {
     public static void saveDataStore(File file, DataStore data) {
         XmlPersistence persistence = data.getStoreDefinition().map(XmlPersistence::new).orElse(new XmlPersistence());
         persistence.saveData(file, data);
+    }
+
+    /**
+     * Executes the application. If not args are passed, launches the GUI mode, otherwise executes the CLI mode.
+     * 
+     * @param app
+     * @param args
+     * @return
+     */
+    public static int executeApp(App app, List<String> args) {
+
+        // If no arguments, launch GUI mode
+        if (args.isEmpty()) {
+            new SimpleGui(app).execute();
+            return 0;
+        }
+
+        // Otherwise, launch command-line mode
+        boolean success = CommandLineUtils.launch(app, args);
+        return success ? 0 : -1;
     }
 
 }
