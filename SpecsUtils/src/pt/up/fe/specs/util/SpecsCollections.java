@@ -795,4 +795,5 @@ public class SpecsCollections {
                 .collect(Collectors.toList())
                 .toArray(new String[0]);
     }
+
 }
