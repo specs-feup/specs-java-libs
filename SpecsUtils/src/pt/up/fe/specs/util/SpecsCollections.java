@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import pt.up.fe.specs.util.collections.SpecsList;
 import pt.up.fe.specs.util.providers.KeyProvider;
 
 /**
@@ -346,7 +347,7 @@ public class SpecsCollections {
      * 
      * @return
      */
-    public static <T> List<T> cast(List<?> list, Class<T> aClass) {
+    public static <T> SpecsList<T> cast(List<?> list, Class<T> aClass) {
         // Verify if all elements implement the type of the class
         Optional<?> invalidElement = list.stream()
                 .filter(element -> !aClass.isInstance(element))
@@ -358,7 +359,7 @@ public class SpecsCollections {
                             + "' which is not an instance of '" + aClass + "'");
         }
 
-        return castUnchecked(list, aClass);
+        return SpecsList.newInstance(castUnchecked(list, aClass));
     }
 
     /**
@@ -371,7 +372,6 @@ public class SpecsCollections {
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> castUnchecked(List<?> list, Class<T> aClass) {
-
         return (List<T>) list;
         /*
         List<T> newList = new ArrayList<>();
@@ -572,7 +572,7 @@ public class SpecsCollections {
         return newList;
     }
 
-    public static <T> List<T> pop(List<T> elements, int numElementsToPop) {
+    public static <T> SpecsList<T> pop(List<T> elements, int numElementsToPop) {
         Preconditions.checkArgument(elements.size() >= numElementsToPop,
                 "List has " + elements.size() + " elements, and want to pop " + numElementsToPop);
 
@@ -581,7 +581,7 @@ public class SpecsCollections {
             poppedElements.add(elements.remove(0));
         }
 
-        return poppedElements;
+        return SpecsList.newInstance(poppedElements);
     }
 
     /**
