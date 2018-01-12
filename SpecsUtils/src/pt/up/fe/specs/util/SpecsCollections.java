@@ -254,6 +254,22 @@ public class SpecsCollections {
         return castUnchecked(remove(list, element -> targetClass.isInstance(element)), targetClass);
     }
 
+    public static <T> T removeLast(List<T> list) {
+        List<T> lastElement = remove(list, list.size() - 1, list.size());
+        Preconditions.checkArgument(lastElement.size() == 1);
+        return lastElement.get(0);
+    }
+
+    public static <T, U extends T> U removeLast(List<T> list, Class<U> targetClass) {
+        if (list.isEmpty()) {
+            throw new RuntimeException("This method should not be called with empty lists");
+        }
+
+        T last = removeLast(list);
+
+        return targetClass.cast(last);
+    }
+
     /**
      * Returns the first index of object that is an instance of the given class. Returns -1 if no object is found that
      * is instance of the class.
@@ -359,7 +375,7 @@ public class SpecsCollections {
                             + "' which is not an instance of '" + aClass + "'");
         }
 
-        return SpecsList.newInstance(castUnchecked(list, aClass));
+        return SpecsList.convert(castUnchecked(list, aClass));
     }
 
     /**
@@ -392,7 +408,7 @@ public class SpecsCollections {
      * @param element
      * @return
      */
-    public static <K> List<K> concat(Collection<? extends K> list, K element) {
+    public static <K> SpecsList<K> concat(Collection<? extends K> list, K element) {
         return concat(list, ofNullable(element));
     }
 
@@ -406,17 +422,17 @@ public class SpecsCollections {
      * @param list
      * @return
      */
-    public static <K> List<K> concat(K element, Collection<? extends K> list) {
+    public static <K> SpecsList<K> concat(K element, Collection<? extends K> list) {
         return concat(ofNullable(element), list);
     }
 
-    public static <K> List<K> concat(Collection<? extends K> list1, Collection<? extends K> list2) {
+    public static <K> SpecsList<K> concat(Collection<? extends K> list1, Collection<? extends K> list2) {
 
         List<K> newList = new ArrayList<>(list1.size() + list2.size());
         newList.addAll(list1);
         newList.addAll(list2);
 
-        return newList;
+        return SpecsList.convert(newList);
     }
 
     /**
@@ -581,7 +597,7 @@ public class SpecsCollections {
             poppedElements.add(elements.remove(0));
         }
 
-        return SpecsList.newInstance(poppedElements);
+        return SpecsList.convert(poppedElements);
     }
 
     /**

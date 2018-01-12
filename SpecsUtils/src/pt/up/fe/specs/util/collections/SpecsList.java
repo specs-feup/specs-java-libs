@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.collections;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +36,7 @@ public class SpecsList<T> implements List<T> {
         this.list = list;
     }
 
-    public static <T> SpecsList<T> newInstance(List<T> list) {
+    public static <T> SpecsList<T> convert(List<T> list) {
         if (list instanceof SpecsList) {
             return (SpecsList<T>) list;
         }
@@ -43,14 +44,50 @@ public class SpecsList<T> implements List<T> {
         return new SpecsList<>(list);
     }
 
+    public static <T> SpecsList<T> newInstance(Class<T> targetClass) {
+        return new SpecsList<>(new ArrayList<>());
+    }
+
     /** CUSTOM METHODS **/
+
+    public List<T> list() {
+        return list;
+    }
 
     public <C extends T> List<C> cast(Class<C> aClass) {
         return SpecsCollections.cast(list, aClass);
     }
 
-    public List<T> list() {
-        return list;
+    /**
+     * Helper method which receives an element.
+     * 
+     * <p>
+     * If the element is null, list remains the same.
+     * 
+     * @param list
+     * @param element
+     * @return
+     */
+    public <K extends T> SpecsList<T> concat(K element) {
+        return SpecsCollections.concat(list, element);
+    }
+
+    /**
+     * Helper method which receives an element.
+     * 
+     * <p>
+     * If the element is null, list remains the same.
+     * 
+     * @param element
+     * @param list
+     * @return
+     */
+    public <K extends T> SpecsList<T> prepend(K element) {
+        return SpecsCollections.concat(element, list);
+    }
+
+    public SpecsList<T> concat(Collection<? extends T> list) {
+        return SpecsCollections.concat(this.list, list);
     }
 
     /** LIST IMPLEMENTATION **/
