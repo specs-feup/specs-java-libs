@@ -114,6 +114,12 @@ public class StringParser {
         */
     }
 
+    public <T, U, V, W, Y> T apply(ParserWorkerWithParam4<T, U, V, W, Y> worker, U parameter1, V parameter2,
+            W parameter3, Y parameter4) {
+        ParserResult<T> result = worker.apply(currentString, parameter1, parameter2, parameter3, parameter4);
+        return applyPrivate(result);
+    }
+
     public String substring(int beginIndex) {
         String consumedString = currentString.substring(0, beginIndex).toString();
 
