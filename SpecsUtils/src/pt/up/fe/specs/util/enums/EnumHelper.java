@@ -30,6 +30,7 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
 
     private final Class<T> enumClass;
     private final Map<String, T> translationMap;
+    private final Lazy<T[]> values;
 
     public EnumHelper(Class<T> enumClass) {
         this(enumClass, Collections.emptyList());
@@ -42,6 +43,8 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
         excludeList.stream()
                 .map(exclude -> exclude.getString())
                 .forEach(key -> translationMap.remove(key));
+
+        values = Lazy.newInstance(() -> enumClass.getEnumConstants());
     }
 
     public Map<String, T> getTranslationMap() {
@@ -50,6 +53,16 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
 
     public T valueOf(String name) {
         return valueOfTry(name).orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name)));
+    }
+
+    /**
+     * Helper method which converts the index of an enum to the enum.
+     * 
+     * @param index
+     * @return
+     */
+    public T valueOf(int index) {
+        return values.get()[index];
     }
 
     // public T valueOfOrNull(String name) {
