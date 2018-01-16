@@ -812,4 +812,15 @@ public class SpecsCollections {
                 .toArray(new String[0]);
     }
 
+    /**
+     * Converts a collection to a set, applying the given mapper to each of the elements.
+     * 
+     * @param collection
+     * @param mapper
+     * @return
+     */
+    public static <T, R> Set<R> toSet(Collection<T> collection, Function<? super T, R> mapper) {
+        return collection.stream().map(mapper).collect(Collectors.toSet());
+    }
+
 }
