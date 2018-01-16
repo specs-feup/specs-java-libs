@@ -28,7 +28,7 @@ import pt.up.fe.specs.util.SpecsCollections;
  *
  * @param <T>
  */
-public class SpecsList<T> implements List<T> {
+public class SpecsList<T> implements List<T>, SpecsCollection<T> {
 
     private final List<T> list;
 
