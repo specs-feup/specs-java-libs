@@ -58,7 +58,7 @@ public class StringParsers {
     }
 
     /**
-     * Receives a string starting with generic string separated by a whitespace, or the compslete tring if no whitespace
+     * Receives a string starting with generic string separated by a whitespace, or the complete string if no whitespace
      * is found.
      *
      * @param string
@@ -269,44 +269,44 @@ public class StringParsers {
      */
     public static ParserResult<String> parseNested(StringSlice string, char begin, char end,
             BiPredicate<StringSlice, Integer> endPredicate) {
-    
+
         // string = string.trim();
-    
+
         Preconditions.checkArgument(!string.isEmpty());
-    
+
         if (string.charAt(0) != begin) {
             return new ParserResult<>(string, "");
         }
-    
+
         int counter = 1;
         int endIndex = 0;
         while (counter > 0) {
             endIndex++;
-    
+
             // If found end char, decrement
             // if (string.charAt(endIndex) == end) {
             if (endPredicate.test(string, endIndex)) {
                 counter--;
                 continue;
             }
-    
+
             // If found start char, increment
             if (string.charAt(endIndex) == begin) {
                 counter++;
                 continue;
             }
         }
-    
+
         // Return string without separators
         String result = string.substring(1, endIndex).toString();
-    
+
         // Cut string from parser
         if (endIndex < string.length() - 1) {
             string = string.substring(endIndex + 1);
         } else {
             string = new StringSlice("");
         }
-    
+
         return new ParserResult<>(string, result);
     }
 
@@ -321,7 +321,7 @@ public class StringParsers {
      */
     public static ParserResult<String> parseNested(StringSlice string, char begin, char end) {
         BiPredicate<StringSlice, Integer> endPredicate = (slice, endIndex) -> slice.charAt(endIndex) == end;
-    
+
         return parseNested(string, begin, end, endPredicate);
     }
 

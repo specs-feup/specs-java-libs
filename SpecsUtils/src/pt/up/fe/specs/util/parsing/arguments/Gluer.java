@@ -46,6 +46,14 @@ public class Gluer {
         return new Gluer("<", ">", true);
     }
 
+    /**
+     * 
+     * @return a new Gluer that start with ( ends with )
+     */
+    public static Gluer newParenthesis() {
+        return new Gluer("(", ")", true);
+    }
+
     public String getGluerStart() {
         return delimiterStart;
     }

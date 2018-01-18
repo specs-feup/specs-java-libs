@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.parsing.arguments;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,6 +51,15 @@ public class ArgumentsParser {
     public static ArgumentsParser newCommandLine(boolean trimArgs) {
         return new ArgumentsParser(Arrays.asList(" "), Arrays.asList(Gluer.newDoubleQuote()),
                 Arrays.asList(Escape.newSlashChar()), trimArgs);
+    }
+
+    public static ArgumentsParser newPragmaText() {
+        return newPragmaText(true);
+    }
+
+    public static ArgumentsParser newPragmaText(boolean trimArgs) {
+        return new ArgumentsParser(Arrays.asList(" "), Arrays.asList(Gluer.newParenthesis()),
+                Collections.emptyList(), trimArgs);
     }
 
     public List<String> parse(String string) {
