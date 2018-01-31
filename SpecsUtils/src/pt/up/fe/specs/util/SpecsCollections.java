@@ -718,8 +718,9 @@ public class SpecsCollections {
         return new HashMap<>();
     }
 
-    public static <K> Set<K> newHashSet() {
-        return new HashSet<>();
+    @SafeVarargs
+    public static <K> Set<K> newHashSet(K... elements) {
+        return new HashSet<>(Arrays.asList(elements));
     }
     /*
     public static <T> T[] toArray(List<T> list) {
