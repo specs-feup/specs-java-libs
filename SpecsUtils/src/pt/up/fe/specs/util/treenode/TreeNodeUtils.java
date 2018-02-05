@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.SpecsCollections;
 
@@ -151,6 +152,18 @@ public class TreeNodeUtils {
         }
 
         return Optional.empty();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <K extends TreeNode<K>, EK extends K> List<EK> copy(List<EK> nodes) {
+        return nodes.stream()
+                .map(node -> (EK) node.copy())
+                .collect(Collectors.toList());
+        // public List<IncludeDecl> getIncludesList() {
+        // return getIncludes().getIncludes().stream()
+        // .map(includeDecl -> (IncludeDecl) includeDecl.copy())
+        // .collect(Collectors.toList());
+        // }
     }
 
 }

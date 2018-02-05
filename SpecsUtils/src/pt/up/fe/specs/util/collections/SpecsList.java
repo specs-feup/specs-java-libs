@@ -207,4 +207,8 @@ public class SpecsList<T> implements List<T>, SpecsCollection<T> {
         return list.subList(fromIndex, toIndex);
     }
 
+    @Override
+    public String toString() {
+        return list.toString();
+    }
 }
