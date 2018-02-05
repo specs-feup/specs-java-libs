@@ -49,8 +49,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -2467,6 +2469,24 @@ public class SpecsIo {
         boolean folderDeleted = delete(folder);
 
         return contentsDeleted && folderDeleted;
+    }
+
+    /**
+     * Maps each file found in the sources folders to its corresponding source.
+     * 
+     * @param sources
+     * @param extensions
+     * @return
+     */
+    public static Map<String, File> getFileMap(List<File> sources, Set<String> extensions) {
+        Map<String, File> fileMap = new HashMap<>();
+
+        for (File source : sources) {
+            List<String> filenames = getFiles(Arrays.asList(source), extensions);
+            filenames.stream().forEach(filename -> fileMap.put(filename, source));
+        }
+
+        return fileMap;
     }
 
     public static List<String> getFiles(List<File> sources, Set<String> extensions) {
