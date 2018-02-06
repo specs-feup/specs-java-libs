@@ -729,7 +729,7 @@ public class SpecsStrings {
             int modulo = (dividend - 1) % 26;
             reversedColumnName.add((char) (65 + modulo));
             // columnName = ((char) (65 + modulo)) + columnName;
-            dividend = (int) ((dividend - modulo) / 26);
+            dividend = (dividend - modulo) / 26;
         }
 
         Collections.reverse(reversedColumnName);
@@ -1105,7 +1105,18 @@ public class SpecsStrings {
     }
 
     /**
-     * Transforms a number of nano-seconds into a string.
+     * Helper method that accepts a double
+     * 
+     * @see SpecsStrings#parseTime(long)
+     * @param nanos
+     * @return
+     */
+    public static String parseTime(double nanos) {
+        return parseTime((long) nanos);
+    }
+
+    /**
+     * Transforms a number of nano-seconds into a string, trying to find what should be the best time unit.
      * 
      * @param nanos
      * @return
@@ -1467,6 +1478,14 @@ public class SpecsStrings {
         return parseTime(message, TimeUnit.MILLISECONDS, nanoDuration);
     }
 
+    /**
+     * Shows a message and the time in the given time unit
+     * 
+     * @param message
+     * @param timeUnit
+     * @param nanoDuration
+     * @return
+     */
     public static String parseTime(String message, TimeUnit timeUnit, long nanoDuration) {
         String unitString = timeUnit.toString();
         if (timeUnit == TimeUnit.MILLISECONDS) {
