@@ -816,7 +816,11 @@ public class SpecsIo {
      * @return if path is a folder, returns all the files inside the given folder, excluding other folders. Otherwise,
      *         returns a list with the given path
      */
-    public static List<File> getFiles(File path) {
+    public static SpecsList<File> getFiles(File path) {
+        return SpecsList.convert(getFilesPrivate(path));
+    }
+
+    private static List<File> getFilesPrivate(File path) {
         // Check if path exists
         if (!path.exists()) {
             SpecsLogs.msgInfo("Given path '" + path + "' does not exist");
