@@ -90,6 +90,18 @@ public class SpecsList<T> implements List<T>, SpecsCollection<T> {
         return SpecsCollections.concat(this.list, list);
     }
 
+    // public <M> SpecsList<M> map(Function<? super T, M> mapper) {
+    // List<M> mappedList = list.stream()
+    // .map(mapper)
+    // .collect(Collectors.toList());
+    //
+    // return SpecsList.convert(mappedList);
+    // }
+
+    // public void addTo(Collection<? super T> receivingCollection) {
+    // receivingCollection.addAll(this);
+    // }
+
     /** LIST IMPLEMENTATION **/
 
     @Override

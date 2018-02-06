@@ -64,6 +64,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import pt.up.fe.specs.util.collections.SpecsList;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 
@@ -1684,12 +1685,15 @@ public class SpecsIo {
      *            a string
      * @return all the files that have a certain extension
      */
-    public static List<File> getFiles(File fileOrFolder, String extension) {
+    // public static List<File> getFiles(File fileOrFolder, String extension) {
+    public static SpecsList<File> getFiles(File fileOrFolder, String extension) {
         // ExtensionFilter filter = new ExtensionFilter(extension);
         String suffix = DEFAULT_EXTENSION_SEPARATOR + extension;
-        return getFiles(fileOrFolder).stream()
+        List<File> fileList = getFiles(fileOrFolder).stream()
                 .filter(currentFile -> currentFile.getName().endsWith(suffix))
                 .collect(Collectors.toList());
+
+        return SpecsList.convert(fileList);
         /*
         File[] files = folder.listFiles(new ExtensionFilter(extension));
         if (files == null) {
@@ -2472,7 +2476,7 @@ public class SpecsIo {
     }
 
     /**
-     * Maps each file found in the sources folders to its corresponding source.
+     * Maps the canonical path of each file found in the sources folders to its corresponding source folder.
      * 
      * @param sources
      * @param extensions
@@ -2482,20 +2486,23 @@ public class SpecsIo {
         Map<String, File> fileMap = new HashMap<>();
 
         for (File source : sources) {
-            List<String> filenames = getFiles(Arrays.asList(source), extensions);
-            filenames.stream().forEach(filename -> fileMap.put(filename, source));
+            // List<String> filenames = getFiles(Arrays.asList(source), extensions);
+            // filenames.stream().forEach(filename -> fileMap.put(filename, source));
+            getFiles(Arrays.asList(source), extensions).stream()
+                    .forEach(file -> fileMap.put(SpecsIo.getCanonicalPath(file), source));
         }
 
         return fileMap;
     }
 
-    public static List<String> getFiles(List<File> sources, Set<String> extensions) {
-        List<String> sourceFiles = sources.stream()
+    public static SpecsList<File> getFiles(List<File> sources, Set<String> extensions) {
+        List<File> sourceFiles = sources.stream()
                 .flatMap(path -> SpecsIo.getFiles(path).stream())
-                .map(file -> file.getAbsolutePath())
-                .filter(filename -> extensions.contains(SpecsIo.getExtension(filename)))
+                // .map(file -> file.getAbsolutePath())
+                .filter(file -> extensions.contains(SpecsIo.getExtension(file)))
                 .collect(Collectors.toList());
-        return sourceFiles;
+
+        return SpecsList.convert(sourceFiles);
     }
 
     public static void copyFolderContents(File sourceFolder, File destinationFolder) {
