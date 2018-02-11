@@ -15,12 +15,13 @@ package pt.up.fe.specs.util.lazy;
 
 import java.util.function.Supplier;
 
-public interface Lazy<T> {
+public interface Lazy<T> extends Supplier<T> {
 
     /**
      * 
      * @return the value encapsulated by the Lazy object
      */
+    @Override
     T get();
 
     /**
