@@ -27,5 +27,6 @@
 	<dependencies>
 		<!-- APACHE -->
 		<dependency org="org.apache.commons" name="commons-lang3" rev="3.0"/>
+		<dependency org="javax.xml.bind" name="jaxb-api" rev="2.3.0"/>
 	</dependencies>
 </ivy-module>
