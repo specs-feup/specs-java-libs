@@ -55,11 +55,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -704,31 +706,36 @@ public class SpecsIo {
     /**
      * Note: by default this follows symlinks.
      * 
-     * @param folder
-     *            a File representing a folder.
+     * @param path
+     *            a File representing a path.
      * 
      * @return all the files inside the given folder, excluding other folders.
      */
-    public static List<File> getFilesRecursive(File folder) {
+    public static List<File> getFilesRecursive(File path) {
 
-        return getFilesRecursive(folder, true);
+        return getFilesRecursive(path, true);
     }
 
     /**
      * 
      * 
-     * @param folder
-     *            a File representing a folder.
+     * @param path
+     *            a File representing a path.
      * 
      * @param followSymlinks
      *            whether to follow symlinks (both files and directories)
      * 
-     * @return all the files inside the given folder, excluding other folders.
+     * @return all the files inside the given path, excluding other folders.
      */
-    public static List<File> getFilesRecursive(File folder, boolean followSymlinks) {
+    public static List<File> getFilesRecursive(File path, boolean followSymlinks) {
+
+        // Special case: path is a single file
+        if (path.isFile()) {
+            return Arrays.asList(path);
+        }
 
         List<File> fileList = new ArrayList<>();
-        File[] files = folder.listFiles();
+        File[] files = path.listFiles();
 
         if (files == null) {
             // Not a folder
@@ -2480,28 +2487,44 @@ public class SpecsIo {
     }
 
     /**
-     * Maps the canonical path of each file found in the sources folders to its corresponding source folder.
+     * Helper method that enables recursion by default.
      * 
      * @param sources
      * @param extensions
      * @return
      */
     public static Map<String, File> getFileMap(List<File> sources, Set<String> extensions) {
+        return getFileMap(sources, true, extensions);
+
+    }
+
+    /**
+     * Maps the canonical path of each file found in the sources folders to its corresponding source folder.
+     * 
+     * @param sources
+     * @param recursive
+     * @param extensions
+     * @return
+     */
+    public static Map<String, File> getFileMap(List<File> sources, boolean recursive, Set<String> extensions) {
         Map<String, File> fileMap = new HashMap<>();
 
         for (File source : sources) {
             // List<String> filenames = getFiles(Arrays.asList(source), extensions);
             // filenames.stream().forEach(filename -> fileMap.put(filename, source));
-            getFiles(Arrays.asList(source), extensions).stream()
+            getFiles(Arrays.asList(source), recursive, extensions).stream()
                     .forEach(file -> fileMap.put(SpecsIo.getCanonicalPath(file), source));
         }
 
         return fileMap;
     }
 
-    public static SpecsList<File> getFiles(List<File> sources, Set<String> extensions) {
+    public static SpecsList<File> getFiles(List<File> sources, boolean recursive, Set<String> extensions) {
+        Function<? super File, ? extends Stream<? extends File>> flatMapper = recursive
+                ? path -> SpecsIo.getFilesRecursive(path).stream() : path -> SpecsIo.getFiles(path).stream();
+
         List<File> sourceFiles = sources.stream()
-                .flatMap(path -> SpecsIo.getFiles(path).stream())
+                .flatMap(flatMapper)
                 // .map(file -> file.getAbsolutePath())
                 .filter(file -> extensions.contains(SpecsIo.getExtension(file)))
                 .collect(Collectors.toList());
