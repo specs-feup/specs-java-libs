@@ -13,6 +13,9 @@
 
 package pt.up.fe.specs.util.classmap;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Set of class T.
  * 
@@ -25,6 +28,19 @@ package pt.up.fe.specs.util.classmap;
  *
  */
 public class ClassSet<E> {
+
+    @SafeVarargs
+    public static <E> ClassSet<E> newInstance(Class<? extends E>... classes) {
+        return newInstance(Arrays.asList(classes));
+    }
+
+    public static <E> ClassSet<E> newInstance(List<Class<? extends E>> classes) {
+        ClassSet<E> classSet = new ClassSet<>();
+
+        classes.stream().forEach(aClass -> classSet.add(aClass));
+
+        return classSet;
+    }
 
     // Dummy value to associate with an Object in the backing Map
     private static final Object PRESENT = new Object();
