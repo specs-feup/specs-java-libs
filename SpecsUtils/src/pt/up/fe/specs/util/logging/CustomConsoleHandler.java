@@ -63,6 +63,7 @@ public class CustomConsoleHandler extends StreamHandler {
     @Override
     public synchronized void publish(LogRecord record) {
         super.publish(record);
+
         flush();
     }
 
