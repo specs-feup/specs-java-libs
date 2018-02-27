@@ -139,29 +139,29 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         public K setChild(K oldChild, K newChild) {
     	K sanitizedToken = TreeNodeUtils.sanitizeNode(newChild);
     	setAsParentOf(sanitizedToken);
-
+    
     	if (!hasChildren()) {
     	    throw new RuntimeException("Token does not have children, cannot set a child.");
     	}
-
+    
     	ListIterator<K> iterator = getChildrenIterator();
     	// Iterate until it finds the child
     	boolean foundChild = false;
     	while (iterator.hasNext()) {
-
+    
     	    // If not the child, continue
     	    if (iterator.next() != oldChild) {
     		continue;
     	    }
-
+    
     	    // Found the child, replace it
     	    iterator.set(newChild);
     	    foundChild = true;
     	}
-
+    
     	// If no child found, throw exception
     	Preconditions.checkArgument(foundChild, "Could not find given child.");
-
+    
     	return oldChild;
         }
      */
@@ -183,7 +183,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     /*
     protected void eventParentSet() {
-
+    
     }
     */
 
@@ -192,7 +192,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     /*
     protected void eventParentUnset() {
-
+    
     }
     */
 
@@ -289,6 +289,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     protected abstract K copyPrivate();
 
+    @Override
     public K copyShallow() {
         return copyPrivate();
     }
@@ -460,13 +461,13 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         return TreeNodeIndexUtils.indexesOf(getChildren(), aClass);
         /*
         	List<Integer> indexes = new ArrayList<>();
-
+        
         	for (int i = 0; i < numChildren(); i++) {
         	    if (aClass.isInstance(getChild(i))) {
         		indexes.add(i);
         	    }
         	}
-
+        
         	return indexes;
         	*/
     }
