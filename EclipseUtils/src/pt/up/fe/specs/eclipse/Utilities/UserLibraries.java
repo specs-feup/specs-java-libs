@@ -44,7 +44,23 @@ public class UserLibraries {
     private final Map<String, List<File>> userLibraries;
 
     UserLibraries(Map<String, List<File>> userLibraries) {
-	this.userLibraries = Collections.unmodifiableMap(userLibraries);
+        this.userLibraries = Collections.unmodifiableMap(userLibraries);
+    }
+
+    /**
+     * Creates a new UserLibraries from a collection of other UserLibraries.
+     * 
+     * @param userLibrariesCollection
+     * @return
+     */
+    public static UserLibraries newInstance(Collection<UserLibraries> userLibrariesCollection) {
+        Map<String, List<File>> fusedUserLibraries = new HashMap<>();
+
+        for (UserLibraries userLibraries : userLibrariesCollection) {
+            fusedUserLibraries.putAll(userLibraries.userLibraries);
+        }
+
+        return new UserLibraries(fusedUserLibraries);
     }
 
     /**
@@ -55,7 +71,7 @@ public class UserLibraries {
      * @return
      */
     public static UserLibraries newInstance(EclipseProjects eclipseProjects, File userLibrariesFile) {
-	return new UserLibrariesParser(eclipseProjects, userLibrariesFile).parse();
+        return new UserLibrariesParser(eclipseProjects, userLibrariesFile).parse();
     }
 
     /**
@@ -65,124 +81,124 @@ public class UserLibraries {
      * @return
      */
     public static UserLibraries newInstance(File workspace,
-	    EclipseProjects eclipseProjects) {
+            EclipseProjects eclipseProjects) {
 
-	// Get properties file
-	File propertiesFile = SpecsIo.existingFile(workspace, UserLibraries.PATH_PROPERTIES);
+        // Get properties file
+        File propertiesFile = SpecsIo.existingFile(workspace, UserLibraries.PATH_PROPERTIES);
 
-	// Parse properties
-	Properties properties = SpecsProperties.newInstance(propertiesFile).getProperties();
+        // Parse properties
+        Properties properties = SpecsProperties.newInstance(propertiesFile).getProperties();
 
-	// Create map
-	Map<String, List<File>> userLibraries = SpecsFactory.newHashMap();
+        // Create map
+        Map<String, List<File>> userLibraries = SpecsFactory.newHashMap();
 
-	for (Object keyObj : properties.keySet()) {
-	    String key = (String) keyObj;
+        for (Object keyObj : properties.keySet()) {
+            String key = (String) keyObj;
 
-	    if (!key.startsWith(UserLibraries.PREFIX_PROP_USER_LIB)) {
-		continue;
-	    }
+            if (!key.startsWith(UserLibraries.PREFIX_PROP_USER_LIB)) {
+                continue;
+            }
 
-	    String libName = key.substring(UserLibraries.PREFIX_PROP_USER_LIB.length());
-	    // System.out.println("Lib:" + libName);
+            String libName = key.substring(UserLibraries.PREFIX_PROP_USER_LIB.length());
+            // System.out.println("Lib:" + libName);
 
-	    String value = properties.getProperty(key);
-	    // System.out.println("VALUE:" + value);
-	    // File xmlFile = new File("C:\\temp_output\\lib.xml");
-	    // IoUtils.write(xmlFile, value);
-	    // Document doc = XomUtils.getDocument(xmlFile);
-	    Document doc = XomUtils.getDocument(value, false);
+            String value = properties.getProperty(key);
+            // System.out.println("VALUE:" + value);
+            // File xmlFile = new File("C:\\temp_output\\lib.xml");
+            // IoUtils.write(xmlFile, value);
+            // Document doc = XomUtils.getDocument(xmlFile);
+            Document doc = XomUtils.getDocument(value, false);
 
-	    if (doc == null) {
-		SpecsLogs.msgInfo("Skipping lib '" + libName + "', could not get info");
-		continue;
-	    }
+            if (doc == null) {
+                SpecsLogs.msgInfo("Skipping lib '" + libName + "', could not get info");
+                continue;
+            }
 
-	    Element element = doc.getRootElement();
+            Element element = doc.getRootElement();
 
-	    // Sanity check
-	    if (!element.getLocalName().equals("userlibrary")) {
-		SpecsLogs.msgWarn("NOT A USER LIBRARY");
-		continue;
-	    }
+            // Sanity check
+            if (!element.getLocalName().equals("userlibrary")) {
+                SpecsLogs.msgWarn("NOT A USER LIBRARY");
+                continue;
+            }
 
-	    Optional<List<File>> jarFiles = getLibraryJars(eclipseProjects, element);
+            Optional<List<File>> jarFiles = getLibraryJars(eclipseProjects, element);
 
-	    if (!jarFiles.isPresent()) {
-		SpecsLogs.msgInfo("Skipping lib '" + libName + "', could not get JAR file");
-		continue;
-	    }
+            if (!jarFiles.isPresent()) {
+                SpecsLogs.msgInfo("Skipping lib '" + libName + "', could not get JAR file");
+                continue;
+            }
 
-	    // Add found jars
-	    userLibraries.put(libName, jarFiles.get());
+            // Add found jars
+            userLibraries.put(libName, jarFiles.get());
 
-	}
+        }
 
-	return new UserLibraries(userLibraries);
+        return new UserLibraries(userLibraries);
     }
 
     private static Optional<List<File>> getLibraryJars(EclipseProjects eclipseProjects, Element element) {
-	// Create List
-	List<File> jarFiles = SpecsFactory.newArrayList();
+        // Create List
+        List<File> jarFiles = SpecsFactory.newArrayList();
 
-	// Check children
-	for (int i = 0; i < element.getChildCount(); i++) {
-	    Node node = element.getChild(i);
+        // Check children
+        for (int i = 0; i < element.getChildCount(); i++) {
+            Node node = element.getChild(i);
 
-	    if (!(node instanceof Element)) {
-		continue;
-	    }
+            if (!(node instanceof Element)) {
+                continue;
+            }
 
-	    Element child = (Element) node;
-	    Attribute attrib = child.getAttribute("path");
+            Element child = (Element) node;
+            Attribute attrib = child.getAttribute("path");
 
-	    Optional<File> jarFile = getJar(attrib.getValue(), eclipseProjects);
+            Optional<File> jarFile = getJar(attrib.getValue(), eclipseProjects);
 
-	    if (!jarFile.isPresent()) {
-		return Optional.empty();
-	    }
+            if (!jarFile.isPresent()) {
+                return Optional.empty();
+            }
 
-	    jarFiles.add(jarFile.get());
-	}
+            jarFiles.add(jarFile.get());
+        }
 
-	return Optional.of(jarFiles);
+        return Optional.of(jarFiles);
     }
 
     private static Optional<File> getJar(String value, EclipseProjects eclipseProjects) {
-	// If starts with '/', remove it
-	if (value.startsWith("/")) {
-	    value = value.substring(1);
-	}
+        // If starts with '/', remove it
+        if (value.startsWith("/")) {
+            value = value.substring(1);
+        }
 
-	// Get index of first '/'
-	int splitIndex = value.indexOf('/');
+        // Get index of first '/'
+        int splitIndex = value.indexOf('/');
 
-	// Get project name
-	String projectName = value.substring(0, splitIndex);
+        // Get project name
+        String projectName = value.substring(0, splitIndex);
 
-	File projectFolder = eclipseProjects.getProjectFolder(projectName);
+        File projectFolder = eclipseProjects.getProjectFolder(projectName);
 
-	// Get file
-	String filepath = value.substring(splitIndex + 1);
+        // Get file
+        String filepath = value.substring(splitIndex + 1);
 
-	// Check if file exists
-	File jarFile = new File(projectFolder, filepath);
-	if (!jarFile.isFile()) {
-	    SpecsLogs.msgInfo("Could not find User Library jar: '" + jarFile + "'");
-	    return Optional.empty();
-	}
+        // Check if file exists
+        File jarFile = new File(projectFolder, filepath);
+        if (!jarFile.isFile()) {
+            SpecsLogs.msgInfo("Could not find User Library jar: '" + jarFile + "'");
+            return Optional.empty();
+        }
 
-	// File jarFile = IoUtils.existingFile(projectFolder, filepath);
+        // File jarFile = IoUtils.existingFile(projectFolder, filepath);
 
-	return Optional.of(jarFile);
+        return Optional.of(jarFile);
     }
 
     public List<File> getJars(String libraryName) {
-	return userLibraries.get(libraryName);
+        return userLibraries.get(libraryName);
     }
 
     public Collection<String> getLibraries() {
-	return userLibraries.keySet();
+        return userLibraries.keySet();
     }
 
     /*
@@ -192,7 +208,7 @@ public class UserLibraries {
      */
     @Override
     public String toString() {
-	return userLibraries.toString();
+        return userLibraries.toString();
     }
 
     /**
@@ -203,29 +219,29 @@ public class UserLibraries {
      */
     public UserLibraries makePathsRelative(File rootFolder) {
 
-	Map<String, List<File>> relativeUserLibraries = new HashMap<>();
+        Map<String, List<File>> relativeUserLibraries = new HashMap<>();
 
-	for (String key : userLibraries.keySet()) {
-	    List<File> files = userLibraries.get(key);
-	    List<File> newFiles = new ArrayList<>();
+        for (String key : userLibraries.keySet()) {
+            List<File> files = userLibraries.get(key);
+            List<File> newFiles = new ArrayList<>();
 
-	    for (File file : files) {
-		String relativeFilename = SpecsIo.getRelativePath(file, rootFolder);
-		if (relativeFilename == null) {
-		    throw new RuntimeException("Could not convert path '" + file + "' to relative path using as base '"
-			    + rootFolder + "'");
-		}
+            for (File file : files) {
+                String relativeFilename = SpecsIo.getRelativePath(file, rootFolder);
+                if (relativeFilename == null) {
+                    throw new RuntimeException("Could not convert path '" + file + "' to relative path using as base '"
+                            + rootFolder + "'");
+                }
 
-		// Add new file
-		newFiles.add(new File(relativeFilename));
-	    }
+                // Add new file
+                newFiles.add(new File(relativeFilename));
+            }
 
-	    // Replace file list
-	    // userLibraries.put(key, newFiles);
-	    relativeUserLibraries.put(key, newFiles);
+            // Replace file list
+            // userLibraries.put(key, newFiles);
+            relativeUserLibraries.put(key, newFiles);
 
-	}
+        }
 
-	return new UserLibraries(relativeUserLibraries);
+        return new UserLibraries(relativeUserLibraries);
     }
 }
