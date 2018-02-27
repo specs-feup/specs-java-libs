@@ -23,47 +23,47 @@ import javax.swing.SwingWorker;
 class MemProgressBarUpdater extends SwingWorker<Object, Object> {
 
     public MemProgressBarUpdater(JProgressBar jProgressBar) {
-	this.jProgressBar = jProgressBar;
-	this.jProgressBar.setStringPainted(true);
+        this.jProgressBar = jProgressBar;
+        this.jProgressBar.setStringPainted(true);
     }
 
     @Override
     protected Object doInBackground() throws Exception {
-	long heapSize = Runtime.getRuntime().totalMemory();
-	long heapFreeSize = Runtime.getRuntime().freeMemory();
-	long usedMemory = heapSize - heapFreeSize;
+        long heapSize = Runtime.getRuntime().totalMemory();
+        long heapFreeSize = Runtime.getRuntime().freeMemory();
+        long usedMemory = heapSize - heapFreeSize;
 
-	// long mbFactor = (long)Math.pow(1024, 2);
-	long kbFactor = (long) Math.pow(1024, 1);
+        long mbFactor = (long) Math.pow(1024, 2);
+        // long kbFactor = (long) Math.pow(1024, 1);
 
-	this.heapSizeMb = (int) (heapSize / kbFactor);
-	this.currentSizeMb = (int) (usedMemory / kbFactor);
+        heapSizeMb = (int) (heapSize / mbFactor);
+        currentSizeMb = (int) (usedMemory / mbFactor);
 
-	java.awt.EventQueue.invokeLater(() -> {
-	    String barString = MemProgressBarUpdater.this.currentSizeMb + "kb/" + MemProgressBarUpdater.this.heapSizeMb
-		    + "kb";
+        java.awt.EventQueue.invokeLater(() -> {
+            String barString = MemProgressBarUpdater.this.currentSizeMb + "MiB/" + MemProgressBarUpdater.this.heapSizeMb
+                    + "MiB";
 
-	    MemProgressBarUpdater.this.jProgressBar.setMinimum(0);
-	    MemProgressBarUpdater.this.jProgressBar.setMaximum(MemProgressBarUpdater.this.heapSizeMb);
-	    MemProgressBarUpdater.this.jProgressBar.setValue(MemProgressBarUpdater.this.currentSizeMb);
-	    MemProgressBarUpdater.this.jProgressBar.setString(barString);
-	    // System.err.println("Heap Size:"+heapSizeMb);
-	    // System.err.println("Current Size:"+currentSizeMb);
-	    });
+            MemProgressBarUpdater.this.jProgressBar.setMinimum(0);
+            MemProgressBarUpdater.this.jProgressBar.setMaximum(MemProgressBarUpdater.this.heapSizeMb);
+            MemProgressBarUpdater.this.jProgressBar.setValue(MemProgressBarUpdater.this.currentSizeMb);
+            MemProgressBarUpdater.this.jProgressBar.setString(barString);
+            // System.err.println("Heap Size:"+heapSizeMb);
+            // System.err.println("Current Size:"+currentSizeMb);
+        });
 
-	return null;
+        return null;
     }
 
     @Override
     protected void done() {
-	/*
-	jProgressBar.setMinimum(0);
-	jProgressBar.setMaximum(heapSizeMb);
-	jProgressBar.setValue(currentSizeMb);
-	System.err.println("Heap Size:"+heapSizeMb);
-	System.err.println("Current Size:"+currentSizeMb);
-	 *
-	 */
+        /*
+        jProgressBar.setMinimum(0);
+        jProgressBar.setMaximum(heapSizeMb);
+        jProgressBar.setValue(currentSizeMb);
+        System.err.println("Heap Size:"+heapSizeMb);
+        System.err.println("Current Size:"+currentSizeMb);
+         *
+         */
     }
 
     /**
