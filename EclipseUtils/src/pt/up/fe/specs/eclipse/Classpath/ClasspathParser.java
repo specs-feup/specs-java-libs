@@ -40,6 +40,7 @@ import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
+import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 /**
@@ -53,13 +54,17 @@ public class ClasspathParser {
     private static final String IVY = "org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/";
     private static final String JUNIT4 = "org.eclipse.jdt.junit.JUNIT_CONTAINER/4";
 
+    // If true, user libraries declared in a repository will be available to all repositories
+    // This is the default behavior in Eclipse, we are replicating it here
+    private static final boolean FUSE_USER_LIBRARIES = true;
+
     private static final Set<String> CONTAINERS_TO_IGNORE = SpecsFactory.newHashSet(Arrays.asList(
             // "org.eclipse.jdt.launching.JRE_CONTAINER", "org.eclipse.jdt.junit.JUNIT_CONTAINER"));
             "org.eclipse.jdt.launching.JRE_CONTAINER"));
 
     private final EclipseProjects eclipseProjects;
-    // private final Optional<UserLibraries> userLibraries;
     private final Map<File, UserLibraries> userLibraries;
+    private final Lazy<UserLibraries> fusedUserLibraries = Lazy.newInstance(() -> createFusedUserLibraries());
 
     // TODO: This should be final, but it would need a restructuring of the class
     private File currentProjectFolder = null;
@@ -67,10 +72,6 @@ public class ClasspathParser {
 
     private final Map<String, ClasspathFiles> classpathCache;
     private final List<File> junitFiles = new ArrayList<>();
-
-    // private ClasspathParser(EclipseProjects eclipseProjects, Map<File, UserLibraries> userLibraries) {
-    // this(eclipseProjects, userLibraries);
-    // }
 
     /**
      * TODO: This should be the preferred constructor, replace others.
@@ -154,6 +155,10 @@ public class ClasspathParser {
         // }
 
         // parseClasspaths();
+    }
+
+    private UserLibraries createFusedUserLibraries() {
+        return UserLibraries.newInstance(userLibraries.values());
     }
 
     /*
@@ -387,6 +392,11 @@ public class ClasspathParser {
     }
 
     private UserLibraries getProjectsUserLibraries(String projectName) {
+        // Return all libraries, if option to fuse user libraries is enabled
+        if (FUSE_USER_LIBRARIES) {
+            return fusedUserLibraries.get();
+        }
+
         // Check if there is a defined repo
         Optional<File> repoFolder = eclipseProjects.getProjectRepositoryTry(projectName);
 

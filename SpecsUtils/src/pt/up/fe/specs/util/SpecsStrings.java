@@ -1729,7 +1729,7 @@ public class SpecsStrings {
      * Normalizes file contents:
      * <p>
      * 1) Replaces \r\n with \n <br>
-     * 2) Removes empty lines
+     * 2) Trims lines and removes empty lines
      * 
      * @param fileContents
      * @return
@@ -1742,6 +1742,7 @@ public class SpecsStrings {
         // Remove empty lines
         if (ignoreEmptyLines) {
             normalizedString = StringLines.getLines(normalizedString).stream()
+                    .map(String::trim)
                     .filter(line -> !line.isEmpty())
                     .collect(Collectors.joining("\n"));
         }
