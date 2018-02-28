@@ -40,7 +40,8 @@ class MemProgressBarUpdater extends SwingWorker<Object, Object> {
         currentSizeMb = (int) (usedMemory / mbFactor);
 
         java.awt.EventQueue.invokeLater(() -> {
-            String barString = MemProgressBarUpdater.this.currentSizeMb + "MiB/" + MemProgressBarUpdater.this.heapSizeMb
+            String barString = MemProgressBarUpdater.this.currentSizeMb + "MiB / "
+                    + MemProgressBarUpdater.this.heapSizeMb
                     + "MiB";
 
             MemProgressBarUpdater.this.jProgressBar.setMinimum(0);

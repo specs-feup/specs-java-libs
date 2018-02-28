@@ -20,6 +20,7 @@
 package pt.up.fe.specs.util.utilities.heapwindow;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,11 +81,14 @@ public class HeapBar extends JPanel {
      */
     private void initComponents() {
         setLayout(new BorderLayout());
-
+        // UIManager.put("ProgressBar.background", Color.CYAN);
+        // UIManager.put("ProgressBar.foreground", Color.BLACK);
+        // UIManager.put("ProgressBar.selectionBackground", Color.BLACK);
+        // UIManager.put("ProgressBar.selectionForeground", Color.WHITE);
         jProgressBar1 = new javax.swing.JProgressBar();
-        jProgressBar1.setToolTipText("Click to run Garbage Collector");
+        jProgressBar1.setToolTipText("Click to run spGarbage Collector");
         jProgressBar1.addMouseListener(GenericMouseListener.click(HeapBar::performGC));
-
+        jProgressBar1.setFont(jProgressBar1.getFont().deriveFont(Font.BOLD, 12f));
         this.add(jProgressBar1, BorderLayout.CENTER);
     }
 
