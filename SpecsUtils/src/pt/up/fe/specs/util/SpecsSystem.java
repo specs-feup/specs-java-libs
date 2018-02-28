@@ -786,4 +786,16 @@ public class SpecsSystem {
     // return process;
     // }
 
+    /**
+     * Based on this: https://stackoverflow.com/a/2591122/1189808
+     * 
+     * @return
+     */
+    public static double getJavaVersionNumber() {
+        String version = System.getProperty("java.version");
+        int pos = version.lastIndexOf('.');
+        // pos = version.indexOf('.', pos + 1);
+        return Double.parseDouble(version.substring(0, pos));
+    }
+
 }
