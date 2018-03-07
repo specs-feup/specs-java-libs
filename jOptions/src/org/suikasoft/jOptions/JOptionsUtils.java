@@ -102,11 +102,15 @@ public class JOptionsUtils {
             return;
         }
 
-        File localOptionsFile = new File(jarFolderTry.get(), optionsFilename);
+        File jarFolder = jarFolderTry.get();
+
+        File localOptionsFile = new File(jarFolder, optionsFilename);
 
         if (localOptionsFile.isFile()) {
             localData.addAll(persistence.loadData(localOptionsFile));
-        } else {
+        }
+        // Only create default local_options.xml near the JAR if it is in a folder that can be written
+        else if (SpecsIo.canWriteFolder(jarFolder)) {
             SpecsLogs
                     .msgInfo("Local options file not found near JAR, creating file:"
                             + SpecsIo.getCanonicalPath(localOptionsFile));
