@@ -23,6 +23,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.util.ValidationEventCollector;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
@@ -34,47 +35,64 @@ import org.xml.sax.SAXException;
 
 public class MarshalUtils {
 
-	public static <T> T unmarshal(File fileSource, String sourceName, InputStream schemaFile, Class<T> rootType,
-			String packageName, boolean validate) throws JAXBException, SAXException {
-		return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate);
-	}
+    public static <T> T unmarshal(File fileSource, String sourceName, InputStream schemaFile, Class<T> rootType,
+            String packageName, boolean validate) throws JAXBException, SAXException {
+        final ValidationEventCollector vec = new ValidationEventCollector();
+        return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate, vec);
+    }
 
-	public static <T> T unmarshal(Source source, String sourceName, InputStream schemaFile, Class<T> rootType,
-			String packageName, boolean validate) throws JAXBException, SAXException {
+    public static <T> T unmarshal(File fileSource, String sourceName, InputStream schemaFile, Class<T> rootType,
+            String packageName, boolean validate, ValidationEventHandler handler) throws JAXBException, SAXException {
+        return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate,
+                handler);
+    }
 
-		final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// W3C_XML_SCHEMA_NS_URI);
+    public static <T> T unmarshal(Source source, String sourceName, InputStream schemaFile, Class<T> rootType,
+            String packageName, boolean validate) throws JAXBException, SAXException {
+        final ValidationEventCollector vec = new ValidationEventCollector();
+        return unmarshal(source, sourceName, schemaFile, rootType, packageName, validate, vec);
+    }
 
-		final JAXBContext jc = JAXBContext.newInstance(packageName);
-		final Unmarshaller u = jc.createUnmarshaller();
-		if (validate && schemaFile != null) {
-			final Source schemaSource = new StreamSource(schemaFile);
-			final Schema schema = sf.newSchema(schemaSource);
-			u.setSchema(schema);
-		}
-		final ValidationEventCollector vec = new ValidationEventCollector();
-		u.setEventHandler(vec);
+    public static <T> T unmarshal(Source source, String sourceName, InputStream schemaFile, Class<T> rootType,
+            String packageName, boolean validate, ValidationEventHandler handler) throws JAXBException, SAXException {
 
-		JAXBElement<T> jaxbEl = null;
+        final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// W3C_XML_SCHEMA_NS_URI);
 
-		jaxbEl = u.unmarshal(source, rootType);
+        final JAXBContext jc = JAXBContext.newInstance(packageName);
 
-		return jaxbEl.getValue();
-	}
+        final Unmarshaller u = jc.createUnmarshaller();
 
-	public static <T> void marshal(T value, Class<T> elementClass, String packageName, QName q_name,
-			OutputStream oStream) throws JAXBException {
+        if (validate && schemaFile != null) {
+            final Source schemaSource = new StreamSource(schemaFile);
+            // SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final Schema schema = sf.newSchema(schemaSource);
+            u.setSchema(schema);
+        }
+        if (handler == null) {
+            handler = new ValidationEventCollector();
+        }
+        u.setEventHandler(handler);
 
-		final JAXBElement<T> jaxbEl = createRootElement(value, q_name, elementClass);
-		final JAXBContext jc = JAXBContext.newInstance(packageName);
-		final Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        JAXBElement<T> jaxbEl = null;
+        jaxbEl = u.unmarshal(source, rootType);
 
-		m.marshal(jaxbEl, oStream);
+        return jaxbEl.getValue();
+    }
 
-	}
+    public static <T> void marshal(T value, Class<T> elementClass, String packageName, QName q_name,
+            OutputStream oStream) throws JAXBException {
 
-	private static <T> JAXBElement<T> createRootElement(T value, QName q_name, Class<T> elementClass) {
-		return new JAXBElement<>(q_name, elementClass, null, value);
-	}
+        final JAXBElement<T> jaxbEl = createRootElement(value, q_name, elementClass);
+        final JAXBContext jc = JAXBContext.newInstance(packageName);
+        final Marshaller m = jc.createMarshaller();
+        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+
+        m.marshal(jaxbEl, oStream);
+
+    }
+
+    private static <T> JAXBElement<T> createRootElement(T value, QName q_name, Class<T> elementClass) {
+        return new JAXBElement<>(q_name, elementClass, null, value);
+    }
 }
