@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
@@ -2675,5 +2676,36 @@ public class SpecsIo {
         } catch (IOException e) {
             SpecsLogs.msgWarn("Exception while closing a stream", e);
         }
+    }
+
+    /**
+     * Tests if a folder can be written.
+     * 
+     * @param folder
+     * @return true if the given path is an existing folder, and can be written
+     */
+    public static boolean canWriteFolder(File folder) {
+        if (!folder.isDirectory()) {
+            return false;
+        }
+
+        // Get a random filename
+        File randomFile = new File(folder, UUID.randomUUID().toString());
+        // Try it until it is a file that does not exist
+        while (randomFile.isFile()) {
+            randomFile = new File(folder, UUID.randomUUID().toString());
+        }
+
+        try {
+            // Try creating a new file
+            randomFile.createNewFile();
+            // Delete file
+            randomFile.delete();
+            return true;
+        } catch (IOException e) {
+            // Could not write file, assume there are no permissions
+            return false;
+        }
+
     }
 }
