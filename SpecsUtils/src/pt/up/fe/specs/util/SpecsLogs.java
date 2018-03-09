@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -589,6 +590,18 @@ public class SpecsLogs {
 
         // Add handler
         SpecsLogs.addHandler(handler);
+    }
+
+    public static void debug(Supplier<String> string) {
+        debug(string.get());
+    }
+
+    public static void debug(String string) {
+        if (SpecsSystem.isDebug()) {
+            // Prefix
+            string = "[DEBUG] " + string;
+            msgInfo(string);
+        }
     }
 
 }
