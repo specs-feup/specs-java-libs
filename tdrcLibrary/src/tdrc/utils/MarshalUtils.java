@@ -33,28 +33,31 @@ import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
 
+import com.sun.xml.bind.IDResolver;
+
 public class MarshalUtils {
 
     public static <T> T unmarshal(File fileSource, String sourceName, InputStream schemaFile, Class<T> rootType,
             String packageName, boolean validate) throws JAXBException, SAXException {
-        final ValidationEventCollector vec = new ValidationEventCollector();
-        return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate, vec);
+        return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate, null,
+                null);
     }
 
     public static <T> T unmarshal(File fileSource, String sourceName, InputStream schemaFile, Class<T> rootType,
-            String packageName, boolean validate, ValidationEventHandler handler) throws JAXBException, SAXException {
+            String packageName, boolean validate, ValidationEventHandler handler, IDResolver resolver)
+            throws JAXBException, SAXException {
         return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate,
-                handler);
+                handler, resolver);
     }
 
     public static <T> T unmarshal(Source source, String sourceName, InputStream schemaFile, Class<T> rootType,
             String packageName, boolean validate) throws JAXBException, SAXException {
-        final ValidationEventCollector vec = new ValidationEventCollector();
-        return unmarshal(source, sourceName, schemaFile, rootType, packageName, validate, vec);
+        return unmarshal(source, sourceName, schemaFile, rootType, packageName, validate, null, null);
     }
 
     public static <T> T unmarshal(Source source, String sourceName, InputStream schemaFile, Class<T> rootType,
-            String packageName, boolean validate, ValidationEventHandler handler) throws JAXBException, SAXException {
+            String packageName, boolean validate, ValidationEventHandler handler, IDResolver resolver)
+            throws JAXBException, SAXException {
 
         final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// W3C_XML_SCHEMA_NS_URI);
 
@@ -71,8 +74,13 @@ public class MarshalUtils {
         if (handler == null) {
             handler = new ValidationEventCollector();
         }
-        u.setEventHandler(handler);
 
+        u.setEventHandler(handler);
+        if (resolver != null) {
+            u.setProperty(IDResolver.class.getName(), resolver);
+        }
+        // u.setProperty("com.sun.xml.internal.bind.IDResolver", resolver2);
+        // u.setProperty(UnmarshallerProperties.ID_RESOLVER, resolver);
         JAXBElement<T> jaxbEl = null;
         jaxbEl = u.unmarshal(source, rootType);
 
