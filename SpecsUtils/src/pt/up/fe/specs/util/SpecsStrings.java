@@ -1122,7 +1122,7 @@ public class SpecsStrings {
      * @return
      */
     public static String parseTime(long nanos) {
-        NumberFormat doubleFormat = NumberFormat.getNumberInstance();
+        NumberFormat doubleFormat = NumberFormat.getNumberInstance(Locale.UK);
         doubleFormat.setMaximumFractionDigits(2);
 
         // Check millis

@@ -33,6 +33,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 public class CommandLineUtils {
 
     private static final String ARG_WRITE = "write";
+    private static final String ARG_HELP = "--help";
 
     private final StoreDefinition definition;
 
@@ -144,6 +145,18 @@ public class CommandLineUtils {
             SpecsLogs
                     .msgInfo("Writing default configuration file to '" + config.getName() + "'");
 
+            return true;
+        }
+
+        boolean hasHelp = args.stream()
+                .filter(arg -> arg.equals(CommandLineUtils.ARG_HELP))
+                .findFirst()
+                .map(arg -> true).orElse(false);
+
+        if (hasHelp) {
+            // Show help message
+            SpecsLogs.msgInfo(app.getName());
+            SpecsLogs.msgInfo(CommandLineUtils.getHelp(app.getDefinition()));
             return true;
         }
 

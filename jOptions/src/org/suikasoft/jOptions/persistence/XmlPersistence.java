@@ -336,7 +336,11 @@ public class XmlPersistence implements AppPersistence {
         DataStore storeToSave = DataStore.newInstance(data.getName());
 
         for (DataKey<?> key : def.get().getKeys()) {
-            storeToSave.setRaw(key, data.get(key));
+            // Before it was not being check if key existed or not, and added default values.
+            // Will it break stuff not putting the default values?
+            if (data.hasValue(key)) {
+                storeToSave.setRaw(key, data.get(key));
+            }
         }
 
         return storeToSave;
