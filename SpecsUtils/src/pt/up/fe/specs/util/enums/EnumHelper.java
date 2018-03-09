@@ -113,4 +113,17 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
         return new ThreadSafeLazy<>(() -> new EnumHelper<>(anEnum, excludeList));
     }
 
+    /**
+     * Similar to newLazyHelper, but accepts any enum, even if they do not implement StringProvider (uses the
+     * enum.name() instead).
+     * 
+     * @param anEnum
+     * @param excludeList
+     * @return
+     */
+    // public static <T extends Enum<T>> Lazy<EnumHelper<T>> newLazyHelperAdapter(Class<T> anEnum,
+    // Collection<T> excludeList) {
+    // return new ThreadSafeLazy<>(() -> new EnumHelper<>(anEnum, excludeList));
+    // }
+
 }
