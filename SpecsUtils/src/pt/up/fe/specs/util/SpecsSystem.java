@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
+import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.properties.SpecsProperty;
 import pt.up.fe.specs.util.system.OutputType;
 import pt.up.fe.specs.util.system.ProcessOutput;
@@ -56,6 +57,8 @@ import pt.up.fe.specs.util.system.StreamToString;
  * @author Joao Bispo
  */
 public class SpecsSystem {
+
+    private static final Lazy<Boolean> IS_DEBUG = Lazy.newInstance(() -> new File("debug").isFile());
 
     /**
      * Helper method which receives the command and the working directory instead of the builder.
@@ -873,4 +876,7 @@ public class SpecsSystem {
 
     /***** ENDS methods for dynamically extending the classpath *****/
 
+    public static boolean isDebug() {
+        return IS_DEBUG.get();
+    }
 }
