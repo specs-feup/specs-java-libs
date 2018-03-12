@@ -2708,4 +2708,38 @@ public class SpecsIo {
         }
 
     }
+
+    /**
+     * Tries to look for the given filename in several common folders.
+     * 
+     * <p>
+     * Current order is: <br>
+     * - In the same folder of the .jar of the given class; <br>
+     * - In the current working directory <br>
+     * 
+     * @param filename
+     * @return
+     */
+    public static Optional<File> getLocalFile(String filename, Class<?> aClass) {
+        // Check if file exists next to the jar
+        Optional<File> jarFolder = SpecsIo.getJarPath(aClass);
+
+        // Return file if next to JAR
+        if (jarFolder.isPresent()) {
+            File localFile = new File(jarFolder.get(), filename);
+            if (localFile.isFile()) {
+                return Optional.of(localFile);
+            }
+        }
+
+        // If no file found next to the jar folder, use current folder
+        File currentFolder = SpecsIo.getWorkingDir();
+
+        File localFile = new File(currentFolder, filename);
+        if (localFile.isFile()) {
+            return Optional.of(localFile);
+        }
+
+        return Optional.empty();
+    }
 }
