@@ -13,6 +13,8 @@
 
 package org.specs.generators.java.exprs;
 
+import org.specs.generators.java.utils.Utils;
+
 /**
  * Generic Implementation of an expression which accepts a string and outputs the exactly same string
  * 
@@ -24,16 +26,20 @@ public class GenericExpression implements IExpression {
     String expression;
 
     public GenericExpression(String expression) {
-	this.expression = expression;
+        this.expression = expression;
+    }
+
+    public static GenericExpression fromString(String expression) {
+        return new GenericExpression(expression);
     }
 
     @Override
     public StringBuilder generateCode(int indentation) {
-	return new StringBuilder(indentation + expression);
+        return new StringBuilder(Utils.indent(indentation) + expression);
     }
 
     @Override
     public String toString() {
-	return generateCode(0).toString();
+        return generateCode(0).toString();
     }
 }

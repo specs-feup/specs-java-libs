@@ -49,7 +49,7 @@ public class Field implements IGenerate {
      *            the name for the field
      */
     public Field(JavaType classType, String name) {
-	init(classType, name, Privacy.PRIVATE);
+        init(classType, name, Privacy.PRIVATE);
     }
 
     /**
@@ -63,17 +63,17 @@ public class Field implements IGenerate {
      *            the privacy level
      */
     public Field(JavaType classType, String name, Privacy privacy) {
-	init(classType, name, privacy);
+        init(classType, name, privacy);
     }
 
     private void init(JavaType classType, String name, Privacy privacy) {
-	this.privacy = privacy;
-	this.name = name;
-	this.classType = classType;
-	annotations = new ArrayList<>();
-	modifiers = new ArrayList<>();
-	initializer = null;
-	setDefaultInitializer(false);
+        this.privacy = privacy;
+        this.name = name;
+        this.classType = classType;
+        annotations = new ArrayList<>();
+        modifiers = new ArrayList<>();
+        initializer = null;
+        setDefaultInitializer(false);
     }
 
     /**
@@ -83,9 +83,9 @@ public class Field implements IGenerate {
      *            the new modifier
      */
     public void addModifier(Modifier newMod) {
-	if (!modifiers.contains(newMod)) {
-	    modifiers.add(newMod);
-	}
+        if (!modifiers.contains(newMod)) {
+            modifiers.add(newMod);
+        }
     }
 
     /**
@@ -96,7 +96,7 @@ public class Field implements IGenerate {
      * @return true if the annotation was successfully added
      */
     public boolean add(Annotation annotation) {
-	return annotations.add(annotation);
+        return annotations.add(annotation);
     }
 
     /**
@@ -107,7 +107,7 @@ public class Field implements IGenerate {
      * @return true if the annotation was successfully removed
      */
     public boolean remove(Annotation annotation) {
-	return annotations.remove(annotation);
+        return annotations.remove(annotation);
     }
 
     /**
@@ -119,47 +119,48 @@ public class Field implements IGenerate {
      */
     @Override
     public StringBuilder generateCode(int indentation) {
-	final StringBuilder fieldStr = Utils.indent(indentation);
+        final StringBuilder fieldStr = Utils.indent(indentation);
 
-	for (final Annotation annot : annotations) {
-	    fieldStr.append(Utils.indent(indentation));
-	    fieldStr.append(annot);
-	    fieldStr.append("\n");
-	}
+        for (final Annotation annot : annotations) {
+            fieldStr.append(Utils.indent(indentation));
+            fieldStr.append(annot);
+            fieldStr.append("\n");
+        }
 
-	fieldStr.append(privacy);
-	for (final Modifier mod : modifiers) {
-	    fieldStr.append(" ");
-	    fieldStr.append(mod);
-	}
-	fieldStr.append(" ");
-	fieldStr.append(classType.getSimpleType());
-	fieldStr.append(" ");
-	fieldStr.append(name);
+        fieldStr.append(privacy);
+        for (final Modifier mod : modifiers) {
+            fieldStr.append(" ");
+            fieldStr.append(mod);
+        }
+        fieldStr.append(" ");
+        fieldStr.append(classType.getSimpleType());
+        fieldStr.append(" ");
+        fieldStr.append(name);
 
-	if (initializer != null) {
+        if (initializer != null) {
 
-	    fieldStr.append(" = ");
-	    fieldStr.append(initializer.generateCode(0));
-	} else if (defaultInitializer) {
+            fieldStr.append(" = ");
+            StringBuilder generateCode = initializer.generateCode(0);
+            fieldStr.append(generateCode);
+        } else if (defaultInitializer) {
 
-	    fieldStr.append(" = ");
-	    fieldStr.append(JavaTypeFactory.getDefaultValue(classType));
-	}
-	fieldStr.append(";");
-	return fieldStr;
+            fieldStr.append(" = ");
+            fieldStr.append(JavaTypeFactory.getDefaultValue(classType));
+        }
+        fieldStr.append(";");
+        return fieldStr;
     }
 
     @Override
     public String toString() {
-	return generateCode(0).toString();
+        return generateCode(0).toString();
     }
 
     /**
      * @return the privacy
      */
     public Privacy getPrivacy() {
-	return privacy;
+        return privacy;
     }
 
     /**
@@ -167,14 +168,14 @@ public class Field implements IGenerate {
      *            the privacy to set
      */
     public void setPrivacy(Privacy privacy) {
-	this.privacy = privacy;
+        this.privacy = privacy;
     }
 
     /**
      * @return the name
      */
     public String getName() {
-	return name;
+        return name;
     }
 
     /**
@@ -182,14 +183,14 @@ public class Field implements IGenerate {
      *            the name to set
      */
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     /**
      * @return the classType
      */
     public JavaType getType() {
-	return classType;
+        return classType;
     }
 
     /**
@@ -197,21 +198,21 @@ public class Field implements IGenerate {
      *            the classType to set
      */
     public void setType(JavaType classType) {
-	this.classType = classType;
+        this.classType = classType;
     }
 
     /**
      * @return the modifiers
      */
     public List<Modifier> getModifiers() {
-	return modifiers;
+        return modifiers;
     }
 
     /**
      * @return the defaultInitializer
      */
     public boolean isDefaultInitializer() {
-	return defaultInitializer;
+        return defaultInitializer;
     }
 
     /**
@@ -219,14 +220,14 @@ public class Field implements IGenerate {
      *            the defaultInitializer to set
      */
     public void setDefaultInitializer(boolean defaultInitializer) {
-	this.defaultInitializer = defaultInitializer;
+        this.defaultInitializer = defaultInitializer;
     }
 
     public IExpression getInitializer() {
-	return initializer;
+        return initializer;
     }
 
     public void setInitializer(IExpression initializer) {
-	this.initializer = initializer;
+        this.initializer = initializer;
     }
 }
