@@ -593,15 +593,22 @@ public class SpecsLogs {
     }
 
     public static void debug(Supplier<String> string) {
-        debug(string.get());
+        // To avoid resolving the string unnecessarily
+        if (SpecsSystem.isDebug()) {
+            // Prefix
+            String message = "[DEBUG] " + string.get();
+            msgInfo(message);
+            // debug(string.get());
+        }
     }
 
     public static void debug(String string) {
-        if (SpecsSystem.isDebug()) {
-            // Prefix
-            string = "[DEBUG] " + string;
-            msgInfo(string);
-        }
+        debug(() -> string);
+        // if (SpecsSystem.isDebug()) {
+        // // Prefix
+        // string = "[DEBUG] " + string;
+        // msgInfo(string);
+        // }
     }
 
 }
