@@ -149,6 +149,13 @@ public class SpecsProperties {
         return folder;
     }
 
+    public Optional<File> getExistingFile(KeyProvider<String> key) {
+        String filename = get(key);
+        File file = new File(filename);
+
+        return file.isFile() ? Optional.of(file) : Optional.empty();
+    }
+
     public <T extends Enum<T> & StringProvider> Optional<T> getEnum(KeyProvider<String> key, EnumHelper<T> helper) {
         String enumName = get(key);
 
