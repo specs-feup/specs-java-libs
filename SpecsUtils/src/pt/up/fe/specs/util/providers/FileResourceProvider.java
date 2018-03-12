@@ -16,8 +16,10 @@ package pt.up.fe.specs.util.providers;
 import java.io.File;
 import java.util.prefs.Preferences;
 
-import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.Preconditions;
+import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
+import pt.up.fe.specs.util.providers.impl.GenericFileResourceProvider;
 
 /**
  * Provides a resource in the format of a file, that might or not exist yet.
@@ -26,6 +28,14 @@ import pt.up.fe.specs.util.Preconditions;
  *
  */
 public interface FileResourceProvider {
+
+    static FileResourceProvider newInstance(File existingFile) {
+        return GenericFileResourceProvider.newInstance(existingFile);
+    }
+
+    static FileResourceProvider newInstance(File existingFile, String versionSuffix) {
+        return GenericFileResourceProvider.newInstance(existingFile, versionSuffix);
+    }
 
     /**
      * Helper class for versioned writing.
@@ -143,5 +153,20 @@ public interface FileResourceProvider {
         assert writtenFile.equals(destination);
 
         return new ResourceWriteData(writtenFile, true);
+    }
+
+    /**
+     * Creates a resource for the given version.
+     * 
+     * <p>
+     * It changes the resource path by appending an underscore and the given version as a suffix, before any
+     * extension.<br>
+     * E.g., if the original resource is "path/executable.exe", returns a resource to "path/executable<version>.exe".
+     * 
+     * @param version
+     * @return
+     */
+    default FileResourceProvider createResourceVersion(String version) {
+        throw new NotImplementedException(getClass());
     }
 }
