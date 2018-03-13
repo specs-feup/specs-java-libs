@@ -28,25 +28,38 @@ import pt.up.fe.specs.util.properties.SpecsProperties;
 public class FileResourceManager {
 
     private final Map<String, FileResourceProvider> availableResources;
-    private final Map<String, File> localResources;
+    private Map<String, File> localResources;
 
     public static <E extends Enum<E> & Supplier<FileResourceProvider>> FileResourceManager fromEnum(
-            Class<E> enumClass, String localResourcesFilename) {
+            // Class<E> enumClass, String localResourcesFilename) {
+            Class<E> enumClass) {
 
         Map<String, FileResourceProvider> availableResources = new LinkedHashMap<>();
         for (E anEnum : SpecsEnums.extractValues(enumClass)) {
             availableResources.put(anEnum.name(), anEnum.get());
         }
 
-        return new FileResourceManager(availableResources, localResourcesFilename);
+        // return new FileResourceManager(availableResources, localResourcesFilename);
+        return new FileResourceManager(availableResources);
     }
 
-    public FileResourceManager(Map<String, FileResourceProvider> availableResources, String localResourcesFilename) {
+    // public FileResourceManager(Map<String, FileResourceProvider> availableResources, String localResourcesFilename) {
+    public FileResourceManager(Map<String, FileResourceProvider> availableResources) {
         this.availableResources = availableResources;
 
         // Populate local resources
-        this.localResources = buildLocalResources(localResourcesFilename);
+        // this.localResources = buildLocalResources(localResourcesFilename);
+        this.localResources = new HashMap<>();
 
+    }
+
+    // public void setLocalResources(String localResourcesFilename) {
+    // this.localResources = buildLocalResources(localResourcesFilename);
+    // }
+
+    public void addLocalResources(String localResourcesFilename) {
+        Map<String, File> resources = buildLocalResources(localResourcesFilename);
+        this.localResources.putAll(resources);
     }
 
     private Map<String, File> buildLocalResources(String localResourcesFilename) {
