@@ -129,7 +129,7 @@ public class NodeInsertUtils {
     }
 
     /**
-     * If move is true,
+     * If move is true, detaches newToken before setting.
      * 
      * @param baseToken
      * @param newToken
