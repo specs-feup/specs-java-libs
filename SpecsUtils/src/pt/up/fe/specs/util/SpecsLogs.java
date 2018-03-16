@@ -611,4 +611,14 @@ public class SpecsLogs {
         // }
     }
 
+    /**
+     * When a certain case has not been yet tested and it can appear on the field.
+     * 
+     * @param untestedAction
+     */
+    public static void untested(String untestedAction) {
+        SpecsLogs.msgWarn(
+                "Untested:" + untestedAction + ". Please contact the developers in order to add this case as a test.");
+    }
+
 }
