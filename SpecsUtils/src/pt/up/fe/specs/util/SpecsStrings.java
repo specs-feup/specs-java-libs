@@ -166,17 +166,30 @@ public class SpecsStrings {
     }
 
     /**
-     * Tries to parse a String into a float. If an exception happens or if it lowers precision, returns null.
+     * Overload that sets 'isStrict' to true.
      * 
-     * @param doublefloat
+     * @param afloat
      *            a String representing a float.
      * @return the float represented by the string, or null if it couldn't be parsed.
      */
     public static Float parseFloat(String afloat) {
+        return parseFloat(afloat, true);
+    }
+
+    /**
+     * Tries to parse a String into a float. If an exception happens or if it lowers precision, returns null.
+     * 
+     * @param afloat
+     *            a String representing a float.
+     * @param isStrict
+     * @return
+     */
+    public static Float parseFloat(String afloat, boolean isStrict) {
         Float floatResult = null;
+
         try {
             floatResult = Float.valueOf(afloat);
-            if (!afloat.equals(floatResult.toString())) {
+            if (isStrict && !afloat.equals(floatResult.toString())) {
                 return null;
             }
 
@@ -185,6 +198,40 @@ public class SpecsStrings {
         }
 
         return floatResult;
+    }
+
+    /**
+     * Overload that sets 'isStrict' to true.
+     * 
+     * @param aDouble
+     *            a String representing a double.
+     * @return the double represented by the string, or null if it couldn't be parsed.
+     */
+    public static Double parseDouble(String aDouble) {
+        return parseDouble(aDouble, true);
+    }
+
+    /**
+     * Tries to parse a String into a double. If an exception happens or if it lowers precision, returns null.
+     * 
+     * @param aDouble
+     *            a String representing a float.
+     * @param strict
+     * @return the double represented by the string, or null if it couldn't be parsed.
+     */
+    public static Double parseDouble(String aDouble, boolean isStrict) {
+        Double doubleResult = null;
+        try {
+            doubleResult = Double.valueOf(aDouble);
+            if (isStrict && !aDouble.equals(doubleResult.toString())) {
+                return null;
+            }
+
+        } catch (NumberFormatException e) {
+            return null;
+        }
+
+        return doubleResult;
     }
 
     /**
