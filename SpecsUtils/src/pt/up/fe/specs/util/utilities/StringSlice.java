@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util.utilities;
 
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsStrings;
 
 /**
  * 
@@ -251,6 +252,10 @@ public class StringSlice implements CharSequence {
 
         // Could not find character
         return -1;
+    }
+
+    public int indexOfFirstWhiteSpace() {
+        return SpecsStrings.indexOfFirstWhiteSpace(toString());
     }
 
     public int lastIndexOf(char aChar) {
