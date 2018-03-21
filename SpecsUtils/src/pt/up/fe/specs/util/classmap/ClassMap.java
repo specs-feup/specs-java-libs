@@ -15,7 +15,9 @@ package pt.up.fe.specs.util.classmap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
@@ -41,22 +43,22 @@ public class ClassMap<T, V> {
     private final V defaultValue;
 
     public ClassMap() {
-	this(new HashMap<>(), true, null);
+        this(new HashMap<>(), true, null);
     }
 
     public <ER extends V> ClassMap(ER defaultValue) {
-	this(new HashMap<>(), true, defaultValue);
+        this(new HashMap<>(), true, defaultValue);
     }
 
     private ClassMap(Map<Class<? extends T>, V> map, boolean supportInterfaces, V defaultValue) {
 
-	this.map = map;
-	this.supportInterfaces = supportInterfaces;
-	this.defaultValue = defaultValue;
+        this.map = map;
+        this.supportInterfaces = supportInterfaces;
+        this.defaultValue = defaultValue;
     }
 
     public ClassMap<T, V> copy() {
-	return new ClassMap<>(new HashMap<>(this.map), this.supportInterfaces, this.defaultValue);
+        return new ClassMap<>(new HashMap<>(this.map), this.supportInterfaces, this.defaultValue);
     }
 
     /**
@@ -74,64 +76,94 @@ public class ClassMap<T, V> {
      * @param value
      */
     public <ET extends T, K extends ET> V put(Class<K> aClass,
-	    V value) {
+            V value) {
 
-	if (!this.supportInterfaces) {
-	    if (aClass.isInterface()) {
-		SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
-		return null;
-	    }
-	}
+        if (!this.supportInterfaces) {
+            if (aClass.isInterface()) {
+                SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
+                return null;
+            }
+        }
 
-	return this.map.put(aClass, value);
+        return this.map.put(aClass, value);
+    }
+
+    /**
+     * 
+     * @param key
+     * @return the class that will be used to access the map, based on the given key
+     */
+    public <TK extends T> Optional<Class<?>> getEquivalentKey(Class<TK> key) {
+        Class<?> currentKey = key;
+
+        while (currentKey != null) {
+            // Test key
+            V result = this.map.get(currentKey);
+            if (result != null) {
+                return Optional.of(currentKey);
+            }
+
+            if (this.supportInterfaces) {
+                for (Class<?> interf : currentKey.getInterfaces()) {
+                    result = this.map.get(interf);
+                    if (result != null) {
+                        return Optional.of(interf);
+                    }
+                }
+            }
+
+            currentKey = currentKey.getSuperclass();
+        }
+
+        return Optional.empty();
     }
 
     public <TK extends T> Optional<V> tryGet(Class<TK> key) {
-	Class<?> currentKey = key;
+        Class<?> currentKey = key;
 
-	while (currentKey != null) {
-	    // Test key
-	    V result = this.map.get(currentKey);
-	    if (result != null) {
-		return Optional.of((V) result);
-	    }
+        while (currentKey != null) {
+            // Test key
+            V result = this.map.get(currentKey);
+            if (result != null) {
+                return Optional.of((V) result);
+            }
 
-	    if (this.supportInterfaces) {
-		for (Class<?> interf : currentKey.getInterfaces()) {
-		    result = this.map.get(interf);
-		    if (result != null) {
-			return Optional.of((V) result);
-		    }
-		}
-	    }
+            if (this.supportInterfaces) {
+                for (Class<?> interf : currentKey.getInterfaces()) {
+                    result = this.map.get(interf);
+                    if (result != null) {
+                        return Optional.of((V) result);
+                    }
+                }
+            }
 
-	    currentKey = currentKey.getSuperclass();
-	}
+            currentKey = currentKey.getSuperclass();
+        }
 
-	// Return default value if present
-	if (this.defaultValue != null) {
-	    return Optional.of(this.defaultValue);
-	}
+        // Return default value if present
+        if (this.defaultValue != null) {
+            return Optional.of(this.defaultValue);
+        }
 
-	return Optional.empty();
+        return Optional.empty();
 
     }
 
     public <TK extends T> V get(Class<TK> key) {
-	Optional<V> result = tryGet(key);
+        Optional<V> result = tryGet(key);
 
-	// Found value, return it
-	if (result.isPresent()) {
-	    return result.get();
-	}
+        // Found value, return it
+        if (result.isPresent()) {
+            return result.get();
+        }
 
-	throw new NotImplementedException("Function not defined for class '"
-		+ key + "'");
+        throw new NotImplementedException("Function not defined for class '"
+                + key + "'");
     }
 
     @SuppressWarnings("unchecked")
     public <TK extends T> V get(TK key) {
-	return get((Class<TK>) key.getClass());
+        return get((Class<TK>) key.getClass());
     }
 
     /**
@@ -141,7 +173,15 @@ public class ClassMap<T, V> {
      * @return
      */
     public ClassMap<T, V> setDefaultValue(V defaultValue) {
-	return new ClassMap<>(this.map, this.supportInterfaces, defaultValue);
+        return new ClassMap<>(this.map, this.supportInterfaces, defaultValue);
+    }
+
+    public Set<Entry<Class<? extends T>, V>> entrySet() {
+        return map.entrySet();
+    }
+
+    public Set<Class<? extends T>> keySet() {
+        return map.keySet();
     }
 
 }
