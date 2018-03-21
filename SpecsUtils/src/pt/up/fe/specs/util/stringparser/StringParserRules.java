@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.stringparser;
 
+import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.utilities.StringSlice;
 
 public class StringParserRules {
@@ -40,4 +41,55 @@ public class StringParserRules {
         return new ParserResult<>(string, element);
     }
 
+    /**
+     * Looks for a word (as defined by {@link StringParserRules#word(StringSlice)}) and tries to transform into an
+     * object using the provided decoder.
+     * 
+     * @param string
+     * @param decoder
+     * @return
+     */
+    public static <T> ParserResult<T> object(StringSlice string, Decoder<T> decoder) {
+        // Get word
+        ParserResult<String> results = word(string);
+
+        // Try to decode string
+        T decodedObject = decoder.apply(results.getResult());
+
+        if (decodedObject == null) {
+            return null;
+        }
+
+        return new ParserResult<>(results.getModifiedString(), decodedObject);
+    }
+
+    /**
+     * Looks for an integer at the beginning of the string.
+     * 
+     * @param string
+     * @return
+     */
+    public static ParserResult<Integer> integer(StringSlice string) {
+        return object(string, SpecsStrings::parseInteger);
+    }
+
+    /**
+     * Looks for a double at the beginning of the string.
+     * 
+     * @param string
+     * @return
+     */
+    public static ParserResult<Double> doubleNumber(StringSlice string) {
+        return object(string, doubleString -> SpecsStrings.parseDouble(doubleString, false));
+    }
+
+    /**
+     * Looks for a float at the beginning of the string.
+     * 
+     * @param string
+     * @return
+     */
+    public static ParserResult<Float> floatNumber(StringSlice string) {
+        return object(string, floatString -> SpecsStrings.parseFloat(floatString, false));
+    }
 }
