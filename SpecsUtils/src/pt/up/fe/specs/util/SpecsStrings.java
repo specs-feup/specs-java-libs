@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -393,15 +394,35 @@ public class SpecsStrings {
      * @return the index of the first whitespace found in the given String, or -1 if none is found.
      */
     public static int indexOfFirstWhiteSpace(String string) {
-        int index = -1;
+        return indexOf(string, aChar -> Character.isWhitespace(aChar), false);
+    }
 
-        for (int i = 0; i < string.length(); i++) {
-            if (Character.isWhitespace(string.charAt(i))) {
-                return i;
+    public static int indexOf(String string, Predicate<Character> target, boolean reverse) {
+
+        // if (reverse) {
+        // string = new StringBuilder(string).reverse().toString();
+        // }
+
+        // IntStream charsStream = string.chars();
+
+        // Test reverse order
+        if (reverse) {
+            for (int i = string.length() - 1; i >= 0; i--) {
+                if (target.test(string.charAt(i))) {
+                    return i;
+                }
+            }
+        }
+        // Test original order
+        else {
+            for (int i = 0; i < string.length(); i++) {
+                if (target.test(string.charAt(i))) {
+                    return i;
+                }
             }
         }
 
-        return index;
+        return -1;
     }
 
     /**

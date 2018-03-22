@@ -781,6 +781,7 @@ public class SpecsCollections {
      * @return a stream of indexes to the list, in reverse order
      */
     public static <T> IntStream reverseIndexStream(List<T> list) {
+
         int from = 0;
         int to = list.size();
 
