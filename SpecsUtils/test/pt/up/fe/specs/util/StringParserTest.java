@@ -67,4 +67,49 @@ public class StringParserTest {
         assertTrue(hasWord4);
         assertTrue(parser.isEmpty());
     }
+
+    @Test
+    public void testNumbers() {
+        String testString = "1 2.0 3.0f";
+        StringParser parser = new StringParser(testString);
+
+        Integer integer = parser.parse(StringParserRules::integer);
+        assertEquals(Integer.valueOf(1), integer);
+        assertEquals("2.0 3.0f", parser.toString());
+
+        Double aDouble = parser.parse(StringParserRules::doubleNumber);
+        assertEquals(Double.valueOf(2.0), aDouble);
+        assertEquals("3.0f", parser.toString());
+
+        Float aFloat = parser.parse(StringParserRules::floatNumber);
+        assertEquals(Float.valueOf(3.0f), aFloat);
+        assertTrue(parser.isEmpty());
+
+    }
+
+    @Test
+    public void testReverseAndSeparator() {
+        String testString = "word1 word2,word3, word4";
+        StringParser parser = new StringParser(testString);
+
+        String word1 = parser.parse(StringParserRules::word);
+        assertEquals("word1", word1);
+        assertEquals("word2,word3, word4", parser.toString());
+
+        parser.setSeparator(aChar -> aChar == ',');
+
+        String word2 = parser.parse(StringParserRules::word);
+        assertEquals("word2", word2);
+        assertEquals("word3, word4", parser.toString());
+
+        parser.setReverse(true);
+
+        String word4 = parser.parse(StringParserRules::word);
+        assertEquals("word4", word4);
+        assertEquals("word3", parser.toString());
+
+        String word3 = parser.parse(StringParserRules::word);
+        assertEquals("word3", word3);
+        assertTrue(parser.isEmpty());
+    }
 }
