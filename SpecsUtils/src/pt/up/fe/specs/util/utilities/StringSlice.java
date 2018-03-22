@@ -16,7 +16,6 @@ package pt.up.fe.specs.util.utilities;
 import java.util.function.Predicate;
 
 import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.SpecsStrings;
 
 /**
  * 
@@ -313,11 +312,12 @@ public class StringSlice implements CharSequence {
      * @deprecated
      * @return
      */
-    @Deprecated
-    public int indexOfFirstWhiteSpace() {
-        return SpecsStrings.indexOfFirstWhiteSpace(toString());
-    }
+    // @Deprecated
+    // public int indexOfFirstWhiteSpace() {
+    // return SpecsStrings.indexOfFirstWhiteSpace(toString());
+    // }
 
+    @Deprecated
     public int lastIndexOf(char aChar) {
 
         // Look for character, starting from the end
@@ -336,15 +336,15 @@ public class StringSlice implements CharSequence {
      * @deprecated use object StringParser
      * @return the substring until the first whitespace, or the complete string if no white space is found
      */
-    @Deprecated
-    public StringSlice getFirstWord() {
-        int spaceIndex = indexOf(' ');
-        if (spaceIndex == -1) {
-            return this;
-        }
-
-        return substring(0, spaceIndex);
-    }
+    // @Deprecated
+    // public StringSlice getFirstWord() {
+    // int spaceIndex = indexOf(' ');
+    // if (spaceIndex == -1) {
+    // return this;
+    // }
+    //
+    // return substring(0, spaceIndex);
+    // }
 
     /**
      * 
