@@ -15,30 +15,33 @@ package pt.up.fe.specs.util.stringparser;
 
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.utilities.StringSlice;
+import pt.up.fe.specs.util.utilities.StringSlice.NextResult;
 
 public class StringParserRules {
 
     /**
-     * Looks for a string separated by a whitespace, or the complete string if no whitespace is found.
+     * Looks for a string defined by the StringSlice separator, or the complete string if no separator was found.
      * 
      * <p>
-     * A whitespace is determined by the function {@link java.lang.Character#isWhitespace(char)}.
+     * The default separator is a whitespace, as determined by the function
+     * {@link java.lang.Character#isWhitespace(char)}.
      * 
      * @param string
      * @return
      */
     public static ParserResult<String> word(StringSlice string) {
-        int endIndex = string.indexOfFirstWhiteSpace();
-        if (endIndex == -1) {
-            endIndex = string.length();
-        }
+        NextResult nextResult = string.next();
+        // int endIndex = string.indexOfFirstWhiteSpace();
+        // if (endIndex == -1) {
+        // endIndex = string.length();
+        // }
+        //
+        // String element = string.substring(0, endIndex).toString();
+        //
+        // // Update slice
+        // string = string.substring(endIndex);
 
-        String element = string.substring(0, endIndex).toString();
-
-        // Update slice
-        string = string.substring(endIndex);
-
-        return new ParserResult<>(string, element);
+        return new ParserResult<>(nextResult.getModifiedSlice(), nextResult.getWord());
     }
 
     /**

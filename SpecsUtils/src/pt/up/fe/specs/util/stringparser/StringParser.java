@@ -42,7 +42,7 @@ public class StringParser {
     }
 
     public StringParser(StringSlice currentString, boolean trimAfterApply) {
-        this.currentString = currentString;
+        this.currentString = currentString.setTrim(trimAfterApply);
         this.trimAfterApply = trimAfterApply;
     }
 
@@ -53,7 +53,7 @@ public class StringParser {
     public <T> T applyPrivate(ParserResult<T> result) {
         int originalLength = currentString.length();
 
-        currentString = result.getModifiedString();
+        currentString = currentString.setString(result.getModifiedString());
 
         // Apply trim if there where modifications
         if (trimAfterApply && currentString.length() != originalLength) {
@@ -132,7 +132,8 @@ public class StringParser {
 
     public String clear() {
         String consumedString = currentString.toString();
-        currentString = new StringSlice("");
+        // currentString = new StringSlice("");
+        currentString = currentString.clear();
         return consumedString;
     }
 
@@ -194,8 +195,8 @@ public class StringParser {
             modifiedString = modifiedString.trim();
         }
 
-        // Update current string
-        currentString = modifiedString;
+        // Update current string, preserving StringSlice state
+        currentString = currentString.setString(modifiedString);
 
         return Optional.of(result.getResult());
     }
@@ -267,6 +268,14 @@ public class StringParser {
      */
     public <T> boolean has(ParserWorker<T> rule, Predicate<T> predicate) {
         return check(rule, predicate).isPresent();
+    }
+
+    public void setReverse(boolean reverse) {
+        currentString = currentString.setReverse(reverse);
+    }
+
+    public void setSeparator(Predicate<Character> separator) {
+        currentString = currentString.setSeparator(separator);
     }
 
 }
