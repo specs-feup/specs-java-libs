@@ -13,8 +13,6 @@
 
 package pt.up.fe.specs.util.utilities;
 
-import java.util.function.Predicate;
-
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -25,31 +23,31 @@ import pt.up.fe.specs.util.SpecsLogs;
 public class StringSlice implements CharSequence {
     public static final StringSlice EMPTY = new StringSlice("");
 
-    private final String internal;
-    private final int startIndex;
-    private final int endIndex;
+    protected final String internal;
+    protected final int startIndex;
+    protected final int endIndex;
+    //
+    // private final boolean trim;
+    // private final boolean reverse;
+    // private final Predicate<Character> separator;
 
-    private final boolean trim;
-    private final boolean reverse;
-    private final Predicate<Character> separator;
-
-    public static class NextResult {
-        private final StringSlice modifiedSlice;
-        private final String word;
-
-        public NextResult(StringSlice modifiedSlice, String word) {
-            this.modifiedSlice = modifiedSlice;
-            this.word = word;
-        }
-
-        public StringSlice getModifiedSlice() {
-            return modifiedSlice;
-        }
-
-        public String getWord() {
-            return word;
-        }
-    }
+    // public static class NextResult {
+    // private final StringSlice modifiedSlice;
+    // private final String word;
+    //
+    // public NextResult(StringSlice modifiedSlice, String word) {
+    // this.modifiedSlice = modifiedSlice;
+    // this.word = word;
+    // }
+    //
+    // public StringSlice getModifiedSlice() {
+    // return modifiedSlice;
+    // }
+    //
+    // public String getWord() {
+    // return word;
+    // }
+    // }
 
     /**
      * Builds a new StringSlice, with 'whitespace' as the default separator.
@@ -57,7 +55,8 @@ public class StringSlice implements CharSequence {
      * @param value
      */
     public StringSlice(String value) {
-        this(value, 0, value == null ? -1 : value.length(), false, false, aChar -> Character.isWhitespace(aChar));
+        // this(value, 0, value == null ? -1 : value.length(), false, false, aChar -> Character.isWhitespace(aChar));
+        this(value, 0, value == null ? -1 : value.length());
         // if (value == null) {
         // throw new IllegalArgumentException("value must not be null");
         // }
@@ -82,8 +81,13 @@ public class StringSlice implements CharSequence {
     // public StringSlice(String value, int start, int end) {
     //
     // }
-    public StringSlice(String value, int start, int end, boolean trim, boolean reverse,
-            Predicate<Character> separator) {
+
+    public StringSlice(String value, int start, int end) {
+        // this(value, start, end, false, false, aChar -> Character.isWhitespace(aChar));
+        // }
+        //
+        // public StringSlice(String value, int start, int end, boolean trim, boolean reverse,
+        // Predicate<Character> separator) {
 
         if (value == null) {
             throw new IllegalArgumentException("value must not be null");
@@ -99,22 +103,22 @@ public class StringSlice implements CharSequence {
         this.startIndex = start;
         this.endIndex = end;
 
-        this.trim = trim;
-        this.reverse = reverse;
-        this.separator = separator;
+        // this.trim = trim;
+        // this.reverse = reverse;
+        // this.separator = separator;
     }
-
-    public StringSlice setTrim(boolean trim) {
-        return new StringSlice(internal, startIndex, endIndex, trim, reverse, separator);
-    }
-
-    public StringSlice setReverse(boolean reverse) {
-        return new StringSlice(internal, startIndex, endIndex, trim, reverse, separator);
-    }
-
-    public StringSlice setSeparator(Predicate<Character> separator) {
-        return new StringSlice(internal, startIndex, endIndex, trim, reverse, separator);
-    }
+    //
+    // public StringSlice setTrim(boolean trim) {
+    // return new StringSlice(internal, startIndex, endIndex, trim, reverse, separator);
+    // }
+    //
+    // public StringSlice setReverse(boolean reverse) {
+    // return new StringSlice(internal, startIndex, endIndex, trim, reverse, separator);
+    // }
+    //
+    // public StringSlice setSeparator(Predicate<Character> separator) {
+    // return new StringSlice(internal, startIndex, endIndex, trim, reverse, separator);
+    // }
 
     @Override
     public char charAt(int index) {
@@ -143,8 +147,9 @@ public class StringSlice implements CharSequence {
             throw new IndexOutOfBoundsException("end");
         }
 
-        // return new StringSlice(this.internal, this.startIndex + start, this.startIndex + end);
-        return new StringSlice(this.internal, this.startIndex + start, this.startIndex + end, trim, reverse, separator);
+        return new StringSlice(this.internal, this.startIndex + start, this.startIndex + end);
+        // return new StringSlice(this.internal, this.startIndex + start, this.startIndex + end, trim, reverse,
+        // separator);
     }
 
     public StringSlice substring(int start) {
@@ -352,6 +357,7 @@ public class StringSlice implements CharSequence {
      * @param reverse
      * @return an index relative to the internal String
      */
+    /*
     private int indexOfInternal(Predicate<Character> target, boolean reverse) {
         // Using internals
         // Test reverse order
@@ -370,7 +376,7 @@ public class StringSlice implements CharSequence {
                 }
             }
         }
-
+    
         // Using class methods
         // // Test reverse order
         // if (reverse) {
@@ -388,10 +394,10 @@ public class StringSlice implements CharSequence {
         // }
         // }
         // }
-
+    
         return -1;
     }
-
+    */
     /**
      * Parses a word according to the StringSlice defined rules (i.e., trim, reverse and separator).
      * <p>
@@ -399,46 +405,48 @@ public class StringSlice implements CharSequence {
      * 
      * @return
      */
+    /*
     public NextResult next() {
         int internalSeparatorIndex = indexOfInternal(separator, reverse);
-
+    
         NextResult result = reverse ? nextReverse(internalSeparatorIndex) : nextRegular(internalSeparatorIndex);
-
+    
         if (trim) {
             return new NextResult(result.getModifiedSlice().trim(), result.getWord().trim());
         }
-
+    
         return result;
     }
-
+    */
+    /*
     private NextResult nextRegular(int internalSeparatorIndex) {
-
+    
         if (internalSeparatorIndex == -1) {
             internalSeparatorIndex = endIndex;
         }
-
+    
         String word = internal.substring(startIndex, internalSeparatorIndex);
-
+    
         // // Trim word
         // if (trim) {
         // word = word.trim();
         // }
-
+    
         int internalSliceStartIndex = internalSeparatorIndex + 1;
-
+    
         // If bigger than endIndex, return empty StringSlice
         if (internalSliceStartIndex > endIndex) {
             return new NextResult(substring(length()), word);
         }
-
+    
         StringSlice modifiedSlice = new StringSlice(internal, internalSliceStartIndex, endIndex, trim, reverse,
                 separator);
-
+    
         // // Trim modified slice
         // if (trim) {
         // modifiedSlice = modifiedSlice.trim();
         // }
-
+    
         return new NextResult(modifiedSlice, word);
         // StringSlice modifiedSlice;
         // if (reverse) {
@@ -453,7 +461,7 @@ public class StringSlice implements CharSequence {
         //
         // // Update slice
         // string = string.substring(endIndex);
-
+    
         // if (internalSeparatorIndex == -1) {
         // if (reverse) {
         // internalSeparatorIndex = startIndex - 1;
@@ -461,12 +469,12 @@ public class StringSlice implements CharSequence {
         // internalSeparatorIndex = endIndex;
         // }
         // }
-
+    
         // int endIndex = string.indexOfFirstWhiteSpace();
         // if (endIndex == -1) {
         // endIndex = string.length();
         // }
-
+    
         // String word;
         // if (reverse) {
         // word = internal.substring(internalSeparatorIndex + 1, endIndex);
@@ -491,36 +499,39 @@ public class StringSlice implements CharSequence {
         //
         // // Update slice
         // string = string.substring(endIndex);
-
+    
         // return null;
     }
-
+    */
+    /*
     private NextResult nextReverse(int internalSeparatorIndex) {
         if (internalSeparatorIndex == -1) {
             internalSeparatorIndex = startIndex - 1;
         }
-
+    
         String word = internal.substring(internalSeparatorIndex + 1, endIndex);
-
+    
         int internalSliceEndIndex = internalSeparatorIndex;
-
+    
         if (internalSliceEndIndex < startIndex) {
             StringSlice modifiedSlice = new StringSlice("", 0, 0, trim, reverse, separator);
             return new NextResult(modifiedSlice, word);
         }
-
+    
         StringSlice modifiedSlice = new StringSlice(internal, startIndex, internalSliceEndIndex, trim, reverse,
                 separator);
-
+    
         return new NextResult(modifiedSlice, word);
     }
+    */
 
     /**
      * 
      * @return an empty StringSlice.
      */
     public StringSlice clear() {
-        return new StringSlice("", 0, 0, trim, reverse, separator);
+        // return new StringSlice("", 0, 0, trim, reverse, separator);
+        return new StringSlice("", 0, 0);
     }
     /*
     int endIndex = string.indexOfFirstWhiteSpace();if(endIndex==-1)
@@ -541,8 +552,16 @@ public class StringSlice implements CharSequence {
      * @param modifiedString
      * @return
      */
-    public StringSlice setString(StringSlice stringSlice) {
-        return new StringSlice(stringSlice.internal, stringSlice.startIndex, stringSlice.endIndex, trim, reverse,
-                separator);
-    }
+    // public StringSlice setString(StringSlice stringSlice) {
+    // return new StringSlice(stringSlice.internal, stringSlice.startIndex, stringSlice.endIndex);
+    // // return new StringSlice(stringSlice.internal, stringSlice.startIndex, stringSlice.endIndex, trim, reverse,
+    // // separator);
+    // }
+
+    // Does not make sense, it is an immutable class
+    // public StringSlice copy() {
+    // return new StringSlice(internal, startIndex, endIndex);
+    // // return new StringSlice(stringSlice.internal, stringSlice.startIndex, stringSlice.endIndex, trim, reverse,
+    // // separator);
+    // }
 }

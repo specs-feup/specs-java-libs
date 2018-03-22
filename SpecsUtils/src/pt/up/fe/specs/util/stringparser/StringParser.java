@@ -30,30 +30,32 @@ import pt.up.fe.specs.util.utilities.StringSlice;
  */
 public class StringParser {
 
-    private StringSlice currentString;
+    // private StringSlice currentString;
+    private StringSplitter currentString;
     private final boolean trimAfterApply;
 
     public StringParser(String string) {
-        this(new StringSlice(string));
+        this(new StringSplitter(new StringSlice(string)));
     }
 
-    public StringParser(StringSlice string) {
+    public StringParser(StringSplitter string) {
         this(string, true);
     }
 
-    public StringParser(StringSlice currentString, boolean trimAfterApply) {
+    public StringParser(StringSplitter currentString, boolean trimAfterApply) {
         this.currentString = currentString.setTrim(trimAfterApply);
         this.trimAfterApply = trimAfterApply;
     }
 
-    public StringSlice getCurrentString() {
+    public StringSplitter getCurrentString() {
         return currentString;
     }
 
     public <T> T applyPrivate(ParserResult<T> result) {
         int originalLength = currentString.length();
 
-        currentString = currentString.setString(result.getModifiedString());
+        // currentString = currentString.setString(result.getModifiedString());
+        currentString = currentString.set(result.getModifiedString());
 
         // Apply trim if there where modifications
         if (trimAfterApply && currentString.length() != originalLength) {
@@ -169,7 +171,7 @@ public class StringParser {
      * @param updateString
      * @return
      */
-    private <T> Optional<T> check(ParserWorker<T> rule, Predicate<T> predicate, boolean updateString) {
+    private <T> Optional<T> check(ParserRule<T> rule, Predicate<T> predicate, boolean updateString) {
         ParserResult<T> result = rule.apply(currentString);
 
         // Check if there was a match
@@ -196,7 +198,8 @@ public class StringParser {
         }
 
         // Update current string, preserving StringSlice state
-        currentString = currentString.setString(modifiedString);
+        // currentString = currentString.setString(modifiedString);
+        currentString = currentString.set(modifiedString);
 
         return Optional.of(result.getResult());
     }
@@ -207,7 +210,7 @@ public class StringParser {
      * @param rule
      * @return
      */
-    public <T> T parse(ParserWorker<T> rule) {
+    public <T> T parse(ParserRule<T> rule) {
         return check(rule)
                 .orElseThrow(() -> new RuntimeException(
                         "Could not apply parsing rule over the string '" + currentString + "'"));
@@ -220,7 +223,7 @@ public class StringParser {
      * @param rule
      * @return
      */
-    public <T> Optional<T> check(ParserWorker<T> rule) {
+    public <T> Optional<T> check(ParserRule<T> rule) {
         // Use check with a predicate that always returns true
         return check(rule, result -> true);
     }
@@ -233,7 +236,7 @@ public class StringParser {
      * @param checker
      * @return
      */
-    public <T> Optional<T> check(ParserWorker<T> rule, Predicate<T> predicate) {
+    public <T> Optional<T> check(ParserRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate, true);
     }
 
@@ -243,7 +246,7 @@ public class StringParser {
      * @param rule
      * @return
      */
-    public <T> Optional<T> peek(ParserWorker<T> rule) {
+    public <T> Optional<T> peek(ParserRule<T> rule) {
         return peek(rule, result -> true);
     }
 
@@ -254,7 +257,7 @@ public class StringParser {
      * @param predicate
      * @return
      */
-    public <T> Optional<T> peek(ParserWorker<T> rule, Predicate<T> predicate) {
+    public <T> Optional<T> peek(ParserRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate, false);
     }
 
@@ -266,7 +269,7 @@ public class StringParser {
      * @param predicate
      * @return
      */
-    public <T> boolean has(ParserWorker<T> rule, Predicate<T> predicate) {
+    public <T> boolean has(ParserRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate).isPresent();
     }
 

@@ -14,8 +14,8 @@
 package pt.up.fe.specs.util.stringparser;
 
 import pt.up.fe.specs.util.SpecsStrings;
+import pt.up.fe.specs.util.stringparser.StringSplitter.NextResult;
 import pt.up.fe.specs.util.utilities.StringSlice;
-import pt.up.fe.specs.util.utilities.StringSlice.NextResult;
 
 public class StringParserRules {
 
@@ -29,7 +29,7 @@ public class StringParserRules {
      * @param string
      * @return
      */
-    public static ParserResult<String> word(StringSlice string) {
+    public static ParserResult<String> word(StringSplitter string) {
         NextResult nextResult = string.next();
         // int endIndex = string.indexOfFirstWhiteSpace();
         // if (endIndex == -1) {
@@ -52,7 +52,7 @@ public class StringParserRules {
      * @param decoder
      * @return
      */
-    public static <T> ParserResult<T> object(StringSlice string, Decoder<T> decoder) {
+    public static <T> ParserResult<T> object(StringSplitter string, Decoder<T> decoder) {
         // Get word
         ParserResult<String> results = word(string);
 
@@ -72,7 +72,7 @@ public class StringParserRules {
      * @param string
      * @return
      */
-    public static ParserResult<Integer> integer(StringSlice string) {
+    public static ParserResult<Integer> integer(StringSplitter string) {
         return object(string, SpecsStrings::parseInteger);
     }
 
@@ -82,7 +82,7 @@ public class StringParserRules {
      * @param string
      * @return
      */
-    public static ParserResult<Double> doubleNumber(StringSlice string) {
+    public static ParserResult<Double> doubleNumber(StringSplitter string) {
         return object(string, doubleString -> SpecsStrings.parseDouble(doubleString, false));
     }
 
@@ -92,7 +92,7 @@ public class StringParserRules {
      * @param string
      * @return
      */
-    public static ParserResult<Float> floatNumber(StringSlice string) {
+    public static ParserResult<Float> floatNumber(StringSplitter string) {
         return object(string, floatString -> SpecsStrings.parseFloat(floatString, false));
     }
 }
