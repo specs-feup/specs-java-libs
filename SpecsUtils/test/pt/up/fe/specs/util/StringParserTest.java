@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import pt.up.fe.specs.util.stringparser.StringParser;
 import pt.up.fe.specs.util.stringparser.StringParsers;
+import pt.up.fe.specs.util.stringsplitter.StringSplitter;
 import pt.up.fe.specs.util.stringsplitter.StringSplitterRules;
 
 public class StringParserTest {
@@ -38,7 +39,7 @@ public class StringParserTest {
         String testString = "word1 word2\tword3  word4";
 
         // By default, trim after parsing is true
-        StringParser parser = new StringParser(testString);
+        StringSplitter parser = new StringSplitter(testString);
 
         String word1 = parser.parse(StringSplitterRules::word);
         assertEquals("word1", word1);
@@ -71,7 +72,7 @@ public class StringParserTest {
     @Test
     public void testNumbers() {
         String testString = "1 2.0 3.0f";
-        StringParser parser = new StringParser(testString);
+        StringSplitter parser = new StringSplitter(testString);
 
         Integer integer = parser.parse(StringSplitterRules::integer);
         assertEquals(Integer.valueOf(1), integer);
@@ -90,7 +91,7 @@ public class StringParserTest {
     @Test
     public void testReverseAndSeparator() {
         String testString = "word1 word2,word3, word4";
-        StringParser parser = new StringParser(testString);
+        StringSplitter parser = new StringSplitter(testString);
 
         String word1 = parser.parse(StringSplitterRules::word);
         assertEquals("word1", word1);

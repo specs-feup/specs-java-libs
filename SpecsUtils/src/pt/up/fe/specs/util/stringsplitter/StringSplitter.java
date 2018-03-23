@@ -13,213 +13,147 @@
 
 package pt.up.fe.specs.util.stringsplitter;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
-import pt.up.fe.specs.util.utilities.StringSlice;
+public class StringSplitter {
 
-/**
- * StringSlice with splitting capabilities.
- * 
- * @author JoaoBispo
- *
- */
-public class StringSplitter extends StringSlice {
+    private StringIterator currentString;
 
-    private static final Predicate<Character> DEFAULT_SEPARATOR = aChar -> Character.isWhitespace(aChar);
-
-    // public static class NextResult {
-    // private final StringSlice modifiedSlice;
-    // private final String word;
-    //
-    // public NextResult(StringSlice modifiedSlice, String word) {
-    // this.modifiedSlice = modifiedSlice;
-    // this.word = word;
-    // }
-    //
-    // public StringSlice getModifiedSlice() {
-    // return modifiedSlice;
-    // }
-    //
-    // public String getWord() {
-    // return word;
-    // }
-    // }
-
-    private final boolean trim;
-    private final boolean reverse;
-    private final Predicate<Character> separator;
-
-    // public StringSplitter(String value, boolean trim, boolean reverse,
-    // Predicate<Character> separator) {
-    // this(new StringSlice(value), trim, reverse, separator);
-    // }
-    //
-    // public StringSplitter(String value, int start, int end, boolean trim, boolean reverse,
-    // Predicate<Character> separator) {
-    // this(new StringSlice(value, start, end), trim, reverse, separator);
-    // }
-
-    public StringSplitter(StringSlice stringSlice) {
-        this(stringSlice, false, false, DEFAULT_SEPARATOR);
+    public StringSplitter(String string) {
+        this(new StringIterator(string));
     }
 
-    public StringSplitter(StringSlice stringSlice, boolean trim, boolean reverse,
-            Predicate<Character> separator) {
-
-        super(stringSlice);
-
-        this.trim = trim;
-        this.reverse = reverse;
-        this.separator = separator;
+    public StringSplitter(StringIterator string) {
+        this.currentString = string;
     }
 
-    public StringSplitter setTrim(boolean trim) {
-        return new StringSplitter(this, trim, reverse, separator);
+    @Override
+    public String toString() {
+        return currentString.toString();
     }
 
-    public StringSplitter setReverse(boolean reverse) {
-        return new StringSplitter(this, trim, reverse, separator);
-    }
-
-    public StringSplitter setSeparator(Predicate<Character> separator) {
-        return new StringSplitter(this, trim, reverse, separator);
+    public boolean isEmpty() {
+        return currentString.isEmpty();
     }
 
     /**
-     * Parses a word according to the StringSlice defined rules (i.e., trim, reverse and separator).
-     * <p>
-     * If no separator is found, the result contains the remaining string.
+     * Internal method that does the heavy work.
      * 
+     * @param rule
+     * @param predicate
+     * @param updateString
      * @return
      */
-    public SplitResult next() {
-        int internalSeparatorIndex = indexOfInternal(separator, reverse);
+    private <T> Optional<T> check(SplitRule<T> rule, Predicate<T> predicate, boolean updateString) {
+        SplitResult<T> result = rule.apply(currentString);
 
-        SplitResult result = reverse ? nextReverse(internalSeparatorIndex) : nextRegular(internalSeparatorIndex);
-
-        if (trim) {
-            return new SplitResult(result.getModifiedSlice().trim(), result.getWord().trim());
+        // Check if there was a match
+        if (result == null) {
+            return Optional.empty();
         }
 
-        return result;
-    }
-
-    private SplitResult nextRegular(int internalSeparatorIndex) {
-
-        if (internalSeparatorIndex == -1) {
-            internalSeparatorIndex = endIndex;
+        // Test predicate
+        if (!predicate.test(result.getValue())) {
+            return Optional.empty();
         }
 
-        String word = internal.substring(startIndex, internalSeparatorIndex);
+        // Return if string should not be updated
+        if (!updateString) {
+            return Optional.of(result.getValue());
+        }
 
-        // // Trim word
-        // if (trim) {
-        // word = word.trim();
+        // Get resulting string
+        // StringSIterator modifiedString = result.getModifiedSlice();
+
+        // Trim string if needed
+        // if (trimAfterApply) {
+        // modifiedString = modifiedString.trim();
         // }
 
-        int internalSliceStartIndex = internalSeparatorIndex + 1;
+        // Update current string, preserving StringSlice state
+        // currentString = currentString.setString(modifiedString);
+        // currentString = currentString.set(modifiedString);
+        // Update current string, preserving StringIterator state
+        currentString = result.getModifiedSlice();
 
-        // If bigger than endIndex, return empty StringSlice
-        if (internalSliceStartIndex > endIndex) {
-            return new SplitResult(substring(length()), word);
-        }
-
-        StringSplitter modifiedSlice = new StringSplitter(new StringSlice(internal, internalSliceStartIndex, endIndex),
-                trim, reverse,
-                separator);
-
-        // // Trim modified slice
-        // if (trim) {
-        // modifiedSlice = modifiedSlice.trim();
-        // }
-
-        return new SplitResult(modifiedSlice, word);
-
-    }
-
-    private SplitResult nextReverse(int internalSeparatorIndex) {
-        if (internalSeparatorIndex == -1) {
-            internalSeparatorIndex = startIndex - 1;
-        }
-
-        String word = internal.substring(internalSeparatorIndex + 1, endIndex);
-
-        int internalSliceEndIndex = internalSeparatorIndex;
-
-        if (internalSliceEndIndex < startIndex) {
-            StringSplitter modifiedSlice = new StringSplitter(new StringSlice("", 0, 0), trim, reverse, separator);
-            return new SplitResult(modifiedSlice, word);
-        }
-
-        StringSplitter modifiedSlice = new StringSplitter(new StringSlice(internal, startIndex, internalSliceEndIndex),
-                trim, reverse, separator);
-
-        return new SplitResult(modifiedSlice, word);
+        return Optional.of(result.getValue());
     }
 
     /**
+     * Similar to check, but throws exception if the rule does not match.
      * 
-     * @param target
-     * @param reverse
-     * @return an index relative to the internal String
+     * @param rule
+     * @return
      */
-    private int indexOfInternal(Predicate<Character> target, boolean reverse) {
-        // Using internals
-        // Test reverse order
-        if (reverse) {
-            for (int i = endIndex - 1; i >= startIndex; i--) {
-                if (target.test(internal.charAt(i))) {
-                    return i;
-                }
-            }
-        }
-        // Test original order
-        else {
-            for (int i = startIndex; i < endIndex; i++) {
-                if (target.test(internal.charAt(i))) {
-                    return i;
-                }
-            }
-        }
-
-        // Using class methods
-        // // Test reverse order
-        // if (reverse) {
-        // for (int i = length() - 1; i >= 0; i--) {
-        // if (target.test(charAtUnchecked(i))) {
-        // return i;
-        // }
-        // }
-        // }
-        // // Test original order
-        // else {
-        // for (int i = 0; i < length(); i++) {
-        // if (target.test(charAtUnchecked(i))) {
-        // return i;
-        // }
-        // }
-        // }
-
-        return -1;
+    public <T> T parse(SplitRule<T> rule) {
+        return check(rule)
+                .orElseThrow(() -> new RuntimeException(
+                        "Could not apply parsing rule over the string '" + currentString + "'"));
     }
 
-    public StringSplitter set(StringSlice modifiedString) {
-        return new StringSplitter(modifiedString, trim, reverse, separator);
+    /**
+     * Applies the rule over the current string. If the rule matches, returns the match and consumes the corresponding
+     * string. Otherwise, returns an empty Optional and leaves the current string unchanged.
+     * 
+     * @param rule
+     * @return
+     */
+    public <T> Optional<T> check(SplitRule<T> rule) {
+        // Use check with a predicate that always returns true
+        return check(rule, result -> true);
     }
 
-    @Override
-    public StringSplitter trim() {
-        return set(super.trim());
+    /**
+     * Applies the given rule, and if it matches, checks if the results passes the predicate. The current string is only
+     * consumed if both the rule and the predicate match.
+     * 
+     * @param rule
+     * @param checker
+     * @return
+     */
+    public <T> Optional<T> check(SplitRule<T> rule, Predicate<T> predicate) {
+        return check(rule, predicate, true);
     }
 
-    @Override
-    public StringSplitter substring(int start) {
-        return set(super.substring(start));
+    /**
+     * Applies the rule over the current string, but does not consume the string even if the rule matches.
+     * 
+     * @param rule
+     * @return
+     */
+    public <T> Optional<T> peek(SplitRule<T> rule) {
+        return peek(rule, result -> true);
     }
 
-    @Override
-    public StringSplitter clear() {
-        return set(super.clear());
+    /**
+     * Overload that accepts a Predicate.
+     * 
+     * @param rule
+     * @param predicate
+     * @return
+     */
+    public <T> Optional<T> peek(SplitRule<T> rule, Predicate<T> predicate) {
+        return check(rule, predicate, false);
     }
 
+    /**
+     * Similar to 'check', but discards the result and returns if the value is present or not, consuming the
+     * corresponding string.
+     * 
+     * @param rule
+     * @param predicate
+     * @return
+     */
+    public <T> boolean has(SplitRule<T> rule, Predicate<T> predicate) {
+        return check(rule, predicate).isPresent();
+    }
+
+    public void setReverse(boolean reverse) {
+        currentString = currentString.setReverse(reverse);
+    }
+
+    public void setSeparator(Predicate<Character> separator) {
+        currentString = currentString.setSeparator(separator);
+    }
 }

@@ -15,7 +15,6 @@ package pt.up.fe.specs.util.stringsplitter;
 
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.parsing.StringDecoder;
-import pt.up.fe.specs.util.stringparser.ParserResult;
 import pt.up.fe.specs.util.utilities.StringSlice;
 
 public class StringSplitterRules {
@@ -30,8 +29,8 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static ParserResult<String> word(StringSplitter string) {
-        SplitResult nextResult = string.next();
+    public static SplitResult<String> word(StringIterator string) {
+        SplitResult<String> nextResult = string.next();
         // int endIndex = string.indexOfFirstWhiteSpace();
         // if (endIndex == -1) {
         // endIndex = string.length();
@@ -42,7 +41,7 @@ public class StringSplitterRules {
         // // Update slice
         // string = string.substring(endIndex);
 
-        return new ParserResult<>(nextResult.getModifiedSlice(), nextResult.getWord());
+        return new SplitResult<>(nextResult.getModifiedSlice(), nextResult.getValue());
     }
 
     /**
@@ -53,18 +52,18 @@ public class StringSplitterRules {
      * @param decoder
      * @return
      */
-    public static <T> ParserResult<T> object(StringSplitter string, StringDecoder<T> decoder) {
+    public static <T> SplitResult<T> object(StringIterator string, StringDecoder<T> decoder) {
         // Get word
-        ParserResult<String> results = word(string);
+        SplitResult<String> results = word(string);
 
         // Try to decode string
-        T decodedObject = decoder.apply(results.getResult());
+        T decodedObject = decoder.apply(results.getValue());
 
         if (decodedObject == null) {
             return null;
         }
 
-        return new ParserResult<>(results.getModifiedString(), decodedObject);
+        return new SplitResult<>(results.getModifiedSlice(), decodedObject);
     }
 
     /**
@@ -73,7 +72,7 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static ParserResult<Integer> integer(StringSplitter string) {
+    public static SplitResult<Integer> integer(StringIterator string) {
         return object(string, SpecsStrings::parseInteger);
     }
 
@@ -83,7 +82,7 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static ParserResult<Double> doubleNumber(StringSplitter string) {
+    public static SplitResult<Double> doubleNumber(StringIterator string) {
         return object(string, doubleString -> SpecsStrings.parseDouble(doubleString, false));
     }
 
@@ -93,7 +92,7 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static ParserResult<Float> floatNumber(StringSplitter string) {
+    public static SplitResult<Float> floatNumber(StringIterator string) {
         return object(string, floatString -> SpecsStrings.parseFloat(floatString, false));
     }
 }

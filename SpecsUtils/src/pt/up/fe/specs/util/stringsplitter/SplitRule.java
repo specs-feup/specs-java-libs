@@ -15,8 +15,6 @@ package pt.up.fe.specs.util.stringsplitter;
 
 import java.util.function.Function;
 
-import pt.up.fe.specs.util.stringparser.ParserResult;
-
-public interface SplitRule<T> extends Function<StringSplitter, ParserResult<T>> {
+public interface SplitRule<T> extends Function<StringIterator, SplitResult<T>> {
 
 }

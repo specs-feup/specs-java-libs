@@ -13,20 +13,20 @@
 
 package pt.up.fe.specs.util.stringsplitter;
 
-public class SplitResult {
-    private final StringSplitter modifiedSlice;
-    private final String word;
+public class SplitResult<T> {
+    private final StringIterator modifiedSlice;
+    private final T value;
 
-    public SplitResult(StringSplitter modifiedSlice, String word) {
+    public SplitResult(StringIterator modifiedSlice, T value) {
         this.modifiedSlice = modifiedSlice;
-        this.word = word;
+        this.value = value;
     }
 
-    public StringSplitter getModifiedSlice() {
+    public StringIterator getModifiedSlice() {
         return modifiedSlice;
     }
 
-    public String getWord() {
-        return word;
+    public T getValue() {
+        return value;
     }
 }
