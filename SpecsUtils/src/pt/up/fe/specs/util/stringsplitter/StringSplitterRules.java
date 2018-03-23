@@ -14,7 +14,7 @@
 package pt.up.fe.specs.util.stringsplitter;
 
 import pt.up.fe.specs.util.SpecsStrings;
-import pt.up.fe.specs.util.stringparser.Decoder;
+import pt.up.fe.specs.util.parsing.StringDecoder;
 import pt.up.fe.specs.util.stringparser.ParserResult;
 import pt.up.fe.specs.util.utilities.StringSlice;
 
@@ -53,7 +53,7 @@ public class StringSplitterRules {
      * @param decoder
      * @return
      */
-    public static <T> ParserResult<T> object(StringSplitter string, Decoder<T> decoder) {
+    public static <T> ParserResult<T> object(StringSplitter string, StringDecoder<T> decoder) {
         // Get word
         ParserResult<String> results = word(string);
 

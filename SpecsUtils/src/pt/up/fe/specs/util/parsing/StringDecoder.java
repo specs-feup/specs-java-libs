@@ -11,11 +11,11 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.util.stringparser;
+package pt.up.fe.specs.util.parsing;
 
 import java.util.function.Function;
 
-public interface Decoder<T> extends Function<String, T> {
+public interface StringDecoder<T> extends Function<String, T> {
 
     /**
      * Attempts to decode the given String into an Object T. If the decoding fails, returns null.
