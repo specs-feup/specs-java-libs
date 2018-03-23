@@ -17,6 +17,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import pt.up.fe.specs.util.stringsplitter.SplitRule;
+import pt.up.fe.specs.util.stringsplitter.StringSplitter;
 import pt.up.fe.specs.util.utilities.StringSlice;
 
 /**
@@ -40,6 +42,10 @@ public class StringParser {
 
     public StringParser(StringSplitter string) {
         this(string, true);
+    }
+
+    public StringParser(StringSlice string) {
+        this(new StringSplitter(string), true);
     }
 
     public StringParser(StringSplitter currentString, boolean trimAfterApply) {
@@ -171,7 +177,7 @@ public class StringParser {
      * @param updateString
      * @return
      */
-    private <T> Optional<T> check(ParserRule<T> rule, Predicate<T> predicate, boolean updateString) {
+    private <T> Optional<T> check(SplitRule<T> rule, Predicate<T> predicate, boolean updateString) {
         ParserResult<T> result = rule.apply(currentString);
 
         // Check if there was a match
@@ -210,7 +216,7 @@ public class StringParser {
      * @param rule
      * @return
      */
-    public <T> T parse(ParserRule<T> rule) {
+    public <T> T parse(SplitRule<T> rule) {
         return check(rule)
                 .orElseThrow(() -> new RuntimeException(
                         "Could not apply parsing rule over the string '" + currentString + "'"));
@@ -223,7 +229,7 @@ public class StringParser {
      * @param rule
      * @return
      */
-    public <T> Optional<T> check(ParserRule<T> rule) {
+    public <T> Optional<T> check(SplitRule<T> rule) {
         // Use check with a predicate that always returns true
         return check(rule, result -> true);
     }
@@ -236,7 +242,7 @@ public class StringParser {
      * @param checker
      * @return
      */
-    public <T> Optional<T> check(ParserRule<T> rule, Predicate<T> predicate) {
+    public <T> Optional<T> check(SplitRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate, true);
     }
 
@@ -246,7 +252,7 @@ public class StringParser {
      * @param rule
      * @return
      */
-    public <T> Optional<T> peek(ParserRule<T> rule) {
+    public <T> Optional<T> peek(SplitRule<T> rule) {
         return peek(rule, result -> true);
     }
 
@@ -257,7 +263,7 @@ public class StringParser {
      * @param predicate
      * @return
      */
-    public <T> Optional<T> peek(ParserRule<T> rule, Predicate<T> predicate) {
+    public <T> Optional<T> peek(SplitRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate, false);
     }
 
@@ -269,7 +275,7 @@ public class StringParser {
      * @param predicate
      * @return
      */
-    public <T> boolean has(ParserRule<T> rule, Predicate<T> predicate) {
+    public <T> boolean has(SplitRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate).isPresent();
     }
 

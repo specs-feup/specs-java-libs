@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.util.stringparser;
+package pt.up.fe.specs.util.stringsplitter;
 
 import java.util.function.Predicate;
 
@@ -27,23 +27,23 @@ public class StringSplitter extends StringSlice {
 
     private static final Predicate<Character> DEFAULT_SEPARATOR = aChar -> Character.isWhitespace(aChar);
 
-    public static class NextResult {
-        private final StringSlice modifiedSlice;
-        private final String word;
-
-        public NextResult(StringSlice modifiedSlice, String word) {
-            this.modifiedSlice = modifiedSlice;
-            this.word = word;
-        }
-
-        public StringSlice getModifiedSlice() {
-            return modifiedSlice;
-        }
-
-        public String getWord() {
-            return word;
-        }
-    }
+    // public static class NextResult {
+    // private final StringSlice modifiedSlice;
+    // private final String word;
+    //
+    // public NextResult(StringSlice modifiedSlice, String word) {
+    // this.modifiedSlice = modifiedSlice;
+    // this.word = word;
+    // }
+    //
+    // public StringSlice getModifiedSlice() {
+    // return modifiedSlice;
+    // }
+    //
+    // public String getWord() {
+    // return word;
+    // }
+    // }
 
     private final boolean trim;
     private final boolean reverse;
@@ -92,19 +92,19 @@ public class StringSplitter extends StringSlice {
      * 
      * @return
      */
-    public NextResult next() {
+    public SplitResult next() {
         int internalSeparatorIndex = indexOfInternal(separator, reverse);
 
-        NextResult result = reverse ? nextReverse(internalSeparatorIndex) : nextRegular(internalSeparatorIndex);
+        SplitResult result = reverse ? nextReverse(internalSeparatorIndex) : nextRegular(internalSeparatorIndex);
 
         if (trim) {
-            return new NextResult(result.getModifiedSlice().trim(), result.getWord().trim());
+            return new SplitResult(result.getModifiedSlice().trim(), result.getWord().trim());
         }
 
         return result;
     }
 
-    private NextResult nextRegular(int internalSeparatorIndex) {
+    private SplitResult nextRegular(int internalSeparatorIndex) {
 
         if (internalSeparatorIndex == -1) {
             internalSeparatorIndex = endIndex;
@@ -121,10 +121,10 @@ public class StringSplitter extends StringSlice {
 
         // If bigger than endIndex, return empty StringSlice
         if (internalSliceStartIndex > endIndex) {
-            return new NextResult(substring(length()), word);
+            return new SplitResult(substring(length()), word);
         }
 
-        StringSlice modifiedSlice = new StringSplitter(new StringSlice(internal, internalSliceStartIndex, endIndex),
+        StringSplitter modifiedSlice = new StringSplitter(new StringSlice(internal, internalSliceStartIndex, endIndex),
                 trim, reverse,
                 separator);
 
@@ -133,11 +133,11 @@ public class StringSplitter extends StringSlice {
         // modifiedSlice = modifiedSlice.trim();
         // }
 
-        return new NextResult(modifiedSlice, word);
+        return new SplitResult(modifiedSlice, word);
 
     }
 
-    private NextResult nextReverse(int internalSeparatorIndex) {
+    private SplitResult nextReverse(int internalSeparatorIndex) {
         if (internalSeparatorIndex == -1) {
             internalSeparatorIndex = startIndex - 1;
         }
@@ -147,15 +147,14 @@ public class StringSplitter extends StringSlice {
         int internalSliceEndIndex = internalSeparatorIndex;
 
         if (internalSliceEndIndex < startIndex) {
-            StringSlice modifiedSlice = new StringSplitter(new StringSlice("", 0, 0), trim, reverse, separator);
-            return new NextResult(modifiedSlice, word);
+            StringSplitter modifiedSlice = new StringSplitter(new StringSlice("", 0, 0), trim, reverse, separator);
+            return new SplitResult(modifiedSlice, word);
         }
 
-        StringSlice modifiedSlice = new StringSplitter(new StringSlice(internal, startIndex, internalSliceEndIndex),
-                trim, reverse,
-                separator);
+        StringSplitter modifiedSlice = new StringSplitter(new StringSlice(internal, startIndex, internalSliceEndIndex),
+                trim, reverse, separator);
 
-        return new NextResult(modifiedSlice, word);
+        return new SplitResult(modifiedSlice, word);
     }
 
     /**

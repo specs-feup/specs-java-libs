@@ -11,13 +11,14 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.util.stringparser;
+package pt.up.fe.specs.util.stringsplitter;
 
 import pt.up.fe.specs.util.SpecsStrings;
-import pt.up.fe.specs.util.stringparser.StringSplitter.NextResult;
+import pt.up.fe.specs.util.stringparser.Decoder;
+import pt.up.fe.specs.util.stringparser.ParserResult;
 import pt.up.fe.specs.util.utilities.StringSlice;
 
-public class StringParserRules {
+public class StringSplitterRules {
 
     /**
      * Looks for a string defined by the StringSlice separator, or the complete string if no separator was found.
@@ -30,7 +31,7 @@ public class StringParserRules {
      * @return
      */
     public static ParserResult<String> word(StringSplitter string) {
-        NextResult nextResult = string.next();
+        SplitResult nextResult = string.next();
         // int endIndex = string.indexOfFirstWhiteSpace();
         // if (endIndex == -1) {
         // endIndex = string.length();
@@ -45,7 +46,7 @@ public class StringParserRules {
     }
 
     /**
-     * Looks for a word (as defined by {@link StringParserRules#word(StringSlice)}) and tries to transform into an
+     * Looks for a word (as defined by {@link StringSplitterRules#word(StringSlice)}) and tries to transform into an
      * object using the provided decoder.
      * 
      * @param string

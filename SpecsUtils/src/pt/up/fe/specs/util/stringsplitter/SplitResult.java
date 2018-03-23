@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 SPeCS.
+ * Copyright 2018 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,10 +11,22 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.util.stringparser;
+package pt.up.fe.specs.util.stringsplitter;
 
-import java.util.function.Function;
+public class SplitResult {
+    private final StringSplitter modifiedSlice;
+    private final String word;
 
-public interface ParserRule<T> extends Function<StringSplitter, ParserResult<T>> {
+    public SplitResult(StringSplitter modifiedSlice, String word) {
+        this.modifiedSlice = modifiedSlice;
+        this.word = word;
+    }
 
+    public StringSplitter getModifiedSlice() {
+        return modifiedSlice;
+    }
+
+    public String getWord() {
+        return word;
+    }
 }
