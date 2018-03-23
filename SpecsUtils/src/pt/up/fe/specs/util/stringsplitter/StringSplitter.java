@@ -63,18 +63,6 @@ public class StringSplitter {
             return Optional.of(result.getValue());
         }
 
-        // Get resulting string
-        // StringSIterator modifiedString = result.getModifiedSlice();
-
-        // Trim string if needed
-        // if (trimAfterApply) {
-        // modifiedString = modifiedString.trim();
-        // }
-
-        // Update current string, preserving StringSlice state
-        // currentString = currentString.setString(modifiedString);
-        // currentString = currentString.set(modifiedString);
-        // Update current string, preserving StringIterator state
         currentString = result.getModifiedSlice();
 
         return Optional.of(result.getValue());

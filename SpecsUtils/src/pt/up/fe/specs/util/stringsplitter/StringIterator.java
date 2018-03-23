@@ -28,37 +28,10 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
 
     private static final Predicate<Character> DEFAULT_SEPARATOR = aChar -> Character.isWhitespace(aChar);
 
-    // public static class NextResult {
-    // private final StringSlice modifiedSlice;
-    // private final String word;
-    //
-    // public NextResult(StringSlice modifiedSlice, String word) {
-    // this.modifiedSlice = modifiedSlice;
-    // this.word = word;
-    // }
-    //
-    // public StringSlice getModifiedSlice() {
-    // return modifiedSlice;
-    // }
-    //
-    // public String getWord() {
-    // return word;
-    // }
-    // }
-
     private final boolean trim;
     private final boolean reverse;
     private final Predicate<Character> separator;
 
-    // public StringSplitter(String value, boolean trim, boolean reverse,
-    // Predicate<Character> separator) {
-    // this(new StringSlice(value), trim, reverse, separator);
-    // }
-    //
-    // public StringSplitter(String value, int start, int end, boolean trim, boolean reverse,
-    // Predicate<Character> separator) {
-    // this(new StringSlice(value, start, end), trim, reverse, separator);
-    // }
     public StringIterator(String string) {
         this(new StringSlice(string));
     }
@@ -123,11 +96,6 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
 
         String word = internal.substring(startIndex, internalSeparatorIndex);
 
-        // // Trim word
-        // if (trim) {
-        // word = word.trim();
-        // }
-
         int internalSliceStartIndex = internalSeparatorIndex + 1;
 
         // If bigger than endIndex, return empty StringSlice
@@ -138,11 +106,6 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
         StringIterator modifiedSlice = new StringIterator(new StringSlice(internal, internalSliceStartIndex, endIndex),
                 trim, reverse,
                 separator);
-
-        // // Trim modified slice
-        // if (trim) {
-        // modifiedSlice = modifiedSlice.trim();
-        // }
 
         return new SplitResult<>(modifiedSlice, word);
 

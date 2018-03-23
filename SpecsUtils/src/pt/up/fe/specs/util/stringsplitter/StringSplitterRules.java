@@ -31,15 +31,6 @@ public class StringSplitterRules {
      */
     public static SplitResult<String> word(StringIterator string) {
         SplitResult<String> nextResult = string.next();
-        // int endIndex = string.indexOfFirstWhiteSpace();
-        // if (endIndex == -1) {
-        // endIndex = string.length();
-        // }
-        //
-        // String element = string.substring(0, endIndex).toString();
-        //
-        // // Update slice
-        // string = string.substring(endIndex);
 
         return new SplitResult<>(nextResult.getModifiedSlice(), nextResult.getValue());
     }
