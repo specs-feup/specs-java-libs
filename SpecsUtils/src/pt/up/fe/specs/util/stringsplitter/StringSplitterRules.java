@@ -29,8 +29,8 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static SplitResult<String> word(StringIterator string) {
-        SplitResult<String> nextResult = string.next();
+    public static SplitResult<String> word(StringSliceWithSplit string) {
+        SplitResult<String> nextResult = string.split();
 
         return new SplitResult<>(nextResult.getModifiedSlice(), nextResult.getValue());
     }
@@ -43,7 +43,7 @@ public class StringSplitterRules {
      * @param decoder
      * @return
      */
-    public static <T> SplitResult<T> object(StringIterator string, StringDecoder<T> decoder) {
+    public static <T> SplitResult<T> object(StringSliceWithSplit string, StringDecoder<T> decoder) {
         // Get word
         SplitResult<String> results = word(string);
 
@@ -63,7 +63,7 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static SplitResult<Integer> integer(StringIterator string) {
+    public static SplitResult<Integer> integer(StringSliceWithSplit string) {
         return object(string, SpecsStrings::parseInteger);
     }
 
@@ -73,7 +73,7 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static SplitResult<Double> doubleNumber(StringIterator string) {
+    public static SplitResult<Double> doubleNumber(StringSliceWithSplit string) {
         return object(string, doubleString -> SpecsStrings.parseDouble(doubleString, false));
     }
 
@@ -83,7 +83,7 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static SplitResult<Float> floatNumber(StringIterator string) {
+    public static SplitResult<Float> floatNumber(StringSliceWithSplit string) {
         return object(string, floatString -> SpecsStrings.parseFloat(floatString, false));
     }
 }

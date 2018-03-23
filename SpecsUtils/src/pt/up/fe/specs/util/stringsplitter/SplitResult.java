@@ -14,15 +14,15 @@
 package pt.up.fe.specs.util.stringsplitter;
 
 public class SplitResult<T> {
-    private final StringIterator modifiedSlice;
+    private final StringSliceWithSplit modifiedSlice;
     private final T value;
 
-    public SplitResult(StringIterator modifiedSlice, T value) {
+    public SplitResult(StringSliceWithSplit modifiedSlice, T value) {
         this.modifiedSlice = modifiedSlice;
         this.value = value;
     }
 
-    public StringIterator getModifiedSlice() {
+    public StringSliceWithSplit getModifiedSlice() {
         return modifiedSlice;
     }
 

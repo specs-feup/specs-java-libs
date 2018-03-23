@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.util.stringsplitter;
 
-import java.util.Iterator;
 import java.util.function.Predicate;
 
 import pt.up.fe.specs.util.utilities.StringSlice;
@@ -24,7 +23,7 @@ import pt.up.fe.specs.util.utilities.StringSlice;
  * @author JoaoBispo
  *
  */
-public class StringIterator extends StringSlice implements Iterator<SplitResult<String>> {
+public class StringSliceWithSplit extends StringSlice {
 
     private static final Predicate<Character> DEFAULT_SEPARATOR = aChar -> Character.isWhitespace(aChar);
 
@@ -32,15 +31,15 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
     private final boolean reverse;
     private final Predicate<Character> separator;
 
-    public StringIterator(String string) {
+    public StringSliceWithSplit(String string) {
         this(new StringSlice(string));
     }
 
-    public StringIterator(StringSlice stringSlice) {
+    public StringSliceWithSplit(StringSlice stringSlice) {
         this(stringSlice, true, false, DEFAULT_SEPARATOR);
     }
 
-    public StringIterator(StringSlice stringSlice, boolean trim, boolean reverse,
+    public StringSliceWithSplit(StringSlice stringSlice, boolean trim, boolean reverse,
             Predicate<Character> separator) {
 
         super(stringSlice);
@@ -50,27 +49,26 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
         this.separator = separator;
     }
 
-    public StringIterator setTrim(boolean trim) {
-        return new StringIterator(this, trim, reverse, separator);
+    public StringSliceWithSplit setTrim(boolean trim) {
+        return new StringSliceWithSplit(this, trim, reverse, separator);
     }
 
-    public StringIterator setReverse(boolean reverse) {
-        return new StringIterator(this, trim, reverse, separator);
+    public StringSliceWithSplit setReverse(boolean reverse) {
+        return new StringSliceWithSplit(this, trim, reverse, separator);
     }
 
-    public StringIterator setSeparator(Predicate<Character> separator) {
-        return new StringIterator(this, trim, reverse, separator);
+    public StringSliceWithSplit setSeparator(Predicate<Character> separator) {
+        return new StringSliceWithSplit(this, trim, reverse, separator);
     }
 
     /**
-     * Parses a word according to the StringSlice defined rules (i.e., trim, reverse and separator).
+     * Parses a word according to the current rules (i.e., trim, reverse and separator).
      * <p>
      * If no separator is found, the result contains the remaining string.
      * 
      * @return
      */
-    @Override
-    public SplitResult<String> next() {
+    public SplitResult<String> split() {
         int internalSeparatorIndex = indexOfInternal(separator, reverse);
 
         SplitResult<String> result = reverse ? nextReverse(internalSeparatorIndex)
@@ -81,11 +79,6 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
         }
 
         return result;
-    }
-
-    @Override
-    public boolean hasNext() {
-        return !isEmpty();
     }
 
     private SplitResult<String> nextRegular(int internalSeparatorIndex) {
@@ -103,7 +96,8 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
             return new SplitResult<>(substring(length()), word);
         }
 
-        StringIterator modifiedSlice = new StringIterator(new StringSlice(internal, internalSliceStartIndex, endIndex),
+        StringSliceWithSplit modifiedSlice = new StringSliceWithSplit(
+                new StringSlice(internal, internalSliceStartIndex, endIndex),
                 trim, reverse,
                 separator);
 
@@ -121,11 +115,13 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
         int internalSliceEndIndex = internalSeparatorIndex;
 
         if (internalSliceEndIndex < startIndex) {
-            StringIterator modifiedSlice = new StringIterator(new StringSlice("", 0, 0), trim, reverse, separator);
+            StringSliceWithSplit modifiedSlice = new StringSliceWithSplit(new StringSlice("", 0, 0), trim, reverse,
+                    separator);
             return new SplitResult<>(modifiedSlice, word);
         }
 
-        StringIterator modifiedSlice = new StringIterator(new StringSlice(internal, startIndex, internalSliceEndIndex),
+        StringSliceWithSplit modifiedSlice = new StringSliceWithSplit(
+                new StringSlice(internal, startIndex, internalSliceEndIndex),
                 trim, reverse, separator);
 
         return new SplitResult<>(modifiedSlice, word);
@@ -177,22 +173,22 @@ public class StringIterator extends StringSlice implements Iterator<SplitResult<
         return -1;
     }
 
-    public StringIterator set(StringSlice modifiedString) {
-        return new StringIterator(modifiedString, trim, reverse, separator);
+    public StringSliceWithSplit set(StringSlice modifiedString) {
+        return new StringSliceWithSplit(modifiedString, trim, reverse, separator);
     }
 
     @Override
-    public StringIterator trim() {
+    public StringSliceWithSplit trim() {
         return set(super.trim());
     }
 
     @Override
-    public StringIterator substring(int start) {
+    public StringSliceWithSplit substring(int start) {
         return set(super.substring(start));
     }
 
     @Override
-    public StringIterator clear() {
+    public StringSliceWithSplit clear() {
         return set(super.clear());
     }
 

@@ -18,13 +18,13 @@ import java.util.function.Predicate;
 
 public class StringSplitter {
 
-    private StringIterator currentString;
+    private StringSliceWithSplit currentString;
 
     public StringSplitter(String string) {
-        this(new StringIterator(string));
+        this(new StringSliceWithSplit(string));
     }
 
-    public StringSplitter(StringIterator string) {
+    public StringSplitter(StringSliceWithSplit string) {
         this.currentString = string;
     }
 

@@ -15,7 +15,7 @@ package pt.up.fe.specs.util.stringparser;
 
 import java.util.function.Function;
 
-import pt.up.fe.specs.util.stringsplitter.StringIterator;
+import pt.up.fe.specs.util.stringsplitter.StringSliceWithSplit;
 import pt.up.fe.specs.util.utilities.StringSlice;
 
 /**
@@ -33,18 +33,18 @@ public class StringParser {
     private final boolean trimAfterApply;
 
     public StringParser(String string) {
-        this(new StringIterator(new StringSlice(string)));
+        this(new StringSliceWithSplit(new StringSlice(string)));
     }
 
-    public StringParser(StringIterator string) {
+    public StringParser(StringSliceWithSplit string) {
         this(string, true);
     }
 
     public StringParser(StringSlice string) {
-        this(new StringIterator(string), true);
+        this(new StringSliceWithSplit(string), true);
     }
 
-    public StringParser(StringIterator currentString, boolean trimAfterApply) {
+    public StringParser(StringSliceWithSplit currentString, boolean trimAfterApply) {
         this.currentString = currentString.setTrim(trimAfterApply);
         this.trimAfterApply = trimAfterApply;
     }
