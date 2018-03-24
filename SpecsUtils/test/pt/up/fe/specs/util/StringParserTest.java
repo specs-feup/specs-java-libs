@@ -41,30 +41,30 @@ public class StringParserTest {
         // By default, trim after parsing is true
         StringSplitter parser = new StringSplitter(testString);
 
-        String word1 = parser.parse(StringSplitterRules::word);
+        String word1 = parser.parse(StringSplitterRules::string);
         assertEquals("word1", word1);
         assertEquals("word2\tword3  word4", parser.toString());
 
-        Optional<String> word2 = parser.check(StringSplitterRules::word);
+        Optional<String> word2 = parser.parseTry(StringSplitterRules::string);
         assertEquals("word2", word2.get());
         assertEquals("word3  word4", parser.toString());
 
-        Optional<String> failedCheck = parser.check(StringSplitterRules::word,
+        Optional<String> failedCheck = parser.parseIf(StringSplitterRules::string,
                 string -> string.equals("non-existing word"));
         assertFalse(failedCheck.isPresent());
         assertEquals("word3  word4", parser.toString());
 
-        Optional<String> word3 = parser.check(StringSplitterRules::word,
+        Optional<String> word3 = parser.parseIf(StringSplitterRules::string,
                 string -> string.equals("word3"));
         assertEquals("word3", word3.get());
         assertEquals("word4", parser.toString());
 
-        Optional<String> word4 = parser.peek(StringSplitterRules::word,
+        Optional<String> word4 = parser.peekIf(StringSplitterRules::string,
                 string -> string.equals("word4"));
         assertEquals("word4", word4.get());
         assertEquals("word4", parser.toString());
 
-        boolean hasWord4 = parser.has(StringSplitterRules::word, string -> string.equals("word4"));
+        boolean hasWord4 = parser.check(StringSplitterRules::string, string -> string.equals("word4"));
         assertTrue(hasWord4);
         assertTrue(parser.isEmpty());
     }
@@ -93,23 +93,23 @@ public class StringParserTest {
         String testString = "word1 word2,word3, word4";
         StringSplitter parser = new StringSplitter(testString);
 
-        String word1 = parser.parse(StringSplitterRules::word);
+        String word1 = parser.parse(StringSplitterRules::string);
         assertEquals("word1", word1);
         assertEquals("word2,word3, word4", parser.toString());
 
         parser.setSeparator(aChar -> aChar == ',');
 
-        String word2 = parser.parse(StringSplitterRules::word);
+        String word2 = parser.parse(StringSplitterRules::string);
         assertEquals("word2", word2);
         assertEquals("word3, word4", parser.toString());
 
         parser.setReverse(true);
 
-        String word4 = parser.parse(StringSplitterRules::word);
+        String word4 = parser.parse(StringSplitterRules::string);
         assertEquals("word4", word4);
         assertEquals("word3", parser.toString());
 
-        String word3 = parser.parse(StringSplitterRules::word);
+        String word3 = parser.parse(StringSplitterRules::string);
         assertEquals("word3", word3);
         assertTrue(parser.isEmpty());
     }

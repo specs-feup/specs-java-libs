@@ -63,6 +63,7 @@ public class StringSplitter {
             return Optional.of(result.getValue());
         }
 
+        // Update string
         currentString = result.getModifiedSlice();
 
         return Optional.of(result.getValue());
@@ -75,7 +76,7 @@ public class StringSplitter {
      * @return
      */
     public <T> T parse(SplitRule<T> rule) {
-        return check(rule)
+        return parseTry(rule)
                 .orElseThrow(() -> new RuntimeException(
                         "Could not apply parsing rule over the string '" + currentString + "'"));
     }
@@ -87,9 +88,9 @@ public class StringSplitter {
      * @param rule
      * @return
      */
-    public <T> Optional<T> check(SplitRule<T> rule) {
+    public <T> Optional<T> parseTry(SplitRule<T> rule) {
         // Use check with a predicate that always returns true
-        return check(rule, result -> true);
+        return parseIf(rule, result -> true);
     }
 
     /**
@@ -100,7 +101,7 @@ public class StringSplitter {
      * @param checker
      * @return
      */
-    public <T> Optional<T> check(SplitRule<T> rule, Predicate<T> predicate) {
+    public <T> Optional<T> parseIf(SplitRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate, true);
     }
 
@@ -111,7 +112,7 @@ public class StringSplitter {
      * @return
      */
     public <T> Optional<T> peek(SplitRule<T> rule) {
-        return peek(rule, result -> true);
+        return peekIf(rule, result -> true);
     }
 
     /**
@@ -121,20 +122,20 @@ public class StringSplitter {
      * @param predicate
      * @return
      */
-    public <T> Optional<T> peek(SplitRule<T> rule, Predicate<T> predicate) {
+    public <T> Optional<T> peekIf(SplitRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate, false);
     }
 
     /**
-     * Similar to 'check', but discards the result and returns if the value is present or not, consuming the
-     * corresponding string.
+     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards the result and returns if the value
+     * is present or not, consuming the corresponding string.
      * 
      * @param rule
      * @param predicate
      * @return
      */
-    public <T> boolean has(SplitRule<T> rule, Predicate<T> predicate) {
-        return check(rule, predicate).isPresent();
+    public <T> boolean check(SplitRule<T> rule, Predicate<T> predicate) {
+        return parseIf(rule, predicate).isPresent();
     }
 
     public void setReverse(boolean reverse) {
@@ -143,5 +144,9 @@ public class StringSplitter {
 
     public void setSeparator(Predicate<Character> separator) {
         currentString = currentString.setSeparator(separator);
+    }
+
+    public void setTrim(boolean trim) {
+        currentString = currentString.setTrim(trim);
     }
 }

@@ -20,7 +20,8 @@ import pt.up.fe.specs.util.utilities.StringSlice;
 public class StringSplitterRules {
 
     /**
-     * Looks for a string defined by the StringSlice separator, or the complete string if no separator was found.
+     * Looks for a string defined by the {@link StringSliceWithSplit} separator, or the complete string if no separator
+     * was found.
      * 
      * <p>
      * The default separator is a whitespace, as determined by the function
@@ -29,14 +30,14 @@ public class StringSplitterRules {
      * @param string
      * @return
      */
-    public static SplitResult<String> word(StringSliceWithSplit string) {
+    public static SplitResult<String> string(StringSliceWithSplit string) {
         SplitResult<String> nextResult = string.split();
 
         return new SplitResult<>(nextResult.getModifiedSlice(), nextResult.getValue());
     }
 
     /**
-     * Looks for a word (as defined by {@link StringSplitterRules#word(StringSlice)}) and tries to transform into an
+     * Looks for a word (as defined by {@link StringSplitterRules#string(StringSlice)}) and tries to transform into an
      * object using the provided decoder.
      * 
      * @param string
@@ -45,7 +46,7 @@ public class StringSplitterRules {
      */
     public static <T> SplitResult<T> object(StringSliceWithSplit string, StringDecoder<T> decoder) {
         // Get word
-        SplitResult<String> results = word(string);
+        SplitResult<String> results = string(string);
 
         // Try to decode string
         T decodedObject = decoder.apply(results.getValue());
