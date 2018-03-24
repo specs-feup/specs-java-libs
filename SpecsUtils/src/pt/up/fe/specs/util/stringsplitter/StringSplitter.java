@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.util.stringsplitter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -70,7 +72,7 @@ public class StringSplitter {
     }
 
     /**
-     * Similar to check, but throws exception if the rule does not match.
+     * Similar to {@link StringSplitter#parseTry(SplitRule)}, but throws exception if the rule does not match.
      * 
      * @param rule
      * @return
@@ -79,6 +81,21 @@ public class StringSplitter {
         return parseTry(rule)
                 .orElseThrow(() -> new RuntimeException(
                         "Could not apply parsing rule over the string '" + currentString + "'"));
+    }
+
+    public <T> List<T> parse(SplitRule<T> rule, int numElements) {
+        List<T> elements = new ArrayList<>();
+
+        for (int i = 0; i < numElements; i++) {
+            try {
+                elements.add(parse(rule));
+            } catch (Exception e) {
+                throw new RuntimeException("Tried to parse " + numElements + " elements, found " + i, e);
+            }
+
+        }
+
+        return elements;
     }
 
     /**
