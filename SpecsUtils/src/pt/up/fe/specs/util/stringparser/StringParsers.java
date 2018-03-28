@@ -325,4 +325,12 @@ public class StringParsers {
         return parseNested(string, begin, end, endPredicate);
     }
 
+    public static String removeSuffix(String string, String suffix) {
+        if (!string.endsWith(suffix)) {
+            return string;
+        }
+
+        return string.substring(0, string.length() - suffix.length());
+    }
+
 }
