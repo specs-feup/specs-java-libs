@@ -377,9 +377,6 @@ public class KeyFactory {
     /**
      * A DataKey that supports types with generics.
      * 
-     * <p>
-     * Can only store instances that have the same concrete type as the given example instance. You should only creating
-     * generic keys of concrete base types (e.g., ArrayList<String>).
      * 
      * @param id
      * @param aClass
