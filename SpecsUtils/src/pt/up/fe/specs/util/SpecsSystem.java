@@ -238,6 +238,14 @@ public class SpecsSystem {
 
         Process process = null;
         try {
+            // Experiment: Calling Garbage Collector before starting process in order to reduce memory required to fork
+            // VM
+            // http://www.bryanmarty.com/2012/01/14/forking-jvm/
+            long totalMemBefore = Runtime.getRuntime().totalMemory();
+            System.gc();
+            long totalMemAfter = Runtime.getRuntime().totalMemory();
+            SpecsLogs.msgLib("Preparing to run process, memory before -> after GC: "
+                    + SpecsStrings.parseSize(totalMemBefore) + " -> " + SpecsStrings.parseSize(totalMemAfter));
             process = builder.start();
         } catch (IOException e) {
             throw new RuntimeException("Could not start process", e);

@@ -56,9 +56,9 @@ public class SpecsStrings {
     static {
         SIZE_SUFFIXES = new HashMap<>();
         SpecsStrings.SIZE_SUFFIXES.put(0, "bytes");
-        SpecsStrings.SIZE_SUFFIXES.put(1, "KB");
-        SpecsStrings.SIZE_SUFFIXES.put(2, "MB");
-        SpecsStrings.SIZE_SUFFIXES.put(3, "GB");
+        SpecsStrings.SIZE_SUFFIXES.put(1, "KiB");
+        SpecsStrings.SIZE_SUFFIXES.put(2, "MiB");
+        SpecsStrings.SIZE_SUFFIXES.put(3, "GiB");
     }
 
     private static final Map<TimeUnit, String> TIME_UNIT_SYMBOL;
