@@ -244,7 +244,7 @@ public class SpecsSystem {
             long totalMemBefore = Runtime.getRuntime().totalMemory();
             System.gc();
             long totalMemAfter = Runtime.getRuntime().totalMemory();
-            SpecsLogs.msgInfo("Preparing to run process, memory before -> after GC: "
+            SpecsLogs.msgLib("Preparing to run process, memory before -> after GC: "
                     + SpecsStrings.parseSize(totalMemBefore) + " -> " + SpecsStrings.parseSize(totalMemAfter));
             process = builder.start();
         } catch (IOException e) {
