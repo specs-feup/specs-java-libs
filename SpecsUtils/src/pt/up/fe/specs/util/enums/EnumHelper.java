@@ -62,6 +62,11 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
      * @return
      */
     public T valueOf(int index) {
+        T[] array = values.get();
+        if (index >= array.length) {
+            throw new RuntimeException(
+                    "Asked for enum at index " + index + ", but there are only " + array.length + " values");
+        }
         return values.get()[index];
     }
 
@@ -97,6 +102,10 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
     public EnumHelper<T> addAlias(String alias, T anEnum) {
         translationMap.put(alias, anEnum);
         return this;
+    }
+
+    public int getSize() {
+        return values.get().length;
     }
 
     public static <T extends Enum<T> & StringProvider> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum) {
