@@ -31,4 +31,12 @@ public class SpecsCheck {
             throw new IllegalArgumentException(String.valueOf(supplier.get()));
         }
     }
+
+    public static <T> T checkNotNull(T reference, Supplier<String> supplier) {
+        if (reference == null) {
+            throw new NullPointerException(supplier.get());
+        }
+
+        return reference;
+    }
 }
