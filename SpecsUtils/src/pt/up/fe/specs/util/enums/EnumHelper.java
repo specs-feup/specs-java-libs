@@ -16,6 +16,7 @@ package pt.up.fe.specs.util.enums;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
 
     private final Class<T> enumClass;
     private final Map<String, T> translationMap;
+    private final Lazy<Map<String, T>> namesTranslationMap;
     private final Lazy<T[]> values;
 
     public EnumHelper(Class<T> enumClass) {
@@ -45,6 +47,17 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
                 .forEach(key -> translationMap.remove(key));
 
         values = Lazy.newInstance(() -> enumClass.getEnumConstants());
+        namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(values.get()));
+    }
+
+    private Map<String, T> buildNamesTranslationMap(T[] values) {
+        Map<String, T> map = new HashMap<>();
+
+        for (T value : values) {
+            map.put(value.name(), value);
+        }
+
+        return map;
     }
 
     public Map<String, T> getTranslationMap() {
@@ -52,7 +65,12 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
     }
 
     public T valueOf(String name) {
-        return valueOfTry(name).orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name)));
+        return valueOfTry(name).orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, translationMap)));
+    }
+
+    public T fromName(String name) {
+        return fromNameTry(name)
+                .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, namesTranslationMap.get())));
     }
 
     /**
@@ -77,13 +95,19 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
     // }
     // }
 
-    private String getErrorMessage(String name) {
+    private String getErrorMessage(String name, Map<String, T> translationMap) {
         return "Enum '" + enumClass.getSimpleName() + "' does not contain an enum with the name '" + name
                 + "'. Available enums: " + translationMap;
     }
 
     public Optional<T> valueOfTry(String name) {
         T value = translationMap.get(name);
+
+        return Optional.ofNullable(value);
+    }
+
+    public Optional<T> fromNameTry(String name) {
+        T value = namesTranslationMap.get().get(name);
 
         return Optional.ofNullable(value);
     }
