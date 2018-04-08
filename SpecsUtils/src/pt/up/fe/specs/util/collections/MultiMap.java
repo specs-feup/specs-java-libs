@@ -152,6 +152,12 @@ public class MultiMap<K, V> {
         return map.values();
     }
 
+    public Collection<V> valuesFlat() {
+        return map.values().stream()
+                .flatMap(list -> list.stream())
+                .collect(Collectors.toList());
+    }
+
     public List<V> flatValues() {
         return map
                 .values()
