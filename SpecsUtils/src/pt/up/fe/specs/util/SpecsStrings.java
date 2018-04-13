@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -1866,6 +1867,10 @@ public class SpecsStrings {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static String toPercentage(double fraction) {
+        return MessageFormat.format("{0,number,#.##%}", fraction);
     }
 
 }
