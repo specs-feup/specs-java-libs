@@ -30,7 +30,7 @@ import pt.up.fe.specs.util.providers.StringProvider;
 public class EnumHelper<T extends Enum<T> & StringProvider> {
 
     private final Class<T> enumClass;
-    private final Map<String, T> translationMap;
+    private final Lazy<Map<String, T>> translationMap;
     private final Lazy<Map<String, T>> namesTranslationMap;
     private final Lazy<T[]> values;
 
@@ -40,14 +40,22 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
 
     public EnumHelper(Class<T> enumClass, Collection<T> excludeList) {
         this.enumClass = enumClass;
-        this.translationMap = SpecsEnums.buildMap(enumClass);
+        this.translationMap = Lazy.newInstance(() -> EnumHelper.buildTranslationMap(enumClass, excludeList));
+        values = Lazy.newInstance(() -> enumClass.getEnumConstants());
+        namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(values.get()));
+    }
+
+    private static <T extends Enum<T> & StringProvider> Map<String, T> buildTranslationMap(Class<T> enumClass,
+            Collection<T> excludeList) {
+
+        Map<String, T> translationMap = SpecsEnums.buildMap(enumClass);
 
         excludeList.stream()
                 .map(exclude -> exclude.getString())
                 .forEach(key -> translationMap.remove(key));
 
-        values = Lazy.newInstance(() -> enumClass.getEnumConstants());
-        namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(values.get()));
+        return translationMap;
+
     }
 
     private Map<String, T> buildNamesTranslationMap(T[] values) {
@@ -61,11 +69,12 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
     }
 
     public Map<String, T> getTranslationMap() {
-        return translationMap;
+        return translationMap.get();
     }
 
     public T valueOf(String name) {
-        return valueOfTry(name).orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, translationMap)));
+        return valueOfTry(name)
+                .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, translationMap.get())));
     }
 
     public T fromName(String name) {
@@ -101,7 +110,7 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
     }
 
     public Optional<T> valueOfTry(String name) {
-        T value = translationMap.get(name);
+        T value = translationMap.get().get(name);
 
         return Optional.ofNullable(value);
     }
@@ -119,12 +128,12 @@ public class EnumHelper<T extends Enum<T> & StringProvider> {
     }
 
     public String getAvailableOptions() {
-        return translationMap.keySet().stream()
+        return translationMap.get().keySet().stream()
                 .collect(Collectors.joining(", "));
     }
 
     public EnumHelper<T> addAlias(String alias, T anEnum) {
-        translationMap.put(alias, anEnum);
+        translationMap.get().put(alias, anEnum);
         return this;
     }
 
