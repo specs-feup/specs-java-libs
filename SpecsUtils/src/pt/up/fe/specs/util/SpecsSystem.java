@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -887,4 +888,39 @@ public class SpecsSystem {
     public static boolean isDebug() {
         return IS_DEBUG.get();
     }
+
+    /**
+     * Uses the copy constructor to create a copy of the given object. Throws exception if the class does not have a
+     * copy constructor.
+     * 
+     * @param object
+     * @return
+     */
+    public static <T> T copy(T object) {
+
+        // Get class
+        @SuppressWarnings("unchecked")
+        Class<T> aClass = (Class<T>) object.getClass();
+
+        Constructor<T> constructorMethod = null;
+        try {
+            // Create copy constructor: new T(T data)
+            constructorMethod = aClass.getConstructor(aClass);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Could not create call to copy constructor for '" + aClass.getSimpleName()
+                            + "'. Check if class contains a constructor of the form 'new T(T object)'.",
+                    e);
+        }
+
+        // Invoke constructor
+        try {
+            return constructorMethod.newInstance(object);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Could not call constructor for object '" + object.getClass().getSimpleName() + "'", e);
+        }
+
+    }
+
 }
