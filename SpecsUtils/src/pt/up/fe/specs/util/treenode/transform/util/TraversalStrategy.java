@@ -25,38 +25,44 @@ import pt.up.fe.specs.util.treenode.transform.TransformRule;
  */
 public enum TraversalStrategy {
 
+    /**
+     * Top-down traversal.
+     */
     PRE_ORDER,
+    /**
+     * Bottom-up traversal.
+     */
     POST_ORDER;
 
     public <K extends TreeNode<K>, T extends TransformResult> void apply(K node, TransformRule<K, T> rule) {
-	getTransformations(node, rule).apply();
+        getTransformations(node, rule).apply();
     }
 
     public <K extends TreeNode<K>, T extends TransformResult> TransformQueue<K> getTransformations(K node,
-	    TransformRule<K, T> rule) {
+            TransformRule<K, T> rule) {
 
-	// Create instruction queue
-	TransformQueue<K> queue = new TransformQueue<>(rule.getClass().getSimpleName());
+        // Create instruction queue
+        TransformQueue<K> queue = new TransformQueue<>(rule.getClass().getSimpleName());
 
-	// Traverse tree and collect transformations
-	traverseTree(node, rule, queue);
+        // Traverse tree and collect transformations
+        traverseTree(node, rule, queue);
 
-	return queue;
+        return queue;
     }
 
     private <K extends TreeNode<K>, T extends TransformResult> void traverseTree(K node, TransformRule<K, T> rule,
-	    TransformQueue<K> queue) {
-	switch (this) {
-	case POST_ORDER:
-	    bottomUpTraversal(node, rule, queue);
-	    return;
-	case PRE_ORDER:
-	    topDownTraversal(node, rule, queue);
-	    return;
-	default:
-	    SpecsLogs.msgWarn("Case not defined:" + this);
-	    return;
-	}
+            TransformQueue<K> queue) {
+        switch (this) {
+        case POST_ORDER:
+            bottomUpTraversal(node, rule, queue);
+            return;
+        case PRE_ORDER:
+            topDownTraversal(node, rule, queue);
+            return;
+        default:
+            SpecsLogs.msgWarn("Case not defined:" + this);
+            return;
+        }
     }
 
     /**
@@ -66,15 +72,15 @@ public enum TraversalStrategy {
      * @param rule
      */
     private <K extends TreeNode<K>, T extends TransformResult> void bottomUpTraversal(K node, TransformRule<K, T> rule,
-	    TransformQueue<K> queue) {
+            TransformQueue<K> queue) {
 
-	if (node.hasChildren()) {
-	    for (K child : node.getChildren()) {
-		bottomUpTraversal(child, rule, queue);
-	    }
-	}
+        if (node.hasChildren()) {
+            for (K child : node.getChildren()) {
+                bottomUpTraversal(child, rule, queue);
+            }
+        }
 
-	rule.apply(node, queue);
+        rule.apply(node, queue);
     }
 
     /**
@@ -84,20 +90,20 @@ public enum TraversalStrategy {
      * @param rule
      */
     private <K extends TreeNode<K>, T extends TransformResult> void topDownTraversal(K node, TransformRule<K, T> rule,
-	    TransformQueue<K> queue) {
+            TransformQueue<K> queue) {
 
-	T result = rule.apply(node, queue);
+        T result = rule.apply(node, queue);
 
-	// Check if children should be visited
-	if (!result.visitChildren()) {
-	    return;
-	}
+        // Check if children should be visited
+        if (!result.visitChildren()) {
+            return;
+        }
 
-	if (node.hasChildren()) {
-	    for (K child : node.getChildren()) {
-		topDownTraversal(child, rule, queue);
-	    }
-	}
+        if (node.hasChildren()) {
+            for (K child : node.getChildren()) {
+                topDownTraversal(child, rule, queue);
+            }
+        }
 
     }
 }
