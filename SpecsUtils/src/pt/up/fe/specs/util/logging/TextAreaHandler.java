@@ -19,7 +19,7 @@ import java.util.logging.StreamHandler;
 
 import javax.swing.JTextArea;
 
-import pt.up.fe.specs.util.logging.ConsoleFormatter;
+import pt.up.fe.specs.util.SpecsSwing;
 
 /**
  * Logger handler for a JTextArea.
@@ -29,22 +29,24 @@ import pt.up.fe.specs.util.logging.ConsoleFormatter;
 public class TextAreaHandler extends StreamHandler {
 
     public TextAreaHandler(JTextArea jTextArea) {
-	this.jTextArea = jTextArea;
-	setFormatter(new ConsoleFormatter());
-	setLevel(Level.ALL);
+        this.jTextArea = jTextArea;
+        setFormatter(new ConsoleFormatter());
+        setLevel(Level.ALL);
     }
 
     @Override
     public synchronized void publish(LogRecord record) {
-	if (record.getLevel().intValue() < this.getLevel().intValue()) {
-	    return;
-	}
+        if (record.getLevel().intValue() < this.getLevel().intValue()) {
+            return;
+        }
 
-	if (this.getFormatter() == null) {
-	    this.jTextArea.append(record.getMessage() + "\n");
-	} else {
-	    this.jTextArea.append(this.getFormatter().format(record));
-	}
+        SpecsSwing.runOnSwing(() -> {
+            if (this.getFormatter() == null) {
+                this.jTextArea.append(record.getMessage() + "\n");
+            } else {
+                this.jTextArea.append(this.getFormatter().format(record));
+            }
+        });
 
     }
 
