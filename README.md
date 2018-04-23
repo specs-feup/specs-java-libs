@@ -1,7 +1,7 @@
 # specs-java-libs
 Java libraries created or extended (-Plus suffix) by SPeCS research group
 
-# Configuring Eclipse
+# configuring eclipse
 
   1. Create an Eclipse workspace on a folder outside of the repository. The workspace is local and should not be shared.
   2. Go to Window > Preferences
@@ -16,4 +16,4 @@ Java libraries created or extended (-Plus suffix) by SPeCS research group
       2. For certain projects, you might need to install additional Eclipse plugins ([how to install Eclipse plugins using update site links](http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Ftasks%2Ftasks-34.htm)). Currently, the used plugins are:
         * JavaCC - http://eclipse-javacc.sourceforge.net/
         * IvyDE - http://www.apache.org/dist/ant/ivyde/updatesite: Install Apache Ivy (tested with 2.4) and Apache IvyDE (tested with 2.2). After installing IvyDE you have to define de ivy settings file:
-             -  Go to Window > Preferences > Ivy > Setting > Ivy Setting path > press "Workspace" and choose "Support\configs\ivysettings.xml"
+            *  Go to Window > Preferences > Ivy > Setting > Ivy Setting path > press "Workspace" and choose "ivysettings.xml"
