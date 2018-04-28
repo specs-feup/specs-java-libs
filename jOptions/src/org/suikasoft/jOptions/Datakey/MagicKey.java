@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.Datakey;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.suikasoft.jOptions.gui.KeyPanelProvider;
@@ -23,12 +24,14 @@ import pt.up.fe.specs.util.SpecsStrings;
 class MagicKey<T> extends ADataKey<T> {
 
     private MagicKey(String id, Supplier<T> defaultValue, StringCodec<T> decoder) {
-        this(id, defaultValue, decoder, null, null, null, null);
+        this(id, defaultValue, decoder, null, null, null, null, null, true);
     }
 
     private MagicKey(String id, Supplier<T> defaultValueProvider, StringCodec<T> decoder,
-            CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition) {
-        super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition);
+            CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
+            Function<T, T> copyFunction, boolean isByReference) {
+        super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                isByReference);
     }
 
     public MagicKey(String id) {
@@ -53,9 +56,11 @@ class MagicKey<T> extends ADataKey<T> {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
-            CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition) {
+            CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
+            Function<T, T> copyFunction, boolean isByReference) {
+
         return new MagicKey(id, defaultValueProvider, decoder, customGetter, panelProvider, label,
-                definition) {
+                definition, copyFunction, isByReference) {
         };
     }
 

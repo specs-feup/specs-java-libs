@@ -215,7 +215,8 @@ public abstract class ADataStore implements DataStore {
     @Override
     public String getName() {
         // return data.getName();
-        return name;
+        return getStoreDefinition().map(def -> def.getName()).orElse(name);
+        // return name;
     }
 
     @Override
@@ -285,12 +286,16 @@ public abstract class ADataStore implements DataStore {
 
     @Override
     public String toString() {
+        return toInlinedString();
+
+        /*
         StringBuilder builder = new StringBuilder();
         builder.append("DataStore (" + getName()).append(")\n");
         for (String key : values.keySet()) {
             builder.append(" - ").append(key).append(" : ").append(values.get(key)).append("\n");
         }
         return builder.toString();
+        */
     }
 
 }

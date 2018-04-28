@@ -13,6 +13,8 @@
 
 package org.suikasoft.jOptions.storedefinition;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,7 +54,7 @@ public interface StoreDefinition {
      * @return
      */
     default List<StoreSection> getSections() {
-	return Arrays.asList(StoreSection.newInstance(getKeys()));
+        return Arrays.asList(StoreSection.newInstance(getKeys()));
     }
 
     /**
@@ -61,59 +63,87 @@ public interface StoreDefinition {
      * @return
      */
     default Map<String, DataKey<?>> getKeyMap() {
-	// To maintain the order of the keys
-	// Map<String, DataKey<?>> keyMap = new LinkedHashMap<>();
-	// getKeys().stream().forEach(key -> keyMap.put(getName(), key));
-	//
-	// return keyMap;
-	return getKeys().stream()
-		.collect(Collectors.toMap(key -> key.getName(), key -> key));
+        // To maintain the order of the keys
+        // Map<String, DataKey<?>> keyMap = new LinkedHashMap<>();
+        // getKeys().stream().forEach(key -> keyMap.put(getName(), key));
+        //
+        // return keyMap;
+        return getKeys().stream()
+                .collect(Collectors.toMap(key -> key.getName(), key -> key));
     }
 
     public static <T extends Enum<T> & DataKeyProvider> StoreDefinition newInstance(Class<T> aClass) {
-	List<DataKey<?>> keys = new ArrayList<>();
-	for (T key : aClass.getEnumConstants()) {
-	    keys.add(key.getDataKey());
-	}
+        List<DataKey<?>> keys = new ArrayList<>();
+        for (T key : aClass.getEnumConstants()) {
+            keys.add(key.getDataKey());
+        }
 
-	return new GenericStoreDefinition(aClass.getSimpleName(), keys);
+        return new GenericStoreDefinition(aClass.getSimpleName(), keys);
     }
 
     public static StoreDefinition newInstance(String name, DataKey<?>... keys) {
-	return new GenericStoreDefinition(name, Arrays.asList(keys));
+        return new GenericStoreDefinition(name, Arrays.asList(keys));
     }
 
     public static GenericStoreDefinition newInstance(String appName, Collection<DataKey<?>> keys) {
-	return new GenericStoreDefinition(appName, new ArrayList<>(keys));
+        return new GenericStoreDefinition(appName, new ArrayList<>(keys));
     }
 
     default DataKey<?> getKey(String key) {
-	DataKey<?> dataKey = getKeyMap().get(key);
-	if (dataKey == null) {
-	    throw new RuntimeException("Key '" + key + "' not found in store definition:" + toString());
-	}
+        DataKey<?> dataKey = getKeyMap().get(key);
+        if (dataKey == null) {
+            throw new RuntimeException("Key '" + key + "' not found in store definition:" + toString());
+        }
 
-	return dataKey;
+        return dataKey;
     }
 
     default DataStore getDefaultValues() {
-	DataStore data = DataStore.newInstance(getName());
+        DataStore data = DataStore.newInstance(getName());
 
-	for (DataKey<?> key : getKeys()) {
-	    if (key.hasDefaultValue()) {
-		data.setRaw(key, key.getDefault().get());
-	    }
-	}
+        for (DataKey<?> key : getKeys()) {
+            if (key.hasDefaultValue()) {
+                data.setRaw(key, key.getDefault().get());
+            }
+        }
 
-	return data;
+        return data;
     }
 
     default StoreDefinition setDefaultValues(DataStore data) {
-	throw new NotImplementedException(getClass());
+        throw new NotImplementedException(getClass());
     }
 
     default boolean hasKey(String keyName) {
-	return getKeyMap().containsKey(keyName);
+        return getKeyMap().containsKey(keyName);
+    }
+
+    /**
+     * Collects all public static DataKey fields and builds a StoreDefinition with those fields.
+     * 
+     * @param aClass
+     * @return
+     */
+    static StoreDefinition fromInterface(Class<?> aClass) {
+        StoreDefinitionBuilder builder = new StoreDefinitionBuilder(aClass.getSimpleName());
+
+        for (Field field : aClass.getFields()) {
+            if (!DataKey.class.isAssignableFrom(field.getType())) {
+                continue;
+            }
+
+            if (!Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
+
+            try {
+                builder.addKey((DataKey<?>) field.get(null));
+            } catch (Exception e) {
+                throw new RuntimeException("Could not retrive value of field: " + field);
+            }
+        }
+
+        return builder.build();
     }
 
 }

@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.Datakey;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.suikasoft.jOptions.gui.KeyPanelProvider;
@@ -36,7 +37,7 @@ class GenericKey<T> extends ADataKey<T> {
      * @param defaultValue
      */
     public GenericKey(String id, T exampleInstance, Supplier<? extends T> defaultValue) {
-        this(id, exampleInstance, defaultValue, null, null, null, null, null);
+        this(id, exampleInstance, defaultValue, null, null, null, null, null, null, true);
     }
 
     public GenericKey(String id, T exampleInstance) {
@@ -45,9 +46,10 @@ class GenericKey<T> extends ADataKey<T> {
 
     protected GenericKey(String id, T exampleInstance, Supplier<? extends T> defaultValueProvider,
             StringCodec<T> decoder, CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition) {
+            StoreDefinition definition, Function<T, T> copyFunction, boolean isByReference) {
 
-        super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition);
+        super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                isByReference);
 
         this.exampleInstance = exampleInstance;
     }
@@ -61,10 +63,11 @@ class GenericKey<T> extends ADataKey<T> {
 
     @Override
     protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
-            CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition) {
+            CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
+            Function<T, T> copyFuncion, boolean isByReference) {
 
         return new GenericKey<>(id, this.exampleInstance, defaultValueProvider, decoder, customGetter, panelProvider,
-                label, definition);
+                label, definition, copyFuncion, isByReference);
     }
 
 }

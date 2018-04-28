@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.Interfaces;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.DataStore.DataStoreContainer;
 import org.suikasoft.jOptions.DataStore.SimpleDataStore;
@@ -25,6 +26,8 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionProvider;
 
 import com.google.common.base.Preconditions;
+
+import pt.up.fe.specs.util.SpecsSystem;
 
 /**
  * A key-value store for arbitrary objects, with type-safe keys.
@@ -139,6 +142,10 @@ public interface DataStore {
     Optional<StoreDefinition> getStoreDefinition();
 
     void setStoreDefinition(StoreDefinition definition);
+
+    default void setDefinition(Class<?> aClass) {
+        setStoreDefinition(StoreDefinition.fromInterface(aClass));
+    }
 
     /**
      * Adds a new key and value.
@@ -279,10 +286,43 @@ public interface DataStore {
     }
 
     /**
+     * If DataStore has a StoreDefinition, uses the copy function defined in the DataKeys. Otherwise, tries to use the
+     * object copy constructor.
      * 
      * @return All the keys in the DataStore that are mapped to a value
      */
     Collection<String> getKeysWithValues();
+
+    default DataStore copy() {
+        if (!getStoreDefinition().isPresent()) {
+            DataStore copy = DataStore.newInstance(getName());
+
+            for (String key : getKeysWithValues()) {
+                copy.setRaw(key, SpecsSystem.copy(get(key)));
+            }
+
+            return copy;
+        }
+
+        StoreDefinition def = getStoreDefinition().get();
+        // .orElseThrow(
+        // () -> new RuntimeException("Can only copy DataStores that have defined a StoreDefinition"));
+
+        // Create new DataStore with same StoreDefinition
+        DataStore copy = DataStore.newInstance(def);
+
+        for (DataKey<?> key : def.getKeys()) {
+            // Skip keys without values
+            if (!hasValue(key)) {
+                continue;
+            }
+
+            Object value = get(key.getName());
+            copy.setRaw(key, key.copyRaw(value));
+        }
+
+        return copy;
+    }
 
     /*
      * CONSTRUCTORS
@@ -314,6 +354,39 @@ public interface DataStore {
 
     public static DataStore newInstance(String name, DataStore dataStore) {
         return new SimpleDataStore(name, dataStore);
+    }
+
+    /**
+     * Creates a DataStore from all the public static DataKeys that can be found in the class.
+     * 
+     * @param aClass
+     * @return
+     */
+    public static DataStore newInstance(Class<?> aClass) {
+        return newInstance(StoreDefinition.fromInterface(aClass));
+    }
+
+    default String toInlinedString() {
+        Collection<String> keys = getKeysWithValues();
+
+        //
+        // getStoreDefinition().map(def -> def.getKeys().stream()
+        // .filter(key -> hasValue(key))
+        // .map(key -> key.getName())
+        // .collect((Collection<String>) Collectors.toList()))
+        // .orElse(getKeysWithValues());
+
+        if (getStoreDefinition().isPresent()) {
+            keys = getStoreDefinition().get().getKeys().stream()
+                    .filter(key -> hasValue(key))
+                    .map(key -> key.getName())
+                    .collect(Collectors.toList());
+        }
+
+        // return getKeysWithValues().stream()
+        return keys.stream()
+                .map(key -> key + ": " + get(key))
+                .collect(Collectors.joining(", ", getName() + " [", "]"));
     }
 
 }

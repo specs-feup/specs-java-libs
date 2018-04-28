@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.Datakey;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.suikasoft.jOptions.Interfaces.DataStore;
@@ -209,4 +210,50 @@ public interface DataKey<T> {
         return builder.toString();
     }
 
+    /**
+     * Copies the given object.
+     * 
+     * <p>
+     * Uses the copy function to copy the object. If no copy function is defined, returns the object itself (shallow
+     * copy). By default, tries to use the copy constructor.
+     * 
+     * @return
+     */
+    default T copy(T object) {
+        return getCopyFunction()
+                .map(copy -> copy.apply(object))
+                .orElse(object);
+    }
+
+    default Object copyRaw(Object object) {
+        return copy(getValueClass().cast(object));
+        // return getCopyFunction()
+        // .map(copy -> copy.apply(getValueClass().cast(object)))
+        // .orElse(SpecsSystem.copy(getValueClass().cast(object)));
+    }
+
+    /**
+     * @deprecated remove
+     * @return
+     */
+    @Deprecated
+    boolean isByReference();
+
+    /**
+     * @deprecated remove
+     * @param isByReference
+     * @return
+     */
+    @Deprecated
+    DataKey<T> setByReference(boolean isByReference);
+
+    /**
+     * A copy of this key, with decoder set.
+     * 
+     * @param decoder
+     * @return
+     */
+    DataKey<T> setCopyFunction(Function<T, T> copyFunction);
+
+    Optional<Function<T, T>> getCopyFunction();
 }

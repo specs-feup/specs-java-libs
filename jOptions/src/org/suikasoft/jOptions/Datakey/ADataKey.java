@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.Datakey;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.suikasoft.jOptions.gui.KeyPanelProvider;
@@ -29,10 +30,12 @@ public abstract class ADataKey<T> implements DataKey<T> {
     private transient final KeyPanelProvider<T> panelProvider;
     private transient final String label;
     private transient final StoreDefinition definition;
+    private transient final Function<T, T> copyFunction;
+    private transient final boolean isByReference;
 
     protected ADataKey(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition) {
+            StoreDefinition definition, Function<T, T> copyFunction, boolean isByReference) {
 
         assert id != null;
 
@@ -43,10 +46,12 @@ public abstract class ADataKey<T> implements DataKey<T> {
         this.panelProvider = panelProvider;
         this.label = label;
         this.definition = definition;
+        this.copyFunction = copyFunction;
+        this.isByReference = isByReference;
     }
 
     protected ADataKey(String id, Supplier<T> defaultValue) {
-        this(id, defaultValue, null, null, null, null, null);
+        this(id, defaultValue, null, null, null, null, null, null, true);
     }
 
     @Override
@@ -92,7 +97,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     abstract protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition);
+            StoreDefinition definition, Function<T, T> copyFunction, boolean isByReference);
 
     @Override
     public Optional<StringCodec<T>> getDecoder() {
@@ -104,8 +109,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
         // Adding interface 'Serializable', so that it can save lambda expressions
         StringCodec<T> serializableDecoder = (StringCodec<T> & Serializable) value -> decoder.decode(value);
         return copy(id, defaultValueProvider, serializableDecoder, customGetter,
-                panelProvider, label,
-                definition);
+                panelProvider, label, definition, copyFunction, isByReference);
     }
 
     @Override
@@ -119,7 +123,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     @Override
     public DataKey<T> setDefault(Supplier<? extends T> defaultValueProvider) {
-        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition);
+        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                isByReference);
     }
 
     @Override
@@ -128,7 +133,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
         CustomGetter<T> serializableGetter = (CustomGetter<T> & Serializable) (value, dataStore) -> customGetter
                 .get(value, dataStore);
 
-        return copy(id, defaultValueProvider, decoder, serializableGetter, panelProvider, label, definition);
+        return copy(id, defaultValueProvider, decoder, serializableGetter, panelProvider, label, definition,
+                copyFunction, isByReference);
     }
 
     @Override
@@ -138,7 +144,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     @Override
     public DataKey<T> setKeyPanelProvider(KeyPanelProvider<T> panelProvider) {
-        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition);
+        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                isByReference);
     }
 
     @Override
@@ -148,7 +155,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     @Override
     public DataKey<T> setLabel(String label) {
-        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition);
+        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                isByReference);
     }
 
     /**
@@ -167,11 +175,35 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     @Override
     public DataKey<T> setStoreDefinition(StoreDefinition definition) {
-        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition);
+        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                isByReference);
     }
 
     @Override
     public Optional<StoreDefinition> getStoreDefinition() {
         return Optional.ofNullable(definition);
     }
+
+    @Override
+    public DataKey<T> setCopyFunction(Function<T, T> copyFunction) {
+        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                isByReference);
+    }
+
+    @Override
+    public Optional<Function<T, T>> getCopyFunction() {
+        return Optional.ofNullable(copyFunction);
+    }
+
+    @Override
+    public DataKey<T> setByReference(boolean isByReference) {
+        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                isByReference);
+    }
+
+    @Override
+    public boolean isByReference() {
+        return isByReference;
+    }
+
 }
