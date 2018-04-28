@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
+import pt.up.fe.specs.util.classmap.ClassSet;
 import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.properties.SpecsProperty;
 import pt.up.fe.specs.util.system.OutputType;
@@ -58,6 +59,9 @@ import pt.up.fe.specs.util.system.StreamToString;
  * @author Joao Bispo
  */
 public class SpecsSystem {
+
+    private static final ClassSet<Object> IMMUTABLE_JAVA_CLASSES = ClassSet.newInstance(Boolean.class, String.class,
+            Number.class, Class.class);
 
     private static final Lazy<Boolean> IS_DEBUG = Lazy.newInstance(() -> new File("debug").isFile());
 
@@ -897,6 +901,15 @@ public class SpecsSystem {
      * @return
      */
     public static <T> T copy(T object) {
+
+        if (object == null) {
+            return null;
+        }
+
+        // Check if part of Immutable objects of java library
+        if (IMMUTABLE_JAVA_CLASSES.contains(object)) {
+            return object;
+        }
 
         // Get class
         @SuppressWarnings("unchecked")
