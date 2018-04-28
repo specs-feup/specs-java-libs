@@ -29,6 +29,10 @@ public class CaseNotDefinedException extends UnsupportedOperationException {
         super(getDefaultMessageEnum(anEnum));
     }
 
+    public CaseNotDefinedException(Object object) {
+        super(getDefaultMessageObject(object));
+    }
+
     // public CaseNotDefinedException(String message) {
     // super("Case not defined: " + message);
     // }
@@ -39,6 +43,10 @@ public class CaseNotDefinedException extends UnsupportedOperationException {
 
     private static String getDefaultMessageEnum(Enum<?> anEnum) {
         return "Case not defined for enum '" + anEnum.name() + "'";
+    }
+
+    private static String getDefaultMessageObject(Object object) {
+        return "Case not defined for value '" + object.toString() + "'";
     }
 
 }
