@@ -1275,6 +1275,28 @@ public class SpecsStrings {
         }
     }
 
+    /**
+     * Returns the default value if there is an exception.
+     * 
+     * @param number
+     * @param defaultValue
+     * @return
+     */
+    public static Long decodeLong(String number, Supplier<Long> defaultValue) {
+        if (number == null) {
+            return defaultValue.get();
+        }
+        // Trim input
+        number = number.trim();
+
+        try {
+            return Long.decode(number);
+        } catch (Exception e) {
+            SpecsLogs.msgInfo("Could not decode integer: " + e.getMessage());
+            return defaultValue.get();
+        }
+    }
+
     public static Double decodeDouble(String number, Supplier<Double> defaultValue) {
         // Trim input
         number = number.trim();
