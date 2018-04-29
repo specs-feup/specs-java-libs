@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.Datakey;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -88,12 +89,34 @@ public class KeyFactory {
 
     }
 
+    public static DataKey<Long> longInt(String id, long defaultValue) {
+        return longInt(id)
+                .setDefault(() -> defaultValue);
+    }
+
+    public static DataKey<Long> longInt(String id) {
+        return new NormalKey<>(id, Long.class)
+                // .setDefault(() -> defaultValue)
+                // .setKeyPanelProvider((key, data) -> new IntegerPanel(key, data))
+                .setDecoder(s -> SpecsStrings.decodeLong(s, () -> 0l));
+
+    }
+
     public static DataKey<Double> double64(String id, double defaultValue) {
+        return double64(id).setDefault(() -> defaultValue);
+    }
+
+    public static DataKey<Double> double64(String id) {
         return new NormalKey<>(id, Double.class)
-                .setDefault(() -> defaultValue)
+                // .setDefault(() -> defaultValue)
                 .setKeyPanelProvider((key, data) -> new DoublePanel(key, data))
                 .setDecoder(s -> Double.valueOf(s));
 
+    }
+
+    public static DataKey<BigInteger> bigInteger(String id) {
+        return new NormalKey<>(id, BigInteger.class)
+                .setDecoder(s -> new BigInteger(s));
     }
 
     /**

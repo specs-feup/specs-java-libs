@@ -27,8 +27,6 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinitionProvider;
 
 import com.google.common.base.Preconditions;
 
-import pt.up.fe.specs.util.SpecsSystem;
-
 /**
  * A key-value store for arbitrary objects, with type-safe keys.
  * 
@@ -39,6 +37,11 @@ import pt.up.fe.specs.util.SpecsSystem;
 public interface DataStore {
 
     <T, E extends T> Optional<T> set(DataKey<T> key, E value);
+
+    default <T, E extends T> DataStore put(DataKey<T> key, E value) {
+        set(key, value);
+        return this;
+    }
 
     /**
      * Only sets the value if there is not a value yet for the given key.
@@ -155,14 +158,16 @@ public interface DataStore {
      * 
      * @param key
      */
-    default <T, E extends T> void add(DataKey<T> key, E value) {
+    default <T, E extends T> DataStore add(DataKey<T> key, E value) {
         Preconditions.checkArgument(key != null);
         Preconditions.checkArgument(!hasValue(key), "Attempting to add value already in PassData: " + key);
 
         set(key, value);
+
+        return this;
     }
 
-    default void addAll(DataView values) {
+    default DataStore addAll(DataView values) {
 
         Map<String, Object> rawValues = values.getValuesMap();
 
@@ -171,13 +176,16 @@ public interface DataStore {
             set(datakey, rawValues.get(key));
         }
 
+        return this;
         // for (DataKey<?> key : values.getKeys()) {
         // add((DataKey<Object>) key, values.getValue(key));
         // }
     }
 
-    default void addAll(DataStore values) {
+    default DataStore addAll(DataStore values) {
         addAll(DataView.newInstance(values));
+
+        return this;
     }
 
     /**
@@ -286,22 +294,33 @@ public interface DataStore {
     }
 
     /**
-     * If DataStore has a StoreDefinition, uses the copy function defined in the DataKeys. Otherwise, tries to use the
-     * object copy constructor.
+     * 
+     * 
      * 
      * @return All the keys in the DataStore that are mapped to a value
      */
     Collection<String> getKeysWithValues();
 
+    /**
+     * If DataStore has a StoreDefinition, uses the copy function defined in the DataKeys.
+     * 
+     * <p>
+     * Otherwise, throws exception.
+     * 
+     * @return
+     */
     default DataStore copy() {
+        // Otherwise, tries to use the
+        // object copy constructor.
         if (!getStoreDefinition().isPresent()) {
-            DataStore copy = DataStore.newInstance(getName());
-
-            for (String key : getKeysWithValues()) {
-                copy.setRaw(key, SpecsSystem.copy(get(key)));
-            }
-
-            return copy;
+            throw new RuntimeException("No StoreDefinition defined, cannot copy");
+            // DataStore copy = DataStore.newInstance(getName());
+            //
+            // for (String key : getKeysWithValues()) {
+            // copy.setRaw(key, SpecsSystem.copy(get(key)));
+            // }
+            //
+            // return copy;
         }
 
         StoreDefinition def = getStoreDefinition().get();
