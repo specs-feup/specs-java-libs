@@ -24,14 +24,13 @@ import pt.up.fe.specs.util.SpecsStrings;
 class MagicKey<T> extends ADataKey<T> {
 
     private MagicKey(String id, Supplier<T> defaultValue, StringCodec<T> decoder) {
-        this(id, defaultValue, decoder, null, null, null, null, null, true);
+        this(id, defaultValue, decoder, null, null, null, null, null);
     }
 
     private MagicKey(String id, Supplier<T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
-            Function<T, T> copyFunction, boolean isByReference) {
-        super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                isByReference);
+            Function<T, T> copyFunction) {
+        super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction);
     }
 
     public MagicKey(String id) {
@@ -57,10 +56,10 @@ class MagicKey<T> extends ADataKey<T> {
     @Override
     protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
-            Function<T, T> copyFunction, boolean isByReference) {
+            Function<T, T> copyFunction) {
 
         return new MagicKey(id, defaultValueProvider, decoder, customGetter, panelProvider, label,
-                definition, copyFunction, isByReference) {
+                definition, copyFunction) {
         };
     }
 

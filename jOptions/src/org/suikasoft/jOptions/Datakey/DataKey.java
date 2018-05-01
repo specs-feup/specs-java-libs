@@ -233,21 +233,6 @@ public interface DataKey<T> {
     }
 
     /**
-     * @deprecated remove
-     * @return
-     */
-    @Deprecated
-    boolean isByReference();
-
-    /**
-     * @deprecated remove
-     * @param isByReference
-     * @return
-     */
-    @Deprecated
-    DataKey<T> setByReference(boolean isByReference);
-
-    /**
      * A copy of this key, with decoder set.
      * 
      * @param decoder

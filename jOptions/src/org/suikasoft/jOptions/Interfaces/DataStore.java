@@ -182,6 +182,12 @@ public interface DataStore {
         // }
     }
 
+    /**
+     * Sets all values of the given DataStore in the given DataStore.
+     * 
+     * @param values
+     * @return
+     */
     default DataStore addAll(DataStore values) {
         addAll(DataView.newInstance(values));
 
