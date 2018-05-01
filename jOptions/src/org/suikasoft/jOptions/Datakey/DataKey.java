@@ -23,6 +23,7 @@ import org.suikasoft.jOptions.gui.KeyPanel;
 import org.suikasoft.jOptions.gui.KeyPanelProvider;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
+import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.StringLines;
 
 /**
@@ -241,4 +242,8 @@ public interface DataKey<T> {
     DataKey<T> setCopyFunction(Function<T, T> copyFunction);
 
     Optional<Function<T, T>> getCopyFunction();
+
+    default DataKey<T> setCopyConstructor() {
+        return setCopyFunction(object -> SpecsSystem.copy(object));
+    }
 }
