@@ -367,6 +367,11 @@ public class KeyFactory {
     private static DataStore dataStoreDecoder(String string, StoreDefinition definition) {
         Gson gson = new Gson();
         Map<String, String> map = gson.fromJson(string, new TypeToken<Map<String, String>>() {
+
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
         }.getType());
 
         DataStore dataStore = DataStore.newInstance(definition);
