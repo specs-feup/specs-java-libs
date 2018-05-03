@@ -27,7 +27,7 @@ import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.lazy.ThreadSafeLazy;
 import pt.up.fe.specs.util.providers.StringProvider;
 
-public class EnumHelper<T extends Enum<T> & StringProvider> {
+public class EnumHelper<T extends Enum<T> & StringProvider> extends EnumHelperBase<T> {
 
     private final Class<T> enumClass;
     private final Lazy<Map<String, T>> translationMap;
