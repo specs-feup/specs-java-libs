@@ -31,7 +31,7 @@ public enum ZipFormat implements StringProvider {
     ZIP("zip"),
     GZ("gz");
 
-    private static final Lazy<EnumHelperWithValue<ZipFormat>> ENUM_HELPER = EnumHelperWithValue.newLazyHelper(ZipFormat.class);
+    private static final Lazy<EnumHelperWithValue<ZipFormat>> ENUM_HELPER = EnumHelperWithValue.newLazyHelperWithValue(ZipFormat.class);
 
     private final String extension;
 

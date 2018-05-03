@@ -21,7 +21,7 @@ public class EnumHelperProvider<T extends Enum<T> & StringProvider> {
     private final Lazy<EnumHelperWithValue<T>> enumHelper;
 
     public EnumHelperProvider(Class<T> enumClass) {
-        enumHelper = EnumHelperWithValue.newLazyHelper(enumClass);
+        enumHelper = EnumHelperWithValue.newLazyHelperWithValue(enumClass);
     }
 
     public EnumHelperWithValue<T> get() {

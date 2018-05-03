@@ -16,7 +16,6 @@ package pt.up.fe.specs.util.enums;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,22 +26,23 @@ import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.lazy.ThreadSafeLazy;
 import pt.up.fe.specs.util.providers.StringProvider;
 
-public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends EnumHelperBase<T> {
+public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends EnumHelper<T> {
 
-    private final Class<T> enumClass;
+    // private final Class<T> enumClass;
     private final Lazy<Map<String, T>> translationMap;
-    private final Lazy<Map<String, T>> namesTranslationMap;
-    private final Lazy<T[]> values;
+    // private final Lazy<Map<String, T>> namesTranslationMap;
+    // private final Lazy<T[]> values;
 
     public EnumHelperWithValue(Class<T> enumClass) {
         this(enumClass, Collections.emptyList());
     }
 
     public EnumHelperWithValue(Class<T> enumClass, Collection<T> excludeList) {
-        this.enumClass = enumClass;
+        super(enumClass, excludeList);
+        // this.enumClass = enumClass;
         this.translationMap = Lazy.newInstance(() -> EnumHelperWithValue.buildTranslationMap(enumClass, excludeList));
-        values = Lazy.newInstance(() -> enumClass.getEnumConstants());
-        namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(values.get()));
+        // values = Lazy.newInstance(() -> enumClass.getEnumConstants());
+        // namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(values.get()));
     }
 
     private static <T extends Enum<T> & StringProvider> Map<String, T> buildTranslationMap(Class<T> enumClass,
@@ -58,28 +58,23 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
 
     }
 
-    private Map<String, T> buildNamesTranslationMap(T[] values) {
-        Map<String, T> map = new HashMap<>();
+    // private Map<String, T> buildNamesTranslationMap(T[] values) {
+    // Map<String, T> map = new HashMap<>();
+    //
+    // for (T value : values) {
+    // map.put(value.name(), value);
+    // }
+    //
+    // return map;
+    // }
 
-        for (T value : values) {
-            map.put(value.name(), value);
-        }
-
-        return map;
-    }
-
-    public Map<String, T> getTranslationMap() {
+    public Map<String, T> getValuesTranslationMap() {
         return translationMap.get();
     }
 
     public T fromValue(String name) {
         return fromValueTry(name)
                 .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, translationMap.get())));
-    }
-
-    public T fromName(String name) {
-        return fromNameTry(name)
-                .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, namesTranslationMap.get())));
     }
 
     /**
@@ -89,12 +84,12 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
      * @return
      */
     public T fromValue(int index) {
-        T[] array = values.get();
+        T[] array = values();
         if (index >= array.length) {
             throw new RuntimeException(
                     "Asked for enum at index " + index + ", but there are only " + array.length + " values");
         }
-        return values.get()[index];
+        return values()[index];
     }
 
     // public T valueOfOrNull(String name) {
@@ -104,19 +99,13 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
     // }
     // }
 
-    private String getErrorMessage(String name, Map<String, T> translationMap) {
-        return "Enum '" + enumClass.getSimpleName() + "' does not contain an enum with the name '" + name
-                + "'. Available enums: " + translationMap;
-    }
+    // private String getErrorMessage(String name, Map<String, T> translationMap) {
+    // return "Enum '" + getEnumClass().getSimpleName() + "' does not contain an enum with the name '" + name
+    // + "'. Available enums: " + translationMap;
+    // }
 
     public Optional<T> fromValueTry(String name) {
         T value = translationMap.get().get(name);
-
-        return Optional.ofNullable(value);
-    }
-
-    public Optional<T> fromNameTry(String name) {
-        T value = namesTranslationMap.get().get(name);
 
         return Optional.ofNullable(value);
     }
@@ -127,7 +116,11 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
                 .collect(Collectors.toList());
     }
 
-    public String getAvailableOptions() {
+    /**
+     * 
+     * @return
+     */
+    public String getAvailableValues() {
         return translationMap.get().keySet().stream()
                 .collect(Collectors.joining(", "));
     }
@@ -137,26 +130,21 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
         return this;
     }
 
-    public int getSize() {
-        return values.get().length;
+    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelperWithValue(
+            Class<T> anEnum) {
+        return newLazyHelperWithValue(anEnum, Collections.emptyList());
     }
 
-    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelper(Class<T> anEnum) {
-        return newLazyHelper(anEnum, Collections.emptyList());
-    }
-
-    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelper(Class<T> anEnum,
+    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelperWithValue(
+            Class<T> anEnum,
             T exclude) {
-        return newLazyHelper(anEnum, Arrays.asList(exclude));
+        return newLazyHelperWithValue(anEnum, Arrays.asList(exclude));
     }
 
-    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelper(Class<T> anEnum,
+    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelperWithValue(
+            Class<T> anEnum,
             Collection<T> excludeList) {
         return new ThreadSafeLazy<>(() -> new EnumHelperWithValue<>(anEnum, excludeList));
-    }
-
-    public T[] values() {
-        return values.get();
     }
 
     /**
