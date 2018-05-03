@@ -163,7 +163,7 @@ public class SpecsProperties {
             return Optional.empty();
         }
 
-        return Optional.of(helper.valueOf(enumName));
+        return Optional.of(helper.fromValue(enumName));
     }
 
     /**

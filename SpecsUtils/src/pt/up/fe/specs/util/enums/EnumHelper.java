@@ -72,8 +72,8 @@ public class EnumHelper<T extends Enum<T> & StringProvider> extends EnumHelperBa
         return translationMap.get();
     }
 
-    public T valueOf(String name) {
-        return valueOfTry(name)
+    public T fromValue(String name) {
+        return fromValueTry(name)
                 .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, translationMap.get())));
     }
 
@@ -88,7 +88,7 @@ public class EnumHelper<T extends Enum<T> & StringProvider> extends EnumHelperBa
      * @param index
      * @return
      */
-    public T valueOf(int index) {
+    public T fromValue(int index) {
         T[] array = values.get();
         if (index >= array.length) {
             throw new RuntimeException(
@@ -109,7 +109,7 @@ public class EnumHelper<T extends Enum<T> & StringProvider> extends EnumHelperBa
                 + "'. Available enums: " + translationMap;
     }
 
-    public Optional<T> valueOfTry(String name) {
+    public Optional<T> fromValueTry(String name) {
         T value = translationMap.get().get(name);
 
         return Optional.ofNullable(value);
@@ -121,9 +121,9 @@ public class EnumHelper<T extends Enum<T> & StringProvider> extends EnumHelperBa
         return Optional.ofNullable(value);
     }
 
-    public List<T> valueOf(List<String> names) {
+    public List<T> fromValue(List<String> names) {
         return names.stream()
-                .map(name -> valueOf(name))
+                .map(name -> fromValue(name))
                 .collect(Collectors.toList());
     }
 

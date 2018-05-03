@@ -40,7 +40,7 @@ public enum ZipFormat implements StringProvider {
     }
 
     public static Optional<ZipFormat> fromExtension(String extension) {
-        return ENUM_HELPER.get().valueOfTry(extension);
+        return ENUM_HELPER.get().fromValueTry(extension);
     }
 
     @Override
