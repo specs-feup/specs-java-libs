@@ -18,13 +18,13 @@ import pt.up.fe.specs.util.providers.StringProvider;
 
 public class EnumHelperProvider<T extends Enum<T> & StringProvider> {
 
-    private final Lazy<EnumHelper<T>> enumHelper;
+    private final Lazy<EnumHelperWithValue<T>> enumHelper;
 
     public EnumHelperProvider(Class<T> enumClass) {
-        enumHelper = EnumHelper.newLazyHelper(enumClass);
+        enumHelper = EnumHelperWithValue.newLazyHelper(enumClass);
     }
 
-    public EnumHelper<T> get() {
+    public EnumHelperWithValue<T> get() {
         return enumHelper.get();
     }
 }

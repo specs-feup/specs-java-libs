@@ -27,20 +27,20 @@ import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.lazy.ThreadSafeLazy;
 import pt.up.fe.specs.util.providers.StringProvider;
 
-public class EnumHelper<T extends Enum<T> & StringProvider> extends EnumHelperBase<T> {
+public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends EnumHelperBase<T> {
 
     private final Class<T> enumClass;
     private final Lazy<Map<String, T>> translationMap;
     private final Lazy<Map<String, T>> namesTranslationMap;
     private final Lazy<T[]> values;
 
-    public EnumHelper(Class<T> enumClass) {
+    public EnumHelperWithValue(Class<T> enumClass) {
         this(enumClass, Collections.emptyList());
     }
 
-    public EnumHelper(Class<T> enumClass, Collection<T> excludeList) {
+    public EnumHelperWithValue(Class<T> enumClass, Collection<T> excludeList) {
         this.enumClass = enumClass;
-        this.translationMap = Lazy.newInstance(() -> EnumHelper.buildTranslationMap(enumClass, excludeList));
+        this.translationMap = Lazy.newInstance(() -> EnumHelperWithValue.buildTranslationMap(enumClass, excludeList));
         values = Lazy.newInstance(() -> enumClass.getEnumConstants());
         namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(values.get()));
     }
@@ -132,7 +132,7 @@ public class EnumHelper<T extends Enum<T> & StringProvider> extends EnumHelperBa
                 .collect(Collectors.joining(", "));
     }
 
-    public EnumHelper<T> addAlias(String alias, T anEnum) {
+    public EnumHelperWithValue<T> addAlias(String alias, T anEnum) {
         translationMap.get().put(alias, anEnum);
         return this;
     }
@@ -141,18 +141,18 @@ public class EnumHelper<T extends Enum<T> & StringProvider> extends EnumHelperBa
         return values.get().length;
     }
 
-    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum) {
+    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelper(Class<T> anEnum) {
         return newLazyHelper(anEnum, Collections.emptyList());
     }
 
-    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum,
+    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelper(Class<T> anEnum,
             T exclude) {
         return newLazyHelper(anEnum, Arrays.asList(exclude));
     }
 
-    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum,
+    public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelper(Class<T> anEnum,
             Collection<T> excludeList) {
-        return new ThreadSafeLazy<>(() -> new EnumHelper<>(anEnum, excludeList));
+        return new ThreadSafeLazy<>(() -> new EnumHelperWithValue<>(anEnum, excludeList));
     }
 
     public T[] values() {

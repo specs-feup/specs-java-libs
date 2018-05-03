@@ -22,7 +22,7 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 
 import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.util.enums.EnumHelper;
+import pt.up.fe.specs.util.enums.EnumHelperWithValue;
 import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.providers.StringProvider;
 
@@ -31,7 +31,7 @@ public enum ZipFormat implements StringProvider {
     ZIP("zip"),
     GZ("gz");
 
-    private static final Lazy<EnumHelper<ZipFormat>> ENUM_HELPER = EnumHelper.newLazyHelper(ZipFormat.class);
+    private static final Lazy<EnumHelperWithValue<ZipFormat>> ENUM_HELPER = EnumHelperWithValue.newLazyHelper(ZipFormat.class);
 
     private final String extension;
 

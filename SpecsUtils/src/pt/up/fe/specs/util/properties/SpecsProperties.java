@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.enums.EnumHelper;
+import pt.up.fe.specs.util.enums.EnumHelperWithValue;
 import pt.up.fe.specs.util.providers.KeyProvider;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.providers.StringProvider;
@@ -156,7 +156,7 @@ public class SpecsProperties {
         return file.isFile() ? Optional.of(file) : Optional.empty();
     }
 
-    public <T extends Enum<T> & StringProvider> Optional<T> getEnum(KeyProvider<String> key, EnumHelper<T> helper) {
+    public <T extends Enum<T> & StringProvider> Optional<T> getEnum(KeyProvider<String> key, EnumHelperWithValue<T> helper) {
         String enumName = get(key);
 
         if (enumName == null) {
