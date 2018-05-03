@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import pt.up.fe.specs.util.enums.EnumHelper;
 import pt.up.fe.specs.util.providers.KeyProvider;
 
 /**
@@ -33,6 +34,13 @@ import pt.up.fe.specs.util.providers.KeyProvider;
  * @author Joao Bispo
  */
 public class SpecsEnums {
+
+    private static final ThreadLocal<Map<Class<Enum<?>>, EnumHelper<?>>> ENUM_HELPERS = ThreadLocal
+            .withInitial(() -> new HashMap<>());
+
+    // private static final ThreadLocal<CachedItems<Class<? extends Enum<?>>, EnumHelper<?>>> ENUM_HELPERS_CACHE =
+    // ThreadLocal
+    // .withInitial(() -> new CachedItems<>(enumClass -> new EnumHelper<?>(enumClass)));
 
     /**
      * Transforms a String into a constant of the same name in a specific Enum. Returns null instead of throwing
@@ -377,6 +385,36 @@ public class SpecsEnums {
         }
 
         return joiner.toString();
+    }
+
+    public static <T extends Enum<T>> T fromName(Class<T> enumType, String name) {
+        return SpecsEnums.valueOf(enumType, name);
+        // EnumHelper<?> helper = getHelper(enumType);
+        // return enumType.cast(helper.fromName(name));
+
+    }
+
+    public static <T extends Enum<T>> T fromOrdinal(Class<T> enumClass, int ordinal) {
+        EnumHelper<T> helper = getHelper(enumClass);
+        return helper.fromOrdinal(ordinal);
+    }
+
+    @SuppressWarnings("unchecked") // Class<T> is a Class<Enum<?>>
+    public static <T extends Enum<T>> EnumHelper<T> getHelper(Class<T> enumClass) {
+        EnumHelper<?> helper = ENUM_HELPERS.get().get(enumClass);
+        if (helper == null) {
+            helper = new EnumHelper<>(enumClass);
+            ENUM_HELPERS.get().put((Class<Enum<?>>) enumClass, helper);
+            // System.out.println("CREATED ENUM HELPER FOR " + enumClass);
+        } else {
+            // System.out.println("REUSED ENUM HELPER FOR " + enumClass);
+        }
+
+        return (EnumHelper<T>) helper;
+    }
+
+    public static <T extends Enum<T>> T[] values(Class<T> enumClass) {
+        return getHelper(enumClass).values();
     }
 
 }

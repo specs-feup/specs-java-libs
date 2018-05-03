@@ -118,6 +118,22 @@ public class EnumHelper<T extends Enum<T>> {
         return Optional.ofNullable(value);
     }
 
+    public Optional<T> fromOrdinalTry(int ordinal) {
+        T[] values = values();
+
+        if (ordinal < 0 || ordinal >= values.length) {
+            return Optional.empty();
+        }
+
+        return Optional.of(values[ordinal]);
+    }
+
+    public T fromOrdinal(int ordinal) {
+        return fromOrdinalTry(ordinal)
+                .orElseThrow(() -> new RuntimeException(
+                        "Given ordinal '" + ordinal + "' is out of range, enum has " + values().length + " values"));
+    }
+
     /*
     public List<T> fromValue(List<String> names) {
         return names.stream()
