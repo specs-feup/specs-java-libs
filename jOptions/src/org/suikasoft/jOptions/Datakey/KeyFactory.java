@@ -82,8 +82,11 @@ public class KeyFactory {
     }
 
     public static DataKey<Integer> integer(String id, int defaultValue) {
+        return integer(id).setDefault(() -> defaultValue);
+    }
+
+    public static DataKey<Integer> integer(String id) {
         return new NormalKey<>(id, Integer.class)
-                .setDefault(() -> defaultValue)
                 .setKeyPanelProvider((key, data) -> new IntegerPanel(key, data))
                 .setDecoder(s -> SpecsStrings.decodeInteger(s, () -> 0));
 
