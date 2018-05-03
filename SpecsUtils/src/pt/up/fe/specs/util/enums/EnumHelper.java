@@ -16,7 +16,6 @@ package pt.up.fe.specs.util.enums;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ import pt.up.fe.specs.util.lazy.ThreadSafeLazy;
 public class EnumHelper<T extends Enum<T>> {
 
     private final Class<T> enumClass;
-    private final Lazy<Map<String, T>> namesTranslationMap;
+    // private final Lazy<Map<String, T>> namesTranslationMap;
     private final Lazy<T[]> enumValues;
 
     public EnumHelper(Class<T> enumClass) {
@@ -36,7 +35,7 @@ public class EnumHelper<T extends Enum<T>> {
     public EnumHelper(Class<T> enumClass, Collection<T> excludeList) {
         this.enumClass = enumClass;
         enumValues = Lazy.newInstance(() -> enumClass.getEnumConstants());
-        namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(enumValues.get()));
+        // namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(enumValues.get()));
     }
 
     /*
@@ -53,15 +52,15 @@ public class EnumHelper<T extends Enum<T>> {
     
     }
     */
-    private Map<String, T> buildNamesTranslationMap(T[] values) {
-        Map<String, T> map = new HashMap<>();
-
-        for (T value : values) {
-            map.put(value.name(), value);
-        }
-
-        return map;
-    }
+    // private Map<String, T> buildNamesTranslationMap(T[] values) {
+    // Map<String, T> map = new HashMap<>();
+    //
+    // for (T value : values) {
+    // map.put(value.name(), value);
+    // }
+    //
+    // return map;
+    // }
 
     public Class<T> getEnumClass() {
         return enumClass;
@@ -78,8 +77,10 @@ public class EnumHelper<T extends Enum<T>> {
     }
     */
     public T fromName(String name) {
-        return fromNameTry(name)
-                .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, namesTranslationMap.get())));
+        return Enum.valueOf(enumClass, name);
+
+        // return fromNameTry(name)
+        // .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, namesTranslationMap.get())));
     }
 
     /**
@@ -112,11 +113,14 @@ public class EnumHelper<T extends Enum<T>> {
     }
     */
 
+    /*
     public Optional<T> fromNameTry(String name) {
+        Enum.valueOf(enumClass, name);
         T value = namesTranslationMap.get().get(name);
-
+    
         return Optional.ofNullable(value);
     }
+    */
 
     public Optional<T> fromOrdinalTry(int ordinal) {
         T[] values = values();
