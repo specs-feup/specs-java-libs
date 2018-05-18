@@ -13,22 +13,110 @@
 
 package org.suikasoft.jOptions.arguments;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
+import org.suikasoft.jOptions.Datakey.KeyFactory;
 import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.app.AppKernel;
 
+import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.collections.MultiMap;
 import pt.up.fe.specs.util.parsing.ListParser;
 
 public class ArgumentsParser {
 
+    /**
+     * If true, just the help message instead of running the tool (--help, -h).
+     */
+    private static final DataKey<Boolean> SHOW_HELP = KeyFactory.bool("arguments_parser_show_help")
+            .setLabel("Shows this help message");
+
     private final Map<String, BiConsumer<ListParser<String>, DataStore>> parsers;
+    private final MultiMap<DataKey<?>, String> datakeys;
+    private final Map<DataKey<?>, Integer> consumedArgs;
 
     public ArgumentsParser() {
-        this.parsers = new LinkedHashMap<>();
+        parsers = new LinkedHashMap<>();
+        datakeys = new MultiMap<>(() -> new LinkedHashMap<>());
+        consumedArgs = new HashMap<>();
+
+        // Automatically add help flags (-h, --help)
+        addBool(SHOW_HELP, "--help", "-h");
+    }
+
+    public int execute(AppKernel kernel, List<String> args) {
+        DataStore config = parse(args);
+
+        // If --help, show message and return
+        if (config.get(SHOW_HELP)) {
+            printHelpMessage();
+            return 0;
+        }
+
+        return kernel.execute(config);
+    }
+
+    private void printHelpMessage() {
+        StringBuilder message = new StringBuilder();
+        // message.append("EclipseBuild - Generates and runs ANT scripts for Eclipse Java projects\n\n");
+        // message.append("Usage: <folder> [-i <ivySetting>] [-u <userLibraries>] <folder> [-i...\n\n");
+        // message.append(
+        // "Default files that will be searched for in the root of the repository folders if no flag is specified:\n");
+        // message.append(" ").append(getDefaultUserLibraries()).append(" - Eclipse user libraries\n");
+        // message.append(" ").append(getDefaultIvySettingsFile()).append(" - Ivy settings file\n");
+        // message.append(" ").append(getDefaultIgnoreProjectsFile())
+        // .append(" - Text file with list of projects to ignore (one project name per line)\n");
+        //
+        // message.append("\nAdditional options:\n");
+        for (DataKey<?> key : datakeys.keySet()) {
+            // for (String key : parsers.keySet()) {
+            String flags = datakeys.get(key).stream().collect(Collectors.joining(", "));
+            message.append(" ").append(flags);
+
+            Integer consumedArgs = this.consumedArgs.get(key);
+            for (int i = 0; i < consumedArgs; i++) {
+                message.append(" <arg").append(i + 1).append(">");
+            }
+
+            String label = key.getLabel();
+            if (!label.isEmpty()) {
+                message.append(": ").append(label);
+            }
+            message.append("\n");
+        }
+
+        // Print message
+        SpecsLogs.msgInfo(message.toString());
+    }
+
+    public DataStore parse(List<String> args) {
+        DataStore parsedData = DataStore.newInstance("ArgumentsParser Data");
+
+        // List with items that will be consumed during parsing of arguments
+        ListParser<String> currentArgs = new ListParser<>(args);
+        while (!currentArgs.isEmpty()) {
+            String currentArg = currentArgs.popSingle();
+
+            // Check if there is a flag for the current string
+            if (parsers.containsKey(currentArg)) {
+                parsers.get(currentArg).accept(currentArgs, parsedData);
+                continue;
+            }
+
+            // No mapping found, throw exception
+            SpecsLogs.msgInfo("Command-line option not supported: '" + currentArg + "'");
+            SpecsLogs.msgInfo("Use argument -h or --help to see available options.");
+        }
+
+        return parsedData;
     }
 
     /**
@@ -39,7 +127,7 @@ public class ArgumentsParser {
      * @return
      */
     public ArgumentsParser addBool(DataKey<Boolean> key, String... flags) {
-        return add(key, list -> true, flags);
+        return add(key, list -> true, 0, flags);
         // for (String flag : flags) {
         // parsers.put(flag, addValue(key, true));
         // }
@@ -55,7 +143,7 @@ public class ArgumentsParser {
      * @return
      */
     public ArgumentsParser addString(DataKey<String> key, String... flags) {
-        return add(key, list -> list.popSingle());
+        return add(key, list -> list.popSingle(), 1, flags);
         // for (String flag : flags) {
         // parsers.put(flag, addValueFromList(key, ListParser::popSingle));
         // }
@@ -71,7 +159,7 @@ public class ArgumentsParser {
      * @return
      */
     public <V> ArgumentsParser add(DataKey<V> key, String... flags) {
-        return add(key, list -> key.getDecoder().get().decode(list.popSingle()));
+        return add(key, list -> key.getDecoder().get().decode(list.popSingle()), 1, flags);
 
         // for (String flag : flags) {
         // parsers.put(flag, (list, dataStore) -> dataStore.add(key, key.getDecoder().get().decode(list.popSingle())));
@@ -88,10 +176,16 @@ public class ArgumentsParser {
      * @param flags
      * @return
      */
-    public <V> ArgumentsParser add(DataKey<V> key, Function<ListParser<String>, V> parser, String... flags) {
+    public <V> ArgumentsParser add(DataKey<V> key, Function<ListParser<String>, V> parser, Integer consumedArgs,
+            String... flags) {
         for (String flag : flags) {
             parsers.put(flag, (list, dataStore) -> dataStore.add(key, parser.apply(list)));
+            // datakeys.put(flag, key);
+            // this.consumedArgs.put(flag, consumedArgs);
         }
+
+        datakeys.put(key, Arrays.asList(flags));
+        this.consumedArgs.put(key, consumedArgs);
 
         return this;
     }
