@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.arguments;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -38,6 +39,12 @@ public class ArgumentsParser {
      */
     private static final DataKey<Boolean> SHOW_HELP = KeyFactory.bool("arguments_parser_show_help")
             .setLabel("Shows this help message");
+
+    private static final DataKey<File> DATASTORE_FILE = KeyFactory.file("arguments_parser_datastore_file")
+            .setLabel("Executes the program using the given file representing a serialized DataStore instance");
+
+    private static final DataKey<File> CONFIG_FILE = KeyFactory.file("arguments_parser_config_file")
+            .setLabel("Executes the program using the given text file containig command-line options");
 
     private final Map<String, BiConsumer<ListParser<String>, DataStore>> parsers;
     private final MultiMap<DataKey<?>, String> datakeys;
@@ -179,6 +186,10 @@ public class ArgumentsParser {
     public <V> ArgumentsParser add(DataKey<V> key, Function<ListParser<String>, V> parser, Integer consumedArgs,
             String... flags) {
         for (String flag : flags) {
+            if (parsers.containsKey(flag)) {
+                throw new RuntimeException("There is already a mapping for flag '" + flag + "'");
+            }
+
             parsers.put(flag, (list, dataStore) -> dataStore.add(key, parser.apply(list)));
             // datakeys.put(flag, key);
             // this.consumedArgs.put(flag, consumedArgs);
