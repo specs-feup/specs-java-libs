@@ -936,4 +936,47 @@ public class SpecsSystem {
 
     }
 
+    public static <T> T newInstance(String classname, Class<T> expectedClass, Object... arguments) {
+        Object object = newInstance(classname, arguments);
+
+        return expectedClass.cast(object);
+    }
+
+    public static Object newInstance(String classname, Object... arguments) {
+        Class<?> aClass;
+        try {
+            aClass = Class.forName(classname);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Could not find class '" + classname + "'", e);
+        }
+
+        return newInstance(aClass, arguments);
+    }
+
+    public static <T> T newInstance(Class<T> aClass, Object... arguments) {
+        Class<?>[] argClasses = new Class<?>[arguments.length];
+        for (int i = 0; i < arguments.length; i++) {
+            argClasses[i] = arguments[i].getClass();
+        }
+
+        Constructor<T> constructorMethod = null;
+        try {
+            // Create copy constructor: new T(T data)
+            constructorMethod = aClass.getConstructor(argClasses);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Could not create call to constructor for '" + aClass.getSimpleName()
+                            + "' with arguments '" + Arrays.toString(argClasses) + "'",
+                    e);
+        }
+
+        try {
+            return constructorMethod.newInstance(arguments);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not create new instance for '" + aClass.getSimpleName()
+                    + "' with arguments " + Arrays.toString(arguments), e);
+        }
+
+    }
+
 }

@@ -394,7 +394,7 @@ public class SpecsStrings {
      *            a string
      * @return the index of the first whitespace found in the given String, or -1 if none is found.
      */
-    public static int indexOfFirstWhiteSpace(String string) {
+    public static int indexOfFirstWhitespace(String string) {
         return indexOf(string, aChar -> Character.isWhitespace(aChar), false);
     }
 
@@ -1743,6 +1743,10 @@ public class SpecsStrings {
     }
 
     public static String escapeJson(String string) {
+        return escapeJson(string, false);
+    }
+
+    public static String escapeJson(String string, boolean ignoreNewlines) {
 
         StringBuilder escapedString = new StringBuilder();
 
@@ -1760,11 +1764,17 @@ public class SpecsStrings {
                 continue;
             }
             if (currentChar == '\n') {
-                escapedString.append("\\n");
+                if (!ignoreNewlines) {
+                    escapedString.append("\\n");
+                }
+
                 continue;
             }
             if (currentChar == '\r') {
-                escapedString.append("\\r");
+                if (!ignoreNewlines) {
+                    escapedString.append("\\r");
+                }
+
                 continue;
             }
             if (currentChar == '\t') {
@@ -1893,6 +1903,10 @@ public class SpecsStrings {
 
     public static String toPercentage(double fraction) {
         return MessageFormat.format("{0,number,#.##%}", fraction);
+    }
+
+    public static String removeWhitespace(String string) {
+        return string.replaceAll("\\s+", "");
     }
 
 }

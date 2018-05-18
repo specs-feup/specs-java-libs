@@ -135,4 +135,9 @@ public class ListParser<T> {
         currentList = SpecsCollections.concat(elements, currentList);
     }
 
+    @Override
+    public String toString() {
+        return currentList.toString();
+    }
+
 }
