@@ -16,9 +16,11 @@ package org.suikasoft.jOptions.arguments;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,14 +51,17 @@ public class ArgumentsParser {
     private final Map<String, BiConsumer<ListParser<String>, DataStore>> parsers;
     private final MultiMap<DataKey<?>, String> datakeys;
     private final Map<DataKey<?>, Integer> consumedArgs;
+    private final Set<String> ignoreFlags;
 
     public ArgumentsParser() {
         parsers = new LinkedHashMap<>();
         datakeys = new MultiMap<>(() -> new LinkedHashMap<>());
         consumedArgs = new HashMap<>();
+        ignoreFlags = new HashSet<>();
 
         // Automatically add help flags (-h, --help)
         addBool(SHOW_HELP, "--help", "-h");
+        ignoreFlags.add("//");
     }
 
     public int execute(AppKernel kernel, List<String> args) {
@@ -115,6 +120,13 @@ public class ArgumentsParser {
             // Check if there is a flag for the current string
             if (parsers.containsKey(currentArg)) {
                 parsers.get(currentArg).accept(currentArgs, parsedData);
+                continue;
+            }
+
+            // Check if ignore flag
+            if (ignoreFlags.contains(currentArg)) {
+                // Discard next element and continue
+                currentArgs.popSingle();
                 continue;
             }
 
@@ -197,6 +209,14 @@ public class ArgumentsParser {
 
         datakeys.put(key, Arrays.asList(flags));
         this.consumedArgs.put(key, consumedArgs);
+
+        return this;
+    }
+
+    public ArgumentsParser addIgnore(String... ignoreFlags) {
+        for (String ignoreFlag : ignoreFlags) {
+            this.ignoreFlags.add(ignoreFlag);
+        }
 
         return this;
     }
