@@ -37,7 +37,7 @@ import pt.up.fe.specs.util.utilities.LineStream;
  */
 public class LineStreamParsers {
 
-    public static boolean parseOneOrZero(String aBoolean) {
+    public static boolean oneOrZero(String aBoolean) {
         if (aBoolean.equals("1")) {
             return true;
         }
@@ -49,15 +49,15 @@ public class LineStreamParsers {
         throw new RuntimeException("Unexpected value: " + aBoolean);
     }
 
-    public static boolean parseOneOrZero(LineStream lines) {
-        return parseOneOrZero(lines.nextLine());
+    public static boolean oneOrZero(LineStream lines) {
+        return oneOrZero(lines.nextLine());
     }
 
-    public static int parseInt(LineStream lines) {
+    public static int integer(LineStream lines) {
         return Integer.parseInt(lines.nextLine());
     }
 
-    public static long parseLong(LineStream lines) {
+    public static long longInt(LineStream lines) {
         return Long.parseLong(lines.nextLine());
     }
 
@@ -75,7 +75,7 @@ public class LineStreamParsers {
     }
     */
     public static <T extends Enum<T>> T enumFromOrdinal(Class<T> enumClass, LineStream lines) {
-        return SpecsEnums.fromOrdinal(enumClass, parseInt(lines));
+        return SpecsEnums.fromOrdinal(enumClass, integer(lines));
     }
 
     public static <T extends Enum<T>> T enumFromName(Class<T> enumClass, LineStream lines) {
@@ -85,7 +85,7 @@ public class LineStreamParsers {
     public static <T extends Enum<T> & StringProvider> T enumFromInt(EnumHelperWithValue<T> helper,
             LineStream lines) {
 
-        return helper.fromValue(parseInt(lines));
+        return helper.fromValue(integer(lines));
     }
 
     public static <T extends Enum<T> & StringProvider> T enumFromName(EnumHelperWithValue<T> helper,
@@ -111,7 +111,7 @@ public class LineStreamParsers {
     public static <T extends Enum<T> & StringProvider> List<T> enumListFromName(EnumHelperWithValue<T> helper,
             LineStream lines) {
 
-        int numEnums = parseInt(lines);
+        int numEnums = integer(lines);
         List<T> enums = new ArrayList<>(numEnums);
 
         for (int i = 0; i < numEnums; i++) {
@@ -135,7 +135,7 @@ public class LineStreamParsers {
         }
     }
 
-    public static void parseStringMap(String id, LineStream linestream, Map<String, String> stringMap) {
+    public static void stringMap(String id, LineStream linestream, Map<String, String> stringMap) {
         String key = linestream.nextLine();
         String value = linestream.nextLine();
 
@@ -150,11 +150,11 @@ public class LineStreamParsers {
      * @param linestream
      * @param stringSet
      */
-    public static void parseStringSet(String id, LineStream linestream, Set<String> stringSet) {
-        parseStringSet(id, linestream, stringSet, true);
+    public static void stringSet(String id, LineStream linestream, Set<String> stringSet) {
+        stringSet(id, linestream, stringSet, true);
     }
 
-    public static void parseStringSet(String id, LineStream linestream, Set<String> stringSet, boolean checkDuplicate) {
+    public static void stringSet(String id, LineStream linestream, Set<String> stringSet, boolean checkDuplicate) {
         String key = linestream.nextLine();
 
         if (checkDuplicate) {
@@ -170,8 +170,8 @@ public class LineStreamParsers {
      * @param lines
      * @param map
      */
-    public static void parseMultiMap(LineStream lines, MultiMap<String, String> map) {
-        parseMultiMap(lines, map, string -> string);
+    public static void multiMap(LineStream lines, MultiMap<String, String> map) {
+        multiMap(lines, map, string -> string);
     }
 
     /**
@@ -182,7 +182,7 @@ public class LineStreamParsers {
      * @param map
      * @param decoder
      */
-    public static <T> void parseMultiMap(LineStream lines, MultiMap<String, T> map, Function<String, T> decoder) {
+    public static <T> void multiMap(LineStream lines, MultiMap<String, T> map, Function<String, T> decoder) {
         String key = lines.nextLine();
         map.put(key, decoder.apply(lines.nextLine()));
     }
@@ -193,8 +193,8 @@ public class LineStreamParsers {
      * @param lines
      * @return
      */
-    public static List<String> parseStringList(LineStream lines) {
-        int numElements = parseInt(lines);
+    public static List<String> stringList(LineStream lines) {
+        int numElements = integer(lines);
 
         List<String> strings = new ArrayList<>(numElements);
         for (int i = 0; i < numElements; i++) {
