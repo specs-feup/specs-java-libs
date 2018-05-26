@@ -35,7 +35,7 @@ import pt.up.fe.specs.util.utilities.LineStream;
  * @author JoaoBispo
  *
  */
-public class GeneralParsers {
+public class LineStreamParsers {
 
     public static boolean parseOneOrZero(String aBoolean) {
         if (aBoolean.equals("1")) {
@@ -139,7 +139,7 @@ public class GeneralParsers {
         String key = linestream.nextLine();
         String value = linestream.nextLine();
 
-        GeneralParsers.checkDuplicate(id, key, value, stringMap);
+        LineStreamParsers.checkDuplicate(id, key, value, stringMap);
         stringMap.put(key, value);
     }
 
@@ -158,7 +158,7 @@ public class GeneralParsers {
         String key = linestream.nextLine();
 
         if (checkDuplicate) {
-            GeneralParsers.checkDuplicate(id, key, stringSet);
+            LineStreamParsers.checkDuplicate(id, key, stringSet);
         }
 
         stringSet.add(key);
