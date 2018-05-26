@@ -23,9 +23,9 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public interface LineStreamParserV2 {
+public interface LineStreamParser {
 
-    static LineStreamParserV2 newInstance(Map<String, LineStreamWorker> workers) {
+    static LineStreamParser newInstance(Map<String, LineStreamWorker> workers) {
         return new GenericLineStreamParser(workers);
     }
 

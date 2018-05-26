@@ -20,7 +20,7 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 
 import pt.up.fe.specs.util.utilities.LineStream;
 
-class GenericLineStreamParser implements LineStreamParserV2 {
+class GenericLineStreamParser implements LineStreamParser {
 
     private final DataStore data;
     private final Map<String, LineStreamWorker> workers;
