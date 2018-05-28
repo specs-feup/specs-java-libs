@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.swing.JFileChooser;
 
@@ -416,6 +417,12 @@ public class KeyFactory {
      */
     public static <T, E extends T> DataKey<T> generic(String id, E exampleInstance) {
         return new GenericKey<>(id, exampleInstance);
+    }
+
+    public static <T, E extends T> DataKey<T> generic(String id, Supplier<E> defaultSupplier) {
+        DataKey<T> datakey = new GenericKey<>(id, defaultSupplier.get());
+        datakey.setDefault(defaultSupplier);
+        return datakey;
     }
 
     /**
