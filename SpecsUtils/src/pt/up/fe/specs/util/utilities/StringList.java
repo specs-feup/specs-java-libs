@@ -21,9 +21,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import pt.up.fe.specs.util.SpecsFactory;
+import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
  * Represents a list of several Strings.
@@ -37,45 +39,54 @@ public class StringList implements Iterable<String> {
     private final List<String> stringList;
 
     public StringList() {
-	this(new ArrayList<String>());
+        this(new ArrayList<String>());
     }
 
     public StringList(String values) {
-	this(decode(values));
+        this(decode(values));
+    }
+
+    public static StringCodec<StringList> getCodec() {
+        return StringCodec.newInstance(StringList::encode, StringList::new);
+    }
+
+    private static String encode(StringList value) {
+        return value.stringList.stream()
+                .collect(Collectors.joining(StringList.DEFAULT_SEPARATOR));
     }
 
     private static List<String> decode(String values) {
-	if (values == null) {
-	    return Collections.emptyList();
-	}
+        if (values == null) {
+            return Collections.emptyList();
+        }
 
-	return Arrays.asList(values.split(StringList.DEFAULT_SEPARATOR));
+        return Arrays.asList(values.split(StringList.DEFAULT_SEPARATOR));
     }
 
     public StringList(Collection<String> stringList) {
-	this.stringList = new ArrayList<>();
-	this.stringList.addAll(stringList);
+        this.stringList = new ArrayList<>();
+        this.stringList.addAll(stringList);
     }
 
     public static String getDefaultSeparator() {
-	return StringList.DEFAULT_SEPARATOR;
+        return StringList.DEFAULT_SEPARATOR;
     }
 
     public <E extends Enum<?>> StringList(Class<E> aClass) {
-	this();
+        this();
 
-	for (E anEnum : aClass.getEnumConstants()) {
-	    stringList.add(anEnum.name());
-	}
+        for (E anEnum : aClass.getEnumConstants()) {
+            stringList.add(anEnum.name());
+        }
     }
 
     public List<String> getStringList() {
-	return stringList;
+        return stringList;
     }
 
     @Override
     public String toString() {
-	return stringList.toString();
+        return stringList.toString();
     }
 
     /**
@@ -87,14 +98,14 @@ public class StringList implements Iterable<String> {
      */
     public static StringList newInstanceFromListOfFiles(List<File> files) {
 
-	List<String> strings = SpecsFactory.newArrayList();
+        List<String> strings = SpecsFactory.newArrayList();
 
-	for (File file : files) {
+        for (File file : files) {
 
-	    strings.add(file.getName());
-	}
+            strings.add(file.getName());
+        }
 
-	return new StringList(strings);
+        return new StringList(strings);
     }
 
     /* (non-Javadoc)
@@ -102,10 +113,10 @@ public class StringList implements Iterable<String> {
      */
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((stringList == null) ? 0 : stringList.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((stringList == null) ? 0 : stringList.hashCode());
+        return result;
     }
 
     /* (non-Javadoc)
@@ -113,37 +124,37 @@ public class StringList implements Iterable<String> {
      */
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	StringList other = (StringList) obj;
-	if (stringList == null) {
-	    if (other.stringList != null) {
-		return false;
-	    }
-	} else if (!stringList.equals(other.stringList)) {
-	    return false;
-	}
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        StringList other = (StringList) obj;
+        if (stringList == null) {
+            if (other.stringList != null) {
+                return false;
+            }
+        } else if (!stringList.equals(other.stringList)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public Iterator<String> iterator() {
-	return stringList.iterator();
+        return stringList.iterator();
     }
 
     public static String encode(String... strings) {
-	StringJoiner joiner = new StringJoiner(StringList.DEFAULT_SEPARATOR);
-	for (String string : strings) {
-	    joiner.add(string);
-	}
-	return joiner.toString();
+        StringJoiner joiner = new StringJoiner(StringList.DEFAULT_SEPARATOR);
+        for (String string : strings) {
+            joiner.add(string);
+        }
+        return joiner.toString();
     }
 
     /**
@@ -154,11 +165,11 @@ public class StringList implements Iterable<String> {
      * @return
      */
     public static StringList newInstance(String... values) {
-	return new StringList(Arrays.asList(values));
+        return new StringList(Arrays.asList(values));
     }
 
     public Stream<String> stream() {
-	return getStringList().stream();
+        return getStringList().stream();
     }
 
 }
