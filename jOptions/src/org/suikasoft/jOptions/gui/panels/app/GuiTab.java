@@ -26,11 +26,11 @@ public abstract class GuiTab extends JPanel {
     private final DataStore data;
 
     public GuiTab(DataStore data) {
-	this.data = data;
+        this.data = data;
     }
 
-    protected DataStore getData() {
-	return data;
+    public DataStore getData() {
+        return data;
     }
 
     private static final long serialVersionUID = 1L;
