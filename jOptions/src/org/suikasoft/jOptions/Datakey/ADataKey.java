@@ -104,10 +104,22 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     @Override
     public DataKey<T> setDecoder(StringCodec<T> decoder) {
+
         // Adding interface 'Serializable', so that it can save lambda expressions
-        StringCodec<T> serializableDecoder = (StringCodec<T> & Serializable) value -> decoder.decode(value);
+        StringCodec<T> serializableDecoder = getSerializableDecoder(decoder);
+        // StringCodec<T> serializableDecoder = (StringCodec<T> & Serializable) value -> decoder.decode(value);
+        // return copy(id, defaultValueProvider, serializableDecoder, customGetter,
         return copy(id, defaultValueProvider, serializableDecoder, customGetter,
                 panelProvider, label, definition, copyFunction);
+    }
+
+    private static <T> StringCodec<T> getSerializableDecoder(StringCodec<T> decoder) {
+        if (decoder instanceof Serializable) {
+            return decoder;
+        }
+
+        return StringCodec.newInstance(decoder::encode, decoder::decode);
+        // return (StringCodec<T> & Serializable) value -> decoder.decode(value);
     }
 
     @Override

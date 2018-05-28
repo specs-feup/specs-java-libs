@@ -278,6 +278,7 @@ public class KeyFactory {
         return new NormalKey<>(id, StringList.class)
                 .setDefault(() -> new StringList(defaultValue))
                 .setDecoder(value -> new StringList(value))
+                // .setDecoder(StringList.getCodec())
                 .setKeyPanelProvider(StringListPanel::newInstance);
     }
 

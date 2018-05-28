@@ -24,27 +24,32 @@ public class EnumCodec<T extends Enum<T>> implements StringCodec<T> {
     private final Map<String, T> decodeMap;
 
     public EnumCodec(Class<T> anEnum) {
-	this.anEnum = anEnum;
-	this.decodeMap = new HashMap<>();
+        this.anEnum = anEnum;
+        this.decodeMap = new HashMap<>();
 
-	for (T enumValue : anEnum.getEnumConstants()) {
-	    decodeMap.put(enumValue.toString(), enumValue);
-	}
+        for (T enumValue : anEnum.getEnumConstants()) {
+            decodeMap.put(enumValue.toString(), enumValue);
+        }
     }
 
     @Override
     public T decode(String value) {
-	if (value == null) {
-	    return anEnum.getEnumConstants()[0];
-	}
+        if (value == null) {
+            return anEnum.getEnumConstants()[0];
+        }
 
-	T enumValue = decodeMap.get(value);
+        T enumValue = decodeMap.get(value);
 
-	if (enumValue == null) {
-	    throw new RuntimeException("Could not find enum '" + value + "' in class '" + anEnum + "'");
-	}
+        if (enumValue == null) {
+            throw new RuntimeException("Could not find enum '" + value + "' in class '" + anEnum + "'");
+        }
 
-	return enumValue;
+        return enumValue;
+    }
+
+    @Override
+    public String encode(T value) {
+        return value.toString();
     }
 
 }
