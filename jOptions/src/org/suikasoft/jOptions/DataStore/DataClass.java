@@ -33,4 +33,9 @@ public abstract class DataClass<T extends DataClass<T>> {
         data.set(key, value);
         return (T) this;
     }
+
+    @Override
+    public String toString() {
+        return data.toString();
+    }
 }
