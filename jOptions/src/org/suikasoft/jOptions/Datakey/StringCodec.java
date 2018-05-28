@@ -13,6 +13,8 @@
 
 package org.suikasoft.jOptions.Datakey;
 
+import java.util.function.Function;
+
 /**
  * Encodes/decodes values to/from Strings.
  * 
@@ -42,5 +44,9 @@ public interface StringCodec<T> {
      */
     default String encode(T value) {
         return value.toString();
+    }
+
+    static <T> StringCodec<T> newInstance(Function<T, String> encoder, Function<String, T> decoder) {
+        return new GenericCodec<>(encoder, decoder);
     }
 }
