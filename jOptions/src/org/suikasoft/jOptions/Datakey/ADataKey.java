@@ -21,6 +21,8 @@ import java.util.function.Supplier;
 import org.suikasoft.jOptions.gui.KeyPanelProvider;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
+import pt.up.fe.specs.util.parsing.StringCodec;
+
 public abstract class ADataKey<T> implements DataKey<T> {
 
     private final String id;

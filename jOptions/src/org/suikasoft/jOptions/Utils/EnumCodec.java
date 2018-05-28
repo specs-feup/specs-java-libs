@@ -16,7 +16,7 @@ package org.suikasoft.jOptions.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.suikasoft.jOptions.Datakey.StringCodec;
+import pt.up.fe.specs.util.parsing.StringCodec;
 
 public class EnumCodec<T extends Enum<T>> implements StringCodec<T> {
 

@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.suikasoft.jOptions.Datakey;
+package pt.up.fe.specs.util.parsing;
 
 import java.io.Serializable;
 import java.util.function.Function;

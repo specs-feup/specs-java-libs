@@ -14,10 +14,10 @@
 package org.suikasoft.jOptions.Utils;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
-import org.suikasoft.jOptions.Datakey.StringCodec;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.classmap.ClassMap;
+import pt.up.fe.specs.util.parsing.StringCodec;
 
 public class RawValueUtils {
 

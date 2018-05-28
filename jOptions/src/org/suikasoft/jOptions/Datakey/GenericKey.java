@@ -19,6 +19,8 @@ import java.util.function.Supplier;
 import org.suikasoft.jOptions.gui.KeyPanelProvider;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
+import pt.up.fe.specs.util.parsing.StringCodec;
+
 /**
  * Implementation of DataKey that supports types with generics.
  *
