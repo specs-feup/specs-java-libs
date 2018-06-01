@@ -77,8 +77,20 @@ public class EnumHelper<T extends Enum<T>> {
     }
     */
     public T fromName(String name) {
-        return Enum.valueOf(enumClass, name);
+        return fromNameTry(name).orElseThrow(() -> new RuntimeException(
+                "Could not find enum with name '" + name + "', available names:" + Arrays.toString(values())));
+        // return Enum.valueOf(enumClass, name);
 
+        // return fromNameTry(name)
+        // .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, namesTranslationMap.get())));
+    }
+
+    public Optional<T> fromNameTry(String name) {
+        try {
+            return Optional.of(Enum.valueOf(enumClass, name));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
         // return fromNameTry(name)
         // .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, namesTranslationMap.get())));
     }
