@@ -146,7 +146,7 @@ public class ArgumentsParser {
      * @return
      */
     public ArgumentsParser addBool(DataKey<Boolean> key, String... flags) {
-        return add(key, list -> true, 0, flags);
+        return addPrivate(key, list -> true, 0, flags);
         // for (String flag : flags) {
         // parsers.put(flag, addValue(key, true));
         // }
@@ -162,7 +162,7 @@ public class ArgumentsParser {
      * @return
      */
     public ArgumentsParser addString(DataKey<String> key, String... flags) {
-        return add(key, list -> list.popSingle(), 1, flags);
+        return addPrivate(key, list -> list.popSingle(), 1, flags);
         // for (String flag : flags) {
         // parsers.put(flag, addValueFromList(key, ListParser::popSingle));
         // }
@@ -195,8 +195,28 @@ public class ArgumentsParser {
      * @param flags
      * @return
      */
+    @SuppressWarnings("unchecked") // Unchecked cases are verified
     public <V> ArgumentsParser add(DataKey<V> key, Function<ListParser<String>, V> parser, Integer consumedArgs,
             String... flags) {
+
+        // Check if value of the key is of type Boolean
+        if (key.getValueClass().equals(Boolean.class)) {
+            return addBool((DataKey<Boolean>) key, flags);
+            // return addPrivate((DataKey<Boolean>) key, list -> true, 0, flags);
+        }
+
+        // Check if value of the key is of type String
+        if (key.getValueClass().equals(String.class)) {
+            return addString((DataKey<String>) key, flags);
+            // return addPrivate((DataKey<Boolean>) key, list -> true, 0, flags);
+        }
+
+        return addPrivate(key, parser, consumedArgs, flags);
+    }
+
+    private <V> ArgumentsParser addPrivate(DataKey<V> key, Function<ListParser<String>, V> parser, Integer consumedArgs,
+            String... flags) {
+
         for (String flag : flags) {
             if (parsers.containsKey(flag)) {
                 throw new RuntimeException("There is already a mapping for flag '" + flag + "'");
