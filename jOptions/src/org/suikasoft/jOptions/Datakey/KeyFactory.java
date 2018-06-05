@@ -169,6 +169,25 @@ public class KeyFactory {
                 .setCustomGetter(customGetterFile(isFolder, !isFolder, create, exists));
     }
 
+    public static DataKey<File> path(String id) {
+        return path(id, false);
+    }
+
+    public static DataKey<File> path(String id, boolean exists) {
+
+        int fileChooser = JFileChooser.FILES_AND_DIRECTORIES;
+
+        return new NormalKey<>(id, File.class, () -> new File(""))
+                .setDecoder(s -> {
+                    if (s == null) {
+                        return new File("");
+                    }
+                    return new File(s);
+                })
+                .setKeyPanelProvider((key, data) -> new FilePanel(key, data, fileChooser, Collections.emptyList()))
+                .setCustomGetter(customGetterFile(true, true, false, exists));
+    }
+
     public static CustomGetter<File> customGetterFile(boolean isFolder, boolean isFile, boolean create,
             boolean exists) {
 
