@@ -40,6 +40,10 @@ public class SpecsPlatforms {
         return SystemUtils.IS_OS_LINUX;
     }
 
+    public static boolean isCentos6() {
+        return System.getProperty("os.version").contains(".el6.");
+    }
+
     public static String getPlatformName() {
         return SystemUtils.OS_NAME;
     }
