@@ -41,7 +41,8 @@ public class EnumCodec<T extends Enum<T>> implements StringCodec<T> {
         T enumValue = decodeMap.get(value);
 
         if (enumValue == null) {
-            throw new RuntimeException("Could not find enum '" + value + "' in class '" + anEnum + "'");
+            throw new RuntimeException("Could not find enum '" + value + "' in class '" + anEnum
+                    + "'. Available values: " + decodeMap.keySet());
         }
 
         return enumValue;

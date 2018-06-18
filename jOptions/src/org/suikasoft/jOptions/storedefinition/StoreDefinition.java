@@ -98,6 +98,11 @@ public interface StoreDefinition {
         return dataKey;
     }
 
+    @SuppressWarnings("unchecked") // It is always Object
+    default DataKey<Object> getKeyRaw(String key) {
+        return (DataKey<Object>) getKey(key);
+    }
+
     default DataStore getDefaultValues() {
         DataStore data = DataStore.newInstance(getName());
 
