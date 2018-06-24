@@ -2429,7 +2429,7 @@ public class SpecsIo {
      * @return
      */
     public static String getCanonicalPath(File file) {
-        return getCanonicalFile(file).getPath();
+        return normalizePath(getCanonicalFile(file).getPath());
     }
 
     public static Optional<File> getJarPath(Class<?> aClass) {
