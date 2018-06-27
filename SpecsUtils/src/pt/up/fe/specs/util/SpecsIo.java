@@ -2059,8 +2059,9 @@ public class SpecsIo {
     public static String getPath(File file) {
 
         try {
-            String path = file.getCanonicalPath();
-            return normalizePath(path);
+            return file.getCanonicalPath();
+            // String path = file.getCanonicalPath();
+            // return normalizePath(path);
         } catch (IOException e) {
             throw new RuntimeException("Could not get canonical file for " + file.getPath());
         }
@@ -2385,17 +2386,27 @@ public class SpecsIo {
     public static File getCanonicalFile(File file) {
 
         try {
+            return file.getAbsoluteFile().getCanonicalFile();
+
+            /*
             file = file.getAbsoluteFile().getCanonicalFile();
+            
             // return new File(file.getAbsolutePath().replace('\\', '/'));
             return new File(normalizePath(file.getAbsolutePath()));
+            */
         } catch (IOException e) {
             SpecsLogs.msgInfo("Could not get canonical file for " + file.getPath() + ", returning absolute file");
+            // return new File(normalizePath(file.getAbsolutePath()));
             return file.getAbsoluteFile();
         }
     }
 
     /**
      * Converts all '\' to '/'
+     * 
+     * <p>
+     * This method should only be used when maniputaling Files as strings. Otherwise, File objects always revert to the
+     * system's preferred separator.
      * 
      * @param path
      * @return
@@ -2429,7 +2440,8 @@ public class SpecsIo {
      * @return
      */
     public static String getCanonicalPath(File file) {
-        return normalizePath(getCanonicalFile(file).getPath());
+        // return normalizePath(getCanonicalFile(file).getPath());
+        return getCanonicalFile(file).getPath();
     }
 
     public static Optional<File> getJarPath(Class<?> aClass) {
@@ -2511,10 +2523,12 @@ public class SpecsIo {
         Map<String, File> fileMap = new HashMap<>();
 
         for (File source : sources) {
+            // Convert source to absolute path
+            File canonicalSource = SpecsIo.getCanonicalFile(source);
             // List<String> filenames = getFiles(Arrays.asList(source), extensions);
             // filenames.stream().forEach(filename -> fileMap.put(filename, source));
-            getFiles(Arrays.asList(source), recursive, extensions).stream()
-                    .forEach(file -> fileMap.put(SpecsIo.getCanonicalPath(file), source));
+            getFiles(Arrays.asList(canonicalSource), recursive, extensions).stream()
+                    .forEach(file -> fileMap.put(SpecsIo.getCanonicalPath(file), canonicalSource));
         }
 
         return fileMap;
