@@ -1689,6 +1689,21 @@ public class SpecsIo {
     }
 
     /**
+     * Convert File to InputStream using a buffered FileInputStream class.
+     * 
+     * @param text
+     * @return
+     */
+    public static InputStream toInputStream(File file) {
+
+        try {
+            return new BufferedInputStream(new FileInputStream(file));
+        } catch (Exception e) {
+            throw new RuntimeException("Could not convert file to InputStream", e);
+        }
+    }
+
+    /**
      * Helper method that filters files that have a certain extension.
      * 
      * @param fileOrFolder
@@ -2536,7 +2551,8 @@ public class SpecsIo {
 
     public static SpecsList<File> getFiles(List<File> sources, boolean recursive, Set<String> extensions) {
         Function<? super File, ? extends Stream<? extends File>> flatMapper = recursive
-                ? path -> SpecsIo.getFilesRecursive(path).stream() : path -> SpecsIo.getFiles(path).stream();
+                ? path -> SpecsIo.getFilesRecursive(path).stream()
+                : path -> SpecsIo.getFiles(path).stream();
 
         List<File> sourceFiles = sources.stream()
                 .flatMap(flatMapper)
