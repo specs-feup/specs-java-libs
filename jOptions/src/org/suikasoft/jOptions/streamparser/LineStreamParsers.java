@@ -46,7 +46,7 @@ public class LineStreamParsers {
             return false;
         }
 
-        throw new RuntimeException("Unexpected value: " + aBoolean);
+        throw new RuntimeException("Unexpected value: '" + aBoolean + "'");
     }
 
     public static boolean oneOrZero(LineStream lines) {
