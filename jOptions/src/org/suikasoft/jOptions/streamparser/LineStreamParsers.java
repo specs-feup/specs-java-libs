@@ -102,7 +102,7 @@ public class LineStreamParsers {
     }
 
     /**
-     * First line represents the number of enums to parse, one in each succeding line.
+     * First line represents the number of enums to parse, one in each succeeding line.
      * 
      * @param helper
      * @param lines
