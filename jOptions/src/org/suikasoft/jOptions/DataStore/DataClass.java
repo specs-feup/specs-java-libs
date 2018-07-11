@@ -24,6 +24,11 @@ public abstract class DataClass<T extends DataClass<T>> {
         this.data = DataStore.newInstance(getClass());
     }
 
+    // public DataClass(T instance) {
+    // this.data = DataStore.newInstance(getClass());
+    // this.data.addAll(((DataClass<?>) instance).data);
+    // }
+
     public <K> K get(DataKey<K> key) {
         return data.get(key);
     }
@@ -31,6 +36,12 @@ public abstract class DataClass<T extends DataClass<T>> {
     @SuppressWarnings("unchecked")
     public <K, E extends K> T set(DataKey<K> key, E value) {
         data.set(key, value);
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T set(T instance) {
+        this.data.addAll(((DataClass<?>) instance).data);
         return (T) this;
     }
 
