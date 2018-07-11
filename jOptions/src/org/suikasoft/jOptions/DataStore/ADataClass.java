@@ -16,7 +16,7 @@ package org.suikasoft.jOptions.DataStore;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
-public abstract class ADataClass<T extends ADataClass<T>> {
+public abstract class ADataClass<T extends ADataClass<T>> implements DataClass<T> {
 
     private final DataStore data;
 
@@ -29,16 +29,28 @@ public abstract class ADataClass<T extends ADataClass<T>> {
     // this.data.addAll(((DataClass<?>) instance).data);
     // }
 
+    /* (non-Javadoc)
+     * @see org.suikasoft.jOptions.DataStore.DataClass#get(org.suikasoft.jOptions.Datakey.DataKey)
+     */
+    @Override
     public <K> K get(DataKey<K> key) {
         return data.get(key);
     }
 
+    /* (non-Javadoc)
+     * @see org.suikasoft.jOptions.DataStore.DataClass#set(org.suikasoft.jOptions.Datakey.DataKey, E)
+     */
+    @Override
     @SuppressWarnings("unchecked")
     public <K, E extends K> T set(DataKey<K> key, E value) {
         data.set(key, value);
         return (T) this;
     }
 
+    /* (non-Javadoc)
+     * @see org.suikasoft.jOptions.DataStore.DataClass#set(T)
+     */
+    @Override
     @SuppressWarnings("unchecked")
     public T set(T instance) {
         this.data.addAll(((ADataClass<?>) instance).data);
