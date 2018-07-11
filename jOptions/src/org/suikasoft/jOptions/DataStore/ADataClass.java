@@ -16,11 +16,11 @@ package org.suikasoft.jOptions.DataStore;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
-public abstract class DataClass<T extends DataClass<T>> {
+public abstract class ADataClass<T extends ADataClass<T>> {
 
     private final DataStore data;
 
-    public DataClass() {
+    public ADataClass() {
         this.data = DataStore.newInstance(getClass());
     }
 
@@ -41,7 +41,7 @@ public abstract class DataClass<T extends DataClass<T>> {
 
     @SuppressWarnings("unchecked")
     public T set(T instance) {
-        this.data.addAll(((DataClass<?>) instance).data);
+        this.data.addAll(((ADataClass<?>) instance).data);
         return (T) this;
     }
 
