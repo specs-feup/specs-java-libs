@@ -825,4 +825,12 @@ public class SpecsCollections {
         return collection.stream().map(mapper).collect(Collectors.toSet());
     }
 
+    public static <T> Stream<T> getStream(Collection<T> collection, boolean isParallel) {
+        if (isParallel) {
+            return collection.parallelStream();
+        }
+
+        return collection.stream();
+    }
+
 }
