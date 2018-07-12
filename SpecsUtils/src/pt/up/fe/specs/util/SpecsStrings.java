@@ -1909,4 +1909,38 @@ public class SpecsStrings {
         return string.replaceAll("\\s+", "");
     }
 
+    /**
+     * Given a string with an open-close parenthesis, returns the closing parenthesis corresponding to the first open
+     * parenthesis it finds.
+     * 
+     * <p>
+     * If no matching closing parenthesis is found, throwns an Exception.
+     * 
+     * @param string
+     * @return
+     */
+    public static int findCloseParenthesisIndex(String string) {
+        int openParIndex = string.indexOf('(');
+
+        int innerOpenPars = 0;
+        for (int i = openParIndex + 1; i < string.length(); i++) {
+            if (string.charAt(i) == ')') {
+                if (innerOpenPars == 0) {
+                    return i;
+                } else {
+                    innerOpenPars--;
+                }
+
+                continue;
+            }
+
+            if (string.charAt(i) == '(') {
+                innerOpenPars++;
+                continue;
+            }
+        }
+
+        throw new RuntimeException("Could not find a matching closing parenthesis for the open parenthesis at index "
+                + openParIndex + " in the string '" + string + "'");
+    }
 }
