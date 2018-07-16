@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.Options;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
@@ -23,6 +24,7 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import pt.up.fe.specs.util.SpecsFactory;
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.StringList;
 
@@ -44,102 +46,122 @@ public class FileList {
      * 
      */
     public FileList() {
-	// super(getStoreDefinition(optionName));
-	data = DataStore.newInstance(FileList.DATA_NAME);
-	// this.extension = extension;
+        // super(getStoreDefinition(optionName));
+        data = DataStore.newInstance(FileList.DATA_NAME);
+        // this.extension = extension;
 
-	// SetupDefinition def = GenericSetupDefinition.newInstance(optionName,
-	// getFolderProvider().getOptionDefinition(),
-	// getFilenamesProvider().getOptionDefinition());
-	//
-	// setSetupTable(SimpleSetup.newInstance(def));
+        // SetupDefinition def = GenericSetupDefinition.newInstance(optionName,
+        // getFolderProvider().getOptionDefinition(),
+        // getFilenamesProvider().getOptionDefinition());
+        //
+        // setSetupTable(SimpleSetup.newInstance(def));
     }
 
     public static StoreDefinition getStoreDefinition() {
-	return StoreDefinition.newInstance(FileList.DATA_NAME, FileList.KEY_FOLDER, FileList.KEY_FILENAMES);
+        return StoreDefinition.newInstance(FileList.DATA_NAME, FileList.KEY_FOLDER, FileList.KEY_FILENAMES);
     }
 
     public static String getFolderOptionName() {
-	return "Folder";
+        return "Folder";
     }
 
     public static String getFilesOptionName() {
-	return "Filenames";
+        return "Filenames";
     }
 
     public List<File> getFiles() {
-	// SetupOptions setupData = getSetupTable().getA();
+        // SetupOptions setupData = getSetupTable().getA();
 
-	// Get base folder
+        // Get base folder
 
-	File baseFolder = data.get(FileList.KEY_FOLDER);
+        File baseFolder = data.get(FileList.KEY_FOLDER);
 
-	// // Get Folder object
-	// Folder folder = value(option, Folder.class);
-	//
-	// // Check if has parent folder to pass
-	// File parentFolder = null;
-	// if (setup.getSetupFile() != null) {
-	// parentFolder = setup.getSetupFile().getParentFolder();
-	// }
-	//
-	// return folder.getFolder(parentFolder);
+        // // Get Folder object
+        // Folder folder = value(option, Folder.class);
+        //
+        // // Check if has parent folder to pass
+        // File parentFolder = null;
+        // if (setup.getSetupFile() != null) {
+        // parentFolder = setup.getSetupFile().getParentFolder();
+        // }
+        //
+        // return folder.getFolder(parentFolder);
 
-	// File baseFolder = setupData.folder(getFolderProvider());
+        // File baseFolder = setupData.folder(getFolderProvider());
 
-	// Get filenames
-	//
-	// StringList filenamesList = setupData.value(getFilenamesProvider(), StringList.class);
-	// List<String> filenames = filenamesList.getStringList();
-	List<String> filenames = data.get(FileList.KEY_FILENAMES).getStringList();
+        // Get filenames
+        //
+        // StringList filenamesList = setupData.value(getFilenamesProvider(), StringList.class);
+        // List<String> filenames = filenamesList.getStringList();
+        List<String> filenames = data.get(FileList.KEY_FILENAMES).getStringList();
 
-	// If list of filenames is empty, and base folder is not null, add all
-	// files in base folder, by name
-	// if (filenames.isEmpty() && (baseFolder != null)) {
-	// List<File> files = IoUtils.getFiles(baseFolder, extension);
-	// for (File file : files) {
-	// filenames.add(file.getName());
-	// }
-	// }
+        // If list of filenames is empty, and base folder is not null, add all
+        // files in base folder, by name
+        // if (filenames.isEmpty() && (baseFolder != null)) {
+        // List<File> files = IoUtils.getFiles(baseFolder, extension);
+        // for (File file : files) {
+        // filenames.add(file.getName());
+        // }
+        // }
 
-	// Build files with full path
-	List<File> files = SpecsFactory.newArrayList();
-	for (String fileName : filenames) {
-	    File file = new File(baseFolder, fileName);
+        // Build files with full path
+        List<File> files = SpecsFactory.newArrayList();
+        for (String fileName : filenames) {
+            File file = new File(baseFolder, fileName);
 
-	    // Verify is file exists
-	    if (!file.isFile()) {
-		SpecsLogs.msgInfo("Could not find file '" + file.getAbsolutePath() + "'");
-		continue;
-	    }
+            // Verify is file exists
+            if (!file.isFile()) {
+                SpecsLogs.msgInfo("Could not find file '" + file.getAbsolutePath() + "'");
+                continue;
+            }
 
-	    // Add folder + filename
-	    files.add(file);
-	}
+            // Add folder + filename
+            files.add(file);
+        }
 
-	return files;
+        return files;
     }
 
     public static FileList decode(String string) {
-	String[] values = string.split(";");
+        String[] values = string.split(";");
 
-	if (values.length < 1) {
-	    throw new RuntimeException(
-		    "Could not find a value in string '" + string + "'. Does it have a at least a singel ';'?");
-	}
+        if (values.length < 1) {
+            throw new RuntimeException(
+                    "Could not find a value in string '" + string + "'. Does it have a at least a singel ';'?");
+        }
 
-	FileList fileList = new FileList();
+        FileList fileList = new FileList();
 
-	fileList.data.set(FileList.KEY_FOLDER, new File(values[0]));
+        fileList.data.set(FileList.KEY_FOLDER, new File(values[0]));
 
-	List<String> filenames = new ArrayList<>();
-	for (int i = 1; i < values.length; i++) {
-	    filenames.add(values[i]);
-	}
-	fileList.data.set(FileList.KEY_FILENAMES, new StringList(filenames));
+        List<String> filenames = new ArrayList<>();
+        for (int i = 1; i < values.length; i++) {
+            filenames.add(values[i]);
+        }
+        fileList.data.set(FileList.KEY_FILENAMES, new StringList(filenames));
 
-	return fileList;
+        return fileList;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(SpecsIo.normalizePath(data.get(FileList.KEY_FOLDER)));
+
+        String filenames = data.get(FileList.KEY_FILENAMES).stream()
+                .map(SpecsIo::normalizePath)
+                .collect(Collectors.joining(";", ";", ""));
+
+        builder.append(filenames);
+
+        return builder.toString();
+    }
+
+    // public static StringCodec<FileList> codec() {
+    //
+    // return StringCodec.newInstance(encoder, FileList::decode);
+    // }
 
     /*
     public static OptionDefinitionProvider getFolderProvider() {
