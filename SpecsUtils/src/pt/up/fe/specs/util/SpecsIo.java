@@ -2430,6 +2430,10 @@ public class SpecsIo {
         return path.replace('\\', SpecsIo.DEFAULT_FOLDER_SEPARATOR);
     }
 
+    public static String normalizePath(File path) {
+        return normalizePath(path.getPath());
+    }
+
     //
     // public static CharSequence getNewline() {
     // return System.getProperty("line.separator");
@@ -2772,4 +2776,5 @@ public class SpecsIo {
 
         return Optional.empty();
     }
+
 }
