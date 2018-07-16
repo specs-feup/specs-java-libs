@@ -100,12 +100,13 @@ public class FilePanel extends KeyPanel<File> {
 
     public void setText(String text) {
         // Normalize text
-        text = SpecsIo.normalizePath(text);
+        // text = SpecsIo.normalizePath(text);
         textField.setText(text);
     }
 
     public String getText() {
-        return SpecsIo.normalizePath(textField.getText());
+        // return SpecsIo.normalizePath(textField.getText());
+        return textField.getText();
     }
 
     private void browseButtonActionPerformed(ActionEvent evt) {

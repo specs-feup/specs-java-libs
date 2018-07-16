@@ -159,12 +159,7 @@ public class KeyFactory {
         }
 
         return new NormalKey<>(id, File.class, () -> new File(""))
-                .setDecoder(s -> {
-                    if (s == null) {
-                        return new File("");
-                    }
-                    return new File(s);
-                })
+                .setDecoder(Codecs.file())
                 .setKeyPanelProvider((key, data) -> new FilePanel(key, data, fileChooser, extensions))
                 .setCustomGetter(customGetterFile(isFolder, !isFolder, create, exists));
     }
@@ -178,12 +173,7 @@ public class KeyFactory {
         int fileChooser = JFileChooser.FILES_AND_DIRECTORIES;
 
         return new NormalKey<>(id, File.class, () -> new File(""))
-                .setDecoder(s -> {
-                    if (s == null) {
-                        return new File("");
-                    }
-                    return new File(s);
-                })
+                .setDecoder(Codecs.file())
                 .setKeyPanelProvider((key, data) -> new FilePanel(key, data, fileChooser, Collections.emptyList()))
                 .setCustomGetter(customGetterFile(true, true, false, exists));
     }
@@ -191,58 +181,64 @@ public class KeyFactory {
     public static CustomGetter<File> customGetterFile(boolean isFolder, boolean isFile, boolean create,
             boolean exists) {
 
-        return (file, dataStore) -> {
-            // System.out.println("RECEIVED:" + file);
-            // If an empty path, return an empty path
-            if (file.getPath().isEmpty() && !isFolder && isFile && !create) {
-                // System.out.println("RETURN 0:" + file);
-                /*
-                if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
-                    return file.getAbsoluteFile();
-                }
-                */
-                return file;
+        // Normalize path before returning
+        return (file, dataStore) -> new File(
+                SpecsIo.normalizePath(customFileGetter(file, dataStore, isFolder, isFile, create, exists)));
+    }
+
+    private static File customFileGetter(File file, DataStore dataStore, boolean isFolder, boolean isFile,
+            boolean create, boolean exists) {
+
+        // System.out.println("RECEIVED:" + file);
+        // If an empty path, return an empty path
+        if (file.getPath().isEmpty() && !isFolder && isFile && !create) {
+            // System.out.println("RETURN 0:" + file);
+            /*
+            if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
+                return file.getAbsoluteFile();
+            }
+            */
+            return file;
+        }
+
+        File currentFile = file;
+
+        // System.out.println("CUSTOM GETTER - CURRENT FOLDER:" +
+        // dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH));
+        // System.out.println("CUSTOM GETTER - MAKE RELATIVE:" + dataStore.get(JOptionKeys.USE_RELATIVE_PATHS));
+
+        // If it has a working folder set
+        Optional<String> workingFolder = dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        if (workingFolder.isPresent()) {
+            // If path is not absolute, create new file with working folder as parent
+
+            if (!currentFile.isAbsolute()) {
+                File parentFolder = new File(workingFolder.get());
+                currentFile = new File(parentFolder, currentFile.getPath());
             }
 
-            File currentFile = file;
+        }
+        // System.out.println("CUSTOM GET FOLDER:" + dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH));
 
-            // System.out.println("CUSTOM GETTER - CURRENT FOLDER:" +
-            // dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH));
-            // System.out.println("CUSTOM GETTER - MAKE RELATIVE:" + dataStore.get(JOptionKeys.USE_RELATIVE_PATHS));
+        currentFile = processPath(isFolder, isFile, create, currentFile);
 
-            // If it has a working folder set
-            Optional<String> workingFolder = dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
-            if (workingFolder.isPresent()) {
-                // If path is not absolute, create new file with working folder as parent
-
-                if (!currentFile.isAbsolute()) {
-                    File parentFolder = new File(workingFolder.get());
-                    currentFile = new File(parentFolder, currentFile.getPath());
-                }
-
+        // Check if it exists
+        if (exists) {
+            if (!currentFile.exists()) {
+                throw new RuntimeException("Path '" + currentFile + "' does not exist");
             }
-            // System.out.println("CUSTOM GET FOLDER:" + dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH));
+        }
 
-            currentFile = processPath(isFolder, isFile, create, currentFile);
+        // If relative paths is enabled, make relative path with working folder.
+        if (workingFolder.isPresent() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
+            currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder.get())));
+        }
 
-            // Check if it exists
-            if (exists) {
-                if (!currentFile.exists()) {
-                    throw new RuntimeException("Path '" + currentFile + "' does not exist");
-                }
-            }
+        if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && workingFolder.isPresent()) {
+            currentFile = SpecsIo.getCanonicalFile(currentFile);
+        }
 
-            // If relative paths is enabled, make relative path with working folder.
-            if (workingFolder.isPresent() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
-                currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder.get())));
-            }
-
-            if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && workingFolder.isPresent()) {
-                currentFile = SpecsIo.getCanonicalFile(currentFile);
-            }
-
-            return currentFile;
-        };
+        return currentFile;
     }
 
     private static File processPath(boolean isFolder, boolean isFile, boolean create, File currentFile) {
