@@ -181,7 +181,7 @@ public class Gprofer {
         binaryCommand.add(binary.getAbsolutePath());
         binaryCommand.addAll(args);
 
-        ProcessOutputAsString result = SpecsSystem.runProcess(binaryCommand, workingDir, true, true);
+        ProcessOutputAsString result = SpecsSystem.runProcess(binaryCommand, workingDir, true, false);
 
         // TODO: check return value, throw if program fails, print stdout and stderr
     }
