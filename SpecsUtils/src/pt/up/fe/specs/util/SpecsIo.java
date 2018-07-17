@@ -2210,6 +2210,10 @@ public class SpecsIo {
      * @return
      */
     public static File getTempFolder() {
+        return getTempFolder(null);
+    }
+
+    public static File getTempFolder(String folderName) {
         // This is the property name for accessing OS temporary directory or
         // folder.
         String property = "java.io.tmpdir";
@@ -2217,7 +2221,13 @@ public class SpecsIo {
         // Get the temporary directory and print it.
         String tempDir = System.getProperty(property);
 
-        return SpecsIo.existingFolder(null, tempDir);
+        File systemTemp = SpecsIo.existingFolder(null, tempDir);
+
+        if (folderName == null) {
+            return systemTemp;
+        }
+
+        return mkdir(systemTemp, folderName);
     }
 
     /**
