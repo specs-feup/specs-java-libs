@@ -89,6 +89,12 @@ public class SpecsSwing {
     }
 
     public static String getSystemLookAndFeel() {
+
+        // Temporarily disable custom system look and feel
+        if (true) {
+            return UIManager.getSystemLookAndFeelClassName();
+        }
+
         // Get System L&F
         String systemLookAndFeel = UIManager.getSystemLookAndFeelClassName();
 
