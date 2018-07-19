@@ -194,11 +194,30 @@ public class LineStreamParsers {
      * @return
      */
     public static List<String> stringList(LineStream lines) {
+        return stringList(lines, LineStream::nextLine);
+        // int numElements = integer(lines);
+        //
+        // List<String> strings = new ArrayList<>(numElements);
+        // for (int i = 0; i < numElements; i++) {
+        // strings.add(lines.nextLine());
+        // }
+        //
+        // return strings;
+    }
+
+    /**
+     * First line represents the number of elements of the list. Then, the given parser is applies as many times as the
+     * number of elements.
+     * 
+     * @param lines
+     * @return
+     */
+    public static List<String> stringList(LineStream lines, Function<LineStream, String> parser) {
         int numElements = integer(lines);
 
         List<String> strings = new ArrayList<>(numElements);
         for (int i = 0; i < numElements; i++) {
-            strings.add(lines.nextLine());
+            strings.add(parser.apply(lines));
         }
 
         return strings;
