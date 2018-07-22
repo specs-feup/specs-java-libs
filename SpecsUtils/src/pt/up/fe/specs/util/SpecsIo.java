@@ -1749,6 +1749,7 @@ public class SpecsIo {
 
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
                 Paths.get(folder.getAbsolutePath()), pattern)) {
+
             dirStream.forEach(path -> files.add(new File(path.toString())));
         } catch (IOException e) {
             SpecsLogs.msgWarn("Error while getting files with pattern: " + e.getMessage());
