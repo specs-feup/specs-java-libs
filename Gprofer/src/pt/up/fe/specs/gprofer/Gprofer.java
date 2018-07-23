@@ -34,6 +34,7 @@ import com.google.gson.Gson;
 import pt.up.fe.specs.gprofer.data.GprofData;
 import pt.up.fe.specs.gprofer.data.GprofLine;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.stringsplitter.StringSplitter;
 import pt.up.fe.specs.util.stringsplitter.StringSplitterRules;
@@ -108,8 +109,13 @@ public class Gprofer {
     public static GprofData profile(File binary, List<String> args, int numRuns, File workingDir,
             boolean deleteWorkingDir) {
 
-        // TODO: perform checks on file
-        // TODO: perform checks on dir
+        if (!binary.exists()) {
+            throw new RuntimeException("Could not locate the binary \"" + binary + "\".");
+        }
+
+        if (!workingDir.exists()) {
+            throw new RuntimeException("Could not locate the working directory \"" + workingDir + "\".");
+        }
 
         int currentRun = 0;
 
@@ -122,7 +128,10 @@ public class Gprofer {
 
         while (currentRun < numRuns) {
 
-            runBinary(binary, args, workingDir);
+            Boolean result = runBinary(binary, args, workingDir);
+            if (!result) {
+                throw new RuntimeException();
+            }
 
             makeGmon(currentRun, workingDir, filesToDelete, gmons);
 
@@ -175,7 +184,7 @@ public class Gprofer {
         filesToDelete.add(newGmon);
     }
 
-    private static void runBinary(File binary, List<String> args, File workingDir) {
+    private static Boolean runBinary(File binary, List<String> args, File workingDir) {
 
         List<String> binaryCommand = new ArrayList<>();
         binaryCommand.add(binary.getAbsolutePath());
@@ -183,7 +192,18 @@ public class Gprofer {
 
         ProcessOutputAsString result = SpecsSystem.runProcess(binaryCommand, workingDir, true, false);
 
-        // TODO: check return value, throw if program fails, print stdout and stderr
+        if (result.isError()) {
+
+            SpecsLogs.setPrintStackTrace(false);
+            SpecsLogs.msgWarn("Could not profile the binary \"" + binary + "\". Execution terminated with error.");
+            SpecsLogs.msgWarn("stdout: " + result.getStdOut());
+            SpecsLogs.msgWarn("stderr: " + result.getStdErr());
+            SpecsLogs.setPrintStackTrace(true);
+
+            return false;
+        }
+
+        return true;
     }
 
     private static void deleteTempFiles(List<File> filesToDelete) {
@@ -193,7 +213,7 @@ public class Gprofer {
             if (file.isDirectory()) {
                 SpecsIo.deleteFolder(file);
             } else {
-                file.delete(); // TODO: check if this is a problem after deleting the parent dir
+                file.delete();
             }
         }
     }
