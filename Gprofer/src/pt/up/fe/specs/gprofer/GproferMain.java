@@ -30,12 +30,13 @@ public class GproferMain {
 
         File workingDir = new File("/home/pedro/Desktop/gprof_tests/src/");
         boolean deleteWorkingDir = false;
+        boolean checkReturn = true;
 
         GprofData data = Gprofer.profile(binary,
                 binaryArgs,
                 numRuns,
                 workingDir,
-                deleteWorkingDir);
+                deleteWorkingDir, checkReturn);
 
         System.out.println(Gprofer.getJsonData(data));
     }

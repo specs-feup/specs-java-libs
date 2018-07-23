@@ -92,8 +92,9 @@ public class Gprofer {
                 "gprofer_" + UUID.randomUUID().toString());
 
         boolean deleteWorkingDir = true;
+        boolean checkReturn = true;
 
-        return profile(binary, args, numRuns, workingDir, deleteWorkingDir);
+        return profile(binary, args, numRuns, workingDir, deleteWorkingDir, checkReturn);
     }
 
     /**
@@ -104,10 +105,12 @@ public class Gprofer {
      * @param numRuns
      * @param workingDir
      * @param deleteWorkingDir
+     * @param checkReturn
+     *            TODO
      * @return
      */
     public static GprofData profile(File binary, List<String> args, int numRuns, File workingDir,
-            boolean deleteWorkingDir) {
+            boolean deleteWorkingDir, boolean checkReturn) {
 
         if (!binary.exists()) {
             throw new RuntimeException("Could not locate the binary \"" + binary + "\".");
@@ -128,7 +131,7 @@ public class Gprofer {
 
         while (currentRun < numRuns) {
 
-            Boolean result = runBinary(binary, args, workingDir);
+            Boolean result = runBinary(binary, args, workingDir, checkReturn);
             if (!result) {
                 throw new RuntimeException();
             }
@@ -184,7 +187,7 @@ public class Gprofer {
         filesToDelete.add(newGmon);
     }
 
-    private static Boolean runBinary(File binary, List<String> args, File workingDir) {
+    private static Boolean runBinary(File binary, List<String> args, File workingDir, boolean checkReturn) {
 
         List<String> binaryCommand = new ArrayList<>();
         binaryCommand.add(binary.getAbsolutePath());
@@ -192,7 +195,7 @@ public class Gprofer {
 
         ProcessOutputAsString result = SpecsSystem.runProcess(binaryCommand, workingDir, true, false);
 
-        if (result.isError()) {
+        if (checkReturn && result.isError()) {
 
             SpecsLogs.setPrintStackTrace(false);
             SpecsLogs.msgWarn("Could not profile the binary \"" + binary + "\". Execution terminated with error.");
