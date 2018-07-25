@@ -49,8 +49,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -2603,7 +2603,7 @@ public class SpecsIo {
      * @return
      */
     public static Map<String, File> getFileMap(List<File> sources, boolean recursive, Set<String> extensions) {
-        Map<String, File> fileMap = new HashMap<>();
+        Map<String, File> fileMap = new LinkedHashMap<>();
 
         for (File source : sources) {
             // Convert source to absolute path
