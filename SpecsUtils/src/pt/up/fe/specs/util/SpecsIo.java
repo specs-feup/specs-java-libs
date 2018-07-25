@@ -68,6 +68,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import pt.up.fe.specs.util.collections.SpecsList;
+import pt.up.fe.specs.util.io.PathFilter;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 
@@ -1744,7 +1745,7 @@ public class SpecsIo {
      * @param pattern
      * @return
      */
-    public static List<File> getFilesWithPattern(File folder, String pattern) {
+    private static List<File> getFilesWithPattern(File folder, String pattern) {
         List<File> files = new ArrayList<>();
 
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
@@ -1753,6 +1754,58 @@ public class SpecsIo {
             dirStream.forEach(path -> files.add(new File(path.toString())));
         } catch (IOException e) {
             SpecsLogs.msgWarn("Error while getting files with pattern: " + e.getMessage());
+        }
+
+        return files;
+    }
+
+    public static List<File> getPathsWithPattern(File folder, String pattern, boolean recursive, String filter) {
+        return getPathsWithPattern(folder, pattern, recursive, Enum.valueOf(PathFilter.class, filter));
+    }
+
+    public static List<File> getPathsWithPattern(File folder, String pattern, boolean recursive, PathFilter filter) {
+
+        // If recursion disabled, use simple version of the function
+        // if (!recursive) {
+        // return getFilesWithPattern(folder, pattern);
+        // }
+
+        List<File> files = new ArrayList<>();
+
+        // Treat recursion separately
+        if (recursive) {
+            List<File> subFolders = getFolders(folder);
+            for (File subFolder : subFolders) {
+                files.addAll(getPathsWithPattern(subFolder, pattern, recursive, filter));
+            }
+        }
+
+        List<File> patternPaths = getFilesWithPattern(folder, pattern);
+
+        for (File currentPatternPath : patternPaths) {
+            if (filter.isAllowed(currentPatternPath)) {
+                files.add(currentPatternPath);
+            }
+
+            /*            
+            if (currentPatternPath.isDirectory()) {
+                if (filter.isAllowed(currentPatternPath)) {
+                    files.add(currentPatternPath);
+                }
+            
+                continue;
+            }
+            
+            if (currentPatternPath.isFile()) {
+                if (filter.isAllowed(currentPatternPath)) {
+                    files.add(currentPatternPath);
+                }
+            
+                continue;
+            }
+            
+            SpecsLogs.msgWarn("Could not hand path, is neither a file or a folder: " + currentPatternPath);
+            */
         }
 
         return files;
