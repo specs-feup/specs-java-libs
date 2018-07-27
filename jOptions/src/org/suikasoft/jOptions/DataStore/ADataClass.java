@@ -61,4 +61,8 @@ public abstract class ADataClass<T extends ADataClass<T>> implements DataClass<T
     public String toString() {
         return data.toString();
     }
+
+    public DataStore getData() {
+        return data;
+    }
 }
