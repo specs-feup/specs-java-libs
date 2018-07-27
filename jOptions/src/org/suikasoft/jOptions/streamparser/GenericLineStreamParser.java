@@ -25,8 +25,8 @@ class GenericLineStreamParser implements LineStreamParser {
     private final DataStore data;
     private final Map<String, LineStreamWorker> workers;
 
-    public GenericLineStreamParser(Map<String, LineStreamWorker> workers) {
-        this.data = DataStore.newInstance("Generic LineStream Data");
+    public GenericLineStreamParser(DataStore inputData, Map<String, LineStreamWorker> workers) {
+        this.data = DataStore.newInstance("Generic LineStream Data").addAll(inputData);
         this.workers = workers;
 
         // Initialize data for each worker
@@ -55,4 +55,10 @@ class GenericLineStreamParser implements LineStreamParser {
         return workers.keySet();
     }
 
+    @Override
+    public void close() throws Exception {
+        for (LineStreamWorker worker : workers.values()) {
+            worker.close(data);
+        }
+    }
 }

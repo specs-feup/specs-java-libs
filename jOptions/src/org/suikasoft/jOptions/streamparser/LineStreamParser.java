@@ -23,10 +23,14 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public interface LineStreamParser {
+public interface LineStreamParser extends AutoCloseable {
 
     static LineStreamParser newInstance(Map<String, LineStreamWorker> workers) {
-        return new GenericLineStreamParser(workers);
+        return newInstance(DataStore.newInstance("Empty DataStore"), workers);
+    }
+
+    static LineStreamParser newInstance(DataStore inputData, Map<String, LineStreamWorker> workers) {
+        return new GenericLineStreamParser(inputData, workers);
     }
 
     /**
