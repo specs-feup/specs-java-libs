@@ -46,4 +46,10 @@ public interface LineStreamWorker {
      */
     void apply(LineStream lineStream, DataStore data);
 
+    /**
+     * Finalizes a worker, after all workers have been executed. By default, does nothing.
+     */
+    default void close(DataStore data) {
+
+    }
 }
