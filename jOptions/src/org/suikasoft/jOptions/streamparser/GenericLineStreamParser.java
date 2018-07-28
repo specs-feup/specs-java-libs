@@ -16,17 +16,18 @@ package org.suikasoft.jOptions.streamparser;
 import java.util.Collection;
 import java.util.Map;
 
-import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.DataStore.DataClass;
 
 import pt.up.fe.specs.util.utilities.LineStream;
 
-class GenericLineStreamParser implements LineStreamParser {
+class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParser<T> {
 
-    private final DataStore data;
-    private final Map<String, LineStreamWorker> workers;
+    private final T data;
+    private final Map<String, LineStreamWorker<T>> workers;
 
-    public GenericLineStreamParser(DataStore inputData, Map<String, LineStreamWorker> workers) {
-        this.data = DataStore.newInstance("Generic LineStream Data").addAll(inputData);
+    public GenericLineStreamParser(T inputData, Map<String, LineStreamWorker<T>> workers) {
+        // this.data = DataStore.newInstance("Generic LineStream Data").addAll(inputData);
+        this.data = inputData;
         this.workers = workers;
 
         // Initialize data for each worker
@@ -34,13 +35,13 @@ class GenericLineStreamParser implements LineStreamParser {
     }
 
     @Override
-    public DataStore getData() {
+    public T getData() {
         return data;
     }
 
     @Override
     public boolean parse(String id, LineStream lineStream) {
-        LineStreamWorker worker = workers.get(id);
+        LineStreamWorker<T> worker = workers.get(id);
         if (worker == null) {
             return false;
         }
@@ -57,7 +58,7 @@ class GenericLineStreamParser implements LineStreamParser {
 
     @Override
     public void close() throws Exception {
-        for (LineStreamWorker worker : workers.values()) {
+        for (LineStreamWorker<T> worker : workers.values()) {
             worker.close(data);
         }
     }

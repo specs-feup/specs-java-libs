@@ -16,17 +16,17 @@ package org.suikasoft.jOptions.streamparser;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.DataStore.DataClass;
 
 import pt.up.fe.specs.util.utilities.LineStream;
 
-class GenericLineStreamWorker implements LineStreamWorker {
+class GenericLineStreamWorker<T extends DataClass<T>> implements LineStreamWorker<T> {
 
     private final String id;
-    private final Consumer<DataStore> init;
-    private final BiConsumer<LineStream, DataStore> apply;
+    private final Consumer<T> init;
+    private final BiConsumer<LineStream, T> apply;
 
-    public GenericLineStreamWorker(String id, Consumer<DataStore> init, BiConsumer<LineStream, DataStore> apply) {
+    public GenericLineStreamWorker(String id, Consumer<T> init, BiConsumer<LineStream, T> apply) {
         this.id = id;
         this.init = init;
         this.apply = apply;
@@ -38,12 +38,12 @@ class GenericLineStreamWorker implements LineStreamWorker {
     }
 
     @Override
-    public void init(DataStore data) {
+    public void init(T data) {
         init.accept(data);
     }
 
     @Override
-    public void apply(LineStream lineStream, DataStore data) {
+    public void apply(LineStream lineStream, T data) {
         apply.accept(lineStream, data);
     }
 

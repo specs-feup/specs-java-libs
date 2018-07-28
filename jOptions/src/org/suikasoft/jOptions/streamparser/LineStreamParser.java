@@ -18,19 +18,22 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 
-import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.DataStore.ADataClass;
+import org.suikasoft.jOptions.DataStore.DataClass;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public interface LineStreamParser extends AutoCloseable {
+public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable {
 
-    static LineStreamParser newInstance(Map<String, LineStreamWorker> workers) {
-        return newInstance(DataStore.newInstance("Empty DataStore"), workers);
-    }
+    // static LineStreamParser newInstance(Map<String, LineStreamWorker> workers) {
+    // return newInstance(DataStore.newInstance("Empty DataStore"), workers);
+    // }
 
-    static LineStreamParser newInstance(DataStore inputData, Map<String, LineStreamWorker> workers) {
-        return new GenericLineStreamParser(inputData, workers);
+    static <T extends ADataClass<T>> LineStreamParser<T> newInstance(T inputData,
+            Map<String, LineStreamWorker<T>> workers) {
+
+        return new GenericLineStreamParser<>(inputData, workers);
     }
 
     /**
@@ -38,7 +41,7 @@ public interface LineStreamParser extends AutoCloseable {
      * 
      * @return DataStore with parsed data
      */
-    public DataStore getData();
+    public T getData();
 
     /**
      * Applies a LineStreamWorker to the given LineStream, based on the given id.

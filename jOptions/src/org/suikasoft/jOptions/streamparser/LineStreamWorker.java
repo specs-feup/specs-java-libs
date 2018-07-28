@@ -16,14 +16,15 @@ package org.suikasoft.jOptions.streamparser;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.DataStore.DataClass;
 
 import pt.up.fe.specs.util.utilities.LineStream;
 
-public interface LineStreamWorker {
+public interface LineStreamWorker<T extends DataClass<T>> {
 
-    static LineStreamWorker newInstance(String id, Consumer<DataStore> init, BiConsumer<LineStream, DataStore> apply) {
-        return new GenericLineStreamWorker(id, init, apply);
+    static <T extends DataClass<T>> LineStreamWorker<T> newInstance(String id, Consumer<T> init,
+            BiConsumer<LineStream, T> apply) {
+        return new GenericLineStreamWorker<>(id, init, apply);
     }
 
     /**
@@ -36,7 +37,7 @@ public interface LineStreamWorker {
     /**
      * Initializes any data worker might need (e.g. initial values in DataStore)
      */
-    void init(DataStore data);
+    void init(T data);
 
     /**
      * Parses linestream
@@ -44,12 +45,12 @@ public interface LineStreamWorker {
      * @param lineStream
      * @param data
      */
-    void apply(LineStream lineStream, DataStore data);
+    void apply(LineStream lineStream, T data);
 
     /**
      * Finalizes a worker, after all workers have been executed. By default, does nothing.
      */
-    default void close(DataStore data) {
+    default void close(T data) {
 
     }
 }
