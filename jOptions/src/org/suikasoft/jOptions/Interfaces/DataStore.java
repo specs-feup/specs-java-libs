@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.suikasoft.jOptions.DataStore.DataClass;
 import org.suikasoft.jOptions.DataStore.DataStoreContainer;
 import org.suikasoft.jOptions.DataStore.SimpleDataStore;
 import org.suikasoft.jOptions.Datakey.DataKey;
@@ -190,6 +191,16 @@ public interface DataStore {
      */
     default DataStore addAll(DataStore values) {
         addAll(DataView.newInstance(values));
+
+        return this;
+    }
+
+    default DataStore addAll(DataClass<?> values) {
+
+        for (DataKey<?> key : values.keysWithValues()) {
+            Object value = values.get(key);
+            setRaw(key, value);
+        }
 
         return this;
     }

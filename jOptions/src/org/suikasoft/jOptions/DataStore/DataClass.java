@@ -13,6 +13,8 @@
 
 package org.suikasoft.jOptions.DataStore;
 
+import java.util.Collection;
+
 import org.suikasoft.jOptions.Datakey.DataKey;
 
 public interface DataClass<T extends DataClass<T>> {
@@ -23,4 +25,16 @@ public interface DataClass<T extends DataClass<T>> {
 
     T set(T instance);
 
+    /**
+     * 
+     * @param key
+     * @return true, if it contains a non-null value for the given key, not considering default values
+     */
+    <VT> boolean hasValue(DataKey<VT> key);
+
+    /**
+     * 
+     * @return All the keys that are mapped to a value
+     */
+    Collection<DataKey<?>> keysWithValues();
 }

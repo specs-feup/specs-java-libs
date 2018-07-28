@@ -13,10 +13,15 @@
 
 package org.suikasoft.jOptions.DataStore;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
-public abstract class ADataClass<T extends ADataClass<T>> implements DataClass<T> {
+public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T> {
 
     private final DataStore data;
 
@@ -62,7 +67,26 @@ public abstract class ADataClass<T extends ADataClass<T>> implements DataClass<T
         return data.toString();
     }
 
+    @Override
+    public <VT> boolean hasValue(DataKey<VT> key) {
+        return data.hasValue(key);
+    }
+
+    @Override
+    public Collection<DataKey<?>> keysWithValues() {
+        StoreDefinition storeDefinition = data.getStoreDefinition().get();
+
+        List<DataKey<?>> keysWithValues = new ArrayList<>();
+        for (String keyId : data.getKeysWithValues()) {
+            keysWithValues.add(storeDefinition.getKey(keyId));
+        }
+
+        return keysWithValues;
+    }
+
+    /*
     public DataStore getData() {
         return data;
     }
+    */
 }
