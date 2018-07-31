@@ -124,7 +124,8 @@ public class LineStreamParsers {
     public static <K> void checkDuplicate(String id, K key, Object value, Map<K, ?> map) {
         Object currentObject = map.get(key);
         if (currentObject != null) {
-            throw new RuntimeException("Duplicate value for id '" + id + "', key '" + key + "'");
+            throw new RuntimeException("Duplicate value for id '" + id + "', key '" + key + "'.\nCurrent value:" + value
+                    + "\nPrevious value:" + currentObject);
         }
 
     }
