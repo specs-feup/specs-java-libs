@@ -282,6 +282,12 @@ public class KeyFactory {
         return new NormalKey<>(id, aClass);
     }
 
+    @SuppressWarnings("unchecked") // It is optional T, because of type erasure
+    public static <T> DataKey<Optional<T>> optional(String id) {
+        return generic(id, (Optional<T>) Optional.empty())
+                .setDefault(() -> Optional.empty());
+    }
+
     /**
      * A new OptionDefinition, using a converter with the default separator (;)
      * 
