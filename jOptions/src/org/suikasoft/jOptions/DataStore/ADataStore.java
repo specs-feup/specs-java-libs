@@ -55,7 +55,7 @@ public abstract class ADataStore implements DataStore {
     public ADataStore(String name, DataStore dataStore) {
         // public ADataStore(String name, StoreDefinition definition) {
         // this(new SimpleSetup(name, dataStore), dataStore.getKeyMap());
-        this(name, dataStore.getValuesMap(), dataStore.getStoreDefinition().orElse(null));
+        this(name, new HashMap<>(dataStore.getValuesMap()), dataStore.getStoreDefinition().orElse(null));
         // this(name, new HashMap<>(), definition);
 
         // data.setValues(dataStore);
@@ -276,7 +276,8 @@ public abstract class ADataStore implements DataStore {
      */
     @Override
     public Map<String, Object> getValuesMap() {
-        return new HashMap<>(values);
+        // return new HashMap<>(values);
+        return values;
     }
 
     @Override
