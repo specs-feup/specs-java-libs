@@ -40,6 +40,11 @@ public abstract class SpecsLogger {
     public void msgInfo(String msg) {
         SpecsLogs.msgInfo(logger, msg);
     }
+
+    public void msgWarn(String msg) {
+        SpecsLogs.msgWarn(logger, msg);
+    }
+
     /*
     public void msgWarn(String msg) {
         LoggingUtils.msgInfo(Logger.getLogger(tag), msg);

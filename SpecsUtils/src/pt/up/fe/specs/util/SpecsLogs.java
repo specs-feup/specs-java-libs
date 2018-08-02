@@ -408,20 +408,32 @@ public class SpecsLogs {
         final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
         final int startIndex = 2;
 
-        msgWarn(msg, elements, startIndex, true);
+        msgWarn(msg, elements, startIndex, true, null);
+    }
+
+    public static void msgWarn(Logger logger, String msg) {
+
+        final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
+        final int startIndex = 2;
+
+        msgWarn(msg, elements, startIndex, true, logger);
     }
 
     private static void msgWarn(String msg, List<StackTraceElement> elements, int startIndex,
-            boolean appendCallingClass) {
+            boolean appendCallingClass, Logger logger) {
 
         msg = "[WARNING]: " + msg;
         msg = parseMessage(msg);
         msg = buildErrorMessage(msg, elements.subList(startIndex, elements.size()));
 
         if (appendCallingClass) {
-            getLoggerDebug().warning(msg);
+            logger = logger == null ? getLoggerDebug() : logger;
+            logger.warning(msg);
+            // getLoggerDebug().warning(msg);
         } else {
-            getLogger().warning(msg);
+            logger = logger == null ? getLogger() : logger;
+            logger.warning(msg);
+            // getLogger().warning(msg);
         }
     }
 
@@ -450,7 +462,7 @@ public class SpecsLogs {
         final List<StackTraceElement> elements = Arrays.asList(ourCause.getStackTrace());
         final int startIndex = 0;
 
-        msgWarn(msg, elements, startIndex, false);
+        msgWarn(msg, elements, startIndex, false, null);
     }
 
     public static void msgWarn(Throwable cause) {
@@ -460,7 +472,7 @@ public class SpecsLogs {
 
         final String msg = cause.getClass().getName() + ": " + cause.getMessage();
 
-        msgWarn(msg, elements, startIndex, false);
+        msgWarn(msg, elements, startIndex, false, null);
 
     }
 
