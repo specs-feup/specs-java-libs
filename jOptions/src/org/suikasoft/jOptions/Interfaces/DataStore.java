@@ -119,7 +119,7 @@ public interface DataStore {
      * 
      * @param dataStore
      */
-    void set(DataStore dataStore);
+    DataStore set(DataStore dataStore);
 
     /**
      * Configures the current DataStore to behave strictly, i.e., can only access values with keys that have been added
