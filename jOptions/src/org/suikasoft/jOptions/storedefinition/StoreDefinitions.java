@@ -23,6 +23,12 @@ import pt.up.fe.specs.util.utilities.CachedItems;
 public class StoreDefinitions {
 
     private static final boolean ENABLE_STORE_DEFINITIONS_CACHE = true;
+
+    // Using ThreadLocal to avoid using a thread-safe class. Since this is a cache, there is no problem in recomputing
+    // the values for each thread.
+    // private static final ThreadLocal<CachedItems<Class<?>, StoreDefinition>> STORE_DEFINITIONS_CACHE = ThreadLocal
+    // .withInitial(() -> new CachedItems<>(StoreDefinitions::fromInterfacePrivate));
+
     private static final CachedItems<Class<?>, StoreDefinition> STORE_DEFINITIONS_CACHE = new CachedItems<>(
             StoreDefinitions::fromInterfacePrivate, true);
 
@@ -38,7 +44,7 @@ public class StoreDefinitions {
      */
     public static StoreDefinition fromInterface(Class<?> aClass) {
         if (ENABLE_STORE_DEFINITIONS_CACHE) {
-            return STORE_DEFINITIONS_CACHE.get(aClass);
+            return getStoreDefinitionsCache().get(aClass);
         }
 
         return fromInterfacePrivate(aClass);
