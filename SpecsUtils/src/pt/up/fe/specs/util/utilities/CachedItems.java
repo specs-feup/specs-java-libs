@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
+import pt.up.fe.specs.util.SpecsStrings;
+
 /**
  * Caches items that can be built with a mapper function.
  * 
@@ -79,5 +81,15 @@ public class CachedItems<K, V> {
 
     public double getHitRatio() {
         return (double) cacheHits / (double) (cacheHits + cacheMisses);
+    }
+
+    public String getAnalytics() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("Cache size: ").append(getCacheSize()).append("\n");
+        builder.append("Total calls: ").append(getCacheTotalCalls()).append("\n");
+        builder.append("Hit ratio: ").append(SpecsStrings.toPercentage(getHitRatio())).append("\n");
+
+        return builder.toString();
     }
 }
