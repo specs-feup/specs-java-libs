@@ -89,10 +89,10 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         return keysWithValues;
     }
 
-    // @Override
-    // public DataStore getData() {
-    // return data;
-    // }
+    @Override
+    public DataStore getData() {
+        return data;
+    }
 
     /*
     public DataStore getData() {

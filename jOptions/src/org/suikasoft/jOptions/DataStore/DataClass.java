@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.DataStore;
 import java.util.Collection;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
+import org.suikasoft.jOptions.Interfaces.DataStore;
 
 public interface DataClass<T extends DataClass<T>> {
 
@@ -38,5 +39,5 @@ public interface DataClass<T extends DataClass<T>> {
      */
     Collection<DataKey<?>> keysWithValues();
 
-    // DataStore getData();
+    DataStore getData();
 }
