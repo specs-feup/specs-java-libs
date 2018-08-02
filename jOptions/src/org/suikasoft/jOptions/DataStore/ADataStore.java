@@ -25,6 +25,8 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import com.google.common.base.Preconditions;
 
+import pt.up.fe.specs.util.SpecsCheck;
+
 public abstract class ADataStore implements DataStore {
 
     // private final SimpleSetup data;
@@ -155,7 +157,7 @@ public abstract class ADataStore implements DataStore {
     */
     @Override
     public <T, E extends T> Optional<T> set(DataKey<T> key, E value) {
-        Preconditions.checkNotNull(value, "Tried to set a null value with key '" + key + "'. Use .remove() instead");
+        SpecsCheck.checkNotNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
 
         // Do not replace key if it already exists
         // if (!keys.containsKey(key.getName())) {
