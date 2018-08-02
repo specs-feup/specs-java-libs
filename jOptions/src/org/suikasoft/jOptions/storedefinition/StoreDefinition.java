@@ -13,8 +13,6 @@
 
 package org.suikasoft.jOptions.storedefinition;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -121,34 +119,6 @@ public interface StoreDefinition {
 
     default boolean hasKey(String keyName) {
         return getKeyMap().containsKey(keyName);
-    }
-
-    /**
-     * Collects all public static DataKey fields and builds a StoreDefinition with those fields.
-     * 
-     * @param aClass
-     * @return
-     */
-    static StoreDefinition fromInterface(Class<?> aClass) {
-        StoreDefinitionBuilder builder = new StoreDefinitionBuilder(aClass.getSimpleName());
-
-        for (Field field : aClass.getFields()) {
-            if (!DataKey.class.isAssignableFrom(field.getType())) {
-                continue;
-            }
-
-            if (!Modifier.isStatic(field.getModifiers())) {
-                continue;
-            }
-
-            try {
-                builder.addKey((DataKey<?>) field.get(null));
-            } catch (Exception e) {
-                throw new RuntimeException("Could not retrive value of field: " + field);
-            }
-        }
-
-        return builder.build();
     }
 
 }

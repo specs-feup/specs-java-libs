@@ -25,6 +25,7 @@ import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionProvider;
+import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
 import com.google.common.base.Preconditions;
 
@@ -148,7 +149,7 @@ public interface DataStore {
     void setStoreDefinition(StoreDefinition definition);
 
     default void setDefinition(Class<?> aClass) {
-        setStoreDefinition(StoreDefinition.fromInterface(aClass));
+        setStoreDefinition(StoreDefinitions.fromInterface(aClass));
     }
 
     /**
@@ -399,7 +400,7 @@ public interface DataStore {
      * @return
      */
     public static DataStore newInstance(Class<?> aClass) {
-        return newInstance(StoreDefinition.fromInterface(aClass));
+        return newInstance(StoreDefinitions.fromInterface(aClass));
     }
 
     default String toInlinedString() {
