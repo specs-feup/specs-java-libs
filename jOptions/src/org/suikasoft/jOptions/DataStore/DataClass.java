@@ -18,6 +18,13 @@ import java.util.Collection;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
+/**
+ * A class that replaces fields with public static DataKey instances.
+ * 
+ * @author JoaoBispo
+ *
+ * @param <T>
+ */
 public interface DataClass<T extends DataClass<T>> {
 
     <K> K get(DataKey<K> key);

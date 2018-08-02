@@ -156,7 +156,8 @@ public abstract class ADataStore implements DataStore {
     }
     */
     @Override
-    public <T, E extends T> Optional<T> set(DataKey<T> key, E value) {
+    // public <T, E extends T> Optional<T> set(DataKey<T> key, E value) {
+    public <T, E extends T> ADataStore set(DataKey<T> key, E value) {
         SpecsCheck.checkNotNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
 
         // Do not replace key if it already exists
@@ -172,15 +173,16 @@ public abstract class ADataStore implements DataStore {
                     + "', with a key that supports '" + key.getValueClass() + "'");
         }
 
-        Optional<Object> previousValue = setRaw(key.getName(), value);
-        // Object previousValue = values.put(key.getName(), value);
+        // Optional<Object> previousValue = setRaw(key.getName(), value);
+        setRaw(key.getName(), value);
 
-        // if (previousValue == null) {
-        if (!previousValue.isPresent()) {
-            return Optional.empty();
-        }
+        return this;
 
-        return Optional.of(key.getValueClass().cast(previousValue.get()));
+        // if (!previousValue.isPresent()) {
+        // return Optional.empty();
+        // }
+        //
+        // return Optional.of(key.getValueClass().cast(previousValue.get()));
     }
 
     @Override

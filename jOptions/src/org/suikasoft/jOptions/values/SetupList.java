@@ -192,8 +192,11 @@ public class SetupList implements DataStore {
     }
 
     @Override
-    public <T, E extends T> Optional<T> set(DataKey<T> key, E value) {
-        return getPreferredSetup().set(key, value);
+    // public <T, E extends T> Optional<T> set(DataKey<T> key, E value) {
+    public <T, E extends T> SetupList set(DataKey<T> key, E value) {
+        // return getPreferredSetup().set(key, value);
+        getPreferredSetup().set(key, value);
+        return this;
     }
 
     @Override

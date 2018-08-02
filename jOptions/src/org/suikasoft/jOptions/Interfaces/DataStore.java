@@ -38,7 +38,8 @@ import com.google.common.base.Preconditions;
  */
 public interface DataStore {
 
-    <T, E extends T> Optional<T> set(DataKey<T> key, E value);
+    // <T, E extends T> Optional<T> set(DataKey<T> key, E value);
+    <T, E extends T> DataStore set(DataKey<T> key, E value);
 
     default <T, E extends T> DataStore put(DataKey<T> key, E value) {
         set(key, value);
@@ -77,7 +78,8 @@ public interface DataStore {
      */
     // Check is being done manually
     @SuppressWarnings("unchecked")
-    default Optional<Object> setRaw(DataKey<?> key, Object value) {
+    // default Optional<Object> setRaw(DataKey<?> key, Object value) {
+    default DataStore setRaw(DataKey<?> key, Object value) {
         // Do not allow the storage of other DataStores
         // if (value instanceof DataStore) {
         // LoggingUtils.msgWarn("Key '" + key.getName()
@@ -101,7 +103,8 @@ public interface DataStore {
      * @param value
      * @return
      */
-    default <T> Optional<T> setString(DataKey<T> key, String value) {
+    // default <T> Optional<T> setString(DataKey<T> key, String value) {
+    default <T> DataStore setString(DataKey<T> key, String value) {
         if (!key.getDecoder().isPresent()) {
             throw new RuntimeException("No decoder set for key '" + key + "'");
         }
