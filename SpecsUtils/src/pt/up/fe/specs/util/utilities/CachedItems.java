@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.utilities;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -30,9 +31,18 @@ public class CachedItems<K, V> {
     private final Map<K, V> cache;
     private final Function<K, V> mapper;
 
+    private long cacheHits;
+    private long cacheMisses;
+
     public CachedItems(Function<K, V> mapper) {
-        this.cache = new HashMap<>();
+        this(mapper, false);
+    }
+
+    public CachedItems(Function<K, V> mapper, boolean isThreadSafe) {
+        this.cache = isThreadSafe ? new ConcurrentHashMap<>() : new HashMap<>();
         this.mapper = mapper;
+        cacheHits = 0;
+        cacheMisses = 0;
     }
 
     public V get(K key) {
@@ -41,11 +51,33 @@ public class CachedItems<K, V> {
 
         // If object is not in map, create and store it
         if (object == null) {
+            cacheMisses++;
             object = mapper.apply(key);
             cache.put(key, object);
+        } else {
+            cacheHits++;
         }
 
         return object;
     }
 
+    public long getCacheHits() {
+        return cacheHits;
+    }
+
+    public long getCacheMisses() {
+        return cacheMisses;
+    }
+
+    public long getCacheTotalCalls() {
+        return cacheMisses + cacheHits;
+    }
+
+    public long getCacheSize() {
+        return cache.size();
+    }
+
+    public double getHitRatio() {
+        return (double) cacheHits / (double) (cacheHits + cacheMisses);
+    }
 }
