@@ -26,42 +26,7 @@ public class SpecsLoggers {
 
     private static final Map<String, LoggerWrapper> LOGGERS = new ConcurrentHashMap<>();
 
-    /**
-     * Builds the logger name, based on a class and a tag.
-     * 
-     * @param aClass
-     * @param tag
-     * @return
-     */
-    // static String getLoggerName(Class<?> aClass, String tag) {
-    // String loggerName = SpecsIo.removeExtension(aClass.getName());
-    //
-    // if (tag != null && !tag.isEmpty()) {
-    // loggerName = loggerName + "." + tag;
-    // }
-    //
-    // return loggerName;
-    // }
-    /*
-    public static SpecsLoggerV2 getLogger(Class<?> aClass) {
-        return getLogger(aClass, null);
-    }
-    
-    public static SpecsLoggerV2 getLogger(Class<?> aClass, String tag) {
-        // Get name
-        String loggerName = getLoggerName(aClass, tag);
-        logger = Logger.getLogger(name);
-    }
-    */
-
-    // TODO: Maybe I'll have to create loggers from the base logger:
-    // For instance, fileLogger = GUI.globalLog.getLogger(FileFunction.class.getName());
-    // https://stackoverflow.com/questions/13397899/java-util-logging-hierarchy-reason#13398421
     static LoggerWrapper getLogger(String loggerName) {
-
-        // }
-
-        // static SpecsLoggerV2 getLogger(SpecsLogger baseLogger, String loggerName) {
         LoggerWrapper logger = LOGGERS.get(loggerName);
 
         if (logger == null) {
@@ -91,24 +56,4 @@ public class SpecsLoggers {
         return logger;
     }
 
-    /**
-     * Creates a logger name, based on a class and a tag.
-     * 
-     * 
-     * @param aClass
-     * @param tag
-     * @return
-     */
-    /*
-    static String getLoggerName(Class<?> aClass, String tag) {
-        // String loggerName = SpecsIo.removeExtension(aClass.getName());
-        String loggerName = aClass.getName();
-    
-        if (tag != null && !tag.isEmpty()) {
-            loggerName = loggerName + "." + tag;
-        }
-    
-        return loggerName;
-    }
-    */
 }

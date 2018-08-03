@@ -13,18 +13,8 @@
 
 package pt.up.fe.specs.util.logging;
 
-public interface Logs<T extends Enum<T>> {
+public interface TagLoggerUser<T> {
 
-    void info(T tag, String message);
-
-    default void info(String message) {
-        info(null, message);
-    }
-
-    void warn(T tag, String message);
-
-    default void warn(String message) {
-        warn(null, message);
-    }
+    TagLogger<T> logger();
 
 }

@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.util.logging;
 
-public interface EnumLoggerUser<T extends Enum<T>> {
+public enum SpecsLoggerTag {
 
-    EnumLogger<T> getLogger();
+    DEPRECATED;
 }

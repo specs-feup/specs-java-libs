@@ -13,26 +13,35 @@
 
 package pt.up.fe.specs.util.logging;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 
-@FunctionalInterface
-public interface EnumLogger<T extends Enum<T>> extends TagLogger<T> {
+import pt.up.fe.specs.util.Preconditions;
 
-    Class<T> getEnumClass();
+public class StringLogger implements TagLogger<String> {
 
-    @Override
-    default String getBaseName() {
-        return getEnumClass().getName();
+    private final String baseName;
+    private final Set<String> tags;
+
+    public StringLogger(String baseName, Set<String> tags) {
+        this.baseName = baseName;
+        this.tags = tags;
     }
 
     @Override
-    default Collection<T> getTags() {
-        return Arrays.asList(getEnumClass().getEnumConstants());
+    public Collection<String> getTags() {
+        return tags;
     }
 
-    static <T extends Enum<T>> EnumLogger<T> newInstance(Class<T> enumClass) {
-        return () -> enumClass;
+    @Override
+    public String getBaseName() {
+        return baseName;
+    }
+
+    @Override
+    public void info(String tag, String message) {
+        Preconditions.checkArgument(tags.contains(tag));
+        TagLogger.super.info(tag, message);
     }
 
     // default void warn(T tag, String message) {

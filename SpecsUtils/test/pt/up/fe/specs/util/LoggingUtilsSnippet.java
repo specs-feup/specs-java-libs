@@ -13,17 +13,18 @@
 
 package pt.up.fe.specs.util;
 
-import static pt.up.fe.specs.util.logging.SpecsLogsTest.*;
-
 import java.util.logging.Level;
 
 import org.junit.Test;
 
-import pt.up.fe.specs.util.logging.ClavaLoggerTag;
-import pt.up.fe.specs.util.logging.ClavaLoggerUser;
-import pt.up.fe.specs.util.logging.ClavaLogsTest;
+import pt.up.fe.specs.util.logging.SpecsLoggerTag;
+import pt.up.fe.specs.util.logging.SpecsLoggerUser;
 
-public class LoggingUtilsSnippet implements ClavaLoggerUser {
+public class LoggingUtilsSnippet implements SpecsLoggerUser {
+
+    public static void test() {
+        SpecsLoggerUser.info("hello");
+    }
 
     @Test
     public void testFileHandler() {
@@ -51,63 +52,17 @@ public class LoggingUtilsSnippet implements ClavaLoggerUser {
 
         // IntStream.range(1, 25).map(i -> i * i).forEach(i -> System.out.println(i));
 
-        SPECS_LOGS.info("SPeCS info message");
-        ClavaLogsTest.info("Clava info message");
-        ClavaLogsTest.metrics("Clava info metrics message");
-
-        // Disable metrics
-        ClavaLogsTest.CLAVA_LOGS.getLogger(ClavaLogsTest.Metrics).getJavaLogger().setLevel(Level.OFF);
-
-        ClavaLogsTest.info("Clava info message 2");
-        ClavaLogsTest.metrics("Clava info metrics message 2 - SHOULD NOT APPEAR");
-
-        // Remove custom level
-        // If a logger has a level set, it overrides parent settings
-        ClavaLogsTest.CLAVA_LOGS.getLogger(ClavaLogsTest.Metrics).getJavaLogger().setLevel(null);
-
-        ClavaLogsTest.info("Clava info message 3");
-        ClavaLogsTest.metrics("Clava info metrics message 3");
-
-        // ClavaLogsTest.CLAVA_LOGS.getLogger(null).getJavaLogger().setLevel(Level.OFF);
-        // ClavaLogsTest.CLAVA_LOGS.getLogger(ClavaLogsTest.Metrics).getJavaLogger().setLevel(Level.OFF);
-        ClavaLogsTest.CLAVA_LOGS.getBaseLogger().getJavaLogger().setLevel(Level.OFF);
-
-        ClavaLogsTest.info("Clava info message 4 - SHOULD NOT APPEAR");
-        ClavaLogsTest.metrics("Clava info metrics message 4 - SHOULD NOT APPEAR");
-
-        // SpecsLogsTest.info("SPeCS info message");
-        // ClavaLogsTest.info("Clava info message");
-        /*
-        Logger childLogger = Logger.getLogger("baseLogger.childLogger");
-        System.out.println("CHILD LOGGER NAME:" + childLogger.getName());
-        
-        Logger childLogger2 = Logger.getLogger("baseLogger.childLogger2");
-        System.out.println("CHILD LOGGER 2 NAME:" + childLogger2.getName());
-        
-        Logger baseLogger = Logger.getLogger("baseLogger");
-        System.out.println("BASE LOGGER NAME:" + baseLogger.getName());
-        
-        baseLogger.setLevel(Level.OFF);
-        
-        childLogger.info("CHILD 1");
-        childLogger2.info("CHILD 2");
-        
-        baseLogger.setLevel(Level.INFO);
-        
-        childLogger.info("CHILD 1 1");
-        childLogger2.info("CHILD 2 2");
-        */
-        getLogger().info("Hello");
-        getLogger().info(ClavaLoggerTag.DEPRECATED, "This is deprecated");
+        logger().info("Hello");
+        logger().info(SpecsLoggerTag.DEPRECATED, "This is deprecated");
 
         // getLogger().getBaseLogger().getJavaLogger().setLevel(Level.OFF);
 
-        getLogger().setLevelAll(Level.OFF);
-        getLogger().setLevel(null, Level.INFO);
+        logger().setLevelAll(Level.OFF);
+        logger().setLevel(null, Level.INFO);
         // getLogger().getLogger(ClavaLoggerTag.DEPRECATED).getJavaLogger().setLevel(Level.OFF);
 
-        getLogger().info("Hello 2");
-        getLogger().info(ClavaLoggerTag.DEPRECATED, "This is deprecated 2");
+        logger().info("Hello 2");
+        logger().info(SpecsLoggerTag.DEPRECATED, "This is deprecated 2");
     }
 
 }

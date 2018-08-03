@@ -15,24 +15,29 @@ package pt.up.fe.specs.util.logging;
 
 import java.util.function.Supplier;
 
-public class ClavaLogger {
+public interface SpecsLoggerUser extends TagLoggerUser<SpecsLoggerTag> {
 
-    private static final EnumLogger<ClavaLoggerTag> LOGGER = EnumLogger.newInstance(ClavaLoggerTag.class);
+    static final EnumLogger<SpecsLoggerTag> SPECS_LOGGER = EnumLogger.newInstance(SpecsLoggerTag.class);
 
-    public static EnumLogger<ClavaLoggerTag> getInnerLogger() {
-        return LOGGER;
+    public static EnumLogger<SpecsLoggerTag> getLogger() {
+        return SPECS_LOGGER;
+    }
+
+    @Override
+    default EnumLogger<SpecsLoggerTag> logger() {
+        return SPECS_LOGGER;
     }
 
     public static void deprecated(String message) {
-        LOGGER.info(ClavaLoggerTag.DEPRECATED, message);
+        SPECS_LOGGER.info(SpecsLoggerTag.DEPRECATED, message);
     }
 
-    public static void info(ClavaLoggerTag tag, String message) {
-        LOGGER.info(tag, message);
+    public static void info(SpecsLoggerTag tag, String message) {
+        SPECS_LOGGER.info(tag, message);
     }
 
     public static void info(String message) {
-        LOGGER.info(message);
+        SPECS_LOGGER.info(message);
     }
 
     public static void info(Supplier<String> message) {

@@ -20,7 +20,7 @@ public interface TagLogger<T> {
 
     Collection<T> getTags();
 
-    Class<?> getBaseClass();
+    String getBaseName();
 
     default void setLevelAll(Level level) {
         for (T tag : getTags()) {
@@ -34,7 +34,7 @@ public interface TagLogger<T> {
     }
 
     default String getLoggerName(T tag) {
-        String loggerName = getBaseClass().getName() + ".";
+        String loggerName = getBaseName() + ".";
 
         loggerName += tag != null ? tag.toString() : "$root";
 
@@ -46,13 +46,13 @@ public interface TagLogger<T> {
     }
 
     default LoggerWrapper getBaseLogger() {
-        return SpecsLoggers.getLogger(getBaseClass().getName());
+        return SpecsLoggers.getLogger(getBaseName());
     }
 
     default void info(T tag, String message) {
         // LogsHelper.logMessage(getLoggerName(tag), tag, message, (logger, msg) -> logger.info(msg));
 
-        String prefix = LogsHelper.getPrefix(tag);
+        String prefix = getPrefix(tag);
 
         LoggerWrapper logger = SpecsLoggers.getLogger(getLoggerName(tag));
         // System.out.println("LEVEL:" + logger.getJavaLogger().getLevel());
@@ -64,6 +64,118 @@ public interface TagLogger<T> {
     default void info(String message) {
         info(null, message);
     }
+
+    static String getPrefix(Object tag) {
+        if (tag == null) {
+            return "";
+        }
+
+        return "[" + tag.toString() + "] ";
+    }
+
+    /*
+    default void warn(T tag, String msg, List<StackTraceElement> elements, int startIndex, boolean appendCallingClass) {
+    
+        msg = "[WARNING]: " + msg;
+        msg = parseMessage(msg);
+        msg = buildErrorMessage(msg, elements.subList(startIndex, elements.size()));
+    
+        if (appendCallingClass) {
+            logger = logger == null ? getLoggerDebug() : logger;
+            logger.warning(msg);
+            // getLoggerDebug().warning(msg);
+        } else {
+            logger = logger == null ? getLogger() : logger;
+            logger.warning(msg);
+            // getLogger().warning(msg);
+        }
+    }
+    */
+
+    /**
+     * Writes a message to the logger with name defined by LOGGING_TAG.
+     *
+     * <p>
+     * Messages written with this method are recorded as a log at warning level. Use this level to show a message for
+     * cases that are supposed to never happen if the code is well used.
+     *
+     * @param msg
+     */
+    /*
+    public static void msgWarn(String msg) {
+    
+        final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
+        final int startIndex = 2;
+    
+        msgWarn(msg, elements, startIndex, true, null);
+    }
+    
+    public static void msgWarn(Logger logger, String msg) {
+    
+        final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
+        final int startIndex = 2;
+    
+        msgWarn(msg, elements, startIndex, true, logger);
+    }
+    
+    private static void msgWarn(String msg, List<StackTraceElement> elements, int startIndex,
+            boolean appendCallingClass, Logger logger) {
+    
+        msg = "[WARNING]: " + msg;
+        msg = parseMessage(msg);
+        msg = buildErrorMessage(msg, elements.subList(startIndex, elements.size()));
+    
+        if (appendCallingClass) {
+            logger = logger == null ? getLoggerDebug() : logger;
+            logger.warning(msg);
+            // getLoggerDebug().warning(msg);
+        } else {
+            logger = logger == null ? getLogger() : logger;
+            logger.warning(msg);
+            // getLogger().warning(msg);
+        }
+    }
+    
+    public static void msgWarn(String msg, Throwable ourCause) {
+    
+        // Get the root cause
+        while (ourCause.getCause() != null) {
+            ourCause = ourCause.getCause();
+        }
+    
+        // Save current place where message is being issued
+        final List<StackTraceElement> currentElements = Arrays.asList(Thread.currentThread().getStackTrace());
+        final StackTraceElement currentElement = currentElements.get(2);
+        final String msgSource = "\n\n[Catch]:\n" + currentElement;
+    
+        String causeString = ourCause.getMessage();
+        if (causeString == null) {
+            causeString = ourCause.toString();
+        }
+    
+        final String causeMsg = causeString + msgSource;
+    
+        // msg = msg + "\nCause: [" + ourCause.getClass().getSimpleName() + "] " + ourCause.getMessage() + msgSource;
+        msg = msg + "\nCause: " + causeMsg;
+    
+        final List<StackTraceElement> elements = Arrays.asList(ourCause.getStackTrace());
+        final int startIndex = 0;
+    
+        msgWarn(msg, elements, startIndex, false, null);
+    }
+    
+    public static void msgWarn(Throwable cause) {
+    
+        final List<StackTraceElement> elements = Arrays.asList(cause.getStackTrace());
+        final int startIndex = 0;
+    
+        final String msg = cause.getClass().getName() + ": " + cause.getMessage();
+    
+        msgWarn(msg, elements, startIndex, false, null);
+    
+    }
+    
+    */
 
     // static <T extends Enum<T>> TagLogger<T> newInstance(Class<T> enumClass) {
     // return () -> enumClass;

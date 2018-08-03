@@ -13,10 +13,8 @@
 
 package pt.up.fe.specs.util.logging;
 
-public interface ClavaLoggerUser extends EnumLoggerUser<ClavaLoggerTag> {
+public interface StringLoggerUser {
 
-    @Override
-    default EnumLogger<ClavaLoggerTag> getLogger() {
-        return ClavaLogger.getInnerLogger();
-    }
+    StringLogger getLogger();
+
 }
