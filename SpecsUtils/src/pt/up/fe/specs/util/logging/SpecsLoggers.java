@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.logging;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Stores SpecsLogger instances.
@@ -24,32 +25,36 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SpecsLoggers {
 
-    private static final Map<String, LoggerWrapper> LOGGERS = new ConcurrentHashMap<>();
+    private static final Map<String, Logger> LOGGERS = new ConcurrentHashMap<>();
 
-    static LoggerWrapper getLogger(String loggerName) {
-        LoggerWrapper logger = LOGGERS.get(loggerName);
+    // static Logger getLogger(String loggerName) {
+    // Logger logger = LOGGERS.get(loggerName);
+    //
+    // if (logger == null) {
+    // logger = new LoggerWrapper(loggerName);
+    // // System.out.println("CREATED " + loggerName);
+    // LOGGERS.put(loggerName, logger);
+    // } else {
+    // // System.out.println("RETURNING " + loggerName);
+    // }
+    //
+    // return logger;
+    // }
 
-        if (logger == null) {
-            logger = new LoggerWrapper(loggerName);
-            // System.out.println("CREATED " + loggerName);
-            LOGGERS.put(loggerName, logger);
-        } else {
-            // System.out.println("RETURNING " + loggerName);
-        }
+    // static Logger getLogger(String baseName, String tag) {
+    //
+    // }
 
-        return logger;
-    }
+    static Logger getLogger(String loggerName) {
 
-    static LoggerWrapper getLogger(Class<?> aClass, String tag) {
-
-        String loggerName = aClass.getName() + "." + tag;
+        // String loggerName = baseName + "." + tag;
         // }
 
         // static SpecsLoggerV2 getLogger(SpecsLogger baseLogger, String loggerName) {
-        LoggerWrapper logger = LOGGERS.get(loggerName);
+        Logger logger = LOGGERS.get(loggerName);
 
         if (logger == null) {
-            logger = new LoggerWrapper(loggerName);
+            logger = Logger.getLogger(loggerName);
             LOGGERS.put(loggerName, logger);
         }
 

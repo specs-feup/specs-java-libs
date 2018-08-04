@@ -31,6 +31,13 @@ public interface EnumLogger<T extends Enum<T>> extends TagLogger<T> {
         return Arrays.asList(getEnumClass().getEnumConstants());
     }
 
+    @Override
+    default EnumLogger<T> addToIgnoreList(Class<?> aClass) {
+        TagLogger.super.addToIgnoreList(aClass);
+
+        return this;
+    }
+
     static <T extends Enum<T>> EnumLogger<T> newInstance(Class<T> enumClass) {
         return () -> enumClass;
     }

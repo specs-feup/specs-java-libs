@@ -63,6 +63,9 @@ public class LoggingUtilsSnippet implements SpecsLoggerUser {
 
         logger().info("Hello 2");
         logger().info(SpecsLoggerTag.DEPRECATED, "This is deprecated 2");
+
+        logger().debug("Debug message");
+        logger().warn("Warn message");
     }
 
 }

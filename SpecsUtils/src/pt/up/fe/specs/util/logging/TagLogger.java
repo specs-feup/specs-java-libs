@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.logging;
 
 import java.util.Collection;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public interface TagLogger<T> {
 
@@ -30,7 +31,7 @@ public interface TagLogger<T> {
     }
 
     default void setLevel(T tag, Level level) {
-        getLogger(tag).getJavaLogger().setLevel(level);
+        getLogger(tag).setLevel(level);
     }
 
     default String getLoggerName(T tag) {
@@ -41,36 +42,78 @@ public interface TagLogger<T> {
         return loggerName.toLowerCase();
     }
 
-    default LoggerWrapper getLogger(T tag) {
+    default Logger getLogger(T tag) {
         return SpecsLoggers.getLogger(getLoggerName(tag));
     }
 
-    default LoggerWrapper getBaseLogger() {
+    default Logger getBaseLogger() {
         return SpecsLoggers.getLogger(getBaseName());
     }
 
+    default void log(Level level, T tag, String message) {
+        log(level, tag, message, LogSourceInfo.getLogSourceInfo(level));
+    }
+
+    default void log(Level level, T tag, String message, LogSourceInfo logSourceInfo) {
+        // Obtain logger
+        Logger logger = SpecsLoggers.getLogger(getLoggerName(tag));
+        logger.log(level, SpecsLogging.parseMessage(tag, message, logSourceInfo));
+        /*        
+            // Obtain stack trace
+        
+            // Log using stack trace
+        
+        } else {
+            logger.log(level, SpecsLogging.parseMessage(tag, message));
+        }
+        */
+    }
+
+    default void log(Level level, String message) {
+        log(level, null, message);
+    }
+
     default void info(T tag, String message) {
+        log(Level.INFO, tag, message);
+        /*
         // LogsHelper.logMessage(getLoggerName(tag), tag, message, (logger, msg) -> logger.info(msg));
-
-        String prefix = getPrefix(tag);
-
-        LoggerWrapper logger = SpecsLoggers.getLogger(getLoggerName(tag));
+        
+        // String prefix = SpecsLogging.getPrefix(tag);
+        
+        Logger logger = SpecsLoggers.getLogger(getLoggerName(tag));
         // System.out.println("LEVEL:" + logger.getJavaLogger().getLevel());
-        logger.info(prefix + message);
+        
+        logger.info(SpecsLogging.parseMessage(tag, message));
         // System.out.println("ADASD");
         // logging.accept(logger, prefix + message);
+        */
+
     }
 
     default void info(String message) {
         info(null, message);
     }
 
-    static String getPrefix(Object tag) {
-        if (tag == null) {
-            return "";
-        }
+    default void debug(String message) {
+        log(Level.INFO, null, message, LogSourceInfo.SOURCE);
+    }
 
-        return "[" + tag.toString() + "] ";
+    default void warn(T tag, String message) {
+        log(Level.WARNING, tag, message);
+    }
+
+    default void warn(String message) {
+        warn(null, message);
+    }
+
+    /**
+     * Adds a class to the ignore list when printing the stack trace, or the source code location.
+     * 
+     * @param aClass
+     */
+    default TagLogger<T> addToIgnoreList(Class<?> aClass) {
+        SpecsLogging.addClassToIgnore(aClass);
+        return this;
     }
 
     /*
