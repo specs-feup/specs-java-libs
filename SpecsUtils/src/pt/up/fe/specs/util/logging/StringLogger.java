@@ -16,8 +16,6 @@ package pt.up.fe.specs.util.logging;
 import java.util.Collection;
 import java.util.Set;
 
-import pt.up.fe.specs.util.Preconditions;
-
 public class StringLogger implements TagLogger<String> {
 
     private final String baseName;
@@ -38,11 +36,11 @@ public class StringLogger implements TagLogger<String> {
         return baseName;
     }
 
-    @Override
-    public void info(String tag, String message) {
-        Preconditions.checkArgument(tags.contains(tag));
-        TagLogger.super.info(tag, message);
-    }
+    // @Override
+    // public void info(String tag, String message) {
+    // Preconditions.checkArgument(tags.contains(tag));
+    // TagLogger.super.info(tag, message);
+    // }
 
     // default void warn(T tag, String message) {
     // LogsHelper.logMessage(getClass().getName(), tag, message, (logger, msg) -> logger.warn(msg));

@@ -21,6 +21,12 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.lazy.ThreadSafeLazy;
 
+/**
+ * @deprecated replaced by TagLogger/one of its implementations (e.g., EnumLogger, StringLogger)
+ * @author JoaoBispo
+ *
+ */
+@Deprecated
 public abstract class SpecsLogger {
 
     protected static String buildLoggerName(Class<? extends SpecsLogger> aClass) {
