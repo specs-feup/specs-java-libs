@@ -95,7 +95,11 @@ public interface TagLogger<T> {
     }
 
     default void debug(String message) {
-        log(Level.INFO, null, message, LogSourceInfo.SOURCE);
+        log(Level.INFO, null, "[DEBUG] " + message, LogSourceInfo.SOURCE);
+    }
+
+    default void deprecated(String message) {
+        log(Level.INFO, null, "[DEPRECATED] " + message, LogSourceInfo.SOURCE);
     }
 
     default void warn(T tag, String message) {
