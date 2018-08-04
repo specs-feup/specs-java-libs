@@ -14,12 +14,17 @@
 package pt.up.fe.specs.util.logging;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 public class StringLogger implements TagLogger<String> {
 
     private final String baseName;
     private final Set<String> tags;
+
+    public StringLogger(String baseName) {
+        this(baseName, Collections.emptySet());
+    }
 
     public StringLogger(String baseName, Set<String> tags) {
         this.baseName = baseName;
