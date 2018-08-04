@@ -64,7 +64,7 @@ class SpecsLogging {
         case NONE:
             return "";
         case SOURCE:
-            return " " + getSourceCodeLocation();
+            return getSourceCodeLocation();
         case STACK_TRACE:
             return getStackTrace();
         default:
@@ -142,14 +142,17 @@ class SpecsLogging {
     public static String getSourceCode(StackTraceElement s) {
 
         StringBuilder builder = new StringBuilder();
-        // builder.append(s.getClassName());
-        // builder.append(".");
-        // builder.append(s.getMethodName());
+        builder.append(" -> ");
+        // builder.append("[ ");
+        builder.append(s.getClassName());
+        builder.append(".");
+        builder.append(s.getMethodName());
         builder.append("(");
         builder.append(s.getFileName());
         builder.append(":");
         builder.append(s.getLineNumber());
         builder.append(")");
+        // builder.append(" ]");
 
         return builder.toString();
     }
