@@ -28,6 +28,9 @@ public interface TagLogger<T> {
             setLevel(tag, level);
         }
 
+        // Root level
+        setLevel(null, level);
+
     }
 
     default void setLevel(T tag, Level level) {
