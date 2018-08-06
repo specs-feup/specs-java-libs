@@ -62,7 +62,7 @@ public class SpecsLogs {
     // private final static PrintStream stdout = System.out;
     // private final static PrintStream stderr = System.err;
 
-    private static boolean printStackTrace = true;
+    // private static boolean printStackTrace = true;
 
     /**
      * Helper method to get the root Logger.
@@ -80,6 +80,11 @@ public class SpecsLogs {
      */
     public static Logger getLogger() {
         return SPECS_LOGGER.getLogger(null);
+        // return Logger.getLogger(SpecsLogs.LOGGING_TAG);
+    }
+
+    public static EnumLogger<SpecsLoggerTag> getSpecsLogger() {
+        return SPECS_LOGGER;
         // return Logger.getLogger(SpecsLogs.LOGGING_TAG);
     }
 
@@ -606,8 +611,18 @@ public class SpecsLogs {
     }
     */
 
+    /**
+     * Enables/disables printing of the stack trace for Warning level.
+     * 
+     * <p>
+     * This method is for compatibility with previous code. Please use LogSourceInfo.setLogSourceInfo instead.
+     * 
+     * @param bool
+     */
     public static void setPrintStackTrace(boolean bool) {
-        SpecsLogs.printStackTrace = bool;
+        LogSourceInfo sourceInfo = bool ? LogSourceInfo.STACK_TRACE : LogSourceInfo.NONE;
+        LogSourceInfo.setLogSourceInfo(Level.WARNING, sourceInfo);
+        // SpecsLogs.printStackTrace = bool;
     }
 
     public static boolean isSystemPrint(String loggerName) {
