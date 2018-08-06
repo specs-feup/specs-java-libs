@@ -44,12 +44,4 @@ public interface SpecsLoggerUser extends TagLoggerUser<SpecsLoggerTag> {
         info(message.get());
     }
 
-    /**
-     * Info-level message prefixed with [ClavaMetrics].
-     * 
-     * @param takeTime
-     */
-    public static void metrics(String message) {
-        info("[ClavaMetrics] " + message);
-    }
 }
