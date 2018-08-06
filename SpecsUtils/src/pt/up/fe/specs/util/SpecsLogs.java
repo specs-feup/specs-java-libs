@@ -27,9 +27,11 @@ import java.util.logging.StreamHandler;
 
 import pt.up.fe.specs.util.logging.ConsoleFormatter;
 import pt.up.fe.specs.util.logging.CustomConsoleHandler;
+import pt.up.fe.specs.util.logging.EnumLogger;
 import pt.up.fe.specs.util.logging.LogLevel;
 import pt.up.fe.specs.util.logging.LoggingOutputStream;
 import pt.up.fe.specs.util.logging.SimpleFileHandler;
+import pt.up.fe.specs.util.logging.SpecsLoggerTag;
 
 /**
  * Methods for the Java Logger API.
@@ -38,23 +40,25 @@ import pt.up.fe.specs.util.logging.SimpleFileHandler;
  */
 public class SpecsLogs {
 
+    private final static EnumLogger<SpecsLoggerTag> SPECS_LOGGER = EnumLogger.newInstance(SpecsLoggerTag.class);
+
     private final static String NEWLINE = System.getProperty("line.separator");
 
     private final static String SYSTEM_OUT_LOGGER = "System.out";
     private final static String SYSTEM_ERR_LOGGER = "System.err";
 
-    public final static String SEVERE_TAG = "App-Severe";
-    public final static String WARNING_TAG = "App-Warn";
-    public final static String INFO_TAG = "App-Info";
-    public final static String LIB_TAG = "App-Lib";
+    private final static String SEVERE_TAG = "App-Severe";
+    private final static String WARNING_TAG = "App-Warn";
+    private final static String INFO_TAG = "App-Info";
+    private final static String LIB_TAG = "App-Lib";
 
-    public final static String LOGGING_TAG = "CurrentApp";
+    private final static String LOGGING_TAG = "CurrentApp";
     // public final static String LOGGING_ANDROID_TAG = "currentApp";
-    public final static String LIB_LOGGING_TAG = "[LIB]";
+    private final static String LIB_LOGGING_TAG = "[LIB]";
     // Preserving a reference to original stdout/stderr streams,
     // in case they change.
-    public final static PrintStream stdout = System.out;
-    public final static PrintStream stderr = System.err;
+    private final static PrintStream stdout = System.out;
+    private final static PrintStream stderr = System.err;
 
     private static boolean printStackTrace = true;
 
@@ -527,6 +531,7 @@ public class SpecsLogs {
 
         // if(globalLevel) {logger.setLevel(globalLevel);}
         logger.info(msg);
+
     }
 
     /**
