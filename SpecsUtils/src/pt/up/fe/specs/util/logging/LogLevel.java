@@ -18,15 +18,15 @@ import java.util.logging.Level;
 public class LogLevel extends Level {
 
     protected LogLevel(String name, int value) {
-	super(name, value);
+        super(name, value);
     }
 
     protected LogLevel(String name, int value, String resourceBundleName) {
-	super(name, value, resourceBundleName);
+        super(name, value, resourceBundleName);
     }
 
     private static final long serialVersionUID = 1L;
-    private static String defaultBundle = "sun.util.logging.resources.logging";
+    private static final String defaultBundle = "sun.util.logging.resources.logging";
 
     public static final Level LIB = new LogLevel("LIB", 750, LogLevel.defaultBundle);
 

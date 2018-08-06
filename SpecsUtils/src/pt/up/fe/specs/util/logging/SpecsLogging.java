@@ -28,12 +28,13 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
  * @author JoaoBispo
  *
  */
-class SpecsLogging {
+public class SpecsLogging {
 
     private final static String NEWLINE = System.getProperty("line.separator");
 
     private final static Set<String> CLASS_NAME_IGNORE = new HashSet<>();
     static {
+        addClassToIgnore(Thread.class); // To avoid Thread.getStackTrace
         addClassToIgnore(SpecsLogging.class);
         addClassToIgnore(TagLogger.class);
     }
@@ -59,22 +60,22 @@ class SpecsLogging {
         return "[" + tag.toString() + "] ";
     }
 
-    public static String getLogSuffix(LogSourceInfo logSuffix) {
+    public static String getLogSuffix(LogSourceInfo logSuffix, StackTraceElement[] stackTrace) {
         switch (logSuffix) {
         case NONE:
             return "";
         case SOURCE:
-            return getSourceCodeLocation();
+            return getSourceCodeLocation(stackTrace);
         case STACK_TRACE:
-            return getStackTrace();
+            return getStackTrace(stackTrace);
         default:
             throw new NotImplementedException(logSuffix);
         }
     }
 
-    private static String getSourceCodeLocation() {
+    private static String getSourceCodeLocation(StackTraceElement[] stackTrace) {
 
-        StackTraceElement element = getLogCallLocation().get(0);
+        StackTraceElement element = getLogCallLocation(stackTrace).get(0);
 
         if (element == null) {
             return "";
@@ -83,9 +84,9 @@ class SpecsLogging {
         return getSourceCode(element);
     }
 
-    public static String getStackTrace() {
+    public static String getStackTrace(StackTraceElement[] stackTrace) {
 
-        Collection<StackTraceElement> elements = getLogCallLocation();
+        Collection<StackTraceElement> elements = getLogCallLocation(stackTrace);
 
         final StringBuilder builder = new StringBuilder();
 
@@ -103,12 +104,14 @@ class SpecsLogging {
         return builder.toString();
     }
 
-    private static List<StackTraceElement> getLogCallLocation() {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+    public static List<StackTraceElement> getLogCallLocation(StackTraceElement[] stackTrace) {
+        if (stackTrace == null) {
+            stackTrace = Thread.currentThread().getStackTrace();
+        }
 
         // Discover from which index to cut the trace
         // Discard first index, will be java.lang.Thread.getStackTrace
-        int index = 1;
+        int index = 0;
         while (index < stackTrace.length) {
             if (!ignoreStackTraceElement(stackTrace[index])) {
                 return Arrays.asList(stackTrace).subList(index, stackTrace.length);
@@ -167,7 +170,7 @@ class SpecsLogging {
      * @param msg
      * @return
      */
-    public static String parseMessage(Object tag, String msg, LogSourceInfo logSuffix) {
+    public static String parseMessage(Object tag, String msg, LogSourceInfo logSuffix, StackTraceElement[] stackTrace) {
 
         // Prefix
         String parsedMessage = getPrefix(tag);
@@ -175,7 +178,7 @@ class SpecsLogging {
         // Message
         parsedMessage += msg;
 
-        parsedMessage += getLogSuffix(logSuffix);
+        parsedMessage += getLogSuffix(logSuffix, stackTrace);
 
         // New line
         if (!msg.isEmpty()) {

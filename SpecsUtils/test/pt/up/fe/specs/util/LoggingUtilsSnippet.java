@@ -66,6 +66,7 @@ public class LoggingUtilsSnippet implements SpecsLoggerUser {
 
         logger().debug("Debug message");
         logger().warn("Warn message");
+
     }
 
 }

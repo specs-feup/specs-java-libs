@@ -55,9 +55,13 @@ public interface TagLogger<T> {
     }
 
     default void log(Level level, T tag, String message, LogSourceInfo logSourceInfo) {
+        log(level, tag, message, logSourceInfo, null);
+    }
+
+    default void log(Level level, T tag, String message, LogSourceInfo logSourceInfo, StackTraceElement[] stackTrace) {
         // Obtain logger
         Logger logger = SpecsLoggers.getLogger(getLoggerName(tag));
-        logger.log(level, SpecsLogging.parseMessage(tag, message, logSourceInfo));
+        logger.log(level, SpecsLogging.parseMessage(tag, message, logSourceInfo, stackTrace));
         /*        
             // Obtain stack trace
         
