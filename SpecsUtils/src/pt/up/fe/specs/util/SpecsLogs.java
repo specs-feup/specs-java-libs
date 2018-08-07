@@ -477,6 +477,8 @@ public class SpecsLogs {
             causeString = ourCause.toString();
         }
 
+        causeString = "[" + ourCause.getClass().getSimpleName() + "] " + causeString;
+
         // final String causeMsg = causeString + msgSource;
 
         // msg = msg + "\nCause: [" + ourCause.getClass().getSimpleName() + "] " + ourCause.getMessage() + msgSource;
