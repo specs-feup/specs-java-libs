@@ -26,9 +26,15 @@ import org.suikasoft.jOptions.Datakey.DataKey;
  */
 public interface DataClass<T extends DataClass<T>> {
 
+    String getDataClassName();
+
     <K> K get(DataKey<K> key);
 
     <K, E extends K> T set(DataKey<K> key, E value);
+
+    default T set(DataKey<Boolean> key) {
+        return set(key, true);
+    }
 
     T set(T instance);
 

@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.DataStore.DataClass;
+import org.suikasoft.jOptions.DataStore.DataClassUtils;
 import org.suikasoft.jOptions.DataStore.DataStoreContainer;
 import org.suikasoft.jOptions.DataStore.SimpleDataStore;
 import org.suikasoft.jOptions.Datakey.DataKey;
@@ -258,6 +259,11 @@ public interface DataStore extends DataClass<DataStore> {
      */
     String getName();
 
+    @Override
+    default String getDataClassName() {
+        return getName();
+    }
+
     /**
      * Returns the value associated with the given key. If there is no value for the key, returns the default value
      * defined by the key.
@@ -433,9 +439,35 @@ public interface DataStore extends DataClass<DataStore> {
         }
 
         // return getKeysWithValues().stream()
+        /*
+        StringBuilder builder = new StringBuilder();
+        builder.append(getName() + " [");
+        boolean firstTime = true;
+        for (String key : keys) {
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                builder.append(", ");
+            }
+        
+            Object object = get(key);
+            if (object instanceof DataClass) {
+                ((DataClass<?>) object).
+                continue;
+            }
+        
+            String keyString = key + ":" + get(key);
+            builder.append(keyString);
+        }
+        builder.append("]");
+        
+        return builder.toString();
+        */
+
         return keys.stream()
-                .map(key -> key + ": " + get(key))
+                .map(key -> key + ": " + DataClassUtils.toString(get(key)))
                 .collect(Collectors.joining(", ", getName() + " [", "]"));
+
     }
 
     @Override

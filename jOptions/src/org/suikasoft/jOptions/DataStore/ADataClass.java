@@ -34,6 +34,11 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         this.data = DataStore.newInstance(getClass());
     }
 
+    @Override
+    public String getDataClassName() {
+        return data.getName();
+    }
+
     // public DataClass(T instance) {
     // this.data = DataStore.newInstance(getClass());
     // this.data.addAll(((DataClass<?>) instance).data);
