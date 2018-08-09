@@ -16,7 +16,6 @@ package pt.up.fe.specs.util;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.FileHandler;
@@ -27,9 +26,13 @@ import java.util.logging.StreamHandler;
 
 import pt.up.fe.specs.util.logging.ConsoleFormatter;
 import pt.up.fe.specs.util.logging.CustomConsoleHandler;
+import pt.up.fe.specs.util.logging.EnumLogger;
 import pt.up.fe.specs.util.logging.LogLevel;
+import pt.up.fe.specs.util.logging.LogSourceInfo;
 import pt.up.fe.specs.util.logging.LoggingOutputStream;
 import pt.up.fe.specs.util.logging.SimpleFileHandler;
+import pt.up.fe.specs.util.logging.SpecsLoggerTag;
+import pt.up.fe.specs.util.logging.SpecsLogging;
 
 /**
  * Methods for the Java Logger API.
@@ -38,25 +41,28 @@ import pt.up.fe.specs.util.logging.SimpleFileHandler;
  */
 public class SpecsLogs {
 
-    private final static String NEWLINE = System.getProperty("line.separator");
+    private final static EnumLogger<SpecsLoggerTag> SPECS_LOGGER = EnumLogger.newInstance(SpecsLoggerTag.class)
+            .addToIgnoreList(SpecsLogs.class);
+
+    // private final static String NEWLINE = System.getProperty("line.separator");
 
     private final static String SYSTEM_OUT_LOGGER = "System.out";
     private final static String SYSTEM_ERR_LOGGER = "System.err";
 
-    public final static String SEVERE_TAG = "App-Severe";
-    public final static String WARNING_TAG = "App-Warn";
+    // private final static String SEVERE_TAG = "App-Severe";
+    // private final static String WARNING_TAG = "App-Warn";
     public final static String INFO_TAG = "App-Info";
-    public final static String LIB_TAG = "App-Lib";
+    // private final static String LIB_TAG = "App-Lib";
 
-    public final static String LOGGING_TAG = "CurrentApp";
+    // private final static String LOGGING_TAG = "CurrentApp";
     // public final static String LOGGING_ANDROID_TAG = "currentApp";
-    public final static String LIB_LOGGING_TAG = "[LIB]";
+    // private final static String LIB_LOGGING_TAG = "[LIB]";
     // Preserving a reference to original stdout/stderr streams,
     // in case they change.
-    public final static PrintStream stdout = System.out;
-    public final static PrintStream stderr = System.err;
+    // private final static PrintStream stdout = System.out;
+    // private final static PrintStream stderr = System.err;
 
-    private static boolean printStackTrace = true;
+    // private static boolean printStackTrace = true;
 
     /**
      * Helper method to get the root Logger.
@@ -73,7 +79,13 @@ public class SpecsLogs {
      * @return logger for
      */
     public static Logger getLogger() {
-        return Logger.getLogger(SpecsLogs.LOGGING_TAG);
+        return SPECS_LOGGER.getLogger(null);
+        // return Logger.getLogger(SpecsLogs.LOGGING_TAG);
+    }
+
+    public static EnumLogger<SpecsLoggerTag> getSpecsLogger() {
+        return SPECS_LOGGER;
+        // return Logger.getLogger(SpecsLogs.LOGGING_TAG);
     }
 
     /**
@@ -88,6 +100,7 @@ public class SpecsLogs {
      * @return logger specific to the given object
      */
 
+    /*
     public static Logger getLoggerDebug() {
         // StackTraceElement stackElement = ProcessUtils.getCallerMethod();
         // If called directly, use index 4
@@ -95,6 +108,7 @@ public class SpecsLogs {
         // StackTraceElement stackElement = ProcessUtils.getCallerMethod(4);
         // return Logger.getLogger(stackElement.getClassName());
     }
+    */
 
     /**
      * Helper method to automatically get the Logger correspondent to the class which calls this method.
@@ -109,12 +123,12 @@ public class SpecsLogs {
      *            is this method, index 4 is the caller index
      * @return logger specific to the given object
      */
-
+    /*
     public static Logger getLoggerDebug(int callerMethodIndex) {
         final StackTraceElement stackElement = SpecsSystem.getCallerMethod(callerMethodIndex);
         return Logger.getLogger(stackElement.toString());
     }
-
+    */
     /**
      * Redirects the System.out stream to the logger with name defined by LOGGING_TAG.
      *
@@ -404,28 +418,31 @@ public class SpecsLogs {
      * @param msg
      */
     public static void msgWarn(String msg) {
-
-        final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
-        final int startIndex = 2;
-
-        msgWarn(msg, elements, startIndex, true, null);
+        SPECS_LOGGER.warn(msg);
+        // final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
+        // final int startIndex = 2;
+        //
+        // msgWarn(msg, elements, startIndex, true, null);
     }
 
+    /*
     public static void msgWarn(Logger logger, String msg) {
-
+    
         final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
         final int startIndex = 2;
-
+    
         msgWarn(msg, elements, startIndex, true, logger);
     }
+    */
 
+    /*
     private static void msgWarn(String msg, List<StackTraceElement> elements, int startIndex,
             boolean appendCallingClass, Logger logger) {
-
+    
         msg = "[WARNING]: " + msg;
         msg = parseMessage(msg);
         msg = buildErrorMessage(msg, elements.subList(startIndex, elements.size()));
-
+    
         if (appendCallingClass) {
             logger = logger == null ? getLoggerDebug() : logger;
             logger.warning(msg);
@@ -436,6 +453,7 @@ public class SpecsLogs {
             // getLogger().warning(msg);
         }
     }
+    */
 
     public static void msgWarn(String msg, Throwable ourCause) {
 
@@ -445,71 +463,84 @@ public class SpecsLogs {
         }
 
         // Save current place where message is being issued
-        final List<StackTraceElement> currentElements = Arrays.asList(Thread.currentThread().getStackTrace());
-        final StackTraceElement currentElement = currentElements.get(2);
-        final String msgSource = "\n\n[Catch]:\n" + currentElement;
+        List<StackTraceElement> catchLocationTrace = SpecsLogging
+                .getLogCallLocation(Thread.currentThread().getStackTrace());
+        String catchLocation = !catchLocationTrace.isEmpty() ? SpecsLogging.getSourceCode(catchLocationTrace.get(0))
+                : "<Could not get catch location trace>";
+        // String msgSource = "\n\nCatch location:" + catchLocation;
+        // final List<StackTraceElement> currentElements = Arrays.asList(Thread.currentThread().getStackTrace());
+        // final StackTraceElement currentElement = currentElements.get(2);
+        // final String msgSource = "\n\n[Catch]:\n" + currentElement;
 
         String causeString = ourCause.getMessage();
         if (causeString == null) {
             causeString = ourCause.toString();
         }
 
-        final String causeMsg = causeString + msgSource;
+        // final String causeMsg = causeString + msgSource;
 
         // msg = msg + "\nCause: [" + ourCause.getClass().getSimpleName() + "] " + ourCause.getMessage() + msgSource;
-        msg = msg + "\nCause: " + causeMsg;
+        msg = msg + catchLocation + "\n\nException message: " + causeString;
 
-        final List<StackTraceElement> elements = Arrays.asList(ourCause.getStackTrace());
-        final int startIndex = 0;
+        SPECS_LOGGER.log(Level.WARNING, null, msg, LogSourceInfo.getLogSourceInfo(Level.WARNING),
+                ourCause.getStackTrace());
 
-        msgWarn(msg, elements, startIndex, false, null);
+        // final List<StackTraceElement> elements = Arrays.asList(ourCause.getStackTrace());
+        // final int startIndex = 0;
+        //
+        // msgWarn(msg, elements, startIndex, false, null);
     }
 
+    /*
     public static void msgWarn(Throwable cause) {
-
-        final List<StackTraceElement> elements = Arrays.asList(cause.getStackTrace());
-        final int startIndex = 0;
-
-        final String msg = cause.getClass().getName() + ": " + cause.getMessage();
-
-        msgWarn(msg, elements, startIndex, false, null);
-
+    
+        msgWarn("Exception", cause);
+        // final List<StackTraceElement> elements = Arrays.asList(cause.getStackTrace());
+        // final int startIndex = 0;
+        //
+        // final String msg = cause.getClass().getName() + ": " + cause.getMessage();
+        //
+        // msgWarn(msg, elements, startIndex, false, null);
+    
     }
+    */
 
+    /*
     public static String buildErrorMessage(String originalMsg, Collection<StackTraceElement> elements) {
-
+    
         final StringBuilder builder = new StringBuilder();
         builder.append(originalMsg);
-
+    
         // Append the stack trace to the msg
         if (SpecsLogs.printStackTrace) {
             builder.append("\n\nStack Trace:");
             builder.append("\n--------------");
-
+    
             for (final StackTraceElement element : elements) {
                 builder.append("\n");
                 builder.append(element);
             }
-
+    
             builder.append("\n--------------");
             builder.append("\n");
-
+    
         }
-
+    
         return builder.toString();
     }
+    */
 
     /**
-     * Writes a message to the logger with name defined by LOGGING_TAG.
+     * Info-level message.
      *
      * <p>
-     * Messages written with this method are recorded as a log at info level. Use this level to show messages to the
-     * user of a program.
+     * Use this level to show messages to the user of a program.
      *
      * @param msg
      */
     public static void msgInfo(String msg) {
-        msgInfo(Logger.getLogger(SpecsLogs.INFO_TAG), msg);
+        SPECS_LOGGER.info(msg);
+        // msgInfo(Logger.getLogger(SpecsLogs.INFO_TAG), msg);
     }
 
     /**
@@ -522,28 +553,30 @@ public class SpecsLogs {
      * @param logger
      * @param msg
      */
-    public static void msgInfo(Logger logger, String msg) {
-        msg = parseMessage(msg);
-
-        // if(globalLevel) {logger.setLevel(globalLevel);}
-        logger.info(msg);
-    }
+    // public static void msgInfo(Logger logger, String msg) {
+    // msg = parseMessage(msg);
+    //
+    // // if(globalLevel) {logger.setLevel(globalLevel);}
+    // logger.info(msg);
+    //
+    // }
 
     /**
-     * Writes a message to the logger with name defined by LOGGING_TAG.
+     * Lib-level message.
      *
      * <p>
-     * Messages written with this method are recorded as a log at info level.
+     * This is a logging level between INFO and CONFIG, to be used by libraries to log execution information.
      *
      * @param msg
      */
     public static void msgLib(String msg) {
-        msg = parseMessage(msg);
+        SPECS_LOGGER.log(LogLevel.LIB, msg);
+        // msg = parseMessage(msg);
         // msgLib does not need support for printing the stack-trace, since it is to be used
         // to log information that does not represent programming errors.
         // Although it can be used to log user input errors, they are not to be resolved by looking
         // at the source code, hence not using support for stack-trace.
-        Logger.getLogger(SpecsLogs.LIB_TAG).log(LogLevel.LIB, msg);
+        // Logger.getLogger(SpecsLogs.LIB_TAG).log(LogLevel.LIB, msg);
     }
 
     /**
@@ -555,9 +588,10 @@ public class SpecsLogs {
      * @param msg
      */
     public static void msgSevere(String msg) {
-        msg = parseMessage(msg);
-
-        getLoggerDebug().severe(msg);
+        SPECS_LOGGER.log(Level.SEVERE, msg);
+        // msg = parseMessage(msg);
+        //
+        // getLoggerDebug().severe(msg);
     }
 
     /**
@@ -566,6 +600,7 @@ public class SpecsLogs {
      * @param msg
      * @return
      */
+    /*
     private static String parseMessage(String msg) {
         if (msg.isEmpty()) {
             return msg;
@@ -574,9 +609,20 @@ public class SpecsLogs {
         // return String.format(msg+"%n");
         return msg + SpecsLogs.NEWLINE;
     }
+    */
 
+    /**
+     * Enables/disables printing of the stack trace for Warning level.
+     * 
+     * <p>
+     * This method is for compatibility with previous code. Please use LogSourceInfo.setLogSourceInfo instead.
+     * 
+     * @param bool
+     */
     public static void setPrintStackTrace(boolean bool) {
-        SpecsLogs.printStackTrace = bool;
+        LogSourceInfo sourceInfo = bool ? LogSourceInfo.STACK_TRACE : LogSourceInfo.NONE;
+        LogSourceInfo.setLogSourceInfo(Level.WARNING, sourceInfo);
+        // SpecsLogs.printStackTrace = bool;
     }
 
     public static boolean isSystemPrint(String loggerName) {
@@ -607,9 +653,10 @@ public class SpecsLogs {
     public static void debug(Supplier<String> string) {
         // To avoid resolving the string unnecessarily
         if (SpecsSystem.isDebug()) {
+            SPECS_LOGGER.debug(string.get());
             // Prefix
-            String message = "[DEBUG] " + string.get();
-            msgInfo(message);
+            // String message = "[DEBUG] " + string.get();
+            // msgInfo(message);
             // debug(string.get());
         }
     }

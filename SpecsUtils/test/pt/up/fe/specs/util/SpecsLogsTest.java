@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 SPeCS Research Group.
+ * Copyright 2018 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,23 +11,32 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.util.logging;
+package pt.up.fe.specs.util;
 
-import java.util.logging.Level;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-public class LogLevel extends Level {
+public class SpecsLogsTest {
 
-    protected LogLevel(String name, int value) {
-        super(name, value);
+    @BeforeClass
+    public static void init() {
+        SpecsSystem.programStandardInit();
     }
 
-    protected LogLevel(String name, int value, String resourceBundleName) {
-        super(name, value, resourceBundleName);
+    @Test
+    public void test() {
+
+        SpecsLogs.msgWarn("Warning level");
+
+        try {
+            throwException();
+        } catch (Exception e) {
+            SpecsLogs.msgWarn("Catching an exception", e);
+        }
     }
 
-    private static final long serialVersionUID = 1L;
-    private static final String defaultBundle = "sun.util.logging.resources.logging";
-
-    public static final Level LIB = new LogLevel("LIB", 750, LogLevel.defaultBundle);
+    private static void throwException() {
+        throw new RuntimeException("Throwing exception");
+    }
 
 }

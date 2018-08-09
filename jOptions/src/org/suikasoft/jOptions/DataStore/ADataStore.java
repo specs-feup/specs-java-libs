@@ -191,8 +191,10 @@ public abstract class ADataStore implements DataStore {
     }
 
     @Override
-    public void set(DataStore setup) {
+    public ADataStore set(DataStore setup) {
         values.putAll(setup.getValuesMap());
+
+        return this;
     }
 
     @Override

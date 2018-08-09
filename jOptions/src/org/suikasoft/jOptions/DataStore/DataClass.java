@@ -16,7 +16,6 @@ package org.suikasoft.jOptions.DataStore;
 import java.util.Collection;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
-import org.suikasoft.jOptions.Interfaces.DataStore;
 
 /**
  * A class that replaces fields with public static DataKey instances.
@@ -46,5 +45,5 @@ public interface DataClass<T extends DataClass<T>> {
      */
     Collection<DataKey<?>> keysWithValues();
 
-    DataStore getData();
+    // DataStore getData();
 }

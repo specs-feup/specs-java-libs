@@ -205,9 +205,10 @@ public class SetupList implements DataStore {
     }
 
     @Override
-    public void set(DataStore dataStore) {
+    public SetupList set(DataStore dataStore) {
         getPreferredSetup().set(dataStore);
 
+        return this;
     }
 
     @Override

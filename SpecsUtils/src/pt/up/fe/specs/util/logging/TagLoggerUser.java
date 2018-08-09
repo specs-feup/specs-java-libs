@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 SPeCS Research Group.
+ * Copyright 2018 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,21 +13,8 @@
 
 package pt.up.fe.specs.util.logging;
 
-import java.util.logging.Level;
+public interface TagLoggerUser<T> {
 
-public class LogLevel extends Level {
-
-    protected LogLevel(String name, int value) {
-        super(name, value);
-    }
-
-    protected LogLevel(String name, int value, String resourceBundleName) {
-        super(name, value, resourceBundleName);
-    }
-
-    private static final long serialVersionUID = 1L;
-    private static final String defaultBundle = "sun.util.logging.resources.logging";
-
-    public static final Level LIB = new LogLevel("LIB", 750, LogLevel.defaultBundle);
+    TagLogger<T> logger();
 
 }

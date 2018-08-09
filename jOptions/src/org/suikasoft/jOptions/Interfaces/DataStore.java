@@ -13,7 +13,10 @@
 
 package org.suikasoft.jOptions.Interfaces;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +32,8 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
 import com.google.common.base.Preconditions;
 
+import pt.up.fe.specs.util.SpecsLogs;
+
 /**
  * A key-value store for arbitrary objects, with type-safe keys.
  * 
@@ -36,9 +41,10 @@ import com.google.common.base.Preconditions;
  * @see SimpleDataStore
  *
  */
-public interface DataStore {
+public interface DataStore extends DataClass<DataStore> {
 
     // <T, E extends T> Optional<T> set(DataKey<T> key, E value);
+    @Override
     <T, E extends T> DataStore set(DataKey<T> key, E value);
 
     default <T, E extends T> DataStore put(DataKey<T> key, E value) {
@@ -119,7 +125,8 @@ public interface DataStore {
      * 
      * @param dataStore
      */
-    void set(DataStore dataStore);
+    @Override
+    DataStore set(DataStore dataStore);
 
     /**
      * Configures the current DataStore to behave strictly, i.e., can only access values with keys that have been added
@@ -264,6 +271,7 @@ public interface DataStore {
      * @param key
      * @return
      */
+    @Override
     <T> T get(DataKey<T> key);
 
     /**
@@ -279,6 +287,7 @@ public interface DataStore {
      * @param key
      * @return true, if it contains a non-null value for the given key, not considering default values
      */
+    @Override
     <T> boolean hasValue(DataKey<T> key);
 
     default boolean hasValueRaw(String key) {
@@ -427,6 +436,24 @@ public interface DataStore {
         return keys.stream()
                 .map(key -> key + ": " + get(key))
                 .collect(Collectors.joining(", ", getName() + " [", "]"));
+    }
+
+    @Override
+    default Collection<DataKey<?>> keysWithValues() {
+        StoreDefinition storeDefinition = getStoreDefinition().orElse(null);
+
+        if (storeDefinition == null) {
+            SpecsLogs.msgInfo(
+                    "keysWithValues: current DataStore does not have a StoreDefinition, returning empty list");
+            return Collections.emptyList();
+        }
+
+        List<DataKey<?>> keysWithValues = new ArrayList<>();
+        for (String keyId : getKeysWithValues()) {
+            keysWithValues.add(storeDefinition.getKey(keyId));
+        }
+
+        return keysWithValues;
     }
 
 }

@@ -500,9 +500,11 @@ public class SpecsIo {
             }
 
         } catch (IOException ex) {
-            SpecsLogs.msgWarn(ex);
-            SpecsLogs.msgInfo("Problems when accessing file '" + file.getPath()
-                    + "'. Check if folder exists before writing the file.");
+            SpecsLogs.msgWarn("Problems when accessing file '" + file.getPath()
+                    + "'. Check if folder exists before writing the file.", ex);
+            // SpecsLogs.msgWarn(ex);
+            // SpecsLogs.msgInfo("Problems when accessing file '" + file.getPath()
+            // + "'. Check if folder exists before writing the file.");
             isSuccess = false;
 
         }
