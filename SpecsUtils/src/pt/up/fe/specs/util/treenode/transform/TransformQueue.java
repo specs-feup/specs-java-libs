@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util.treenode.transform;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import pt.up.fe.specs.util.treenode.TreeNode;
@@ -43,7 +44,25 @@ public class TransformQueue<K extends TreeNode<K>> {
      * Applies the transformations in the queue, empties the queue.
      */
     public void apply() {
-        for (NodeTransform<K> transform : getTransforms()) {
+        // for (NodeTransform<K> transform : getTransforms()) {
+        // transform.execute();
+        // }
+        //
+        // instructions.clear();
+        applyPrivate(getTransforms());
+    }
+
+    public void applyReverse() {
+
+        List<NodeTransform<K>> list = new ArrayList<>(getTransforms());
+        Collections.reverse(list);
+
+        applyPrivate(list);
+    }
+
+    private void applyPrivate(List<NodeTransform<K>> transforms) {
+
+        for (NodeTransform<K> transform : transforms) {
             transform.execute();
         }
 

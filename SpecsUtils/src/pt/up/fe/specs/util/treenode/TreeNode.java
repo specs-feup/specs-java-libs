@@ -269,6 +269,12 @@ public interface TreeNode<K extends TreeNode<K>> {
      */
     K removeChild(int index);
 
+    default void removeChildren() {
+        while (hasChildren()) {
+            removeChild(0);
+        }
+    }
+
     default int removeChild(K child) {
         // Find index of child
         for (int i = 0; i < getNumChildren(); i++) {

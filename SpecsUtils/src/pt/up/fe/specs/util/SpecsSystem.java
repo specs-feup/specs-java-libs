@@ -893,6 +893,30 @@ public class SpecsSystem {
         return IS_DEBUG.get();
     }
 
+    /*
+    // public static <T> boolean hasCopyConstructor(T object) {
+    public static boolean hasCopyConstructor(Object object) {
+        // Class<T> aClass = (Class<T>) object.getClass();
+    
+        // Constructor<T> constructorMethod = null;
+        for (Constructor<?> constructor : object.getClass().getConstructors()) {
+            Class<?>[] constructorParams = constructor.getParameterTypes();
+    
+            if (constructorParams.length != 1) {
+                continue;
+            }
+    
+            if (object.getClass().isAssignableFrom(constructorParams[0])) {
+                return true;
+            }
+        }
+    
+        return false;
+        // Create copy constructor: new T(T data)
+        // constructorMethod = aClass.getConstructor(aClass);
+    }
+    */
+
     /**
      * Uses the copy constructor to create a copy of the given object. Throws exception if the class does not have a
      * copy constructor.
