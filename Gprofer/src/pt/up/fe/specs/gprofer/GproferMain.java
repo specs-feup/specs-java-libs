@@ -14,7 +14,7 @@
 package pt.up.fe.specs.gprofer;
 
 import java.io.File;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.gprofer.data.GprofData;
@@ -23,22 +23,48 @@ public class GproferMain {
 
     public static void main(String[] args) {
 
-        File binary = new File("/home/pedro/Desktop/gprof_tests/src/a.out");
-        List<String> binaryArgs = Collections.emptyList();
+        File binary = new File(
+                "/home/pedro/Documents/repositories/AntarexIT4I-master/Betweenness/Code/build/betweenness");
+        List<String> binaryArgs = Arrays.asList("-f",
+                "/home/pedro/Documents/repositories/AntarexIT4I-master/Betweenness/Graphs/graph-prt-port.csv");
 
         int numRuns = 1;
 
-        File workingDir = new File("/home/pedro/Desktop/gprof_tests/src/");
-        boolean deleteWorkingDir = false;
-        boolean checkReturn = true;
+        // File workingDir = new File("/home/pedro/Desktop/gprof_tests/src/");
+        // boolean deleteWorkingDir = false;
+        // boolean checkReturn = true;
 
         GprofData data = Gprofer.profile(binary,
                 binaryArgs,
-                numRuns,
-                workingDir,
-                deleteWorkingDir, checkReturn);
+                numRuns);
 
         System.out.println(Gprofer.getJsonData(data));
+
+        // warn("This is a warning message");
+    }
+
+    static void warn(String message) {
+
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        StackTraceElement s = stackTrace[2]; // 0 is getStracktrace, 1 is this method
+
+        System.out.printf(buildShortMessage(message, s));
+    }
+
+    static String buildShortMessage(String message, StackTraceElement s) {
+
+        StringBuilder builder = new StringBuilder(message);
+        builder.append("    ");
+        builder.append(s.getClassName());
+        builder.append(".");
+        builder.append(s.getMethodName());
+        builder.append("(");
+        builder.append(s.getFileName());
+        builder.append(":");
+        builder.append(s.getLineNumber());
+        builder.append(")");
+
+        return builder.toString();
     }
 
 }

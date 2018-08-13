@@ -131,10 +131,7 @@ public class Gprofer {
 
         while (currentRun < numRuns) {
 
-            Boolean result = runBinary(binary, args, workingDir, checkReturn);
-            if (!result) {
-                throw new RuntimeException();
-            }
+            runBinary(binary, args, workingDir, checkReturn);
 
             makeGmon(currentRun, workingDir, filesToDelete, gmons);
 
@@ -187,7 +184,7 @@ public class Gprofer {
         filesToDelete.add(newGmon);
     }
 
-    private static Boolean runBinary(File binary, List<String> args, File workingDir, boolean checkReturn) {
+    private static void runBinary(File binary, List<String> args, File workingDir, boolean checkReturn) {
 
         List<String> binaryCommand = new ArrayList<>();
         binaryCommand.add(binary.getAbsolutePath());
@@ -203,10 +200,8 @@ public class Gprofer {
             SpecsLogs.msgWarn("stderr: " + result.getStdErr());
             SpecsLogs.setPrintStackTrace(true);
 
-            return false;
+            throw new RuntimeException();
         }
-
-        return true;
     }
 
     private static void deleteTempFiles(List<File> filesToDelete) {
@@ -285,7 +280,8 @@ public class Gprofer {
                 totalMsCall = splitter.parse(StringSplitterRules::doubleNumber);
             }
 
-            String name = splitter.parse(StringSplitterRules::string);
+            // String name = splitter.parse(StringSplitterRules::string);
+            String name = splitter.toString();
 
             GprofLine gproferRow = new GprofLine(percentage, cumulativeSeconds, selfSeconds, calls, selfMsCall,
                     totalMsCall, name);
