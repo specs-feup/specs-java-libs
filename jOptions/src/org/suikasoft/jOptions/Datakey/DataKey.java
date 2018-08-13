@@ -227,10 +227,12 @@ public interface DataKey<T> {
      * 
      * @return
      */
+    // @SuppressWarnings("unchecked") // Should be ok
     default T copy(T object) {
         return getCopyFunction()
                 .map(copy -> copy.apply(object))
                 .orElse(object);
+        // .orElse(object instanceof Copyable<?> ? (T) ((Copyable<?>) object).copy() : object);
     }
 
     default Object copyRaw(Object object) {
