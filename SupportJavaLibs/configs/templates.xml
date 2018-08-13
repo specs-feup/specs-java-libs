@@ -1,1 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="java" deleted="false" description="Debug message" enabled="true" name="debug">SpecsLogs.debug(${cursor});</template></templates>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="java" deleted="false" description="DataKeys preamble comment" enabled="true" name="datakeys">/// DATAKEYS BEGIN&#13;
+&#13;
+${cursor}&#13;
+&#13;
+/// DATAKEYS END</template></templates>
