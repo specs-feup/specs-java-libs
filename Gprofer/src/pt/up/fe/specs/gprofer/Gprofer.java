@@ -282,6 +282,7 @@ public class Gprofer {
 
             // String name = splitter.parse(StringSplitterRules::string);
             String name = splitter.toString();
+            name = name.replaceAll(", ", ",");
 
             GprofLine gproferRow = new GprofLine(percentage, cumulativeSeconds, selfSeconds, calls, selfMsCall,
                     totalMsCall, name);
