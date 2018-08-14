@@ -51,6 +51,10 @@ public class LineStream implements AutoCloseable {
 
     private BufferedStringBuilder dumpFile;
 
+    // Metrics
+    private long readLines;
+    private long readChars;
+
     /**
      * Default CharSet used in file operations.
      */
@@ -72,10 +76,20 @@ public class LineStream implements AutoCloseable {
 
         nextLine = nextLineHelper();
 
+        this.readLines = 0;
+        this.readChars = 0;
     }
 
     public void setDumpFile(File file) {
         this.dumpFile = file == null ? null : new BufferedStringBuilder(file);
+    }
+
+    public long getReadLines() {
+        return readLines;
+    }
+
+    public long getReadChars() {
+        return readChars;
     }
 
     /**
@@ -97,8 +111,9 @@ public class LineStream implements AutoCloseable {
      * @return
      */
     public static LineStream newInstance(ResourceProvider resource, boolean useResourceName) {
-        final Optional<String> resourceName = useResourceName ? Optional.of(resource.getResourceName()) : Optional
-                .empty();
+        final Optional<String> resourceName = useResourceName ? Optional.of(resource.getResourceName())
+                : Optional
+                        .empty();
 
         InputStreamReader reader;
         try {
@@ -194,6 +209,10 @@ public class LineStream implements AutoCloseable {
         if (dumpFile != null) {
             dumpFile.append(currentLine).append("\n");
         }
+
+        // Metrics
+        this.readLines++;
+        this.readChars += currentLine.length();
 
         return currentLine;
     }
