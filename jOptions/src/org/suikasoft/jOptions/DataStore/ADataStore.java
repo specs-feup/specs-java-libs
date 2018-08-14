@@ -249,7 +249,7 @@ public abstract class ADataStore implements DataStore {
         if (value == null) {
             Optional<T> defaultValue = key.getDefault();
             if (!defaultValue.isPresent()) {
-                throw new RuntimeException("No default value for key '" + key.getName() + "'");
+                throw new RuntimeException("No default value for key '" + key.getName() + "' in this object: " + this);
             }
 
             value = defaultValue.get();
