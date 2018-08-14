@@ -25,6 +25,8 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
     private final T data;
     private final Map<String, LineStreamWorker<T>> workers;
 
+    private LineStream currentLineStream;
+
     public GenericLineStreamParser(T inputData, Map<String, LineStreamWorker<T>> workers) {
         // this.data = DataStore.newInstance("Generic LineStream Data").addAll(inputData);
         this.data = inputData;
@@ -32,6 +34,8 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
 
         // Initialize data for each worker
         this.workers.values().forEach(worker -> worker.init(data));
+
+        currentLineStream = null;
     }
 
     @Override
@@ -41,6 +45,8 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
 
     @Override
     public boolean parse(String id, LineStream lineStream) {
+        this.currentLineStream = lineStream;
+
         LineStreamWorker<T> worker = workers.get(id);
         if (worker == null) {
             return false;
@@ -62,4 +68,15 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
             worker.close(data);
         }
     }
+
+    @Override
+    public long getReadLines() {
+        return currentLineStream.getReadLines();
+    }
+
+    @Override
+    public long getReadChars() {
+        return currentLineStream.getReadChars();
+    }
+
 }

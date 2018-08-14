@@ -108,4 +108,14 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
 
         return linesNotParsed.toString();
     }
+
+    default long getReadLines() {
+        SpecsLogs.debug("Not implemented yet, returning 0");
+        return 0;
+    }
+
+    default long getReadChars() {
+        SpecsLogs.debug("Not implemented yet, returning 0");
+        return 0;
+    }
 }
