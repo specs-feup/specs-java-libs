@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -1964,4 +1965,10 @@ public class SpecsStrings {
         throw new RuntimeException("Could not find a matching closing parenthesis for the open parenthesis at index "
                 + openParIndex + " in the string '" + string + "'");
     }
+
+    public static String toDecimal(long number) {
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+        return decimalFormat.format(number);
+    }
+
 }
