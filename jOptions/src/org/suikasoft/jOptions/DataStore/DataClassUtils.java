@@ -13,6 +13,11 @@
 
 package org.suikasoft.jOptions.DataStore;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 public class DataClassUtils {
 
     /**
@@ -30,6 +35,18 @@ public class DataClassUtils {
             DataClass<?> dataClass = (DataClass<?>) dataClassValue;
 
             return "'" + dataClass.getDataClassName() + "'";
+        }
+
+        if (dataClassValue instanceof Optional) {
+            Optional<?> optional = (Optional<?>) dataClassValue;
+
+            return optional.map(value -> toString(value)).orElse("Optional.empty");
+        }
+
+        if (dataClassValue instanceof List) {
+            ((Collection<?>) dataClassValue).stream()
+                    .map(value -> toString(value))
+                    .collect(Collectors.joining(", ", "[", "]"));
         }
 
         return dataClassValue.toString();
