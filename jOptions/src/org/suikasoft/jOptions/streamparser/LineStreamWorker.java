@@ -28,7 +28,7 @@ public interface LineStreamWorker<T extends DataClass<T>> {
     }
 
     /**
-     * Id of this worker, preceedes lines to parse in LineStream.
+     * Id of this worker, precedes lines to parse in LineStream.
      * 
      * @return
      */
