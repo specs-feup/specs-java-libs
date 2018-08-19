@@ -171,6 +171,24 @@ public abstract class ADataStore implements DataStore {
         if (!key.getValueClass().isInstance(value)) {
             throw new RuntimeException("Tried to add a value of type '" + value.getClass()
                     + "', with a key that supports '" + key.getValueClass() + "'");
+
+            // // Check if there is a common type, besides Object
+            // Class<?> currentClass = key.getValueClass().getSuperclass();
+            //
+            // boolean foundCommonType = false;
+            // while (!currentClass.equals(Object.class)) {
+            // foundCommonType = currentClass.isInstance(value);
+            // if (foundCommonType) {
+            // break;
+            // }
+            // currentClass = currentClass.getSuperclass();
+            // }
+            //
+            // if (!foundCommonType) {
+            // throw new RuntimeException("Tried to add a value of type '" + value.getClass()
+            // + "', with a key that supports '" + key.getValueClass() + "'");
+            // }
+
         }
 
         // Optional<Object> previousValue = setRaw(key.getName(), value);
