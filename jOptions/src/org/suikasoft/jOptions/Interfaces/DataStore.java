@@ -33,6 +33,7 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
 import com.google.common.base.Preconditions;
 
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -173,7 +174,7 @@ public interface DataStore extends DataClass<DataStore> {
      */
     default <T, E extends T> DataStore add(DataKey<T> key, E value) {
         Preconditions.checkArgument(key != null);
-        Preconditions.checkArgument(!hasValue(key), "Attempting to add value already in PassData: " + key);
+        SpecsCheck.checkArgument(!hasValue(key), () -> "Attempting to add value already in PassData: " + key);
 
         set(key, value);
 
