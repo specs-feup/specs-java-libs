@@ -71,4 +71,14 @@ class GenericKey<T> extends ADataKey<T> {
                 label, definition, copyFuncion);
     }
 
+    /**
+     * Due to the way Java implements generics, it is not possible to verify if a value is compatible based only on the
+     * class of the example instance.
+     * 
+     */
+    @Override
+    public boolean verifyValueClass() {
+        return false;
+    }
+
 }

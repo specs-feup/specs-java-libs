@@ -168,7 +168,7 @@ public abstract class ADataStore implements DataStore {
         // return data.setValue(key, value);
 
         // Stop if value is not compatible with class of key
-        if (!key.getValueClass().isInstance(value)) {
+        if (key.verifyValueClass() && !key.getValueClass().isInstance(value)) {
             throw new RuntimeException("Tried to add a value of type '" + value.getClass()
                     + "', with a key that supports '" + key.getValueClass() + "'");
 

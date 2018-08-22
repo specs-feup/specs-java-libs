@@ -222,15 +222,16 @@ public interface DataKey<T> {
      * Copies the given object.
      * 
      * <p>
-     * Uses the copy function to copy the object. If no copy function is defined, returns the object itself (shallow
-     * copy). By default, tries to use the copy constructor.
+     * 1) Uses the copy function to copy the object; <br>
+     * 2) If no copy function is defined, checks if object implements Copyable, and uses its copy function; <br>
+     * 3) Returns the object itself (shallow copy).
      * 
      * @return
      */
     // @SuppressWarnings("unchecked") // Should be ok
     default T copy(T object) {
         return getCopyFunction()
-                .map(copy -> copy.apply(object))
+                .map(copyFunction -> copyFunction.apply(object))
                 .orElse(object);
         // .orElse(object instanceof Copyable<?> ? (T) ((Copyable<?>) object).copy() : object);
     }
@@ -254,5 +255,19 @@ public interface DataKey<T> {
 
     default DataKey<T> setCopyConstructor() {
         return setCopyFunction(object -> SpecsSystem.copy(object));
+    }
+
+    /**
+     * If true, verifies if the class of a value being set is compatible with the value class of the key.
+     * 
+     * <p>
+     * By default returns true.
+     * 
+     * TODO: Replace with a "customValueVerification"
+     * 
+     * @return
+     */
+    default boolean verifyValueClass() {
+        return true;
     }
 }

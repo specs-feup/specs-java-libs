@@ -36,6 +36,10 @@ public interface DataClass<T extends DataClass<T>> {
         return set(key, true);
     }
 
+    // default T set(DataKey<Optional<T>> key, T value) {
+    // return set(key, Optional.of(value));
+    // }
+
     T set(T instance);
 
     /**
