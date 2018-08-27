@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import pt.up.fe.specs.util.SpecsSystem;
+
 public interface TagLogger<T> {
 
     Collection<T> getTags();
@@ -102,7 +104,13 @@ public interface TagLogger<T> {
     }
 
     default void debug(String message) {
-        log(Level.INFO, null, "[DEBUG] " + message, LogSourceInfo.SOURCE);
+        if (SpecsSystem.isDebug()) {
+            log(Level.INFO, null, "[DEBUG] " + message, LogSourceInfo.SOURCE);
+        }
+    }
+
+    default void test(String message) {
+        log(Level.INFO, null, "[TEST] " + message, LogSourceInfo.SOURCE);
     }
 
     default void deprecated(String message) {

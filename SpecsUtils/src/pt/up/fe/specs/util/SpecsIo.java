@@ -2630,6 +2630,14 @@ public class SpecsIo {
                 .filter(file -> extensions.contains(SpecsIo.getExtension(file)))
                 .collect(Collectors.toList());
 
+        // System.out.println(
+        // "All Sources:" + sourceFiles.stream().map(Object::toString).collect(Collectors.joining(", ")));
+        //
+        // Collections.sort(sourceFiles);
+        //
+        // System.out.println(
+        // "All Sources after:" + sourceFiles.stream().map(Object::toString).collect(Collectors.joining(", ")));
+
         return SpecsList.convert(sourceFiles);
     }
 
@@ -2841,6 +2849,20 @@ public class SpecsIo {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Reads a single byte from System.in;
+     * 
+     * @return
+     */
+    public static int read() {
+
+        try {
+            return System.in.read();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read input", e);
+        }
     }
 
 }

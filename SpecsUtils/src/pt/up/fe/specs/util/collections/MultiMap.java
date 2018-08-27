@@ -195,4 +195,8 @@ public class MultiMap<K, V> {
     public void clear() {
         map.clear();
     }
+
+    public int size() {
+        return map.size();
+    }
 }
