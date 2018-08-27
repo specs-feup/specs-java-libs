@@ -856,6 +856,9 @@ public class SpecsIo {
             }
         }
 
+        // Sort files, to keep same order across platforms
+        Collections.sort(fileList);
+
         return fileList;
     }
 
@@ -2633,7 +2636,9 @@ public class SpecsIo {
         // System.out.println(
         // "All Sources:" + sourceFiles.stream().map(Object::toString).collect(Collectors.joining(", ")));
         //
-        // Collections.sort(sourceFiles);
+
+        // Sort files to keep order across platforms
+        Collections.sort(sourceFiles);
         //
         // System.out.println(
         // "All Sources after:" + sourceFiles.stream().map(Object::toString).collect(Collectors.joining(", ")));
