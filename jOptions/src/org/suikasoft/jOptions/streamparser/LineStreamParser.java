@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.suikasoft.jOptions.DataStore.ADataClass;
 import org.suikasoft.jOptions.DataStore.DataClass;
@@ -94,13 +95,18 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
                     continue;
                 }
 
-                // Add line to the warnings
-                if (storeLinesNotParsed) {
-                    linesNotParsed.append(currentLine).append("\n");
-                }
+                // If line should not be ignored, add to warnings
+                if (!getLineIgnore().test(currentLine)) {
+                    // Add line to the warnings
+                    if (storeLinesNotParsed) {
+                        linesNotParsed.append(currentLine).append("\n");
+                    }
 
-                if (printLinesNotParsed) {
-                    SpecsLogs.msgInfo(currentLine);
+                    if (printLinesNotParsed) {
+                        SpecsLogs.msgInfo(currentLine);
+                    }
+                } else {
+                    SpecsLogs.debug("Ignoring line: " + currentLine);
                 }
 
             }
@@ -118,4 +124,18 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
         SpecsLogs.debug("Not implemented yet, returning 0");
         return 0;
     }
+
+    /**
+     * Predicate that in case a line is not parsed, tests if it should be ignored.
+     * 
+     * <p>
+     * By default, always returns false (does not ignore lines).
+     * 
+     * @return
+     */
+    default Predicate<String> getLineIgnore() {
+        return string -> false;
+    }
+
+    void setLineIgnore(Predicate<String> ignorePredicate);
 }

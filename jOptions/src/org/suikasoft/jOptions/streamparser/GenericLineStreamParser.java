@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.streamparser;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.suikasoft.jOptions.DataStore.DataClass;
 
@@ -26,6 +27,7 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
     private final Map<String, LineStreamWorker<T>> workers;
 
     private LineStream currentLineStream;
+    private Predicate<String> lineIgnore;
 
     public GenericLineStreamParser(T inputData, Map<String, LineStreamWorker<T>> workers) {
         // this.data = DataStore.newInstance("Generic LineStream Data").addAll(inputData);
@@ -36,6 +38,7 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
         this.workers.values().forEach(worker -> worker.init(data));
 
         currentLineStream = null;
+        lineIgnore = null;
     }
 
     @Override
@@ -44,11 +47,23 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
     }
 
     @Override
+    public Predicate<String> getLineIgnore() {
+        if (lineIgnore == null) {
+            return string -> false;
+        }
+
+        return lineIgnore;
+    }
+
+    @Override
     public boolean parse(String id, LineStream lineStream) {
         this.currentLineStream = lineStream;
 
         LineStreamWorker<T> worker = workers.get(id);
         if (worker == null) {
+            // Check if id should be ignored
+            // return getLineIgnore().test(id);
+
             return false;
         }
 
@@ -77,6 +92,11 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
     @Override
     public long getReadChars() {
         return currentLineStream.getReadChars();
+    }
+
+    @Override
+    public void setLineIgnore(Predicate<String> ignorePredicate) {
+        this.lineIgnore = ignorePredicate;
     }
 
 }
