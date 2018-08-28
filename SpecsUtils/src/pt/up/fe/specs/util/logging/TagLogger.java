@@ -103,9 +103,15 @@ public interface TagLogger<T> {
         info(null, message);
     }
 
+    // default void debug(String message) {
+    // debug(message, true);
+    // }
+    //
+    // default void debug(String message, boolean sourceInfo) {
     default void debug(String message) {
         if (SpecsSystem.isDebug()) {
-            log(Level.INFO, null, "[DEBUG] " + message, LogSourceInfo.SOURCE);
+            // LogSourceInfo sourceInfoLevel = sourceInfo ? LogSourceInfo.SOURCE : LogSourceInfo.NONE));
+            log(Level.INFO, null, "[DEBUG] " + message);
         }
     }
 
