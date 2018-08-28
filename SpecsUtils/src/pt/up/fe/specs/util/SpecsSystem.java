@@ -410,8 +410,6 @@ public class SpecsSystem {
      * 'suika.properties' on the running folder and applies its options.
      */
     public static void programStandardInit() {
-        // Debug information.
-        SpecsLogs.debug("Current platform: " + System.getProperty("os.version"));
 
         // Disable security manager for Web Start
         // System.setSecurityManager(null);
@@ -423,6 +421,11 @@ public class SpecsSystem {
         SpecsSwing.setSystemLookAndFeel();
         // Platform specific initialization
         // PlatformUtils.programPlatformInit();
+
+        // Debug information.
+        SpecsLogs.debug("Current platform name: " + System.getProperty("os.name"));
+        SpecsLogs.debug("Current platform version: " + System.getProperty("os.version"));
+
     }
 
     /**
