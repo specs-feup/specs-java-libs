@@ -91,9 +91,9 @@ public class SpecsSwing {
     public static String getSystemLookAndFeel() {
 
         // Temporarily disable custom system look and feel
-        if (true) {
-            return UIManager.getSystemLookAndFeelClassName();
-        }
+        // if (true) {
+        // return UIManager.getSystemLookAndFeelClassName();
+        // }
 
         // Get System L&F
         String systemLookAndFeel = UIManager.getSystemLookAndFeelClassName();
@@ -108,7 +108,7 @@ public class SpecsSwing {
         // return systemLookAndFeel;
         // }
 
-        SpecsLogs.msgLib("Default system look and feel is Metal, trying to use another one");
+        SpecsLogs.debug("Default system look and feel is Metal, trying to use another one");
 
         // Map<String, String> lookAndFeels = Arrays.stream(UIManager.getInstalledLookAndFeels())
         // .collect(Collectors.toMap(info -> info.getName(), info -> info.getClassName()));
@@ -131,7 +131,7 @@ public class SpecsSwing {
                 .findFirst().orElse(systemLookAndFeel);
 
         if (!alternativeLookAndFeel.equals(systemLookAndFeel)) {
-            SpecsLogs.msgInfo("Setting 'Look & Feel' to " + alternativeLookAndFeel);
+            SpecsLogs.debug("Setting 'Look & Feel' to " + alternativeLookAndFeel);
         }
 
         return alternativeLookAndFeel;
