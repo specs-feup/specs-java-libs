@@ -410,8 +410,11 @@ public class SpecsSystem {
      * 'suika.properties' on the running folder and applies its options.
      */
     public static void programStandardInit() {
+        // Debug information.
+        SpecsLogs.debug("Current platform: " + System.getProperty("os.version"));
+
         // Disable security manager for Web Start
-        System.setSecurityManager(null);
+        // System.setSecurityManager(null);
         // Redirect output to the logger
         SpecsLogs.setupConsoleOnly();
         // Read the general bootstrap configuration for the application
