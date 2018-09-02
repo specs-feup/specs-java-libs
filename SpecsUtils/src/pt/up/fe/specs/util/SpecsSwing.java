@@ -65,6 +65,8 @@ public class SpecsSwing {
         try {
             String lookAndFeel = getSystemLookAndFeel();
 
+            SpecsLogs.debug("Using '" + lookAndFeel + "' as system look and feel");
+
             // Set System L&F
             UIManager.setLookAndFeel(lookAndFeel);
 
