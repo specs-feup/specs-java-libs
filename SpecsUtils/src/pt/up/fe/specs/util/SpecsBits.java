@@ -715,4 +715,9 @@ public class SpecsBits {
         return reversedBytes;
     }
 
+    public static byte decodeUnsignedByte(String unsignedByteValue) {
+        // Bytes in Java are signed, decode as Short
+        return Short.valueOf(unsignedByteValue).byteValue();
+    }
+
 }

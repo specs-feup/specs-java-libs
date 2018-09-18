@@ -410,7 +410,6 @@ public class SpecsSystem {
      * 'suika.properties' on the running folder and applies its options.
      */
     public static void programStandardInit() {
-
         // Disable security manager for Web Start
         // System.setSecurityManager(null);
         // Redirect output to the logger
