@@ -224,4 +224,23 @@ public class LineStreamParsers {
         return strings;
     }
 
+    /**
+     * First line represents the number of elements of the list. Then, the given parser is applies as many times as the
+     * number of elements.
+     * 
+     * @param lines
+     * @param parser
+     * @return
+     */
+    public static <T> List<T> list(LineStream lines, Function<LineStream, T> parser) {
+        int numElements = integer(lines);
+
+        List<T> values = new ArrayList<>(numElements);
+        for (int i = 0; i < numElements; i++) {
+            values.add(parser.apply(lines));
+        }
+
+        return values;
+    }
+
 }
