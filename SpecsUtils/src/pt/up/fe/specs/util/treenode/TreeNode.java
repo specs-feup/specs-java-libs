@@ -306,7 +306,8 @@ public interface TreeNode<K extends TreeNode<K>> {
      * @param child
      * @return
      */
-    boolean addChild(K child);
+    // boolean addChild(K child);
+    void addChild(K child);
 
     /**
      *
@@ -317,14 +318,15 @@ public interface TreeNode<K extends TreeNode<K>> {
      */
     void addChild(int index, K child);
 
-    default <EK extends K> boolean addChildren(List<EK> children) {
+    // default <EK extends K> boolean addChildren(List<EK> children) {
+    default <EK extends K> void addChildren(List<EK> children) {
         boolean changed = false;
         for (EK child : children) {
             addChild(child);
             changed = true;
         }
 
-        return changed;
+        // return changed;
     }
 
     /**

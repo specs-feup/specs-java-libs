@@ -56,4 +56,5 @@ public interface DataClass<T extends DataClass<T>> {
     Collection<DataKey<?>> keysWithValues();
 
     // DataStore getData();
+
 }

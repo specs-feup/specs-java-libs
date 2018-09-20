@@ -222,9 +222,8 @@ public interface DataKey<T> {
      * Copies the given object.
      * 
      * <p>
-     * 1) Uses the copy function to copy the object; <br>
-     * 2) If no copy function is defined, checks if object implements Copyable, and uses its copy function; <br>
-     * 3) Returns the object itself (shallow copy).
+     * 1) Uses the defined copy function to copy the object; <br>
+     * 2) Returns the object itself (shallow copy).
      * 
      * @return
      */

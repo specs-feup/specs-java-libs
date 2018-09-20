@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.treenode;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -27,18 +28,19 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
-    private final List<K> children;
+    private List<K> children;
     protected K parent;
 
     public ATreeNode(Collection<? extends K> children) {
-        this.children = SpecsFactory.newLinkedList();
+        // this.children = SpecsFactory.newLinkedList();
+        this.children = initChildren(children);
 
         // Safety if given list is null
-        if (children == null) {
-            // This list is immutable, this means that we will not be able to add children to this node
-            // Do we want to keep it like this?
-            children = Collections.emptyList();
-        }
+        // if (children == null) {
+        // // This list is immutable, this means that we will not be able to add children to this node
+        // // Do we want to keep it like this?
+        // children = Collections.emptyList();
+        // }
 
         // Add children
         for (K child : children) {
@@ -52,6 +54,32 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         // System.out.println("ATREE GETCHILD:" + getChildren());
     }
 
+    private void addChildPrivate(K child) {
+        addChildPrivate(-1, child);
+    }
+
+    private void addChildPrivate(int index, K child) {
+        // If empty, it most likely is Collections.emptyList(), use new list
+        if (!hasChildren()) {
+            this.children = new ArrayList<>();
+        }
+
+        // If no index, means that will be inserted at the end
+        if (index == -1) {
+            index = children.size();
+        }
+
+        this.children.add(index, child);
+    }
+
+    private List<K> initChildren(Collection<? extends K> children) {
+        if (children == null || children.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return new ArrayList<>();
+    }
+
     /* (non-Javadoc)
      * @see pt.up.fe.specs.util.treenode.TreeNode#getChildren()
      */
@@ -61,7 +89,8 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     *
+     * TODO: Remove?
+     * 
      * @return a mutable view of the children
      */
     @Override
@@ -98,6 +127,11 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         }
 
         K child = this.children.remove(index);
+
+        // If no children, replace list with reference to empty list
+        if (this.children.isEmpty()) {
+            this.children = Collections.emptyList();
+        }
 
         // Unlink child from this node
         child.removeParent();
@@ -229,7 +263,8 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      * @see pt.up.fe.specs.util.treenode.TreeNode#addChild(K)
      */
     @Override
-    public boolean addChild(K child) {
+    // public boolean addChild(K child) {
+    public void addChild(K child) {
         K sanitizedChild = TreeNodeUtils.sanitizeNode(child);
         setAsParentOf(sanitizedChild);
 
@@ -240,27 +275,30 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         }
          */
 
-        boolean changed = this.children.add(sanitizedChild);
+        // boolean changed = this.children.add(sanitizedChild);
+        addChildPrivate(sanitizedChild);
 
-        return changed;
+        // return changed;
     }
 
     @Override
-    public <EK extends K> boolean addChildren(List<EK> children) {
+    // public <EK extends K> boolean addChildren(List<EK> children) {
+    public <EK extends K> void addChildren(List<EK> children) {
         // If the same list (reference) create a copy, to avoid problems when
         // adding the list to itself
-        if (children == this.children) {
+        if (!children.isEmpty() && children == this.children) {
             SpecsLogs.msgWarn("Adding the list to itself");
             children = SpecsFactory.newArrayList(children);
         }
 
-        boolean changed = false;
+        // boolean changed = false;
 
         for (K child : children) {
-            changed = addChild(child);
+            // changed = addChild(child);
+            addChild(child);
         }
 
-        return changed;
+        // return changed;
     }
 
     /* (non-Javadoc)
@@ -279,7 +317,8 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
          */
 
         // Insert child
-        this.children.add(index, sanitizedToken);
+        addChildPrivate(index, sanitizedToken);
+        // this.children.add(index, sanitizedToken);
     }
 
     /**
