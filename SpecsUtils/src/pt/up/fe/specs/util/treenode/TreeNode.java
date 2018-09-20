@@ -320,10 +320,10 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     // default <EK extends K> boolean addChildren(List<EK> children) {
     default <EK extends K> void addChildren(List<EK> children) {
-        boolean changed = false;
+        // boolean changed = false;
         for (EK child : children) {
             addChild(child);
-            changed = true;
+            // changed = true;
         }
 
         // return changed;

@@ -36,11 +36,11 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         this.children = initChildren(children);
 
         // Safety if given list is null
-        // if (children == null) {
-        // // This list is immutable, this means that we will not be able to add children to this node
-        // // Do we want to keep it like this?
-        // children = Collections.emptyList();
-        // }
+        if (children == null) {
+            // This list is immutable, this means that we will not be able to add children to this node
+            // Do we want to keep it like this?
+            children = Collections.emptyList();
+        }
 
         // Add children
         for (K child : children) {
@@ -55,29 +55,37 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     private void addChildPrivate(K child) {
-        addChildPrivate(-1, child);
+        this.children.add(child);
+        // addChildPrivate(-1, child);
     }
 
     private void addChildPrivate(int index, K child) {
-        // If empty, it most likely is Collections.emptyList(), use new list
-        if (!hasChildren()) {
-            this.children = new ArrayList<>();
-        }
-
-        // If no index, means that will be inserted at the end
-        if (index == -1) {
-            index = children.size();
-        }
-
         this.children.add(index, child);
+
+        // // If empty, it most likely is Collections.emptyList(), use new list
+        // if (!hasChildren()) {
+        // System.out.println("CURRENT CHILDREN:" + children);
+        // // if (this.children == (List<K>) Collections.emptyList()) {
+        // this.children = new ArrayList<>();
+        // }
+        //
+        // // If no index, means that will be inserted at the end
+        // if (index == -1) {
+        // this.children.add(child);
+        // // index = children.size();
+        // } else {
+        // this.children.add(index, child);
+        // }
+
     }
 
     private List<K> initChildren(Collection<? extends K> children) {
-        if (children == null || children.isEmpty()) {
-            return Collections.emptyList();
-        }
-
         return new ArrayList<>();
+        // if (children == null || children.isEmpty()) {
+        // return Collections.emptyList();
+        // }
+        //
+        // return new ArrayList<>();
     }
 
     /* (non-Javadoc)
@@ -129,9 +137,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         K child = this.children.remove(index);
 
         // If no children, replace list with reference to empty list
-        if (this.children.isEmpty()) {
-            this.children = Collections.emptyList();
-        }
+        // if (this.children.isEmpty()) {
+        // this.children = Collections.emptyList();
+        // }
 
         // Unlink child from this node
         child.removeParent();
