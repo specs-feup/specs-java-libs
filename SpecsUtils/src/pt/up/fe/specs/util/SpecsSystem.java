@@ -683,7 +683,7 @@ public class SpecsSystem {
      */
 
     /**
-     * Lauches the weaver in another thread and waits termination.
+     * Launches the callable in another thread and waits termination.
      * 
      * @param args
      * @return
@@ -693,6 +693,29 @@ public class SpecsSystem {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<T> future = executor.submit(callable);
         executor.shutdown();
+
+        return get(future);
+        /*
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            SpecsLogs.msgInfo("Failed to complete execution on thread, returning null");
+            return null;
+        } catch (ExecutionException e) {
+            // Rethrow cause
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+        
+            throw new RuntimeException(e.getCause());
+            // throw new RuntimeException("Error while executing thread", e);
+        }
+        */
+    }
+
+    public static <T> T get(Future<T> future) {
         try {
             return future.get();
         } catch (InterruptedException e) {
