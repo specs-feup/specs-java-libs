@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -71,6 +72,10 @@ public class SpecsEnums {
             // warning("Parameter 'name' is null.");
             return null;
         }
+    }
+
+    public static <T extends Enum<T>> Optional<T> valueOfTry(Class<T> enumType, String name) {
+        return Optional.ofNullable(valueOf(enumType, name));
     }
 
     public static <T extends Enum<T>> List<T> getValues(Class<T> enumType, List<String> names) {
