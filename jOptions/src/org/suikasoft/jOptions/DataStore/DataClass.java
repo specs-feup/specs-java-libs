@@ -55,6 +55,18 @@ public interface DataClass<T extends DataClass<T>> {
      */
     Collection<DataKey<?>> keysWithValues();
 
+    /**
+     * If the DataClass is closed, this means that no keys are allowed besides the ondes defined in the StoreDefinition.
+     * 
+     * <p>
+     * By default, returns false.
+     * 
+     * @return
+     */
+    default boolean isClosed() {
+        return false;
+    }
+
     // DataStore getData();
 
 }

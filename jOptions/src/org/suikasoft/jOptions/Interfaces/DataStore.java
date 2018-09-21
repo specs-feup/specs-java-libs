@@ -421,7 +421,7 @@ public interface DataStore extends DataClass<DataStore> {
         // () -> new RuntimeException("Can only copy DataStores that have defined a StoreDefinition"));
 
         // Create new DataStore with same StoreDefinition
-        DataStore copy = DataStore.newInstance(def);
+        DataStore copy = DataStore.newInstance(def, isClosed());
 
         for (DataKey<?> key : def.getKeys()) {
             // Skip keys without values

@@ -138,6 +138,8 @@ public class ListDataStore implements DataStore {
     @Override
     public <T> T get(DataKey<T> key) {
 
+        // boolean hasKey = keys.hasKey(key.getName());
+        // Object valueRaw = hasKey ? values.get(toIndex(key)) : null;
         Object valueRaw = values.get(toIndex(key));
         if (strict && valueRaw == null) {
             throw new RuntimeException(
@@ -161,7 +163,10 @@ public class ListDataStore implements DataStore {
             value = defaultValue.get();
 
             // Storing value, in case it is a mutable value (e.g., a list)
+            // if (hasKey) {
             setRaw(key.getName(), value);
+            // }
+
             // values.put(key.getName(), value);
         }
 
@@ -227,5 +232,13 @@ public class ListDataStore implements DataStore {
     @Override
     public Object get(String id) {
         return values.get(toIndex(id));
+    }
+
+    /**
+     * This implementation is always closed.
+     */
+    @Override
+    public boolean isClosed() {
+        return true;
     }
 }
