@@ -57,9 +57,11 @@ public abstract class ADataStore implements DataStore {
     public ADataStore(String name, DataStore dataStore) {
         // public ADataStore(String name, StoreDefinition definition) {
         // this(new SimpleSetup(name, dataStore), dataStore.getKeyMap());
-        this(name, new HashMap<>(dataStore.getValuesMap()), dataStore.getStoreDefinition().orElse(null));
+        // this(name, new HashMap<>(dataStore.getValuesMap()), dataStore.getStoreDefinition().orElse(null));
+        this(name, new HashMap<>(), dataStore.getStoreDefinition().orElse(null));
         // this(name, new HashMap<>(), definition);
 
+        set(dataStore);
         // data.setValues(dataStore);
         // keys.putAll(dataStore.getKeyMap());
     }
@@ -208,12 +210,12 @@ public abstract class ADataStore implements DataStore {
         return Optional.ofNullable(values.put(key, value));
     }
 
-    @Override
-    public ADataStore set(DataStore setup) {
-        values.putAll(setup.getValuesMap());
-
-        return this;
-    }
+    // @Override
+    // public ADataStore set(DataStore setup) {
+    // values.putAll(setup.getValuesMap());
+    //
+    // return this;
+    // }
 
     @Override
     public <T> Optional<T> remove(DataKey<T> key) {
@@ -298,11 +300,11 @@ public abstract class ADataStore implements DataStore {
     /**
      * 
      */
-    @Override
-    public Map<String, Object> getValuesMap() {
-        // return new HashMap<>(values);
-        return values;
-    }
+    // @Override
+    // public Map<String, Object> getValuesMap() {
+    // // return new HashMap<>(values);
+    // return values;
+    // }
 
     @Override
     public Collection<String> getKeysWithValues() {
@@ -322,5 +324,9 @@ public abstract class ADataStore implements DataStore {
         return builder.toString();
         */
     }
+
+    // Object get(String id) {
+    // return getValuesMap().get(id);
+    // }
 
 }

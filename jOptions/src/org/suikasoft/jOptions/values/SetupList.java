@@ -204,16 +204,21 @@ public class SetupList implements DataStore {
         return getPreferredSetup().setRaw(key, value);
     }
 
-    @Override
-    public SetupList set(DataStore dataStore) {
-        getPreferredSetup().set(dataStore);
-
-        return this;
-    }
+    // @Override
+    // public SetupList set(DataStore dataStore) {
+    // getPreferredSetup().set(dataStore);
+    //
+    // return this;
+    // }
 
     @Override
     public <T> T get(DataKey<T> key) {
         return getPreferredSetup().get(key);
+    }
+
+    @Override
+    public Object get(String id) {
+        return getPreferredSetup().get(id);
     }
 
     @Override
@@ -226,11 +231,11 @@ public class SetupList implements DataStore {
         getPreferredSetup().setStrict(value);
 
     }
-
-    @Override
-    public Map<String, Object> getValuesMap() {
-        return getPreferredSetup().getValuesMap();
-    }
+    //
+    // @Override
+    // public Map<String, Object> getValuesMap() {
+    // return getPreferredSetup().getValuesMap();
+    // }
 
     @Override
     public <T> Optional<T> remove(DataKey<T> key) {

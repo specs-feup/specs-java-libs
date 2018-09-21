@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,6 @@ import org.suikasoft.jOptions.DataStore.DataClassUtils;
 import org.suikasoft.jOptions.DataStore.DataStoreContainer;
 import org.suikasoft.jOptions.DataStore.SimpleDataStore;
 import org.suikasoft.jOptions.Datakey.DataKey;
-import org.suikasoft.jOptions.Datakey.KeyFactory;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionProvider;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
@@ -127,8 +125,27 @@ public interface DataStore extends DataClass<DataStore> {
      * 
      * @param dataStore
      */
+    // @Override
+    // DataStore set(DataStore dataStore);
     @Override
-    DataStore set(DataStore dataStore);
+    default DataStore set(DataStore dataStore) {
+
+        StoreDefinition definition = getStoreDefinition().orElse(null);
+
+        for (DataKey<?> key : dataStore.keysWithValues()) {
+
+            // Check if key exists
+            if (definition != null && !definition.hasKey(key.getName())) {
+                SpecsLogs.debug(
+                        "set(DataStore): value with key '" + key + "' not part of this definition: " + definition);
+                continue;
+            }
+
+            setRaw(key, dataStore.getRaw(key));
+        }
+
+        return this;
+    }
 
     /**
      * Configures the current DataStore to behave strictly, i.e., can only access values with keys that have been added
@@ -183,12 +200,16 @@ public interface DataStore extends DataClass<DataStore> {
 
     default DataStore addAll(DataView values) {
 
-        Map<String, Object> rawValues = values.getValuesMap();
-
-        for (String key : rawValues.keySet()) {
-            DataKey<Object> datakey = KeyFactory.object(key, Object.class);
-            set(datakey, rawValues.get(key));
+        for (DataKey<?> key : values.keysWithValues()) {
+            setRaw(key, values.getValueRaw(key));
         }
+
+        // Map<String, Object> rawValues = values.getValuesMap();
+        //
+        // for (String key : rawValues.keySet()) {
+        // DataKey<Object> datakey = KeyFactory.object(key, Object.class);
+        // set(datakey, rawValues.get(key));
+        // }
 
         return this;
         // for (DataKey<?> key : values.getKeys()) {
@@ -297,9 +318,9 @@ public interface DataStore extends DataClass<DataStore> {
     @Override
     <T> boolean hasValue(DataKey<T> key);
 
-    default boolean hasValueRaw(String key) {
-        return getValuesMap().get(key) != null;
-    }
+    // default boolean hasValueRaw(String key) {
+    // return getValuesMap().get(key) != null;
+    // }
 
     /**
      * Tries to return a value from the DataStore.
@@ -319,16 +340,50 @@ public interface DataStore extends DataClass<DataStore> {
         return Optional.of(get(key));
     }
 
-    Map<String, Object> getValuesMap();
+    // Map<String, Object> getValuesMap();
+
+    default Collection<Object> getValues() {
+        List<Object> values = new ArrayList<>();
+
+        for (String key : getKeysWithValues()) {
+            values.add(get(key));
+        }
+
+        return values;
+    }
 
     /**
      * 
      * @param id
      * @return the value mapped to the given key id, or null if no value is mapped
      */
-    default Object get(String id) {
-        return getValuesMap().get(id);
+    Object get(String id);
+
+    /**
+     * Helper method for when the type of the DataKey is unknown (e.g., when working with DataKeys in bulk).
+     * 
+     * @param key
+     * @param value
+     * @return
+     */
+    // Check is being done manually
+    @SuppressWarnings("unchecked")
+    default Object getRaw(DataKey<?> key) {
+
+        Object value = get((DataKey<Object>) key);
+
+        // Check value is instance compatible with key
+        if (!key.getValueClass().isInstance(value)) {
+            throw new RuntimeException("Value '" + value + "' of type '" + value.getClass()
+                    + "' is not compatible with key '" + key + "'");
+        }
+
+        return value;
     }
+
+    // default Object get(String id) {
+    // return getValuesMap().get(id);
+    // }
 
     /**
      * 

@@ -13,7 +13,7 @@
 
 package org.suikasoft.jOptions.Interfaces;
 
-import java.util.Map;
+import java.util.Collection;
 
 import org.suikasoft.jOptions.DataStore.DataStoreContainer;
 import org.suikasoft.jOptions.Datakey.DataKey;
@@ -29,17 +29,17 @@ public class DefaultCleanSetup implements DataView, DataStoreContainer {
     private final DataStore data;
 
     public DefaultCleanSetup(DataStore data) {
-	this.data = data;
+        this.data = data;
     }
 
     @Override
     public String getName() {
-	return data.getName();
+        return data.getName();
     }
 
     @Override
     public <T> T getValue(DataKey<T> key) {
-	return data.get(key);
+        return data.get(key);
     }
 
     /**
@@ -48,21 +48,31 @@ public class DefaultCleanSetup implements DataView, DataStoreContainer {
      */
     @Override
     public DataStore getDataStore() {
-	return data;
+        return data;
     }
 
     @Override
     public String toString() {
-	return data.toString();
+        return data.toString();
     }
 
-    @Override
-    public Map<String, Object> getValuesMap() {
-	return data.getValuesMap();
-    }
+    // @Override
+    // public Map<String, Object> getValuesMap() {
+    // return data.getValuesMap();
+    // }
 
     @Override
     public <T> boolean hasValue(DataKey<T> key) {
-	return data.hasValue(key);
+        return data.hasValue(key);
+    }
+
+    @Override
+    public Object getValueRaw(String id) {
+        return data.get(id);
+    }
+
+    @Override
+    public Collection<DataKey<?>> keysWithValues() {
+        return data.keysWithValues();
     }
 }

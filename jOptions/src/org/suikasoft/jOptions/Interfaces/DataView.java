@@ -13,8 +13,8 @@
 
 package org.suikasoft.jOptions.Interfaces;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 
@@ -44,6 +44,14 @@ public interface DataView {
      */
     <T> T getValue(DataKey<T> key);
 
+    Object getValueRaw(String id);
+
+    Collection<DataKey<?>> keysWithValues();
+
+    default Object getValueRaw(DataKey<?> key) {
+        return getValueRaw(key.getName());
+    }
+
     /**
      * 
      * @param key
@@ -55,38 +63,48 @@ public interface DataView {
      * 
      * @return the objects mapped to the key ids
      */
-    Map<String, Object> getValuesMap();
+    // Map<String, Object> getValuesMap();
 
     public static DataView newInstance(DataStore dataStore) {
-	return new DefaultCleanSetup(dataStore);
+        return new DefaultCleanSetup(dataStore);
     }
 
     public static DataView empty() {
-	return new DataView() {
+        return new DataView() {
 
-	    @Override
-	    public <T> T getValue(DataKey<T> key) {
-		return null;
-	    }
+            @Override
+            public <T> T getValue(DataKey<T> key) {
+                return null;
+            }
 
-	    @Override
-	    public String getName() {
-		return "<empty>";
-	    }
+            @Override
+            public String getName() {
+                return "<empty>";
+            }
 
-	    @Override
-	    public Map<String, Object> getValuesMap() {
-		return Collections.emptyMap();
-	    }
+            // @Override
+            // public Map<String, Object> getValuesMap() {
+            // return Collections.emptyMap();
+            // }
 
-	    @Override
-	    public <T> boolean hasValue(DataKey<T> key) {
-		return false;
-	    }
-	};
+            @Override
+            public <T> boolean hasValue(DataKey<T> key) {
+                return false;
+            }
+
+            @Override
+            public Object getValueRaw(String id) {
+                return null;
+            }
+
+            @Override
+            public Collection<DataKey<?>> keysWithValues() {
+                return Collections.emptyList();
+            }
+        };
     }
 
     default DataStore toDataStore() {
-	return DataStore.newInstance(this);
+        return DataStore.newInstance(this);
     }
 }
