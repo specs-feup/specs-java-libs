@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import org.suikasoft.jOptions.DataStore.DataClass;
 import org.suikasoft.jOptions.DataStore.DataClassUtils;
 import org.suikasoft.jOptions.DataStore.DataStoreContainer;
+import org.suikasoft.jOptions.DataStore.ListDataStore;
 import org.suikasoft.jOptions.DataStore.SimpleDataStore;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
@@ -405,7 +406,7 @@ public interface DataStore extends DataClass<DataStore> {
         // Otherwise, tries to use the
         // object copy constructor.
         if (!getStoreDefinition().isPresent()) {
-            throw new RuntimeException("No StoreDefinition defined, cannot copy");
+            throw new RuntimeException("No StoreDefinition defined, cannot copy. DataStore: " + this);
             // DataStore copy = DataStore.newInstance(getName());
             //
             // for (String key : getKeysWithValues()) {
@@ -448,7 +449,23 @@ public interface DataStore extends DataClass<DataStore> {
     }
 
     public static DataStore newInstance(StoreDefinition storeDefinition) {
-        return new SimpleDataStore(storeDefinition);
+        return newInstance(storeDefinition, false);
+    }
+
+    /**
+     * 
+     * @param storeDefinition
+     * @param closed
+     *            if true, no other keys besides the ones defined in the StoreDefinition can be added.
+     * @return
+     */
+    public static DataStore newInstance(StoreDefinition storeDefinition, boolean closed) {
+        if (closed) {
+            return new ListDataStore(storeDefinition);
+        } else {
+            return new SimpleDataStore(storeDefinition);
+        }
+
     }
 
     public static DataStore newInstance(StoreDefinitionProvider storeProvider) {
@@ -531,8 +548,8 @@ public interface DataStore extends DataClass<DataStore> {
         StoreDefinition storeDefinition = getStoreDefinition().orElse(null);
 
         if (storeDefinition == null) {
-            SpecsLogs.msgInfo(
-                    "keysWithValues: current DataStore does not have a StoreDefinition, returning empty list");
+            // SpecsLogs.msgInfo(
+            // "keysWithValues: current DataStore does not have a StoreDefinition, returning empty list");
             return Collections.emptyList();
         }
 

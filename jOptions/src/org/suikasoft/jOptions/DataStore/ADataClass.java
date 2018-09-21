@@ -20,6 +20,7 @@ import java.util.List;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
+import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
 public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T> {
 
@@ -31,7 +32,8 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
 
     public ADataClass() {
         // this(DataStore.newInstance(getClass()));
-        this.data = DataStore.newInstance(getClass());
+        // this.data = DataStore.newInstance(getClass());
+        this.data = DataStore.newInstance(StoreDefinitions.fromInterface(getClass()), false);
     }
 
     @Override

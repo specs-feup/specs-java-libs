@@ -49,6 +49,10 @@ public class ListDataStore implements DataStore {
     public ListDataStore(StoreDefinition keys) {
         this.keys = keys;
         this.values = new ArrayList<>(keys.getKeys().size());
+        // Fill array with nulls
+        for (int i = 0; i < keys.getKeys().size(); i++) {
+            this.values.add(null);
+        }
 
         this.strict = false;
     }
@@ -101,6 +105,11 @@ public class ListDataStore implements DataStore {
 
     @Override
     public Optional<Object> setRaw(String key, Object value) {
+        // Do not set key
+        if (!keys.hasKey(key)) {
+            return Optional.empty();
+        }
+
         int index = toIndex(key);
         return Optional.ofNullable(values.set(index, value));
     }
@@ -183,6 +192,9 @@ public class ListDataStore implements DataStore {
 
     @Override
     public <T> boolean hasValue(DataKey<T> key) {
+        // System.out.println("VALUES:" + values);
+        // System.out.println("KEY:" + key);
+        // System.out.println("KEy INDEX:" + toIndex(key));
         return values.get(toIndex(key)) != null;
     }
 
