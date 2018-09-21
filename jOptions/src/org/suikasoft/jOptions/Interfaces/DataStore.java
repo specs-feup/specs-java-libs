@@ -201,7 +201,8 @@ public interface DataStore extends DataClass<DataStore> {
 
     default DataStore addAll(DataView values) {
 
-        for (DataKey<?> key : values.keysWithValues()) {
+        // for (DataKey<?> key : values.keysWithValues()) {
+        for (String key : values.keysWithValuesRaw()) {
             setRaw(key, values.getValueRaw(key));
         }
 

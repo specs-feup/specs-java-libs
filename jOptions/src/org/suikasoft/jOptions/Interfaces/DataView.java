@@ -48,6 +48,8 @@ public interface DataView {
 
     Collection<DataKey<?>> keysWithValues();
 
+    Collection<String> keysWithValuesRaw();
+
     default Object getValueRaw(DataKey<?> key) {
         return getValueRaw(key.getName());
     }
@@ -99,6 +101,11 @@ public interface DataView {
 
             @Override
             public Collection<DataKey<?>> keysWithValues() {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public Collection<String> keysWithValuesRaw() {
                 return Collections.emptyList();
             }
         };

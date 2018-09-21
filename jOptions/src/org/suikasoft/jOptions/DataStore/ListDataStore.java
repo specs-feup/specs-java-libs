@@ -49,12 +49,34 @@ public class ListDataStore implements DataStore {
     public ListDataStore(StoreDefinition keys) {
         this.keys = keys;
         this.values = new ArrayList<>(keys.getKeys().size());
+
         // Fill array with nulls
-        for (int i = 0; i < keys.getKeys().size(); i++) {
-            this.values.add(null);
-        }
+        // for (int i = 0; i < keys.getKeys().size(); i++) {
+        // this.values.add(null);
+        // }
 
         this.strict = false;
+    }
+
+    private void ensureSize(int index) {
+        if (index < values.size()) {
+            return;
+        }
+
+        int missingElements = index - values.size() + 1;
+        for (int i = 0; i < missingElements; i++) {
+            this.values.add(null);
+        }
+    }
+
+    private Object get(int index) {
+        ensureSize(index);
+        return values.get(index);
+    }
+
+    private Object set(int index, Object value) {
+        ensureSize(index);
+        return values.set(index, value);
     }
 
     @Override
@@ -111,7 +133,7 @@ public class ListDataStore implements DataStore {
         }
 
         int index = toIndex(key);
-        return Optional.ofNullable(values.set(index, value));
+        return Optional.ofNullable(set(index, value));
     }
 
     @Override
@@ -140,7 +162,7 @@ public class ListDataStore implements DataStore {
 
         // boolean hasKey = keys.hasKey(key.getName());
         // Object valueRaw = hasKey ? values.get(toIndex(key)) : null;
-        Object valueRaw = values.get(toIndex(key));
+        Object valueRaw = get(toIndex(key));
         if (strict && valueRaw == null) {
             throw new RuntimeException(
                     "No value present in DataStore '" + getName() + "' " + " for key '" + key.getName() + "'");
@@ -188,9 +210,10 @@ public class ListDataStore implements DataStore {
             return Optional.empty();
         }
 
-        if (values.remove(toIndex(key)) != value.get()) {
-            throw new RuntimeException("Removed wrong value");
-        }
+        set(toIndex(key), null);
+        // if (values.remove(toIndex(key)) != value.get()) {
+        // throw new RuntimeException("Removed wrong value");
+        // }
 
         return value;
     }
@@ -200,14 +223,14 @@ public class ListDataStore implements DataStore {
         // System.out.println("VALUES:" + values);
         // System.out.println("KEY:" + key);
         // System.out.println("KEy INDEX:" + toIndex(key));
-        return values.get(toIndex(key)) != null;
+        return get(toIndex(key)) != null;
     }
 
     @Override
     public Collection<String> getKeysWithValues() {
         List<String> keysWithValues = new ArrayList<>();
         for (DataKey<?> key : keys.getKeys()) {
-            if (values.get(toIndex(key)) != null) {
+            if (get(toIndex(key)) != null) {
                 keysWithValues.add(key.getName());
             }
         }
@@ -231,7 +254,7 @@ public class ListDataStore implements DataStore {
 
     @Override
     public Object get(String id) {
-        return values.get(toIndex(id));
+        return get(toIndex(id));
     }
 
     /**
