@@ -133,16 +133,17 @@ public interface DataStore extends DataClass<DataStore> {
 
         StoreDefinition definition = getStoreDefinition().orElse(null);
 
-        for (DataKey<?> key : dataStore.keysWithValues()) {
+        // for (DataKey<?> key : dataStore.keysWithValues()) {
+        for (String key : dataStore.getKeysWithValues()) {
 
             // Check if key exists
-            if (definition != null && !definition.hasKey(key.getName())) {
+            if (definition != null && isClosed() && !definition.hasKey(key)) {
                 SpecsLogs.debug(
                         "set(DataStore): value with key '" + key + "' not part of this definition: " + definition);
                 continue;
             }
 
-            setRaw(key, dataStore.getRaw(key));
+            setRaw(key, dataStore.get(key));
         }
 
         return this;
