@@ -102,6 +102,12 @@ public class SpecsList<T> implements List<T>, SpecsCollection<T> {
     // receivingCollection.addAll(this);
     // }
 
+    public SpecsList<T> andAdd(T e) {
+        list.add(e);
+
+        return this;
+    }
+
     /** LIST IMPLEMENTATION **/
 
     @Override
