@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import pt.up.fe.specs.util.providers.StringProvider;
+
 public class DataClassUtils {
 
     /**
@@ -31,6 +33,10 @@ public class DataClassUtils {
      * @return
      */
     public static String toString(Object dataClassValue) {
+        if (dataClassValue instanceof StringProvider) {
+            return ((StringProvider) dataClassValue).getString();
+        }
+
         if (dataClassValue instanceof DataClass) {
             DataClass<?> dataClass = (DataClass<?>) dataClassValue;
 
