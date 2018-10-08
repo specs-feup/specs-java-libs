@@ -72,12 +72,12 @@ public class DefaultCleanSetup implements DataView, DataStoreContainer {
     }
 
     @Override
-    public Collection<DataKey<?>> keysWithValues() {
-        return data.keysWithValues();
+    public Collection<DataKey<?>> getDataKeysWithValues() {
+        return data.getDataKeysWithValues();
     }
 
     @Override
-    public Collection<String> keysWithValuesRaw() {
+    public Collection<String> getKeysWithValues() {
         return data.getKeysWithValues();
     }
 }

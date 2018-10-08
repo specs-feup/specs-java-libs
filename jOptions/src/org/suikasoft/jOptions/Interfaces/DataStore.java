@@ -203,7 +203,7 @@ public interface DataStore extends DataClass<DataStore> {
     default DataStore addAll(DataView values) {
 
         // for (DataKey<?> key : values.keysWithValues()) {
-        for (String key : values.keysWithValuesRaw()) {
+        for (String key : values.getKeysWithValues()) {
             setRaw(key, values.getValueRaw(key));
         }
 
@@ -234,7 +234,7 @@ public interface DataStore extends DataClass<DataStore> {
 
     default DataStore addAll(DataClass<?> values) {
 
-        for (DataKey<?> key : values.keysWithValues()) {
+        for (DataKey<?> key : values.getDataKeysWithValues()) {
             Object value = values.get(key);
             setRaw(key, value);
         }
@@ -546,7 +546,7 @@ public interface DataStore extends DataClass<DataStore> {
     }
 
     @Override
-    default Collection<DataKey<?>> keysWithValues() {
+    default Collection<DataKey<?>> getDataKeysWithValues() {
         StoreDefinition storeDefinition = getStoreDefinition().orElse(null);
 
         if (storeDefinition == null) {

@@ -53,7 +53,7 @@ public interface DataClass<T extends DataClass<T>> {
      * 
      * @return All the keys that are mapped to a value
      */
-    Collection<DataKey<?>> keysWithValues();
+    Collection<DataKey<?>> getDataKeysWithValues();
 
     /**
      * If the DataClass is closed, this means that no keys are allowed besides the ondes defined in the StoreDefinition.

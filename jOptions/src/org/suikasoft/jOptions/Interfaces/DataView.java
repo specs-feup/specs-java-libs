@@ -46,9 +46,9 @@ public interface DataView {
 
     Object getValueRaw(String id);
 
-    Collection<DataKey<?>> keysWithValues();
+    Collection<DataKey<?>> getDataKeysWithValues();
 
-    Collection<String> keysWithValuesRaw();
+    Collection<String> getKeysWithValues();
 
     default Object getValueRaw(DataKey<?> key) {
         return getValueRaw(key.getName());
@@ -100,12 +100,12 @@ public interface DataView {
             }
 
             @Override
-            public Collection<DataKey<?>> keysWithValues() {
+            public Collection<DataKey<?>> getDataKeysWithValues() {
                 return Collections.emptyList();
             }
 
             @Override
-            public Collection<String> keysWithValuesRaw() {
+            public Collection<String> getKeysWithValues() {
                 return Collections.emptyList();
             }
         };

@@ -85,7 +85,7 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     }
 
     @Override
-    public Collection<DataKey<?>> keysWithValues() {
+    public Collection<DataKey<?>> getDataKeysWithValues() {
         StoreDefinition storeDefinition = data.getStoreDefinition().get();
 
         List<DataKey<?>> keysWithValues = new ArrayList<>();
