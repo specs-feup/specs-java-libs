@@ -30,6 +30,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -1029,6 +1031,61 @@ public class SpecsSystem {
                     + "' with arguments " + Arrays.toString(arguments), e);
         }
 
+    }
+
+    /**
+     * Taken from here:
+     * https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689
+     * 
+     * @param clazz
+     * @return
+     */
+    private static Set<Class<?>> getClassesBfs(Class<?> clazz) {
+        Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
+        Set<Class<?>> nextLevel = new LinkedHashSet<Class<?>>();
+        nextLevel.add(clazz);
+        do {
+            classes.addAll(nextLevel);
+            Set<Class<?>> thisLevel = new LinkedHashSet<Class<?>>(nextLevel);
+            nextLevel.clear();
+            for (Class<?> each : thisLevel) {
+                Class<?> superClass = each.getSuperclass();
+                if (superClass != null && superClass != Object.class) {
+                    nextLevel.add(superClass);
+                }
+                for (Class<?> eachInt : each.getInterfaces()) {
+                    nextLevel.add(eachInt);
+                }
+            }
+        } while (!nextLevel.isEmpty());
+        return classes;
+    }
+
+    /**
+     * Taken from here:
+     * https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689
+     * 
+     * @param classes
+     * @return
+     */
+    public static List<Class<?>> getCommonSuperClass(Class<?>... classes) {
+        return getCommonSuperClasses(Arrays.asList(classes));
+    }
+
+    /**
+     * 
+     * @param classes
+     * @return
+     */
+    public static List<Class<?>> getCommonSuperClasses(List<Class<?>> classes) {
+        // start off with set from first hierarchy
+        Set<Class<?>> rollingIntersect = new LinkedHashSet<Class<?>>(
+                getClassesBfs(classes.get(0)));
+        // intersect with next
+        for (int i = 1; i < classes.size(); i++) {
+            rollingIntersect.retainAll(getClassesBfs(classes.get(i)));
+        }
+        return new LinkedList<Class<?>>(rollingIntersect);
     }
 
 }
