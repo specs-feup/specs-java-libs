@@ -1068,9 +1068,9 @@ public class SpecsSystem {
      * @param classes
      * @return
      */
-    // public static List<Class<?>> getCommonSuperClass(Class<?>... classes) {
-    // return getCommonSuperClasses(Arrays.asList(classes));
-    // }
+    public static List<Class<?>> getCommonSuperClasses(Class<?>... classes) {
+        return getCommonSuperClasses(Arrays.asList(classes));
+    }
 
     /**
      * 
