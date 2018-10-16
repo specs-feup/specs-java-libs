@@ -412,6 +412,8 @@ public class SpecsSystem {
      * 'suika.properties' on the running folder and applies its options.
      */
     public static void programStandardInit() {
+        fixes();
+
         // Disable security manager for Web Start
         // System.setSecurityManager(null);
         // Redirect output to the logger
@@ -427,6 +429,12 @@ public class SpecsSystem {
         SpecsLogs.debug("Current platform name: " + System.getProperty("os.name"));
         SpecsLogs.debug("Current platform version: " + System.getProperty("os.version"));
 
+    }
+
+    private static void fixes() {
+        // To avoid illegal reflective accesses in Java 10 while library is not upgraded
+        // https://stackoverflow.com/questions/33255578/old-jaxb-and-jdk8-metaspace-outofmemory-issue
+        System.getProperties().setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
     }
 
     /**
