@@ -27,7 +27,14 @@
 	<dependencies>
 		<!-- APACHE -->
 		<dependency org="org.apache.commons" name="commons-lang3" rev="3.0"/>
-		<dependency org="javax.xml.bind" name="jaxb-api" rev="2.3.0"/>
-		<dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.3.0"/>
+		<!-- XML Bind -->
+
+		<dependency org="javax.xml.bind" name="jaxb-api" rev="2.3.1"/>
+		<dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.3.0.1"/> 
+		<!-- <dependency org="com.sun.istack" name="istack-commons-runtime" rev="3.0.7"/> -->
+		<!-- 
+		<dependency org="javax.xml.bind" name="jaxb-api" rev="2.4.0-b180830.0359"/>
+		<dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.4.0-b180725.0644"/> 
+		-->
 	</dependencies>
 </ivy-module>
