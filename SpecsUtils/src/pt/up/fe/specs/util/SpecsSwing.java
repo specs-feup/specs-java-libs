@@ -122,10 +122,10 @@ public class SpecsSwing {
         }
 
         // Check if GTK+ is available
-        String gtkLookAndFeel = lookAndFeels.get("GTK+");
-        if (gtkLookAndFeel != null) {
-            return gtkLookAndFeel;
-        }
+        // String gtkLookAndFeel = lookAndFeels.get("GTK+");
+        // if (gtkLookAndFeel != null) {
+        // return gtkLookAndFeel;
+        // }
 
         // Return first that is not Metal
         String alternativeLookAndFeel = lookAndFeels.values().stream()
