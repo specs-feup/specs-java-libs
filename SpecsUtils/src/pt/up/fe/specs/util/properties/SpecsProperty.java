@@ -15,11 +15,17 @@ package pt.up.fe.specs.util.properties;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -49,9 +55,15 @@ public enum SpecsProperty {
      * Opens a Swing window (if available) showing information about memory usage of the application. Receives a boolean
      * value.
      */
-    ShowMemoryHeap;
+    ShowMemoryHeap,
+    /**
+     * Sets a custom Look&Feel, can use name or classname.
+     */
+    LookAndFeel;
 
     public static final String PROPERTIES_FILENAME = "suika.properties";
+
+    private static final List<String> SPECS_PROPERTIES = Arrays.asList("specs.properties", PROPERTIES_FILENAME);
 
     public static void applyProperties(Properties suikaProps) {
 
@@ -75,15 +87,36 @@ public enum SpecsProperty {
      * Looks for the file 'suika.properties' on the running folder and applies its options.
      */
     public static void applyProperties() {
-        File suikaPropsFile = new File("suika.properties");
-        if (!suikaPropsFile.isFile()) {
-            // System.out.println("did not find file "+suikaPropsFile);
+        // Look for compatible files representing specs properties, return the first
+
+        File specsPropertiesFile = null;
+        for (String filename : SPECS_PROPERTIES) {
+            File currentFile = new File(filename);
+
+            if (currentFile.isFile()) {
+                specsPropertiesFile = currentFile;
+                break;
+            }
+        }
+
+        // If no compatible properties file found, just return
+        if (specsPropertiesFile == null) {
             return;
         }
 
+        SpecsLogs.debug("Applying the SPeCS properties file '" + specsPropertiesFile.getAbsolutePath() + "'");
+        Properties specsProperties = SpecsProperties.newInstance(specsPropertiesFile).getProperties();
+        SpecsProperty.applyProperties(specsProperties);
+
+        // File suikaPropsFile = new File("suika.properties");
+        // if (!suikaPropsFile.isFile()) {
+        // // System.out.println("did not find file "+suikaPropsFile);
+        // return;
+        // }
+
         // Properties suikaProps = IoUtils.loadProperties(suikaPropsFile);
-        Properties suikaProps = SpecsProperties.newInstance(suikaPropsFile).getProperties();
-        SpecsProperty.applyProperties(suikaProps);
+        // Properties suikaProps = SpecsProperties.newInstance(suikaPropsFile).getProperties();
+        // SpecsProperty.applyProperties(suikaProps);
     }
 
     /**
@@ -158,6 +191,42 @@ public enum SpecsProperty {
             SpecsLogs.msgInfo("Setting error log to file '" + value + "'");
             newHandlers[oldHandlers.length] = SpecsLogs.buildErrorLogHandler(value);
             SpecsLogs.setRootHandlers(newHandlers);
+            return;
+        }
+
+        if (this == LookAndFeel) {
+
+            // Build look and feels map
+            Map<String, String> lookAndFeels = new LinkedHashMap<>();
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                lookAndFeels.put(info.getName(), info.getClassName());
+            }
+            SpecsLogs.debug("Available look and feels: " + lookAndFeels);
+
+            // First search as name, then as classname
+            String lookAndFeel = lookAndFeels.get(value);
+
+            if (lookAndFeel == null && lookAndFeels.containsValue(value)) {
+                lookAndFeel = value;
+            }
+
+            // If still null, return
+            if (lookAndFeel == null) {
+                return;
+            }
+
+            // Set Custom L&F
+            SpecsSwing.setCustomLookAndFeel(lookAndFeel);
+            // try {
+            // System.out.println("CUSTOM LOOK: " + lookAndFeel);
+            // System.out.println("SYSTEM BEFORE: " + UIManager.getSystemLookAndFeelClassName());
+            // UIManager.setLookAndFeel(lookAndFeel);
+            // System.out.println("SYSTEM AFTER: " + UIManager.getSystemLookAndFeelClassName());
+            // } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+            // | UnsupportedLookAndFeelException e) {
+            // throw new RuntimeException("Could not set custom Look&Feel", e);
+            // }
+
             return;
         }
 

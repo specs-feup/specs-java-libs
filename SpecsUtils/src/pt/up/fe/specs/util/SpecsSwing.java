@@ -40,6 +40,22 @@ public class SpecsSwing {
 
     public static final String TEST_CLASSNAME = "javax.swing.JFrame";
 
+    private static String CUSTOM_LOOK_AND_FEEL = null;
+
+    synchronized public static void setCustomLookAndFeel(String value) {
+        CUSTOM_LOOK_AND_FEEL = value;
+    }
+
+    synchronized public static String getCustomLookAndFeel() {
+        return CUSTOM_LOOK_AND_FEEL;
+    }
+
+    // public static boolean hasCustomLookAndFeel() {
+    // // Since it is a boolean, it should not have problems regarding reading concurrently, according to the Java
+    // // memory model
+    // return HAS_CUSTOM_LOOK_AND_FEEL;
+    // }
+
     /**
      * Returns true if the Java package Swing is available.
      * 
@@ -97,8 +113,22 @@ public class SpecsSwing {
         // return UIManager.getSystemLookAndFeelClassName();
         // }
 
+        // Get custom L&F
+        String customLookAndFeel = getCustomLookAndFeel();
+        if (customLookAndFeel != null) {
+            return customLookAndFeel;
+        }
+
         // Get System L&F
         String systemLookAndFeel = UIManager.getSystemLookAndFeelClassName();
+
+        // Build look and feels map
+        Map<String, String> lookAndFeels = new LinkedHashMap<>();
+
+        for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            lookAndFeels.put(info.getName(), info.getClassName());
+        }
+        SpecsLogs.debug("Available look and feels: " + lookAndFeels);
 
         // Avoid Metal
         if (!systemLookAndFeel.endsWith(".MetalLookAndFeel")) {
@@ -111,15 +141,16 @@ public class SpecsSwing {
         // }
 
         SpecsLogs.debug("Default system look and feel is Metal, trying to use another one");
-
         // Map<String, String> lookAndFeels = Arrays.stream(UIManager.getInstalledLookAndFeels())
         // .collect(Collectors.toMap(info -> info.getName(), info -> info.getClassName()));
 
-        // Build look and feels map
-        Map<String, String> lookAndFeels = new LinkedHashMap<>();
-        for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-            lookAndFeels.put(info.getName(), info.getClassName());
-        }
+        // // Build look and feels map
+        // Map<String, String> lookAndFeels = new LinkedHashMap<>();
+        //
+        // for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+        // lookAndFeels.put(info.getName(), info.getClassName());
+        // }
+        // SpecsLogs.debug("Available look and feels: " + lookAndFeels);
 
         // Check if GTK+ is available
         // String gtkLookAndFeel = lookAndFeels.get("GTK+");
