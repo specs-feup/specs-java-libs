@@ -26,6 +26,11 @@
 	</info>
 	
 	<dependencies>
-		<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.8"/>
+		<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.10">
+			<!--
+			<exclude org="xpp3" name="xpp3_min"/>
+			<exclude org="xmlpull" name="xmlpull"/>
+			-->
+		</dependency>
 	</dependencies>
 </ivy-module>
