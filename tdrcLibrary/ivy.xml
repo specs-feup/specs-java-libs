@@ -34,15 +34,16 @@
 		-->
 		<!-- <dependency org="com.sun.istack" name="istack-commons-runtime" rev="3.0.7"/> -->
 		<dependency org="javax.xml.bind" name="jaxb-api" rev="2.4.0-b180830.0359"/>
- 		<dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.4.0-b180830.0438" conf="default->master,runtime,compile,default,system,optional">
-		<dependency org="com.sun.istack" name="istack-commons-runtime" rev="3.0.7"/>
+		<dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.4.0-b180830.0438" conf="default->master,optional"/> 		
+ 		<!-- <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.4.0-b180830.0438" conf="default->master,runtime,compile,default,system,optional"/>-->
+		<!-- <dependency org="com.sun.istack" name="istack-commons-runtime" rev="3.0.7"/> -->
 		<!-- <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.4.0-b180830.0438" conf="default->master,optional">--> 		
 	<!--
 			<exclude module="org.glassfish.jaxb#osgi-test-parent;2.4.0-b180830.0438"/>
 			<exclude module="org.glassfish.jaxb#osgi-test-runtime;2.4.0-b180830.0438"/>
 			<exclude org="org.glassfish.jaxb" name="osgi-test-runtime"/>			
 -->
-		</dependency>
+
 		<!-- <exclude org="org.glassfish.jaxb" name="osgi-test-runtime" rev="2.4.0-b180830.0438"/> -->
 
 
