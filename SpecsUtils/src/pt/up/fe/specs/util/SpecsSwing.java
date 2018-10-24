@@ -130,8 +130,8 @@ public class SpecsSwing {
         }
         SpecsLogs.debug("Available look and feels: " + lookAndFeels);
 
-        // Avoid Metal
-        if (!systemLookAndFeel.endsWith(".MetalLookAndFeel")) {
+        // Avoid Metal & GTK+
+        if (!systemLookAndFeel.endsWith(".MetalLookAndFeel") && !systemLookAndFeel.endsWith(".GTKLookAndFeel")) {
             return systemLookAndFeel;
         }
 
@@ -140,7 +140,7 @@ public class SpecsSwing {
         // return systemLookAndFeel;
         // }
 
-        SpecsLogs.debug("Default system look and feel is Metal, trying to use another one");
+        // SpecsLogs.debug("Default system look and feel is Metal, trying to use another one");
         // Map<String, String> lookAndFeels = Arrays.stream(UIManager.getInstalledLookAndFeels())
         // .collect(Collectors.toMap(info -> info.getName(), info -> info.getClassName()));
 
@@ -158,9 +158,11 @@ public class SpecsSwing {
         // return gtkLookAndFeel;
         // }
 
-        // Return first that is not Metal
         String alternativeLookAndFeel = lookAndFeels.values().stream()
+                // Return first that is not Metal
                 .filter(lookAndFeel -> !lookAndFeel.endsWith(".MetalLookAndFeel"))
+                // Recently, GTK+ on Linux is really buggy, avoid it too
+                .filter(lookAndFeel -> !lookAndFeel.endsWith(".GTKLookAndFeel"))
                 .findFirst().orElse(systemLookAndFeel);
 
         if (!alternativeLookAndFeel.equals(systemLookAndFeel)) {
