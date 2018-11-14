@@ -458,7 +458,8 @@ public interface DataStore extends DataClass<DataStore> {
      * 
      * @param storeDefinition
      * @param closed
-     *            if true, no other keys besides the ones defined in the StoreDefinition can be added.
+     *            if true, no other keys besides the ones defined in the StoreDefinition can be added. This allows a
+     *            more efficient implementation of DataStore to be used.
      * @return
      */
     public static DataStore newInstance(StoreDefinition storeDefinition, boolean closed) {
