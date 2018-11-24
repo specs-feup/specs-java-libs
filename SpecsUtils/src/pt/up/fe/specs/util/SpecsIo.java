@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -797,8 +796,8 @@ public class SpecsIo {
      * @return all the files inside the given folder, excluding other folders, that have a certain extension.
      */
     public static List<File> getFilesRecursive(File folder, String extension) {
-
-        return getFilesRecursive(folder, extension, true);
+        return getFilesRecursive(folder, Arrays.asList(extension), true, path -> false);
+        // return getFilesRecursive(folder, extension, true);
     }
 
     /**
@@ -813,45 +812,48 @@ public class SpecsIo {
      * 
      * @return all the files inside the given folder, excluding other folders, that have a certain extension.
      */
+    /*
     public static List<File> getFilesRecursive(File path, String extension, boolean followSymlinks) {
-
+    
         // if (!path.isDirectory()) {
         if (!path.exists()) {
             SpecsLogs.msgWarn("Path '" + path + "' does not exist.");
             return null;
         }
-
+    
         if (path.isFile()) {
             if (SpecsIo.getExtension(path).equals(extension)) {
                 return Arrays.asList(path);
             }
-
+    
             return Collections.emptyList();
         }
-
+    
         List<File> fileList = new ArrayList<>();
-
+    
         ExtensionFilter filter = new ExtensionFilter(extension, followSymlinks);
         File[] files = path.listFiles(filter);
-
+    
         fileList.addAll(Arrays.asList(files));
-
-        /* directories */
+    
+        // directories 
         files = path.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-
-                /* Ignore directory if is symlink */
+    
+                // Ignore directory if is symlink 
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-
+    
                 fileList.addAll(getFilesRecursive(file, extension));
             }
         }
-
+    
         return fileList;
     }
+    
+    */
 
     /**
      * Note: by default this follows symlinks.
@@ -862,7 +864,7 @@ public class SpecsIo {
      * @return all the files inside the given folder, excluding other folders.
      */
     public static List<File> getFilesRecursive(File path) {
-
+        // return getFilesRecursive(path, Collections.emptySet(), true, folder -> false);
         return getFilesRecursive(path, true);
     }
 
@@ -878,47 +880,52 @@ public class SpecsIo {
      * @return all the files inside the given path, excluding other folders.
      */
     public static List<File> getFilesRecursive(File path, boolean followSymlinks) {
-
+        return getFilesRecursive(path, Collections.emptySet(), followSymlinks, folder -> false);
+    }
+    /*
+    public static List<File> getFilesRecursive(File path, boolean followSymlinks) {
+    
         // Special case: path is a single file
         if (path.isFile()) {
             return Arrays.asList(path);
         }
-
+    
         List<File> fileList = new ArrayList<>();
         File[] files = path.listFiles();
-
+    
         if (files == null) {
             // Not a folder
             return fileList;
         }
-
+    
         for (File file : files) {
-
-            /* Ignore file if is symlink */
+    
+            // Ignore file if is symlink 
             if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                 continue;
             }
-
+    
             if (file.isFile()) {
                 fileList.add(file);
             }
         }
-
+    
         for (File file : files) {
-
+    
             if (file.isDirectory()) {
-
-                /* Ignore directory if is symlink */
+    
+                // Ignore directory if is symlink 
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-
+    
                 fileList.addAll(getFilesRecursive(file, followSymlinks));
             }
         }
-
+    
         return fileList;
     }
+    */
 
     /**
      * @param folder
@@ -1557,52 +1564,6 @@ public class SpecsIo {
     }
 
     /**
-     * INNER CLASS
-     * 
-     * Accepts files with a certain extension.
-     */
-    static class ExtensionFilter implements FilenameFilter {
-
-        private final String extension;
-        private final String separator;
-        private final boolean followSymlinks;
-
-        /**
-         * Note: By default follows symlinks.
-         * 
-         * @param extension
-         */
-        public ExtensionFilter(String extension) {
-            this(extension, true);
-        }
-
-        public ExtensionFilter(String extension, boolean followSymlinks) {
-            this.extension = extension;
-            this.separator = SpecsIo.DEFAULT_EXTENSION_SEPARATOR;
-            this.followSymlinks = followSymlinks;
-        }
-
-        @Override
-        public boolean accept(File dir, String name) {
-
-            String suffix = separator + extension.toLowerCase();
-
-            if (!followSymlinks) {
-
-                File f = new File(dir, name);
-
-                /* Fail if this is a symlink. */
-                if (Files.isSymbolicLink(f.toPath())) {
-                    return false;
-                }
-            }
-
-            return name.toLowerCase().endsWith(suffix);
-        }
-
-    }
-
-    /**
      * Copies the given list of resources to the execution path. If the files already exist, the method does nothing.
      * 
      * <p>
@@ -1973,18 +1934,20 @@ public class SpecsIo {
      * 
      * @return true if the folder contains at least one file having the extension "extension".
      */
+    /*
     public static boolean contains(File folder, String extension) {
         if (!folder.isDirectory()) {
             throw new IllegalArgumentException("The file given in parameter is not a folder");
         }
-
+    
         File[] files = folder.listFiles(new ExtensionFilter(extension));
-
+    
         if (files == null || files.length == 0) {
             return false;
         }
         return true;
     }
+    */
 
     /**
      * Returns the relative path of the file given in parameter, relative to the working folder.
