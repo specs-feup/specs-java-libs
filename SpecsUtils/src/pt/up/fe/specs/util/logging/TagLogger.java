@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util.logging;
 
 import java.util.Collection;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -109,9 +110,13 @@ public interface TagLogger<T> {
     //
     // default void debug(String message, boolean sourceInfo) {
     default void debug(String message) {
+        debug(() -> message);
+    }
+
+    default void debug(Supplier<String> message) {
         if (SpecsSystem.isDebug()) {
             // LogSourceInfo sourceInfoLevel = sourceInfo ? LogSourceInfo.SOURCE : LogSourceInfo.NONE));
-            log(Level.INFO, null, "[DEBUG] " + message);
+            log(Level.INFO, null, "[DEBUG] " + message.get());
         }
     }
 
