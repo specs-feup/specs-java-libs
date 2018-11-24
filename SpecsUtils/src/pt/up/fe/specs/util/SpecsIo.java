@@ -672,10 +672,15 @@ public class SpecsIo {
         }
 
         if (path.isFile()) {
-            String extension = SpecsIo.getExtension(path).toLowerCase();
-            if (extensions.contains(extension)) {
-                foundFiles.add(path);
+            // Test for extension, if set is not empty
+            if (!extensions.isEmpty()) {
+                String extension = SpecsIo.getExtension(path).toLowerCase();
+                if (!extensions.contains(extension)) {
+                    return;
+                }
             }
+
+            foundFiles.add(path);
 
             return;
             // if (SpecsIo.getExtension(path).equals(extension)) {
