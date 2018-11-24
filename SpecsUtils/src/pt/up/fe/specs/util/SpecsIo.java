@@ -56,7 +56,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -616,6 +615,10 @@ public class SpecsIo {
         return getFilesRecursive(path, extensions, true);
     }
 
+    public static List<File> getFilesRecursive(File folder, Collection<String> extensions, boolean followSymlinks) {
+        return getFilesRecursive(folder, extensions, followSymlinks, path -> false);
+    }
+
     /**
      * @param folder
      *            a File representing a folder or a file.
@@ -626,19 +629,162 @@ public class SpecsIo {
      * @param followSymlinks
      *            whether to follow symlinks
      * 
+     * @param cutoffFolders
+     * 
+     * 
      * @return all the files inside the given folder, excluding other folders, that have a certain extension as
      *         determined by the set.
      */
-    public static List<File> getFilesRecursive(File folder, Collection<String> extensions, boolean followSymlinks) {
+    public static List<File> getFilesRecursive(File path, Collection<String> extensions, boolean followSymlinks,
+            Predicate<File> cutoffFolders) {
 
-        List<File> fileList = new ArrayList<>();
+        // Make extensions lower-case
+        Collection<String> lowerCaseExtensions = extensions.stream().map(ext -> ext.toLowerCase())
+                .collect(Collectors.toSet());
 
-        for (String extension : extensions) {
-            List<File> files = getFilesRecursive(folder, extension, followSymlinks);
-            fileList.addAll(files);
+        List<File> files = new ArrayList<>();
+
+        getFilesRecursivePrivate(path, lowerCaseExtensions, followSymlinks, cutoffFolders, files);
+
+        return files;
+    }
+
+    private static void getFilesRecursivePrivate(File path, Collection<String> extensions, boolean followSymlinks,
+            Predicate<File> cutoffFolders, List<File> foundFiles) {
+
+        // List<File> fileList = new ArrayList<>();
+        //
+        // for (String extension : extensions) {
+        // List<File> files = getFilesRecursive(folder, extension, followSymlinks);
+        // fileList.addAll(files);
+        // }
+        //
+        // return fileList;
+
+        // if (!path.isDirectory()) {
+        if (!path.exists()) {
+            SpecsLogs.msgWarn("Path '" + path + "' does not exist.");
+            return;
         }
 
+        // Ignore path if is symlink
+        if (!followSymlinks && Files.isSymbolicLink(path.toPath())) {
+            return;
+        }
+
+        if (path.isFile()) {
+            String extension = SpecsIo.getExtension(path).toLowerCase();
+            if (extensions.contains(extension)) {
+                foundFiles.add(path);
+            }
+
+            return;
+            // if (SpecsIo.getExtension(path).equals(extension)) {
+            // return Arrays.asList(path);
+            // }
+            //
+            // return Collections.emptyList();
+        }
+
+        // Must be a folder from this point on
+        SpecsCheck.checkArgument(path.isDirectory(), () -> "Expected file to be a folder: " + path);
+
+        // If it should be cut-off, stop processing of this folder
+        if (cutoffFolders.test(path)) {
+            return;
+        }
+
+        // Recursively add files of folder
+        for (File child : path.listFiles()) {
+            getFilesRecursivePrivate(child, extensions, followSymlinks, cutoffFolders, foundFiles);
+        }
+
+        /*
+        this.extension = extension;
+        this.separator = SpecsIo.DEFAULT_EXTENSION_SEPARATOR;
+        this.followSymlinks = followSymlinks;
+        }
+        
+        @Override
+        public boolean accept(File dir, String name) {
+        
+        String suffix = separator + extension.toLowerCase();
+        
+        if (!followSymlinks) {
+        
+            File f = new File(dir, name);
+        
+            // Fail if this is a symlink. 
+            if (Files.isSymbolicLink(f.toPath())) {
+                return false;
+            }
+        }
+        
+        return name.toLowerCase().endsWith(suffix);
+        */
+        /*
+        // Process files inside folder
+        for (File file : path.listFiles()) {
+        
+          
+        
+            // Process folder
+            if (file.isDirectory()) {
+                // If it should be cut-off, stop processing of this folder
+                if (cutoffFolders.test(file)) {
+                    continue;
+                }
+        
+                // Recursively add files of folder
+                getFilesRecursivePrivate(file, extensions, followSymlinks, cutoffFolders, foundFiles);
+                continue;
+            }
+        
+            //
+            // if (!followSymlinks) {
+            //
+            // File f = new File(dir, name);
+            //
+            // // Fail if this is a symlink.
+            // if (Files.isSymbolicLink(f.toPath())) {
+            // return false;
+            // }
+            // }
+            //
+            // return name.toLowerCase().endsWith(suffix);
+        
+            String extension = SpecsIo.getExtension(file).toLowerCase();
+            
+            if(extensions.contains(o))
+        
+            // Add files that pass the extension and symlink rules
+            // String suffix = SpecsIo.DEFAULT_EXTENSION_SEPARATOR + extension.toLowerCase();
+        }
+        */
+        /*
+        List<File> fileList = new ArrayList<>();
+        
+        ExtensionFilter filter = new ExtensionFilter(extension, followSymlinks);
+        File[] files = path.listFiles(filter);
+        
+        fileList.addAll(Arrays.asList(files));
+        
+        // directories
+        files = path.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+        
+                // Ignore directory if is symlink
+                if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
+                    continue;
+                }
+        
+                fileList.addAll(getFilesRecursive(file, extension));
+            }
+        }
+        
         return fileList;
+        */
     }
 
     /**
@@ -1417,6 +1563,10 @@ public class SpecsIo {
      */
     static class ExtensionFilter implements FilenameFilter {
 
+        private final String extension;
+        private final String separator;
+        private final boolean followSymlinks;
+
         /**
          * Note: By default follows symlinks.
          * 
@@ -1450,9 +1600,6 @@ public class SpecsIo {
             return name.toLowerCase().endsWith(suffix);
         }
 
-        private final String extension;
-        private final String separator;
-        private final boolean followSymlinks;
     }
 
     /**
@@ -2608,6 +2755,21 @@ public class SpecsIo {
      * @return
      */
     public static Map<String, File> getFileMap(List<File> sources, boolean recursive, Set<String> extensions) {
+        return getFileMap(sources, recursive, extensions, file -> false);
+    }
+
+    /**
+     * 
+     * @param sources
+     * @param recursive
+     * @param extensions
+     * @param cutoffFolders
+     *            accepts a folder, if returns true, that folder and its sub-folders will be ignored from the search
+     * @return
+     */
+    public static Map<String, File> getFileMap(List<File> sources, boolean recursive, Set<String> extensions,
+            Predicate<File> cutoffFolders) {
+
         Map<String, File> fileMap = new LinkedHashMap<>();
 
         for (File source : sources) {
@@ -2615,7 +2777,7 @@ public class SpecsIo {
             File canonicalSource = SpecsIo.getCanonicalFile(source);
             // List<String> filenames = getFiles(Arrays.asList(source), extensions);
             // filenames.stream().forEach(filename -> fileMap.put(filename, source));
-            getFiles(Arrays.asList(canonicalSource), recursive, extensions).stream()
+            getFiles(Arrays.asList(canonicalSource), recursive, extensions, cutoffFolders).stream()
                     .forEach(file -> fileMap.put(SpecsIo.getCanonicalPath(file), canonicalSource));
         }
 
@@ -2623,12 +2785,19 @@ public class SpecsIo {
     }
 
     public static SpecsList<File> getFiles(List<File> sources, boolean recursive, Set<String> extensions) {
-        Function<? super File, ? extends Stream<? extends File>> flatMapper = recursive
-                ? path -> SpecsIo.getFilesRecursive(path).stream()
-                : path -> SpecsIo.getFiles(path).stream();
+        return getFiles(sources, recursive, extensions, file -> false);
+    }
+
+    public static SpecsList<File> getFiles(List<File> sources, boolean recursive, Set<String> extensions,
+            Predicate<File> cutoffFolders) {
+
+        // Function<? super File, ? extends Stream<? extends File>> flatMapper = recursive
+        // ? path -> SpecsIo.getFilesRecursive(path).stream()
+        // : path -> SpecsIo.getFiles(path).stream();
 
         List<File> sourceFiles = sources.stream()
-                .flatMap(flatMapper)
+                // .flatMap(flatMapper)
+                .flatMap(path -> fileMapper(path, recursive, extensions, cutoffFolders))
                 // .map(file -> file.getAbsolutePath())
                 .filter(file -> extensions.contains(SpecsIo.getExtension(file)))
                 .collect(Collectors.toList());
@@ -2644,6 +2813,22 @@ public class SpecsIo {
         // "All Sources after:" + sourceFiles.stream().map(Object::toString).collect(Collectors.joining(", ")));
 
         return SpecsList.convert(sourceFiles);
+    }
+
+    private static Stream<File> fileMapper(File path, boolean recursive, Set<String> extensions,
+            Predicate<File> cutoffFolders) {
+        // Test if path should be cut-off
+        if (path.isDirectory() && cutoffFolders.test(path)) {
+            return Stream.empty();
+        }
+
+        // // Check if it is a folder that should be ignored
+        // if (source.isDirectory() && cutoffFolders.test(source)) {
+        // continue;
+        // }
+
+        return recursive ? SpecsIo.getFilesRecursive(path, extensions, true, cutoffFolders).stream()
+                : SpecsIo.getFiles(path).stream();
     }
 
     public static void copyFolderContents(File sourceFolder, File destinationFolder) {
