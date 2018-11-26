@@ -699,7 +699,13 @@ public class SpecsIo {
         }
 
         // Recursively add files of folder
-        for (File child : path.listFiles()) {
+        File[] children = path.listFiles();
+        if (children == null) {
+            children = new File[0];
+            SpecsLogs.debug("Could not list files of path '" + path.getAbsolutePath() + "'");
+        }
+        // File[] childrenChecked = children != null ? children : new File[0];
+        for (File child : children) {
             getFilesRecursivePrivate(child, extensions, followSymlinks, cutoffFolders, foundFiles);
         }
 
