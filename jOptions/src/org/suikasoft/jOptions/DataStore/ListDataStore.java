@@ -223,6 +223,12 @@ public class ListDataStore implements DataStore {
         // System.out.println("VALUES:" + values);
         // System.out.println("KEY:" + key);
         // System.out.println("KEy INDEX:" + toIndex(key));
+
+        // Check if it has the index
+        // if (!getIndexes().hasIndex(key)) {
+        // return false;
+        // }
+
         return get(toIndex(key)) != null;
     }
 
@@ -243,13 +249,18 @@ public class ListDataStore implements DataStore {
     }
 
     private int toIndex(String key) {
+        StoreDefinitionIndexes indexes = getIndexes();
+
+        return indexes.getIndex(key);
+    }
+
+    private StoreDefinitionIndexes getIndexes() {
         StoreDefinitionIndexes indexes = KEY_TO_INDEXES.get(keys);
         if (indexes == null) {
             indexes = new StoreDefinitionIndexes(keys);
             KEY_TO_INDEXES.put(keys, indexes);
         }
-
-        return indexes.getIndex(key);
+        return indexes;
     }
 
     @Override

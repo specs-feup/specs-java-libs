@@ -52,4 +52,12 @@ public class StoreDefinitionIndexes {
         return index;
     }
 
+    public boolean hasIndex(DataKey<?> key) {
+        return hasIndex(key.getName());
+    }
+
+    public boolean hasIndex(String key) {
+        return keysToIndexes.containsKey(key);
+    }
+
 }
