@@ -92,12 +92,12 @@ public class TransformQueue<K extends TreeNode<K>> {
         instructions.add(new ReplaceTransform<>(originalNode, newNode));
     }
 
-    public void moveBefore(K originalNode, K newNode) {
-        instructions.add(new MoveBeforeTransform<>(originalNode, newNode));
+    public void moveBefore(K baseNode, K newNode) {
+        instructions.add(new MoveBeforeTransform<>(baseNode, newNode));
     }
 
-    public void moveAfter(K originalNode, K newNode) {
-        instructions.add(new MoveAfterTransform<>(originalNode, newNode));
+    public void moveAfter(K baseNode, K newNode) {
+        instructions.add(new MoveAfterTransform<>(baseNode, newNode));
     }
 
     public void delete(K node) {
