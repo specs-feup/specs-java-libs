@@ -261,51 +261,127 @@ public class SpecsSystem {
         InputStream errorStream = process.getErrorStream();
         InputStream inputStream = process.getInputStream();
 
+        // try {
+
+        // FunctionContainer<InputStream, O> outputContainer = new FunctionContainer<>(outputProcessor);
+        // FunctionContainer<InputStream, E> errorContainer = new FunctionContainer<>(errorProcessor);
+
+        ExecutorService stdoutThread = Executors.newSingleThreadExecutor();
+        Future<O> outputFuture = stdoutThread.submit(() -> outputProcessor.apply(inputStream));
+
+        ExecutorService stderrThread = Executors.newSingleThreadExecutor();
+        Future<E> errorFuture = stderrThread.submit(() -> errorProcessor.apply(errorStream));
+
+        // The ExecutorService objects are shutdown, as they will not
+        // receive more tasks.
+        stdoutThread.shutdown();
+        stderrThread.shutdown();
+
+        return executeProcess(process, timeoutNanos, outputFuture, errorFuture);
+
+        /*
+        int returnValue = executeProcess(process, timeoutNanos);
+        
+        // Wait 2 seconds
+        // stderrThread.awaitTermination(2, TimeUnit.SECONDS);
+        // stdoutThread.awaitTermination(2, TimeUnit.SECONDS);
+        
         try {
+            O output = outputFuture.get();
+            E error = errorFuture.get();
+        
+            // Save output
+            ProcessOutput<O, E> processOutput = new ProcessOutput<>(returnValue, output, error);
+        
+            return processOutput;
+        
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Exception while processing outputs of process:", e);
+        }
+        */
+        // outputContainer.getResult();
 
-            // FunctionContainer<InputStream, O> outputContainer = new FunctionContainer<>(outputProcessor);
-            // FunctionContainer<InputStream, E> errorContainer = new FunctionContainer<>(errorProcessor);
+        // } catch (InterruptedException e) {
+        // Thread.currentThread().interrupt();
+        // } finally {
+        // // Process is destroyed, even if we 'interrupt' the thread.
+        // // Thread.currentThread().interrupt() only sets a flag.
+        // process.destroy();
+        // }
 
-            ExecutorService stdoutThread = Executors.newSingleThreadExecutor();
-            Future<O> outputFuture = stdoutThread.submit(() -> outputProcessor.apply(inputStream));
+        // throw new RuntimeException("Could not execute the process");
+    }
 
-            ExecutorService stderrThread = Executors.newSingleThreadExecutor();
-            Future<E> errorFuture = stderrThread.submit(() -> errorProcessor.apply(errorStream));
+    private static <O, E> ProcessOutput<O, E> executeProcess(Process process, Long timeoutNanos, Future<O> outputFuture,
+            Future<E> errorFuture) {
 
-            // The ExecutorService objects are shutdown, as they will not
-            // receive more tasks.
-            stdoutThread.shutdown();
-            stderrThread.shutdown();
+        // try {
+        // O output = outputFuture.get();
+        // E error = errorFuture.get();
+        //
+        // // Save output
+        // ProcessOutput<O, E> processOutput = new ProcessOutput<>(returnValue, output, error);
+        //
+        // return processOutput;
+        //
+        // } catch (ExecutionException e) {
+        // throw new RuntimeException("Exception while processing outputs of process:", e);
+        // }
 
-            int returnValue = executeProcess(process, timeoutNanos);
+        try {
+            // System.out.println("EXECUTE PROCESS TIMEOUT:" + timeoutNanos + "ns");
 
-            // Wait 2 seconds
-            // stderrThread.awaitTermination(2, TimeUnit.SECONDS);
-            // stdoutThread.awaitTermination(2, TimeUnit.SECONDS);
+            boolean timedOut = false;
+            if (timeoutNanos == null) {
+                process.waitFor();
+            } else {
+                timedOut = !process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
+            }
 
+            // System.out.println("Process ended");
+
+            // Read streams before the process ends
+            O output = null;
+            E error = null;
             try {
-                O output = outputFuture.get();
-                E error = errorFuture.get();
-
-                // Save output
-                ProcessOutput<O, E> processOutput = new ProcessOutput<>(returnValue, output, error);
-
-                return processOutput;
-
+                output = outputFuture.get();
+                error = errorFuture.get();
             } catch (ExecutionException e) {
                 throw new RuntimeException("Exception while processing outputs of process:", e);
             }
-            // outputContainer.getResult();
 
+            int returnValue = timedOut ? -1 : process.exitValue();
+
+            // boolean processExited = process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
+            // System.out.println("PROCESS EXITED: " + processExited);
+            // System.out.println("PROCESS EXIT VALUE: " + process.exitValue());
+            // if (processExited) {
+            // return process.exitValue();
+            // }
+
+            if (timedOut) {
+                SpecsLogs.msgLib("SpecsSystem.executeProcess: Killing process...");
+                process.destroyForcibly();
+                SpecsLogs.msgLib("SpecsSystem.executeProcess: Waiting killing...");
+                boolean processDestroyed = process.waitFor(1, TimeUnit.SECONDS);
+                if (processDestroyed) {
+                    SpecsLogs.msgLib("SpecsSystem.executeProcess: Destroyed");
+                } else {
+                    SpecsLogs.msgInfo("SpecsSystem.executeProcess: Could not destroy process!");
+                }
+            }
+
+            return new ProcessOutput<>(returnValue, output, error);
+            // return -1;
+
+            // SpecsLogs.msgInfo("Process timed out v2");
+            // return -1;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-        } finally {
-            // Process is destroyed, even if we 'interrupt' the thread.
-            // Thread.currentThread().interrupt() only sets a flag.
-            process.destroy();
+            // SpecsLogs.msgInfo("Process timed out");
+            // return -1;
+            return new ProcessOutput<>(-1, null, null);
         }
-
-        throw new RuntimeException("Could not execute the process");
     }
 
     private static int executeProcess(Process process, Long timeoutNanos) {
