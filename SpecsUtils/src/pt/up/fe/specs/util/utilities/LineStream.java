@@ -199,10 +199,11 @@ public class LineStream implements AutoCloseable {
     public String nextLine() {
         if (nextLine != null) {
             currentLineIndex++;
+        } else {
+            return null;
         }
 
         final String currentLine = nextLine;
-
         nextLine = nextLineHelper();
 
         // Log to file
