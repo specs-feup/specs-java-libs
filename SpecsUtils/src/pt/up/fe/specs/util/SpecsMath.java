@@ -25,73 +25,73 @@ public class SpecsMath {
 
     // public static double zeroRatio(List<Number> values) {
     public static double zeroRatio(Collection<Number> values) {
-	return zeroRatio(values, 0.0);
+        return zeroRatio(values, 0.0);
     }
 
     // public static double zeroRatio(List<Number> values, double threshold) {
     public static double zeroRatio(Collection<Number> values, double threshold) {
-	double numZeros = 0;
+        double numZeros = 0;
 
-	for (Number value : values) {
-	    if (!(value.doubleValue() > threshold)) {
-		numZeros++;
-	    }
-	}
+        for (Number value : values) {
+            if (!(value.doubleValue() > threshold)) {
+                numZeros++;
+            }
+        }
 
-	return numZeros / values.size();
+        return numZeros / values.size();
     }
 
     // public static double arithmeticMean(List<Number> values) {
-    public static double arithmeticMean(Collection<Number> values) {
-	if (values.isEmpty()) {
-	    return 0;
-	}
+    public static double arithmeticMean(Collection<? extends Number> values) {
+        if (values.isEmpty()) {
+            return 0;
+        }
 
-	double result = 0;
+        double result = 0;
 
-	for (Number value : values) {
-	    result += value.doubleValue();
-	}
+        for (Number value : values) {
+            result += value.doubleValue();
+        }
 
-	result /= values.size();
+        result /= values.size();
 
-	return result;
+        return result;
     }
 
     // public static double arithmeticMeanWithoutZeros(List<Number> values) {
     public static Double arithmeticMeanWithoutZeros(Collection<Number> values) {
-	if (values.isEmpty()) {
-	    return null;
-	}
+        if (values.isEmpty()) {
+            return null;
+        }
 
-	double result = 0;
+        double result = 0;
 
-	int numZeros = 0;
-	for (Number value : values) {
-	    if (!(value.doubleValue() > 0.0) && !(value.doubleValue() < 0.0)) {
-		numZeros++;
-		continue;
-	    }
+        int numZeros = 0;
+        for (Number value : values) {
+            if (!(value.doubleValue() > 0.0) && !(value.doubleValue() < 0.0)) {
+                numZeros++;
+                continue;
+            }
 
-	    result += value.doubleValue();
-	}
+            result += value.doubleValue();
+        }
 
-	int numElements = values.size() - numZeros;
-	if (numElements == 0) {
-	    return 0d;
-	}
+        int numElements = values.size() - numZeros;
+        if (numElements == 0) {
+            return 0d;
+        }
 
-	// result /= values.size();
-	result /= numElements;
+        // result /= values.size();
+        result /= numElements;
 
-	return result;
+        return result;
     }
 
     // public static double geometricMean(List<Number> values) {
     /*
     public static double geometricMean(Collection<Number> values) {
        double result = 1;
-
+    
        //int zeros = 0;
        for(Number value : values) {
           
@@ -105,14 +105,14 @@ public class SpecsMath {
           result *= value.doubleValue();
        }
        //System.out.println("Piatorio:"+result);
-
+    
        int numberOfElements = values.size();
        
        double power = (double)1 / (double)numberOfElements;
        //double power = (double)1 / (double)values.size();
        result = Math.pow(result, power);
        //System.out.println("Final result:"+result);
-
+    
        return result;
     }
     */
@@ -120,7 +120,7 @@ public class SpecsMath {
     /*
     public static double geometricMeanWithZeroCorrection(Collection<Number> values) {
        double result = 1;
-
+    
        int zeros = 0;
        for(Number value : values) {
           if (!(value.doubleValue() > 0.0)) {
@@ -131,14 +131,14 @@ public class SpecsMath {
           result *= value.doubleValue();
        }
        //System.out.println("Piatorio:"+result);
-
+    
        int numberOfElements = values.size() - zeros;
        
        double power = (double)1 / (double)numberOfElements;
        //double power = (double)1 / (double)values.size();
        result = Math.pow(result, power);
        //System.out.println("Final result:"+result);
-
+    
        return result;
     }
     */
@@ -151,69 +151,69 @@ public class SpecsMath {
      * @return
      */
     public static double geometricMean(Collection<Number> values, boolean withoutZeros) {
-	double result = 1;
+        double result = 1;
 
-	int zeros = 0;
-	for (Number value : values) {
-	    if (!(value.doubleValue() > 0.0) && !(value.doubleValue() < 0.0)) {
-		zeros++;
-		continue;
-	    }
-	    // System.out.println("Value:"+value);
-	    result *= value.doubleValue();
-	}
-	// System.out.println("Piatorio:"+result);
+        int zeros = 0;
+        for (Number value : values) {
+            if (!(value.doubleValue() > 0.0) && !(value.doubleValue() < 0.0)) {
+                zeros++;
+                continue;
+            }
+            // System.out.println("Value:"+value);
+            result *= value.doubleValue();
+        }
+        // System.out.println("Piatorio:"+result);
 
-	int numberOfElements;
-	if (withoutZeros) {
-	    numberOfElements = values.size() - zeros;
-	} else {
-	    numberOfElements = values.size();
-	}
-	// int numberOfElements = values.size() - zeros;
+        int numberOfElements;
+        if (withoutZeros) {
+            numberOfElements = values.size() - zeros;
+        } else {
+            numberOfElements = values.size();
+        }
+        // int numberOfElements = values.size() - zeros;
 
-	double power = (double) 1 / (double) numberOfElements;
-	// double power = (double)1 / (double)values.size();
-	result = Math.pow(result, power);
-	// System.out.println("Final result:"+result);
+        double power = (double) 1 / (double) numberOfElements;
+        // double power = (double)1 / (double)values.size();
+        result = Math.pow(result, power);
+        // System.out.println("Final result:"+result);
 
-	return result;
+        return result;
     }
 
     // public static double harmonicMean(List<Number> values, boolean useZeroCorrection) {
     public static double harmonicMean(Collection<Number> values, boolean useZeroCorrection) {
-	double result = 0;
-	int zeros = 0;
-	for (Number value : values) {
-	    if (!(value.doubleValue() > 0.0) && !(value.doubleValue() < 0.0)) {
-		zeros++;
-		continue;
-		// value = 0.000000001;
-		// value = Double.MIN_VALUE;
-	    }
-	    // System.out.println("Value:"+value);
-	    result += 1 / value.doubleValue();
-	}
+        double result = 0;
+        int zeros = 0;
+        for (Number value : values) {
+            if (!(value.doubleValue() > 0.0) && !(value.doubleValue() < 0.0)) {
+                zeros++;
+                continue;
+                // value = 0.000000001;
+                // value = Double.MIN_VALUE;
+            }
+            // System.out.println("Value:"+value);
+            result += 1 / value.doubleValue();
+        }
 
-	int numberOfElements = values.size() - zeros;
+        int numberOfElements = values.size() - zeros;
 
-	if (numberOfElements == 0) {
-	    return 0.0;
-	}
-	// int numberOfElements = values.size();
+        if (numberOfElements == 0) {
+            return 0.0;
+        }
+        // int numberOfElements = values.size();
 
-	// result = (double)values.size() / result;
-	result = numberOfElements / result;
+        // result = (double)values.size() / result;
+        result = numberOfElements / result;
 
-	// Zero value correction
-	// System.out.println("Number of zeros:"+zeros);
-	// System.out.println("BEfore correction:"+result);
-	if (useZeroCorrection) {
-	    result *= (double) numberOfElements / (double) values.size();
-	}
-	// System.out.println("AFter correction:"+result);
-	// result = (double)values.size() / result;
-	return result;
+        // Zero value correction
+        // System.out.println("Number of zeros:"+zeros);
+        // System.out.println("BEfore correction:"+result);
+        if (useZeroCorrection) {
+            result *= (double) numberOfElements / (double) values.size();
+        }
+        // System.out.println("AFter correction:"+result);
+        // result = (double)values.size() / result;
+        return result;
     }
 
     /*
@@ -228,7 +228,7 @@ public class SpecsMath {
           //System.out.println("Value:"+value);
           result += (double)1 / value.doubleValue();
        }
-
+    
        int numberOfElements = values.size() - zeros;
        //int numberOfElements = values.size();
        
@@ -238,68 +238,68 @@ public class SpecsMath {
     }
     */
 
-    public static Number max(List<Number> values, boolean ignoreZeros) {
-	if (values == null) {
-	    // return 0;
-	    return null;
-	}
+    public static Number max(List<? extends Number> values, boolean ignoreZeros) {
+        if (values == null) {
+            // return 0;
+            return null;
+        }
 
-	if (values.isEmpty()) {
-	    // return 0;
-	    return null;
-	}
+        if (values.isEmpty()) {
+            // return 0;
+            return null;
+        }
 
-	Number max = Double.MAX_VALUE * -1;
+        Number max = Double.MAX_VALUE * -1;
 
-	int zeros = 0;
-	for (Number number : values) {
-	    if (!(number.doubleValue() > 0.0) && !(number.doubleValue() < 0.0)) {
-		zeros++;
-		if (ignoreZeros) {
-		    continue;
-		}
-	    }
+        int zeros = 0;
+        for (Number number : values) {
+            if (!(number.doubleValue() > 0.0) && !(number.doubleValue() < 0.0)) {
+                zeros++;
+                if (ignoreZeros) {
+                    continue;
+                }
+            }
 
-	    max = Math.max(max.doubleValue(), number.doubleValue());
-	}
+            max = Math.max(max.doubleValue(), number.doubleValue());
+        }
 
-	if (zeros == values.size() && ignoreZeros) {
-	    return 0;
-	}
+        if (zeros == values.size() && ignoreZeros) {
+            return 0;
+        }
 
-	return max;
+        return max;
     }
 
-    public static Number min(List<Number> values, boolean ignoreZeros) {
-	if (values == null) {
-	    // return 0;
-	    return null;
-	}
+    public static Number min(List<? extends Number> values, boolean ignoreZeros) {
+        if (values == null) {
+            // return 0;
+            return null;
+        }
 
-	if (values.isEmpty()) {
-	    // return 0;
-	    return null;
-	}
+        if (values.isEmpty()) {
+            // return 0;
+            return null;
+        }
 
-	Number min = Double.MAX_VALUE;
+        Number min = Double.MAX_VALUE;
 
-	int zeros = 0;
-	for (Number number : values) {
-	    if (!(number.doubleValue() > 0.0) && !(number.doubleValue() < 0.0)) {
-		zeros++;
-		if (ignoreZeros) {
-		    continue;
-		}
-	    }
+        int zeros = 0;
+        for (Number number : values) {
+            if (!(number.doubleValue() > 0.0) && !(number.doubleValue() < 0.0)) {
+                zeros++;
+                if (ignoreZeros) {
+                    continue;
+                }
+            }
 
-	    min = Math.min(min.doubleValue(), number.doubleValue());
-	}
+            min = Math.min(min.doubleValue(), number.doubleValue());
+        }
 
-	if (zeros == values.size() && ignoreZeros) {
-	    return 0;
-	}
+        if (zeros == values.size() && ignoreZeros) {
+            return 0;
+        }
 
-	return min;
+        return min;
     }
 
     /*
@@ -310,11 +310,11 @@ public class SpecsMath {
      */
 
     public static long sum(List<Number> numbers) {
-	long acc = 0;
-	for (Number number : numbers) {
-	    acc += number.longValue();
-	}
+        long acc = 0;
+        for (Number number : numbers) {
+            acc += number.longValue();
+        }
 
-	return acc;
+        return acc;
     }
 }
