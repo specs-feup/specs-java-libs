@@ -662,7 +662,7 @@ public class SpecsIo {
 
         // if (!path.isDirectory()) {
         if (!path.exists()) {
-            SpecsLogs.msgWarn("Path '" + path + "' does not exist.");
+            SpecsLogs.debug(() -> "Path '" + path + "' does not exist.");
             return;
         }
 
@@ -690,6 +690,11 @@ public class SpecsIo {
             // return Collections.emptyList();
         }
 
+        if (!path.isDirectory()) {
+            SpecsLogs.debug(() -> "Ignoring path that is neither file or folder: " + path);
+            return;
+        }
+        
         // Must be a folder from this point on
         SpecsCheck.checkArgument(path.isDirectory(), () -> "Expected file to be a folder: " + path);
 
