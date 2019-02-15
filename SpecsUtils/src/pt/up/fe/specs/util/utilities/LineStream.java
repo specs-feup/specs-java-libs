@@ -191,6 +191,11 @@ public class LineStream implements AutoCloseable {
         return name;
     }
 
+    public String peekNextLine() {
+        return nextLine;
+
+    }
+
     /**
      * TODO: Rename 'next'
      * 
