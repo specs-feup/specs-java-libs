@@ -51,7 +51,7 @@ class GenericKey<T> extends ADataKey<T> {
             StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter) {
 
         super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customGetter);
+                customSetter);
 
         this.exampleInstance = exampleInstance;
     }
