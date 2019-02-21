@@ -41,8 +41,9 @@ class NormalKey<T> extends ADataKey<T> {
 
     protected NormalKey(String id, Class<T> aClass, Supplier<? extends T> defaultValueProvider,
             StringCodec<T> decoder, CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition, Function<T, T> copyFunction) {
-        super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction);
+            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter) {
+        super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                customSetter);
 
         this.aClass = aClass;
     }
@@ -54,16 +55,16 @@ class NormalKey<T> extends ADataKey<T> {
      * @param defaultValue
      */
     public NormalKey(String id, Class<T> aClass, Supplier<T> defaultValue) {
-        this(id, aClass, defaultValue, null, null, null, null, null, null);
+        this(id, aClass, defaultValue, null, null, null, null, null, null, null);
     }
 
     @Override
     protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
-            Function<T, T> copyFunction) {
+            Function<T, T> copyFunction, CustomGetter<T> customSetter) {
 
         return new NormalKey<>(id, aClass, defaultValueProvider, decoder, customGetter, panelProvider, label,
-                definition, copyFunction);
+                definition, copyFunction, customSetter);
     }
 
     @Override

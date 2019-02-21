@@ -162,6 +162,14 @@ public abstract class ADataStore implements DataStore {
     public <T, E extends T> ADataStore set(DataKey<T> key, E value) {
         SpecsCheck.checkNotNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
 
+        T realValue = value;
+
+        // Check if key has custom setter
+        Optional<CustomGetter<T>> setter = key.getCustomSetter();
+        if (setter.isPresent()) {
+            realValue = setter.get().get(value, this);
+        }
+
         // Do not replace key if it already exists
         // if (!keys.containsKey(key.getName())) {
         // keys.put(key.getName(), key);
@@ -170,8 +178,8 @@ public abstract class ADataStore implements DataStore {
         // return data.setValue(key, value);
 
         // Stop if value is not compatible with class of key
-        if (key.verifyValueClass() && !key.getValueClass().isInstance(value)) {
-            throw new RuntimeException("Tried to add a value of type '" + value.getClass()
+        if (key.verifyValueClass() && !key.getValueClass().isInstance(realValue)) {
+            throw new RuntimeException("Tried to add a value of type '" + realValue.getClass()
                     + "', with a key that supports '" + key.getValueClass() + "'");
 
             // // Check if there is a common type, besides Object
@@ -194,7 +202,7 @@ public abstract class ADataStore implements DataStore {
         }
 
         // Optional<Object> previousValue = setRaw(key.getName(), value);
-        setRaw(key.getName(), value);
+        setRaw(key.getName(), realValue);
 
         return this;
 

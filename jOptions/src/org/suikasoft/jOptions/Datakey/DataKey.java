@@ -116,6 +116,14 @@ public interface DataKey<T> {
     Optional<CustomGetter<T>> getCustomGetter();
 
     /*
+     * CUSTOM SETTER
+     */
+
+    DataKey<T> setCustomSetter(CustomGetter<T> setProcessing);
+
+    Optional<CustomGetter<T>> getCustomSetter();
+
+    /*
      * KEY PANEL
      */
     DataKey<T> setKeyPanelProvider(KeyPanelProvider<T> panelProvider);
