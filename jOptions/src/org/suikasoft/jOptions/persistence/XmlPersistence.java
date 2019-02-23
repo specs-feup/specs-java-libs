@@ -153,7 +153,7 @@ public class XmlPersistence implements AppPersistence {
 
         // Check that they refer to the same dataStore
         if (!dataStore.getName().equals(parsedObject.getName())) {
-            SpecsLogs.msgWarn("Given file refers to the store definition '" + parsedObject.getName()
+            SpecsLogs.debug("File '" + file + "' refers to the store definition '" + parsedObject.getName()
                     + "', expected '" + dataStore.getName() + "'");
         }
 
