@@ -45,6 +45,7 @@ import org.suikasoft.jOptions.values.SetupList;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
+import pt.up.fe.specs.util.SpecsCollections;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.utilities.StringList;
@@ -474,4 +475,25 @@ public class KeyFactory {
     //
     // return key;
     // }
+
+    @SuppressWarnings("unchecked")
+    public static <T> DataKey<List<T>> list(String id, Class<T> elementClass) {
+        return generic(id, () -> (List<T>) new ArrayList<>())
+                .setCustomSetter((value, data) -> KeyFactory.listCustomSetter(value, data, elementClass));
+
+    }
+
+    private static <T> List<T> listCustomSetter(List<?> value, DataStore data, Class<T> elementClass) {
+        if (value instanceof ArrayList) {
+            return SpecsCollections.cast(value, elementClass);
+        }
+
+        List<T> arrayList = new ArrayList<>(value.size());
+        for (Object element : value) {
+            arrayList.add(elementClass.cast(element));
+        }
+
+        return arrayList;
+    }
+
 }
