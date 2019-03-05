@@ -44,6 +44,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -330,12 +331,15 @@ public class SpecsSystem {
 
         try {
             // System.out.println("EXECUTE PROCESS TIMEOUT:" + timeoutNanos + "ns");
-
             boolean timedOut = false;
             if (timeoutNanos == null) {
+                // SpecsLogs.debug(() -> "Launched process without timeout");
                 process.waitFor();
             } else {
+                // SpecsLogs.debug(() -> "Launched process with a timeout of " + timeoutNanos + "ns");
                 timedOut = !process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
+                boolean timedOutFinal = timedOut;
+                // SpecsLogs.debug(() -> "Process timed out? " + timedOutFinal);
             }
 
             // System.out.println("Process ended");
@@ -343,12 +347,15 @@ public class SpecsSystem {
             // Read streams before the process ends
             O output = null;
             E error = null;
-            try {
-                output = outputFuture.get();
-                error = errorFuture.get();
-            } catch (ExecutionException e) {
-                throw new RuntimeException("Exception while processing outputs of process:", e);
-            }
+            // SpecsLogs.debug(() -> "Reading process streams");
+            output = get(outputFuture, 1, TimeUnit.SECONDS);
+            error = get(errorFuture, 1, TimeUnit.SECONDS);
+
+            // try {
+            //
+            // } catch (ExecutionException e) {
+            // throw new RuntimeException("Exception while processing outputs of process:", e);
+            // }
 
             int returnValue = timedOut ? -1 : process.exitValue();
 
@@ -360,17 +367,18 @@ public class SpecsSystem {
             // }
 
             if (timedOut) {
-                SpecsLogs.msgLib("SpecsSystem.executeProcess: Killing process...");
+                SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Killing process...");
                 process.destroyForcibly();
-                SpecsLogs.msgLib("SpecsSystem.executeProcess: Waiting killing...");
+                SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Waiting killing...");
                 boolean processDestroyed = process.waitFor(1, TimeUnit.SECONDS);
                 if (processDestroyed) {
-                    SpecsLogs.msgLib("SpecsSystem.executeProcess: Destroyed");
+                    SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Destroyed");
                 } else {
-                    SpecsLogs.msgInfo("SpecsSystem.executeProcess: Could not destroy process!");
+                    SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Could not destroy process!");
                 }
             }
 
+            // SpecsLogs.debug(() -> "Returning process output");
             return new ProcessOutput<>(returnValue, output, error);
             // return -1;
 
@@ -380,25 +388,26 @@ public class SpecsSystem {
             Thread.currentThread().interrupt();
             // SpecsLogs.msgInfo("Process timed out");
             // return -1;
+            // SpecsLogs.debug(() -> "Returning interrupted process output");
             return new ProcessOutput<>(-1, null, null);
         }
     }
-
+    /*
     private static int executeProcess(Process process, Long timeoutNanos) {
         try {
             // System.out.println("EXECUTE PROCESS TIMEOUT:" + timeoutNanos + "ns");
-
+    
             if (timeoutNanos == null) {
                 return process.waitFor();
             }
-
+    
             boolean processExited = process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
             // System.out.println("PROCESS EXITED: " + processExited);
             // System.out.println("PROCESS EXIT VALUE: " + process.exitValue());
             if (processExited) {
                 return process.exitValue();
             }
-
+    
             SpecsLogs.msgLib("SpecsSystem.executeProcess: Killing process...");
             process.destroyForcibly();
             SpecsLogs.msgLib("SpecsSystem.executeProcess: Waiting killing...");
@@ -408,9 +417,9 @@ public class SpecsSystem {
             } else {
                 SpecsLogs.msgInfo("SpecsSystem.executeProcess: Could not destroy process!");
             }
-
+    
             return -1;
-
+    
             // SpecsLogs.msgInfo("Process timed out v2");
             // return -1;
         } catch (InterruptedException e) {
@@ -419,6 +428,7 @@ public class SpecsSystem {
             return -1;
         }
     }
+    */
 
     public static ThreadFactory getDaemonThreadFactory() {
         return r -> {
@@ -817,6 +827,28 @@ public class SpecsSystem {
 
             throw new RuntimeException(e.getCause());
             // throw new RuntimeException("Error while executing thread", e);
+        }
+    }
+
+    public static <T> T get(Future<T> future, long timeout, TimeUnit unit) {
+        try {
+            return future.get(timeout, unit);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            SpecsLogs.debug("get(): Failed to complete execution on thread, returning null");
+            return null;
+        } catch (ExecutionException e) {
+            // Rethrow cause
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+
+            throw new RuntimeException(e.getCause());
+            // throw new RuntimeException("Error while executing thread", e);
+        } catch (TimeoutException e) {
+            SpecsLogs.debug("SpecsSystem.get(): Timeout while retriving Future");
+            return null;
         }
     }
 

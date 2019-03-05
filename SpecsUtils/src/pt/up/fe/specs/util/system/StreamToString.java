@@ -23,7 +23,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 public class StreamToString implements Function<InputStream, String> {
 
-    private static String NEW_LINE = System.getProperty("line.separator");
+    private static final String NEW_LINE = System.getProperty("line.separator");
 
     private final boolean printOutput;
     private final boolean storeOutput;
@@ -48,11 +48,15 @@ public class StreamToString implements Function<InputStream, String> {
         StringBuilder output = new StringBuilder();
 
         try {
-            String stdline = null;
-            while ((stdline = reader.readLine()) != null) {
 
+            String stdline = null;
+
+            while ((stdline = reader.readLine()) != null) {
+                // String currentLine = stdline;
+                // SpecsLogs.debug(() -> "StreamToString: reading line: " + currentLine);
                 if (this.printOutput) {
-                    type.print(stdline + NEW_LINE);
+                    type.print(stdline);
+                    type.print(NEW_LINE);
                 }
 
                 // System.err.println(stdline);
@@ -64,10 +68,13 @@ public class StreamToString implements Function<InputStream, String> {
 
             }
 
+            // SpecsLogs.debug("StreamToString: finished stream");
+            // inputStream.close();
         } catch (IOException e) {
             SpecsLogs.msgWarn("IOException during program execution:" + e.getMessage());
         }
-
+        // SpecsLogs.debug(() -> "Output class: " + output.getClass());
+        // SpecsLogs.debug(() -> "Output string length: " + output.toString().length());
         return output.toString();
     }
 

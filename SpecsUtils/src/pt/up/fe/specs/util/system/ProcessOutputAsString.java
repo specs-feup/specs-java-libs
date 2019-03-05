@@ -21,7 +21,7 @@ public class ProcessOutputAsString extends ProcessOutput<String, String> {
      * @param stdErr
      */
     public ProcessOutputAsString(int returnValue, String stdOut, String stdErr) {
-        super(returnValue, stdOut, stdErr);
+        super(returnValue, stdOut == null ? "" : stdOut, stdErr == null ? "" : stdErr);
     }
 
     /**
