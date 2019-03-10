@@ -338,7 +338,7 @@ public class SpecsSystem {
             } else {
                 // SpecsLogs.debug(() -> "Launched process with a timeout of " + timeoutNanos + "ns");
                 timedOut = !process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
-                boolean timedOutFinal = timedOut;
+                // boolean timedOutFinal = timedOut;
                 // SpecsLogs.debug(() -> "Process timed out? " + timedOutFinal);
             }
 
@@ -348,8 +348,19 @@ public class SpecsSystem {
             O output = null;
             E error = null;
             // SpecsLogs.debug(() -> "Reading process streams");
-            output = get(outputFuture, 1, TimeUnit.SECONDS);
-            error = get(errorFuture, 1, TimeUnit.SECONDS);
+
+            try {
+                output = outputFuture.get(10, TimeUnit.SECONDS);
+                error = errorFuture.get(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Thread interrupted while waiting for output/error streams");
+            } catch (Exception e) {
+                throw new RuntimeException("Exception while waiting for output/error streams", e);
+            }
+
+            // output = get(outputFuture, 2, TimeUnit.SECONDS);
+            // error = get(errorFuture, 2, TimeUnit.SECONDS);
 
             // try {
             //
@@ -847,7 +858,7 @@ public class SpecsSystem {
             throw new RuntimeException(e.getCause());
             // throw new RuntimeException("Error while executing thread", e);
         } catch (TimeoutException e) {
-            SpecsLogs.debug("SpecsSystem.get(): Timeout while retriving Future");
+            SpecsLogs.debug("get(): Timeout while retriving Future");
             return null;
         }
     }
