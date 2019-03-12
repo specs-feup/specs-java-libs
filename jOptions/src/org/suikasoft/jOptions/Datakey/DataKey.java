@@ -25,6 +25,7 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.parsing.StringCodec;
+import pt.up.fe.specs.util.providers.KeyProvider;
 import pt.up.fe.specs.util.utilities.StringLines;
 
 /**
@@ -34,7 +35,12 @@ import pt.up.fe.specs.util.utilities.StringLines;
  * 
  * @see KeyFactory
  */
-public interface DataKey<T> {
+public interface DataKey<T> extends KeyProvider<String> {
+
+    @Override
+    default String getKey() {
+        return getName();
+    }
 
     /**
      * TODO: Rename to getType
