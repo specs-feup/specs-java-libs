@@ -417,12 +417,12 @@ public class SpecsLogs {
      *
      * @param msg
      */
-    public static void msgWarn(String msg) {
+    public static void warn(String msg) {
         SPECS_LOGGER.warn(msg);
-        // final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
-        // final int startIndex = 2;
-        //
-        // msgWarn(msg, elements, startIndex, true, null);
+    }
+
+    public static void msgWarn(String msg) {
+        warn(msg);
     }
 
     /*
@@ -541,8 +541,12 @@ public class SpecsLogs {
      * @param msg
      */
     public static void msgInfo(String msg) {
-        SPECS_LOGGER.info(msg);
+        info(msg);
         // msgInfo(Logger.getLogger(SpecsLogs.INFO_TAG), msg);
+    }
+
+    public static void info(String msg) {
+        SPECS_LOGGER.info(msg);
     }
 
     /**
