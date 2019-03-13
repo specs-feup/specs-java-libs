@@ -77,6 +77,9 @@ import pt.up.fe.specs.util.utilities.ProgressCounter;
  */
 public class SpecsIo {
 
+    private static final Set<Character> ILLEGAL_FILENAME_CHARS = new HashSet<>(
+            Arrays.asList('\\', '/', ':', '*', '?', '"', '<', '>', '|'));
+
     /**
      * Helper class for methods that copy resources.
      * 
@@ -694,7 +697,7 @@ public class SpecsIo {
             SpecsLogs.debug(() -> "Ignoring path that is neither file or folder: " + path);
             return;
         }
-        
+
         // Must be a folder from this point on
         SpecsCheck.checkArgument(path.isDirectory(), () -> "Expected file to be a folder: " + path);
 
@@ -2351,8 +2354,13 @@ public class SpecsIo {
             String filename = path.substring(path.lastIndexOf('/') + 1, path.length());
 
             if (filename.isEmpty()) {
-                SpecsLogs.msgInfo("Could not get a filename for the url '" + url + "'");
+                SpecsLogs.info("Could not get a filename for the url '" + url + "'");
                 return null;
+            }
+
+            String escapedFilename = SpecsIo.escapeFilename(filename);
+            if (!escapedFilename.equals(filename)) {
+                SpecsLogs.info("Renamed '" + filename + "' to '" + escapedFilename + "'");
             }
 
             byte[] buffer = new byte[4 * 1024];
@@ -2365,9 +2373,9 @@ public class SpecsIo {
                 outputFolder = SpecsIo.mkdir(outputFolder);
             }
 
-            File outputFile = new File(outputFolder, filename);
+            File outputFile = new File(outputFolder, escapedFilename);
 
-            SpecsLogs.msgInfo("Downloading '" + filename + "' to '" + outputFolder + "'...");
+            SpecsLogs.msgInfo("Downloading '" + escapedFilename + "' to '" + outputFolder + "'...");
             try (FileOutputStream os = new FileOutputStream(outputFile);
                     InputStream in = con.getInputStream()) {
 
@@ -2387,6 +2395,26 @@ public class SpecsIo {
             return null;
         }
 
+    }
+
+    /**
+     * Replaces characters that are illegal for filenames with '_'.
+     * 
+     * @param filename
+     * @return
+     */
+    public static String escapeFilename(String filename) {
+        StringBuilder escapedFilename = new StringBuilder(filename.length());
+        for (char aChar : filename.toCharArray()) {
+
+            if (ILLEGAL_FILENAME_CHARS.contains(aChar)) {
+                escapedFilename.append("_");
+            } else {
+                escapedFilename.append(aChar);
+            }
+        }
+
+        return escapedFilename.toString();
     }
 
     /**
