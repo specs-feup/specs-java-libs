@@ -14,10 +14,12 @@
 package org.suikasoft.jOptions.app;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.cli.GenericApp;
 import org.suikasoft.jOptions.gui.panels.app.TabProvider;
+import org.suikasoft.jOptions.persistence.XmlPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -28,11 +30,15 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
  */
 public interface App {
 
+    AppKernel getKernel();
+
     /**
      *
      * @return name of the app
      */
-    String getName();
+    default String getName() {
+        return getClass().getSimpleName();
+    }
 
     /**
      * The options available for this app.
@@ -46,15 +52,21 @@ public interface App {
      *
      * @return
      */
-    AppPersistence getPersistence();
+    default AppPersistence getPersistence() {
+        return new XmlPersistence(getDefinition());
+    }
 
-    AppKernel getKernel();
+    default Collection<TabProvider> getOtherTabs() {
+        return Collections.emptyList();
+    }
 
-    Collection<TabProvider> getOtherTabs();
+    default Class<?> getNodeClass() {
+        return getClass();
+    }
 
-    Class<?> getNodeClass();
-
-    Optional<ResourceProvider> getIcon();
+    default Optional<ResourceProvider> getIcon() {
+        return Optional.empty();
+    }
 
     /**
      * Creates a new App.
