@@ -2438,7 +2438,9 @@ public class SpecsIo {
         // This can be problematic in regard to read/write permissions
         // Suffix the name of the user to make the temporary folder unique to the user
         if (SpecsSystem.isLinux()) {
-            tempDir = tempDir + "_" + System.getProperty("user.name");
+            String userName = System.getProperty("user.name");
+            folderName = folderName == null ? "tmp_" + userName : folderName + "_" + userName;
+            // tempDir = tempDir + "_" + System.getProperty("user.name");
         }
 
         File systemTemp = SpecsIo.existingFolder(null, tempDir);
