@@ -2434,6 +2434,13 @@ public class SpecsIo {
         // Get the temporary directory and print it.
         String tempDir = System.getProperty(property);
 
+        // If we are on Linux, usually the temporary folder is shared by all users.
+        // This can be problematic in regard to read/write permissions
+        // Suffix the name of the user to make the temporary folder unique to the user
+        if (SpecsSystem.isLinux()) {
+            tempDir = tempDir + "_" + System.getProperty("user.name");
+        }
+
         File systemTemp = SpecsIo.existingFolder(null, tempDir);
 
         if (folderName == null) {
