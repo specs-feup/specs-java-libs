@@ -68,6 +68,8 @@ public class SpecsSystem {
 
     private static final Lazy<Boolean> IS_DEBUG = Lazy.newInstance(() -> new File("debug").isFile());
 
+    private static final boolean IS_LINUX = System.getProperty("os.name").toLowerCase().startsWith("linux");
+
     /**
      * Helper method which receives the command and the working directory instead of the builder.
      *
@@ -1215,4 +1217,11 @@ public class SpecsSystem {
         return new LinkedList<Class<?>>(rollingIntersect);
     }
 
+    /**
+     * 
+     * @return true if the JVM is currently executing in a Linux system, false otherwise
+     */
+    public static boolean isLinux() {
+        return IS_LINUX;
+    }
 }
