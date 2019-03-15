@@ -14,7 +14,6 @@
 package pt.up.fe.specs.ant;
 
 import java.io.File;
-import java.util.UUID;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
@@ -23,6 +22,7 @@ import org.apache.tools.ant.ProjectHelper;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.lazy.Lazy;
 
 /**
  * Utility methods related with ANT.
@@ -32,7 +32,13 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class SpecsAnt {
 
-    private static final String TEMPORARY_FOLDERNAME = "specs_ant_" + UUID.randomUUID().toString();
+    private static final Lazy<File> TEMPORARY_FOLDER = Lazy.newInstance(SpecsAnt::initTempFolder);
+
+    private static File initTempFolder() {
+        File tempFolder = SpecsIo.getTempFolder("specs_ant");
+        SpecsIo.deleteFolderContents(tempFolder);
+        return tempFolder;
+    }
 
     public static void runAnt(File antScript, String target) {
 
@@ -152,6 +158,6 @@ public class SpecsAnt {
     }
 
     public static File getTemporaryFolder() {
-        return SpecsIo.getTempFolder(TEMPORARY_FOLDERNAME);
+        return TEMPORARY_FOLDER.get();
     }
 }
