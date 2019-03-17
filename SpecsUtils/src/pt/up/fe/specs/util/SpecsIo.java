@@ -3071,4 +3071,8 @@ public class SpecsIo {
         }
     }
 
+    public static String getPathSeparator() {
+        return File.pathSeparator;
+    }
+
 }
