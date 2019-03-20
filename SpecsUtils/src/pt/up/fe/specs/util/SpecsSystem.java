@@ -243,22 +243,8 @@ public class SpecsSystem {
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
-        // Adapt command if in Linux
-        // if (isLinux()) {
-        // List<String> newCommand = new ArrayList<>();
-        // newCommand.add("script");
-        // // newCommand.add("-q");
-        // newCommand.add("-f");
-        // newCommand.add("-e");
-        // newCommand.add("-c");
-        // newCommand.add(getCommandString(builder.command()));
-        //
-        // builder.command(newCommand);
-        // }
-
         String commandString = getCommandString(builder.command());
         SpecsLogs.debug("Launching Process: " + commandString);
-        // System.out.println("Launching Process: " + commandString);
 
         Process process = null;
         try {
