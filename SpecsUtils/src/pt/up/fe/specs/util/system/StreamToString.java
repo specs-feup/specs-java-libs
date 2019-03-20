@@ -23,7 +23,10 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 public class StreamToString implements Function<InputStream, String> {
 
+    // private static AtomicInteger COUNTER = new AtomicInteger();
+
     private static final String NEW_LINE = System.getProperty("line.separator");
+    // private static final int BUFFER_SIZE = 1024;
 
     private final boolean printOutput;
     private final boolean storeOutput;
@@ -44,10 +47,62 @@ public class StreamToString implements Function<InputStream, String> {
 
     @Override
     public String apply(InputStream inputStream) {
+        // int id = COUNTER.incrementAndGet();
+        // System.out.println("Stream to String " + id + " (" + type + ")");
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        // InputStreamReader reader = new InputStreamReader(inputStream);
         StringBuilder output = new StringBuilder();
 
+        // char[] buffer = new char[BUFFER_SIZE];
+
         try {
+            /*
+            int readChars = -1;
+            while ((readChars = reader.read(buffer)) != -1) {
+                // String currentLine = stdline;
+                // SpecsLogs.debug(() -> "StreamToString: reading line: " + currentLine);
+                if (this.printOutput) {
+                    type.print(String.valueOf(readChars));
+                    // type.print(stdline);
+                    // type.print(NEW_LINE);
+                }
+            
+                // System.err.println(stdline);
+            
+                // Save output
+                if (this.storeOutput) {
+                    output.append(readChars);
+                }
+            
+            }
+            // System.out.println("Finished StreamToString " + id + " (" + type + ")");
+            inputStream.close();
+            */
+            /*
+            int readChar = -1;
+            
+            while ((readChar = reader.read()) != -1) {
+                char read = (char) readChar;
+                String readString = String.valueOf(read);
+            
+                // String currentLine = stdline;
+                // SpecsLogs.debug(() -> "StreamToString: reading line: " + currentLine);
+                if (this.printOutput) {
+                    type.print(readString);
+                    // type.print(stdline);
+                    // type.print(NEW_LINE);
+                }
+            
+                // System.err.println(stdline);
+            
+                // Save output
+                if (this.storeOutput) {
+                    // output.append(stdline).append(NEW_LINE);
+                    output.append(read);
+                }
+            
+            }
+            */
 
             String stdline = null;
 
@@ -67,9 +122,10 @@ public class StreamToString implements Function<InputStream, String> {
                 }
 
             }
+            inputStream.close();
 
-            // SpecsLogs.debug("StreamToString: finished stream");
-            // inputStream.close();
+            // System.out.println("Finished StreamToString " + id + " (" + type + ")");
+
         } catch (IOException e) {
             SpecsLogs.msgWarn("IOException during program execution:" + e.getMessage());
         }
