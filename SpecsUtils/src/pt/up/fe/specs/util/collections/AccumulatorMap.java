@@ -93,6 +93,24 @@ public class AccumulatorMap<T> {
         return value;
     }
 
+    /**
+     * Sets the value for the given element.
+     * 
+     * @param element
+     * @return the previous value, or 0 if there was no value
+     */
+    public Integer set(T element, int value) {
+        int previousCount = getCount(element);
+
+        accMap.put(element, value);
+
+        // Adjust accumulator
+        accumulator -= previousCount;
+        accumulator += value;
+
+        return previousCount;
+    }
+
     public boolean remove(T element) {
         return remove(element, 1);
     }
