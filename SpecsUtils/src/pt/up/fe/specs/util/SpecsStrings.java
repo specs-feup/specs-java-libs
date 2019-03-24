@@ -76,6 +76,7 @@ public class SpecsStrings {
     }
 
     public static final Pattern INTEGER_PATTERN = Pattern.compile("^[+-]?[0-9]+$");
+    public static final Pattern LINE_COUNTER_PATTERN = Pattern.compile("\r\n|\r|\n");
 
     public static boolean isPrintableChar(char c) {
         Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
@@ -1654,6 +1655,30 @@ public class SpecsStrings {
         }
 
         return counter;
+    }
+
+    /**
+     * Counts the number of lines in the given String.
+     * 
+     * <p>
+     * Taken from here: https://stackoverflow.com/questions/2850203/count-the-number-of-lines-in-a-java-string#2850259
+     * 
+     * @param string
+     * @return
+     */
+    public static int countLines(String string) {
+
+        if (string.isEmpty()) {
+            return 0;
+        }
+
+        Matcher m = LINE_COUNTER_PATTERN.matcher(string);
+        int lines = 1;
+        while (m.find()) {
+            lines++;
+        }
+
+        return lines;
     }
 
     /**

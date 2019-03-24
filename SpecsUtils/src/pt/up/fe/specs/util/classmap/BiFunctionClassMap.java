@@ -21,7 +21,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
- * Maps a class to a BiConsumer that receives an instance of that class being used as key and other object.
+ * Maps a class to a BiFunction that receives an instance of that class being used as key and other object.
  * 
  * @author JoaoBispo
  *
@@ -34,8 +34,8 @@ public class BiFunctionClassMap<T, U, R> {
     private final boolean supportInterfaces;
 
     public BiFunctionClassMap() {
-	this.map = new HashMap<>();
-	this.supportInterfaces = true;
+        this.map = new HashMap<>();
+        this.supportInterfaces = true;
     }
 
     /**
@@ -53,48 +53,48 @@ public class BiFunctionClassMap<T, U, R> {
      * @param value
      */
     public <VS extends T, KS extends VS> void put(Class<KS> aClass,
-	    BiFunction<VS, U, R> value) {
+            BiFunction<VS, U, R> value) {
 
-	if (!this.supportInterfaces) {
-	    if (aClass.isInterface()) {
-		SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
-		return;
-	    }
-	}
+        if (!this.supportInterfaces) {
+            if (aClass.isInterface()) {
+                SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
+                return;
+            }
+        }
 
-	this.map.put(aClass, value);
+        this.map.put(aClass, value);
     }
 
     @SuppressWarnings("unchecked")
     private <TK extends T> BiFunction<T, U, R> get(Class<TK> key) {
-	Class<?> currentKey = key;
+        Class<?> currentKey = key;
 
-	while (currentKey != null) {
-	    // Test key
-	    BiFunction<? extends T, U, R> result = this.map.get(currentKey);
-	    if (result != null) {
-		return (BiFunction<T, U, R>) result;
-	    }
+        while (currentKey != null) {
+            // Test key
+            BiFunction<? extends T, U, R> result = this.map.get(currentKey);
+            if (result != null) {
+                return (BiFunction<T, U, R>) result;
+            }
 
-	    if (this.supportInterfaces) {
-		for (Class<?> interf : currentKey.getInterfaces()) {
-		    result = this.map.get(interf);
-		    if (result != null) {
-			return (BiFunction<T, U, R>) result;
-		    }
-		}
-	    }
+            if (this.supportInterfaces) {
+                for (Class<?> interf : currentKey.getInterfaces()) {
+                    result = this.map.get(interf);
+                    if (result != null) {
+                        return (BiFunction<T, U, R>) result;
+                    }
+                }
+            }
 
-	    currentKey = currentKey.getSuperclass();
-	}
+            currentKey = currentKey.getSuperclass();
+        }
 
-	return null;
+        return null;
 
     }
 
     @SuppressWarnings("unchecked")
     private <TK extends T> BiFunction<T, U, R> get(TK key) {
-	return get((Class<TK>) key.getClass());
+        return get((Class<TK>) key.getClass());
     }
 
     /**
@@ -105,14 +105,14 @@ public class BiFunctionClassMap<T, U, R> {
      * @param u
      */
     public R apply(T t, U u) {
-	BiFunction<T, U, R> result = get(t);
+        BiFunction<T, U, R> result = get(t);
 
-	if (result == null) {
-	    throw new NotImplementedException("BiConsumer not defined for class '"
-		    + t.getClass() + "'");
-	}
+        if (result == null) {
+            throw new NotImplementedException("BiConsumer not defined for class '"
+                    + t.getClass() + "'");
+        }
 
-	return result.apply(t, u);
+        return result.apply(t, u);
     }
 
 }
