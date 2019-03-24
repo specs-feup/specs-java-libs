@@ -17,6 +17,8 @@ import java.util.Collection;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 
+import pt.up.fe.specs.util.SpecsNumbers;
+
 /**
  * A class that replaces fields with public static DataKey instances.
  * 
@@ -67,6 +69,50 @@ public interface DataClass<T extends DataClass<T>> {
         return false;
     }
 
-    // DataStore getData();
+    /**
+     * Increments the value of the given key by one.
+     * 
+     * @param key
+     * @return
+     */
+    default Number inc(DataKey<Number> key) {
+        // if (key.getValueClass().isAssignableFrom(Integer.class)) {
+        // return inc(key, (int) 1);
+        // }
+        return inc(key, 1);
+    }
+
+    /**
+     * Increments the value of the given key by the given amount.
+     * 
+     * <p>
+     * If there is not value for the given key, it is initialized to zero.
+     * 
+     * @param key
+     * @param amount
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    default <N extends Number> N inc(DataKey<N> key, N amount) {
+        // Check if value is already present
+        if (!hasValue(key)) {
+            set(key, (N) SpecsNumbers.zero(key.getValueClass()));
+        }
+
+        Number previousValue = get(key);
+        set(key, (N) SpecsNumbers.add(previousValue, amount));
+        return (N) previousValue;
+    }
+
+    // default Integer inc(DataKey<Integer> key, int amount) {
+    // // Check if value is already present
+    // if (!hasValue(key)) {
+    // set(key, 0);
+    // }
+    //
+    // Integer previousValue = get(key);
+    // set(key, previousValue + amount);
+    // return previousValue;
+    // }
 
 }
