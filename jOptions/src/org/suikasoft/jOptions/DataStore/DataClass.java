@@ -104,6 +104,25 @@ public interface DataClass<T extends DataClass<T>> {
         return (N) previousValue;
     }
 
+    /**
+     * Increments the value of all given keys by the amounts in the given DataClass.
+     * 
+     * @param dataClass
+     */
+    @SuppressWarnings("unchecked")
+    default void inc(DataClass<?> dataClass) {
+        for (DataKey<?> key : dataClass.getDataKeysWithValues()) {
+            if (!key.getValueClass().isAssignableFrom(Number.class)) {
+                continue;
+            }
+
+            DataKey<Number> numberKey = (DataKey<Number>) key;
+
+            Number amount = dataClass.get(numberKey);
+            inc(numberKey, amount);
+        }
+    }
+
     // default Integer inc(DataKey<Integer> key, int amount) {
     // // Check if value is already present
     // if (!hasValue(key)) {
