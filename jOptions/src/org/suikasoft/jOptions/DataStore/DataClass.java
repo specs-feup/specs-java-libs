@@ -76,7 +76,7 @@ public interface DataClass<T extends DataClass<T>> {
      * @return
      */
     default Number inc(DataKey<Number> key) {
-        // if (key.getValueClass().isAssignableFrom(Integer.class)) {
+        // if (Integer.class.isAssignableFrom(key.getValueClass())) {
         // return inc(key, (int) 1);
         // }
         return inc(key, 1);
@@ -112,10 +112,9 @@ public interface DataClass<T extends DataClass<T>> {
     @SuppressWarnings("unchecked")
     default void inc(DataClass<?> dataClass) {
         for (DataKey<?> key : dataClass.getDataKeysWithValues()) {
-            if (!key.getValueClass().isAssignableFrom(Number.class)) {
+            if (!Number.class.isAssignableFrom(key.getValueClass())) {
                 continue;
             }
-
             DataKey<Number> numberKey = (DataKey<Number>) key;
 
             Number amount = dataClass.get(numberKey);
