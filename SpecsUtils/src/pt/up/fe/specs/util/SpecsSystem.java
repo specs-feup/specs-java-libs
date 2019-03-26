@@ -47,6 +47,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.classmap.ClassSet;
 import pt.up.fe.specs.util.lazy.Lazy;
@@ -55,6 +56,7 @@ import pt.up.fe.specs.util.system.OutputType;
 import pt.up.fe.specs.util.system.ProcessOutput;
 import pt.up.fe.specs.util.system.ProcessOutputAsString;
 import pt.up.fe.specs.util.system.StreamToString;
+import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
  * Utility methods related to system tasks.
@@ -337,6 +339,7 @@ public class SpecsSystem {
             if (timeoutNanos == null) {
                 // SpecsLogs.debug(() -> "Launched process without timeout");
                 process.waitFor();
+                destroyDescendants(process.descendants().collect(Collectors.toList()));
             } else {
                 // SpecsLogs.debug(() -> "Launched process with a timeout of " + timeoutNanos + "ns");
                 timedOut = !process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
@@ -380,6 +383,9 @@ public class SpecsSystem {
             // }
 
             if (timedOut) {
+                // Get descendants of the process
+                List<ProcessHandle> processDescendants = process.descendants().collect(Collectors.toList());
+
                 SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Killing process...");
                 process.destroyForcibly();
                 SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Waiting killing...");
@@ -389,6 +395,8 @@ public class SpecsSystem {
                 } else {
                     SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Could not destroy process!");
                 }
+
+                destroyDescendants(processDescendants);
             }
 
             // SpecsLogs.debug(() -> "Returning process output");
@@ -405,6 +413,29 @@ public class SpecsSystem {
             return new ProcessOutput<>(-1, null, null);
         }
     }
+
+    private static void destroyDescendants(List<ProcessHandle> processDescendants) {
+        // Destroy descendants
+        ProgressCounter counter = new ProgressCounter(processDescendants.size());
+        SpecsLogs.debug("Found " + processDescendants.size() + " descendants processes");
+        for (ProcessHandle handle : processDescendants) {
+            SpecsLogs
+                    .debug(() -> "SpecsSystem.executeProcess: Killing descendant process... " + counter.next());
+
+            handle.destroyForcibly();
+            SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Waiting killing...");
+            try {
+                handle.onExit().get(1, TimeUnit.SECONDS);
+                SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Destroyed");
+            } catch (TimeoutException t) {
+                SpecsLogs.debug(
+                        () -> "SpecsSystem.executeProcess: Timeout while destroying descendant process!");
+            } catch (Exception e) {
+                SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Could not destroy descendant process!");
+            }
+        }
+    }
+
     /*
     private static int executeProcess(Process process, Long timeoutNanos) {
         try {
@@ -457,7 +488,7 @@ public class SpecsSystem {
      * @param command
      * @return
      */
-    private static String getCommandString(List<String> command) {
+    public static String getCommandString(List<String> command) {
         StringBuilder builder = new StringBuilder();
 
         builder.append(command.get(0));
@@ -977,7 +1008,13 @@ public class SpecsSystem {
      */
     public static double getJavaVersionNumber() {
         String version = System.getProperty("java.version");
+        // System.out.println("JAVA VERSION:" + version);
         int pos = version.lastIndexOf('.');
+
+        if (pos == -1) {
+            int dashPos = version.indexOf('-');
+            return Double.parseDouble(version.substring(0, dashPos));
+        }
         // pos = version.indexOf('.', pos + 1);
         return Double.parseDouble(version.substring(0, pos));
     }
