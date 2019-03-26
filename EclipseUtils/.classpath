@@ -10,12 +10,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/SpecsUtils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/GuiHelper"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/XStreamPlus"/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=EclipseDeployment&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/CommonsLangPlus"/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=EclipseUtils&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CommonsLangPlus"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GuiHelper"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SpecsUtils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XStreamPlus"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=EclipseUtils&amp;ivyXmlPath=ivy.xml&amp;confs=*"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -26,19 +26,23 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.google.common.base.Preconditions;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
+// import nu.xom.Attribute;
+// import nu.xom.Document;
+// import nu.xom.Element;
+// import nu.xom.Node;
 import pt.up.fe.specs.eclipse.Utilities.EclipseProjects;
 import pt.up.fe.specs.eclipse.Utilities.UserLibraries;
-import pt.up.fe.specs.eclipse.Utilities.XomUtils;
 import pt.up.fe.specs.eclipse.builder.BuildResource;
 import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsXml;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -53,6 +57,7 @@ public class ClasspathParser {
     private static final String USER_LIBRARY = "org.eclipse.jdt.USER_LIBRARY/";
     private static final String IVY = "org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/";
     private static final String JUNIT4 = "org.eclipse.jdt.junit.JUNIT_CONTAINER/4";
+    // private static final String JUNIT5 = "org.eclipse.jdt.junit.JUNIT_CONTAINER/5";
 
     // If true, user libraries declared in a repository will be available to all repositories
     // This is the default behavior in Eclipse, we are replicating it here
@@ -105,6 +110,7 @@ public class ClasspathParser {
      * @return
      */
     public static ClasspathParser newInstance(File repositoryFolder, File userLibrariesFile) {
+
         // In case user libraries is null
         if (userLibrariesFile == null) {
             return newInstance(repositoryFolder);
@@ -133,6 +139,7 @@ public class ClasspathParser {
 
     // private ClasspathParser(File workspaceFolder, Optional<File> outputFolder) {
     private ClasspathParser(File workspaceFolder) {
+        System.out.println("ADASDASDASD");
         // this.workspaceFolder = workspaceFolder;
         // this.projectName = projectName;
         currentSourceFolders = new ArrayList<>();
@@ -255,29 +262,45 @@ public class ClasspathParser {
             // + projectFolder + "'");
         }
 
-        Document classpath = XomUtils.getDocument(SpecsIo.read(classpathFile), false);
-        Element element = classpath.getRootElement();
-        for (int i = 0; i < element.getChildCount(); i++) {
-            Node child = element.getChild(i);
-            if (!(child instanceof Element)) {
-                continue;
-            }
+        // Document classpath = XomUtils.getDocument(SpecsIo.read(classpathFile), false);
+        // Element classpath = SpecsXml.getXmlRoot(classpathFile).getElementById("classpath");
+        Document classpath = SpecsXml.getXmlRoot(classpathFile);
+        // Element element = classpath.getRootElement();
+        // Element element = classpath.getDocumentElement();
 
-            Element childElem = (Element) child;
-            if (!childElem.getLocalName().equals("classpathentry")) {
-                SpecsLogs.msgWarn("Entry not parsed:" + childElem.getLocalName());
-                continue;
-            }
+        // for (int i = 0; i < element.getChildCount(); i++) {
+        // Node child = element.getChild(i);
+        // if (!(child instanceof Element)) {
+        // continue;
+        // }
+        // System.out.println("PROJECT: " + projectName);
+        // // System.out.println("DOC ELEM: " + classpath.getDocumentElement());
+        // System.out.println(
+        // "DOC ELEM Children: " + SpecsXml.getElementChildren(classpath.getDocumentElement()));
+        // System.out.println(
+        // "DOC ELEMs: " + SpecsXml.getElements(classpath.getDocumentElement()));
+
+        for (Element childElem : SpecsXml.getElementChildren(classpath.getDocumentElement(), "classpathentry")) {
+
+            // if (!childElem.getLocalName().equals("classpathentry")) {
+            // SpecsLogs.msgWarn("Entry not parsed:" + childElem.getLocalName());
+            // continue;
+            // }
+
+            // System.out.println("KIND: " + SpecsXml.getAttribute(childElem, "kind"));
 
             // Get 'kind' value
-            Attribute kindAttribute = childElem.getAttribute("kind");
+            // Attribute kindAttribute = childElem.getAttribute("kind");
+            Attr kindAttribute = childElem.getAttributeNode("kind");
             String kindValue = kindAttribute.getValue();
-
+            // System.out.println("OLD KIND:" + kindValue);
             // Get 'path' value
-            Attribute pathAttribute = childElem.getAttribute("path");
+            // Attribute pathAttribute = childElem.getAttribute("path");
+            Attr pathAttribute = childElem.getAttributeNode("path");
             String pathValue = pathAttribute.getValue();
 
-            Attribute accessRulesAttribute = childElem.getAttribute("combineaccessrules");
+            // Attribute accessRulesAttribute = childElem.getAttribute("combineaccessrules");
+            Attr accessRulesAttribute = childElem.getAttributeNode("combineaccessrules");
             String accessRulesValue = null;
             if (accessRulesAttribute != null) {
                 accessRulesValue = accessRulesAttribute.getValue();
@@ -349,7 +372,8 @@ public class ClasspathParser {
                     continue;
                 }
 
-                SpecsLogs.msgWarn("Does not know how to interpret container '" + pathValue + "', ignoring.");
+                SpecsLogs.msgWarn("Does not know how to interpret container '" + pathValue + "' in project '"
+                        + projectName + "', ignoring.");
                 continue;
             }
 

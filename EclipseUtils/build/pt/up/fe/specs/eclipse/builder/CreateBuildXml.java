@@ -85,6 +85,7 @@ public class CreateBuildXml {
         // ClasspathParser parser = XStreamUtils.read(parsedInfo, ClasspathParser.class);
 
         File userLibrariesFile = SpecsIo.existingFile(repFolder, args[1]);
+
         ClasspathParser parser = ClasspathParser.newInstance(repFolder, userLibrariesFile);
 
         File ivySettingsFile = null;

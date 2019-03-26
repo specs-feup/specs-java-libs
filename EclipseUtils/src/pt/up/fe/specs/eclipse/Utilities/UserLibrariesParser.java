@@ -23,8 +23,7 @@ import java.util.stream.Collectors;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.google.common.base.Preconditions;
-
+import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsXml;
 

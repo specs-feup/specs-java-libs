@@ -23,13 +23,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsXml;
 import pt.up.fe.specs.util.properties.SpecsProperties;
 
 /**
@@ -107,14 +108,18 @@ public class UserLibraries {
             // File xmlFile = new File("C:\\temp_output\\lib.xml");
             // IoUtils.write(xmlFile, value);
             // Document doc = XomUtils.getDocument(xmlFile);
-            Document doc = XomUtils.getDocument(value, false);
 
+            // Document doc = XomUtils.getDocument(value, false);
+            Document doc = SpecsXml.getXmlRoot(value);
+            SpecsLogs.warn(
+                    "Currently this call to 'SpecsXml.getXmlRoot' is untested, please verify if everything is ok");
             if (doc == null) {
                 SpecsLogs.msgInfo("Skipping lib '" + libName + "', could not get info");
                 continue;
             }
 
-            Element element = doc.getRootElement();
+            // Element element = doc.getRootElement();
+            Element element = doc.getDocumentElement();
 
             // Sanity check
             if (!element.getLocalName().equals("userlibrary")) {
@@ -142,15 +147,18 @@ public class UserLibraries {
         List<File> jarFiles = SpecsFactory.newArrayList();
 
         // Check children
-        for (int i = 0; i < element.getChildCount(); i++) {
-            Node node = element.getChild(i);
-
-            if (!(node instanceof Element)) {
-                continue;
-            }
-
-            Element child = (Element) node;
-            Attribute attrib = child.getAttribute("path");
+        // for (int i = 0; i < element.getChildCount(); i++) {
+        // Node node = element.getChild(i);
+        //
+        // if (!(node instanceof Element)) {
+        // continue;
+        // }
+        //
+        // Element child = (Element) node;
+        //
+        for (Element child : SpecsXml.getElementChildren(element)) {
+            // Attribute attrib = child.getAttribute("path");
+            Attr attrib = child.getAttributeNode("path");
 
             Optional<File> jarFile = getJar(attrib.getValue(), eclipseProjects);
 
