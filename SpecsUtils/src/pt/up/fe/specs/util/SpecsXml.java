@@ -280,6 +280,36 @@ public class SpecsXml {
     }
 
     public static List<Element> getElementChildren(Element element, String tag) {
+
+        NodeList entries = element.getChildNodes();
+        List<Element> children = new ArrayList<>();
+        for (int i = 0; i < entries.getLength(); i++) {
+            Node currentNode = entries.item(i);
+            if (!(currentNode instanceof Element)) {
+                continue;
+            }
+
+            Element childElement = (Element) currentNode;
+
+            if (tag.equals("*") || tag.equals(childElement.getTagName())) {
+                children.add(childElement);
+            }
+
+            // if (!currentNode.getNodeName().equals(tag)) {
+            // continue;
+            // }
+            //
+            // children.add(((Element) currentNode).);
+        }
+
+        return children;
+    }
+
+    public static List<Element> getElements(Element element) {
+        return getElements(element, "*");
+    }
+
+    public static List<Element> getElements(Element element, String tag) {
         NodeList entries = element.getElementsByTagName(tag);
         List<Element> children = new ArrayList<>();
         for (int i = 0; i < entries.getLength(); i++) {
@@ -292,4 +322,5 @@ public class SpecsXml {
 
         return children;
     }
+
 }
