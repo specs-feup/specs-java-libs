@@ -15,12 +15,17 @@ package pt.up.fe.specs.util.stringparser;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
 import pt.up.fe.specs.util.Preconditions;
+import pt.up.fe.specs.util.SpecsEnums;
+import pt.up.fe.specs.util.enums.EnumHelperWithValue;
+import pt.up.fe.specs.util.providers.StringProvider;
 import pt.up.fe.specs.util.utilities.StringSlice;
 
 public class StringParsers {
@@ -331,6 +336,154 @@ public class StringParsers {
         }
 
         return string.substring(0, string.length() - suffix.length());
+    }
+
+    // public static <K extends Enum<K>> ParserResult<K> parseEnum(StringSlice string, Class<K> enumClass) {
+    // return parseEnum(string, enumClass, null, Collections.emptyMap());
+    // }
+
+    /**
+     * Helper method which does not use the example value as a default value. Throws exception if the enum is not found.
+     * 
+     * @param string
+     * @param exampleValue
+     * @return
+     */
+    public static <K extends Enum<K> & StringProvider> ParserResult<K> parseEnum(
+            StringSlice string, EnumHelperWithValue<K> enumHelper) {
+
+        return parseEnum(string, enumHelper, null);
+    }
+
+    /**
+     * 
+     * @param string
+     * @param exampleValue
+     * @param useAsDefault
+     *            if true, uses the given value as the default
+     * @return
+     */
+    public static <K extends Enum<K> & StringProvider> ParserResult<K> parseEnum(
+            StringSlice string, EnumHelperWithValue<K> enumHelper, K defaultValue) {
+
+        // Try parsing the enum
+        ParserResult<Optional<K>> result = checkEnum(string, enumHelper);
+
+        if (result.getResult().isPresent()) {
+            return new ParserResult<>(result.getModifiedString(), result.getResult().get());
+        }
+
+        // No value found, check if should use the given example value as default
+        if (defaultValue != null) {
+            return new ParserResult<>(string, defaultValue);
+        }
+
+        throw new RuntimeException(
+                "Could not convert string '" + StringParsers.parseWord(new StringSlice(string)).getResult()
+                        + "' to enum '"
+                        + enumHelper.getValuesTranslationMap() + "'");
+
+    }
+
+    /**
+     * Helper method which converts the word to upper case (enum values by convention should be uppercase).
+     * 
+     * @param string
+     * @param enumClass
+     * @return
+     */
+    public static <K extends Enum<K>> ParserResult<K> parseEnum(StringSlice string, Class<K> enumClass,
+            K defaultValue) {
+
+        return parseEnum(string, enumClass, defaultValue, Collections.emptyMap());
+        /*
+        ParserResult<Optional<K>> enumTry = checkEnum(string, enumClass, true, Collections.emptyMap());
+        
+        K result = enumTry.getResult().orElseThrow(() -> new RuntimeException("Could not convert string '"
+            + parseWord(string) + "' to enum '" + Arrays.toString(enumClass.getEnumConstants()) + "'"));
+        
+        return new ParserResult<>(enumTry.getModifiedString(), result);
+        */
+    }
+
+    public static <K extends Enum<K>> ParserResult<K> parseEnum(StringSlice string, Class<K> enumClass) {
+        return parseEnum(string, enumClass, null, Collections.emptyMap());
+    }
+
+    public static <K extends Enum<K>> ParserResult<K> parseEnum(StringSlice string, Class<K> enumClass,
+            K defaultValue, Map<String, K> customMappings) {
+
+        // Copy StringSlice, in case the function does not found the enum
+        ParserResult<String> word = StringParsers.parseWord(new StringSlice(string));
+
+        // String wordToTest = word.getResult();
+
+        // Convert to upper case if needed
+        // if (toUpper) {
+        // wordToTest = wordToTest.toUpperCase();
+        // }
+
+        // Check if enumeration contains element with the same name as the string
+        K anEnum = SpecsEnums.valueOf(enumClass, word.getResult().toUpperCase());
+        if (anEnum != null) {
+            return new ParserResult<>(word.getModifiedString(), anEnum);
+        }
+
+        // Check if there are any custom mappings for the word
+        K customMapping = customMappings.get(word.getResult());
+        if (customMapping != null) {
+            return new ParserResult<>(word.getModifiedString(), customMapping);
+        }
+
+        // Check if there is a default value
+        // In this case, return the unmodified string
+        if (defaultValue != null) {
+            return new ParserResult<>(string, defaultValue);
+        }
+
+        throw new RuntimeException(
+                "Could not convert string '" + StringParsers.parseWord(new StringSlice(string)).getResult()
+                        + "' to enum '"
+                        + Arrays.toString(enumClass.getEnumConstants()) + "'");
+
+    }
+
+    /**
+     * Helper method which accepts a default value.
+     * 
+     * @param string
+     * @param enumHelper
+     * @param defaultValue
+     * @return
+     */
+    public static <K extends Enum<K> & StringProvider> ParserResult<K> checkEnum(
+            StringSlice string, EnumHelperWithValue<K> enumHelper, K defaultValue) {
+
+        ParserResult<Optional<K>> result = checkEnum(string, enumHelper);
+        K value = result.getResult().orElse(defaultValue);
+        return new ParserResult<>(result.getModifiedString(), value);
+    }
+
+    /**
+     * Checks if string starts with a word representing an enumeration of the given example value.
+     * 
+     * @param string
+     * @param exampleValue
+     * @return
+     */
+    public static <K extends Enum<K> & StringProvider> ParserResult<Optional<K>> checkEnum(
+            StringSlice string, EnumHelperWithValue<K> enumHelper) {
+
+        // Copy StringSlice, in case the function does not found the enum
+        ParserResult<String> word = StringParsers.parseWord(new StringSlice(string));
+
+        // Check if there are any custom mappings for the word
+        Optional<K> result = enumHelper.fromValueTry(word.getResult());
+
+        // Prepare return value
+        StringSlice modifiedString = result.isPresent() ? word.getModifiedString() : string;
+
+        return new ParserResult<>(modifiedString, result);
     }
 
 }
