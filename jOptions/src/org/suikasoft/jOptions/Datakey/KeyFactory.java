@@ -481,6 +481,7 @@ public class KeyFactory {
     public static <T> DataKey<List<T>> list(String id, Class<T> elementClass) {
         return generic(id, () -> (List<T>) new ArrayList<>())
                 .setCustomSetter((value, data) -> KeyFactory.listCustomSetter(value, data, elementClass));
+        // .setDefault(() -> new ArrayList<>());
 
     }
 

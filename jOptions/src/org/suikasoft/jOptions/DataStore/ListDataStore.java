@@ -275,4 +275,9 @@ public class ListDataStore implements DataStore {
     public boolean isClosed() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return toInlinedString();
+    }
 }
