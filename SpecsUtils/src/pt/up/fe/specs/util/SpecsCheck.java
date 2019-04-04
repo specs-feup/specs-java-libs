@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
@@ -39,4 +40,20 @@ public class SpecsCheck {
 
         return reference;
     }
+
+    public static void checkSize(Collection<?> collection, int expectedSize) {
+        checkSize(expectedSize, collection.size());
+    }
+
+    public static void checkSize(Object[] objects, int expectedSize) {
+        checkSize(expectedSize, objects.length);
+    }
+
+    private static void checkSize(int expectedSize, int actualSize) {
+        if (actualSize != expectedSize) {
+            throw new IllegalArgumentException("Expected collection to have size '" + expectedSize
+                    + "', its current size is '" + actualSize + "'");
+        }
+    }
+
 }
