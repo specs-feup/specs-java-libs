@@ -9,7 +9,7 @@
   	<COMMANDS>
   
   	<!-- Fork might be needed when running ANT inside a test unit. However, for general use it can become to slow -->
-    <javac destdir="<BIN_FOLDER>"  source="1.8" target="1.8" encoding="Cp1252" includeantruntime="false" <JAVAC_FORK>> <!-- includes="**/*.java" -->
+    <javac destdir="<BIN_FOLDER>" encoding="Cp1252" includeantruntime="false" <JAVAC_FORK>> <!-- includes="**/*.java" -->
 		<SOURCE_PATH>
 		
         <classpath refid="classpath.base_<PROJECT_NAME>" />
