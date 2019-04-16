@@ -1666,7 +1666,11 @@ public class SpecsStrings {
      * @param string
      * @return
      */
-    public static int countLines(String string) {
+    public static int countLines(String string, boolean trim) {
+
+        if (trim) {
+            string = string.trim();
+        }
 
         if (string.isEmpty()) {
             return 0;
