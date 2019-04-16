@@ -2254,6 +2254,40 @@ public class SpecsIo {
     }
 
     /**
+     * From the given paths, returns a list of existing files. The paths can represent single files or folders.
+     * 
+     * <p>
+     * If a folder is given, looks recursively inside the folder.
+     * 
+     * @param paths
+     * @param extensions
+     * @return
+     */
+    // public static List<File> existingFiles(List<String> paths, boolean recursive, Collection<String> extensions) {
+    // List<File> existingPaths = new ArrayList<>();
+    // for (String arg : paths) {
+    // File path = new File(arg);
+    // if (!path.exists()) {
+    // SpecsLogs.info("Ignoring path '" + arg + "', it does not exist");
+    // continue;
+    // }
+    //
+    // existingPaths.add(path);
+    // }
+    //
+    // List<File> files = new ArrayList<>();
+    // for (File existingPath : existingPaths) {
+    // if (existingPath.isDirectory()) {
+    // files.addAll(SpecsIo.getFiles(existingPath, recursive, extensions));
+    // } else {
+    // files.add(existingPath);
+    // }
+    // }
+    //
+    // return files;
+    // }
+
+    /**
      * Returns the canonical path of the given file. If a problem happens, throws an exception.
      * 
      * @param executable
@@ -2800,11 +2834,11 @@ public class SpecsIo {
         return fileMap;
     }
 
-    public static SpecsList<File> getFiles(List<File> sources, boolean recursive, Set<String> extensions) {
+    public static SpecsList<File> getFiles(List<File> sources, boolean recursive, Collection<String> extensions) {
         return getFiles(sources, recursive, extensions, file -> false);
     }
 
-    public static SpecsList<File> getFiles(List<File> sources, boolean recursive, Set<String> extensions,
+    public static SpecsList<File> getFiles(List<File> sources, boolean recursive, Collection<String> extensions,
             Predicate<File> cutoffFolders) {
 
         // Function<? super File, ? extends Stream<? extends File>> flatMapper = recursive
@@ -2831,7 +2865,7 @@ public class SpecsIo {
         return SpecsList.convert(sourceFiles);
     }
 
-    private static Stream<File> fileMapper(File path, boolean recursive, Set<String> extensions,
+    private static Stream<File> fileMapper(File path, boolean recursive, Collection<String> extensions,
             Predicate<File> cutoffFolders) {
         // Test if path should be cut-off
         if (path.isDirectory() && cutoffFolders.test(path)) {
