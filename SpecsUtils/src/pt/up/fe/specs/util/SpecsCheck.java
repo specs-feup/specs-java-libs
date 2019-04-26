@@ -56,4 +56,20 @@ public class SpecsCheck {
         }
     }
 
+    public static void checkSizeRange(Collection<?> collection, int minSize, int maxSize) {
+        checkSizeRange(minSize, maxSize, collection.size());
+    }
+
+    public static void checkSizeRange(Object[] objects, int minSize, int maxSize) {
+        checkSizeRange(minSize, maxSize, objects.length);
+    }
+
+    private static void checkSizeRange(int minSize, int maxSize, int actualSize) {
+        if (actualSize < minSize || actualSize > maxSize) {
+            throw new IllegalArgumentException(
+                    "Expected collection to have size between '" + minSize + "' and '" + maxSize + "'"
+                            + "', its current size is '" + actualSize + "'");
+        }
+    }
+
 }
