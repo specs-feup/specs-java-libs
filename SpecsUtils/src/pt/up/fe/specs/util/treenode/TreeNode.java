@@ -71,6 +71,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      */
     default K getChild(int index) {
         if (!hasChildren()) {
+            SpecsLogs.warn("Tried to get child with index '" + index + "', but children size is " + getNumChildren());
             return null;
         }
 

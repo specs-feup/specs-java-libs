@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.up.fe.specs.util.Preconditions;
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -55,11 +56,13 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     private void addChildPrivate(K child) {
+        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
         this.children.add(child);
         // addChildPrivate(-1, child);
     }
 
     private void addChildPrivate(int index, K child) {
+        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
         this.children.add(index, child);
 
         // // If empty, it most likely is Collections.emptyList(), use new list
@@ -159,6 +162,8 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         if (!hasChildren()) {
             throw new RuntimeException("Token does not have children, cannot set a child.");
         }
+
+        SpecsCheck.checkNotNull(sanitizedToken, () -> "Sanitized token is null");
 
         // Insert child
         K previousChild = this.children.set(index, sanitizedToken);
