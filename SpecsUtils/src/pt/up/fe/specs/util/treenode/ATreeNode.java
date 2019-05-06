@@ -47,48 +47,23 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         for (K child : children) {
             Preconditions.checkNotNull(child, "Cannot use 'null' as children.");
             addChild(child);
-            // System.out.println("ADDING CHILD:" + child);
         }
 
         this.parent = null;
-
-        // System.out.println("ATREE GETCHILD:" + getChildren());
     }
 
     private void addChildPrivate(K child) {
         SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
         this.children.add(child);
-        // addChildPrivate(-1, child);
     }
 
     private void addChildPrivate(int index, K child) {
         SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
         this.children.add(index, child);
-
-        // // If empty, it most likely is Collections.emptyList(), use new list
-        // if (!hasChildren()) {
-        // System.out.println("CURRENT CHILDREN:" + children);
-        // // if (this.children == (List<K>) Collections.emptyList()) {
-        // this.children = new ArrayList<>();
-        // }
-        //
-        // // If no index, means that will be inserted at the end
-        // if (index == -1) {
-        // this.children.add(child);
-        // // index = children.size();
-        // } else {
-        // this.children.add(index, child);
-        // }
-
     }
 
     private List<K> initChildren(Collection<? extends K> children) {
         return new ArrayList<>();
-        // if (children == null || children.isEmpty()) {
-        // return Collections.emptyList();
-        // }
-        //
-        // return new ArrayList<>();
     }
 
     /* (non-Javadoc)
@@ -139,11 +114,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
         K child = this.children.remove(index);
 
-        // If no children, replace list with reference to empty list
-        // if (this.children.isEmpty()) {
-        // this.children = Collections.emptyList();
-        // }
-
         // Unlink child from this node
         child.removeParent();
 
@@ -176,44 +146,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         return previousChild;
     }
 
-    /**
-     * Fails a test in matlabirtransforms when used in NodeInsertUtils, could not understand why
-     */
-    /* (non-Javadoc)
-     * @see pt.up.fe.specs.util.treenode.TreeNode#setChild(int, K)
-     */
-    /*
-        public K setChild(K oldChild, K newChild) {
-    	K sanitizedToken = TreeNodeUtils.sanitizeNode(newChild);
-    	setAsParentOf(sanitizedToken);
-    
-    	if (!hasChildren()) {
-    	    throw new RuntimeException("Token does not have children, cannot set a child.");
-    	}
-    
-    	ListIterator<K> iterator = getChildrenIterator();
-    	// Iterate until it finds the child
-    	boolean foundChild = false;
-    	while (iterator.hasNext()) {
-    
-    	    // If not the child, continue
-    	    if (iterator.next() != oldChild) {
-    		continue;
-    	    }
-    
-    	    // Found the child, replace it
-    	    iterator.set(newChild);
-    	    foundChild = true;
-    	}
-    
-    	// If no child found, throw exception
-    	Preconditions.checkArgument(foundChild, "Could not find given child.");
-    
-    	return oldChild;
-        }
-     */
-
-    // protected void setAsParentOf(K childToken) {
     @Override
     public void setAsParentOf(K childToken) {
 
@@ -222,26 +154,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         }
 
         childToken.parent = getThis();
-        // childToken.eventParentSet();
     }
-
-    /**
-     * This method is called when the parent of this node is set. By default does nothing.
-     */
-    /*
-    protected void eventParentSet() {
-    
-    }
-    */
-
-    /**
-     * This method is called when the parent of this node is unset. By default does nothing.
-     */
-    /*
-    protected void eventParentUnset() {
-    
-    }
-    */
 
     @Override
     public void detach() {
@@ -269,7 +182,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         }
 
         this.parent = null;
-        // eventParentUnset();
     }
 
     /* (non-Javadoc)
@@ -281,21 +193,10 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         K sanitizedChild = TreeNodeUtils.sanitizeNode(child);
         setAsParentOf(sanitizedChild);
 
-        /*
-        if (children == null) {
-        children = FactoryUtils.newLinkedList();
-        // children = FactoryUtils.newArrayList();
-        }
-         */
-
-        // boolean changed = this.children.add(sanitizedChild);
         addChildPrivate(sanitizedChild);
-
-        // return changed;
     }
 
     @Override
-    // public <EK extends K> boolean addChildren(List<EK> children) {
     public <EK extends K> void addChildren(List<EK> children) {
         // If the same list (reference) create a copy, to avoid problems when
         // adding the list to itself
@@ -304,14 +205,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
             children = SpecsFactory.newArrayList(children);
         }
 
-        // boolean changed = false;
-
         for (K child : children) {
-            // changed = addChild(child);
             addChild(child);
         }
-
-        // return changed;
     }
 
     /* (non-Javadoc)
@@ -319,19 +215,11 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     @Override
     public void addChild(int index, K child) {
-        // K sanitizedToken = sanitizeToken(child);
         K sanitizedToken = TreeNodeUtils.sanitizeNode(child);
         setAsParentOf(sanitizedToken);
 
-        /*
-        if (children == null) {
-        children = FactoryUtils.newLinkedList();
-        }
-         */
-
         // Insert child
         addChildPrivate(index, sanitizedToken);
-        // this.children.add(index, sanitizedToken);
     }
 
     /**
@@ -356,11 +244,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     @Override
     public K copy() {
-        // K newToken = newEmptyInstance();
-
-        // newToken.setType(this.getType());
-        // newToken.setContent(this.getContent());
-
         K newToken = copyPrivate();
         // Check new token does not have children
         if (newToken.getNumChildren() != 0) {
@@ -377,17 +260,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
         return newToken;
     }
-
-    /**
-     * Returns an empty instance of the token (all values can be initialized to null).
-     *
-     *
-     *
-     * @param token
-     * @return
-     * @deprecated Replace with copy(). However, copy must be made abstract first
-     */
-    // protected abstract K newEmptyInstance();
 
     /**
      * Returns a reference to the object that implements this class.
@@ -427,61 +299,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         return parent.getRoot();
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    /*
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.children == null) ? 0 : this.children.hashCode());
-    
-        String contentString = toContentString();
-        result = prime * result + ((contentString == null) ? 0 : contentString.hashCode());
-    
-        return result;
-    }
-    */
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    /*
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        ATreeNode<?> other = (ATreeNode<?>) obj;
-        if (this.children == null) {
-            if (other.children != null) {
-                return false;
-            }
-        } else if (!this.children.equals(other.children)) {
-            return false;
-        }
-    
-        String contentString = toContentString();
-        String otherContentString = other.toContentString();
-        if (contentString == null) {
-            if (otherContentString != null) {
-                return false;
-            }
-        } else if (!contentString.equals(otherContentString)) {
-            return false;
-        }
-    
-        return true;
-    }
-    */
-
     /**
      * Prints the tree.
      */
@@ -511,17 +328,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
     public List<Integer> indexesOf(Class<? extends K> aClass) {
         return TreeNodeIndexUtils.indexesOf(getChildren(), aClass);
-        /*
-        	List<Integer> indexes = new ArrayList<>();
-        
-        	for (int i = 0; i < numChildren(); i++) {
-        	    if (aClass.isInstance(getChild(i))) {
-        		indexes.add(i);
-        	    }
-        	}
-        
-        	return indexes;
-        	*/
     }
 
     /**
