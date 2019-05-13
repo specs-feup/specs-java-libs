@@ -341,10 +341,10 @@ public class SpecsSystem {
                 process.waitFor();
                 destroyDescendants(process.descendants().collect(Collectors.toList()));
             } else {
-                // SpecsLogs.debug(() -> "Launched process with a timeout of " + timeoutNanos + "ns");
+                SpecsLogs.debug(() -> "Launched process with a timeout of " + timeoutNanos + "ns");
                 timedOut = !process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
-                // boolean timedOutFinal = timedOut;
-                // SpecsLogs.debug(() -> "Process timed out? " + timedOutFinal);
+                boolean timedOutFinal = timedOut;
+                SpecsLogs.debug(() -> "Process timed out? " + timedOutFinal);
             }
 
             // System.out.println("Process ended");
@@ -355,13 +355,15 @@ public class SpecsSystem {
             // SpecsLogs.debug(() -> "Reading process streams");
 
             try {
-                output = outputFuture.get(10, TimeUnit.SECONDS);
-                error = errorFuture.get(10, TimeUnit.SECONDS);
+                output = outputFuture.get(1, TimeUnit.SECONDS);
+                error = errorFuture.get(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException("Thread interrupted while waiting for output/error streams");
             } catch (Exception e) {
-                throw new RuntimeException("Exception while waiting for output/error streams", e);
+                SpecsLogs.debug("Exception while waiting for output/error streams: " + e.getMessage());
+                timedOut = true;
+                // throw new RuntimeException("Exception while waiting for output/error streams", e);
             }
 
             // output = get(outputFuture, 2, TimeUnit.SECONDS);
