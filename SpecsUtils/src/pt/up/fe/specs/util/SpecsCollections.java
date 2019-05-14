@@ -213,6 +213,10 @@ public class SpecsCollections {
         return removedElements;
     }
 
+    public static <T> List<T> remove(List<T> list, int startIndex) {
+        return remove(list, startIndex, list.size());
+    }
+
     public static <T> List<T> remove(List<T> list, List<Integer> indexes) {
         // Sort indexes
         Collections.sort(indexes);
