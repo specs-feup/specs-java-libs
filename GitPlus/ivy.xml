@@ -27,8 +27,12 @@
 	
 	<dependencies>
 		<dependency org="com.google.guava" name="guava" rev="19.0"/>
+		
 		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="4.0.0.201505050340-m2" />
 		<!-- jgit has a dependency to classes in this jar -->
-		<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.25"/>
+		<!--<dependency org="org.slf4j" name="slf4j-api" rev="1.7.25"/>-->
+		<!-- <dependency org="org.slf4j" name="slf4j-simple" rev="1.7.25"/> -->
+		<!-- <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.25"/> -->
+		
 	</dependencies>
 </ivy-module>
