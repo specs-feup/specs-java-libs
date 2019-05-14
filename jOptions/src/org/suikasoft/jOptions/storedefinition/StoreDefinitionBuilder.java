@@ -65,6 +65,12 @@ public class StoreDefinitionBuilder {
         // this(appName, new ArrayList<>(), new HashSet<>(), null);
     }
 
+    public StoreDefinitionBuilder(Class<?> aClass) {
+        this(aClass.getSimpleName());
+
+        addDefinition(StoreDefinitions.fromInterface(aClass));
+    }
+
     /**
      * Helper method to add several keys.
      * 
@@ -148,6 +154,10 @@ public class StoreDefinitionBuilder {
         addDefinitionPrivate(storeDefinition, false);
 
         return this;
+    }
+
+    public StoreDefinitionBuilder addNamedDefinition(String name, StoreDefinition storeDefinition) {
+        return addNamedDefinition(new StoreDefinitionBuilder(name).addDefinition(storeDefinition).build());
     }
 
     public StoreDefinitionBuilder addNamedDefinition(StoreDefinition storeDefinition) {

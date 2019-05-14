@@ -87,6 +87,10 @@ public interface StoreDefinition {
         return new GenericStoreDefinition(appName, new ArrayList<>(keys));
     }
 
+    public static GenericStoreDefinition newInstanceFromInterface(Class<?> aClass) {
+        return StoreDefinition.newInstance(aClass.getSimpleName(), StoreDefinitions.fromInterface(aClass).getKeys());
+    }
+
     default DataKey<?> getKey(String key) {
         DataKey<?> dataKey = getKeyMap().get(key);
         if (dataKey == null) {
