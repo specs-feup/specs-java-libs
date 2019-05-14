@@ -16,10 +16,12 @@ package org.suikasoft.jOptions.DataStore;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
+import org.suikasoft.jOptions.storedefinition.StoreDefinitionBuilder;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
 public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T> {
@@ -43,6 +45,12 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     @Override
     public String getDataClassName() {
         return data.getName();
+    }
+
+    @Override
+    public Optional<StoreDefinition> getStoreDefinition() {
+        return data.getStoreDefinition()
+                .map(def -> new StoreDefinitionBuilder(getDataClassName()).addDefinition(def).build());
     }
 
     // public DataClass(T instance) {

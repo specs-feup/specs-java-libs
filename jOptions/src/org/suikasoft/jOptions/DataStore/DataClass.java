@@ -14,8 +14,10 @@
 package org.suikasoft.jOptions.DataStore;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
+import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import pt.up.fe.specs.util.SpecsNumbers;
 
@@ -36,6 +38,14 @@ public interface DataClass<T extends DataClass<T>> {
 
     default T set(DataKey<Boolean> key) {
         return set(key, true);
+    }
+
+    /**
+     * 
+     * @return an Optional containing a StoreDefinition, if defined. By default returns empty.
+     */
+    default Optional<StoreDefinition> getStoreDefinition() {
+        return Optional.empty();
     }
 
     // default T set(DataKey<Optional<T>> key, T value) {

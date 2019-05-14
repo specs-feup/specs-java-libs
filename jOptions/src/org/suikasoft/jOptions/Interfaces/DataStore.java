@@ -175,7 +175,7 @@ public interface DataStore extends DataClass<DataStore> {
      * 
      * @return an Optional containing a StoreDefinition, if defined
      */
-    Optional<StoreDefinition> getStoreDefinition();
+    // Optional<StoreDefinition> getStoreDefinition();
 
     void setStoreDefinition(StoreDefinition definition);
 
