@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Supplier;
 
@@ -42,17 +43,33 @@ public class SpecsCheck {
     }
 
     public static void checkSize(Collection<?> collection, int expectedSize) {
-        checkSize(expectedSize, collection.size());
+        checkSize(expectedSize, collection.size(), () -> collection.toString());
     }
 
     public static void checkSize(Object[] objects, int expectedSize) {
-        checkSize(expectedSize, objects.length);
+        checkSize(expectedSize, objects.length, () -> Arrays.toString(objects));
     }
 
-    private static void checkSize(int expectedSize, int actualSize) {
+    private static void checkSize(int expectedSize, int actualSize, Supplier<String> collectionContents) {
         if (actualSize != expectedSize) {
             throw new IllegalArgumentException("Expected collection to have size '" + expectedSize
-                    + "', its current size is '" + actualSize + "'");
+                    + "', its current size is '" + actualSize + "'.\nCollection:" + collectionContents.get());
+        }
+    }
+
+    public static void checkSizeRange(Collection<?> collection, int minSize, int maxSize) {
+        checkSizeRange(minSize, maxSize, collection.size(), () -> collection.toString());
+    }
+
+    public static void checkSizeRange(Object[] objects, int minSize, int maxSize) {
+        checkSizeRange(minSize, maxSize, objects.length, () -> Arrays.toString(objects));
+    }
+
+    private static void checkSizeRange(int minSize, int maxSize, int actualSize, Supplier<String> collectionContents) {
+        if (actualSize < minSize || actualSize > maxSize) {
+            throw new IllegalArgumentException(
+                    "Expected collection to have size between '" + minSize + "' and '" + maxSize + "'"
+                            + "', its current size is '" + actualSize + "'\nCollection:" + collectionContents.get());
         }
     }
 
