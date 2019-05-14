@@ -19,6 +19,10 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class BufferedStringBuilder implements AutoCloseable {
 
+    public static BufferedStringBuilder nullStringBuilder() {
+        return new BufferedStringBuilder(null);
+    }
+
     /**
      * INSTANCE VARIABLES
      */
@@ -45,8 +49,9 @@ public class BufferedStringBuilder implements AutoCloseable {
         this.bufferCapacity = bufferCapacity;
 
         // Erase last trace
-        SpecsIo.write(outputFile, "");
-
+        if (outputFile == null) {
+            SpecsIo.write(outputFile, "");
+        }
         this.builder = newStringBuilder();
 
         this.isClosed = false;
@@ -107,6 +112,10 @@ public class BufferedStringBuilder implements AutoCloseable {
     }
 
     private StringBuilder newStringBuilder() {
+        if (this.writeFile == null) {
+            return null;
+        }
+
         return new StringBuilder((int) (this.bufferCapacity * 1.10));
     }
 
