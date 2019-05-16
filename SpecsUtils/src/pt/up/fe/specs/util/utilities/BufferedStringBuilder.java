@@ -20,7 +20,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 public class BufferedStringBuilder implements AutoCloseable {
 
     public static BufferedStringBuilder nullStringBuilder() {
-        return new BufferedStringBuilder(null);
+        return new NullStringBuilder();
     }
 
     /**
@@ -49,7 +49,7 @@ public class BufferedStringBuilder implements AutoCloseable {
         this.bufferCapacity = bufferCapacity;
 
         // Erase last trace
-        if (outputFile == null) {
+        if (outputFile != null) {
             SpecsIo.write(outputFile, "");
         }
         this.builder = newStringBuilder();

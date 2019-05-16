@@ -13,11 +13,9 @@
 
 package pt.up.fe.specs.util.utilities;
 
-import java.io.File;
-
 class NullStringBuilder extends BufferedStringBuilder {
 
-    public NullStringBuilder(File outputFile) {
+    public NullStringBuilder() {
         super(null);
     }
 
