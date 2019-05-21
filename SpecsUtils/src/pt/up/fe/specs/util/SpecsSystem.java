@@ -385,20 +385,7 @@ public class SpecsSystem {
             // }
 
             if (timedOut) {
-                // Get descendants of the process
-                List<ProcessHandle> processDescendants = process.descendants().collect(Collectors.toList());
-
-                SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Killing process...");
-                process.destroyForcibly();
-                SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Waiting killing...");
-                boolean processDestroyed = process.waitFor(1, TimeUnit.SECONDS);
-                if (processDestroyed) {
-                    SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Destroyed");
-                } else {
-                    SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Could not destroy process!");
-                }
-
-                destroyDescendants(processDescendants);
+                destroyProcess(process);
             }
 
             // SpecsLogs.debug(() -> "Returning process output");
@@ -409,11 +396,29 @@ public class SpecsSystem {
             // return -1;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            // destroyProcess(process);
             // SpecsLogs.msgInfo("Process timed out");
             // return -1;
             // SpecsLogs.debug(() -> "Returning interrupted process output");
             return new ProcessOutput<>(-1, null, null);
         }
+    }
+
+    private static void destroyProcess(Process process) {
+        // Get descendants of the process
+        List<ProcessHandle> processDescendants = process.descendants().collect(Collectors.toList());
+
+        SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Killing process...");
+        process.destroyForcibly();
+        // SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Waiting killing...");
+        // boolean processDestroyed = process.waitFor(1, TimeUnit.SECONDS);
+        // if (processDestroyed) {
+        // SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Destroyed");
+        // } else {
+        // SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Could not destroy process!");
+        // }
+
+        destroyDescendants(processDescendants);
     }
 
     private static void destroyDescendants(List<ProcessHandle> processDescendants) {
