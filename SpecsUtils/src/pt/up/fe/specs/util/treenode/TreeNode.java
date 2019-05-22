@@ -17,6 +17,7 @@ import static pt.up.fe.specs.util.SpecsCollections.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -568,5 +569,37 @@ public interface TreeNode<K extends TreeNode<K>> {
      * @param childToken
      */
     void setAsParentOf(K childToken);
+
+    /**
+     * Returns the nodes on the left of this node.
+     * 
+     * @return
+     */
+    default List<K> getLeftSiblings() {
+        if (!hasParent()) {
+            SpecsLogs.warn("Asked for left siblings of a node that does not have a parent");
+            return Collections.emptyList();
+        }
+
+        List<K> parentChildren = getParent().getChildren();
+
+        return parentChildren.subList(0, indexOfSelf());
+    }
+
+    /**
+     * Returns the nodes on the right of this node.
+     * 
+     * @return
+     */
+    default List<K> getRightSiblings() {
+        if (!hasParent()) {
+            SpecsLogs.warn("Asked for right siblings of a node that does not have a parent");
+            return Collections.emptyList();
+        }
+
+        List<K> parentChildren = getParent().getChildren();
+
+        return parentChildren.subList(indexOfSelf() + 1, parentChildren.size());
+    }
 
 }
