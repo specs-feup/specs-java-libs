@@ -1,11 +1,11 @@
 /*
  * Copyright 2009 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -72,7 +72,7 @@ import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
  * Methods for quick and simple manipulation of files, folders and other input/output related operations.
- * 
+ *
  * @author Joao Bispo
  */
 public class SpecsIo {
@@ -82,7 +82,7 @@ public class SpecsIo {
 
     /**
      * Helper class for methods that copy resources.
-     * 
+     *
      * @author JoaoBispo
      *
      */
@@ -131,7 +131,7 @@ public class SpecsIo {
 
     /**
      * Helper method which accepts a parent File and a child String as input.
-     * 
+     *
      * @param parentFolder
      * @param child
      * @return
@@ -142,7 +142,7 @@ public class SpecsIo {
 
     /**
      * Helper method which accepts a File as input.
-     * 
+     *
      * @param folder
      * @return
      */
@@ -152,18 +152,18 @@ public class SpecsIo {
 
     /**
      * Given a string representing a filepath to a folder, returns a File object representing the folder.
-     * 
+     *
      * <p>
      * If the folder doesn't exist, the method will try to create the folder and necessary sub-folders. If an error
      * occurs (ex.: the folder could not be created, the given path does not represent a folder), throws an exception.
-     * 
+     *
      * *
      * <p>
      * If the given folderpath is an empty string, returns the current working folder.
-     * 
+     *
      * <p>
      * If the method returns it is guaranteed that the folder exists.
-     * 
+     *
      * @param folderpath
      *            String representing a folder.
      * @return a File object representing a folder, or null if unsuccessful.
@@ -238,11 +238,11 @@ public class SpecsIo {
 
     /**
      * Method to create a File object for a file which should exist.
-     * 
+     *
      * <p>
      * The method does some common checks (ex.: if the file given by filepath exists, if it is a file). If any of the
      * checks fail, throws an exception.
-     * 
+     *
      * @param filepath
      *            String representing an existing file.
      * @return a File object representing a file, or null if unsuccessful.
@@ -282,7 +282,7 @@ public class SpecsIo {
 
     /**
      * Helper method that receives a String.
-     * 
+     *
      * @param filename
      * @return
      */
@@ -292,10 +292,10 @@ public class SpecsIo {
 
     /**
      * Given a File object, returns a String with the contents of the file.
-     * 
+     *
      * <p>
      * If an error occurs (ex.: the File argument does not represent a file) returns null and logs the cause.
-     * 
+     *
      * @param file
      *            a File object representing a file.
      * @return a String with the contents of the file.
@@ -349,7 +349,7 @@ public class SpecsIo {
 
     /**
      * Reads a stream to a String. The stream is closed after it is read.
-     * 
+     *
      * @param inputStream
      * @return
      */
@@ -387,11 +387,11 @@ public class SpecsIo {
     /**
      * Given a File object and a String, writes the contents of the String in the file, overwriting everything that was
      * previously in that file.
-     * 
+     *
      * <p>
      * If successful, returns true. If an error occurs (ex.: the File argument does not represent a file) returns false,
      * logs the cause and nothing is written.
-     * 
+     *
      * @param file
      *            a File object representing a file.
      * @param contents
@@ -417,11 +417,11 @@ public class SpecsIo {
     /**
      * Given a File object and a String, writes the contents of the String at the end of the file. If successful,
      * returns true.
-     * 
+     *
      * <p>
      * If an error occurs (ex.: the File argument does not represent a file) returns false, logs the cause and nothing
      * is written.
-     * 
+     *
      * @param file
      *            a File object representing a file.
      * @param contents
@@ -447,11 +447,11 @@ public class SpecsIo {
 
     /**
      * Method shared among write and append.
-     * 
+     *
      * <p>
      * Using 'finally' style 2 as described in <a href="http://www.javapractices.com/topic/TopicAction.do?Id=25">Java
      * Practices: Finally and Catch</a>.
-     * 
+     *
      * @param file
      * @param contents
      * @param append
@@ -515,11 +515,11 @@ public class SpecsIo {
 
     /**
      * Given a File object, loads the contents of the file into a Java Properties object.
-     * 
+     *
      * <p>
      * If an error occurs (ex.: the File argument does not represent a file, could not load the Properties object)
      * returns null and logs the cause.
-     * 
+     *
      * @deprecated
      * @param file
      *            a File object representing a file.
@@ -534,7 +534,7 @@ public class SpecsIo {
     				"Input 'file' is null.");
     		return null;
     	}
-    
+
     	try {
     		Properties props = new Properties();
     		props.load(new java.io.FileReader(file));
@@ -543,20 +543,20 @@ public class SpecsIo {
     		Logger.getLogger(IoUtils.class.getName()).log(Level.WARNING,
     				"IOException: " + ex.getMessage());
     	}
-    
+
     	return null;
     }
      */
 
     /**
      * Given a filename, removes the extension suffix and the separator.
-     * 
+     *
      * <p>
      * Example: <br>
      * filename: 'readme.txt' <br>
      * separator: '.' <br>
      * result: 'readme'
-     * 
+     *
      * @param filename
      *            a string
      * @param separator
@@ -573,15 +573,15 @@ public class SpecsIo {
 
     /**
      * Given a filename, removes the extension suffix and the separator.
-     * 
+     *
      * <p>
      * Uses '.' as default separator
-     * 
+     *
      * <p>
      * Example: <br>
      * filename: 'readme.txt' <br>
      * result: 'readme'
-     * 
+     *
      * @param filename
      *            a string
      * @return the name of the file without the extension and the separator
@@ -592,7 +592,7 @@ public class SpecsIo {
 
     /**
      * Helper method which receives a file.
-     * 
+     *
      * @param file
      * @return
      */
@@ -602,13 +602,13 @@ public class SpecsIo {
 
     /**
      * Note: by default follows symlinks.
-     * 
+     *
      * @param path
      *            a File representing a folder or a file.
-     * 
+     *
      * @param extensions
      *            a set of strings
-     * 
+     *
      * @return all the files inside the given folder, excluding other folders, that have a certain extension as
      *         determined by the set.
      */
@@ -624,16 +624,16 @@ public class SpecsIo {
     /**
      * @param folder
      *            a File representing a folder or a file.
-     * 
+     *
      * @param extensions
      *            a set of strings
-     * 
+     *
      * @param followSymlinks
      *            whether to follow symlinks
-     * 
+     *
      * @param cutoffFolders
-     * 
-     * 
+     *
+     *
      * @return all the files inside the given folder, excluding other folders, that have a certain extension as
      *         determined by the set.
      */
@@ -722,42 +722,42 @@ public class SpecsIo {
         this.separator = SpecsIo.DEFAULT_EXTENSION_SEPARATOR;
         this.followSymlinks = followSymlinks;
         }
-        
+
         @Override
         public boolean accept(File dir, String name) {
-        
+
         String suffix = separator + extension.toLowerCase();
-        
+
         if (!followSymlinks) {
-        
+
             File f = new File(dir, name);
-        
-            // Fail if this is a symlink. 
+
+            // Fail if this is a symlink.
             if (Files.isSymbolicLink(f.toPath())) {
                 return false;
             }
         }
-        
+
         return name.toLowerCase().endsWith(suffix);
         */
         /*
         // Process files inside folder
         for (File file : path.listFiles()) {
-        
-          
-        
+
+
+
             // Process folder
             if (file.isDirectory()) {
                 // If it should be cut-off, stop processing of this folder
                 if (cutoffFolders.test(file)) {
                     continue;
                 }
-        
+
                 // Recursively add files of folder
                 getFilesRecursivePrivate(file, extensions, followSymlinks, cutoffFolders, foundFiles);
                 continue;
             }
-        
+
             //
             // if (!followSymlinks) {
             //
@@ -770,44 +770,44 @@ public class SpecsIo {
             // }
             //
             // return name.toLowerCase().endsWith(suffix);
-        
+
             String extension = SpecsIo.getExtension(file).toLowerCase();
-            
+
             if(extensions.contains(o))
-        
+
             // Add files that pass the extension and symlink rules
             // String suffix = SpecsIo.DEFAULT_EXTENSION_SEPARATOR + extension.toLowerCase();
         }
         */
         /*
         List<File> fileList = new ArrayList<>();
-        
+
         ExtensionFilter filter = new ExtensionFilter(extension, followSymlinks);
         File[] files = path.listFiles(filter);
-        
+
         fileList.addAll(Arrays.asList(files));
-        
+
         // directories
         files = path.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-        
+
                 // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-        
+
                 fileList.addAll(getFilesRecursive(file, extension));
             }
         }
-        
+
         return fileList;
         */
     }
 
     /**
      * Note: by default follows symlinks.
-     * 
+     *
      * @param folder
      *            a File representing a folder or a file.
      * @param extension
@@ -822,64 +822,64 @@ public class SpecsIo {
     /**
      * @param path
      *            a File representing a folder or a file.
-     * 
+     *
      * @param extension
      *            a string
-     * 
+     *
      * @param followSymlinks
      *            whether to follow symlinks
-     * 
+     *
      * @return all the files inside the given folder, excluding other folders, that have a certain extension.
      */
     /*
     public static List<File> getFilesRecursive(File path, String extension, boolean followSymlinks) {
-    
+
         // if (!path.isDirectory()) {
         if (!path.exists()) {
             SpecsLogs.msgWarn("Path '" + path + "' does not exist.");
             return null;
         }
-    
+
         if (path.isFile()) {
             if (SpecsIo.getExtension(path).equals(extension)) {
                 return Arrays.asList(path);
             }
-    
+
             return Collections.emptyList();
         }
-    
+
         List<File> fileList = new ArrayList<>();
-    
+
         ExtensionFilter filter = new ExtensionFilter(extension, followSymlinks);
         File[] files = path.listFiles(filter);
-    
+
         fileList.addAll(Arrays.asList(files));
-    
-        // directories 
+
+        // directories
         files = path.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-    
-                // Ignore directory if is symlink 
+
+                // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-    
+
                 fileList.addAll(getFilesRecursive(file, extension));
             }
         }
-    
+
         return fileList;
     }
-    
+
     */
 
     /**
      * Note: by default this follows symlinks.
-     * 
+     *
      * @param path
      *            a File representing a path.
-     * 
+     *
      * @return all the files inside the given folder, excluding other folders.
      */
     public static List<File> getFilesRecursive(File path) {
@@ -888,14 +888,14 @@ public class SpecsIo {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param path
      *            a File representing a path.
-     * 
+     *
      * @param followSymlinks
      *            whether to follow symlinks (both files and directories)
-     * 
+     *
      * @return all the files inside the given path, excluding other folders.
      */
     public static List<File> getFilesRecursive(File path, boolean followSymlinks) {
@@ -903,45 +903,45 @@ public class SpecsIo {
     }
     /*
     public static List<File> getFilesRecursive(File path, boolean followSymlinks) {
-    
+
         // Special case: path is a single file
         if (path.isFile()) {
             return Arrays.asList(path);
         }
-    
+
         List<File> fileList = new ArrayList<>();
         File[] files = path.listFiles();
-    
+
         if (files == null) {
             // Not a folder
             return fileList;
         }
-    
+
         for (File file : files) {
-    
-            // Ignore file if is symlink 
+
+            // Ignore file if is symlink
             if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                 continue;
             }
-    
+
             if (file.isFile()) {
                 fileList.add(file);
             }
         }
-    
+
         for (File file : files) {
-    
+
             if (file.isDirectory()) {
-    
-                // Ignore directory if is symlink 
+
+                // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-    
+
                 fileList.addAll(getFilesRecursive(file, followSymlinks));
             }
         }
-    
+
         return fileList;
     }
     */
@@ -970,7 +970,7 @@ public class SpecsIo {
 
     /**
      * Do a depth-first listing of all folders inside the given folder.
-     * 
+     *
      * @param folder
      *            a File representing a folder.
      * @return all the folders inside the given folder, excluding other files.
@@ -1062,7 +1062,7 @@ public class SpecsIo {
 
     /**
      * Convenience method which overwrites files by default
-     * 
+     *
      * @param source
      * @param destination
      * @return
@@ -1073,7 +1073,7 @@ public class SpecsIo {
 
     /**
      * Copies the contents of a folder to another folder.
-     * 
+     *
      * @param source
      * @param destination
      * @param verbose
@@ -1112,14 +1112,14 @@ public class SpecsIo {
 
     /**
      * Copies the specified file to the specified location.
-     * 
+     *
      * <p>
      * If the destination is an existing folder, copies the file to a file of the same name on that folder (method
      * 'safeFolder' can be used to create the destination folder, before passing it to the function).
-     * 
+     *
      * <p>
      * If verbose is true, warns when overwriting files.
-     * 
+     *
      * @param source
      * @param destination
      * @param verbose
@@ -1162,10 +1162,10 @@ public class SpecsIo {
 
     /**
      * Copies the contents of the source stream to the destination file.
-     * 
+     *
      * <p>
      * After copy, the source stream is closed.
-     * 
+     *
      * @param source
      * @param destination
      * @return
@@ -1206,7 +1206,7 @@ public class SpecsIo {
 
     /**
      * Helper method which enables recursion by default.
-     * 
+     *
      * @param folder
      * @return true in case the operation was successful (could delete all files, or the folder does not exit)
      */
@@ -1249,7 +1249,7 @@ public class SpecsIo {
 
     /**
      * Helper method which accepts a ResourceProvider.
-     * 
+     *
      * @param resource
      * @return
      */
@@ -1259,7 +1259,7 @@ public class SpecsIo {
 
     /**
      * Given the name of a resource, returns a String with the contents of the resource.
-     * 
+     *
      * @param resourceName
      * @return
      */
@@ -1280,10 +1280,10 @@ public class SpecsIo {
 
     /**
      * Returns the last name of the resource.
-     * 
+     *
      * <p>
      * Example, if input is 'package/resource.ext', returns 'resource.ext'.
-     * 
+     *
      * @param resource
      * @return
      */
@@ -1391,10 +1391,10 @@ public class SpecsIo {
 
     /**
      * Reads the contents of ZipInputStream at the current position to a File.
-     * 
+     *
      * <p>
      * Does not close the stream, so that it can be used again for the remaining zipped files.
-     * 
+     *
      * @param zis
      * @param outFile
      * @throws FileNotFoundException
@@ -1418,7 +1418,7 @@ public class SpecsIo {
 
     /**
      * Converts an object to an array of bytes.
-     * 
+     *
      * @param obj
      * @return
      */
@@ -1441,7 +1441,7 @@ public class SpecsIo {
 
     /**
      * Recovers a String List from an array of bytes.
-     * 
+     *
      * @param bytes
      * @return
      */
@@ -1464,7 +1464,7 @@ public class SpecsIo {
 
     /**
      * Serializes an object to a file.
-     * 
+     *
      * @param file
      * @param serializableObject
      * @return
@@ -1487,7 +1487,7 @@ public class SpecsIo {
 
     /**
      * Deserializes an object from a file.
-     * 
+     *
      * @param file
      * @return
      */
@@ -1534,10 +1534,10 @@ public class SpecsIo {
 
     /**
      * When we don't know the size of the input stream, read until the stream is empty.
-     * 
+     *
      * <p>
      * Closes the stream after reading.
-     * 
+     *
      * @param inStream
      * @return
      */
@@ -1584,7 +1584,7 @@ public class SpecsIo {
 
     /**
      * Copies the given list of resources to the execution path. If the files already exist, the method does nothing.
-     * 
+     *
      * <p>
      * The method assumes that the resource is bundled within the application JAR.
      */
@@ -1619,7 +1619,7 @@ public class SpecsIo {
     /**
      * Copy the given resource to the destination folder using the full path of the resource. Is destination file
      * already exists, does nothing.
-     * 
+     *
      * @param resource
      * @param destinationFolder
      */
@@ -1629,7 +1629,7 @@ public class SpecsIo {
 
     /**
      * Copy the given resource to the destination folder. Is destination file already exists, does nothing.
-     * 
+     *
      * @param resource
      * @param destinationFolder
      * @param useResourcePath
@@ -1642,7 +1642,7 @@ public class SpecsIo {
 
     /**
      * Helper method which uses the package of the ResourceProvider as the Context.
-     * 
+     *
      * @param resource
      * @param destinationFolder
      * @param useResourcePath
@@ -1656,15 +1656,15 @@ public class SpecsIo {
     /**
      * Copies the given resource to the destination folder. If the file already exists, uses ResourceProvider version
      * method to determine if the file should be overwritten or not.
-     * 
+     *
      * <p>
      * If the file already exists but no versioning information is available in the system, the file is overwritten.
-     * 
+     *
      * <p>
      * The method will use the package of the class indicated in 'context' as the location to store the information
      * about versioning. Keep in mind that calls using the same context will refer to the same local copy of the
      * resource.
-     * 
+     *
      * @param resource
      * @param destinationFolder
      * @param useResourcePath
@@ -1779,9 +1779,9 @@ public class SpecsIo {
     /**
      * If baseInput path is "C:\inputpath"; If inputFile is "C:\inputpath\aFolder\inputFile.txt"; If outputFolder is
      * "C:\anotherFolder";
-     * 
+     *
      * Returns the String "C:\anotherFolder\aFolder\"
-     * 
+     *
      * @param baseInputPath
      * @param inputFile
      * @param outputFolder
@@ -1809,7 +1809,7 @@ public class SpecsIo {
     /**
      * Convert String to InputStream using ByteArrayInputStream class. This class constructor takes the string byte
      * array which can be done by calling the getBytes() method.
-     * 
+     *
      * @param text
      * @return
      */
@@ -1823,7 +1823,7 @@ public class SpecsIo {
 
     /**
      * Convert File to InputStream using a buffered FileInputStream class.
-     * 
+     *
      * @param text
      * @return
      */
@@ -1838,7 +1838,7 @@ public class SpecsIo {
 
     /**
      * Helper method that filters files that have a certain extension.
-     * 
+     *
      * @param fileOrFolder
      *            a File representing an existing file or folder.
      * @param extension
@@ -1859,20 +1859,20 @@ public class SpecsIo {
         if (files == null) {
             return Collections.emptyList();
         }
-        
+
         ArrayList<File> returnValue = new ArrayList<>();
-        
+
         for (File file : files) {
             returnValue.add(file);
         }
-        
+
         return returnValue;
         */
     }
 
     /**
      * Taken from here: https://stackoverflow.com/a/31685610/1189808
-     * 
+     *
      * @param folder
      * @param pattern
      * @return
@@ -1919,23 +1919,23 @@ public class SpecsIo {
                 files.add(currentPatternPath);
             }
 
-            /*            
+            /*
             if (currentPatternPath.isDirectory()) {
                 if (filter.isAllowed(currentPatternPath)) {
                     files.add(currentPatternPath);
                 }
-            
+
                 continue;
             }
-            
+
             if (currentPatternPath.isFile()) {
                 if (filter.isAllowed(currentPatternPath)) {
                     files.add(currentPatternPath);
                 }
-            
+
                 continue;
             }
-            
+
             SpecsLogs.msgWarn("Could not hand path, is neither a file or a folder: " + currentPatternPath);
             */
         }
@@ -1945,12 +1945,12 @@ public class SpecsIo {
 
     /**
      * Returns true if the folder contains at least one file having the extension "extension".
-     * 
+     *
      * @param folder
      *            The folder to find the extension from.
      * @param extension
      *            The extension to find in the folder.
-     * 
+     *
      * @return true if the folder contains at least one file having the extension "extension".
      */
     /*
@@ -1958,9 +1958,9 @@ public class SpecsIo {
         if (!folder.isDirectory()) {
             throw new IllegalArgumentException("The file given in parameter is not a folder");
         }
-    
+
         File[] files = folder.listFiles(new ExtensionFilter(extension));
-    
+
         if (files == null || files.length == 0) {
             return false;
         }
@@ -1970,7 +1970,7 @@ public class SpecsIo {
 
     /**
      * Returns the relative path of the file given in parameter, relative to the working folder.
-     * 
+     *
      * @param file
      * @return
      */
@@ -1980,16 +1980,16 @@ public class SpecsIo {
 
     /**
      * Returns the path of 'file', relative to 'baseFile'.
-     * 
+     *
      * <p>
      * The output path is normalized to use the '/' as path separator.
-     * 
+     *
      * <p>
      * If the file does not share a common ancestor with baseFile, returns the absolute path to file.
-     * 
+     *
      * @param file
      *            The file the user needs the relative path of.
-     * 
+     *
      * @return the relative path of the file given in parameter.
      */
     public static String getRelativePath(File file, File baseFile) {
@@ -1997,7 +1997,7 @@ public class SpecsIo {
     }
 
     /**
-     * 
+     *
      * @param file
      * @param baseFile
      * @param strict
@@ -2100,7 +2100,7 @@ public class SpecsIo {
     }
 
     /**
-     * 
+     *
      * @return a File representing the working directory
      */
     public static File getWorkingDir() {
@@ -2111,30 +2111,30 @@ public class SpecsIo {
      * Returns the name of each parent folder in an array.
      * <p>
      * The File ./parent1/parent2/file.f will return the value {., parent1, parent2, file.f}
-     * 
+     *
      * @param file
      *            The file to check.
-     * 
+     *
      * @return the name of each parent folder in an array.
      */
     /*
     public static String[] getParentNames(File file) {
-    
+
     final String WINDOWS = "\\";
     final String LINUX = "/";
-    
+
     String[] parents;
     String path = file.getAbsolutePath();
-    
+
     if (path.contains(WINDOWS)) {
-    
+
         parents = path.split(Pattern.quote(WINDOWS));
         // parents = StringUtils.split(path, WINDOWS);
     } else { // if (path.contains(LINUX))
     	 // parents = StringUtils.split(LINUX);
         parents = path.split(Pattern.quote(LINUX));
     }
-    
+
     return parents;
     }
      */
@@ -2148,7 +2148,7 @@ public class SpecsIo {
     }
 
     /**
-     * 
+     *
      * @param file
      * @param names
      * @return
@@ -2174,7 +2174,7 @@ public class SpecsIo {
 
     /**
      * Convenience method which accepts a File as input.
-     * 
+     *
      * @param file
      * @return
      */
@@ -2188,17 +2188,17 @@ public class SpecsIo {
         	if (extIndex < 0) {
         	    return "";
         	}
-        
+
         	return filename.substring(extIndex + 1, filename.length());
          */
     }
 
     /**
      * Returns the extension of a file name (everything that's after the last '.').
-     * 
+     *
      * <p>
      * If the file has no extension, returns an empty String.
-     * 
+     *
      * @param fileName
      * @return
      */
@@ -2215,10 +2215,10 @@ public class SpecsIo {
 
     /**
      * Convenience method, without parent folder.
-     * 
+     *
      * <p>
      * If folder does not exist, throws a RuntimeException.
-     * 
+     *
      * @param foldername
      * @return
      */
@@ -2226,11 +2226,11 @@ public class SpecsIo {
         return existingFolder(null, folderpath);
         /*
         File folder = existingFolder(null, folderpath);
-        
+
         if (folder == null) {
         throw new RuntimeException("Folder '" + folderpath + "' not found");
         }
-        
+
         return folder;
          */
     }
@@ -2255,10 +2255,10 @@ public class SpecsIo {
 
     /**
      * From the given paths, returns a list of existing files. The paths can represent single files or folders.
-     * 
+     *
      * <p>
      * If a folder is given, looks recursively inside the folder.
-     * 
+     *
      * @param paths
      * @param extensions
      * @return
@@ -2289,7 +2289,7 @@ public class SpecsIo {
 
     /**
      * Returns the canonical path of the given file. If a problem happens, throws an exception.
-     * 
+     *
      * @param executable
      * @return
      */
@@ -2307,7 +2307,7 @@ public class SpecsIo {
 
     /**
      * Returns the parent folder of an existing file.
-     * 
+     *
      * @param existingFile
      * @return
      */
@@ -2361,7 +2361,7 @@ public class SpecsIo {
 
     /**
      * This function downloads the file specified in the URL.
-     * 
+     *
      * @param url
      *            The URL of the file to be downloaded.
      * @return true if the file could be downloaded, false otherwise
@@ -2433,7 +2433,7 @@ public class SpecsIo {
 
     /**
      * Replaces characters that are illegal for filenames with '_'.
-     * 
+     *
      * @param filename
      * @return
      */
@@ -2453,7 +2453,7 @@ public class SpecsIo {
 
     /**
      * Code taken from http://www.kodejava.org/how-do-i-get-operating-system-temporary-directory-folder/
-     * 
+     *
      * @return
      */
     public static File getTempFolder() {
@@ -2489,7 +2489,7 @@ public class SpecsIo {
     /**
      * List directory contents for a resource folder. Not recursive. This is basically a brute-force implementation.
      * Works for regular files and also JARs.
-     * 
+     *
      * @author Greg Briggs
      * @param aClass
      *            Any java class that lives in the same place as the resources you want.
@@ -2547,13 +2547,13 @@ public class SpecsIo {
     /**
      * Returns a File object pointing to the given file path. If the returned object is different than null, the file
      * exists.
-     * 
+     *
      * <p>
      * The method tries to build a File object using the following order of approaches:<br>
      * - If the given file path is absolute, uses only that information; <br>
      * - If the given parent folder is different than null, uses it as base folder. Otherwise, uses the path alone,
      * relative to the current working folder;
-     * 
+     *
      * @param parentFolder
      * @param filepath
      * @return
@@ -2600,7 +2600,7 @@ public class SpecsIo {
 
     /**
      * Returns null if could not return a valid folder.
-     * 
+     *
      * @param parentFolder
      * @return
      */
@@ -2653,14 +2653,14 @@ public class SpecsIo {
 
     /**
      * Returns the canonical file.
-     * 
+     *
      * <p>
      * Calls getAbsoluteFile(), to avoid problems when using paths such as 'Desktop' in Windows, and then transforms to
      * a canonical path.
-     * 
+     *
      * <p>
      * Throws a RuntimeException if it could not obtain the canonical file.
-     * 
+     *
      * @param file
      * @return
      */
@@ -2671,7 +2671,7 @@ public class SpecsIo {
 
             /*
             file = file.getAbsoluteFile().getCanonicalFile();
-            
+
             // return new File(file.getAbsolutePath().replace('\\', '/'));
             return new File(normalizePath(file.getAbsolutePath()));
             */
@@ -2684,11 +2684,11 @@ public class SpecsIo {
 
     /**
      * Converts all '\' to '/'
-     * 
+     *
      * <p>
-     * This method should only be used when maniputaling Files as strings. Otherwise, File objects always revert to the
+     * This method should only be used when manipulating Files as strings. Otherwise, File objects always revert to the
      * system's preferred separator.
-     * 
+     *
      * @param path
      * @return
      */
@@ -2720,7 +2720,7 @@ public class SpecsIo {
 
     /**
      * Returns the canonical path of a file
-     * 
+     *
      * @param file
      * @return
      */
@@ -2761,7 +2761,7 @@ public class SpecsIo {
 
     /**
      * Deletes the given folder and all its contents.
-     * 
+     *
      * @param folder
      *            folder to delete
      * @return true if both the folder and its contents could be deleted
@@ -2786,7 +2786,7 @@ public class SpecsIo {
 
     /**
      * Helper method that enables recursion by default.
-     * 
+     *
      * @param sources
      * @param extensions
      * @return
@@ -2798,7 +2798,7 @@ public class SpecsIo {
 
     /**
      * Maps the canonical path of each file found in the sources folders to its corresponding source folder.
-     * 
+     *
      * @param sources
      * @param recursive
      * @param extensions
@@ -2809,7 +2809,7 @@ public class SpecsIo {
     }
 
     /**
-     * 
+     *
      * @param sources
      * @param recursive
      * @param extensions
@@ -2903,7 +2903,7 @@ public class SpecsIo {
 
     /**
      * Compresses the entries into the given zipFile. Uses basePath to calculate the root of entries in the zip.
-     * 
+     *
      * @param entries
      * @param basePath
      * @param zipFile
@@ -2983,7 +2983,7 @@ public class SpecsIo {
 
     /**
      * Based on https://stackoverflow.com/questions/304268/getting-a-files-md5-checksum-in-java
-     * 
+     *
      * @param file
      * @return
      */
@@ -3028,7 +3028,7 @@ public class SpecsIo {
 
     /**
      * Tests if a folder can be written.
-     * 
+     *
      * @param folder
      * @return true if the given path is an existing folder, and can be written
      */
@@ -3059,12 +3059,12 @@ public class SpecsIo {
 
     /**
      * Tries to look for the given filename in several common folders.
-     * 
+     *
      * <p>
      * Current order is: <br>
      * - In the same folder of the .jar of the given class; <br>
      * - In the current working directory <br>
-     * 
+     *
      * @param filename
      * @return
      */
@@ -3093,7 +3093,7 @@ public class SpecsIo {
 
     /**
      * Reads a single byte from System.in;
-     * 
+     *
      * @return
      */
     public static int read() {
