@@ -1,11 +1,11 @@
 /**
  * Copyright 2016 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -85,19 +85,20 @@ public class DataKeyTest {
         DataStore savedStore = xmlBuilder.loadData(testFile);
         SpecsIo.delete(testFile);
 
-        assertEquals(savedStore, store);
+        // Using toString() to remove extra information, such as configuration file
+        assertEquals(savedStore.toString(), store.toString());
 
         /*
         DataKey<StringList> list = KeyFactory.object("Option", StringList.class).setDefaultValueV2(new StringList())
         	.setDecoderV2(value -> new StringList(value));
-        
+
         assertEquals(String.class, s.getValueClass());
-        
+
         SetupBuilder data = new SimpleSetup("test_data");
-        
+
         data.setValue(s, "a value");
         assertEquals("a value", data.getValue(s));
-        
+
         fail("Not yet implemented");
         */
     }
@@ -155,7 +156,8 @@ public class DataKeyTest {
         DataStore savedStore = xmlBuilder.loadData(testFile);
         SpecsIo.delete(testFile);
 
-        assertEquals(savedStore, store);
+        // Using toString() to remove extra information, such as configuration file
+        assertEquals(savedStore.toString(), store.toString());
     }
 
     // TODO: Make this generic for any type of list. Separator can be one of the parameters
