@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -39,7 +39,7 @@ import pt.up.fe.specs.util.utilities.LineStream;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class XmlPersistence implements AppPersistence {
 
@@ -101,7 +101,6 @@ public class XmlPersistence implements AppPersistence {
      */
     @Override
     public DataStore loadData(File file) {
-
         // Read first line, to check if it is from previous format
         try (LineStream lines = LineStream.newInstance(file)) {
             while (lines.hasNextLine()) {
@@ -138,6 +137,9 @@ public class XmlPersistence implements AppPersistence {
             // return null;
         }
 
+        parsedObject.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
+        parsedObject.set(JOptionKeys.USE_RELATIVE_PATHS, false);
+
         // If no definition defined, show warning and return parsed object
         if (definition == null) {
             // LoggingUtils
@@ -145,6 +147,8 @@ public class XmlPersistence implements AppPersistence {
             // "Using XmlPersistence without a StoreDefinition, customizations to the keys (e.g., KeyPanels, custom
             // getters) will be lost");
             // parsedObject.setSetupFile(file);
+            // When loading DataStore, use absolute paths
+
             return parsedObject;
         }
 
@@ -161,8 +165,8 @@ public class XmlPersistence implements AppPersistence {
         // Do not use it as a normal DataStore
 
         // When loading DataStore, use absolute paths
-        parsedObject.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
-        parsedObject.set(JOptionKeys.USE_RELATIVE_PATHS, false);
+        // parsedObject.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
+        // parsedObject.set(JOptionKeys.USE_RELATIVE_PATHS, false);
 
         // System.out.println("PARSED OBJECT FOLDER:" + parsedObject.get(JOptionKeys.CURRENT_FOLDER_PATH));
 
@@ -175,6 +179,10 @@ public class XmlPersistence implements AppPersistence {
                 dataStore.setRaw(dataKey, value.get());
             }
         }
+
+        // Set configuration file information
+        dataStore.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
+        // dataStore.set(JOptionKeys.USE_RELATIVE_PATHS, false);
 
         // dataStore.set(parsedObject);
         // dataStore.getKeys().stream()
