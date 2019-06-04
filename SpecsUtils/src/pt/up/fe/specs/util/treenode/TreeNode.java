@@ -306,10 +306,11 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      *
      * @param child
-     * @return
+     * @return the object that was really inserted in the tree (e.g., if child already had a parent, usually a copy is
+     *         inserted)
      */
     // boolean addChild(K child);
-    void addChild(K child);
+    K addChild(K child);
 
     /**
      *
@@ -318,7 +319,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      * @param child
      * @return
      */
-    void addChild(int index, K child);
+    K addChild(int index, K child);
 
     // default <EK extends K> boolean addChildren(List<EK> children) {
     default <EK extends K> void addChildren(List<EK> children) {
@@ -572,7 +573,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns the nodes on the left of this node.
-     * 
+     *
      * @return
      */
     default List<K> getLeftSiblings() {
@@ -588,7 +589,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns the nodes on the right of this node.
-     * 
+     *
      * @return
      */
     default List<K> getRightSiblings() {

@@ -76,7 +76,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
     /**
      * TODO: Remove?
-     * 
+     *
      * @return a mutable view of the children
      */
     @Override
@@ -189,11 +189,13 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     @Override
     // public boolean addChild(K child) {
-    public void addChild(K child) {
+    public K addChild(K child) {
         K sanitizedChild = TreeNodeUtils.sanitizeNode(child);
         setAsParentOf(sanitizedChild);
 
         addChildPrivate(sanitizedChild);
+
+        return sanitizedChild;
     }
 
     @Override
@@ -214,12 +216,14 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      * @see pt.up.fe.specs.util.treenode.TreeNode#addChild(int, K)
      */
     @Override
-    public void addChild(int index, K child) {
+    public K addChild(int index, K child) {
         K sanitizedToken = TreeNodeUtils.sanitizeNode(child);
         setAsParentOf(sanitizedToken);
 
         // Insert child
         addChildPrivate(index, sanitizedToken);
+
+        return sanitizedToken;
     }
 
     /**
