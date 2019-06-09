@@ -13,8 +13,8 @@
         <mkdir dir="<JAR_SUBFOLDER>"/>
         <COPY_JARS>
         
-        <jar destfile="<JAVADOC_JAR_FILE>">
-			<JAVADOC_FILESET>
+        <jar destfile="<SOURCES_JAR_FILE>">
+			<SOURCES_FILESET>
         </jar>
     </target>
 </project>

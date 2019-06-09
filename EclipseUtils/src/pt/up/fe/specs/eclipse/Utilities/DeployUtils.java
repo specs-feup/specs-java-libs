@@ -79,6 +79,18 @@ public class DeployUtils {
     }
 
     /**
+     * @param projectFolder
+     * @return
+     */
+    public static String getSourcesFileset(File projectFolder) {
+        String template = "<fileset dir=\"<FOLDER>\" includes=\"**/*.java\"/>";
+
+        template = template.replace("<FOLDER>", projectFolder.getAbsolutePath());
+
+        return template;
+    }
+
+    /**
      * @param jarFile
      * @return
      */
@@ -199,7 +211,7 @@ public class DeployUtils {
     /*
     public static boolean hasMainMethod(String className) {
     System.err.println("NOT IMPLEMENTED");
-    
+
     Class<?> classWithMain = null;
     try {
         classWithMain = Class.forName("className");
@@ -207,7 +219,7 @@ public class DeployUtils {
         LoggingUtils.msgInfo("Could not find class with name '" + className + "'");
         return false;
     }
-    
+
     Method mainMethod = null;
     try {
         classWithMain.getMethod("main", String[].class);
@@ -218,7 +230,7 @@ public class DeployUtils {
         // TODO Auto-generated catch block
         e.printStackTrace();
     }
-    
+
     return false;
     }
     */
@@ -226,35 +238,35 @@ public class DeployUtils {
     public static String buildFileset(ClasspathFiles classpathFiles, boolean hasIvyDependencies) {
     	final String prefix = "			";
     	StringBuilder fileset = new StringBuilder();
-    
+
     	// Add JAR Files
     	for (File jarFile : classpathFiles.getJarFiles()) {
     	    String line = DeployUtils.getZipfileset(jarFile);
-    
+
     	    fileset.append(prefix);
     	    fileset.append(line);
     	    fileset.append("\n");
     	}
-    
+
     	// Add Filesets
     	for (File projectFolder : classpathFiles.getBinFolders()) {
     	    String line = DeployUtils.getFileset(projectFolder);
-    
+
     	    fileset.append(prefix);
     	    fileset.append(line);
     	    fileset.append("\n");
     	}
-    
+
     	// If classpath has an ivy path, add Ivy jar folder
     	if (hasIvyDependencies) {
-    
+
     	    String ivyJarFolder = BuildUtils.getIvyJarFolder(classpathFiles.getProjectFolder());
     	    // String ivyJarFolder = "${user.home}/.ivy2/cache";
     	    Replacer ivyFileset = new Replacer(BuildResource.JARFOLDER_TEMPLATE);
     	    ivyFileset.replace("<FOLDER>", ivyJarFolder);
     	    fileset.append(ivyFileset.toString()).append("\n");
     	}
-    
+
     	return fileset.toString();
     }
     */
@@ -317,13 +329,13 @@ public class DeployUtils {
             jarList.append(jarFile.getName());
             jarList.append(" ");
         }
-        
+
         // long bytesSaved = 0l;
         // List<String> ignoredJars = new ArrayList<>();
-        
+
         for (String ivyFolder : ivyFolders) {
             List<File> jarFiles = SpecsIo.getFiles(new File(ivyFolder), "jar");
-        
+
             for (File jarFile : jarFiles) {
                 // Ignore javadoc and source
                 // if (jarFile.getName().contains("-javadoc") || jarFile.getName().contains("-source")) {
@@ -331,18 +343,18 @@ public class DeployUtils {
                 // ignoredJars.add(jarFile.getName());
                 // continue;
                 // }
-        
+
                 jarList.append(jarFile.getName());
                 jarList.append(" ");
             }
         }
-        
+
         // Is not having an effect in the final JAR
         // if (!ignoredJars.isEmpty()) {
         // LoggingUtils
         // .msgInfo("Ignored the following JARs (~" + ParseUtils.parseSize(bytesSaved) + "): " + ignoredJars);
         // }
-        
+
         return jarList.toString();
         */
     }
@@ -420,7 +432,7 @@ public class DeployUtils {
         /*
         for (File projectFolder : classpathFiles.getBinFolders()) {
             String line = DeployUtils.getFileset(projectFolder);
-        
+
             fileset.append(prefix);
             fileset.append(line);
             fileset.append("\n");
@@ -464,5 +476,42 @@ public class DeployUtils {
     public static String getCopyTask(File sourceFile, File destinationFolder) {
         return "<copy file=\"" + sourceFile.getAbsolutePath() + "\" todir=\"" + destinationFolder.getAbsolutePath()
                 + "\"/>";
+    }
+
+    public static File getSourcesJar(String nameOfOutputJar) {
+        // The javadoc jar will be in a temporary folder
+        File tempFolder = getTempFolder();
+
+        if (nameOfOutputJar.endsWith(".jar")) {
+            nameOfOutputJar = nameOfOutputJar.substring(0, nameOfOutputJar.length() - ".jar".length());
+        }
+
+        nameOfOutputJar = nameOfOutputJar + "-sources.jar";
+
+        return new File(tempFolder, nameOfOutputJar);
+    }
+
+    /**
+     * Fileset related project files sources (Eclipse project and sub-projects).
+     *
+     * @param parser
+     * @param projetName
+     * @return
+     */
+    public static List<String> buildSourcesFileset(ClasspathParser parser, String projetName) {
+        List<String> projectsFileset = new ArrayList<>();
+
+        ClasspathFiles classpathFiles = parser.getClasspath(projetName);
+
+        // Add current project folder
+        projectsFileset.add(DeployUtils.getSourcesFileset(classpathFiles.getProjectFolder()));
+
+        // Add dependent project folders
+        for (String dependentProject : classpathFiles.getDependentProjects()) {
+            File projectFolder = parser.getClasspath(dependentProject).getProjectFolder();
+            projectsFileset.add(DeployUtils.getSourcesFileset(projectFolder));
+        }
+
+        return projectsFileset;
     }
 }

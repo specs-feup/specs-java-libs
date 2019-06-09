@@ -330,11 +330,12 @@ public class EclipseDeployment {
                 .map(jar -> DeployUtils.getCopyTask(jar, subfolder))
                 .collect(Collectors.joining("\n"));
 
-        // Javadoc
+        // Sources
 
-        // File javadocJar = DeployUtils.getJavadocJar(data.nameOfOutputJar);
-        // <JAVADOC_JAR_FILE>
-        // <JAVADOC_FILESET>
+        File sourcesJar = DeployUtils.getSourcesJar(data.nameOfOutputJar);
+
+        String sourcesFileset = DeployUtils.buildSourcesFileset(parser, data.projetName).stream()
+                .collect(Collectors.joining("\n" + DeployUtils.getPrefix()));
 
         template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
         template = template.replace("<MAIN_CLASS>", data.mainClass);
@@ -342,10 +343,12 @@ public class EclipseDeployment {
         template = template.replace("<FILESET>", fileset);
         template = template.replace("<JAR_SUBFOLDER>", subfolder.getAbsolutePath());
         template = template.replace("<COPY_JARS>", copyJars);
+        template = template.replace("<SOURCES_JAR_FILE>", sourcesJar.getAbsolutePath());
+        template = template.replace("<SOURCES_FILESET>", sourcesFileset);
 
         File buildFile = new File(EclipseDeployment.BUILD_FILE);
         SpecsIo.write(buildFile, template);
-
+        System.out.println("XML:" + template);
         // Launch ant
         Project project = new Project();
         project.init();
