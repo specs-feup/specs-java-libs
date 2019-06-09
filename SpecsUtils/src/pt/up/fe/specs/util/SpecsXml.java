@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -15,6 +15,7 @@ package pt.up.fe.specs.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,9 +32,9 @@ import org.xml.sax.SAXException;
 
 /**
  * Utility methods related with XML files.
- * 
+ *
  * @author Joao Bispo
- * 
+ *
  */
 public class SpecsXml {
 
@@ -42,13 +43,29 @@ public class SpecsXml {
     }
 
     public static Document getXmlRoot(File file) {
+        InputStream fileInputStream = SpecsIo.toInputStream(file);
+        Document xmlDoc = getXmlRoot(fileInputStream);
+        try {
+            fileInputStream.close();
+        } catch (IOException e) {
+            SpecsLogs.msgWarn("Could not close file input stream:\n", e);
+        }
+        return xmlDoc;
+    }
+
+    public static Document getXmlRoot(String contents) {
+        return getXmlRoot(SpecsIo.toInputStream(contents));
+    }
+
+    public static Document getXmlRoot(InputStream inputStream) {
+
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder;
 
             dBuilder = dbFactory.newDocumentBuilder();
 
-            Document doc = dBuilder.parse(file);
+            Document doc = dBuilder.parse(inputStream);
 
             // optional, but recommended
             // read this -
@@ -67,8 +84,9 @@ public class SpecsXml {
         return null;
     }
 
-    public static Document getXmlRoot(String uri) {
+    public static Document getXmlRootFromUri(String uri) {
         try {
+
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder;
 
@@ -95,7 +113,7 @@ public class SpecsXml {
 
     /**
      * Returns the value of the attribute inside the given session.
-     * 
+     *
      * @param doc
      * @param section
      * @param attribute
@@ -200,12 +218,12 @@ public class SpecsXml {
 
     /*
     public static List<Node> getNodes(NodeList nodeList, String nodeTag) {
-    
+
     List<Node> nodes = new ArrayList<>();
     for (int i = 0; i < nodeList.getLength(); i++) {
         nodes.add(nodeList.item(i));
     }
-    
+
     return nodes;
     }
      */
@@ -249,7 +267,7 @@ public class SpecsXml {
 
     /**
      * The value of the node found by walking the given tag-chain.
-     * 
+     *
      * @param doc
      * @param tagChain
      * @return
