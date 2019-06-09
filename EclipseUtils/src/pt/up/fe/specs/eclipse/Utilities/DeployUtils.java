@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -14,6 +14,7 @@
 package pt.up.fe.specs.eclipse.Utilities;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,18 +29,24 @@ import pt.up.fe.specs.eclipse.Classpath.ClasspathParser;
 import pt.up.fe.specs.eclipse.builder.BuildResource;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.Replacer;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class DeployUtils {
 
     // private static final String PREFIX_PROP_USER_LIB = "org.eclipse.jdt.core.userLibrary";
 
     private static final String TEMPORARY_FOLDER = "temp";
+    private static final String PREFIX = "           ";
+
+    public static String getPrefix() {
+        return PREFIX;
+    }
 
     /**
      * @param projectFolder
@@ -104,10 +111,10 @@ public class DeployUtils {
 
     /**
      * Standard listener for ANT project.
-     * 
+     *
      * <p>
      * Outputs a message when an ANT target starts and finishes.
-     * 
+     *
      * @return
      */
     public static BuildListener newStdoutListener() {
@@ -178,7 +185,7 @@ public class DeployUtils {
 
     /**
      * Returns a File representing the output JAR.
-     * 
+     *
      * @param jarFilename
      * @return
      */
@@ -251,19 +258,71 @@ public class DeployUtils {
     	return fileset.toString();
     }
     */
+
+    public static boolean ignoreJar(File jarFile) {
+        // Ignore javadoc and source
+        if (jarFile.getName().contains("-javadoc-") || jarFile.getName().contains("-source-")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static List<File> getJarFiles(List<File> classpathJars, Collection<String> ivyFolders,
+            boolean filterJars) {
+        List<File> jars = new ArrayList<>();
+
+        long bytesSaved = 0l;
+        List<String> ignoredJars = new ArrayList<>();
+        for (File jarFile : classpathJars) {
+            if (filterJars && ignoreJar(jarFile)) {
+                bytesSaved += jarFile.length();
+                ignoredJars.add(jarFile.getName());
+                continue;
+            }
+
+            jars.add(jarFile);
+        }
+
+        for (String ivyFolder : ivyFolders) {
+            List<File> jarFiles = SpecsIo.getFiles(new File(ivyFolder), "jar");
+
+            for (File jarFile : jarFiles) {
+                if (filterJars && ignoreJar(jarFile)) {
+                    bytesSaved += jarFile.length();
+                    ignoredJars.add(jarFile.getName());
+                    continue;
+                }
+
+                jars.add(jarFile);
+            }
+        }
+
+        if (!ignoredJars.isEmpty()) {
+            SpecsLogs.info(
+                    "Ignored the following JARs (~" + SpecsStrings.parseSize(bytesSaved) + "): " + ignoredJars);
+        }
+
+        return jars;
+    }
+
     public static String buildJarList(ClasspathFiles classpathFiles, Collection<String> ivyFolders) {
+        return getJarFiles(classpathFiles.getJarFiles(), ivyFolders, false).stream()
+                .map(File::getName)
+                .collect(Collectors.joining(" "));
+        /*
         StringBuilder jarList = new StringBuilder();
         for (File jarFile : classpathFiles.getJarFiles()) {
             jarList.append(jarFile.getName());
             jarList.append(" ");
         }
-
+        
         // long bytesSaved = 0l;
         // List<String> ignoredJars = new ArrayList<>();
-
+        
         for (String ivyFolder : ivyFolders) {
             List<File> jarFiles = SpecsIo.getFiles(new File(ivyFolder), "jar");
-
+        
             for (File jarFile : jarFiles) {
                 // Ignore javadoc and source
                 // if (jarFile.getName().contains("-javadoc") || jarFile.getName().contains("-source")) {
@@ -271,19 +330,20 @@ public class DeployUtils {
                 // ignoredJars.add(jarFile.getName());
                 // continue;
                 // }
-
+        
                 jarList.append(jarFile.getName());
                 jarList.append(" ");
             }
         }
-
+        
         // Is not having an effect in the final JAR
         // if (!ignoredJars.isEmpty()) {
         // LoggingUtils
         // .msgInfo("Ignored the following JARs (~" + ParseUtils.parseSize(bytesSaved) + "): " + ignoredJars);
         // }
-
+        
         return jarList.toString();
+        */
     }
 
     public static void runAnt(File antScript) {
@@ -315,6 +375,26 @@ public class DeployUtils {
         SpecsSystem.executeOnProcessAndWait(RunAnt.class, antScript.getAbsolutePath(), target);
     }
 
+    /**
+     * Fileset related project files (Eclipse project and sub-projects).
+     *
+     * @param parser
+     * @param projetName
+     * @return
+     */
+    public static List<String> buildProjectsFileset(ClasspathParser parser, String projetName) {
+        List<String> projectsFileset = new ArrayList<>();
+
+        ClasspathFiles classpathFiles = parser.getClasspath(projetName);
+
+        // Add Filesets
+        for (File projectFolder : classpathFiles.getBinFolders()) {
+            projectsFileset.add(DeployUtils.getFileset(projectFolder));
+        }
+
+        return projectsFileset;
+    }
+
     public static String buildFileset(ClasspathParser parser, String projetName, Collection<String> ivyFolders,
             boolean extractJars) {
         ClasspathFiles classpathFiles = parser.getClasspath(projetName);
@@ -332,15 +412,19 @@ public class DeployUtils {
             fileset.append("\n");
         }
 
-        // Add Filesets
+        // Add projects filesets
+        buildProjectsFileset(parser, projetName).stream()
+                .map(projectFileset -> prefix + projectFileset + "\n")
+                .forEach(fileset::append);
+        /*
         for (File projectFolder : classpathFiles.getBinFolders()) {
             String line = DeployUtils.getFileset(projectFolder);
-
+        
             fileset.append(prefix);
             fileset.append(line);
             fileset.append("\n");
         }
-
+        */
         // Add Ivy folders
         for (String ivyFolder : ivyFolders) {
             String ivySet = extractJars ? getIvyJarsExtracted(ivyFolder) : getIvyJars(ivyFolder);
@@ -374,5 +458,10 @@ public class DeployUtils {
         return ivyFolders.stream()
                 .map(ivyFolder -> "<delete dir=\"" + ivyFolder + "\"/>")
                 .collect(Collectors.joining("\n"));
+    }
+
+    public static String getCopyTask(File sourceFile, File destinationFolder) {
+        return "<copy file=\"" + sourceFile.getAbsolutePath() + "\" todir=\"" + destinationFolder.getAbsolutePath()
+                + "\"/>";
     }
 }

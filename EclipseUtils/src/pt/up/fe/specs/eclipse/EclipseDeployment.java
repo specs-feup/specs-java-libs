@@ -1,11 +1,11 @@
 /*
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -15,7 +15,9 @@ package pt.up.fe.specs.eclipse;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -36,7 +38,7 @@ import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
  * Builds and deploys Eclipse projects.
- * 
+ *
  * @author Joao Bispo
  */
 public class EclipseDeployment {
@@ -50,6 +52,7 @@ public class EclipseDeployment {
         DEPLOY_BUILDER = new HashMap<>();
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.RepackJar, EclipseDeployment::buildJarRepack);
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.UseJarInJar, EclipseDeployment::buildJarInJar);
+        EclipseDeployment.DEPLOY_BUILDER.put(JarType.SubFolder, EclipseDeployment::buildSubFolder);
     }
 
     private final EclipseDeploymentData data;
@@ -114,7 +117,7 @@ public class EclipseDeployment {
     }
 
     /**
-     * 
+     *
      */
     private void processTasks() {
 
@@ -139,19 +142,19 @@ public class EclipseDeployment {
     }
 
     /**
-     * 
+     *
      */
     /*
     private void deployFtp() {
     String script = "open specsuser:SpecS#12345@specs.fe.up.pt\r\n" + "bin\r\n"
     	+ "cd /home/specsuser/tools/gearman_server\r\n" + "put C:\\temp_output\\deploy\\suika.properties\r\n"
     	+ "ls\r\n" + "exit";
-    
+
     IoUtils.write(new File("ftp_script.txt"), script);
-    
+
     ProcessUtils.run(Arrays.asList("WinSCP.com", "/script=ftp_script.txt"), IoUtils.getWorkingDir()
     	.getAbsolutePath());
-    
+
     }
     */
 
@@ -268,5 +271,87 @@ public class EclipseDeployment {
             throw new RuntimeException("Could not create output JAR '" + outputJar.getAbsolutePath() + "'");
         }
 
+    }
+
+    /**
+     * Creates a single JAR with additional library JARs in a subfolder.
+     */
+    private static void buildSubFolder(EclipseDeploymentData data) {
+        ClasspathParser parser = ClasspathParser.newFromWorkspace(data.workspaceFolder);
+
+        ClasspathFiles classpathFiles = parser.getClasspath(data.projetName);
+
+        Collection<String> dependentProjects = parser.getDependentProjects(data.projetName);
+        Collection<String> projectsWithIvy = BuildUtils.filterProjectsWithIvy(parser, dependentProjects);
+        Collection<String> ivyFolders = projectsWithIvy.stream()
+                .map(ivyProject -> BuildUtils.getIvyJarFoldername(parser.getClasspath(ivyProject).getProjectFolder()))
+                .collect(Collectors.toList());
+
+        // String fileset = DeployUtils.buildFileset(parser, data.projetName, ivyFolders, false);
+
+        // String jarList = DeployUtils.buildJarList(classpathFiles, ivyFolders);
+
+        // Replace fields in template
+        String template = SpecsIo.getResource(DeployResource.DEPLOY_SUBFOLDER_TEMPLATE);
+
+        // Output JAR
+        File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+
+        // Subfolder name
+        String subFoldername = "libs";
+
+        List<File> ivyJars = DeployUtils.getJarFiles(Collections.emptyList(), ivyFolders, true);
+
+        // Subfolder gets Ivy JARs
+        String subfolderJars = ivyJars.stream()
+                .map(file -> subFoldername + "/" + file.getName())
+                .collect(Collectors.joining(" "));
+
+        String fileset = DeployUtils.buildProjectsFileset(parser, data.projetName).stream()
+                .collect(Collectors.joining("\n" + DeployUtils.getPrefix(), DeployUtils.getPrefix(), ""));
+
+        // Project JARs are repackaged inside JAR
+        List<File> projectsJars = DeployUtils.getJarFiles(classpathFiles.getJarFiles(), Collections.emptyList(), true);
+
+        if (!projectsJars.isEmpty()) {
+            SpecsLogs.debug(() -> "Repackaging the following JARs in SubFolder deploy: " + projectsJars);
+
+            for (var jarFile : projectsJars) {
+                String line = DeployUtils.getZipfilesetExtracted(jarFile);
+                fileset += "\n" + DeployUtils.getPrefix() + line;
+            }
+
+        }
+
+        // Subfolder
+        File subfolder = new File(DeployUtils.getTempFolder(), subFoldername);
+
+        String copyJars = ivyJars.stream()
+                .map(jar -> DeployUtils.getCopyTask(jar, subfolder))
+                .collect(Collectors.joining("\n"));
+
+        template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
+        template = template.replace("<MAIN_CLASS>", data.mainClass);
+        template = template.replace("<SUBFOLDER_JARS>", subfolderJars);
+        template = template.replace("<FILESET>", fileset);
+        template = template.replace("<JAR_SUBFOLDER>", subfolder.getAbsolutePath());
+        template = template.replace("<COPY_JARS>", copyJars);
+
+        File buildFile = new File(EclipseDeployment.BUILD_FILE);
+        SpecsIo.write(buildFile, template);
+
+        // Launch ant
+        Project project = new Project();
+        project.init();
+
+        ProjectHelper.configureProject(project, buildFile);
+
+        project.addBuildListener(DeployUtils.newStdoutListener());
+        project.executeTarget(project.getDefaultTarget());
+
+        // Check if jar file exists
+        if (!outputJar.isFile()) {
+            throw new RuntimeException("Could not create output JAR '" + outputJar.getAbsolutePath() + "'");
+        }
     }
 }

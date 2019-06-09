@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -49,7 +49,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class ClasspathParser {
 
@@ -80,7 +80,7 @@ public class ClasspathParser {
 
     /**
      * TODO: This should be the preferred constructor, replace others.
-     * 
+     *
      * @param userLibraries
      * @param eclipseProjects
      */
@@ -104,7 +104,7 @@ public class ClasspathParser {
     /**
      * Creates a new ClasspathParser from the folder which contains Eclipse projects, and an exported user libraries
      * file.
-     * 
+     *
      * @param repositoryFolder
      * @param userLibrariesFile
      * @return
@@ -129,7 +129,7 @@ public class ClasspathParser {
      * Creates a new instance from an Eclipse workspace. By using an Eclipse workspace instead of the folder of a
      * repository (and possibly a user libraries file), it might execute faster by using information already built by
      * Eclipse, instead of building it itself.
-     * 
+     *
      * @param workspaceFolder
      * @return
      */
@@ -139,7 +139,7 @@ public class ClasspathParser {
 
     // private ClasspathParser(File workspaceFolder, Optional<File> outputFolder) {
     private ClasspathParser(File workspaceFolder) {
-        System.out.println("ADASDASDASD");
+
         // this.workspaceFolder = workspaceFolder;
         // this.projectName = projectName;
         currentSourceFolders = new ArrayList<>();
@@ -506,17 +506,17 @@ public class ClasspathParser {
         /*
          * for(String containersToIgnore : CONTAINERS_TO_IGNORE) {
          * if(pathValue.startsWith(containersToIgnore)) { return true; } }
-         * 
+         *
          * return false;
          */
     }
 
     /**
      * Returns a list of all Eclipse projects the given project depends on.
-     * 
+     *
      * <p>
      * The search is done recursively.
-     * 
+     *
      * @param projectName
      * @return
      */
@@ -530,7 +530,7 @@ public class ClasspathParser {
 
     /**
      * Recursive helper method which does all the work.
-     * 
+     *
      * @param projectName
      * @param projects
      * @return
