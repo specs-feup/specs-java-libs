@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -35,7 +35,7 @@ import pt.up.fe.specs.util.properties.SpecsProperties;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class UserLibraries {
 
@@ -50,7 +50,7 @@ public class UserLibraries {
 
     /**
      * Creates a new UserLibraries from a collection of other UserLibraries.
-     * 
+     *
      * @param userLibrariesCollection
      * @return
      */
@@ -66,7 +66,7 @@ public class UserLibraries {
 
     /**
      * Creates a new UserLibraries object.
-     * 
+     *
      * @param eclipseProjects
      * @param userLibrariesFile
      * @return
@@ -77,7 +77,7 @@ public class UserLibraries {
 
     /**
      * Always returns a UserLibraries object.
-     * 
+     *
      * @param workspace
      * @return
      */
@@ -111,8 +111,7 @@ public class UserLibraries {
 
             // Document doc = XomUtils.getDocument(value, false);
             Document doc = SpecsXml.getXmlRoot(value);
-            SpecsLogs.warn(
-                    "Currently this call to 'SpecsXml.getXmlRoot' is untested, please verify if everything is ok");
+
             if (doc == null) {
                 SpecsLogs.msgInfo("Skipping lib '" + libName + "', could not get info");
                 continue;
@@ -122,8 +121,8 @@ public class UserLibraries {
             Element element = doc.getDocumentElement();
 
             // Sanity check
-            if (!element.getLocalName().equals("userlibrary")) {
-                SpecsLogs.msgWarn("NOT A USER LIBRARY");
+            if (!element.getNodeName().equals("userlibrary")) {
+                SpecsLogs.msgWarn("NOT A USER LIBRARY: " + element.getNodeName());
                 continue;
             }
 
@@ -211,7 +210,7 @@ public class UserLibraries {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -221,7 +220,7 @@ public class UserLibraries {
 
     /**
      * Creates a new UserLibraries with paths relative to the given folder.
-     * 
+     *
      * @param rootFolder
      * @return
      */

@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -34,7 +34,7 @@ import pt.up.fe.specs.util.SpecsSystem;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class XomTester {
 
@@ -46,13 +46,13 @@ public class XomTester {
     // @Test
     /*
     public void testXml() {
-    
+
         // String xmlFilename =
         // "C:\\Users\\Joao
         // Bispo\\Work\\Code\\suikasoft-java2\\JavaSe\\.metadata\\.plugins\\org.eclipse.core.runtime\\.settings\\org.eclipse.jdt.core.prefs";
         String xmlFilename = "C:\\Users\\Joao Bispo\\Desktop\\user_test.xml";
         File xmlFile = SpecsIo.existingFile(xmlFilename);
-    
+
         Document doc = null;
         try {
             Builder parser = new Builder(true);
@@ -69,19 +69,19 @@ public class XomTester {
             System.err.println("Could not connect to Cafe con Leche. The site may be down.");
             System.exit(1);
         }
-    
-    
+
+
     //        	for (int i = 0; i < doc.getChildCount(); i++) {
         	  //  System.out.println("VALUE:" + doc.getChild(i).getValue());
         	//}
         //
-    
+
     }
     */
 
     /*
         public static Document getDocument(String xmlContents) {
-    	
+
         }
       */
     /*
@@ -103,7 +103,7 @@ public class XomTester {
         // System.err.println("Could not connect to Cafe con Leche. The site may be down.");
         // System.exit(1);
     }
-    
+
     return doc;
     }
     */
@@ -111,56 +111,56 @@ public class XomTester {
     /*
     public void testProperties() {
     String PREFIX_PROP_USER_LIB = "org.eclipse.jdt.core.userLibrary.";
-    
+
     String propsFilename = "C:\\Users\\Joao Bispo\\Work\\Code\\suikasoft-java2\\JavaSe\\.metadata\\.plugins\\org.eclipse.core.runtime\\.settings\\org.eclipse.jdt.core.prefs";
     File propsFile = IoUtils.existingFile(propsFilename);
-    
+
     Properties properties = PropertiesUtils.load(propsFile);
     for (Object keyObj : properties.keySet()) {
         String key = (String) keyObj;
-    
+
         if (!key.startsWith(PREFIX_PROP_USER_LIB)) {
     	continue;
         }
-    
+
         String lib = key.substring(PREFIX_PROP_USER_LIB.length());
         System.out.println("Lib:" + lib);
-    
+
         String value = properties.getProperty(key);
         //System.out.println("VALUE:" + value);
         File xmlFile = new File("C:\\temp_output\\lib.xml");
         IoUtils.write(xmlFile, value);
         Document doc = getDocument(xmlFile);
-    
+
         if (doc == null) {
     	System.out.println("Skipping lib.");
     	continue;
         }
-    
+
         Element element = doc.getRootElement();
-        if (!element.getLocalName().equals("userlibrary")) {
+        if (!element.getNodeName().equals("userlibrary")) {
     	System.out.println("NOT A USER LIBRARY");
     	continue;
         }
-    
+
         //listChildren(element, 0);
-        
+
         for (int i = 0; i < element.getChildCount(); i++) {
     	Node node = element.getChild(i);
-    
+
     	if(!(node instanceof Element)) {
     	    continue;
     	}
-    	
+
     	Element child = (Element) node;
     	Attribute attrib = child.getAttribute("path");
-    	
-    	
-    	
+
+
+
     	System.out.println("VALUE:" + attrib.getValue());
         }
-        
-    
+
+
         /*
         	    for (int i = 0; i < doc.getChildCount(); i++) {
         		System.out.println("VALUE:" + doc.getChild(i).getValue());
@@ -169,14 +169,14 @@ public class XomTester {
     /*
     }
     	// System.out.println("PROPS:"+properties);
-    
+
         }
     */
     /*
     public static void listChildren(Node current, int depth) {
-    
+
         System.out.print(SpecsStrings.buildLine(" ", depth));
-    
+
         // printSpaces(depth);
         String data = "";
         if (current instanceof Element) {
@@ -202,7 +202,7 @@ public class XomTester {
         for (int i = 0; i < current.getChildCount(); i++) {
             listChildren(current.getChild(i), depth + 1);
         }
-    
+
     }
     */
     @Test
@@ -221,15 +221,15 @@ public class XomTester {
     // @Test
     /*
     public void parseClasspath() {
-    
+
     String workspaceFilename = "C:\\Users\\Joao Bispo\\Work\\Code\\suikasoft-java2\\JavaSe\\";
     File workspaceFolder = IoUtils.existingFolder(workspaceFilename);
-    
+
     String projetName = "MatlabToCTester";
     // String projetName = "SymjaPlus";
-    
+
     ClasspathParser parser = new ClasspathParser(workspaceFolder);
-    
+
     ClasspathFiles classpathFiles = parser.getClasspath(projetName);
     System.out.println("PARSED CLASSPATH:" + classpathFiles);
     }
