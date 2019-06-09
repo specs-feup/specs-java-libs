@@ -261,7 +261,8 @@ public class DeployUtils {
 
     public static boolean ignoreJar(File jarFile) {
         // Ignore javadoc and source
-        if (jarFile.getName().contains("-javadoc-") || jarFile.getName().contains("-source-")) {
+        if (jarFile.getName().contains("-javadoc") || jarFile.getName().contains("-source-")
+                || jarFile.getName().contains("-sources")) {
             return true;
         }
 

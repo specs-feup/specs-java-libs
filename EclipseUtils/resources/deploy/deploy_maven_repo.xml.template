@@ -12,5 +12,9 @@
         <delete dir="<JAR_SUBFOLDER>"/>
         <mkdir dir="<JAR_SUBFOLDER>"/>
         <COPY_JARS>
+        
+        <jar destfile="<JAVADOC_JAR_FILE>">
+			<JAVADOC_FILESET>
+        </jar>
     </target>
 </project>

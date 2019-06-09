@@ -17,6 +17,6 @@ public enum JarType {
 
     RepackJar,
     UseJarInJar,
-    SubFolder;
+    MavenRepository;
 
 }

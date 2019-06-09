@@ -52,7 +52,7 @@ public class EclipseDeployment {
         DEPLOY_BUILDER = new HashMap<>();
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.RepackJar, EclipseDeployment::buildJarRepack);
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.UseJarInJar, EclipseDeployment::buildJarInJar);
-        EclipseDeployment.DEPLOY_BUILDER.put(JarType.SubFolder, EclipseDeployment::buildSubFolder);
+        EclipseDeployment.DEPLOY_BUILDER.put(JarType.MavenRepository, EclipseDeployment::buildMavenRepository);
     }
 
     private final EclipseDeploymentData data;
@@ -149,12 +149,12 @@ public class EclipseDeployment {
     String script = "open specsuser:SpecS#12345@specs.fe.up.pt\r\n" + "bin\r\n"
     	+ "cd /home/specsuser/tools/gearman_server\r\n" + "put C:\\temp_output\\deploy\\suika.properties\r\n"
     	+ "ls\r\n" + "exit";
-
+    
     IoUtils.write(new File("ftp_script.txt"), script);
-
+    
     ProcessUtils.run(Arrays.asList("WinSCP.com", "/script=ftp_script.txt"), IoUtils.getWorkingDir()
     	.getAbsolutePath());
-
+    
     }
     */
 
@@ -274,9 +274,9 @@ public class EclipseDeployment {
     }
 
     /**
-     * Creates a single JAR with additional library JARs in a subfolder.
+     * Creates the necessary JAR files to deploy to Maven Repository.
      */
-    private static void buildSubFolder(EclipseDeploymentData data) {
+    private static void buildMavenRepository(EclipseDeploymentData data) {
         ClasspathParser parser = ClasspathParser.newFromWorkspace(data.workspaceFolder);
 
         ClasspathFiles classpathFiles = parser.getClasspath(data.projetName);
@@ -292,7 +292,7 @@ public class EclipseDeployment {
         // String jarList = DeployUtils.buildJarList(classpathFiles, ivyFolders);
 
         // Replace fields in template
-        String template = SpecsIo.getResource(DeployResource.DEPLOY_SUBFOLDER_TEMPLATE);
+        String template = SpecsIo.getResource(DeployResource.DEPLOY_MAVEN_REPOSITORY_TEMPLATE);
 
         // Output JAR
         File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
@@ -329,6 +329,12 @@ public class EclipseDeployment {
         String copyJars = ivyJars.stream()
                 .map(jar -> DeployUtils.getCopyTask(jar, subfolder))
                 .collect(Collectors.joining("\n"));
+
+        // Javadoc
+
+        // File javadocJar = DeployUtils.getJavadocJar(data.nameOfOutputJar);
+        // <JAVADOC_JAR_FILE>
+        // <JAVADOC_FILESET>
 
         template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
         template = template.replace("<MAIN_CLASS>", data.mainClass);
