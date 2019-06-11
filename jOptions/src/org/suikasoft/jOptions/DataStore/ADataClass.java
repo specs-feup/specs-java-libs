@@ -1,11 +1,11 @@
 /**
  * Copyright 2018 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -106,6 +106,45 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         }
 
         return keysWithValues;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+
+        for (var key : getDataKeysWithValues()) {
+            result = prime * result + ((get(key) == null) ? 0 : get(key).hashCode());
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass().isInstance(obj.getClass()))
+            return false;
+        ADataClass<?> other = getClass().cast(obj);
+
+        // Check if has the same datakeys with values
+        if (!other.getDataKeysWithValues().equals(getDataKeysWithValues())) {
+            return false;
+        }
+
+        // Check the values of the keys
+        for (var key : getDataKeysWithValues()) {
+            if (get(key) == null) {
+                if (other.get(key) != null)
+                    return false;
+            } else if (!get(key).equals(other.get(key)))
+                return false;
+        }
+
+        return true;
     }
 
     // @Override
