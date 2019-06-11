@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -19,8 +19,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import pt.up.fe.specs.eclipse.builder.BuildUtils;
+import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * @author Joao Bispo
@@ -91,6 +93,15 @@ public class ClasspathFiles {
         return ivyPath;
     }
 
+    public Optional<File> getIvyFile() {
+        Optional<File> ivyFile = getIvyPath().map(ivyPath -> new File(getProjectFolder(), ivyPath));
+        if (ivyFile.isPresent()) {
+            SpecsCheck.checkArgument(ivyFile.get().isFile(), () -> "Could not find ivy file '" + ivyFile.get() + "'");
+        }
+
+        return ivyFile;
+    }
+
     public Optional<File> getIvyJarFolder() {
         if (!getIvyPath().isPresent()) {
             return Optional.empty();
@@ -128,6 +139,16 @@ public class ClasspathFiles {
 
     public List<String> getSourceFolders() {
         return sourceFolders;
+    }
+
+    /**
+     *
+     * @return the source folders of this project
+     */
+    public List<File> getSources() {
+        return getSourceFolders().stream()
+                .map(src -> new File(getProjectFolder(), src))
+                .collect(Collectors.toList());
     }
 
     /* (non-Javadoc)

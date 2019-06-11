@@ -24,6 +24,8 @@ public enum DeployResource implements ResourceProvider {
     DEPLOY_JAR_IN_JAR_TEMPLATE("deploy.xml.template"),
     DEPLOY_REPACK_TEMPLATE("deploy/deploy_repack.xml.template"),
     DEPLOY_MAVEN_REPOSITORY_TEMPLATE("deploy/deploy_maven_repo.xml.template"),
+    DEPLOY_POM_TEMPLATE("deploy/deploy_pom.xml.template"),
+    DEPLOY_MAVEN_SCRIPT_TEMPLATE("deploy/deploy_maven_script.bat.template"),
     IVY_RESOLVE_TEMPLATE("resolveIvy.xml.template"),
     SFTP_TEMPLATE("sftp.xml.template"),
     FTP_TEMPLATE("ftp.xml.template"),

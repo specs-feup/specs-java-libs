@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,7 @@ import com.google.common.base.Preconditions;
 // import nu.xom.Element;
 // import nu.xom.Node;
 import pt.up.fe.specs.eclipse.Utilities.EclipseProjects;
+import pt.up.fe.specs.eclipse.Utilities.License;
 import pt.up.fe.specs.eclipse.Utilities.UserLibraries;
 import pt.up.fe.specs.eclipse.builder.BuildResource;
 import pt.up.fe.specs.util.SpecsFactory;
@@ -528,6 +530,13 @@ public class ClasspathParser {
         return projects;
     }
 
+    public Collection<String> getDependentProjectsAndSelf(String projectName) {
+        Set<String> projects = new HashSet<>();
+        projects.add(projectName);
+        projects.addAll(getDependentProjects(projectName));
+        return projects;
+    }
+
     /**
      * Recursive helper method which does all the work.
      *
@@ -548,6 +557,76 @@ public class ClasspathParser {
         for (String dependentProject : getClasspath(projectName).getDependentProjects()) {
             getDependentProjects(dependentProject, projects);
         }
+    }
+
+    public Set<License> getLicenses(String projetName) {
+        // Get all project folders
+        List<File> projectFolders = new ArrayList<>();
+
+        // Add self
+        projectFolders.add(getClasspath(projetName).getProjectFolder());
+
+        // Gather all git repositories of current projects
+        for (String dependentProject : getClasspath(projetName).getDependentProjects()) {
+            projectFolders.add(getClasspath(dependentProject).getProjectFolder());
+        }
+
+        Set<License> licenses = EnumSet.noneOf(License.class);
+
+        // Find the license of each project
+        for (File projectFolder : projectFolders) {
+            // System.out.println("CHECKING LICENSE OF " + projectFolder);
+
+            File currentFolder = projectFolder;
+            License currentLicense = null;
+            while (currentFolder != null) {
+                File licenseFile = new File(currentFolder, "LICENSE");
+                if (licenseFile.isFile()) {
+                    currentLicense = License.valueOf(licenseFile);
+                    break;
+                }
+
+                currentFolder = currentFolder.getParentFile();
+            }
+
+            if (currentLicense == null) {
+                throw new RuntimeException("Could not find a license for project at " + projectFolder);
+            }
+
+            licenses.add(currentLicense);
+        }
+
+        return licenses;
+    }
+
+    public Set<Dependency> getIvyDependencies(String projectName) {
+        Set<Dependency> dependencies = new HashSet<>();
+
+        for (String dependentProject : getDependentProjectsAndSelf(projectName)) {
+            getClasspath(dependentProject).getIvyFile()
+                    .map(this::getIvyDependencies)
+                    .ifPresent(dependencies::addAll);
+        }
+
+        return dependencies;
+    }
+
+    public Collection<Dependency> getIvyDependencies(File ivyFile) {
+        Set<Dependency> dependencies = new HashSet<>();
+
+        Document ivyXml = SpecsXml.getXmlRoot(ivyFile);
+        List<Element> ivyDependencies = SpecsXml.getElements(ivyXml.getDocumentElement(), "dependency");
+
+        for (Element ivyDependency : ivyDependencies) {
+            Dependency newDependency = new Dependency();
+            newDependency.set(Dependency.GROUP, ivyDependency.getAttribute("org"));
+            newDependency.set(Dependency.NAME, ivyDependency.getAttribute("name"));
+            newDependency.set(Dependency.VERSION, ivyDependency.getAttribute("rev"));
+
+            dependencies.add(newDependency);
+        }
+
+        return dependencies;
     }
 
 }

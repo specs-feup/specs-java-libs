@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildEvent;
@@ -24,9 +25,13 @@ import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 
+import pt.up.fe.specs.eclipse.DeployResource;
+import pt.up.fe.specs.eclipse.EclipseDeploymentData;
 import pt.up.fe.specs.eclipse.Classpath.ClasspathFiles;
 import pt.up.fe.specs.eclipse.Classpath.ClasspathParser;
+import pt.up.fe.specs.eclipse.Classpath.Dependency;
 import pt.up.fe.specs.eclipse.builder.BuildResource;
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -211,7 +216,7 @@ public class DeployUtils {
     /*
     public static boolean hasMainMethod(String className) {
     System.err.println("NOT IMPLEMENTED");
-
+    
     Class<?> classWithMain = null;
     try {
         classWithMain = Class.forName("className");
@@ -219,7 +224,7 @@ public class DeployUtils {
         LoggingUtils.msgInfo("Could not find class with name '" + className + "'");
         return false;
     }
-
+    
     Method mainMethod = null;
     try {
         classWithMain.getMethod("main", String[].class);
@@ -230,7 +235,7 @@ public class DeployUtils {
         // TODO Auto-generated catch block
         e.printStackTrace();
     }
-
+    
     return false;
     }
     */
@@ -238,35 +243,35 @@ public class DeployUtils {
     public static String buildFileset(ClasspathFiles classpathFiles, boolean hasIvyDependencies) {
     	final String prefix = "			";
     	StringBuilder fileset = new StringBuilder();
-
+    
     	// Add JAR Files
     	for (File jarFile : classpathFiles.getJarFiles()) {
     	    String line = DeployUtils.getZipfileset(jarFile);
-
+    
     	    fileset.append(prefix);
     	    fileset.append(line);
     	    fileset.append("\n");
     	}
-
+    
     	// Add Filesets
     	for (File projectFolder : classpathFiles.getBinFolders()) {
     	    String line = DeployUtils.getFileset(projectFolder);
-
+    
     	    fileset.append(prefix);
     	    fileset.append(line);
     	    fileset.append("\n");
     	}
-
+    
     	// If classpath has an ivy path, add Ivy jar folder
     	if (hasIvyDependencies) {
-
+    
     	    String ivyJarFolder = BuildUtils.getIvyJarFolder(classpathFiles.getProjectFolder());
     	    // String ivyJarFolder = "${user.home}/.ivy2/cache";
     	    Replacer ivyFileset = new Replacer(BuildResource.JARFOLDER_TEMPLATE);
     	    ivyFileset.replace("<FOLDER>", ivyJarFolder);
     	    fileset.append(ivyFileset.toString()).append("\n");
     	}
-
+    
     	return fileset.toString();
     }
     */
@@ -329,13 +334,13 @@ public class DeployUtils {
             jarList.append(jarFile.getName());
             jarList.append(" ");
         }
-
+        
         // long bytesSaved = 0l;
         // List<String> ignoredJars = new ArrayList<>();
-
+        
         for (String ivyFolder : ivyFolders) {
             List<File> jarFiles = SpecsIo.getFiles(new File(ivyFolder), "jar");
-
+        
             for (File jarFile : jarFiles) {
                 // Ignore javadoc and source
                 // if (jarFile.getName().contains("-javadoc") || jarFile.getName().contains("-source")) {
@@ -343,18 +348,18 @@ public class DeployUtils {
                 // ignoredJars.add(jarFile.getName());
                 // continue;
                 // }
-
+        
                 jarList.append(jarFile.getName());
                 jarList.append(" ");
             }
         }
-
+        
         // Is not having an effect in the final JAR
         // if (!ignoredJars.isEmpty()) {
         // LoggingUtils
         // .msgInfo("Ignored the following JARs (~" + ParseUtils.parseSize(bytesSaved) + "): " + ignoredJars);
         // }
-
+        
         return jarList.toString();
         */
     }
@@ -432,7 +437,7 @@ public class DeployUtils {
         /*
         for (File projectFolder : classpathFiles.getBinFolders()) {
             String line = DeployUtils.getFileset(projectFolder);
-
+        
             fileset.append(prefix);
             fileset.append(line);
             fileset.append("\n");
@@ -478,7 +483,11 @@ public class DeployUtils {
                 + "\"/>";
     }
 
-    public static File getSourcesJar(String nameOfOutputJar) {
+    public static File getJarWithClassifier(String nameOfOutputJar, String classifier) {
+        return getFileWithClassifier(nameOfOutputJar, classifier, "jar");
+    }
+
+    public static File getFileWithClassifier(String nameOfOutputJar, String classifier, String extension) {
         // The javadoc jar will be in a temporary folder
         File tempFolder = getTempFolder();
 
@@ -486,7 +495,10 @@ public class DeployUtils {
             nameOfOutputJar = nameOfOutputJar.substring(0, nameOfOutputJar.length() - ".jar".length());
         }
 
-        nameOfOutputJar = nameOfOutputJar + "-sources.jar";
+        if (classifier != null) {
+            nameOfOutputJar += "-" + classifier;
+        }
+        nameOfOutputJar += "." + extension;
 
         return new File(tempFolder, nameOfOutputJar);
     }
@@ -503,15 +515,55 @@ public class DeployUtils {
 
         ClasspathFiles classpathFiles = parser.getClasspath(projetName);
 
-        // Add current project folder
-        projectsFileset.add(DeployUtils.getSourcesFileset(classpathFiles.getProjectFolder()));
+        classpathFiles.getSources().stream()
+                .forEach(src -> projectsFileset.add(DeployUtils.getSourcesFileset(src)));
 
         // Add dependent project folders
         for (String dependentProject : classpathFiles.getDependentProjects()) {
-            File projectFolder = parser.getClasspath(dependentProject).getProjectFolder();
-            projectsFileset.add(DeployUtils.getSourcesFileset(projectFolder));
+            parser.getClasspath(dependentProject).getSources().stream()
+                    .forEach(src -> projectsFileset.add(DeployUtils.getSourcesFileset(src)));
+
+            // File projectFolder = parser.getClasspath(dependentProject).getProjectFolder();
+            // projectsFileset.add(DeployUtils.getSourcesFileset(projectFolder));
         }
 
         return projectsFileset;
     }
+
+    public static String buildMavenRepoPom(EclipseDeploymentData data, ClasspathParser parser) {
+        String groupId = data.pomInfo.get(() -> "groupId");
+        String artifactId = data.pomInfo.get(() -> "artifactId");
+
+        SpecsCheck.checkNotNull(data.version,
+                () -> "No version supplied, use for instance %BUILD% in name of output JAR");
+
+        Set<License> licenses = parser.getLicenses(data.projetName);
+        String licensesXml = licenses.stream().map(License::getXmlInfo).collect(Collectors.joining("\n"));
+
+        SpecsCheck.checkNotNull(data.developersXml,
+                () -> "No developers XML file supplied");
+        String developers = SpecsIo.read(data.developersXml);
+
+        // Get Ivy dependencies
+        Set<Dependency> dependencies = parser.getIvyDependencies(data.projetName);
+        String dependenciesXml = dependencies.stream()
+                .map(Dependency::toMaven)
+                .collect(Collectors.joining("\n"));
+
+        System.out.println("DEPENDENCIES:\n" + dependenciesXml);
+        Replacer template = new Replacer(DeployResource.DEPLOY_POM_TEMPLATE);
+        template.replace("%GROUP_ID%", groupId);
+        template.replace("%ARTIFACT_ID%", artifactId);
+        template.replace("%VERSION%", data.version);
+        template.replace("%NAME%", data.pomInfo.get(() -> "name"));
+        template.replace("%DESCRIPTION%", data.pomInfo.get(() -> "description"));
+        template.replace("%URL%", data.pomInfo.get(() -> "url"));
+        template.replace("%LICENSES%", licensesXml);
+        template.replace("%DEVELOPERS%", developers);
+        template.replace("%GITHUB_PROJECT%", data.pomInfo.get(() -> "githubProject"));
+        template.replace("%DEPENDENCIES%", dependenciesXml);
+
+        return template.toString();
+    }
+
 }

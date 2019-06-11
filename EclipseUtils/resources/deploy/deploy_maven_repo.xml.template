@@ -13,8 +13,21 @@
         <mkdir dir="<JAR_SUBFOLDER>"/>
         <COPY_JARS>
         
+        
+        <!-- SOURCES JAR -->
         <jar destfile="<SOURCES_JAR_FILE>">
-			<SOURCES_FILESET>
+		<SOURCES_FILESET>
         </jar>
+        
+        <!-- JAVADOC -->
+        <delete dir="<JAVADOC_FOLDER>" />
+		<mkdir dir="<JAVADOC_FOLDER>" />
+    	<javadoc destdir="<JAVADOC_FOLDER>" useexternalfile="yes" classpath="<JAVADOC_CLASSPATH>">
+		<SOURCES_FILESET>
+    	</javadoc>
+
+		<jar destfile="<JAVADOC_JAR_FILE>">
+           <fileset dir="<JAVADOC_FOLDER>"/>
+        </jar>        
     </target>
 </project>

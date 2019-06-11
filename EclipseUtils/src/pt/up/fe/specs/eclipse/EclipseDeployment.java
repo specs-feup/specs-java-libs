@@ -14,6 +14,7 @@
 package pt.up.fe.specs.eclipse;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,9 +33,11 @@ import pt.up.fe.specs.eclipse.Tasks.TaskUtils;
 import pt.up.fe.specs.eclipse.Utilities.DeployUtils;
 import pt.up.fe.specs.eclipse.builder.BuildUtils;
 import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
+import pt.up.fe.specs.lang.SpecsPlatforms;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
+import pt.up.fe.specs.util.utilities.Replacer;
 
 /**
  * Builds and deploys Eclipse projects.
@@ -277,6 +280,7 @@ public class EclipseDeployment {
      * Creates the necessary JAR files to deploy to Maven Repository.
      */
     private static void buildMavenRepository(EclipseDeploymentData data) {
+
         ClasspathParser parser = ClasspathParser.newFromWorkspace(data.workspaceFolder);
 
         ClasspathFiles classpathFiles = parser.getClasspath(data.projetName);
@@ -290,9 +294,6 @@ public class EclipseDeployment {
         // String fileset = DeployUtils.buildFileset(parser, data.projetName, ivyFolders, false);
 
         // String jarList = DeployUtils.buildJarList(classpathFiles, ivyFolders);
-
-        // Replace fields in template
-        String template = SpecsIo.getResource(DeployResource.DEPLOY_MAVEN_REPOSITORY_TEMPLATE);
 
         // Output JAR
         File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
@@ -332,10 +333,32 @@ public class EclipseDeployment {
 
         // Sources
 
-        File sourcesJar = DeployUtils.getSourcesJar(data.nameOfOutputJar);
+        File sourcesJar = DeployUtils.getJarWithClassifier(data.nameOfOutputJar, "sources");
 
         String sourcesFileset = DeployUtils.buildSourcesFileset(parser, data.projetName).stream()
                 .collect(Collectors.joining("\n" + DeployUtils.getPrefix()));
+
+        // Javadoc
+        File javadocFolder = new File(DeployUtils.getTempFolder(), "javadoc");
+        File javadocJar = DeployUtils.getJarWithClassifier(data.nameOfOutputJar, "javadoc");
+
+        List<File> allJars = new ArrayList<>();
+        allJars.addAll(projectsJars);
+        allJars.addAll(ivyJars);
+        String javadocClasspath = allJars.stream()
+                .map(file -> SpecsIo.normalizePath(file.getAbsoluteFile()))
+                .collect(Collectors.joining(":"));
+        // String javadocClasspath = ivyJars.stream()
+        // .map(file -> SpecsIo.normalizePath(new File(subfolder, file.getName())))
+        // .collect(Collectors.joining(":"));
+
+        // POM file
+        String mavenPom = DeployUtils.buildMavenRepoPom(data, parser);
+        File pomFile = DeployUtils.getFileWithClassifier(data.nameOfOutputJar, null, "pom");
+        SpecsIo.write(pomFile, mavenPom);
+
+        // Replace fields in template
+        String template = SpecsIo.getResource(DeployResource.DEPLOY_MAVEN_REPOSITORY_TEMPLATE);
 
         template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
         template = template.replace("<MAIN_CLASS>", data.mainClass);
@@ -345,10 +368,13 @@ public class EclipseDeployment {
         template = template.replace("<COPY_JARS>", copyJars);
         template = template.replace("<SOURCES_JAR_FILE>", sourcesJar.getAbsolutePath());
         template = template.replace("<SOURCES_FILESET>", sourcesFileset);
+        template = template.replace("<JAVADOC_FOLDER>", javadocFolder.getAbsolutePath());
+        template = template.replace("<JAVADOC_JAR_FILE>", javadocJar.getAbsolutePath());
+        template = template.replace("<JAVADOC_CLASSPATH>", javadocClasspath);
 
         File buildFile = new File(EclipseDeployment.BUILD_FILE);
         SpecsIo.write(buildFile, template);
-        System.out.println("XML:" + template);
+
         // Launch ant
         Project project = new Project();
         project.init();
@@ -362,5 +388,20 @@ public class EclipseDeployment {
         if (!outputJar.isFile()) {
             throw new RuntimeException("Could not create output JAR '" + outputJar.getAbsolutePath() + "'");
         }
+
+        // Create script
+        Replacer deployScript = new Replacer(DeployResource.DEPLOY_MAVEN_SCRIPT_TEMPLATE);
+        deployScript.replace("%POM_FILE%", pomFile.getName());
+        deployScript.replace("%JAR_FILE%", outputJar.getName());
+        deployScript.replace("%SOURCE_FILE%", sourcesJar.getName());
+        deployScript.replace("%JAVADOC_FILE%", javadocJar.getName());
+
+        String scriptExtension = SpecsPlatforms.isWindows() ? ".bat" : ".sh";
+
+        File scriptFile = new File(DeployUtils.getTempFolder(), "deploy_script" + scriptExtension);
+        SpecsIo.write(scriptFile, deployScript.toString());
+
+        SpecsLogs.msgInfo(
+                "Artifacts generated, to deploy them execute the script '" + scriptFile.getAbsolutePath() + "'");
     }
 }

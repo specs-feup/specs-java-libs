@@ -14,7 +14,11 @@
 package pt.up.fe.specs.eclipse;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import pt.up.fe.specs.eclipse.Tasks.TaskUtils;
 import pt.up.fe.specs.guihelper.FieldType;
@@ -28,6 +32,7 @@ import pt.up.fe.specs.guihelper.SetupFieldOptions.DefaultValue;
 import pt.up.fe.specs.guihelper.SetupFieldOptions.MultipleChoice;
 import pt.up.fe.specs.guihelper.SetupFieldOptions.MultipleSetup;
 import pt.up.fe.specs.util.SpecsFactory;
+import pt.up.fe.specs.util.properties.SpecsProperties;
 import pt.up.fe.specs.util.utilities.StringList;
 
 /**
@@ -42,6 +47,8 @@ public enum EclipseDeploymentSetup implements SetupFieldEnum, MultipleSetup, Mul
     NameOfOutputJar(FieldType.string),
     ClassWithMain(FieldType.string),
     OutputJarType(FieldType.multipleChoice),
+    PomInfoFile(FieldType.string),
+    DevelopersXml(FieldType.string),
     Tasks(FieldType.setupList);
 
     public static EclipseDeploymentData newData(SetupData setupData) {
@@ -51,13 +58,38 @@ public enum EclipseDeploymentSetup implements SetupFieldEnum, MultipleSetup, Mul
 
         String projetName = setup.getString(ProjectName);
         String nameOfOutputJar = setup.getString(NameOfOutputJar);
+        Pair<String, String> nameAndVersion = processOuputJarName(nameOfOutputJar);
+        nameOfOutputJar = nameAndVersion.getLeft();
+        String version = nameAndVersion.getRight();
         String mainClass = setup.getString(ClassWithMain);
 
         JarType jarType = setup.getEnum(OutputJarType, JarType.class);
 
+        File pomInfoFile = setup.getString(PomInfoFile).strip().isEmpty() ? null
+                : setup.getExistingFile(PomInfoFile);
+        SpecsProperties pomInfo = pomInfoFile == null ? null : SpecsProperties.newInstance(pomInfoFile);
+
+        File developersXml = setup.getString(DevelopersXml).strip().isEmpty() ? null
+                : setup.getExistingFile(DevelopersXml);
+
         ListOfSetups tasks = setup.getListOfSetups(Tasks);
 
-        return new EclipseDeploymentData(workspaceFolder, projetName, nameOfOutputJar, mainClass, jarType, tasks);
+        return new EclipseDeploymentData(workspaceFolder, projetName, nameOfOutputJar, mainClass, jarType, pomInfo,
+                developersXml, version, tasks);
+    }
+
+    private static Pair<String, String> processOuputJarName(String nameOfOutputJar) {
+        String version = null;
+
+        if (nameOfOutputJar.contains("%BUILD%")) {
+            // Generate build number
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+            Date date = new Date(System.currentTimeMillis());
+            version = formatter.format(date);
+            nameOfOutputJar = nameOfOutputJar.replace("%BUILD%", version);
+        }
+        return Pair.of(nameOfOutputJar, version);
+        // return nameOfOutputJar;
     }
 
     private EclipseDeploymentSetup(FieldType fieldType) {
@@ -89,10 +121,10 @@ public enum EclipseDeploymentSetup implements SetupFieldEnum, MultipleSetup, Mul
         /*
          * List<Class<? extends SetupFieldEnum>> setups =
          * FactoryUtils.newArrayList();
-         * 
+         *
          * setups.addAll(TaskUtils.getTasks().keySet()); //
          * setups.add(FtpSetup.class); // setups.add(SftpSetup.class);
-         * 
+         *
          * return ListOfSetupDefinitions.newInstance(setups);
          */
         return getTasksDefinitions();
