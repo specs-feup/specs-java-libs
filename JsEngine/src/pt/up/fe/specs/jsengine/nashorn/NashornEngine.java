@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
@@ -69,12 +70,26 @@ public class NashornEngine implements JsEngine {
     }
 
     @Override
+    public Object getBindings() {
+        return getEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+    }
+
+    @Override
     public Bindings newNativeArray() {
         try {
             return (Bindings) engine.eval(NEW_ARRAY);
         } catch (ScriptException e) {
             throw new RuntimeException("Could not create new array ", e);
         }
+    }
+
+    @Override
+    public Bindings toNativeArray(Object[] values) {
+        Bindings bindings = newNativeArray();
+        for (int i = 0; i < values.length; i++) {
+            bindings.put("" + i, values[i]);
+        }
+        return bindings;
     }
 
     /**
@@ -113,12 +128,17 @@ public class NashornEngine implements JsEngine {
     }
 
     @Override
-    public Object eval(String script, Object scope) {
+    public Object eval(String script, Bindings scope) {
         try {
             return engine.eval(script, (Bindings) scope);
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Bindings asBindings(Object value) {
+        return (Bindings) value;
     }
 
 }

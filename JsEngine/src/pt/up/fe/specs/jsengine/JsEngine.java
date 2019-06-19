@@ -16,7 +16,6 @@ package pt.up.fe.specs.jsengine;
 import java.util.Collection;
 
 import javax.script.Bindings;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 
 /**
@@ -43,15 +42,6 @@ public interface JsEngine {
     boolean supportsModifyingThis();
 
     /**
-     * Creates a new JavaScript array.
-     *
-     * TODO: return objects instead of Bindings
-     * 
-     * @return a
-     */
-    Bindings newNativeArray();
-
-    /**
      * Based on this site: http://programmaticallyspeaking.com/nashorns-jsobject-in-context.html
      *
      * @return
@@ -60,13 +50,21 @@ public interface JsEngine {
 
     String stringify(Object object);
 
+    Bindings asBindings(Object value);
+
     /**
      * 
      * @return the Bindings of the engine scope
      */
-    default Object getBindings() {
-        return getEngine().getBindings(ScriptContext.ENGINE_SCOPE);
-    }
+    Object getBindings();
+
+    /**
+     * Creates a new JavaScript array.
+     *
+     * 
+     * @return a
+     */
+    Bindings newNativeArray();
 
     /**
      * Converts an array of objects to a JavaScript array
@@ -75,13 +73,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(Object[] values) {
-        Bindings bindings = newNativeArray();
-        for (int i = 0; i < values.length; i++) {
-            bindings.put("" + i, values[i]);
-        }
-        return bindings;
-    }
+    Bindings toNativeArray(Object[] values);
 
     /**
      * Converts a list of objects to a JavaScript array
@@ -208,7 +200,7 @@ public interface JsEngine {
 
     Object eval(String code);
 
-    Object eval(String script, Object scope);
+    Object eval(String script, Bindings scope);
 
     default Bindings createBindings() {
         return getEngine().createBindings();

@@ -15,12 +15,10 @@ package pt.up.fe.specs.jsengine.graal;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.script.Bindings;
-import javax.script.ScriptException;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
@@ -29,7 +27,6 @@ import org.graalvm.polyglot.Value;
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
 import pt.up.fe.specs.jsengine.ForOfType;
-import pt.up.fe.specs.jsengine.GenericBindings;
 import pt.up.fe.specs.jsengine.JsEngine;
 
 public class GraalvmJsEngine implements JsEngine {
@@ -92,18 +89,19 @@ public class GraalvmJsEngine implements JsEngine {
         return engine.getPolyglotContext().eval("js", code);
     }
 
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> evalOld(String code) {
-
-        try {
-            return (Map<String, Object>) engine.eval(code);
-        } catch (ScriptException e) {
-            throw new RuntimeException("Could not execute code: '" + code + "'", e);
-        }
-    }
+    // @SuppressWarnings("unchecked")
+    // public Map<String, Object> evalOld(String code) {
+    //
+    // try {
+    // return (Map<String, Object>) engine.eval(code);
+    // } catch (ScriptException e) {
+    // throw new RuntimeException("Could not execute code: '" + code + "'", e);
+    // }
+    // }
 
     public Bindings newNativeArray() {
-        return new GenericBindings(evalOld(NEW_ARRAY));
+        return asBindings(eval(NEW_ARRAY));
+        // return new GenericBindings(evalOld(NEW_ARRAY));
         // try {
         // Map<String, Object> array = (Map<String, Object>) engine.eval(NEW_ARRAY);
         //
@@ -111,6 +109,15 @@ public class GraalvmJsEngine implements JsEngine {
         // } catch (ScriptException e) {
         // throw new DefaultLARAException("Could not create new array ", e);
         // }
+    }
+
+    @Override
+    public Bindings toNativeArray(Object[] values) {
+        Value array = eval(NEW_ARRAY);
+        for (int i = 0; i < values.length; i++) {
+            array.putMember("" + i, values[i]);
+        }
+        return asBindings(array);
     }
 
     /**
@@ -153,7 +160,7 @@ public class GraalvmJsEngine implements JsEngine {
      * new engine, before executing the code.
      */
     @Override
-    public Object eval(String code, Object scope) {
+    public Object eval(String code, Bindings scope) {
         GraalvmJsEngine newEngine = new GraalvmJsEngine();
         Value scopeValue = asValue(scope);
 
@@ -184,5 +191,10 @@ public class GraalvmJsEngine implements JsEngine {
 
     public Value asValue(Object object) {
         return engine.getPolyglotContext().asValue(object);
+    }
+
+    @Override
+    public Bindings asBindings(Object value) {
+        return asValue(value).as(Bindings.class);
     }
 }
