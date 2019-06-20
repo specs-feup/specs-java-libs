@@ -121,11 +121,16 @@ public class NashornEngine implements JsEngine {
             throw new RuntimeException("Exception while evaluation code '" + script + "'", e);
         }
     }
-
-    @Override
-    public void put(Bindings var, String member, Object value) {
-        var.put(member, value);
-    }
+    //
+    // @Override
+    // public Object put(Bindings var, String member, Object value) {
+    // return var.put(member, value);
+    // }
+    //
+    // @Override
+    // public Object remove(Bindings object, Object key) {
+    // return object.remove(key);
+    // }
 
     @Override
     public Object eval(String script, Bindings scope) {
@@ -141,4 +146,8 @@ public class NashornEngine implements JsEngine {
         return (Bindings) value;
     }
 
+    @Override
+    public boolean asBoolean(Object result) {
+        return (boolean) result;
+    }
 }

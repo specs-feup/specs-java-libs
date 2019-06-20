@@ -34,6 +34,8 @@ public class GraalvmJsEngine implements JsEngine {
     private static final String NEW_ARRAY = "[]"; // Faster
 
     private final GraalJSScriptEngine engine;
+    // private final Context.Builder contextBuilder;
+    private final Set<String> forbiddenClasses;
     private final boolean nashornCompatibility;
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses) {
@@ -42,8 +44,16 @@ public class GraalvmJsEngine implements JsEngine {
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility) {
 
-        Set<String> forbiddenClasses = blacklistedClasses.stream().map(Class::getName).collect(Collectors.toSet());
+        this.forbiddenClasses = blacklistedClasses.stream().map(Class::getName).collect(Collectors.toSet());
+        this.nashornCompatibility = nashornCompatibility;
 
+        Context.Builder contextBuilder = createBuilder();
+
+        this.engine = GraalJSScriptEngine.create(null, contextBuilder);
+
+    }
+
+    private Context.Builder createBuilder() {
         Context.Builder contextBuilder = Context.newBuilder("js")
                 // .allowAllAccess(true)
                 .allowHostAccess(HostAccess.ALL)
@@ -53,12 +63,10 @@ public class GraalvmJsEngine implements JsEngine {
                 // .allowPolyglotAccess(PolyglotAccess.ALL)
                 .allowHostClassLookup(name -> !forbiddenClasses.contains(name));
 
-        if (nashornCompatibility) {
+        if (this.nashornCompatibility) {
             contextBuilder.allowExperimentalOptions(true).option("js.nashorn-compat", "true");
         }
-
-        this.engine = GraalJSScriptEngine.create(null, contextBuilder);
-        this.nashornCompatibility = nashornCompatibility;
+        return contextBuilder;
     }
 
     public GraalvmJsEngine() {
@@ -146,11 +154,21 @@ public class GraalvmJsEngine implements JsEngine {
         // return engine.getPolyglotContext().getPolyglotBindings();
     }
 
-    @Override
-    public void put(Bindings object, String member, Object value) {
-        Value valueObject = asValue(object);
-        valueObject.putMember(member, value);
-    }
+    // @Override
+    // public Object put(Bindings object, String member, Object value) {
+    // Value valueObject = asValue(object);
+    // Value previousValue = valueObject.getMember(member);
+    // valueObject.putMember(member, value);
+    // return previousValue;
+    // }
+    //
+    // @Override
+    // public Object remove(Bindings object, Object key) {
+    // Value valueObject = asValue(object);
+    // Value previousValue = valueObject.getMember(key.toString());
+    // valueObject.removeMember(key.toString());
+    // return previousValue;
+    // }
 
     /**
      * This implementation is slow, since Graal does not support sharing Contexts between engines.
@@ -161,16 +179,73 @@ public class GraalvmJsEngine implements JsEngine {
      */
     @Override
     public Object eval(String code, Bindings scope) {
-        GraalvmJsEngine newEngine = new GraalvmJsEngine();
+
+        // var newEngine = GraalJSScriptEngine.create(engine.getPolyglotEngine(), contextBuilder);
+        // Context context = Context.create("js");
+        // Context context = Context.newBuilder("js").build();
+        Context context = createBuilder().build();
+        // Context context = contextBuilder.build();
+
+        // Value b = newEngine.getPolyglotContext().getBindings("js");
+        // Value b = asValue(newEngine.getBindings(ScriptContext.ENGINE_SCOPE));
+        // Value b = asValue(newEngine.getContext().getBindings(ScriptContext.ENGINE_SCOPE));
+        // try {
+        // System.out.println("typeof a: " + newEngine.eval("typeof a"));
+        // b.putMember("a", 10);
+        // System.out.println("typeof a 2: " + newEngine.eval("typeof a"));
+        // } catch (ScriptException e) {
+        // throw new RuntimeException(e);
+        // }
+
+        // Value b = context.getBindings("js");
+        //
+        // System.out.println("typeof a: " + context.eval("js", "typeof foo"));
+        // b.putMember("foo", 10);
+        // System.out.println("typeof a 2: " + context.eval("js", "foo"));
+
+        // Context context = newEngine.getPolyglotContext();
+        Value jsBindings = context.getBindings("js");
+
+        // GraalvmJsEngine newEngine = new GraalvmJsEngine();
+        // Value newBindings = newEngine.engine.getPolyglotContext().getBindings("js");
+        // Value newBindings = asValue(newEngine.engine.getBindings(ScriptContext.ENGINE_SCOPE));
+
         Value scopeValue = asValue(scope);
 
         // Add scope code
+        // System.out.println("SCOPE BEFORE: " + jsBindings.getMemberKeys());
         for (String key : scopeValue.getMemberKeys()) {
-            newEngine.eval(key + " = " + stringify(scopeValue.getMember(key)));
-        }
+            // System.out.println("KEY: " + key);
+            Value value = scopeValue.getMember(key);
 
+            // If value is undefined, set the key as undefined
+            if (value.isNull()) {
+                context.eval("js", key + " = undefined");
+                continue;
+            }
+            // System.out.println("VALUE: " + value);
+
+            // Otherwise, add the value
+            jsBindings.putMember(key, value);
+            // System.out.printlsn("COULD PUT");
+        }
+        // System.out.println("SCOPE AFTER: " + jsBindings.getMemberKeys());
+        // System.out.println("CODE: " + code);
         // Execute new code
-        return newEngine.eval(code);
+        Value result = context.eval("js", code);
+        // System.out.println("RESULT: " + result);
+        return result;
+
+        // GraalvmJsEngine newEngine = new GraalvmJsEngine();
+        // Value scopeValue = asValue(scope);
+        //
+        // // Add scope code
+        // for (String key : scopeValue.getMemberKeys()) {
+        // newEngine.eval(key + " = " + stringify(scopeValue.getMember(key)));
+        // }
+        //
+        // // Execute new code
+        // return newEngine.eval(code);
 
         // newEngine.getPolyglotContext().
         // var newScriptContext = new SimpleScriptContext();
@@ -190,11 +265,25 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     public Value asValue(Object object) {
+        if (object instanceof GraalvmBindings) {
+            return ((GraalvmBindings) object).getValue();
+        }
+
         return engine.getPolyglotContext().asValue(object);
     }
 
     @Override
     public Bindings asBindings(Object value) {
-        return asValue(value).as(Bindings.class);
+        if (value instanceof GraalvmBindings) {
+            return (Bindings) value;
+        }
+
+        return new GraalvmBindings(this, asValue(value).as(Bindings.class));
     }
+
+    @Override
+    public boolean asBoolean(Object value) {
+        return asValue(value).asBoolean();
+    }
+
 }

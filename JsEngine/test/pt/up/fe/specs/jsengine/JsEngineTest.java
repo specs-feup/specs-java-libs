@@ -112,6 +112,7 @@ public class JsEngineTest {
     @Test
     public void testNewArray() {
         assertEquals("2,3", getEngine().toNativeArray(Arrays.asList(2, 3)).toString());
+        assertEquals("", getEngine().toNativeArray(Arrays.asList()).toString());
     }
 
     @Test
@@ -128,8 +129,10 @@ public class JsEngineTest {
 
         Object scope = engine1.eval("var a = {aString: 'Hello', aNumber: 10}; a;");
 
-        assertEquals("Hello", engine1.eval("var b = this.aString; b;", engine1.asBindings(scope)).toString());
-        assertEquals("undefined", engine1.eval("var b = this.aString; b;").toString());
+        // assertEquals("Hello", engine1.eval("var b = this.aString; b;", engine1.asBindings(scope)).toString());
+        assertEquals("Hello", engine1.eval("var b = aString; b;", engine1.asBindings(scope)).toString());
+        // assertEquals("undefined", engine1.eval("var b = this.aString; b;").toString());
+        assertEquals("true", engine1.eval("typeof aString === 'undefined'").toString());
     }
 
     @Test

@@ -50,7 +50,11 @@ public interface JsEngine {
 
     String stringify(Object object);
 
+    /// TYPE CONVERSIONS
+
     Bindings asBindings(Object value);
+
+    boolean asBoolean(Object value);
 
     /**
      * 
@@ -206,6 +210,8 @@ public interface JsEngine {
         return getEngine().createBindings();
     }
 
-    void put(Bindings var, String member, Object value);
+    // Object put(Bindings var, String member, Object value);
+
+    // public Object remove(Bindings object, Object key);
 
 }
