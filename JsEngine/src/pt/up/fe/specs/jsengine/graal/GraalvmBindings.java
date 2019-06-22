@@ -17,14 +17,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.script.Bindings;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.graalvm.polyglot.Value;
-
-import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 public class GraalvmBindings implements Bindings {
 
@@ -43,38 +41,35 @@ public class GraalvmBindings implements Bindings {
 
     @Override
     public int size() {
-        throw new NotImplementedException(this);
-        // return bindings.size();
+        return bindings.getMemberKeys().size();
     }
 
     @Override
     public boolean isEmpty() {
-        throw new NotImplementedException(this);
-        // return bindings.isEmpty();
+        return bindings.getMemberKeys().isEmpty();
     }
 
     @Override
     public boolean containsValue(Object value) {
-        throw new NotImplementedException(this);
-        // return bindings.containsValue(value);
+        return values().contains(value);
     }
 
     @Override
     public void clear() {
-        throw new NotImplementedException(this);
-        // bindings.clear();
+        bindings.getMemberKeys().stream()
+                .forEach(bindings::removeMember);
     }
 
     @Override
     public Set<String> keySet() {
-        throw new NotImplementedException(this);
-        // return bindings.keySet();
+        return bindings.getMemberKeys();
     }
 
     @Override
     public Collection<Object> values() {
-        throw new NotImplementedException(this);
-        // return bindings.values();
+        return bindings.getMemberKeys().stream()
+                .map(bindings::getMember)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -83,7 +78,7 @@ public class GraalvmBindings implements Bindings {
         for (var key : bindings.getMemberKeys()) {
             set.add(Pair.of(key, bindings.getMember(key)));
         }
-        SpecsLogs.msgWarn("PAIRS: " + set);
+
         return set;
     }
 
@@ -97,8 +92,8 @@ public class GraalvmBindings implements Bindings {
 
     @Override
     public void putAll(Map<? extends String, ? extends Object> toMerge) {
-        throw new NotImplementedException(this);
-        // bindings.putAll(toMerge);
+        toMerge.entrySet().stream()
+                .forEach(entry -> bindings.putMember(entry.getKey(), entry.getValue()));
     }
 
     @Override
@@ -134,6 +129,11 @@ public class GraalvmBindings implements Bindings {
             // Object[] list = bindings.as(Object[].class);
             // return Arrays.toString(list);
         }
+
+        // Undefined
+        // if (bindings.isNull()) {
+        // return "";
+        // }
 
         return bindings.toString();
     }
