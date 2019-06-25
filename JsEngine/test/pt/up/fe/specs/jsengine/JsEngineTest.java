@@ -30,15 +30,15 @@ import org.junit.Test;
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
 import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.lazy.Lazy;
 
 public class JsEngineTest {
 
-    private static final Lazy<JsEngine> GRAAL_JS = Lazy.newInstance(() -> JsEngineType.GRAALVM.newEngine());
+    // private static final Lazy<JsEngine> GRAAL_JS = Lazy.newInstance(() -> JsEngineType.GRAALVM.newEngine());
     // private static final Lazy<JsEngine> NASHORN = Lazy.newInstance(() -> JsEngineType.NASHORN.newEngine());
 
     private JsEngine getEngine() {
-        return GRAAL_JS.get();
+        return JsEngineType.GRAALVM.newEngine();
+        // return GRAAL_JS.get();
     }
 
     public static void test(Bindings bindings) {
@@ -113,6 +113,14 @@ public class JsEngineTest {
     public void testNewArray() {
         assertEquals("2,3", getEngine().toNativeArray(Arrays.asList(2, 3)).toString());
         assertEquals("", getEngine().toNativeArray(Arrays.asList()).toString());
+
+        // Bindings array = getEngine().toNativeArray(Arrays.asList("1, 2, 3"));
+
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals("undefined", getEngine().eval("undefined").toString());
     }
 
     @Test
