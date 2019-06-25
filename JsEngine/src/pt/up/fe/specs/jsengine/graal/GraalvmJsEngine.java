@@ -28,6 +28,7 @@ import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
 import pt.up.fe.specs.jsengine.ForOfType;
 import pt.up.fe.specs.jsengine.JsEngine;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class GraalvmJsEngine implements JsEngine {
 
@@ -94,7 +95,13 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     public Value eval(String code) {
-        return engine.getPolyglotContext().eval("js", code);
+        Value value = engine.getPolyglotContext().eval("js", code);
+
+        // if (value.hasMembers() || value.hasArrayElements()) {
+        // return asBindings(value);
+        // }
+
+        return value;
     }
 
     // @SuppressWarnings("unchecked")
@@ -284,6 +291,11 @@ public class GraalvmJsEngine implements JsEngine {
     @Override
     public boolean asBoolean(Object value) {
         return asValue(value).asBoolean();
+    }
+
+    @Override
+    public void nashornWarning(String message) {
+        SpecsLogs.msgWarn(message);
     }
 
 }

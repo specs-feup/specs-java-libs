@@ -210,6 +210,10 @@ public interface JsEngine {
         return getEngine().createBindings();
     }
 
+    default void nashornWarning(String message) {
+        // Do nothing
+    }
+
     // Object put(Bindings var, String member, Object value);
 
     // public Object remove(Bindings object, Object key);
