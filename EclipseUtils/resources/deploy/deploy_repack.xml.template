@@ -3,7 +3,7 @@
 
 	<!--ANT 1.7 is required  -->
 	 <target name="create_run_jar">
-	    <jar destfile="<OUTPUT_JAR_FILE>" filesetmanifest="mergewithoutmain">
+	    <jar destfile="<OUTPUT_JAR_FILE>" filesetmanifest="mergewithoutmain" zip64Mode="always">
 			<manifest>
 				<attribute name="Main-Class" value="<MAIN_CLASS>" />
 				<attribute name="Class-Path" value="." />

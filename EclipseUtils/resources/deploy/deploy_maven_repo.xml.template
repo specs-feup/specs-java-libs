@@ -2,7 +2,7 @@
 <project default="create_run_jar" name="Create Runnable Jar for Eclipse Project with libraries in sub-folder">
     <!--ANT 1.7 is required -->
     <target name="create_run_jar">
-        <jar destfile="<OUTPUT_JAR_FILE>">
+        <jar destfile="<OUTPUT_JAR_FILE>" zip64Mode="always">
             <manifest>
                 <attribute name="Main-Class" value="<MAIN_CLASS>"/>
                 <attribute name="Class-Path" value=". <SUBFOLDER_JARS>"/>
@@ -15,7 +15,7 @@
         
         
         <!-- SOURCES JAR -->
-        <jar destfile="<SOURCES_JAR_FILE>">
+        <jar destfile="<SOURCES_JAR_FILE>" zip64Mode="always">
 		<SOURCES_FILESET>
         </jar>
         
@@ -26,7 +26,7 @@
 		<SOURCES_FILESET>
     	</javadoc>
 
-		<jar destfile="<JAVADOC_JAR_FILE>">
+		<jar destfile="<JAVADOC_JAR_FILE>" zip64Mode="always">
            <fileset dir="<JAVADOC_FOLDER>"/>
         </jar>        
     </target>

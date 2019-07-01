@@ -8,7 +8,7 @@
 	<!--ANT 1.7 is required                                        -->
 	<!--<target name="create_run_jar" <IVY_DEPENDENCIES>> -->
 	 <target name="create_run_jar">
-	    <jar destfile="<OUTPUT_JAR_FILE>">
+	    <jar destfile="<OUTPUT_JAR_FILE>" zip64Mode="always">
 			<manifest>
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
 				<attribute name="Rsrc-Main-Class" value="<MAIN_CLASS>" />
