@@ -50,6 +50,14 @@ public class SpecsList<T> implements List<T>, SpecsCollection<T> {
 
     /** CUSTOM METHODS **/
 
+    public ArrayList<T> toArrayList() {
+        if (list instanceof ArrayList) {
+            return (ArrayList<T>) list;
+        }
+
+        return new ArrayList<>(list);
+    }
+
     public List<T> list() {
         return list;
     }
