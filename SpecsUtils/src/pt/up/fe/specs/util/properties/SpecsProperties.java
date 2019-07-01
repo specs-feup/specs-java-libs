@@ -123,6 +123,10 @@ public class SpecsProperties {
         return props.getProperty(key.getKey()).trim();
     }
 
+    public Object put(KeyProvider<String> key, Object value) {
+        return props.put(key.getKey(), value);
+    }
+
     public int getInt(KeyProvider<String> key) {
         String intString = get(key);
 
@@ -156,7 +160,8 @@ public class SpecsProperties {
         return file.isFile() ? Optional.of(file) : Optional.empty();
     }
 
-    public <T extends Enum<T> & StringProvider> Optional<T> getEnum(KeyProvider<String> key, EnumHelperWithValue<T> helper) {
+    public <T extends Enum<T> & StringProvider> Optional<T> getEnum(KeyProvider<String> key,
+            EnumHelperWithValue<T> helper) {
         String enumName = get(key);
 
         if (enumName == null) {
