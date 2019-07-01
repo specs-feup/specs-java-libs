@@ -487,7 +487,7 @@ public class KeyFactory {
 
     private static <T> List<T> listCustomSetter(List<?> value, DataStore data, Class<T> elementClass) {
         if (value instanceof ArrayList) {
-            return SpecsCollections.cast(value, elementClass);
+            return SpecsCollections.cast(value, elementClass).toArrayList();
         }
 
         List<T> arrayList = new ArrayList<>(value.size());
