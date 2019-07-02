@@ -185,10 +185,10 @@ public class KeyFactory {
 
         // Normalize path before returning
         return (file, dataStore) -> new File(
-                SpecsIo.normalizePath(customFileGetter(file, dataStore, isFolder, isFile, create, exists)));
+                SpecsIo.normalizePath(customGetterFile(file, dataStore, isFolder, isFile, create, exists)));
     }
 
-    public static File customFileGetter(File file, DataStore dataStore, boolean isFolder, boolean isFile,
+    public static File customGetterFile(File file, DataStore dataStore, boolean isFolder, boolean isFile,
             boolean create, boolean exists) {
 
         // System.out.println("RECEIVED:" + file);
