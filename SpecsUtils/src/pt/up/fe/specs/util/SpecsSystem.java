@@ -1272,4 +1272,23 @@ public class SpecsSystem {
     public static boolean isLinux() {
         return IS_LINUX;
     }
+
+    /**
+     * Equivalent to class.isInstance.
+     * 
+     * <p>
+     * Used when direct access to .class is not allowed.
+     * 
+     * @param classpath
+     * @param value
+     * @return true, if the value is an instance of the given classpath
+     */
+    public static boolean isInstance(String className, Object value) {
+        try {
+            Class<?> aClass = Class.forName(className);
+            return aClass.isInstance(value);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Could not find class '" + className + "'", e);
+        }
+    }
 }
