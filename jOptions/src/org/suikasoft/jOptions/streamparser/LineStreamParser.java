@@ -138,4 +138,14 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
     }
 
     void setLineIgnore(Predicate<String> ignorePredicate);
+
+    int getNumExceptions();
+
+    /**
+     * 
+     * @return true, if at least one exception has occurred
+     */
+    default boolean hasExceptions() {
+        return getNumExceptions() > 0;
+    }
 }

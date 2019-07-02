@@ -28,6 +28,7 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
 
     private LineStream currentLineStream;
     private Predicate<String> lineIgnore;
+    private int numExceptions;
 
     public GenericLineStreamParser(T inputData, Map<String, LineStreamWorker<T>> workers) {
         // this.data = DataStore.newInstance("Generic LineStream Data").addAll(inputData);
@@ -39,6 +40,12 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
 
         currentLineStream = null;
         lineIgnore = null;
+        numExceptions = 0;
+    }
+
+    @Override
+    public int getNumExceptions() {
+        return numExceptions;
     }
 
     @Override
@@ -57,19 +64,25 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
 
     @Override
     public boolean parse(String id, LineStream lineStream) {
-        this.currentLineStream = lineStream;
+        try {
+            this.currentLineStream = lineStream;
 
-        LineStreamWorker<T> worker = workers.get(id);
-        if (worker == null) {
-            // Check if id should be ignored
-            // return getLineIgnore().test(id);
+            LineStreamWorker<T> worker = workers.get(id);
+            if (worker == null) {
+                // Check if id should be ignored
+                // return getLineIgnore().test(id);
 
-            return false;
+                return false;
+            }
+
+            worker.apply(lineStream, data);
+
+            return true;
+        } catch (Exception e) {
+            numExceptions++;
+            throw e;
         }
 
-        worker.apply(lineStream, data);
-
-        return true;
     }
 
     @Override
