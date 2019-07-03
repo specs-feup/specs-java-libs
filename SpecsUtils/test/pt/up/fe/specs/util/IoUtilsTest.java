@@ -148,9 +148,9 @@ public class IoUtilsTest {
      */
     @Test
     public void testParsePathList() {
-        assertEquals("{=[path1, path2, path3]}", SpecsIo.parsePathList("path1; path2  ; path3", ";").toString());
+        assertEquals("{=[path1, path2, path3]}", SpecsStrings.parsePathList("path1; path2  ; path3", ";").toString());
         assertEquals("{=[path1, path4], prefix/=[path2, path3]}",
-                SpecsIo.parsePathList("path1$prefix/$path2;path3$$path4", ";").toString());
+                SpecsStrings.parsePathList("path1$prefix/$path2;path3$$path4", ";").toString());
 
     }
 }

@@ -65,7 +65,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import pt.up.fe.specs.util.collections.MultiMap;
 import pt.up.fe.specs.util.collections.SpecsList;
 import pt.up.fe.specs.util.io.PathFilter;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -3108,66 +3107,6 @@ public class SpecsIo {
 
     public static String getPathSeparator() {
         return File.pathSeparator;
-    }
-
-    /**
-     * Parses a list of paths.
-     * 
-     * <p>
-     * A sequence of paths may be prefixed with a $PREFIX$, the paths after the second $ will be prefixed with PREFIX,
-     * until a new $PREFIX$ appears. PREFIX can be empty.
-     * 
-     * <p>
-     * Example (; as separator): path1$prefix/$path2;path3$$path4 returns a Map where "" (empty string) is mapped to
-     * path1 and path4, and "prefix" is mapped to path2 and path3
-     * 
-     * 
-     * @param pathList
-     * @param separator
-     * @return
-     */
-    public static MultiMap<String, String> parsePathList(String pathList, String separator) {
-        // Separate into prefixes
-        MultiMap<String, String> prefixPaths = new MultiMap<>();
-        // List<String> pathsWithoutPrefix = new ArrayList<>();
-
-        String currentString = pathList;
-
-        int dollarIndex = -1;
-        while ((dollarIndex = currentString.indexOf('$')) != -1) {
-
-            // Add what is before the dollar
-            if (dollarIndex > 0) {
-                String beforeDollar = currentString.substring(0, dollarIndex);
-                prefixPaths.addAll("", SpecsStrings.splitNonEmpty(beforeDollar, separator, true));
-            }
-
-            currentString = currentString.substring(dollarIndex + 1);
-
-            dollarIndex = currentString.indexOf('$');
-            if (dollarIndex == -1) {
-                throw new RuntimeException("Expected an even number of $");
-            }
-
-            String prefix = currentString.substring(0, dollarIndex);
-            currentString = currentString.substring(dollarIndex + 1);
-
-            dollarIndex = currentString.indexOf('$');
-            String paths = dollarIndex == -1 ? currentString : currentString.substring(0, dollarIndex);
-
-            prefixPaths.addAll(prefix, SpecsStrings.splitNonEmpty(paths, separator, true));
-
-            // Update string
-            currentString = dollarIndex == -1 ? "" : currentString.substring(dollarIndex, currentString.length());
-        }
-
-        // Parse remaining string to the empty prefix
-        if (!currentString.isEmpty()) {
-            prefixPaths.addAll("", SpecsStrings.splitNonEmpty(currentString, separator, true));
-        }
-
-        return prefixPaths;
-
     }
 
 }
