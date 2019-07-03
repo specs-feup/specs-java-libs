@@ -15,7 +15,6 @@ package pt.up.fe.specs.util.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,17 +61,13 @@ public class MultiMap<K, V> {
     // ---------- - - - - - - - - - - - - - - - - - - - - - - - - - ----------- dynamic
 
     /**
-     * Returns the values associated to the parameter key, as an unmodifiable view.
+     * Returns the values associated to the parameter key.
      * 
      * @param key
      *            The key the user wants the values of.
      * @return the values associated to the parameter key.
      */
     public List<V> get(K key) {
-        return Collections.unmodifiableList(this.map.getOrDefault(key, Collections.emptyList()));
-    }
-
-    private List<V> getPrivate(K key) {
         List<V> values = this.map.get(key);
         if (values == null) {
             values = new ArrayList<>();
@@ -80,7 +75,18 @@ public class MultiMap<K, V> {
         }
 
         return values;
+        // return Collections.unmodifiableList(this.map.getOrDefault(key, Collections.emptyList()));
     }
+
+    // private List<V> getPrivate(K key) {
+    // List<V> values = this.map.get(key);
+    // if (values == null) {
+    // values = new ArrayList<>();
+    // this.map.put(key, values);
+    // }
+    //
+    // return values;
+    // }
 
     /**
      * Adds the given value to the key.
@@ -91,7 +97,7 @@ public class MultiMap<K, V> {
      *            the value the user wants to attribute to the key.
      */
     public void put(K key, V value) {
-        List<V> values = getPrivate(key);
+        List<V> values = get(key);
         // List<V> values = this.map.get(key);
         // if (values == null) {
         // values = new ArrayList<>();
@@ -123,7 +129,7 @@ public class MultiMap<K, V> {
             return;
         }
 
-        List<V> previousValues = getPrivate(key);
+        List<V> previousValues = get(key);
         previousValues.addAll(values);
     }
 
