@@ -2000,4 +2000,21 @@ public class SpecsStrings {
         return decimalFormat.format(number);
     }
 
+    /**
+     * Splits the given String according to a separator, and removes blank String that can be created from the
+     * splitting.
+     * 
+     * @param string
+     * @param separator
+     * @param strip
+     *            if true, strips each splitted String
+     * @return
+     */
+    public static List<String> splitNonEmpty(String string, String separator, boolean strip) {
+        return Arrays.stream(string.split(separator))
+                .filter(substring -> !substring.isBlank())
+                .map(substring -> strip ? substring.strip() : substring)
+                .collect(Collectors.toList());
+    }
+
 }

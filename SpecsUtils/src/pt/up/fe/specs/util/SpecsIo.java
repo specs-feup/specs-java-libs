@@ -65,6 +65,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import pt.up.fe.specs.util.collections.MultiMap;
 import pt.up.fe.specs.util.collections.SpecsList;
 import pt.up.fe.specs.util.io.PathFilter;
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -534,7 +535,7 @@ public class SpecsIo {
     				"Input 'file' is null.");
     		return null;
     	}
-
+    
     	try {
     		Properties props = new Properties();
     		props.load(new java.io.FileReader(file));
@@ -543,7 +544,7 @@ public class SpecsIo {
     		Logger.getLogger(IoUtils.class.getName()).log(Level.WARNING,
     				"IOException: " + ex.getMessage());
     	}
-
+    
     	return null;
     }
      */
@@ -722,42 +723,42 @@ public class SpecsIo {
         this.separator = SpecsIo.DEFAULT_EXTENSION_SEPARATOR;
         this.followSymlinks = followSymlinks;
         }
-
+        
         @Override
         public boolean accept(File dir, String name) {
-
+        
         String suffix = separator + extension.toLowerCase();
-
+        
         if (!followSymlinks) {
-
+        
             File f = new File(dir, name);
-
+        
             // Fail if this is a symlink.
             if (Files.isSymbolicLink(f.toPath())) {
                 return false;
             }
         }
-
+        
         return name.toLowerCase().endsWith(suffix);
         */
         /*
         // Process files inside folder
         for (File file : path.listFiles()) {
-
-
-
+        
+        
+        
             // Process folder
             if (file.isDirectory()) {
                 // If it should be cut-off, stop processing of this folder
                 if (cutoffFolders.test(file)) {
                     continue;
                 }
-
+        
                 // Recursively add files of folder
                 getFilesRecursivePrivate(file, extensions, followSymlinks, cutoffFolders, foundFiles);
                 continue;
             }
-
+        
             //
             // if (!followSymlinks) {
             //
@@ -770,37 +771,37 @@ public class SpecsIo {
             // }
             //
             // return name.toLowerCase().endsWith(suffix);
-
+        
             String extension = SpecsIo.getExtension(file).toLowerCase();
-
+        
             if(extensions.contains(o))
-
+        
             // Add files that pass the extension and symlink rules
             // String suffix = SpecsIo.DEFAULT_EXTENSION_SEPARATOR + extension.toLowerCase();
         }
         */
         /*
         List<File> fileList = new ArrayList<>();
-
+        
         ExtensionFilter filter = new ExtensionFilter(extension, followSymlinks);
         File[] files = path.listFiles(filter);
-
+        
         fileList.addAll(Arrays.asList(files));
-
+        
         // directories
         files = path.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-
+        
                 // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-
+        
                 fileList.addAll(getFilesRecursive(file, extension));
             }
         }
-
+        
         return fileList;
         */
     }
@@ -833,45 +834,45 @@ public class SpecsIo {
      */
     /*
     public static List<File> getFilesRecursive(File path, String extension, boolean followSymlinks) {
-
+    
         // if (!path.isDirectory()) {
         if (!path.exists()) {
             SpecsLogs.msgWarn("Path '" + path + "' does not exist.");
             return null;
         }
-
+    
         if (path.isFile()) {
             if (SpecsIo.getExtension(path).equals(extension)) {
                 return Arrays.asList(path);
             }
-
+    
             return Collections.emptyList();
         }
-
+    
         List<File> fileList = new ArrayList<>();
-
+    
         ExtensionFilter filter = new ExtensionFilter(extension, followSymlinks);
         File[] files = path.listFiles(filter);
-
+    
         fileList.addAll(Arrays.asList(files));
-
+    
         // directories
         files = path.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-
+    
                 // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-
+    
                 fileList.addAll(getFilesRecursive(file, extension));
             }
         }
-
+    
         return fileList;
     }
-
+    
     */
 
     /**
@@ -903,45 +904,45 @@ public class SpecsIo {
     }
     /*
     public static List<File> getFilesRecursive(File path, boolean followSymlinks) {
-
+    
         // Special case: path is a single file
         if (path.isFile()) {
             return Arrays.asList(path);
         }
-
+    
         List<File> fileList = new ArrayList<>();
         File[] files = path.listFiles();
-
+    
         if (files == null) {
             // Not a folder
             return fileList;
         }
-
+    
         for (File file : files) {
-
+    
             // Ignore file if is symlink
             if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                 continue;
             }
-
+    
             if (file.isFile()) {
                 fileList.add(file);
             }
         }
-
+    
         for (File file : files) {
-
+    
             if (file.isDirectory()) {
-
+    
                 // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-
+    
                 fileList.addAll(getFilesRecursive(file, followSymlinks));
             }
         }
-
+    
         return fileList;
     }
     */
@@ -1859,13 +1860,13 @@ public class SpecsIo {
         if (files == null) {
             return Collections.emptyList();
         }
-
+        
         ArrayList<File> returnValue = new ArrayList<>();
-
+        
         for (File file : files) {
             returnValue.add(file);
         }
-
+        
         return returnValue;
         */
     }
@@ -1924,18 +1925,18 @@ public class SpecsIo {
                 if (filter.isAllowed(currentPatternPath)) {
                     files.add(currentPatternPath);
                 }
-
+            
                 continue;
             }
-
+            
             if (currentPatternPath.isFile()) {
                 if (filter.isAllowed(currentPatternPath)) {
                     files.add(currentPatternPath);
                 }
-
+            
                 continue;
             }
-
+            
             SpecsLogs.msgWarn("Could not hand path, is neither a file or a folder: " + currentPatternPath);
             */
         }
@@ -1958,9 +1959,9 @@ public class SpecsIo {
         if (!folder.isDirectory()) {
             throw new IllegalArgumentException("The file given in parameter is not a folder");
         }
-
+    
         File[] files = folder.listFiles(new ExtensionFilter(extension));
-
+    
         if (files == null || files.length == 0) {
             return false;
         }
@@ -2119,22 +2120,22 @@ public class SpecsIo {
      */
     /*
     public static String[] getParentNames(File file) {
-
+    
     final String WINDOWS = "\\";
     final String LINUX = "/";
-
+    
     String[] parents;
     String path = file.getAbsolutePath();
-
+    
     if (path.contains(WINDOWS)) {
-
+    
         parents = path.split(Pattern.quote(WINDOWS));
         // parents = StringUtils.split(path, WINDOWS);
     } else { // if (path.contains(LINUX))
     	 // parents = StringUtils.split(LINUX);
         parents = path.split(Pattern.quote(LINUX));
     }
-
+    
     return parents;
     }
      */
@@ -2188,7 +2189,7 @@ public class SpecsIo {
         	if (extIndex < 0) {
         	    return "";
         	}
-
+        
         	return filename.substring(extIndex + 1, filename.length());
          */
     }
@@ -2226,11 +2227,11 @@ public class SpecsIo {
         return existingFolder(null, folderpath);
         /*
         File folder = existingFolder(null, folderpath);
-
+        
         if (folder == null) {
         throw new RuntimeException("Folder '" + folderpath + "' not found");
         }
-
+        
         return folder;
          */
     }
@@ -2671,7 +2672,7 @@ public class SpecsIo {
 
             /*
             file = file.getAbsoluteFile().getCanonicalFile();
-
+            
             // return new File(file.getAbsolutePath().replace('\\', '/'));
             return new File(normalizePath(file.getAbsolutePath()));
             */
@@ -3107,6 +3108,66 @@ public class SpecsIo {
 
     public static String getPathSeparator() {
         return File.pathSeparator;
+    }
+
+    /**
+     * Parses a list of paths.
+     * 
+     * <p>
+     * A sequence of paths may be prefixed with a $PREFIX$, the paths after the second $ will be prefixed with PREFIX,
+     * until a new $PREFIX$ appears. PREFIX can be empty.
+     * 
+     * <p>
+     * Example (; as separator): path1$prefix/$path2;path3$$path4 returns a Map where "" (empty string) is mapped to
+     * path1 and path4, and "prefix" is mapped to path2 and path3
+     * 
+     * 
+     * @param pathList
+     * @param separator
+     * @return
+     */
+    public static MultiMap<String, String> parsePathList(String pathList, String separator) {
+        // Separate into prefixes
+        MultiMap<String, String> prefixPaths = new MultiMap<>();
+        // List<String> pathsWithoutPrefix = new ArrayList<>();
+
+        String currentString = pathList;
+
+        int dollarIndex = -1;
+        while ((dollarIndex = currentString.indexOf('$')) != -1) {
+
+            // Add what is before the dollar
+            if (dollarIndex > 0) {
+                String beforeDollar = currentString.substring(0, dollarIndex);
+                prefixPaths.addAll("", SpecsStrings.splitNonEmpty(beforeDollar, separator, true));
+            }
+
+            currentString = currentString.substring(dollarIndex + 1);
+
+            dollarIndex = currentString.indexOf('$');
+            if (dollarIndex == -1) {
+                throw new RuntimeException("Expected an even number of $");
+            }
+
+            String prefix = currentString.substring(0, dollarIndex);
+            currentString = currentString.substring(dollarIndex + 1);
+
+            dollarIndex = currentString.indexOf('$');
+            String paths = dollarIndex == -1 ? currentString : currentString.substring(0, dollarIndex);
+
+            prefixPaths.put(prefix, SpecsStrings.splitNonEmpty(paths, separator, true));
+
+            // Update string
+            currentString = dollarIndex == -1 ? "" : currentString.substring(dollarIndex, currentString.length());
+        }
+
+        // Parse remaining string to the empty prefix
+        if (!currentString.isEmpty()) {
+            prefixPaths.put("", SpecsStrings.splitNonEmpty(currentString, separator, true));
+        }
+
+        return prefixPaths;
+
     }
 
 }
