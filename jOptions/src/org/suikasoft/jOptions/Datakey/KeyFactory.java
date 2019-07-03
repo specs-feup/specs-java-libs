@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,6 +36,7 @@ import org.suikasoft.jOptions.gui.panels.option.BooleanPanel;
 import org.suikasoft.jOptions.gui.panels.option.DoublePanel;
 import org.suikasoft.jOptions.gui.panels.option.EnumMultipleChoicePanel;
 import org.suikasoft.jOptions.gui.panels.option.FilePanel;
+import org.suikasoft.jOptions.gui.panels.option.FilesWithBaseFoldersPanel;
 import org.suikasoft.jOptions.gui.panels.option.IntegerPanel;
 import org.suikasoft.jOptions.gui.panels.option.StringListPanel;
 import org.suikasoft.jOptions.gui.panels.option.StringPanel;
@@ -496,6 +498,91 @@ public class KeyFactory {
         }
 
         return arrayList;
+    }
+
+    /**
+     * Represents a set of files, with a corresponding base folder.
+     * 
+     * @param id
+     * @return
+     */
+    public static DataKey<Map<File, File>> filesWithBaseFolders(String id) {
+        return generic(id, (Map<File, File>) new HashMap<File, File>())
+                .setKeyPanelProvider((key, data) -> new FilesWithBaseFoldersPanel(key, data))
+                .setDecoder(Codecs.filesWithBaseFolders())
+                .setCustomGetter(KeyFactory::customGetterFilesWithBaseFolders)
+                .setCustomSetter(KeyFactory::customSetterFilesWithBaseFolders)
+                .setDefault(() -> new HashMap<File, File>());
+
+        // return new NormalKey<>(id, String.class)
+        // .setKeyPanelProvider((key, data) -> new StringPanel(key, data))
+        // .setDecoder(s -> s)
+        // .setDefault(() -> "");
+
+    }
+
+    public static Map<File, File> customGetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
+        Map<File, File> processedMap = new HashMap<>();
+
+        for (var entry : value.entrySet()) {
+
+            File oldBase = entry.getValue() == null ? new File(".") : entry.getValue();
+
+            File newPath = customGetterFile(entry.getKey(), data, false, false, false, true);
+            File newBase = customGetterFile(oldBase, data, true, false, false, true);
+
+            processedMap.put(newPath, newBase);
+
+            // System.out.println("PATH BEFORE:" + entry.getKey());
+            // System.out.println("PATH AFTER:" + newPath);
+            // System.out.println("BASE BEFORE:" + entry.getValue());
+            // System.out.println("BASE AFTER:" + newBase);
+        }
+
+        return processedMap;
+    }
+
+    public static Map<File, File> customSetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
+        System.out.println("CUSTOM SETTER: ");
+        System.out.println("ACCESSING " + JOptionKeys.CURRENT_FOLDER_PATH.getKey());
+        System.out.println("OH DATA: " + data);
+        // If it has no working folder set, just return value
+        Optional<String> workingFolderTry = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        if (!workingFolderTry.isPresent()) {
+            System.out.println("NO CURRENT FOLDER PATH");
+            return value;
+        }
+
+        File workingFolder = new File(workingFolderTry.get());
+
+        Map<File, File> processedMap = new HashMap<>();
+
+        // Replace values with relative paths to the working folder, if there is a common base
+        for (var entry : value.entrySet()) {
+
+            File previousPath = entry.getKey();
+            File previousBase = entry.getValue();
+
+            String newBase = SpecsIo.getRelativePath(previousBase, workingFolder, true).orElse(previousBase.toString());
+
+            // New path must take into account base
+            // String newPath = SpecsIo.getRelativePath(previousPath, new File(workingFolder, newBase), true)
+            // .orElse(previousPath.toString());
+            String newPath = SpecsIo.getRelativePath(previousPath, workingFolder, true)
+                    .orElse(previousPath.toString());
+
+            // File newPath = customGetterFile(entry.getKey(), data, false, false, false, true);
+            // File newBase = customGetterFile(oldBase, data, true, false, false, true);
+
+            processedMap.put(new File(newPath), new File(newBase));
+
+            System.out.println("PATH BEFORE:" + previousPath);
+            System.out.println("PATH AFTER:" + newPath);
+            System.out.println("BASE BEFORE:" + previousBase);
+            System.out.println("BASE AFTER:" + newBase);
+        }
+
+        return processedMap;
     }
 
 }
