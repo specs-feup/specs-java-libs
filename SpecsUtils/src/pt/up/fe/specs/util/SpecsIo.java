@@ -3109,4 +3109,28 @@ public class SpecsIo {
         return File.pathSeparator;
     }
 
+    /**
+     * 
+     * @param file
+     * @param base
+     * @return
+     */
+    public static File removeCommonPath(File file, File base) {
+        // Normalize paths
+        String normalizedFile = normalizePath(file);
+        String normalizedBase = normalizePath(base);
+
+        // If file does not start with base, return file
+        if (!normalizedFile.startsWith(normalizedBase)) {
+            return file;
+        }
+
+        String fileWithoutBase = normalizedFile.substring(normalizedBase.length());
+        if (fileWithoutBase.startsWith("/")) {
+            fileWithoutBase = fileWithoutBase.substring(1);
+        }
+
+        return new File(fileWithoutBase);
+    }
+
 }

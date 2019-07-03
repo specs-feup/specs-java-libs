@@ -107,6 +107,10 @@ public class MultiMap<K, V> {
         values.add(value);
     }
 
+    public void add(K key, V value) {
+        get(key).add(value);
+    }
+
     /**
      * Replaces the current value mapped to the given key with the given values
      * 
