@@ -3155,7 +3155,7 @@ public class SpecsIo {
             dollarIndex = currentString.indexOf('$');
             String paths = dollarIndex == -1 ? currentString : currentString.substring(0, dollarIndex);
 
-            prefixPaths.put(prefix, SpecsStrings.splitNonEmpty(paths, separator, true));
+            prefixPaths.addAll(prefix, SpecsStrings.splitNonEmpty(paths, separator, true));
 
             // Update string
             currentString = dollarIndex == -1 ? "" : currentString.substring(dollarIndex, currentString.length());
@@ -3163,7 +3163,7 @@ public class SpecsIo {
 
         // Parse remaining string to the empty prefix
         if (!currentString.isEmpty()) {
-            prefixPaths.put("", SpecsStrings.splitNonEmpty(currentString, separator, true));
+            prefixPaths.addAll("", SpecsStrings.splitNonEmpty(currentString, separator, true));
         }
 
         return prefixPaths;
