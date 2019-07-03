@@ -18,6 +18,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @deprecated instead, move it as method of SpecsIo
+ * @author JoaoBispo
+ *
+ */
+@Deprecated
 public class PathList {
 
     private final static String SEPARATOR = ";";
@@ -90,5 +96,9 @@ public class PathList {
 
         return allPaths;
     }
+
+    // getBases()
+    // getPaths()
+    // getPaths(base)
 
 }
