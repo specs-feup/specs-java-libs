@@ -525,11 +525,13 @@ public class KeyFactory {
         Map<File, File> processedMap = new HashMap<>();
 
         for (var entry : value.entrySet()) {
-
-            File oldBase = entry.getValue() == null ? new File(".") : entry.getValue();
-
+            boolean noBaseFolder = entry.getValue() == null || entry.getValue().toString().isEmpty();
             File newPath = customGetterFile(entry.getKey(), data, false, false, false, true);
-            File newBase = customGetterFile(oldBase, data, true, false, false, true);
+            File newBase = noBaseFolder ? null
+                    : customGetterFile(entry.getValue(), data, true, false, false, true);
+
+            // File oldBase = entry.getValue() == null ? new File(".") : entry.getValue();
+            // File newBase = customGetterFile(oldBase, data, true, false, false, true);
 
             processedMap.put(newPath, newBase);
 
@@ -543,13 +545,13 @@ public class KeyFactory {
     }
 
     public static Map<File, File> customSetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
-        System.out.println("CUSTOM SETTER: ");
-        System.out.println("ACCESSING " + JOptionKeys.CURRENT_FOLDER_PATH.getKey());
-        System.out.println("OH DATA: " + data);
+        // System.out.println("CUSTOM SETTER: ");
+        // System.out.println("ACCESSING " + JOptionKeys.CURRENT_FOLDER_PATH.getKey());
+        // System.out.println("OH DATA: " + data);
         // If it has no working folder set, just return value
         Optional<String> workingFolderTry = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
         if (!workingFolderTry.isPresent()) {
-            System.out.println("NO CURRENT FOLDER PATH");
+            // System.out.println("NO CURRENT FOLDER PATH");
             return value;
         }
 
@@ -576,10 +578,10 @@ public class KeyFactory {
 
             processedMap.put(new File(newPath), new File(newBase));
 
-            System.out.println("PATH BEFORE:" + previousPath);
-            System.out.println("PATH AFTER:" + newPath);
-            System.out.println("BASE BEFORE:" + previousBase);
-            System.out.println("BASE AFTER:" + newBase);
+            // System.out.println("PATH BEFORE:" + previousPath);
+            // System.out.println("PATH AFTER:" + newPath);
+            // System.out.println("BASE BEFORE:" + previousBase);
+            // System.out.println("BASE AFTER:" + newBase);
         }
 
         return processedMap;

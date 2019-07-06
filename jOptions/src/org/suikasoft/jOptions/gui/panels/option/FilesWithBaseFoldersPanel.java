@@ -61,11 +61,11 @@ public class FilesWithBaseFoldersPanel extends KeyPanel<Map<File, File>> {
 
     @Override
     public <ET extends Map<File, File>> void setValue(ET value) {
-        System.out.println("DATA: " + getData());
+        // System.out.println("DATA: " + getData());
         // Simplify value before setting
-        System.out.println("ORIGINAL VALUE: " + value);
+        // System.out.println("ORIGINAL VALUE: " + value);
         var simplifiedValue = getKey().getCustomSetter().get().get(value, getData());
-        System.out.println("SIMPLIFIED VALUE:\n" + simplifiedValue);
+        // System.out.println("SIMPLIFIED VALUE:\n" + simplifiedValue);
         setText(getKey().encode(simplifiedValue));
     }
 
