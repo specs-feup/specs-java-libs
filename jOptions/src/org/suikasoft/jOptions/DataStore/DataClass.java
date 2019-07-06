@@ -40,6 +40,14 @@ public interface DataClass<T extends DataClass<T>> {
         return set(key, true);
     }
 
+    default <K, E extends K> T setOptional(DataKey<Optional<K>> key, E value) {
+        if (value == null) {
+            return set(key, Optional.empty());
+        }
+
+        return set(key, Optional.of(value));
+    }
+
     /**
      * 
      * @return an Optional containing a StoreDefinition, if defined. By default returns empty.
