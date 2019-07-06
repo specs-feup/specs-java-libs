@@ -81,11 +81,18 @@ public class Codecs {
             return basesToPaths.get("").stream().collect(Collectors.joining());
         }
 
-        return basesToPaths.entrySet().stream()
+        String pathsNoPrefix = basesToPaths.get("") == null ? ""
+                : basesToPaths.get("").stream()
+                        .collect(Collectors.joining(FILES_WITH_BASE_FOLDER_SEPARATOR));
+
+        String pathsWithPrefix = basesToPaths.entrySet().stream()
+                // Ignore empty key
+                .filter(entry -> !entry.getKey().isEmpty())
                 .map(entry -> "$" + entry.getKey() + "$"
                         + entry.getValue().stream().collect(Collectors.joining(FILES_WITH_BASE_FOLDER_SEPARATOR)))
                 .collect(Collectors.joining());
 
+        return pathsNoPrefix + pathsWithPrefix;
         // value.entrySet().stream()
         // .map(entry -> entry.getValue() == null ? "$$" : "$" + entry.getValue() + "$" + entry.getKey())
         // .collect(Collectors.joining(FILES_WITH_BASE_FOLDER_SEPARATOR));
