@@ -3133,4 +3133,25 @@ public class SpecsIo {
         return new File(fileWithoutBase);
     }
 
+    public static void deleteOnExit(File tempFolder) {
+        SpecsLogs.debug(() -> "Registered for deletion on exit: " + tempFolder.getAbsolutePath());
+        deleteOnExitPrivate(tempFolder);
+    }
+
+    private static void deleteOnExitPrivate(File path) {
+        // First register top file
+        path.deleteOnExit();
+
+        // Obtain all children and register them
+        File[] children = path.listFiles();
+        if (children == null) {
+            return;
+        }
+
+        for (File child : children) {
+            deleteOnExit(child);
+        }
+
+    }
+
 }
