@@ -565,7 +565,8 @@ public class KeyFactory {
             File previousPath = entry.getKey();
             File previousBase = entry.getValue();
 
-            String newBase = SpecsIo.getRelativePath(previousBase, workingFolder, true).orElse(previousBase.toString());
+            String newBase = entry.getValue() == null ? ""
+                    : SpecsIo.getRelativePath(previousBase, workingFolder, true).orElse(previousBase.toString());
 
             // New path must take into account base
             // String newPath = SpecsIo.getRelativePath(previousPath, new File(workingFolder, newBase), true)
