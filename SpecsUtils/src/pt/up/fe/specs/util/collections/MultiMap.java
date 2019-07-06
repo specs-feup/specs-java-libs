@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,24 @@ public class MultiMap<K, V> {
      * @return the values associated to the parameter key.
      */
     public List<V> get(K key) {
+        // List<V> values = this.map.get(key);
+        // if (values == null) {
+        // values = new ArrayList<>();
+        // this.map.put(key, values);
+        // }
+        //
+        // return values;
+        //// return Collections.unmodifiableList(this.map.getOrDefault(key, Collections.emptyList()));
+        return this.map.getOrDefault(key, Collections.emptyList());
+    }
+
+    /**
+     * If key does not exist, creates an entry.
+     * 
+     * @param key
+     * @return
+     */
+    private List<V> getPrivate(K key) {
         List<V> values = this.map.get(key);
         if (values == null) {
             values = new ArrayList<>();
@@ -75,18 +94,7 @@ public class MultiMap<K, V> {
         }
 
         return values;
-        // return Collections.unmodifiableList(this.map.getOrDefault(key, Collections.emptyList()));
     }
-
-    // private List<V> getPrivate(K key) {
-    // List<V> values = this.map.get(key);
-    // if (values == null) {
-    // values = new ArrayList<>();
-    // this.map.put(key, values);
-    // }
-    //
-    // return values;
-    // }
 
     /**
      * Adds the given value to the key.
@@ -97,7 +105,7 @@ public class MultiMap<K, V> {
      *            the value the user wants to attribute to the key.
      */
     public void put(K key, V value) {
-        List<V> values = get(key);
+        List<V> values = getPrivate(key);
         // List<V> values = this.map.get(key);
         // if (values == null) {
         // values = new ArrayList<>();
@@ -108,7 +116,7 @@ public class MultiMap<K, V> {
     }
 
     public void add(K key, V value) {
-        get(key).add(value);
+        getPrivate(key).add(value);
     }
 
     /**
@@ -133,7 +141,7 @@ public class MultiMap<K, V> {
             return;
         }
 
-        List<V> previousValues = get(key);
+        List<V> previousValues = getPrivate(key);
         previousValues.addAll(values);
     }
 
