@@ -200,11 +200,97 @@ public class SpecsSystem {
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command, File workingDir,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
 
+        // List<String> normalizedCommand = normalizeProcessCommand(command);
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
 
         return runProcess(builder, outputProcessor, errorProcessor);
     }
+
+    /**
+     * Arguments such as -I
+     * 
+     * @param command
+     * @return
+     */
+    /*
+    // private static List<String> normalizeProcessCommand(List<String> command) {
+    private static String normalizeProcessArgument(String arg) {
+        // Trim argument
+        String trimmedArg = arg.strip();
+        SpecsLogs.debug(() -> "Argument: '" + trimmedArg + "'");
+    
+        if (!trimmedArg.startsWith("-I")) {
+            return trimmedArg;
+        }
+    
+        if (trimmedArg.charAt(2) != '\"') {
+            return trimmedArg;
+        }
+    
+        SpecsLogs.debug(() -> "Normalizing -I argument: '" + trimmedArg + "'");
+        SpecsCheck.checkArgument(trimmedArg.endsWith("\""),
+                () -> "Expected argument to end with double quote: '" + trimmedArg + "'");
+        String normalizedArg = "-I" + trimmedArg.substring(3, trimmedArg.length() - 1);
+        SpecsLogs.debug(() -> "Normalized: '" + normalizedArg + "'");
+    
+        return normalizedArg;
+    
+        // // List<String> normalizedCommand = new ArrayList<>(command.size());
+        //
+        // // for (String arg : command) {
+        // // Trim argument
+        // String trimmedArg = arg.strip();
+        //
+        // // Check if it has white space
+        // if (!trimmedArg.contains(" ")) {
+        // // SpecsLogs.debug("Did not normalized argument, did not find spaces: '" + trimmedArg + "'");
+        // return trimmedArg;
+        // // normalizedCommand.add(trimmedArg);
+        // // continue;
+        // }
+        //
+        // // If contain white space, check if already between quotes
+        // boolean hasStartQuote = trimmedArg.startsWith("\"");
+        // boolean hasEndQuote = trimmedArg.endsWith("\"");
+        // if (hasStartQuote && hasEndQuote) {
+        // // SpecsLogs
+        // // .debug("Did not normalized argument, has spaces but also already has quotes: '" + trimmedArg + "'");
+        // return trimmedArg;
+        // // normalizedCommand.add(trimmedArg);
+        // // continue;
+        // }
+        //
+        // // Check if quotes are balanced
+        // // Leave like that, it can be on purpose
+        // // E.g., -I"<path>"
+        // boolean isUnbalanced = hasStartQuote ^ hasEndQuote;
+        // if (isUnbalanced) {
+        // // SpecsLogs.debug("Found unbalanced double quotes on argument, leaving it like that: '" + trimmedArg +
+        // // "'");
+        // return trimmedArg;
+        // }
+        // // } else {
+        // SpecsLogs.debug("Found argument that needs double quotes, correcting: '" + trimmedArg + "'");
+        // // }
+        //
+        // if (!hasStartQuote) {
+        // trimmedArg = "\"" + trimmedArg;
+        // }
+        //
+        // if (!hasEndQuote) {
+        // trimmedArg = trimmedArg + "\"";
+        // }
+        //
+        // return trimmedArg;
+        // // normalizedCommand.add(trimmedArg);
+        // // }
+        //
+        // // return normalizedCommand;
+        //
+    
+    }
+    */
 
     /**
      * Launches the process characterized by 'builder'.
@@ -245,8 +331,11 @@ public class SpecsSystem {
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
-        String commandString = getCommandString(builder.command());
-        SpecsLogs.debug("Launching Process: " + commandString);
+        // List<String> normalizedCommand = normalizeCommand(builder.command());
+        // builder.command(normalizedCommand);
+        // String commandString = getCommandString(builder.command());
+        // SpecsLogs.debug("Launching Process: " + commandString);
+        SpecsLogs.debug(() -> "Launching Process: " + builder.command().stream().collect(Collectors.joining(" ")));
 
         Process process = null;
         try {
@@ -499,17 +588,38 @@ public class SpecsSystem {
      * @param command
      * @return
      */
+    /*
     public static String getCommandString(List<String> command) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(command.get(0));
-        for (int i = 1; i < command.size(); i++) {
-            builder.append(" ");
-            builder.append(command.get(i));
-        }
-
-        return builder.toString();
+        return normalizeCommand(command).stream()
+                // Normalize argument
+                // .map(SpecsSystem::normalizeProcessArgument)
+                .collect(Collectors.joining(" "));
+    
+        // StringBuilder builder = new StringBuilder();
+        //
+        // builder.append(command.get(0));
+        // for (int i = 1; i < command.size(); i++) {
+        // builder.append(" ");
+        // builder.append(command.get(i));
+        // }
+        //
+        // return builder.toString();
     }
+    */
+    /**
+     * Normalizes a command to be executed, inserting double quotes where necessary.
+     * 
+     * @param command
+     * @return
+     */
+    /*
+    public static List<String> normalizeCommand(List<String> command) {
+        return command.stream()
+                // Normalize argument
+                .map(SpecsSystem::normalizeProcessArgument)
+                .collect(Collectors.toList());
+    }
+    */
 
     /**
      *
