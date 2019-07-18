@@ -46,6 +46,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -1013,8 +1014,29 @@ public class SpecsSystem {
             // throw new RuntimeException("Error while executing thread", e);
         } catch (TimeoutException e) {
             SpecsLogs.debug("get(): Timeout while retriving Future");
+            future.cancel(true);
             return null;
         }
+    }
+
+    /**
+     * Runs the given supplier in a separate thread, encapsulating the result in a Future.
+     * 
+     * <p>
+     * Taken from here: https://stackoverflow.com/questions/5715235/java-set-timeout-on-a-certain-block-of-code
+     * 
+     * @param <T>
+     * @param supplier
+     * @param timeout
+     * @param unit
+     * @return
+     */
+    public static <T> Future<T> getFuture(Supplier<T> supplier) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        var future = executor.submit(() -> supplier.get());
+        executor.shutdown(); // This does not cancel the already-scheduled task.
+
+        return future;
     }
 
     public static int executeOnProcessAndWait(Class<?> aClass, String... args) {
