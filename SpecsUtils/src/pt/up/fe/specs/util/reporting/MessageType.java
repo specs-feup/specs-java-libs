@@ -16,7 +16,7 @@ package pt.up.fe.specs.util.reporting;
 /**
  * Specifies a type of warning or error.
  * 
- * @author Lu�s Reis
+ * @author Luís Reis
  * @see Reporter
  */
 public interface MessageType {

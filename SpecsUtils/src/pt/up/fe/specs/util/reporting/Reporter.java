@@ -20,7 +20,7 @@ import pt.up.fe.specs.util.Preconditions;
 /**
  * An interface to unify the error/warning reporting system.
  * 
- * @author Lu�s Reis
+ * @author Luís Reis
  *
  */
 public interface Reporter {

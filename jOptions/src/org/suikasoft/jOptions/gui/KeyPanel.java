@@ -24,7 +24,7 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 /**
  * A GUI panel that returns a value of a type.
  * 
- * @author Jo„o Bispo
+ * @author Jo√£o Bispo
  *
  * @param <T>
  */
