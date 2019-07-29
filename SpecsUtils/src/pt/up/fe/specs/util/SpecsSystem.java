@@ -982,7 +982,7 @@ public class SpecsSystem {
             return future.get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            SpecsLogs.msgInfo("Failed to complete execution on thread, returning null");
+            SpecsLogs.info("Failed to complete execution on thread, returning null");
             return null;
         } catch (ExecutionException e) {
             // Rethrow cause
@@ -993,6 +993,8 @@ public class SpecsSystem {
 
             throw new RuntimeException(e.getCause());
             // throw new RuntimeException("Error while executing thread", e);
+        } finally {
+            future.cancel(true);
         }
     }
 
@@ -1014,8 +1016,9 @@ public class SpecsSystem {
             // throw new RuntimeException("Error while executing thread", e);
         } catch (TimeoutException e) {
             SpecsLogs.debug("get(): Timeout while retriving Future");
-            future.cancel(true);
             return null;
+        } finally {
+            future.cancel(true);
         }
     }
 
