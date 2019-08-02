@@ -80,6 +80,8 @@ public class SpecsIo {
     private static final Set<Character> ILLEGAL_FILENAME_CHARS = new HashSet<>(
             Arrays.asList('\\', '/', ':', '*', '?', '"', '<', '>', '|'));
 
+    private static final String UNIVERSAL_PATH_SEPARATOR = ";";
+
     /**
      * Helper class for methods that copy resources.
      *
@@ -3105,9 +3107,9 @@ public class SpecsIo {
         }
     }
 
-    public static String getPathSeparator() {
-        return File.pathSeparator;
-    }
+    // public static String getPathSeparator() {
+    // return File.pathSeparator;
+    // }
 
     /**
      * 
@@ -3152,6 +3154,23 @@ public class SpecsIo {
             deleteOnExit(child);
         }
 
+    }
+
+    /**
+     * Splits the given String into several paths, according to the path separator.
+     * 
+     * <p>
+     * Always uses the same character as path separator, the semicolon (;).
+     * 
+     * @param fileList
+     * @return
+     */
+    public static String[] splitPaths(String pathList) {
+        return pathList.split(UNIVERSAL_PATH_SEPARATOR);
+    }
+
+    public static String getUniversalPathSeparator() {
+        return UNIVERSAL_PATH_SEPARATOR;
     }
 
 }
