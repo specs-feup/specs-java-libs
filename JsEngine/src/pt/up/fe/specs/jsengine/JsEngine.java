@@ -214,6 +214,13 @@ public interface JsEngine {
         // Do nothing
     }
 
+    /**
+     * 
+     * @param object
+     * @return true if the given object is an array, false otherwise
+     */
+    boolean isArray(Object object);
+
     // Object put(Bindings var, String member, Object value);
 
     // public Object remove(Bindings object, Object key);

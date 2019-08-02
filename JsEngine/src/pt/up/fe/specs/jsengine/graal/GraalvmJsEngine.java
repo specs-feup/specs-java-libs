@@ -298,4 +298,9 @@ public class GraalvmJsEngine implements JsEngine {
         SpecsLogs.msgWarn(message);
     }
 
+    @Override
+    public boolean isArray(Object object) {
+        return asValue(object).hasArrayElements();
+    }
+
 }

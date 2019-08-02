@@ -38,11 +38,19 @@ public class JsEngineTest {
 
     private JsEngine getEngine() {
         return JsEngineType.GRAALVM.newEngine();
+        // return JsEngineType.NASHORN.newEngine();
         // return GRAAL_JS.get();
     }
 
     public static void test(Bindings bindings) {
         System.out.println("INSIDE JAVA: " + bindings);
+    }
+
+    public static void testValue(Value value) {
+
+        System.out.println("INSIDE JAVA (GRAAL VALUE): " + value);
+        value.putMember("aString", "Hello");
+        System.out.println("After adding: " + value);
     }
 
     // @Test
@@ -148,11 +156,14 @@ public class JsEngineTest {
         assertEquals("undefined", getEngine().getUndefined().toString());
     }
 
-    public static void testValue(Value value) {
+    @Test
+    public void testIsArray() {
+        JsEngine engine = getEngine();
 
-        System.out.println("INSIDE JAVA (GRAAL VALUE): " + value);
-        value.putMember("aString", "Hello");
-        System.out.println("After adding: " + value);
+        assertEquals(true, engine.isArray(engine.eval("var a = [0, 1, 2]; a;")));
+        assertEquals(false, engine.isArray(engine.eval("var a = {'aa' : 0}; a;")));
+        // System.out.println("ARRAY: " + array);
+        // assertEquals("undefined", getEngine().getUndefined().toString());
     }
 
     // @Test

@@ -150,4 +150,9 @@ public class NashornEngine implements JsEngine {
     public boolean asBoolean(Object result) {
         return (boolean) result;
     }
+
+    public boolean isArray(Object object) {
+        return object instanceof ScriptObjectMirror
+                && ((ScriptObjectMirror) object).isArray();
+    }
 }
