@@ -50,4 +50,5 @@ public class SpecsNumbers {
     public static <N extends Number> N add(N number1, N number2) {
         return (N) ADD.apply(number1, number2);
     }
+
 }

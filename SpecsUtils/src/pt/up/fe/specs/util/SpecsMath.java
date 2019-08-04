@@ -317,4 +317,20 @@ public class SpecsMath {
 
         return acc;
     }
+
+    /**
+     * Taken from here: https://stackoverflow.com/a/7879559/1189808
+     * 
+     * @param number
+     * @return
+     */
+    public static long factorial(int number) {
+        long result = 1;
+
+        for (int factor = 2; factor <= number; factor++) {
+            result *= factor;
+        }
+        // System.out.println("RESULT: " + result);
+        return result;
+    }
 }
