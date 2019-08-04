@@ -13,11 +13,16 @@
 
 package org.suikasoft.GsonPlus;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class SpecsGson {
 
     public static String toJson(Object object) {
         return new GsonBuilder().setPrettyPrinting().create().toJson(object);
+    }
+
+    public static <T> T fromJson(String json, Class<T> aClass) {
+        return new Gson().fromJson(json, aClass);
     }
 }
