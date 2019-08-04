@@ -2077,4 +2077,42 @@ public class SpecsStrings {
         return prefixPaths;
 
     }
+
+    /**
+     * All indexes where the given char appears on the String.
+     * 
+     * @param string
+     * @param ch
+     * @return
+     */
+    public static List<Integer> indexesOf(String string, int ch) {
+        List<Integer> indexes = new ArrayList<>();
+
+        int currentIndex = string.indexOf(ch);
+        String currentString = string;
+        int offset = 0;
+        while (currentIndex != -1) {
+            indexes.add(currentIndex + offset);
+            offset += currentString.subSequence(0, currentIndex + 1).length();
+            currentString = currentString.substring(currentIndex + 1);
+            currentIndex = currentString.indexOf(ch);
+
+        }
+
+        return indexes;
+    }
+
+    public static int[] toDigits(Number number) {
+        return toDigits(number.toString());
+    }
+
+    public static int[] toDigits(String number) {
+        int[] digits = new int[number.length()];
+
+        for (int i = 0; i < number.length(); i++) {
+            digits[i] = Integer.valueOf(number.substring(i, i + 1));
+        }
+
+        return digits;
+    }
 }
