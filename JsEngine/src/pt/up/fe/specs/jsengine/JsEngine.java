@@ -48,6 +48,8 @@ public interface JsEngine {
      */
     Object getUndefined();
 
+    boolean isUndefined(Object object);
+
     String stringify(Object object);
 
     /// TYPE CONVERSIONS

@@ -303,4 +303,9 @@ public class GraalvmJsEngine implements JsEngine {
         return asValue(object).hasArrayElements();
     }
 
+    @Override
+    public boolean isUndefined(Object object) {
+        return asValue(object).isNull();
+    }
+
 }

@@ -155,4 +155,9 @@ public class NashornEngine implements JsEngine {
         return object instanceof ScriptObjectMirror
                 && ((ScriptObjectMirror) object).isArray();
     }
+
+    @Override
+    public boolean isUndefined(Object object) {
+        return ScriptObjectMirror.isUndefined(object);
+    }
 }
