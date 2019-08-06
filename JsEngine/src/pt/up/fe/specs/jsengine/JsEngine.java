@@ -227,4 +227,5 @@ public interface JsEngine {
 
     // public Object remove(Bindings object, Object key);
 
+    Collection<Object> getValues(Object object);
 }

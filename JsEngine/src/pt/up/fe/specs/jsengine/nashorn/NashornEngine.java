@@ -26,6 +26,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import pt.up.fe.specs.jsengine.ForOfType;
 import pt.up.fe.specs.jsengine.JsEngine;
+import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * @deprecated uses Nashorn classes, should be replaced with GraalvmJsEngine
@@ -159,5 +160,13 @@ public class NashornEngine implements JsEngine {
     @Override
     public boolean isUndefined(Object object) {
         return ScriptObjectMirror.isUndefined(object);
+    }
+
+    @Override
+    public Collection<Object> getValues(Object object) {
+        SpecsCheck.checkArgument(object instanceof ScriptObjectMirror, () -> "Expected object of class '"
+                + ScriptObjectMirror.class.getSimpleName() + "', got " + object.getClass());
+
+        return ((ScriptObjectMirror) object).values();
     }
 }

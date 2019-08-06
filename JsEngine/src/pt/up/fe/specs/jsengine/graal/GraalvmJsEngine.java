@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import javax.script.Bindings;
 
@@ -306,6 +307,33 @@ public class GraalvmJsEngine implements JsEngine {
     @Override
     public boolean isUndefined(Object object) {
         return asValue(object).isNull();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<Object> getValues(Object object) {
+        var value = asValue(object);
+
+        // // Collection
+        // if (object instanceof Collection<?>) {
+        // return (Collection<Object>) object;
+        // }
+
+        // Array
+        if (value.hasArrayElements()) {
+            return LongStream.range(0, value.getArraySize())
+                    .mapToObj(index -> value.getArrayElement(index))
+                    .collect(Collectors.toList());
+        }
+
+        // Map
+        if (value.hasMembers()) {
+            return value.getMemberKeys().stream()
+                    .map(key -> value.getMember(key))
+                    .collect(Collectors.toList());
+        }
+
+        throw new RuntimeException("Not supported for class '" + object.getClass() + "'");
     }
 
 }
