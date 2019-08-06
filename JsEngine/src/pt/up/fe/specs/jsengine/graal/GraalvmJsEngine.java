@@ -309,7 +309,6 @@ public class GraalvmJsEngine implements JsEngine {
         return asValue(object).isNull();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Collection<Object> getValues(Object object) {
         var value = asValue(object);
@@ -334,6 +333,11 @@ public class GraalvmJsEngine implements JsEngine {
         }
 
         throw new RuntimeException("Not supported for class '" + object.getClass() + "'");
+    }
+
+    @Override
+    public <T> T convert(Object object, Class<T> targetClass) {
+        return asValue(object).as(targetClass);
     }
 
 }

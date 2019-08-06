@@ -24,6 +24,7 @@ import javax.script.ScriptException;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import jdk.nashorn.api.scripting.ScriptUtils;
 import pt.up.fe.specs.jsengine.ForOfType;
 import pt.up.fe.specs.jsengine.JsEngine;
 import pt.up.fe.specs.util.SpecsCheck;
@@ -168,5 +169,10 @@ public class NashornEngine implements JsEngine {
                 + ScriptObjectMirror.class.getSimpleName() + "', got " + object.getClass());
 
         return ((ScriptObjectMirror) object).values();
+    }
+
+    @Override
+    public <T> T convert(Object object, Class<T> targetClass) {
+        return targetClass.cast(ScriptUtils.convert(object, targetClass));
     }
 }

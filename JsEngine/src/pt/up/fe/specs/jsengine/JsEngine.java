@@ -227,5 +227,21 @@ public interface JsEngine {
 
     // public Object remove(Bindings object, Object key);
 
+    /**
+     * 
+     * @param object
+     * @return the value inside the given object (e.g., map, array)
+     */
     Collection<Object> getValues(Object object);
+
+    /**
+     * Converts an objecto to the given Java class.
+     * 
+     * @param <T>
+     * @param object
+     * @param toConvert
+     * @return
+     */
+    <T> T convert(Object object, Class<T> targetClass);
+
 }
