@@ -2115,4 +2115,20 @@ public class SpecsStrings {
 
         return digits;
     }
+
+    public static boolean isPalindrome(String string) {
+        int length = string.length();
+
+        // If only one character, return true
+        if (length == 1) {
+            return true;
+        }
+
+        int middleIndex = length / 2;
+
+        String firstHalf = string.substring(0, middleIndex);
+        String secondHalf = string.substring(length - middleIndex, length);
+
+        return firstHalf.equals(new StringBuilder(secondHalf).reverse().toString());
+    }
 }
