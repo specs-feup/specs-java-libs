@@ -166,6 +166,16 @@ public class JsEngineTest {
         // assertEquals("undefined", getEngine().getUndefined().toString());
     }
 
+    @Test
+    public void testGetValues() {
+        JsEngine engine = getEngine();
+
+        assertEquals("[0, 1, 2]", engine.getValues(engine.eval("var a = [0, 1, 2]; a;")).toString());
+        assertEquals("[0]", engine.getValues(engine.eval("var a = {'aa' : 0}; a;")).toString());
+        // System.out.println("ARRAY: " + array);
+        // assertEquals("undefined", getEngine().getUndefined().toString());
+    }
+
     // @Test
     // public void testEval() {
     // var engine = JsEngineType.GRAALVM.newEngine();
