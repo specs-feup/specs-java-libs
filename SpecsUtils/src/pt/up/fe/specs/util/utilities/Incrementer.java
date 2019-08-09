@@ -21,8 +21,9 @@ public class Incrementer {
         this.count = 0;
     }
 
-    public void increment() {
+    public int increment() {
         count++;
+        return count;
     }
 
     public int getCurrent() {
