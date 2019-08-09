@@ -143,10 +143,15 @@ public class JsEngineTest {
     public void testEvalWithBindings() {
         JsEngine engine1 = getEngine();
 
-        Object scope = engine1.eval("var a = {aString: 'Hello', aNumber: 10}; a;");
+        // Object scope = engine1.eval("var a = {aString: 'Hello', aNumber: 10}; a;");
+
+        Object scope = engine1.newNativeMap();
+        engine1.put(scope, "aString", "Hello");
+        engine1.put(scope, "aNumber", 10);
 
         // assertEquals("Hello", engine1.eval("var b = this.aString; b;", engine1.asBindings(scope)).toString());
-        assertEquals("Hello", engine1.eval("var b = aString; b;", engine1.asBindings(scope)).toString());
+        // assertEquals("Hello", engine1.eval("var b = aString; b;", engine1.asBindings(scope)).toString());
+        assertEquals("Hello", engine1.eval("var b = aString; b;", scope).toString());
         // assertEquals("undefined", engine1.eval("var b = this.aString; b;").toString());
         assertEquals("true", engine1.eval("typeof aString === 'undefined'").toString());
     }

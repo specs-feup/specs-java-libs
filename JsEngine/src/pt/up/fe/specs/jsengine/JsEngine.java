@@ -73,6 +73,14 @@ public interface JsEngine {
     Object newNativeArray();
 
     /**
+     * Creates a new JavaScript map.
+     *
+     * 
+     * @return a
+     */
+    Object newNativeMap();
+
+    /**
      * Converts an array of objects to a JavaScript array
      *
      * @param values
@@ -206,7 +214,7 @@ public interface JsEngine {
 
     Object eval(String code);
 
-    Object eval(String script, Bindings scope);
+    Object eval(String script, Object scope);
 
     default Bindings createBindings() {
         return getEngine().createBindings();
@@ -243,5 +251,9 @@ public interface JsEngine {
      * @return
      */
     <T> T convert(Object object, Class<T> targetClass);
+
+    Object put(Object localScope, String key, Object value);
+
+    Object remove(Object localScope, Object key);
 
 }

@@ -34,6 +34,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 public class GraalvmJsEngine implements JsEngine {
 
     private static final String NEW_ARRAY = "[]"; // Faster
+    private static final String NEW_MAP = "a = {}; a";
 
     private final GraalJSScriptEngine engine;
     // private final Context.Builder contextBuilder;
@@ -128,6 +129,11 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     @Override
+    public Object newNativeMap() {
+        return eval(NEW_MAP);
+    }
+
+    @Override
     public Value toNativeArray(Object[] values) {
         Value array = eval(NEW_ARRAY);
         for (int i = 0; i < values.length; i++) {
@@ -204,7 +210,7 @@ public class GraalvmJsEngine implements JsEngine {
      * new engine, before executing the code.
      */
     @Override
-    public Object eval(String code, Bindings scope) {
+    public Object eval(String code, Object scope) {
 
         // var newEngine = GraalJSScriptEngine.create(engine.getPolyglotEngine(), contextBuilder);
         // Context context = Context.create("js");
@@ -357,6 +363,21 @@ public class GraalvmJsEngine implements JsEngine {
     @Override
     public <T> T convert(Object object, Class<T> targetClass) {
         return asValue(object).as(targetClass);
+    }
+
+    @Override
+    public Object put(Object bindings, String key, Object value) {
+        // Value bindingsValue = asValue(bindings);
+        //
+        // Object previousValue = bindingsValue.getMember(memberName);
+        // bindingsValue.putMember(memberName, value);
+        // return previousValue;
+        return asBindings(bindings).put(key, value);
+    }
+
+    @Override
+    public Object remove(Object bindings, Object key) {
+        return asBindings(bindings).remove(key);
     }
 
 }

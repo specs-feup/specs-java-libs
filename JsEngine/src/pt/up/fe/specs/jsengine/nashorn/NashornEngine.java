@@ -135,7 +135,7 @@ public class NashornEngine implements JsEngine {
     // }
 
     @Override
-    public Object eval(String script, Bindings scope) {
+    public Object eval(String script, Object scope) {
         try {
             return engine.eval(script, (Bindings) scope);
         } catch (ScriptException e) {
@@ -174,5 +174,29 @@ public class NashornEngine implements JsEngine {
     @Override
     public <T> T convert(Object object, Class<T> targetClass) {
         return targetClass.cast(ScriptUtils.convert(object, targetClass));
+    }
+
+    @Override
+    public Object put(Object bindings, String key, Object value) {
+        if (!(bindings instanceof Bindings)) {
+            throw new RuntimeException("Bindings class not supported: " + bindings.getClass());
+        }
+
+        return ((Bindings) bindings).put(key, value);
+
+    }
+
+    @Override
+    public Object remove(Object bindings, Object key) {
+        if (!(bindings instanceof Bindings)) {
+            throw new RuntimeException("Bindings class not supported: " + bindings.getClass());
+        }
+
+        return ((Bindings) bindings).remove(key);
+    }
+
+    @Override
+    public Object newNativeMap() {
+        return getEngine().createBindings();
     }
 }
