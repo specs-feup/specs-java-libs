@@ -119,8 +119,8 @@ public class JsEngineTest {
 
     @Test
     public void testNewArray() {
-        assertEquals("2,3", getEngine().toNativeArray(Arrays.asList(2, 3)).toString());
-        assertEquals("", getEngine().toNativeArray(Arrays.asList()).toString());
+        assertEquals("(2) [2, 3]", getEngine().toNativeArray(Arrays.asList(2, 3)).toString());
+        assertEquals("(0) []", getEngine().toNativeArray(Arrays.asList()).toString());
 
         // Bindings array = getEngine().toNativeArray(Arrays.asList("1, 2, 3"));
 
@@ -185,4 +185,15 @@ public class JsEngineTest {
     // System.out.println("VALUE CLASS: " + value.getClass());
     // }
 
+    // @Test
+    // public void testToNativeArray() {
+    // JsEngine engine = getEngine();
+    //
+    // int[] a = { 0 };
+    // // System.out.println("NATIVE ARRAY: " + engine.isArray(engine.toNativeArray(a)));
+    // // System.out.println("NATIVE ARRAY CLASS: " + engine.toNativeArray(Arrays.asList(0)).getClass());
+    // // assertEquals("[0, 1, 2]", engine.getValues(engine.eval("var a = [0, 1, 2]; a;")).toString());
+    // // assertEquals("[0]", engine.getValues(engine.eval("var a = {'aa' : 0}; a;")).toString());
+    //
+    // }
 }
