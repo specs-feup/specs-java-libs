@@ -115,8 +115,8 @@ public class GraalvmJsEngine implements JsEngine {
     // }
     // }
 
-    public Bindings newNativeArray() {
-        return asBindings(eval(NEW_ARRAY));
+    public Object newNativeArray() {
+        return eval(NEW_ARRAY);
         // return new GenericBindings(evalOld(NEW_ARRAY));
         // try {
         // Map<String, Object> array = (Map<String, Object>) engine.eval(NEW_ARRAY);
@@ -128,12 +128,30 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     @Override
-    public Bindings toNativeArray(Object[] values) {
+    public Value toNativeArray(Object[] values) {
         Value array = eval(NEW_ARRAY);
         for (int i = 0; i < values.length; i++) {
-            array.putMember("" + i, values[i]);
+            array.setArrayElement(i, values[i]);
         }
-        return asBindings(array);
+
+        return array;
+
+        // System.out.println("ARRAY: " + array);
+        // System.out.println("AS BINDINGS: " + asBindings(array));
+        // var bindings = asBindings(array);
+        // System.out.println("ARRAY: " + array);
+        // System.out.println("BINDINGS: " + bindings);
+
+        // return bindings;
+    }
+
+    public Object toNativeArrayV2(Object[] values) {
+        Value array = eval(NEW_ARRAY);
+        for (int i = 0; i < values.length; i++) {
+            array.setArrayElement(i, values[i]);
+        }
+
+        return array;
     }
 
     /**
@@ -286,7 +304,8 @@ public class GraalvmJsEngine implements JsEngine {
             return (Bindings) value;
         }
 
-        return new GraalvmBindings(this, asValue(value).as(Bindings.class));
+        // return new GraalvmBindings(this, asValue(value).as(Bindings.class));
+        return new GraalvmBindings(this.asValue(value));
     }
 
     @Override

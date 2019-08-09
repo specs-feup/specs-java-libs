@@ -70,7 +70,7 @@ public interface JsEngine {
      * 
      * @return a
      */
-    Bindings newNativeArray();
+    Object newNativeArray();
 
     /**
      * Converts an array of objects to a JavaScript array
@@ -79,7 +79,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    Bindings toNativeArray(Object[] values);
+    Object toNativeArray(Object[] values);
 
     /**
      * Converts a list of objects to a JavaScript array
@@ -88,7 +88,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(Collection<? extends Object> values) {
+    default Object toNativeArray(Collection<? extends Object> values) {
         return toNativeArray(values.toArray());
     }
 
@@ -99,7 +99,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(int[] values) {
+    default Object toNativeArray(int[] values) {
 
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -115,7 +115,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(float[] values) {
+    default Object toNativeArray(float[] values) {
 
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -131,7 +131,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(double[] values) {
+    default Object toNativeArray(double[] values) {
 
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -147,7 +147,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(boolean[] values) {
+    default Object toNativeArray(boolean[] values) {
 
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -163,7 +163,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(char[] values) {
+    default Object toNativeArray(char[] values) {
 
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -179,7 +179,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(byte[] values) {
+    default Object toNativeArray(byte[] values) {
 
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -195,7 +195,7 @@ public interface JsEngine {
      *            the array of values
      * @return a javascript array containing all the elements in values, with the same indexes
      */
-    default Bindings toNativeArray(short[] values) {
+    default Object toNativeArray(short[] values) {
 
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
