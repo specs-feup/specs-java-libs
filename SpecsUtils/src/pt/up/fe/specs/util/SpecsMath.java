@@ -309,7 +309,7 @@ public class SpecsMath {
      * 
      */
 
-    public static long sum(List<Number> numbers) {
+    public static long sum(List<? extends Number> numbers) {
         long acc = 0;
         for (Number number : numbers) {
             acc += number.longValue();
