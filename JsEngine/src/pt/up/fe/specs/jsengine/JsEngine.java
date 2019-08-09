@@ -14,9 +14,7 @@
 package pt.up.fe.specs.jsengine;
 
 import java.util.Collection;
-
-import javax.script.Bindings;
-import javax.script.ScriptEngine;
+import java.util.Set;
 
 /**
  * Represents the JavaScript engine used by LARA.
@@ -28,18 +26,9 @@ import javax.script.ScriptEngine;
  */
 public interface JsEngine {
 
-    ScriptEngine getEngine();
+    // ScriptEngine getEngine();
 
     ForOfType getForOfType();
-
-    /**
-     * TODO: Remove
-     * 
-     * @deprecated
-     * @return true, if you can pass a reference to 'this' from JS and modify it through a Bindings object.
-     */
-    @Deprecated
-    boolean supportsModifyingThis();
 
     /**
      * Based on this site: http://programmaticallyspeaking.com/nashorns-jsobject-in-context.html
@@ -54,7 +43,7 @@ public interface JsEngine {
 
     /// TYPE CONVERSIONS
 
-    Bindings asBindings(Object value);
+    // Bindings asBindings(Object value);
 
     boolean asBoolean(Object value);
 
@@ -216,9 +205,9 @@ public interface JsEngine {
 
     Object eval(String script, Object scope);
 
-    default Bindings createBindings() {
-        return getEngine().createBindings();
-    }
+    // default Bindings createBindings() {
+    // return getEngine().createBindings();
+    // }
 
     default void nashornWarning(String message) {
         // Do nothing
@@ -252,8 +241,24 @@ public interface JsEngine {
      */
     <T> T convert(Object object, Class<T> targetClass);
 
-    Object put(Object localScope, String key, Object value);
+    /// Engine related engine-scope operations
 
-    Object remove(Object localScope, Object key);
+    /**
+     * Sets the specified value with the specified key in the ENGINE_SCOPE Bindings of the protected context field.
+     *
+     * @param key
+     * @param value
+     */
+    void put(String key, Object value);
+
+    /// Bindings-like operations
+
+    Object put(Object bindings, String key, Object value);
+
+    Object remove(Object bindings, String key);
+
+    Set<String> keySet(Object bindings);
+
+    public Object get(Object bindings, String key);
 
 }

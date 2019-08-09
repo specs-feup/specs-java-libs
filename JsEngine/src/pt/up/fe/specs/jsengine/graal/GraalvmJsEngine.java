@@ -76,24 +76,14 @@ public class GraalvmJsEngine implements JsEngine {
         this(Collections.emptyList());
     }
 
-    @Override
-    public GraalJSScriptEngine getEngine() {
-        return engine;
-    }
+    // @Override
+    // public GraalJSScriptEngine getEngine() {
+    // return engine;
+    // }
 
     @Override
     public ForOfType getForOfType() {
         return ForOfType.NATIVE;
-    }
-
-    @Override
-    public boolean supportsModifyingThis() {
-        return true;
-        // if (nashornCompatibility) {
-        // return true;
-        // }
-        //
-        // return false;
     }
 
     public Value eval(String code) {
@@ -182,6 +172,7 @@ public class GraalvmJsEngine implements JsEngine {
 
     @Override
     public Value getBindings() {
+        // return asValue(engine.getBindings(ScriptContext.ENGINE_SCOPE));
         return engine.getPolyglotContext().getBindings("js");
         // return engine.getPolyglotContext().getPolyglotBindings();
     }
@@ -304,7 +295,12 @@ public class GraalvmJsEngine implements JsEngine {
         return engine.getPolyglotContext().asValue(object);
     }
 
-    @Override
+    /**
+     * Convenience method to handle JS maps.
+     * 
+     * @param value
+     * @return
+     */
     public Bindings asBindings(Object value) {
         if (value instanceof GraalvmBindings) {
             return (Bindings) value;
@@ -365,6 +361,8 @@ public class GraalvmJsEngine implements JsEngine {
         return asValue(object).as(targetClass);
     }
 
+    /// Bindings-like operations
+
     @Override
     public Object put(Object bindings, String key, Object value) {
         // Value bindingsValue = asValue(bindings);
@@ -376,8 +374,26 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     @Override
-    public Object remove(Object bindings, Object key) {
+    public Object remove(Object bindings, String key) {
         return asBindings(bindings).remove(key);
+    }
+
+    @Override
+    public Set<String> keySet(Object bindings) {
+        return asBindings(bindings).keySet();
+
+    }
+
+    @Override
+    public Object get(Object bindings, String key) {
+        return asBindings(bindings).get(key);
+    }
+
+    /// Engine related engine-scope operations
+
+    @Override
+    public void put(String key, Object value) {
+        engine.put(key, value);
     }
 
 }

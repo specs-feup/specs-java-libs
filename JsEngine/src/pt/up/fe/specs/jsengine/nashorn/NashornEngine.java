@@ -15,10 +15,10 @@ package pt.up.fe.specs.jsengine.nashorn;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
@@ -56,10 +56,10 @@ public class NashornEngine implements JsEngine {
         this(Collections.emptyList());
     }
 
-    @Override
-    public ScriptEngine getEngine() {
-        return engine;
-    }
+    // @Override
+    // public ScriptEngine getEngine() {
+    // return engine;
+    // }
 
     @Override
     public ForOfType getForOfType() {
@@ -67,13 +67,8 @@ public class NashornEngine implements JsEngine {
     }
 
     @Override
-    public boolean supportsModifyingThis() {
-        return true;
-    }
-
-    @Override
     public Object getBindings() {
-        return getEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+        return engine.getBindings(ScriptContext.ENGINE_SCOPE);
     }
 
     @Override
@@ -118,7 +113,7 @@ public class NashornEngine implements JsEngine {
     @Override
     public Object eval(String script) {
         try {
-            return getEngine().eval(script);
+            return engine.eval(script);
         } catch (ScriptException e) {
             throw new RuntimeException("Exception while evaluation code '" + script + "'", e);
         }
@@ -143,10 +138,10 @@ public class NashornEngine implements JsEngine {
         }
     }
 
-    @Override
-    public Bindings asBindings(Object value) {
-        return (Bindings) value;
-    }
+    // @Override
+    // public Bindings asBindings(Object value) {
+    // return (Bindings) value;
+    // }
 
     @Override
     public boolean asBoolean(Object result) {
@@ -177,6 +172,11 @@ public class NashornEngine implements JsEngine {
     }
 
     @Override
+    public Object newNativeMap() {
+        return engine.createBindings();
+    }
+
+    @Override
     public Object put(Object bindings, String key, Object value) {
         if (!(bindings instanceof Bindings)) {
             throw new RuntimeException("Bindings class not supported: " + bindings.getClass());
@@ -187,7 +187,7 @@ public class NashornEngine implements JsEngine {
     }
 
     @Override
-    public Object remove(Object bindings, Object key) {
+    public Object remove(Object bindings, String key) {
         if (!(bindings instanceof Bindings)) {
             throw new RuntimeException("Bindings class not supported: " + bindings.getClass());
         }
@@ -196,7 +196,26 @@ public class NashornEngine implements JsEngine {
     }
 
     @Override
-    public Object newNativeMap() {
-        return getEngine().createBindings();
+    public Set<String> keySet(Object bindings) {
+        if (!(bindings instanceof Bindings)) {
+            throw new RuntimeException("Bindings class not supported: " + bindings.getClass());
+        }
+
+        return ((Bindings) bindings).keySet();
     }
+
+    @Override
+    public Object get(Object bindings, String key) {
+        if (!(bindings instanceof Bindings)) {
+            throw new RuntimeException("Bindings class not supported: " + bindings.getClass());
+        }
+
+        return ((Bindings) bindings).get(key);
+    }
+
+    @Override
+    public void put(String key, Object value) {
+        engine.put(key, value);
+    }
+
 }
