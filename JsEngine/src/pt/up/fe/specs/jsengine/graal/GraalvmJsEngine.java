@@ -53,7 +53,6 @@ public class GraalvmJsEngine implements JsEngine {
         Context.Builder contextBuilder = createBuilder();
 
         this.engine = GraalJSScriptEngine.create(null, contextBuilder);
-
     }
 
     private Context.Builder createBuilder() {
@@ -301,7 +300,7 @@ public class GraalvmJsEngine implements JsEngine {
      * @param value
      * @return
      */
-    public Bindings asBindings(Object value) {
+    private Bindings asBindings(Object value) {
         if (value instanceof GraalvmBindings) {
             return (Bindings) value;
         }
