@@ -309,10 +309,19 @@ public class SpecsMath {
      * 
      */
 
-    public static long sum(List<? extends Number> numbers) {
-        long acc = 0;
+    public static double sum(List<? extends Number> numbers) {
+        double acc = 0;
         for (Number number : numbers) {
-            acc += number.longValue();
+            acc += number.doubleValue();
+        }
+
+        return acc;
+    }
+
+    public static double multiply(List<? extends Number> numbers) {
+        double acc = 1;
+        for (Number number : numbers) {
+            acc *= number.doubleValue();
         }
 
         return acc;
