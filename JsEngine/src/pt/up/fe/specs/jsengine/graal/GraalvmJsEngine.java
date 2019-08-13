@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.jsengine.graal;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -333,6 +334,10 @@ public class GraalvmJsEngine implements JsEngine {
     public Collection<Object> getValues(Object object) {
         var value = asValue(object);
 
+        if (value.isHostObject()) {
+            return Arrays.asList(value.asHostObject());
+        }
+
         // // Collection
         // if (object instanceof Collection<?>) {
         // return (Collection<Object>) object;
@@ -341,14 +346,16 @@ public class GraalvmJsEngine implements JsEngine {
         // Array
         if (value.hasArrayElements()) {
             return LongStream.range(0, value.getArraySize())
-                    .mapToObj(index -> value.getArrayElement(index))
+                    .mapToObj(index -> asValue(value.getArrayElement(index)))
+                    .map(elem -> elem.isHostObject() ? (Object) elem.asHostObject() : (Object) elem)
                     .collect(Collectors.toList());
         }
 
         // Map
         if (value.hasMembers()) {
             return value.getMemberKeys().stream()
-                    .map(key -> value.getMember(key))
+                    .map(key -> asValue(value.getMember(key)))
+                    .map(elem -> elem.isHostObject() ? (Object) elem.asHostObject() : (Object) elem)
                     .collect(Collectors.toList());
         }
 
