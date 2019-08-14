@@ -16,6 +16,8 @@ package pt.up.fe.specs.jsengine.graal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -24,6 +26,7 @@ import javax.script.Bindings;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
+import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
@@ -87,13 +90,45 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     public Value eval(String code) {
-        Value value = engine.getPolyglotContext().eval("js", code);
+        try {
+            Value value = engine.getPolyglotContext().eval("js", code);
 
-        // if (value.hasMembers() || value.hasArrayElements()) {
-        // return asBindings(value);
-        // }
+            // if (value.hasMembers() || value.hasArrayElements()) {
+            // return asBindings(value);
+            // }
 
-        return value;
+            return value;
+
+        } catch (PolyglotException e) {
+            // System.out.println("CUASE: " + e.getCause());
+            // System.out.println("Is host ex? " + ((PolyglotException) e).isHostException());
+            // System.out.println("Is guest ex? " + ((PolyglotException) e).isGuestException());
+            if (e.isHostException()) {
+                Throwable hostException = null;
+                try {
+                    hostException = e.asHostException();
+                } catch (Exception unreachableException) {
+                    // Will not take this branch since it is a host exception
+                    throw new RuntimeException("Should not launch this exception", unreachableException);
+                }
+
+                // System.out.println("PE:" + pe.getClass());
+                // System.out.println("PE CAUSE: " + pe.getCause());
+                // e.getPolyglotStackTrace();
+                // pe.printStackTrace();
+
+                throw new RuntimeException(e.getMessage(), hostException);
+            }
+
+            throw new RuntimeException("Polyglot exception while evaluating JavaScript code", e);
+        }
+
+        catch (Exception e) {
+
+            // System.out.println("class: " + e.getClass());
+            // e.printStackTrace();
+            throw new RuntimeException("Could not evaluate JavaScript code:", e);
+        }
     }
 
     // @SuppressWarnings("unchecked")
@@ -194,19 +229,89 @@ public class GraalvmJsEngine implements JsEngine {
     // }
 
     /**
+     * Adds the members in the given scope before evaluating the code.
+     */
+    @Override
+    public Object eval(String code, Object scope) {
+
+        // Context context = createBuilder().build();
+        //
+        // // Context context = newEngine.getPolyglotContext();
+        // Value jsBindings = context.getBindings("js");
+
+        Value scopeValue = asValue(scope);
+
+        Map<String, Object> previousValues = new HashMap<>();
+
+        // Add scope code, save previous values
+        for (String key : scopeValue.getMemberKeys()) {
+
+            if (asBoolean(eval("typeof variable === 'undefined'"))) {
+                previousValues.put(key, null);
+            } else {
+                previousValues.put(key, eval(key));
+            }
+
+            // if (asValue(previousValue).isNull()) {
+            // previousValues.put(key, null);
+            // } else {
+            // previousValues.put(key, previousValue);
+            // }
+
+            Value value = scopeValue.getMember(key);
+
+            // If value is undefined, set the key as undefined
+            if (value.isNull()) {
+                eval(key + " = undefined");
+                continue;
+            }
+
+            // Otherwise, add the value
+            put(key, value);
+        }
+
+        // Execute new code
+        Value result = eval(code);
+
+        // Restore previous values
+        // System.out.println("PREVIOUS VALUES: " + previousValues);
+        for (var entry : previousValues.entrySet()) {
+            var value = entry.getValue();
+            if (value == null) {
+                // Should remove entry or is undefined enough?
+                eval(entry.getKey() + " = undefined");
+            } else {
+                put(entry.getKey(), value);
+            }
+        }
+        // System.out.println("EVAL AF: " + eval("_EVAL_"));
+        return result;
+    }
+
+    /**
      * This implementation is slow, since Graal does not support sharing Contexts between engines.
      * 
      * <p>
      * A new engine will be created, and the contents of the given scope will be converted to code and loaded into the
      * new engine, before executing the code.
      */
-    @Override
-    public Object eval(String code, Object scope) {
+    public Object evalOld(String code, Object scope) {
+        // try {
+        // engine.getPolyglotContext().eval("js", code);
+        //
+        //
+        // System.out.println("ENGINE CONTEXT: " + engine.getPolyglotContext());
+        // return engine.eval(code, asBindings(scope));
+        // } catch (ScriptException e) {
+        // throw new RuntimeException("Could not evaluate script with custom scope:\n" + code, e);
+        // }
 
         // var newEngine = GraalJSScriptEngine.create(engine.getPolyglotEngine(), contextBuilder);
         // Context context = Context.create("js");
         // Context context = Context.newBuilder("js").build();
         Context context = createBuilder().build();
+        // Context context = engine.getPolyglotContext();
+
         // Context context = contextBuilder.build();
 
         // Value b = newEngine.getPolyglotContext().getBindings("js");
@@ -285,6 +390,7 @@ public class GraalvmJsEngine implements JsEngine {
         // Value result = eval(code);
         // engine.setBindings(previousBindings, ScriptContext.ENGINE_SCOPE);
         // return result;
+
     }
 
     public Value asValue(Object object) {
