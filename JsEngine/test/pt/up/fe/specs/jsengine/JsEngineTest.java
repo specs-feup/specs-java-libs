@@ -229,7 +229,7 @@ public class JsEngineTest {
         // "console.log(person.firstName); // Jack\r\n" +
         // "console.log(person.lastName) // Franklin";
 
-        assertEquals("Jimmy Smith extraName", engine.eval(code));
+        assertEquals("Jimmy Smith extraName", engine.eval(code).toString());
     }
 
     @Test
