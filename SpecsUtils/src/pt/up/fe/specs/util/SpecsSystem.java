@@ -37,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -76,6 +77,7 @@ public class SpecsSystem {
     private static final boolean IS_LINUX = System.getProperty("os.name").toLowerCase().startsWith("linux");
 
     private static final Map<String, Method> CACHED_METHODS = new HashMap<>();
+    private static final Map<String, Optional<Field>> CACHED_FIELDS = new HashMap<>();
 
     /**
      * Helper method which receives the command and the working directory instead of the builder.
@@ -1440,8 +1442,8 @@ public class SpecsSystem {
             index++;
         }
 
-        // Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
-        Class<?> invokingClass = object.getClass();
+        Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
+        // Class<?> invokingClass = object.getClass();
         // Object invokingObject = object instanceof Class ? null : object;
         // If method is static, object will be ignored
         Object invokingObject = object;
@@ -1506,6 +1508,32 @@ public class SpecsSystem {
         return invokingMethod;
     }
 
+    private static String getFieldId(Class<?> invokingClass, String fieldName) {
+        StringBuilder fieldId = new StringBuilder();
+
+        fieldId.append(invokingClass.getName()).append("::").append(fieldName);
+
+        return fieldId.toString();
+    }
+
+    public static Optional<Field> getField(Class<?> invokingClass, String fieldName) {
+        String fieldId = getFieldId(invokingClass, fieldName);
+        return CACHED_FIELDS.computeIfAbsent(fieldId, key -> findField(invokingClass, fieldName));
+    }
+
+    private static Optional<Field> findField(Class<?> invokingClass, String fieldName) {
+
+        try {
+            return Optional.of(invokingClass.getField(fieldName));
+        } catch (NoSuchFieldException e1) {
+            // No field, return empty
+            return Optional.empty();
+        } catch (Exception e) {
+            throw new RuntimeException("Could not get field '" + fieldName + "' from object of class" + invokingClass,
+                    e);
+        }
+    }
+
     /**
      * Invokes the given method as a property. If the method with name 'foo()' could not be found, looks for a .getFoo()
      * method.
@@ -1515,13 +1543,22 @@ public class SpecsSystem {
      * @return
      */
     public static Object invokeAsGetter(Object object, String methodName) {
-        // Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
-        Class<?> invokingClass = object.getClass();
+        Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
+        // Class<?> invokingClass = object.getClass();
 
-        // Assume getter is not used for static properties
-        // Object invokingObject = object;
+        // Check if getter is a field
+        var field = getField(invokingClass, methodName);
 
-        // TODO: Check if has public field with the given name?
+        if (field.isPresent()) {
+            return field.map(f -> {
+                try {
+                    return f.get(object);
+                } catch (Exception e) {
+                    throw new RuntimeException(
+                            "Could not get value from field '" + methodName + "' in class " + invokingClass, e);
+                }
+            }).get();
+        }
 
         // Check if it as a method with the same name and arity 0
         Method invokingMethod = getMethod(invokingClass, methodName);

@@ -13,14 +13,39 @@
 
 package pt.up.fe.specs.util;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 public class SpecsSystemTest {
+
+    public static final String STATIC_FIELD = "a_static_field";
+    private static final int A_NUMBER = 10;
+
+    public static int getStaticNumber() {
+        return A_NUMBER;
+    }
+
+    public int getNumber() {
+        return 20;
+    }
 
     @Test
     public void testJavaVersion() {
         // Just ensure there is no exception thrown
         System.out.println(SpecsSystem.getJavaVersionNumber());
+    }
+
+    @Test
+    public void testInvokeAsGetter() {
+        // Field
+        assertEquals("a_static_field", SpecsSystem.invokeAsGetter(SpecsSystemTest.class, "STATIC_FIELD"));
+
+        // Static Method
+        assertEquals(10, SpecsSystem.invokeAsGetter(SpecsSystemTest.class, "staticNumber"));
+
+        // Instance Method
+        assertEquals(20, SpecsSystem.invokeAsGetter(new SpecsSystemTest(), "number"));
     }
 
 }
