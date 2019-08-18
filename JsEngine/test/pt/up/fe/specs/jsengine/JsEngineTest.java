@@ -29,12 +29,17 @@ import org.junit.Test;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class JsEngineTest {
 
     // private static final Lazy<JsEngine> GRAAL_JS = Lazy.newInstance(() -> JsEngineType.GRAALVM.newEngine());
     // private static final Lazy<JsEngine> NASHORN = Lazy.newInstance(() -> JsEngineType.NASHORN.newEngine());
+
+    private static final String getResource(String resource) {
+        return SpecsIo.getResource("pt/up/fe/specs/jsengine/test/" + resource);
+    }
 
     private JsEngine getEngine() {
         return JsEngineType.GRAALVM.newEngine();
@@ -201,4 +206,48 @@ public class JsEngineTest {
     // // assertEquals("[0]", engine.getValues(engine.eval("var a = {'aa' : 0}; a;")).toString());
     //
     // }
+
+    @Test
+    public void testGetterSetter() {
+        var engine = JsEngineType.GRAALVM.newEngine();
+
+        String code = "var person = {\r\n" +
+                "    firstName: 'Jimmy',\r\n" +
+                "    lastName: 'Smith',\r\n" +
+                "    get fullName() {\r\n" +
+                "        return this.firstName + ' ' + this.lastName + ' extraName';\r\n" +
+                "    },\r\n" +
+                "    set fullName (name) {\r\n" +
+                "        var words = name.toString().split(' ');\r\n" +
+                "        this.firstName = words[0] || '';\r\n" +
+                "        this.lastName = words[1] || '';\r\n" +
+                "    }\r\n" +
+                "}\r\n" +
+                "\r\n" +
+                "person.fullName;\r\n";
+        // +
+        // "console.log(person.firstName); // Jack\r\n" +
+        // "console.log(person.lastName) // Franklin";
+
+        assertEquals("Jimmy Smith extraName", engine.eval(code));
+    }
+
+    @Test
+    public void testAccessors() {
+
+        var engine = JsEngineType.GRAALVM_COMPAT.newEngine();
+        var result = engine.eval("var FileClass = Java.type('java.io.File');" +
+                "var file = new FileClass(\"myFile.md\");" +
+                "file.name;");
+
+        assertEquals("myFile.md", result.toString());
+    }
+
+    @Test
+    public void testClosures() {
+        var engine = JsEngineType.GRAALVM.newEngine();
+        var result = engine.eval(getResource("closures.js"));
+
+        assertEquals("(2) [10, 20]", result.toString());
+    }
 }
