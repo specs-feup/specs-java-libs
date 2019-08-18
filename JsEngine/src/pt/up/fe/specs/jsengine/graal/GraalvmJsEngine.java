@@ -116,7 +116,6 @@ public class GraalvmJsEngine implements JsEngine {
                 // System.out.println("PE CAUSE: " + pe.getCause());
                 // e.getPolyglotStackTrace();
                 // pe.printStackTrace();
-
                 throw new RuntimeException(e.getMessage(), hostException);
             }
 
@@ -494,6 +493,12 @@ public class GraalvmJsEngine implements JsEngine {
     @Override
     public void put(String key, Object value) {
         engine.put(key, value);
+    }
+
+    @Override
+    public boolean supportsProperties() {
+        // TODO: use nashorn compatibility
+        return false;
     }
 
 }

@@ -41,6 +41,14 @@ public interface JsEngine {
 
     String stringify(Object object);
 
+    /// ENGINE FEATURES
+
+    /**
+     * 
+     * @return if true, the engine can automatically transform obj.prop to obj.getProp(). False otherwise
+     */
+    boolean supportsProperties();
+
     /// TYPE CONVERSIONS
 
     // Bindings asBindings(Object value);

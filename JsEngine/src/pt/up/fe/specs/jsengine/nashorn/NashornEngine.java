@@ -218,4 +218,9 @@ public class NashornEngine implements JsEngine {
         engine.put(key, value);
     }
 
+    @Override
+    public boolean supportsProperties() {
+        return true;
+    }
+
 }
