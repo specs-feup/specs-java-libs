@@ -21,6 +21,7 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -29,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -72,6 +74,8 @@ public class SpecsSystem {
     private static final Lazy<Boolean> IS_DEBUG = Lazy.newInstance(() -> new File("debug").isFile());
 
     private static final boolean IS_LINUX = System.getProperty("os.name").toLowerCase().startsWith("linux");
+
+    private static final Map<String, Method> CACHED_METHODS = new HashMap<>();
 
     /**
      * Helper method which receives the command and the working directory instead of the builder.
@@ -1424,6 +1428,118 @@ public class SpecsSystem {
             return aClass.isInstance(value);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Could not find class '" + className + "'", e);
+        }
+    }
+
+    public static Object invoke(Object object, String method, Object... args) {
+
+        Class<?>[] types = new Class[args.length];
+        int index = 0;
+        for (var arg : args) {
+            types[index] = arg.getClass();
+            index++;
+        }
+
+        // Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
+        Class<?> invokingClass = object.getClass();
+        // Object invokingObject = object instanceof Class ? null : object;
+        // If method is static, object will be ignored
+        Object invokingObject = object;
+
+        // Choose best method
+        Method invokingMethod = getMethod(invokingClass, method, types);
+
+        if (invokingMethod == null) {
+            throw new RuntimeException("Could not find method '" + method + "' for object " + object + " and arguments "
+                    + Arrays.asList(types));
+        }
+
+        try {
+            return invokingMethod.invoke(invokingObject, args);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while invonking method '" + method + "'", e);
+        }
+        // return object.class.getMethod(property, arguments).invoke(object, arguments);
+    }
+
+    public static Method getMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
+        // Use methodId to cache results
+        String methodId = getMethodId(invokingClass, methodName, types);
+        return CACHED_METHODS.computeIfAbsent(methodId, key -> findMethod(invokingClass, methodName, types));
+    }
+
+    private static String getMethodId(Class<?> invokingClass, String methodName, Class<?>... types) {
+        StringBuilder methodId = new StringBuilder();
+
+        methodId.append(invokingClass.getName());
+        methodId.append("::").append(methodName);
+        for (var type : types) {
+            methodId.append(",");
+            methodId.append(type.getName());
+        }
+
+        return methodId.toString();
+    }
+
+    private static Method findMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
+        Method invokingMethod = null;
+        top: for (var classMethod : invokingClass.getMethods()) {
+            // Check name
+            if (!classMethod.getName().equals(methodName)) {
+                continue;
+            }
+
+            // Check if types are compatible
+            var paramTypes = classMethod.getParameterTypes();
+            if (paramTypes.length != types.length) {
+                continue;
+            }
+
+            for (int i = 0; i < paramTypes.length; i++) {
+                if (!paramTypes[i].isAssignableFrom(types[i])) {
+                    continue top;
+                }
+            }
+
+            invokingMethod = classMethod;
+        }
+        return invokingMethod;
+    }
+
+    /**
+     * Invokes the given method as a property. If the method with name 'foo()' could not be found, looks for a .getFoo()
+     * method.
+     * 
+     * @param object
+     * @param methodName
+     * @return
+     */
+    public static Object invokeAsGetter(Object object, String methodName) {
+        // Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
+        Class<?> invokingClass = object.getClass();
+
+        // Assume getter is not used for static properties
+        // Object invokingObject = object;
+
+        // TODO: Check if has public field with the given name?
+
+        // Check if it as a method with the same name and arity 0
+        Method invokingMethod = getMethod(invokingClass, methodName);
+
+        // If null, try camelCase getter
+        if (invokingMethod == null) {
+            String getterName = "get" + methodName.substring(0, 1).toUpperCase()
+                    + methodName.substring(1, methodName.length());
+            return invoke(object, getterName);
+        }
+
+        SpecsCheck.checkNotNull(invokingMethod,
+                () -> "Could not find method '" + methodName + "' for object " + object);
+
+        try {
+            return invokingMethod.invoke(object);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while invoking method '" + methodName + "'", e);
         }
     }
 }
