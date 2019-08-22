@@ -21,15 +21,20 @@
        xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info
         organisation="specs.fe.up.pt"
-        module="WeaverInterface"
+        module="JsEngine"
         status="release">
 	</info>
 	
-	<dependencies>
+	<dependencies>	
 
-		<dependency org="org.graalvm.sdk" name="graal-sdk" rev="19.0.0"/>
-		<dependency org="org.graalvm.js" name="js" rev="19.0.0"/>
-		<dependency org="org.graalvm.js" name="js-scriptengine" rev="19.0.0"/>
+		<dependency org="org.graalvm.js" name="js-scriptengine" rev="19.1.1" conf="default"/>
+		<dependency org="org.graalvm.js" name="js" rev="19.1.1">
+			<!-- Provokes a conflict when repackaging the JAR -->	
+			<exclude module="regex"/>
+		</dependency>
+		<!--<dependency org="org.graalvm.sdk" name="graal-sdk" rev="19.1.1"/>-->
+
+
 		
 	</dependencies>
 </ivy-module>
