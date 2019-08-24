@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <eclipse-userlibraries version="2">
-	<library name="symja" systemlibrary="false">
-        <archive path="/SupportJavaLibs/libs/symja/matheclipse-core-1.0.0-SNAPSHOT-jar-with-dependencies.jar"/>	
-	</library>
-	<library name="slf4j-simple" systemlibrary="false">
-        <archive path="/SupportJavaLibs/libs/slf4j-simple/slf4j-simple-1.7.25.jar"/>	
-	</library>	
+    <library name="onejar" systemlibrary="false">
+        <archive path="/SupportJavaLibs/libs/onejar/one-jar-ant-task-0.97.jar"/>
+    </library>
+    <library name="slf4j-simple" systemlibrary="false">
+        <archive path="/SupportJavaLibs/libs/slf4j-simple/slf4j-simple-1.7.25.jar"/>
+    </library>
+    <library name="symja" systemlibrary="false">
+        <archive path="/SupportJavaLibs/libs/symja/matheclipse-core-1.0.0-SNAPSHOT-jar-with-dependencies.jar"/>
+    </library>
 </eclipse-userlibraries>
