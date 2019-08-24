@@ -53,6 +53,7 @@ public class EclipseDeployment {
     private static final Map<JarType, Consumer<EclipseDeploymentData>> DEPLOY_BUILDER;
     static {
         DEPLOY_BUILDER = new HashMap<>();
+        EclipseDeployment.DEPLOY_BUILDER.put(JarType.OneJar, EclipseDeployment::buildOneJar);
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.RepackJar, EclipseDeployment::buildJarRepack);
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.UseJarInJar, EclipseDeployment::buildJarInJar);
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.MavenRepository, EclipseDeployment::buildMavenRepository);
@@ -403,5 +404,63 @@ public class EclipseDeployment {
 
         SpecsLogs.msgInfo(
                 "Artifacts generated, to deploy them execute the script '" + scriptFile.getAbsolutePath() + "'");
+    }
+
+    /**
+     * Builds a JAR with additional library JARs inside, using Simon Tuffs One-JAR.
+     */
+    private static void buildOneJar(EclipseDeploymentData data) {
+        ClasspathParser parser = ClasspathParser.newFromWorkspace(data.workspaceFolder);
+
+        ClasspathFiles classpathFiles = parser.getClasspath(data.projetName);
+
+        Collection<String> dependentProjects = parser.getDependentProjects(data.projetName);
+        Collection<String> projectsWithIvy = BuildUtils.filterProjectsWithIvy(parser, dependentProjects);
+        Collection<String> ivyFolders = projectsWithIvy.stream()
+                .map(ivyProject -> BuildUtils.getIvyJarFoldername(parser.getClasspath(ivyProject).getProjectFolder()))
+                .collect(Collectors.toList());
+
+        String mainFileset = DeployUtils.buildMainFileset(parser, data.projetName);
+        String libFileset = DeployUtils.buildLibFileset(parser, data.projetName, ivyFolders);
+
+        String jarList = DeployUtils.buildJarList(classpathFiles, ivyFolders);
+
+        // Replace fields in template
+        String template = SpecsIo.getResource(DeployResource.DEPLOY_ONE_JAR_TEMPLATE);
+
+        // Output JAR
+        File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+
+        template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
+        template = template.replace("<MAIN_CLASS>", data.mainClass);
+        template = template.replace("<JAR_LIST>", jarList);
+        template = template.replace("<MAIN_FILESET>", mainFileset);
+        template = template.replace("<LIB_FILESET>", libFileset);
+
+        template = template.replace("<IVY_RESOLVE>", BuildUtils.getResolveTasks(parser, dependentProjects));
+        template = template.replace("<USE_IVY>", BuildUtils.getIvyDependency(parser));
+        template = template.replace("<IVY_DEPENDENCIES>", BuildUtils.getIvyDepends(projectsWithIvy));
+        template = template.replace("<DELETE_IVY>", DeployUtils.getDeleteIvyFolders(ivyFolders));
+
+        // Save script
+        File buildFile = new File(EclipseDeployment.BUILD_FILE);
+        SpecsIo.write(buildFile, template);
+        System.out.println("BUILD.XML:\n" + template);
+        // Run script
+        // ProcessUtils.run(Arrays.asList("ant", "build.xml"), IoUtils.getWorkingDir().getPath());
+        // Launch ant
+        Project project = new Project();
+        project.init();
+
+        ProjectHelper.configureProject(project, buildFile);
+
+        project.addBuildListener(DeployUtils.newStdoutListener());
+        project.executeTarget(project.getDefaultTarget());
+        // System.out.println("OUTPUT JAR:" + outputJar.getAbsolutePath());
+        // Check if jar file exists
+        if (!outputJar.isFile()) {
+            throw new RuntimeException("Could not create output JAR '" + outputJar.getAbsolutePath() + "'");
+        }
+
     }
 }

@@ -453,6 +453,74 @@ public class DeployUtils {
         return fileset.toString();
     }
 
+    public static String buildLibFileset(ClasspathParser parser, String projetName, Collection<String> ivyFolders) {
+        ClasspathFiles classpathFiles = parser.getClasspath(projetName);
+
+        final String prefix = "         ";
+        StringBuilder fileset = new StringBuilder();
+
+        // Add JAR Files
+        // System.out.println("JAR FILES: " + classpathFiles.getJarFiles());
+
+        fileset.append(DeployUtils.getJarFileset(classpathFiles.getJarFiles()));
+        // for (File jarFile : classpathFiles.getJarFiles()) {
+        // String line = DeployUtils.getZipfileset(jarFile);
+        //
+        // fileset.append(prefix);
+        // fileset.append(line);
+        // fileset.append("\n");
+        // }
+
+        // Add Ivy folders
+        for (String ivyFolder : ivyFolders) {
+            String ivySet = getIvyJars(ivyFolder);
+
+            fileset.append(ivySet).append("\n");
+        }
+
+        return fileset.toString();
+    }
+
+    private static String getJarFileset(List<File> jarFiles) {
+        StringBuilder jarFileset = new StringBuilder();
+        final String prefix = "         ";
+
+        for (File jarFile : jarFiles) {
+            jarFileset.append(prefix).append("<fileset dir=\"" + jarFile.getParentFile().getAbsolutePath() + "\">\n");
+            jarFileset.append(prefix).append(prefix)
+                    .append("<include name=\"")
+                    .append(jarFile.getName())
+                    .append("\"/>\n");
+            jarFileset.append(prefix).append("</fileset>\n");
+        }
+        /*
+        jarFileset.append(prefix).append("<fileset>\n");
+        
+        for (File jarFile : jarFiles) {
+            jarFileset.append(prefix).append(prefix)
+                    .append("<include name=\"")
+                    .append(jarFile.getAbsolutePath())
+                    .append("\"/>\n");
+        }
+        
+        jarFileset.append("</fileset>\n");
+        */
+        return jarFileset.toString();
+    }
+
+    public static String buildMainFileset(ClasspathParser parser, String projetName) {
+
+        final String prefix = "         ";
+        StringBuilder fileset = new StringBuilder();
+
+        // Add projects filesets
+        buildProjectsFileset(parser, projetName).stream()
+                .map(projectFileset -> prefix + projectFileset + "\n")
+                .forEach(fileset::append);
+
+        return fileset.toString();
+    }
+
     public static String getIvySet(String ivyFolder, boolean extractJars) {
         return extractJars ? getIvyJarsExtracted(ivyFolder) : getIvyJars(ivyFolder);
     }

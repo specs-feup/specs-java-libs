@@ -42,55 +42,55 @@ public class EclipseDeploymentLauncher implements AppDefaultConfig, AppSource {
      *            the command line arguments
      */
     public static void main(String[] args) {
-	SpecsSystem.programStandardInit();
+        SpecsSystem.programStandardInit();
 
-	SpecsIo.resourceCopy(getResources());
+        SpecsIo.resourceCopy(getResources());
 
-	EclipseDeploymentLauncher app = new EclipseDeploymentLauncher();
+        EclipseDeploymentLauncher app = new EclipseDeploymentLauncher();
 
-	if (args.length > 0) {
-	    GuiHelperUtils.trySingleConfigMode(args, app);
-	    return;
-	}
+        if (args.length > 0) {
+            GuiHelperUtils.trySingleConfigMode(args, app);
+            return;
+        }
 
-	SimpleGui gui = new SimpleGui(app);
+        SimpleGui gui = new SimpleGui(app);
 
-	gui.setTitle("EclipseDeployment v0.1");
-	gui.execute();
+        gui.setTitle("EclipseDeployment v0.1");
+        gui.execute();
     }
 
     public static List<String> getResources() {
-	List<String> resources = new ArrayList<>();
-	resources.addAll(baseResourceFiles);
-	resources.addAll(SpecsProperty.getResources());
-	return resources;
+        List<String> resources = new ArrayList<>();
+        resources.addAll(baseResourceFiles);
+        resources.addAll(SpecsProperty.getResources());
+        return resources;
     }
 
     @Override
     public int execute(File setupFile) throws InterruptedException {
-	SetupData setupData = GuiHelperUtils.loadData(setupFile);
+        SetupData setupData = GuiHelperUtils.loadData(setupFile);
 
-	// EclipseDeploymentGlobalData globalData = EclipseDeploymentGlobalSetup.getData();
+        // EclipseDeploymentGlobalData globalData = EclipseDeploymentGlobalSetup.getData();
 
-	EclipseDeploymentData data = null;
-	try {
-	    data = EclipseDeploymentSetup.newData(setupData);
-	} catch (Exception e) {
-	    SpecsLogs.msgWarn("Exception while building configuration data.", e);
-	    return -1;
-	}
+        EclipseDeploymentData data = null;
+        try {
+            data = EclipseDeploymentSetup.newData(setupData);
+        } catch (Exception e) {
+            SpecsLogs.msgWarn("Exception while building configuration data.", e);
+            return -1;
+        }
 
-	if (data == null) {
-	    SpecsLogs.msgWarn("Configuration data is null.");
-	    return -1;
-	}
+        if (data == null) {
+            SpecsLogs.msgWarn("Configuration data is null.");
+            return -1;
+        }
 
-	EclipseDeployment appBody = new EclipseDeployment(data);
+        EclipseDeployment appBody = new EclipseDeployment(data);
 
-	int result = appBody.execute();
-	SpecsLogs.msgInfo("Done");
+        int result = appBody.execute();
+        SpecsLogs.msgInfo("Done");
 
-	return result;
+        return result;
     }
 
     /* (non-Javadoc)
@@ -98,21 +98,21 @@ public class EclipseDeploymentLauncher implements AppDefaultConfig, AppSource {
      */
     @Override
     public App newInstance() {
-	return new EclipseDeploymentLauncher();
+        return new EclipseDeploymentLauncher();
     }
 
     @Override
     public SetupDefinition getEnumKeys() {
-	return SetupDefinition.create(EclipseDeploymentSetup.class);
+        return SetupDefinition.create(EclipseDeploymentSetup.class);
     }
 
     @Override
     public String defaultConfigFile() {
-	return DEFAULT_CONFIG;
+        return DEFAULT_CONFIG;
     }
 
     private final static String DEFAULT_CONFIG = "default.config";
     private final static List<String> baseResourceFiles = Arrays.asList(
-	    DeployResource.JAR_IN_JAR_LOADER.getResource());
+            DeployResource.JAR_IN_JAR_LOADER.getResource());
 
 }

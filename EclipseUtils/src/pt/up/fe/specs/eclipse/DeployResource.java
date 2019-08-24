@@ -21,6 +21,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
  */
 public enum DeployResource implements ResourceProvider {
 
+    DEPLOY_ONE_JAR_TEMPLATE("deploy/deploy_onejar.xml.template"),
     DEPLOY_JAR_IN_JAR_TEMPLATE("deploy.xml.template"),
     DEPLOY_REPACK_TEMPLATE("deploy/deploy_repack.xml.template"),
     DEPLOY_MAVEN_REPOSITORY_TEMPLATE("deploy/deploy_maven_repo.xml.template"),
