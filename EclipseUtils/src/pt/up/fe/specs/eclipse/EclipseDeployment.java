@@ -337,7 +337,7 @@ public class EclipseDeployment {
         // Save script
         File buildFile = new File(EclipseDeployment.BUILD_FILE);
         SpecsIo.write(buildFile, template);
-        System.out.println("XML: " + template);
+
         // Run script
         // ProcessUtils.run(Arrays.asList("ant", "build.xml"), IoUtils.getWorkingDir().getPath());
         // Launch ant

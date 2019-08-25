@@ -16,6 +16,7 @@ package pt.up.fe.specs.eclipse.Utilities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -656,10 +657,23 @@ public class DeployUtils {
     public static String buildJarZipfileset(List<File> jarFiles, String libFoldername) {
         StringBuilder jarZipfileset = new StringBuilder();
 
+        Set<String> addedJars = new HashSet<>();
+
+        int skippedJars = 0;
         for (File jarFile : jarFiles) {
+            String jarFilename = jarFile.getName();
+
+            // Skip JARs that have been already added
+            if (!addedJars.add(jarFilename)) {
+                skippedJars++;
+                continue;
+            }
+
             jarZipfileset.append("<zipfileset dir=\"" + jarFile.getParentFile().getAbsolutePath()
-                    + "\" includes=\"" + jarFile.getName() + "\" prefix=\"" + libFoldername + "\"/>\n");
+                    + "\" includes=\"" + jarFilename + "\" prefix=\"" + libFoldername + "\"/>\n");
         }
+
+        SpecsLogs.debug("Skipped " + skippedJars + " out of " + jarFiles.size());
 
         return jarZipfileset.toString();
     }
