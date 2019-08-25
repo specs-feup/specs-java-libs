@@ -124,8 +124,9 @@ public class JsEngineTest {
 
     @Test
     public void testNewArray() {
-        assertEquals("(2) [2, 3]", getEngine().toNativeArray(Arrays.asList(2, 3)).toString());
-        assertEquals("(0) []", getEngine().toNativeArray(Arrays.asList()).toString());
+        var engine = getEngine();
+        assertEquals("[2, 3]", engine.getValues(engine.toNativeArray(Arrays.asList(2, 3))).toString());
+        assertEquals("[]", engine.getValues(engine.toNativeArray(Arrays.asList())).toString());
 
         // Bindings array = getEngine().toNativeArray(Arrays.asList("1, 2, 3"));
 
@@ -248,6 +249,6 @@ public class JsEngineTest {
         var engine = JsEngineType.GRAALVM.newEngine();
         var result = engine.eval(getResource("closures.js"));
 
-        assertEquals("(2) [10, 20]", result.toString());
+        assertEquals("[10, 20]", engine.getValues(result).toString());
     }
 }
