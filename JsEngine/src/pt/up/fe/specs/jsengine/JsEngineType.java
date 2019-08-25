@@ -34,6 +34,10 @@ public enum JsEngineType {
      * @return
      */
     public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses) {
+        // System.out.println("TEST CLASSLOADER " + Test.class.getClassLoader());
+        // System.out.println("JS ENGINE CLASS LOADER: " + GraalJSScriptEngine.class.getClassLoader());
+        // System.out.println("THREAD CLASS LOADER: " + Thread.currentThread().getContextClassLoader());
+        // Thread.currentThread().setContextClassLoader(GraalJSScriptEngine.class.getClassLoader());
         switch (this) {
         case NASHORN:
             return new NashornEngine(forbiddenClasses);

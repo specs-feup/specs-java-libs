@@ -55,8 +55,14 @@ public class GraalvmJsEngine implements JsEngine {
         this.nashornCompatibility = nashornCompatibility;
 
         Context.Builder contextBuilder = createBuilder();
-
+        // System.out.println("CLASS LOADER: " + GraalvmJsEngine.class.getClassLoader());
+        // Thread.currentThread().setContextClassLoader(classLoader);
         this.engine = GraalJSScriptEngine.create(null, contextBuilder);
+        // List<ScriptEngineFactory> engines = (new ScriptEngineManager()).getEngineFactories();
+        // System.out.println("Available Engines");
+        // for (ScriptEngineFactory f : engines) {
+        // System.out.println(f.getLanguageName() + " " + f.getEngineName() + " " + f.getNames().toString());
+        // }
     }
 
     private Context.Builder createBuilder() {
@@ -91,6 +97,7 @@ public class GraalvmJsEngine implements JsEngine {
 
     public Value eval(String code) {
         try {
+            // Value value = asValue(engine.eval(code));
             Value value = engine.getPolyglotContext().eval("js", code);
 
             // if (value.hasMembers() || value.hasArrayElements()) {
@@ -126,7 +133,7 @@ public class GraalvmJsEngine implements JsEngine {
 
             // System.out.println("class: " + e.getClass());
             // e.printStackTrace();
-            throw new RuntimeException("Could not evaluate JavaScript code:", e);
+            throw new RuntimeException("Could not evaluate JavaScript code", e);
         }
     }
 
