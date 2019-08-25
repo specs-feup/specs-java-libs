@@ -53,6 +53,7 @@ public class EclipseDeployment {
     private static final Map<JarType, Consumer<EclipseDeploymentData>> DEPLOY_BUILDER;
     static {
         DEPLOY_BUILDER = new HashMap<>();
+        EclipseDeployment.DEPLOY_BUILDER.put(JarType.SubfolderZip, EclipseDeployment::buildSubfolderZip);
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.OneJar, EclipseDeployment::buildOneJar);
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.RepackJar, EclipseDeployment::buildJarRepack);
         EclipseDeployment.DEPLOY_BUILDER.put(JarType.UseJarInJar, EclipseDeployment::buildJarInJar);
@@ -259,6 +260,84 @@ public class EclipseDeployment {
         File buildFile = new File(EclipseDeployment.BUILD_FILE);
         SpecsIo.write(buildFile, template);
 
+        // Run script
+        // ProcessUtils.run(Arrays.asList("ant", "build.xml"), IoUtils.getWorkingDir().getPath());
+        // Launch ant
+        Project project = new Project();
+        project.init();
+
+        ProjectHelper.configureProject(project, buildFile);
+
+        project.addBuildListener(DeployUtils.newStdoutListener());
+        project.executeTarget(project.getDefaultTarget());
+        // System.out.println("OUTPUT JAR:" + outputJar.getAbsolutePath());
+        // Check if jar file exists
+        if (!outputJar.isFile()) {
+            throw new RuntimeException("Could not create output JAR '" + outputJar.getAbsolutePath() + "'");
+        }
+
+    }
+
+    /**
+     * Creates a zip file with a JAR and additional library JARs inside a folder.
+     */
+    private static void buildSubfolderZip(EclipseDeploymentData data) {
+        ClasspathParser parser = ClasspathParser.newFromWorkspace(data.workspaceFolder);
+
+        ClasspathFiles classpathFiles = parser.getClasspath(data.projetName);
+
+        Collection<String> dependentProjects = parser.getDependentProjects(data.projetName);
+        Collection<String> projectsWithIvy = BuildUtils.filterProjectsWithIvy(parser, dependentProjects);
+        Collection<String> ivyFolders = projectsWithIvy.stream()
+                .map(ivyProject -> BuildUtils.getIvyJarFoldername(parser.getClasspath(ivyProject).getProjectFolder()))
+                .collect(Collectors.toList());
+
+        String mainFileset = DeployUtils.buildMainFileset(parser, data.projetName);
+        // String jarList = DeployUtils.buildJarList(classpathFiles, ivyFolders);
+
+        // Replace fields in template
+        String template = SpecsIo.getResource(DeployResource.DEPLOY_SUBFOLDER_ZIP_TEMPLATE);
+
+        // Output JAR
+        File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+        String outputJarname = outputJar.getName();
+        String outputJarFoldername = outputJar.getParent();
+        String libFoldername = data.projetName + "_lib";
+
+        List<File> jarFileList = DeployUtils.getJarFiles(classpathFiles.getJarFiles(), ivyFolders, false);
+
+        String jarList = jarFileList.stream()
+                .map(jarFile -> libFoldername + "/" + jarFile.getName())
+                .collect(Collectors.joining(" "));
+
+        String jarZipfileset = DeployUtils.buildJarZipfileset(jarFileList, libFoldername);
+
+        // Output Zip
+        File outputZip = new File(outputJar.getParentFile(), SpecsIo.removeExtension(outputJar) + ".zip");
+
+        // Set output file as being the zip
+        data.setResultFile(outputZip);
+
+        template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
+        template = template.replace("<OUTPUT_JAR_FOLDER>", outputJarFoldername);
+        template = template.replace("<OUTPUT_JAR_FILENAME>", outputJarname);
+        template = template.replace("<OUTPUT_ZIP_FILE>", outputZip.getAbsolutePath());
+        template = template.replace("<MAIN_CLASS>", data.mainClass);
+        template = template.replace("<JAR_LIST>", jarList);
+        template = template.replace("<MAIN_FILESET>", mainFileset);
+        template = template.replace("<JAR_ZIPFILESET>", jarZipfileset);
+
+        // System.out.println("IVY RESOLVE 1:\n" + BuildUtils.getResolveTasks(parser, dependentProjects));
+        // System.out.println("IVY RESOLVE 2:\n" + BuildUtils.getResolveTask(classpathFiles));
+        template = template.replace("<IVY_RESOLVE>", BuildUtils.getResolveTasks(parser, dependentProjects));
+        template = template.replace("<USE_IVY>", BuildUtils.getIvyDependency(parser));
+        template = template.replace("<IVY_DEPENDENCIES>", BuildUtils.getIvyDepends(projectsWithIvy));
+        template = template.replace("<DELETE_IVY>", DeployUtils.getDeleteIvyFolders(ivyFolders));
+        // System.out.println("BUILD FILE:\n" + template);
+        // Save script
+        File buildFile = new File(EclipseDeployment.BUILD_FILE);
+        SpecsIo.write(buildFile, template);
+        System.out.println("XML: " + template);
         // Run script
         // ProcessUtils.run(Arrays.asList("ant", "build.xml"), IoUtils.getWorkingDir().getPath());
         // Launch ant

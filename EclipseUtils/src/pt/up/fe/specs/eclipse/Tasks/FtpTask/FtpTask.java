@@ -34,22 +34,23 @@ public class FtpTask implements TaskExecutor {
      */
     @Override
     public void execute(SetupData setup, EclipseDeploymentData data) {
-	// Get SftpData
-	FtpData ftpData = FtpSetup.newData(setup);
+        // Get SftpData
+        FtpData ftpData = FtpSetup.newData(setup);
 
-	File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+        // File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+        File outputJar = DeployUtils.getResultFile(data);
 
-	// Check if it needs name a name change
-	outputJar = TaskUtils.updateOutput(outputJar, ftpData.outputJarFilename);
+        // Check if it needs name a name change
+        outputJar = TaskUtils.updateOutput(outputJar, ftpData.outputJarFilename);
 
-	// Get ANT script
-	String antftp = buildScript(outputJar, ftpData);
+        // Get ANT script
+        String antftp = buildScript(outputJar, ftpData);
 
-	// Save script
-	File ftpScript = new File(DeployUtils.getTempFolder(), "ftp.xml");
-	SpecsIo.write(ftpScript, antftp);
+        // Save script
+        File ftpScript = new File(DeployUtils.getTempFolder(), "ftp.xml");
+        SpecsIo.write(ftpScript, antftp);
 
-	DeployUtils.runAnt(ftpScript);
+        DeployUtils.runAnt(ftpScript);
 
     }
 
@@ -58,16 +59,16 @@ public class FtpTask implements TaskExecutor {
      * @return
      */
     private static String buildScript(File fileToSend, FtpData sftpData) {
-	String template = SpecsIo.getResource(DeployResource.FTP_TEMPLATE);
+        String template = SpecsIo.getResource(DeployResource.FTP_TEMPLATE);
 
-	template = template.replace("<LOGIN>", sftpData.login);
-	template = template.replace("<PASS>", sftpData.pass);
-	template = template.replace("<HOST>", sftpData.host);
-	template = template.replace("<DESTINATION_FOLDER>", sftpData.destinationFolder);
+        template = template.replace("<LOGIN>", sftpData.login);
+        template = template.replace("<PASS>", sftpData.pass);
+        template = template.replace("<HOST>", sftpData.host);
+        template = template.replace("<DESTINATION_FOLDER>", sftpData.destinationFolder);
 
-	template = template.replace("<FILE>", fileToSend.getAbsolutePath());
+        template = template.replace("<FILE>", fileToSend.getAbsolutePath());
 
-	return template;
+        return template;
     }
 
 }

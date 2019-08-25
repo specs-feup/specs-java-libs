@@ -35,6 +35,8 @@ public class EclipseDeploymentData {
     public final String version;
     public final ListOfSetups tasks;
 
+    private File resultFile;
+
     public EclipseDeploymentData(File workspaceFolder, String projetName, String nameOfOutputJar, String mainClass,
             JarType jarType, SpecsProperties pomInfo, File developersXml, String version, ListOfSetups tasks) {
 
@@ -47,6 +49,15 @@ public class EclipseDeploymentData {
         this.developersXml = developersXml;
         this.version = version;
         this.tasks = tasks;
+        this.resultFile = null;
+    }
+
+    public void setResultFile(File resultFile) {
+        this.resultFile = resultFile;
+    }
+
+    public File getResultFile() {
+        return resultFile;
     }
 
 }

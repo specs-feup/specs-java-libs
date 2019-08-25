@@ -81,6 +81,12 @@ public class TaskUtils {
             return file;
         }
 
+        // Update newName if extension needs to be changed
+        if (!SpecsIo.getExtension(file).equals(SpecsIo.getExtension(newName))) {
+            String correctExtension = SpecsIo.getExtension(file);
+            newName = SpecsIo.removeExtension(newName) + "." + correctExtension;
+        }
+
         // If newName is the same as the current name, return original file
         if (file.getName().equals(newName)) {
             SpecsLogs.msgInfo(" - Output name for jar is the same as the default name ('" + newName + "')");

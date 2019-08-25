@@ -213,6 +213,25 @@ public class DeployUtils {
         return new File(tempFolder, jarFilename);
     }
 
+    /**
+     * Returns a File representing the file created from the build.
+     *
+     * @param jarFilename
+     * @return
+     */
+    public static File getResultFile(EclipseDeploymentData data) {
+        if (data.getResultFile() != null) {
+            return data.getResultFile();
+        }
+
+        String jarFilename = data.nameOfOutputJar;
+
+        // The output jar will be in a temporary folder
+        File tempFolder = getTempFolder();
+
+        return new File(tempFolder, jarFilename);
+    }
+
     /*
     public static boolean hasMainMethod(String className) {
     System.err.println("NOT IMPLEMENTED");
@@ -632,6 +651,17 @@ public class DeployUtils {
         template.replace("%DEPENDENCIES%", dependenciesXml);
 
         return template.toString();
+    }
+
+    public static String buildJarZipfileset(List<File> jarFiles, String libFoldername) {
+        StringBuilder jarZipfileset = new StringBuilder();
+
+        for (File jarFile : jarFiles) {
+            jarZipfileset.append("<zipfileset dir=\"" + jarFile.getParentFile().getAbsolutePath()
+                    + "\" includes=\"" + jarFile.getName() + "\" prefix=\"" + libFoldername + "\"/>\n");
+        }
+
+        return jarZipfileset.toString();
     }
 
 }
