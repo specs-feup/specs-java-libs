@@ -60,6 +60,7 @@ import pt.up.fe.specs.util.system.OutputType;
 import pt.up.fe.specs.util.system.ProcessOutput;
 import pt.up.fe.specs.util.system.ProcessOutputAsString;
 import pt.up.fe.specs.util.system.StreamToString;
+import pt.up.fe.specs.util.utilities.JarPath;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
@@ -72,12 +73,28 @@ public class SpecsSystem {
     private static final ClassSet<Object> IMMUTABLE_JAVA_CLASSES = ClassSet.newInstance(Boolean.class, String.class,
             Number.class, Class.class);
 
-    private static final Lazy<Boolean> IS_DEBUG = Lazy.newInstance(() -> new File("debug").isFile());
+    private static final Lazy<Boolean> IS_DEBUG = Lazy.newInstance(SpecsSystem::testIsDebug);
 
     private static final boolean IS_LINUX = System.getProperty("os.name").toLowerCase().startsWith("linux");
 
     private static final Map<String, Method> CACHED_METHODS = new HashMap<>();
     private static final Map<String, Optional<Field>> CACHED_FIELDS = new HashMap<>();
+
+    private static boolean testIsDebug() {
+        // Test if file debug exists in working directory
+        if (new File("debug").isFile()) {
+            return true;
+        }
+
+        // Test if file debug exists in JAR directory
+        if (JarPath.getJarFolder()
+                .map(jarFolder -> new File(jarFolder, "debug").isFile())
+                .orElse(false)) {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Helper method which receives the command and the working directory instead of the builder.

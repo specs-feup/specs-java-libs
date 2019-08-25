@@ -16,104 +16,131 @@ package pt.up.fe.specs.util.utilities;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class JarPath {
 
+    public static Optional<String> getJarFolder() {
+        return new JarPath(JarPath.class, "<NO_PROPERTY>").buildJarPathInternalTry();
+    }
+
     private final Class<?> programClass;
     private final String programName;
     private final String jarPathProperty;
+    private final boolean verbose;
 
     public JarPath(Class<?> programClass, String jarPathProperty) {
-	this(programClass, programClass.getSimpleName(), jarPathProperty);
+        this(programClass, programClass.getSimpleName(), jarPathProperty);
     }
 
     /**
      * @param programName
      */
     public JarPath(Class<?> programClass, String programName, String jarPathProperty) {
-	this.programClass = programClass;
-	this.programName = programName;
-	this.jarPathProperty = jarPathProperty;
+        this(programClass, programName, jarPathProperty, true);
+    }
+
+    public JarPath(Class<?> programClass, String programName, String jarPathProperty, boolean verbose) {
+        this.programClass = programClass;
+        this.programName = programName;
+        this.jarPathProperty = jarPathProperty;
+        this.verbose = verbose;
     }
 
     /**
      * @return
      */
     public String buildJarPath() {
-	String path = buildJarPathInternal();
+        String path = buildJarPathInternal();
 
-	if (!path.endsWith("/")) {
-	    path = path + "/";
-	}
+        if (!path.endsWith("/")) {
+            path = path + "/";
+        }
 
-	return path;
+        return path;
     }
 
     private String buildJarPathInternal() {
-	String jarPath = null;
+        String jarPath = buildJarPathInternalTry().orElse(null);
+        if (jarPath != null) {
+            return jarPath;
+        }
 
-	// 1. Check if property JAR_PATH is set
-	jarPath = System.getProperty(this.jarPathProperty);
+        // 3. As last resort, return current directory. Warn user and recommend to set property
+        if (verbose) {
+            SpecsLogs.msgWarn("Could not find Jar path (maybe application is being run from "
+                    + "another application in a different process)");
+            SpecsLogs.msgInfo("Setting Jar path to current folder. Try passing the " + this.programName
+                    + " Jar location with the system property '" + this.jarPathProperty + "'");
+            SpecsLogs.msgInfo("Example: java -D" + this.jarPathProperty + "=<JAR_FOLDER> ...");
 
-	if (jarPath != null) {
-	    File jarFolder = SpecsIo.existingFolder(null, jarPath);
+        }
 
-	    if (jarFolder != null) {
-		try {
-		    return jarFolder.getCanonicalPath();
-		} catch (IOException e) {
-		    return jarFolder.getAbsolutePath();
-		}
-	    }
+        jarPath = SpecsIo.getWorkingDir().getAbsolutePath();
+        jarPath = jarPath.replace('\\', '/');
+        jarPath = jarPath.substring(0, jarPath.lastIndexOf("/") + 1);
 
-	    SpecsLogs.msgInfo("Could not find folder '" + jarPath
-		    + "', given by system property '" + this.jarPathProperty + "'");
-	}
+        return jarPath;
 
-	// 2. Try to find the location of the jar
-	jarPath = getJarPathAuto();
-	if (jarPath != null) {
-	    return jarPath;
-	}
+    }
 
-	// 3. As last resort, return current directory. Warn user and recommend to set property
-	SpecsLogs.msgWarn("Could not find Jar path (maybe application is being run from "
-		+ "another application in a different process)");
-	SpecsLogs.msgInfo("Setting Jar path to current folder. Try passing the " + this.programName
-		+ " Jar location with the system property '" + this.jarPathProperty + "'");
-	SpecsLogs.msgInfo("Example: java -D" + this.jarPathProperty + "=<JAR_FOLDER> ...");
+    private Optional<String> buildJarPathInternalTry() {
+        String jarPath = null;
 
-	jarPath = SpecsIo.getWorkingDir().getAbsolutePath();
-	jarPath = jarPath.replace('\\', '/');
-	jarPath = jarPath.substring(0, jarPath.lastIndexOf("/") + 1);
+        // 1. Check if property JAR_PATH is set
+        jarPath = System.getProperty(this.jarPathProperty);
 
-	return jarPath;
+        if (jarPath != null) {
+            File jarFolder = SpecsIo.existingFolder(null, jarPath);
+
+            if (jarFolder != null) {
+                try {
+                    return Optional.of(jarFolder.getCanonicalPath());
+                } catch (IOException e) {
+                    return Optional.of(jarFolder.getAbsolutePath());
+                }
+            }
+
+            if (verbose) {
+                SpecsLogs.msgInfo("Could not find folder '" + jarPath
+                        + "', given by system property '" + this.jarPathProperty + "'");
+            }
+
+        }
+
+        // 2. Try to find the location of the jar
+        jarPath = getJarPathAuto();
+        if (jarPath != null) {
+            return Optional.of(jarPath);
+        }
+
+        return Optional.empty();
     }
 
     private String getJarPathAuto() {
-	String jarfilePath = null;
+        String jarfilePath = null;
 
-	try {
+        try {
 
-	    jarfilePath = this.programClass.getProtectionDomain().getCodeSource().getLocation().toURI()
-		    .getPath();
+            jarfilePath = this.programClass.getProtectionDomain().getCodeSource().getLocation().toURI()
+                    .getPath();
 
-	} catch (URISyntaxException e) {
-	    SpecsLogs.msgInfo("Problems decoding URI of jarpath\n" + e.getMessage());
-	    return null;
-	}
+        } catch (URISyntaxException e) {
+            SpecsLogs.msgInfo("Problems decoding URI of jarpath\n" + e.getMessage());
+            return null;
+        }
 
-	// If could not obtain path, return null
-	if (jarfilePath == null) {
-	    return null;
-	}
+        // If could not obtain path, return null
+        if (jarfilePath == null) {
+            return null;
+        }
 
-	String jarLoc = jarfilePath.substring(0, jarfilePath.lastIndexOf("/") + 1);
+        String jarLoc = jarfilePath.substring(0, jarfilePath.lastIndexOf("/") + 1);
 
-	return jarLoc;
+        return jarLoc;
 
     }
 
