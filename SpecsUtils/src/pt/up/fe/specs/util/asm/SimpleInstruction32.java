@@ -18,29 +18,13 @@ package pt.up.fe.specs.util.asm;
  *
  * @author Joao Bispo
  */
-public interface SimpleInstruction32 {
-    // public class SimpleInstruction32 {
-    /*
-       public SimpleInstruction32(int address, String instruction) {
-          this.address = address;
-          this.instruction = instruction;
-       }
-      */
+public interface SimpleInstruction32 extends Instruction {
+
     int getAddress();
 
-    String getInstruction();
-    /*
-       public int getAddress() {
-          return address;
-       }
-       
-       public String getInstruction() {
-          return instruction;
-       }   
-       
-       
-       public final int address;
-       public final String instruction;
-        * 
-        */
+    @Override
+    default String getAddressAsString() {
+        return Integer.toString(getAddress());
+    }
+
 }
