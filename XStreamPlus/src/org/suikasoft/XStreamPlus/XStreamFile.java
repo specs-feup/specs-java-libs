@@ -38,80 +38,80 @@ public class XStreamFile<T> {
     public boolean useCompactRepresentation;
 
     static {
-	reservedAlias = new HashSet<>();
+        reservedAlias = new HashSet<>();
 
-	reservedAlias.add("string");
-	reservedAlias.add("int");
+        reservedAlias.add("string");
+        reservedAlias.add("int");
 
     }
 
     public XStreamFile(ObjectXml<T> object) {
-	this.config = object;
-	xstream = newXStream();
-	useCompactRepresentation = false;
+        this.config = object;
+        xstream = newXStream();
+        useCompactRepresentation = false;
     }
 
     public static <T> XStreamFile<T> newInstance(ObjectXml<T> object) {
-	return new XStreamFile<>(object);
+        return new XStreamFile<>(object);
     }
 
     public void setUseCompactRepresentation(boolean useCompactRepresentation) {
-	this.useCompactRepresentation = useCompactRepresentation;
+        this.useCompactRepresentation = useCompactRepresentation;
     }
 
     public XStream getXstream() {
-	return xstream;
+        return xstream;
     }
 
     public String toXml(Object object) {
-	if (!(config.getTargetClass().isInstance(object))) {
-	    SpecsLogs.getLogger().warning(
-		    "Given object of class '" + object.getClass() + "' is not "
-			    + "compatible with class '" + config.getTargetClass() + "'.");
-	    return null;
-	}
+        if (!(config.getTargetClass().isInstance(object))) {
+            SpecsLogs.getLogger().warning(
+                    "Given object of class '" + object.getClass() + "' is not "
+                            + "compatible with class '" + config.getTargetClass() + "'.");
+            return null;
+        }
 
-	if (useCompactRepresentation) {
-	    StringWriter sw = new StringWriter();
-	    xstream.marshal(object, new CompactWriter(sw));
-	    return sw.toString();
-	}
+        if (useCompactRepresentation) {
+            StringWriter sw = new StringWriter();
+            xstream.marshal(object, new CompactWriter(sw));
+            return sw.toString();
+        }
 
-	return getXstream().toXML(object);
+        return getXstream().toXML(object);
     }
 
     public T fromXml(String xmlContents) {
-	Object dataInstance = xstream.fromXML(xmlContents);
-	if (!config.getTargetClass().isInstance(dataInstance)) {
-	    SpecsLogs.msgWarn(
-		    "Given file does not represent a '" + config.getTargetClass() + "' object.");
-	    return null;
-	}
+        Object dataInstance = xstream.fromXML(xmlContents);
+        if (!config.getTargetClass().isInstance(dataInstance)) {
+            SpecsLogs.msgWarn(
+                    "Given file does not represent a '" + config.getTargetClass() + "' object.");
+            return null;
+        }
 
-	// if(config.getTargetClass().isAssignableFrom(dataInstance.getClass())) {
-	if (!config.getTargetClass().isInstance(dataInstance)) {
-	    return null;
-	}
+        // if(config.getTargetClass().isAssignableFrom(dataInstance.getClass())) {
+        if (!config.getTargetClass().isInstance(dataInstance)) {
+            return null;
+        }
 
-	return config.getTargetClass().cast(dataInstance);
+        return config.getTargetClass().cast(dataInstance);
     }
 
     private XStream newXStream() {
-	MappingsCollector mappingsCollector = new MappingsCollector();
-	Map<String, Class<?>> mappings = mappingsCollector.collectMappings(config);
+        MappingsCollector mappingsCollector = new MappingsCollector();
+        Map<String, Class<?>> mappings = mappingsCollector.collectMappings(config);
 
-	XStream newSstream = new XStream();
-	for (String key : mappings.keySet()) {
-	    // Check if key is not a reserved alias
-	    if (reservedAlias.contains(key)) {
-		SpecsLogs.getLogger().warning(
-			"'" + key + "' is a reserved alias. Skipping this mapping.");
-		continue;
-	    }
-	    newSstream.alias(key, mappings.get(key));
-	}
+        XStream newSstream = XStreamUtils.newXStream();
+        for (String key : mappings.keySet()) {
+            // Check if key is not a reserved alias
+            if (reservedAlias.contains(key)) {
+                SpecsLogs.getLogger().warning(
+                        "'" + key + "' is a reserved alias. Skipping this mapping.");
+                continue;
+            }
+            newSstream.alias(key, mappings.get(key));
+        }
 
-	return newSstream;
+        return newSstream;
     }
 
 }
