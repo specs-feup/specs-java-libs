@@ -2669,7 +2669,7 @@ public class SpecsIo {
     public static File getCanonicalFile(File file) {
 
         try {
-            return file.getAbsoluteFile().getCanonicalFile();
+            return new File(file.getAbsolutePath().trim()).getCanonicalFile();
 
             /*
             file = file.getAbsoluteFile().getCanonicalFile();
@@ -2695,7 +2695,7 @@ public class SpecsIo {
      * @return
      */
     public static String normalizePath(String path) {
-        return path.replace('\\', SpecsIo.DEFAULT_FOLDER_SEPARATOR);
+        return path.replace('\\', SpecsIo.DEFAULT_FOLDER_SEPARATOR).trim();
     }
 
     public static String normalizePath(File path) {
