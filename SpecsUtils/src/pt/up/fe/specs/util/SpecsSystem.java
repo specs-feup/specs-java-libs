@@ -76,6 +76,7 @@ public class SpecsSystem {
     private static final Lazy<Boolean> IS_DEBUG = Lazy.newInstance(SpecsSystem::testIsDebug);
 
     private static final boolean IS_LINUX = System.getProperty("os.name").toLowerCase().startsWith("linux");
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
     private static final Map<String, Method> CACHED_METHODS = new HashMap<>();
     private static final Map<String, Optional<Field>> CACHED_FIELDS = new HashMap<>();
@@ -355,11 +356,15 @@ public class SpecsSystem {
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
+        // The command in the builder might need processing (e.g., Windows system commands)
+        processCommand(builder);
+
         // List<String> normalizedCommand = normalizeCommand(builder.command());
         // builder.command(normalizedCommand);
         // String commandString = getCommandString(builder.command());
         // SpecsLogs.debug("Launching Process: " + commandString);
-        SpecsLogs.debug(() -> "Launching Process: " + builder.command().stream().collect(Collectors.joining(" ")));
+        SpecsLogs.debug(
+                () -> "Launching Process: " + builder.command().stream().collect(Collectors.joining(" ")));
 
         Process process = null;
         try {
@@ -428,6 +433,41 @@ public class SpecsSystem {
         // }
 
         // throw new RuntimeException("Could not execute the process");
+    }
+
+    /**
+     * Performs several fixes on the builder command (e.g., adapts command for Windows platforms)
+     * 
+     * @param builder
+     */
+    private static void processCommand(ProcessBuilder builder) {
+
+        // For now, do nothing if it is not Windows
+        if (!isWindows()) {
+            return;
+        }
+
+        // Do nothing if no command
+        if (builder.command().isEmpty()) {
+            return;
+        }
+
+        // Check if command is a file that exists in the working folder
+        File workingDir = builder.directory();
+        File command = new File(workingDir, builder.command().get(0));
+
+        // If command is a file that exists, do nothing
+        if (command.isFile()) {
+            return;
+        }
+
+        // Update command
+        List<String> newCommand = new ArrayList<>(builder.command().size() + 2);
+        newCommand.add("cmd");
+        newCommand.add("/c");
+        newCommand.addAll(builder.command());
+
+        builder.command(newCommand);
     }
 
     private static <O, E> ProcessOutput<O, E> executeProcess(Process process, Long timeoutNanos, Future<O> outputFuture,
@@ -1429,6 +1469,14 @@ public class SpecsSystem {
      */
     public static boolean isLinux() {
         return IS_LINUX;
+    }
+
+    /**
+     * 
+     * @return true if the JVM is currently executing in a Windows system, false otherwise
+     */
+    public static boolean isWindows() {
+        return IS_WINDOWS;
     }
 
     /**
