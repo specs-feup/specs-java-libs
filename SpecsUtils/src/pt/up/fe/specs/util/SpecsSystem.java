@@ -22,6 +22,7 @@ import java.lang.management.MemoryUsage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -1643,5 +1644,28 @@ public class SpecsSystem {
         } catch (Exception e) {
             throw new RuntimeException("Error while invoking method '" + methodName + "'", e);
         }
+    }
+
+    public static <K, T> List<T> getStaticFields(Class<? extends K> aClass, Class<? extends T> type) {
+
+        List<T> fields = new ArrayList<>();
+
+        for (Field field : aClass.getFields()) {
+            if (!type.isAssignableFrom(field.getType())) {
+                continue;
+            }
+
+            if (!Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
+
+            try {
+                fields.add(type.cast(field.get(null)));
+            } catch (Exception e) {
+                throw new RuntimeException("Could not retrive value of field: " + field);
+            }
+        }
+
+        return fields;
     }
 }
