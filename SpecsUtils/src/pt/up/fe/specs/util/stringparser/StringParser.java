@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.stringparser;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import pt.up.fe.specs.util.stringsplitter.StringSliceWithSplit;
@@ -126,7 +127,16 @@ public class StringParser {
         return applyPrivate(result);
     }
 
+    public Optional<String> substringTry(int beginIndex) {
+        if (beginIndex > currentString.length()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(substring(beginIndex));
+    }
+
     public String substring(int beginIndex) {
+
         String consumedString = currentString.substring(0, beginIndex).toString();
 
         currentString = currentString.substring(beginIndex);
