@@ -267,6 +267,18 @@ public interface JsEngine {
 
     Set<String> keySet(Object bindings);
 
-    public Object get(Object bindings, String key);
+    Object get(Object bindings, String key);
+
+    default <T> T get(Object bindings, String key, Class<T> targetClass) {
+        return convert(get(bindings, key), targetClass);
+    }
+
+    default Object get(String key) {
+        return get(getBindings(), key);
+    }
+
+    default <T> T get(String key, Class<T> targetClass) {
+        return get(getBindings(), key, targetClass);
+    }
 
 }
