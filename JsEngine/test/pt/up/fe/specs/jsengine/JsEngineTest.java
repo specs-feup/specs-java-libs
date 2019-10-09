@@ -251,4 +251,13 @@ public class JsEngineTest {
 
         assertEquals("[10, 20]", engine.getValues(result).toString());
     }
+
+    @Test
+    public void testGet() {
+        var engine = JsEngineType.GRAALVM.newEngine();
+        engine.eval("var a = 10; var b = 'hello'");
+
+        assertEquals("10", engine.get("a").toString());
+        assertEquals("hello", engine.get("b", String.class));
+    }
 }
