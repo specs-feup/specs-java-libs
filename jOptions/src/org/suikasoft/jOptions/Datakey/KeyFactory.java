@@ -32,12 +32,14 @@ import org.suikasoft.jOptions.JOptionKeys;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.Options.FileList;
 import org.suikasoft.jOptions.Utils.EnumCodec;
+import org.suikasoft.jOptions.Utils.MultiEnumCodec;
 import org.suikasoft.jOptions.gui.panels.option.BooleanPanel;
 import org.suikasoft.jOptions.gui.panels.option.DoublePanel;
 import org.suikasoft.jOptions.gui.panels.option.EnumMultipleChoicePanel;
 import org.suikasoft.jOptions.gui.panels.option.FilePanel;
 import org.suikasoft.jOptions.gui.panels.option.FilesWithBaseFoldersPanel;
 import org.suikasoft.jOptions.gui.panels.option.IntegerPanel;
+import org.suikasoft.jOptions.gui.panels.option.MultiEnumMultipleChoicePanel;
 import org.suikasoft.jOptions.gui.panels.option.StringListPanel;
 import org.suikasoft.jOptions.gui.panels.option.StringPanel;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
@@ -47,6 +49,7 @@ import org.suikasoft.jOptions.values.SetupList;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsCollections;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -430,6 +433,20 @@ public class KeyFactory {
                 .setDefault(() -> anEnum.getEnumConstants()[0])
                 .setDecoder(new EnumCodec<>(anEnum))
                 .setKeyPanelProvider((key, data) -> new EnumMultipleChoicePanel<>(key, data));
+    }
+
+    public static <T extends Enum<T>> DataKey<List<T>> enumerationMulti(String id, Class<T> anEnum) {
+        return enumerationMulti(id, anEnum.getEnumConstants());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Enum<T>> DataKey<List<T>> enumerationMulti(String id, T... enums) {
+        SpecsCheck.checkArgument(enums.length > 0, () -> "Must give at least one enum");
+
+        return generic(id, (List<T>) new ArrayList<>(Arrays.asList(enums[0])))
+                .setDefault(() -> new ArrayList<>(Arrays.asList(enums)))
+                .setDecoder(new MultiEnumCodec<>((Class<T>) enums[0].getClass()))
+                .setKeyPanelProvider((key, data) -> new MultiEnumMultipleChoicePanel<>(key, data));
     }
 
     /**
