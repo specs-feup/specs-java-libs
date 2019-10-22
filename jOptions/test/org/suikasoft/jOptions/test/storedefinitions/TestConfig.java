@@ -24,21 +24,35 @@ public class TestConfig implements StoreDefinitionProvider {
 
     @Override
     public StoreDefinition getStoreDefinition() {
-	StoreDefinitionBuilder builder = new StoreDefinitionBuilder(TestConfig.SETUP_NAME);
+        StoreDefinitionBuilder builder = new StoreDefinitionBuilder(TestConfig.SETUP_NAME);
 
-	builder.addKey(TestKeys.A_STRING);
-	builder.addKey(TestKeys.A_BOOLEAN);
-	builder.addKey(TestKeys.A_STRINGLIST);
-	builder.addKey(TestKeys.A_FILELIST);
-	builder.addKey(TestKeys.A_SETUP);
-	builder.addKey(TestKeys.A_SETUP_LIST);
-	builder.addKey(TestKeys.A_MULTIPLE_OPTION);
+        builder.addKey(TestKeys.A_STRING);
+        builder.addKey(TestKeys.A_BOOLEAN);
+        builder.addKey(TestKeys.A_STRINGLIST);
+        builder.addKey(TestKeys.A_FILELIST);
+        builder.addKey(TestKeys.A_SETUP);
+        builder.addKey(TestKeys.A_SETUP_LIST);
+        builder.addKey(TestKeys.A_MULTIPLE_OPTION);
 
-	return builder.build();
+        return builder.build();
     }
 
     public static String getSetupName() {
-	return TestConfig.SETUP_NAME;
+        return TestConfig.SETUP_NAME;
     }
 
+    public static StoreDefinition getGuiStoreDefinition() {
+        StoreDefinitionBuilder builder = new StoreDefinitionBuilder(TestConfig.SETUP_NAME);
+
+        builder.addKey(TestKeys.A_STRING);
+        builder.addKey(TestKeys.A_BOOLEAN);
+        builder.addKey(TestKeys.A_STRINGLIST);
+        // builder.addKey(TestKeys.A_FILELIST);
+        // builder.addKey(TestKeys.A_SETUP);
+        // builder.addKey(TestKeys.A_SETUP_LIST);
+        builder.addKey(TestKeys.A_MULTIPLE_OPTION);
+        builder.addKey(TestKeys.A_MULTI_ENUM);
+
+        return builder.build();
+    }
 }

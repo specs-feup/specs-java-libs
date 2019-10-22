@@ -25,14 +25,15 @@ import pt.up.fe.specs.util.SpecsSwing;
 public class PanelRun {
 
     public static void main(String[] args) {
-	StoreDefinition definition = StoreDefinition.newInstance("test_panel",
-		TestKeys.A_BOOLEAN,
-		TestKeys.A_STRING);
+        StoreDefinition definition = StoreDefinition.newInstance("test_panel",
+                TestKeys.A_BOOLEAN,
+                TestKeys.A_STRING,
+                TestKeys.A_MULTI_ENUM);
 
-	JPanel panel = new BaseSetupPanel(definition, DataStore.newInstance("dummy_data"));
-	SpecsSwing.showPanel(panel, "Test");
+        JPanel panel = new BaseSetupPanel(definition, DataStore.newInstance("dummy_data"));
+        SpecsSwing.showPanel(panel, "Test");
 
-	// App.newInstance("Test App", definition, XmlPer)
+        // App.newInstance("Test App", definition, XmlPer)
     }
 
 }

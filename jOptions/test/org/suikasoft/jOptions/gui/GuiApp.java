@@ -11,11 +11,15 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package org.suikasoft.jOptions.cli;
+package org.suikasoft.jOptions.gui;
 
+import java.util.Arrays;
+
+import org.suikasoft.jOptions.JOptionsUtils;
 import org.suikasoft.jOptions.app.App;
 import org.suikasoft.jOptions.app.AppKernel;
 import org.suikasoft.jOptions.app.AppPersistence;
+import org.suikasoft.jOptions.cli.GenericApp;
 import org.suikasoft.jOptions.persistence.XmlPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.test.storedefinitions.TestConfig;
@@ -27,7 +31,7 @@ import pt.up.fe.specs.util.properties.SpecsProperty;
  * @author Joao Bispo
  * 
  */
-public class SimpleApp {
+public class GuiApp {
 
     /**
      * @param args
@@ -39,19 +43,12 @@ public class SimpleApp {
 
         // TODO: Use SetupDefinition
         // Setup defaultSetup = SimpleSetup.newInstance(TestOption.class);
-        StoreDefinition setupDef = new TestConfig().getStoreDefinition();
+        StoreDefinition setupDef = TestConfig.getGuiStoreDefinition();
         AppPersistence persistence = new XmlPersistence(setupDef);
 
         App app = new GenericApp("TestApp", setupDef, persistence, newKernel());
 
-        // AppLauncher launcher = new AppLauncher(newKernel(), "TestApp", TestOption.class,
-        // persistence);
-
-        AppLauncher launcher = new AppLauncher(app);
-
-        launcher.launch(args);
-
-        // JOptionsUtils.executeApp(app, Arrays.asList(args));
+        JOptionsUtils.executeApp(app, Arrays.asList(args));
     }
 
     private static AppKernel newKernel() {

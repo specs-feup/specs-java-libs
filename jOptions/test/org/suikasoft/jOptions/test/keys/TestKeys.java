@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.test.keys;
 
 import java.io.File;
+import java.util.List;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
@@ -33,18 +34,21 @@ public interface TestKeys {
     DataKey<Boolean> A_BOOLEAN = KeyFactory.bool("A_bool").setDefault(() -> Boolean.TRUE);
 
     DataKey<StringList> A_STRINGLIST = KeyFactory.stringList("A_string_list")
-	    .setDefault(() -> StringList.newInstance("default_string1", "default_string2"));
+            .setDefault(() -> StringList.newInstance("default_string1", "default_string2"));
 
     DataKey<FileList> A_FILELIST = KeyFactory.fileList("Text_files", "txt");
 
     DataKey<DataStore> A_SETUP = KeyFactory.dataStore("A_setup", new InnerOptions().getStoreDefinition());
 
     DataKey<SetupList> A_SETUP_LIST = KeyFactory.setupList("A_setup_list", new InnerOptions(),
-	    new InnerOptions2());
+            new InnerOptions2());
 
     DataKey<MultipleChoices> A_MULTIPLE_OPTION = KeyFactory
-	    .enumeration("A_multiple_option", MultipleChoices.class)
-	    .setDefault(() -> MultipleChoices.CHOICE1);
+            .enumeration("A_multiple_option", MultipleChoices.class)
+            .setDefault(() -> MultipleChoices.CHOICE1);
+
+    DataKey<List<MultipleChoices>> A_MULTI_ENUM = KeyFactory
+            .enumerationMulti("A_multi_enumeration", MultipleChoices.class);
 
     DataKey<File> A_FILE = KeyFactory.file("A_file");
 }
