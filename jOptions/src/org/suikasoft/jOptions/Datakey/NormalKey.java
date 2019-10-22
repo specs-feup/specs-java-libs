@@ -30,7 +30,7 @@ import pt.up.fe.specs.util.parsing.StringCodec;
  *
  * @param <T>
  */
-class NormalKey<T> extends ADataKey<T> {
+public class NormalKey<T> extends ADataKey<T> {
 
     // TODO: Temporarily removing 'transient' from aClass and default value, while phasing out Setup
     private final Class<T> aClass;
@@ -41,9 +41,11 @@ class NormalKey<T> extends ADataKey<T> {
 
     protected NormalKey(String id, Class<T> aClass, Supplier<? extends T> defaultValueProvider,
             StringCodec<T> decoder, CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter) {
+            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter,
+            DataKeyExtraData extraData) {
+
         super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customSetter);
+                customSetter, extraData);
 
         this.aClass = aClass;
     }
@@ -55,16 +57,16 @@ class NormalKey<T> extends ADataKey<T> {
      * @param defaultValue
      */
     public NormalKey(String id, Class<T> aClass, Supplier<T> defaultValue) {
-        this(id, aClass, defaultValue, null, null, null, null, null, null, null);
+        this(id, aClass, defaultValue, null, null, null, null, null, null, null, null);
     }
 
     @Override
     protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
-            Function<T, T> copyFunction, CustomGetter<T> customSetter) {
+            Function<T, T> copyFunction, CustomGetter<T> customSetter, DataKeyExtraData extraData) {
 
         return new NormalKey<>(id, aClass, defaultValueProvider, decoder, customGetter, panelProvider, label,
-                definition, copyFunction, customSetter);
+                definition, copyFunction, customSetter, extraData);
     }
 
     @Override

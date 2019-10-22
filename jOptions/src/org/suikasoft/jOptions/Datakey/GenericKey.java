@@ -28,7 +28,7 @@ import pt.up.fe.specs.util.parsing.StringCodec;
  *
  * @param <T>
  */
-class GenericKey<T> extends ADataKey<T> {
+public class GenericKey<T> extends ADataKey<T> {
 
     private final T exampleInstance;
 
@@ -39,7 +39,7 @@ class GenericKey<T> extends ADataKey<T> {
      * @param defaultValue
      */
     public GenericKey(String id, T exampleInstance, Supplier<? extends T> defaultValue) {
-        this(id, exampleInstance, defaultValue, null, null, null, null, null, null, null);
+        this(id, exampleInstance, defaultValue, null, null, null, null, null, null, null, null);
     }
 
     public GenericKey(String id, T exampleInstance) {
@@ -48,10 +48,11 @@ class GenericKey<T> extends ADataKey<T> {
 
     protected GenericKey(String id, T exampleInstance, Supplier<? extends T> defaultValueProvider,
             StringCodec<T> decoder, CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter) {
+            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter,
+            DataKeyExtraData extraData) {
 
         super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customSetter);
+                customSetter, extraData);
 
         this.exampleInstance = exampleInstance;
     }
@@ -66,10 +67,11 @@ class GenericKey<T> extends ADataKey<T> {
     @Override
     protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter) {
+            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter,
+            DataKeyExtraData extraData) {
 
         return new GenericKey<>(id, this.exampleInstance, defaultValueProvider, decoder, customGetter, panelProvider,
-                label, definition, copyFunction, customSetter);
+                label, definition, copyFunction, customSetter, extraData);
     }
 
     /**

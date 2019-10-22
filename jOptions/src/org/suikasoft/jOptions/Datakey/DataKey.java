@@ -171,6 +171,13 @@ public interface DataKey<T> extends KeyProvider<String> {
     String getLabel();
 
     /*
+     * EXTRA DATA
+     */
+    Optional<DataKeyExtraData> getExtraData();
+
+    DataKey<T> setExtraData(DataKeyExtraData extraData);
+
+    /*
      * TO STRING
      */
     /**

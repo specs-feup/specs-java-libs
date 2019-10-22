@@ -34,10 +34,12 @@ public abstract class ADataKey<T> implements DataKey<T> {
     private transient final StoreDefinition definition;
     private transient final Function<T, T> copyFunction;
     private transient final CustomGetter<T> customSetter;
+    private transient final DataKeyExtraData extraData;
 
     protected ADataKey(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter) {
+            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter,
+            DataKeyExtraData extraData) {
 
         assert id != null;
 
@@ -50,10 +52,11 @@ public abstract class ADataKey<T> implements DataKey<T> {
         this.definition = definition;
         this.copyFunction = copyFunction;
         this.customSetter = customSetter;
+        this.extraData = extraData;
     }
 
     protected ADataKey(String id, Supplier<T> defaultValue) {
-        this(id, defaultValue, null, null, null, null, null, null, null);
+        this(id, defaultValue, null, null, null, null, null, null, null, null);
     }
 
     @Override
@@ -99,7 +102,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     abstract protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
-            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter);
+            StoreDefinition definition, Function<T, T> copyFunction, CustomGetter<T> customSetter,
+            DataKeyExtraData extraData);
 
     @Override
     public Optional<StringCodec<T>> getDecoder() {
@@ -114,7 +118,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
         // StringCodec<T> serializableDecoder = (StringCodec<T> & Serializable) value -> decoder.decode(value);
         // return copy(id, defaultValueProvider, serializableDecoder, customGetter,
         return copy(id, defaultValueProvider, serializableDecoder, customGetter,
-                panelProvider, label, definition, copyFunction, customSetter);
+                panelProvider, label, definition, copyFunction, customSetter, extraData);
     }
 
     private static <T> StringCodec<T> getSerializableDecoder(StringCodec<T> decoder) {
@@ -138,27 +142,29 @@ public abstract class ADataKey<T> implements DataKey<T> {
     @Override
     public DataKey<T> setDefault(Supplier<? extends T> defaultValueProvider) {
         return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customSetter);
+                customSetter, extraData);
     }
 
     @Override
     public DataKey<T> setCustomGetter(CustomGetter<T> customGetter) {
         // Adding interface 'Serializable', so that it can save lambda expressions
+        @SuppressWarnings("unchecked")
         CustomGetter<T> serializableGetter = (CustomGetter<T> & Serializable) (value, dataStore) -> customGetter
                 .get(value, dataStore);
 
         return copy(id, defaultValueProvider, decoder, serializableGetter, panelProvider, label, definition,
-                copyFunction, customSetter);
+                copyFunction, customSetter, extraData);
     }
 
     @Override
     public DataKey<T> setCustomSetter(CustomGetter<T> customSetter) {
         // Adding interface 'Serializable', so that it can save lambda expressions
+        @SuppressWarnings("unchecked")
         CustomGetter<T> serializableSetter = (CustomGetter<T> & Serializable) (value, dataStore) -> customSetter
                 .get(value, dataStore);
 
         return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition,
-                copyFunction, serializableSetter);
+                copyFunction, serializableSetter, extraData);
     }
 
     @Override
@@ -174,7 +180,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
     @Override
     public DataKey<T> setKeyPanelProvider(KeyPanelProvider<T> panelProvider) {
         return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customSetter);
+                customSetter, extraData);
     }
 
     @Override
@@ -185,7 +191,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
     @Override
     public DataKey<T> setLabel(String label) {
         return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customSetter);
+                customSetter, extraData);
     }
 
     /**
@@ -205,7 +211,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
     @Override
     public DataKey<T> setStoreDefinition(StoreDefinition definition) {
         return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customSetter);
+                customSetter, extraData);
     }
 
     @Override
@@ -216,7 +222,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
     @Override
     public DataKey<T> setCopyFunction(Function<T, T> copyFunction) {
         return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customSetter);
+                customSetter, extraData);
     }
 
     @Override
@@ -224,4 +230,13 @@ public abstract class ADataKey<T> implements DataKey<T> {
         return Optional.ofNullable(copyFunction);
     }
 
+    public Optional<DataKeyExtraData> getExtraData() {
+        return Optional.ofNullable(extraData);
+    }
+
+    @Override
+    public DataKey<T> setExtraData(DataKeyExtraData extraData) {
+        return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
+                customSetter, extraData);
+    }
 }

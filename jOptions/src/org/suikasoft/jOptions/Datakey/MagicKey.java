@@ -25,14 +25,15 @@ import pt.up.fe.specs.util.parsing.StringCodec;
 class MagicKey<T> extends ADataKey<T> {
 
     private MagicKey(String id, Supplier<T> defaultValue, StringCodec<T> decoder) {
-        this(id, defaultValue, decoder, null, null, null, null, null, null);
+        this(id, defaultValue, decoder, null, null, null, null, null, null, null);
     }
 
     private MagicKey(String id, Supplier<T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
-            Function<T, T> copyFunction, CustomGetter<T> customSetter) {
+            Function<T, T> copyFunction, CustomGetter<T> customSetter, DataKeyExtraData extraData) {
+
         super(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
-                customSetter);
+                customSetter, extraData);
     }
 
     public MagicKey(String id) {
@@ -58,10 +59,11 @@ class MagicKey<T> extends ADataKey<T> {
     @Override
     protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
-            Function<T, T> copyFunction, CustomGetter<T> customSetter) {
+            Function<T, T> copyFunction, CustomGetter<T> customSetter, DataKeyExtraData extraData) {
 
         return new MagicKey(id, defaultValueProvider, decoder, customGetter, panelProvider, label,
-                definition, copyFunction, customSetter) {
+                definition, copyFunction, customSetter, extraData) {
+
         };
     }
 
