@@ -29,17 +29,18 @@ import java.util.function.Supplier;
 import javax.swing.JFileChooser;
 
 import org.suikasoft.jOptions.JOptionKeys;
+import org.suikasoft.jOptions.Datakey.customkeys.MultipleChoiceListKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.Options.FileList;
 import org.suikasoft.jOptions.Utils.EnumCodec;
-import org.suikasoft.jOptions.Utils.MultiEnumCodec;
+import org.suikasoft.jOptions.Utils.MultipleChoiceListCodec;
 import org.suikasoft.jOptions.gui.panels.option.BooleanPanel;
 import org.suikasoft.jOptions.gui.panels.option.DoublePanel;
 import org.suikasoft.jOptions.gui.panels.option.EnumMultipleChoicePanel;
 import org.suikasoft.jOptions.gui.panels.option.FilePanel;
 import org.suikasoft.jOptions.gui.panels.option.FilesWithBaseFoldersPanel;
 import org.suikasoft.jOptions.gui.panels.option.IntegerPanel;
-import org.suikasoft.jOptions.gui.panels.option.MultiEnumMultipleChoicePanel;
+import org.suikasoft.jOptions.gui.panels.option.MultipleChoiceListPanel;
 import org.suikasoft.jOptions.gui.panels.option.StringListPanel;
 import org.suikasoft.jOptions.gui.panels.option.StringPanel;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
@@ -53,6 +54,7 @@ import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsCollections;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
+import pt.up.fe.specs.util.parsing.StringCodec;
 import pt.up.fe.specs.util.utilities.StringList;
 
 public class KeyFactory {
@@ -441,12 +443,16 @@ public class KeyFactory {
 
     @SuppressWarnings("unchecked")
     public static <T extends Enum<T>> DataKey<List<T>> enumerationMulti(String id, T... enums) {
+
         SpecsCheck.checkArgument(enums.length > 0, () -> "Must give at least one enum");
 
-        return generic(id, (List<T>) new ArrayList<>(Arrays.asList(enums[0])))
-                .setDefault(() -> new ArrayList<>(Arrays.asList(enums)))
-                .setDecoder(new MultiEnumCodec<>((Class<T>) enums[0].getClass()))
-                .setKeyPanelProvider((key, data) -> new MultiEnumMultipleChoicePanel<>(key, data));
+        return multiplechoiceList(id, new EnumCodec<>((Class<T>) enums[0].getClass()), Arrays.asList(enums));
+
+        //
+        // return generic(id, (List<T>) new ArrayList<>(Arrays.asList(enums[0])))
+        // .setDefault(() -> new ArrayList<>(Arrays.asList(enums)))
+        // .setDecoder(new MultiEnumCodec<>((Class<T>) enums[0].getClass()))
+        // .setKeyPanelProvider((key, data) -> new MultiEnumMultipleChoicePanel<>(key, data));
     }
 
     /**
@@ -603,6 +609,34 @@ public class KeyFactory {
         }
 
         return processedMap;
+    }
+
+    // @SuppressWarnings("unchecked")
+    // public static <T extends Enum<T>> DataKey<List<T>> multiplechoiceList(String id, T... enums) {
+    //
+    // }
+
+    // public static <T> DataKey<List<T>> multiplechoiceList(String id,
+    // @SuppressWarnings("unchecked") T... availableChoices) {
+    // return multiplechoiceList(id, Arrays.asList(availableChoices));
+    // }
+
+    public static <T> DataKey<List<T>> multiplechoiceList(String id, StringCodec<T> codec,
+            List<T> availableChoices) {
+        SpecsCheck.checkArgument(availableChoices.size() > 0, () -> "Must give at least one element");
+
+        return new MultipleChoiceListKey<>(id, availableChoices)
+                .setDecoder(new MultipleChoiceListCodec<>(codec))
+                .setKeyPanelProvider(
+                        (key, data) -> new MultipleChoiceListPanel<>(key, data));
+    }
+
+    public static DataKey<List<String>> multipleStringList(String id, String... availableChoices) {
+        return multipleStringList(id, Arrays.asList(availableChoices));
+    }
+
+    public static DataKey<List<String>> multipleStringList(String id, List<String> availableChoices) {
+        return multiplechoiceList(id, s -> s, availableChoices);
     }
 
 }

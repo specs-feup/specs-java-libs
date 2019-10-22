@@ -50,5 +50,8 @@ public interface TestKeys {
     DataKey<List<MultipleChoices>> A_MULTI_ENUM = KeyFactory
             .enumerationMulti("A_multi_enumeration", MultipleChoices.class);
 
+    DataKey<List<String>> A_MULTI_STRING = KeyFactory
+            .multipleStringList("A_multi_string_list", "option1", "option2", "option3");
+
     DataKey<File> A_FILE = KeyFactory.file("A_file");
 }

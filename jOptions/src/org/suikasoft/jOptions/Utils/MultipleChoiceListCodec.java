@@ -14,34 +14,31 @@
 package org.suikasoft.jOptions.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
- * @deprecated
  * @author JoaoBispo
  *
  * @param <T>
  */
-@Deprecated
-public class MultiEnumCodec<T extends Enum<T>> implements StringCodec<List<T>> {
+public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
 
-    private static final String SEPARATOR = ";";
+    private static final String SEPARATOR = "$$$";
 
-    private final Class<T> anEnum;
-    private final Map<String, T> decodeMap;
+    // private final Class<T> anEnum;
+    // private final Map<String, T> decodeMap;
+    private final StringCodec<T> elementCodec;
 
-    public MultiEnumCodec(Class<T> anEnum) {
-        this.anEnum = anEnum;
-        this.decodeMap = new HashMap<>();
-
-        for (T enumValue : anEnum.getEnumConstants()) {
-            decodeMap.put(enumValue.name(), enumValue);
-        }
+    public MultipleChoiceListCodec(StringCodec<T> elementCodec) {
+        // this.anEnum = anEnum;
+        // this.decodeMap = new HashMap<>();
+        this.elementCodec = elementCodec;
+        // for (T enumValue : anEnum.getEnumConstants()) {
+        // decodeMap.put(enumValue.name(), enumValue);
+        // }
     }
 
     @Override
@@ -60,21 +57,21 @@ public class MultiEnumCodec<T extends Enum<T>> implements StringCodec<List<T>> {
     }
 
     private T decodeSingle(String value) {
-
-        T enumValue = decodeMap.get(value);
-
-        if (enumValue == null) {
-            throw new RuntimeException("Could not find enum '" + value + "' in class '" + anEnum
-                    + "'. Available values: " + decodeMap.keySet());
-        }
-
-        return enumValue;
+        return elementCodec.decode(value);
+        // T enumValue = decodeMap.get(value);
+        //
+        // if (enumValue == null) {
+        // throw new RuntimeException("Could not find enum '" + value + "' in class '" + anEnum
+        // + "'. Available values: " + decodeMap.keySet());
+        // }
+        //
+        // return enumValue;
     }
 
     @Override
     public String encode(List<T> value) {
         return value.stream()
-                .map(enumValue -> enumValue.name())
+                .map(element -> elementCodec.encode(element))
                 .collect(Collectors.joining(SEPARATOR));
     }
 

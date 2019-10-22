@@ -52,6 +52,7 @@ public class TestConfig implements StoreDefinitionProvider {
         // builder.addKey(TestKeys.A_SETUP_LIST);
         builder.addKey(TestKeys.A_MULTIPLE_OPTION);
         builder.addKey(TestKeys.A_MULTI_ENUM);
+        builder.addKey(TestKeys.A_MULTI_STRING);
 
         return builder.build();
     }
