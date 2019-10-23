@@ -40,8 +40,10 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
      */
     private final JComboBox<T> selectedElements;
     private final JComboBox<T> availableElements;
-    private final JButton removeButton;
     private final JButton addButton;
+    private final JButton removeButton;
+    private final JButton addAllButton;
+    private final JButton removeAllButton;
 
     // private final Collection<T> availableChoices;
 
@@ -50,6 +52,8 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
 
         addButton = new JButton("Add");
         removeButton = new JButton("X");
+        addAllButton = new JButton("Add All");
+        removeAllButton = new JButton("X All");
 
         selectedElements = new JComboBox<>();
 
@@ -59,6 +63,8 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         // Add actions
         addButton.addActionListener(this::addButtonAction);
         removeButton.addActionListener(this::removeButtonAction);
+        addAllButton.addActionListener(this::addAllButtonAction);
+        removeAllButton.addActionListener(this::removeAllButtonAction);
 
         // ExtraData must be defined, otherwise we are not able to populate the avaliable choices
         var extraData = key.getExtraData()
@@ -95,6 +101,8 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         add(availableElements);
         add(addButton);
         add(removeButton);
+        add(addAllButton);
+        add(removeAllButton);
     }
 
     private List<T> getElements(JComboBox<T> comboBox) {
@@ -158,6 +166,28 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         }
 
         moveElement(selectedElements.getItemAt(choice), selectedElements, availableElements);
+    }
+
+    /**
+     * Moves all options from the avaliable list to selected list.
+     * 
+     * @param evt
+     */
+    private void addAllButtonAction(ActionEvent evt) {
+        while (availableElements.getItemCount() > 0) {
+            moveElement(availableElements.getItemAt(0), availableElements, selectedElements);
+        }
+    }
+
+    /**
+     * Moves all options from the selected list to the available list.
+     * 
+     * @param evt
+     */
+    private void removeAllButtonAction(ActionEvent evt) {
+        while (selectedElements.getItemCount() > 0) {
+            moveElement(selectedElements.getItemAt(0), selectedElements, availableElements);
+        }
     }
 
     @Override
