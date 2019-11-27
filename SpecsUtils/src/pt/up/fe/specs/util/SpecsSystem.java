@@ -1062,6 +1062,15 @@ public class SpecsSystem {
         }
     }
 
+    /**
+     * The contents of the Future, or null if there was a timeout.
+     * 
+     * @param <T>
+     * @param future
+     * @param timeout
+     * @param unit
+     * @return
+     */
     public static <T> T get(Future<T> future, long timeout, TimeUnit unit) {
         try {
             return future.get(timeout, unit);
