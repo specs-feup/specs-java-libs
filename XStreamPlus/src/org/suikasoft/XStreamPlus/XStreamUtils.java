@@ -32,7 +32,16 @@ public class XStreamUtils {
 
     public static XStream newXStream() {
 
-        return new XStream();
+        var xstream = new XStream();
+
+        // XStream.setupDefaultSecurity(xstream);
+        // xstream.allowTypesByWildcard(new String[] {
+        // "java.**"
+        // });
+
+        return xstream;
+
+        // return new XStream();
         // return new XStream(new DomDriver());
 
         // Taken from here: https://github.com/x-stream/xstream/issues/101#issuecomment-514760040
