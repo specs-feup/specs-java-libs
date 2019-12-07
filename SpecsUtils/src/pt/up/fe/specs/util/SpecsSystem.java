@@ -1534,7 +1534,7 @@ public class SpecsSystem {
         try {
             return invokingMethod.invoke(invokingObject, args);
         } catch (Exception e) {
-            throw new RuntimeException("Error while invonking method '" + method + "'", e);
+            throw new RuntimeException("Error while invoking method '" + method + "'", e);
         }
         // return object.class.getMethod(property, arguments).invoke(object, arguments);
     }
