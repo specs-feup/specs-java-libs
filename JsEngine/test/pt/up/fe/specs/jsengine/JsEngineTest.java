@@ -260,4 +260,19 @@ public class JsEngineTest {
         assertEquals("10", engine.get("a").toString());
         assertEquals("hello", engine.get("b", String.class));
     }
+
+    @Test
+    public void testArrowFunction() {
+        var engine = JsEngineType.GRAALVM.newEngine();
+        engine.eval("const materials = [\r\n" +
+                "  'Hydrogen',\r\n" +
+                "  'Helium',\r\n" +
+                "  'Lithium',\r\n" +
+                "  'Beryllium'\r\n" +
+                "];\r\n" +
+                "\r\n" +
+                "var result = materials.map(material => material.length);");
+
+        assertEquals("[8, 6, 7, 9]", engine.getValues(engine.get("result")).toString());
+    }
 }
