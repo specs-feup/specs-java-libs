@@ -33,6 +33,7 @@ import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
 import pt.up.fe.specs.jsengine.ForOfType;
 import pt.up.fe.specs.jsengine.JsEngine;
+import pt.up.fe.specs.jsengine.JsEngineResource;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class GraalvmJsEngine implements JsEngine {
@@ -58,6 +59,10 @@ public class GraalvmJsEngine implements JsEngine {
         // System.out.println("CLASS LOADER: " + GraalvmJsEngine.class.getClassLoader());
         // Thread.currentThread().setContextClassLoader(classLoader);
         this.engine = GraalJSScriptEngine.create(null, contextBuilder);
+
+        // Load Java compatibility layer
+        eval(JsEngineResource.JAVA_COMPATIBILITY.read());
+
         // List<ScriptEngineFactory> engines = (new ScriptEngineManager()).getEngineFactories();
         // System.out.println("Available Engines");
         // for (ScriptEngineFactory f : engines) {
