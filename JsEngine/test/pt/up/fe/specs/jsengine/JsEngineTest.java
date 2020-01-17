@@ -275,4 +275,15 @@ public class JsEngineTest {
 
         assertEquals("[8, 6, 7, 9]", engine.getValues(engine.get("result")).toString());
     }
+
+    @Test
+    public void testPrint() {
+        var engine = JsEngineType.GRAALVM.newEngine();
+        // Empty print
+        engine.eval("print()");
+        engine.eval("print('Using print()\\n')");
+        engine.eval("console.log('Using console.log()\\n')");
+        engine.eval("print(['Using print() '], 'with ', 'several objects\\n')");
+        engine.eval("print('Using print() with substitution arguments, like %d and %s\\n', 10, 'aString')");
+    }
 }
