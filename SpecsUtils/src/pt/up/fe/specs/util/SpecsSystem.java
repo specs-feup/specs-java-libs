@@ -928,7 +928,7 @@ public class SpecsSystem {
      * can find it.
      * 
      * @param path
-     *            The path to add
+     *                 The path to add
      */
     public static void addJavaLibraryPath(String path) {
         System.setProperty("java.library.path",
@@ -1274,7 +1274,7 @@ public class SpecsSystem {
      * Adds a jar file or directory to the classpath. From Utils4J.
      *
      * @param newpaths
-     *            JAR filename(s) or directory(s) to add
+     *                     JAR filename(s) or directory(s) to add
      * @return URLClassLoader after newpaths added if newpaths != null
      */
     public static ClassLoader addToClasspath(String... newpaths) {
@@ -1295,7 +1295,7 @@ public class SpecsSystem {
      * Adds to library path in ClassLoader returned by addToClassPath
      *
      * @param newpaths
-     *            Path(s) to directory(s) holding OS library files
+     *                     Path(s) to directory(s) holding OS library files
      */
     public static void addToLibraryPath(String... newpaths) {
         for (String newpath : Objects.requireNonNull(newpaths))
@@ -1393,16 +1393,18 @@ public class SpecsSystem {
     }
 
     public static <T> T newInstance(Class<T> aClass, Object... arguments) {
-        Class<?>[] argClasses = new Class<?>[arguments.length];
-        for (int i = 0; i < arguments.length; i++) {
-            argClasses[i] = arguments[i].getClass();
-        }
 
         Constructor<T> constructorMethod = null;
         try {
             // Create copy constructor: new T(T data)
-            constructorMethod = aClass.getConstructor(argClasses);
+            // constructorMethod = aClass.getConstructor(argClasses);
+            constructorMethod = getConstructor(aClass, arguments);
         } catch (Exception e) {
+            Class<?>[] argClasses = new Class<?>[arguments.length];
+            for (int i = 0; i < arguments.length; i++) {
+                argClasses[i] = arguments[i].getClass();
+            }
+
             throw new RuntimeException(
                     "Could not create call to constructor for '" + aClass.getSimpleName()
                             + "' with arguments '" + Arrays.toString(argClasses) + "'",
@@ -1416,6 +1418,37 @@ public class SpecsSystem {
                     + "' with arguments " + Arrays.toString(arguments), e);
         }
 
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param aClass
+     * @param arguments
+     * @return the first constructor that is compatible with the given arguments, or null if none is found
+     */
+    public static <T> Constructor<T> getConstructor(Class<T> aClass, Object... arguments) {
+        constructorTest: for (var constructor : aClass.getConstructors()) {
+            // Verify if arguments are compatible
+            var paramTypes = constructor.getParameterTypes();
+
+            // Check number of parameters
+            if (paramTypes.length != arguments.length) {
+                continue;
+            }
+
+            for (int i = 0; i < paramTypes.length; i++) {
+                if (!paramTypes[i].isAssignableFrom(arguments[i].getClass())) {
+                    break constructorTest;
+                }
+            }
+
+            @SuppressWarnings("unchecked")
+            var validConstructor = (Constructor<T>) constructor;
+            return validConstructor;
+        }
+
+        return null;
     }
 
     /**
@@ -1558,7 +1591,7 @@ public class SpecsSystem {
         return methodId.toString();
     }
 
-    private static Method findMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
+    public static Method findMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
         Method invokingMethod = null;
         top: for (var classMethod : invokingClass.getMethods()) {
             // Check name
@@ -1677,4 +1710,5 @@ public class SpecsSystem {
 
         return fields;
     }
+
 }
