@@ -16,8 +16,10 @@ package org.suikasoft.jOptions.treenode;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 
 import org.suikasoft.jOptions.Interfaces.DataStore;
@@ -26,36 +28,36 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 public class ClassesService<T extends DataNode<T>> {
 
-    // private static final String AST_PACKAGE = "pt.up.fe.specs.lara.ast";
-    // private static final DataStore EMPTY_DATA_STORE = DataStore.newInstance("Empty LaraNode DataStore");
-
-    // private static final ClassesService STATIC_INSTANCE = new ClassesService();
-
-    // private static final Set<String> WARNED_CLASSES = ConcurrentHashMap.newKeySet();
-
     private final String basePackage;
     private final Class<T> baseClass;
     private final CustomClassnameMapper<T> customClassMap;
     private final Map<String, Class<? extends T>> autoClassMap;
+    private final Set<String> warnedClasses;
+
+    private Class<? extends T> defaultClass;
 
     public ClassesService(String basePackage, Class<T> baseClass, CustomClassnameMapper<T> customClassMap) {
         this.basePackage = basePackage;
         this.baseClass = baseClass;
         this.customClassMap = customClassMap;
         this.autoClassMap = new HashMap<>();
+        this.warnedClasses = new HashSet<>();
+
+        defaultClass = null;
     }
 
     public ClassesService(String basePackage, Class<T> baseClass) {
         this(basePackage, baseClass, new CustomClassnameMapper<T>());
     }
 
+    public ClassesService<T> setDefaultClass(Class<? extends T> defaultClass) {
+        this.defaultClass = defaultClass;
+        return this;
+    }
+
     public CustomClassnameMapper<T> getCustomClassMap() {
         return customClassMap;
     }
-
-    // public static Class<? extends LaraNode> getNodeClass(String classname) {
-    // return STATIC_INSTANCE.getClass(classname, EMPTY_DATA_STORE);
-    // }
 
     public Class<? extends T> getClass(String classname) {
 
@@ -96,24 +98,20 @@ public class ClassesService<T extends DataNode<T>> {
             return aClass.asSubclass(baseClass);
 
         } catch (ClassNotFoundException e) {
-            /*
-            // Before throwing exception, try some cases
-            if (clangClassname.endsWith("Attr") && !WARNED_CLASSES.contains(clangClassname)) {
-                WARNED_CLASSES.add(clangClassname);
-            
-                SpecsLogs.info("No parser defined for attribute '" + clangClassname
-                        + "', using generic attribute parser with no arguments");
-            
-                return Attribute.class;
+            // If default node class is defined, use that class
+            if (defaultClass != null) {
+                if (!warnedClasses.contains(clangClassname)) {
+                    warnedClasses.add(clangClassname);
+
+                    SpecsLogs.info("No parser defined for attribute '" + clangClassname
+                            + "', using default class");
+
+                }
+
+                return defaultClass;
             }
-            
-            if (clangClassname.startsWith("OMP")) {
-                return GenericClangOMP.class;
-            }
-            */
 
             throw new RuntimeException("Could not map classname '" + clangClassname + "' to a node class");
-            // return Optional.empty();
         }
     }
 
