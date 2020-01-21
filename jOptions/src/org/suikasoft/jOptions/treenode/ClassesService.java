@@ -80,9 +80,9 @@ public class ClassesService<T extends DataNode<T>> {
 
     }
 
-    private Class<? extends T> discoverClass(String clangClassname) {
+    private Class<? extends T> discoverClass(String classname) {
 
-        String fullClassname = simpleNameToFullName(clangClassname);
+        String fullClassname = simpleNameToFullName(classname);
 
         try {
             // Get class
@@ -90,7 +90,7 @@ public class ClassesService<T extends DataNode<T>> {
 
             // Check if class is a subtype of DataNode
             if (!baseClass.isAssignableFrom(aClass)) {
-                throw new RuntimeException("Classname '" + clangClassname + "' was converted to a (" + fullClassname
+                throw new RuntimeException("Classname '" + classname + "' was converted to a (" + fullClassname
                         + ") that is not a DataNode");
             }
 
@@ -100,18 +100,18 @@ public class ClassesService<T extends DataNode<T>> {
         } catch (ClassNotFoundException e) {
             // If default node class is defined, use that class
             if (defaultClass != null) {
-                if (!warnedClasses.contains(clangClassname)) {
-                    warnedClasses.add(clangClassname);
+                if (!warnedClasses.contains(classname)) {
+                    warnedClasses.add(classname);
 
-                    SpecsLogs.info("No parser defined for attribute '" + clangClassname
-                            + "', using default class");
+                    SpecsLogs.info("ClassesService: no node class found for name '" + classname
+                            + "', using default class '" + defaultClass + "'");
 
                 }
 
                 return defaultClass;
             }
 
-            throw new RuntimeException("Could not map classname '" + clangClassname + "' to a node class");
+            throw new RuntimeException("Could not map classname '" + classname + "' to a node class");
         }
     }
 
