@@ -260,4 +260,30 @@ public class JsEngineTest {
         assertEquals("10", engine.get("a").toString());
         assertEquals("hello", engine.get("b", String.class));
     }
+
+    @Test
+    public void testArrowFunction() {
+        var engine = JsEngineType.GRAALVM.newEngine();
+        engine.eval("const materials = [\r\n" +
+                "  'Hydrogen',\r\n" +
+                "  'Helium',\r\n" +
+                "  'Lithium',\r\n" +
+                "  'Beryllium'\r\n" +
+                "];\r\n" +
+                "\r\n" +
+                "var result = materials.map(material => material.length);");
+
+        assertEquals("[8, 6, 7, 9]", engine.getValues(engine.get("result")).toString());
+    }
+
+    @Test
+    public void testPrint() {
+        var engine = JsEngineType.GRAALVM.newEngine();
+        // Empty print
+        engine.eval("print()");
+        engine.eval("print('Using print()\\n')");
+        engine.eval("console.log('Using console.log()\\n')");
+        engine.eval("print(['Using print() '], 'with ', 'several objects\\n')");
+        engine.eval("print('Using print() with substitution arguments, like %d and %s\\n', 10, 'aString')");
+    }
 }

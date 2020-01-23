@@ -23,6 +23,8 @@ import java.util.concurrent.BlockingQueue;
  */
 public class ConcurrentChannel<T> {
 
+    private final BlockingQueue<T> channel;
+
     /**
      * Creates a bounded blocking queue with the specified capacity.
      *
@@ -30,7 +32,7 @@ public class ConcurrentChannel<T> {
      *            the capacity of this Concurrent Channel.
      */
     public ConcurrentChannel(int capacity) {
-	this.channel = new ArrayBlockingQueue<>(capacity);
+        this.channel = new ArrayBlockingQueue<>(capacity);
     }
 
     /**
@@ -39,15 +41,14 @@ public class ConcurrentChannel<T> {
      * @return a ChannelProducer
      */
     public ChannelProducer<T> createProducer() {
-	return new ChannelProducer<>(this.channel);
+        return new ChannelProducer<>(this.channel);
     }
 
     public ChannelConsumer<T> createConsumer() {
-	return new ChannelConsumer<>(this.channel);
+        return new ChannelConsumer<>(this.channel);
     }
 
-    // /
-    // INSTANCE VARIABLES
-    // /
-    private final BlockingQueue<T> channel;
+    public boolean isEmpty() {
+        return this.channel.isEmpty();
+    }
 }

@@ -1887,7 +1887,7 @@ public class SpecsIo {
 
             dirStream.forEach(path -> files.add(new File(path.toString())));
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Error while getting files with pattern: " + e.getMessage());
+            SpecsLogs.msgWarn("Error while getting files with pattern '" + pattern + "'", e);
         }
 
         return files;

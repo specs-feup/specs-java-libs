@@ -73,4 +73,9 @@ public class SpecsCheck {
         }
     }
 
+    public static void checkClass(Object value, Class<?> aClass) {
+        SpecsCheck.checkArgument(aClass.isInstance(value),
+                () -> "Expected value to be an instance of " + aClass + ", however it is a " + value.getClass());
+    }
+
 }

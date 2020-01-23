@@ -140,7 +140,8 @@ public class NodeInsertUtils {
 
         K parent = baseToken.getParent();
         if (parent == null) {
-            SpecsLogs.msgWarn("Given 'baseToken' does not have a parent. Token:\n" + baseToken);
+            SpecsLogs.msgInfo("Tried to replace node, but it does not have a parent. Base node:\n" + baseToken
+                    + "\nNew node:\n" + newToken);
             return newToken;
         }
 
