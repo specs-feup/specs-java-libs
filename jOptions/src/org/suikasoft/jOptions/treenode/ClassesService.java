@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.treenode;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 public class ClassesService<T extends DataNode<T>> {
 
-    private final String basePackage;
+    private final Collection<String> astNodesPackages;
     private final Class<T> baseClass;
     private final CustomClassnameMapper<T> customClassMap;
     private final Map<String, Class<? extends T>> autoClassMap;
@@ -36,9 +37,11 @@ public class ClassesService<T extends DataNode<T>> {
 
     private Class<? extends T> defaultClass;
 
-    public ClassesService(String basePackage, Class<T> baseClass, CustomClassnameMapper<T> customClassMap) {
-        this.basePackage = basePackage;
+    public ClassesService(Class<T> baseClass, Collection<String> astNodesPackages,
+            CustomClassnameMapper<T> customClassMap) {
+
         this.baseClass = baseClass;
+        this.astNodesPackages = astNodesPackages;
         this.customClassMap = customClassMap;
         this.autoClassMap = new HashMap<>();
         this.warnedClasses = new HashSet<>();
@@ -46,8 +49,12 @@ public class ClassesService<T extends DataNode<T>> {
         defaultClass = null;
     }
 
-    public ClassesService(String basePackage, Class<T> baseClass) {
-        this(basePackage, baseClass, new CustomClassnameMapper<T>());
+    public ClassesService(Class<T> baseClass, Collection<String> astNodesPackages) {
+        this(baseClass, astNodesPackages, new CustomClassnameMapper<T>());
+    }
+
+    public ClassesService(Class<T> baseClass, String... astNodesPackages) {
+        this(baseClass, Arrays.asList(astNodesPackages));
     }
 
     public ClassesService<T> setDefaultClass(Class<? extends T> defaultClass) {
@@ -80,10 +87,7 @@ public class ClassesService<T extends DataNode<T>> {
 
     }
 
-    private Class<? extends T> discoverClass(String classname) {
-
-        String fullClassname = simpleNameToFullName(classname);
-
+    private Class<? extends T> getClass(String classname, String fullClassname) {
         try {
             // Get class
             Class<?> aClass = Class.forName(fullClassname);
@@ -98,33 +102,92 @@ public class ClassesService<T extends DataNode<T>> {
             return aClass.asSubclass(baseClass);
 
         } catch (ClassNotFoundException e) {
-            // If default node class is defined, use that class
-            if (defaultClass != null) {
-                if (!warnedClasses.contains(classname)) {
-                    warnedClasses.add(classname);
-
-                    SpecsLogs.info("ClassesService: no node class found for name '" + classname
-                            + "', using default class '" + defaultClass + "'");
-
-                }
-
-                return defaultClass;
-            }
-
-            throw new RuntimeException("Could not map classname '" + classname + "' to a node class");
+            // No class found, return null
+            return null;
+            // throw new RuntimeException("Could not map classname '" + classname + "' to a node class");
         }
     }
 
-    private String simpleNameToFullName(String nodeClassname) {
-        var customName = customSimpleNameToFullName(nodeClassname);
+    private Class<? extends T> discoverClass(String classname) {
+
+        // First, try custom name
+        var customName = customSimpleNameToFullName(classname);
 
         if (customName != null) {
-            return customName;
+            var nodeClass = getClass(classname, customName);
+            if (nodeClass != null) {
+                return nodeClass;
+            }
         }
 
-        // By default, append nodeClassname to basePackage
-        return basePackage + "." + nodeClassname;
+        // Look for the class in the given node packages
+        for (var astNodesPackage : astNodesPackages) {
+            // Append nodeClassname to basePackage
+            var fullClassname = astNodesPackage + "." + classname;
+            var nodeClass = getClass(classname, fullClassname);
+
+            if (nodeClass != null) {
+                return nodeClass;
+            }
+        }
+
+        // If default node class is defined and no class was found, use that class
+        if (defaultClass != null) {
+            if (!warnedClasses.contains(classname)) {
+                warnedClasses.add(classname);
+
+                SpecsLogs.info("ClassesService: no node class found for name '" + classname
+                        + "', using default class '" + defaultClass + "'");
+
+            }
+
+            return defaultClass;
+        }
+
+        // Throw exception if nothing works
+        throw new RuntimeException("Could not map classname '" + classname + "' to a node class");
+
+        // try {
+        // // Get class
+        // Class<?> aClass = Class.forName(fullClassname);
+        //
+        // // Check if class is a subtype of DataNode
+        // if (!baseClass.isAssignableFrom(aClass)) {
+        // throw new RuntimeException("Classname '" + classname + "' was converted to a (" + fullClassname
+        // + ") that is not a DataNode");
+        // }
+        //
+        // // Cast class object
+        // return aClass.asSubclass(baseClass);
+        //
+        // } catch (ClassNotFoundException e) {
+        // // If default node class is defined, use that class
+        // if (defaultClass != null) {
+        // if (!warnedClasses.contains(classname)) {
+        // warnedClasses.add(classname);
+        //
+        // SpecsLogs.info("ClassesService: no node class found for name '" + classname
+        // + "', using default class '" + defaultClass + "'");
+        //
+        // }
+        //
+        // return defaultClass;
+        // }
+        //
+        // throw new RuntimeException("Could not map classname '" + classname + "' to a node class");
+        // }
     }
+
+    // private String simpleNameToFullName(String nodeClassname) {
+    // var customName = customSimpleNameToFullName(nodeClassname);
+    //
+    // if (customName != null) {
+    // return customName;
+    // }
+    //
+    // // By default, append nodeClassname to basePackage
+    // return basePackage + "." + nodeClassname;
+    // }
 
     /**
      * Override method if you want to define custom rules. Any case that returns null uses the default conversion.
