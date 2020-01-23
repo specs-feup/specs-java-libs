@@ -250,6 +250,9 @@ public class LineStream implements AutoCloseable {
 
             return line;
         } catch (final IOException ex) {
+            // SpecsLogs.msgWarn("Could not read line.", ex);
+            // fileEnded = true;
+            // reader.close();
             throw new RuntimeException("Could not read line.", ex);
             // LoggingUtils.msgWarn("Could not read line.", ex);
             // return null;

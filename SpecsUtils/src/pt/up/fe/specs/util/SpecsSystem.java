@@ -83,6 +83,7 @@ public class SpecsSystem {
     private static final Map<String, Optional<Field>> CACHED_FIELDS = new HashMap<>();
 
     private static boolean testIsDebug() {
+
         // Test if file debug exists in working directory
         if (new File("debug").isFile()) {
             return true;
@@ -112,10 +113,7 @@ public class SpecsSystem {
 
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
-
         return runProcess(builder, storeOutput, printOutput);
-        // return runProcess(command, workingDir, storeOutput, printOutput, builder);
-
     }
 
     public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
@@ -123,11 +121,11 @@ public class SpecsSystem {
 
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
+
         Function<InputStream, String> stdout = new StreamToString(printOutput, storeOutput, OutputType.StdOut);
         Function<InputStream, String> stderr = new StreamToString(printOutput, storeOutput, OutputType.StdErr);
 
         ProcessOutput<String, String> output = runProcess(builder, stdout, stderr, timeoutNanos);
-
         return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
     }
 
@@ -180,24 +178,13 @@ public class SpecsSystem {
      * @return
      */
     public static ProcessOutputAsString runProcess(ProcessBuilder builder, boolean storeOutput, boolean printOutput) {
+
         Function<InputStream, String> stdout = new StreamToString(printOutput, storeOutput, OutputType.StdOut);
         Function<InputStream, String> stderr = new StreamToString(printOutput, storeOutput, OutputType.StdErr);
 
         ProcessOutput<String, String> output = runProcess(builder, stdout, stderr);
-
         return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
     }
-
-    /*
-    public static ProcessOutputAsString runProcess(Process process, boolean storeOutput, boolean printOutput) {
-        Function<InputStream, String> stdout = new StreamToString(printOutput, storeOutput, OutputType.StdOut);
-        Function<InputStream, String> stderr = new StreamToString(printOutput, storeOutput, OutputType.StdErr);
-    
-        ProcessOutput<String, String> output = runProcess(process, stdout, stderr, null);
-    
-        return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
-    }
-    */
 
     /**
      * Helper method which receives the command instead of the builder, and launches the process in the current
@@ -226,10 +213,8 @@ public class SpecsSystem {
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command, File workingDir,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
 
-        // List<String> normalizedCommand = normalizeProcessCommand(command);
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
-
         return runProcess(builder, outputProcessor, errorProcessor);
     }
 
@@ -334,38 +319,12 @@ public class SpecsSystem {
         return runProcess(builder, outputProcessor, errorProcessor, null);
     }
 
-    /*
-    public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
-            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
-    
-        String commandString = getCommandString(builder.command());
-        SpecsLogs.msgLib("Launching Process: " + commandString);
-    
-        Process process = null;
-        try {
-            process = builder.start();
-        } catch (IOException e) {
-            throw new RuntimeException("Could not start process", e);
-        }
-    
-        return runProcess(process, outputProcessor, errorProcessor, timeoutNanos);
-    }
-    
-    public static <O, E> ProcessOutput<O, E> runProcess(Process process,
-            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
-    */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
         // The command in the builder might need processing (e.g., Windows system commands)
         processCommand(builder);
-
-        // List<String> normalizedCommand = normalizeCommand(builder.command());
-        // builder.command(normalizedCommand);
-        // String commandString = getCommandString(builder.command());
-        // SpecsLogs.debug("Launching Process: " + commandString);
-        SpecsLogs.debug(
-                () -> "Launching Process: " + builder.command().stream().collect(Collectors.joining(" ")));
+        SpecsLogs.debug(() -> "Launching Process: " + builder.command().stream().collect(Collectors.joining(" ")));
 
         Process process = null;
         try {
@@ -378,22 +337,17 @@ public class SpecsSystem {
             SpecsLogs.msgLib("Preparing to run process, memory before -> after GC: "
                     + SpecsStrings.parseSize(totalMemBefore) + " -> " + SpecsStrings.parseSize(totalMemAfter));
             process = builder.start();
+
         } catch (IOException e) {
             throw new RuntimeException("Could not start process", e);
         }
 
-        InputStream errorStream = process.getErrorStream();
-        InputStream inputStream = process.getInputStream();
-
-        // try {
-
-        // FunctionContainer<InputStream, O> outputContainer = new FunctionContainer<>(outputProcessor);
-        // FunctionContainer<InputStream, E> errorContainer = new FunctionContainer<>(errorProcessor);
-
         ExecutorService stdoutThread = Executors.newSingleThreadExecutor();
+        InputStream inputStream = process.getInputStream();
         Future<O> outputFuture = stdoutThread.submit(() -> outputProcessor.apply(inputStream));
 
         ExecutorService stderrThread = Executors.newSingleThreadExecutor();
+        InputStream errorStream = process.getErrorStream();
         Future<E> errorFuture = stderrThread.submit(() -> errorProcessor.apply(errorStream));
 
         // The ExecutorService objects are shutdown, as they will not
@@ -402,38 +356,6 @@ public class SpecsSystem {
         stderrThread.shutdown();
 
         return executeProcess(process, timeoutNanos, outputFuture, errorFuture);
-
-        /*
-        int returnValue = executeProcess(process, timeoutNanos);
-        
-        // Wait 2 seconds
-        // stderrThread.awaitTermination(2, TimeUnit.SECONDS);
-        // stdoutThread.awaitTermination(2, TimeUnit.SECONDS);
-        
-        try {
-            O output = outputFuture.get();
-            E error = errorFuture.get();
-        
-            // Save output
-            ProcessOutput<O, E> processOutput = new ProcessOutput<>(returnValue, output, error);
-        
-            return processOutput;
-        
-        } catch (ExecutionException e) {
-            throw new RuntimeException("Exception while processing outputs of process:", e);
-        }
-        */
-        // outputContainer.getResult();
-
-        // } catch (InterruptedException e) {
-        // Thread.currentThread().interrupt();
-        // } finally {
-        // // Process is destroyed, even if we 'interrupt' the thread.
-        // // Thread.currentThread().interrupt() only sets a flag.
-        // process.destroy();
-        // }
-
-        // throw new RuntimeException("Could not execute the process");
     }
 
     /**
@@ -471,29 +393,21 @@ public class SpecsSystem {
         builder.command(newCommand);
     }
 
-    private static <O, E> ProcessOutput<O, E> executeProcess(Process process, Long timeoutNanos, Future<O> outputFuture,
-            Future<E> errorFuture) {
+    private static <O, E> ProcessOutput<O, E> executeProcess(Process process,
+            Long timeoutNanos, Future<O> outputFuture, Future<E> errorFuture) {
 
-        // try {
-        // O output = outputFuture.get();
-        // E error = errorFuture.get();
-        //
-        // // Save output
-        // ProcessOutput<O, E> processOutput = new ProcessOutput<>(returnValue, output, error);
-        //
-        // return processOutput;
-        //
-        // } catch (ExecutionException e) {
-        // throw new RuntimeException("Exception while processing outputs of process:", e);
-        // }
+        boolean timedOut = false;
 
+        // Read streams before the process ends
+        O output = null;
+        E error = null;
+
+        // wait forever, or just for a while
         try {
-            // System.out.println("EXECUTE PROCESS TIMEOUT:" + timeoutNanos + "ns");
-            boolean timedOut = false;
             if (timeoutNanos == null) {
-                // SpecsLogs.debug(() -> "Launched process without timeout");
                 process.waitFor();
-                destroyDescendants(process.descendants().collect(Collectors.toList()));
+                SpecsLogs.debug(() -> "Process ended on its own");
+
             } else {
                 SpecsLogs.debug(() -> "Launched process with a timeout of " + timeoutNanos + "ns");
                 timedOut = !process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
@@ -501,143 +415,74 @@ public class SpecsSystem {
                 SpecsLogs.debug(() -> "Process timed out? " + timedOutFinal);
             }
 
-            // System.out.println("Process ended");
-
-            // Read streams before the process ends
-            O output = null;
-            E error = null;
-            // SpecsLogs.debug(() -> "Reading process streams");
-
-            try {
-                output = outputFuture.get(10, TimeUnit.SECONDS);
-                error = errorFuture.get(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException("Thread interrupted while waiting for output/error streams");
-            } catch (Exception e) {
-                SpecsLogs.debug("Exception while waiting for output/error streams: " + e.getMessage());
-                timedOut = true;
-                // throw new RuntimeException("Exception while waiting for output/error streams", e);
-            }
-
-            // output = get(outputFuture, 2, TimeUnit.SECONDS);
-            // error = get(errorFuture, 2, TimeUnit.SECONDS);
-
-            // try {
-            //
-            // } catch (ExecutionException e) {
-            // throw new RuntimeException("Exception while processing outputs of process:", e);
-            // }
-
-            int returnValue = timedOut ? -1 : process.exitValue();
-
-            // boolean processExited = process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
-            // System.out.println("PROCESS EXITED: " + processExited);
-            // System.out.println("PROCESS EXIT VALUE: " + process.exitValue());
-            // if (processExited) {
-            // return process.exitValue();
-            // }
-
-            if (timedOut) {
-                destroyProcess(process);
-            }
-
-            // SpecsLogs.debug(() -> "Returning process output");
-            return new ProcessOutput<>(returnValue, output, error);
-            // return -1;
-
-            // SpecsLogs.msgInfo("Process timed out v2");
-            // return -1;
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-
+            e.printStackTrace();
             destroyProcess(process);
-
             throw new RuntimeException("Could not finish process with command '"
                     + process.info().commandLine().orElse("<NOT AVAILABLE>") + "'");
-            // SpecsLogs.msgInfo("Process timed out");
-            // return -1;
-            // SpecsLogs.debug(() -> "Returning interrupted process output");
-            // return new ProcessOutput<>(-1, null, null);
         }
+
+        try {
+            output = outputFuture.get(10, TimeUnit.SECONDS);
+            error = errorFuture.get(10, TimeUnit.SECONDS);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Thread interrupted while waiting for output/error streams");
+
+        } catch (Exception e) {
+            SpecsLogs.debug("Exception while waiting for output/error streams: " + e.getMessage());
+            timedOut = true;
+        }
+
+        // wait for notify (?)
+        /*       try {
+            process.getInputStream().wait();
+        
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }*/
+
+        int returnValue = timedOut ? -1 : process.exitValue();
+        destroyProcess(process);
+        return new ProcessOutput<>(returnValue, output, error);
     }
 
     private static void destroyProcess(Process process) {
+
+        // TODO: a breakpoint is necessary before process destruction, or else the "insts"
+        // linestream is closed
+
         // Get descendants of the process
         List<ProcessHandle> processDescendants = process.descendants().collect(Collectors.toList());
-
         SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Killing process...");
         process.destroyForcibly();
-        // SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Waiting killing...");
-        // boolean processDestroyed = process.waitFor(1, TimeUnit.SECONDS);
-        // if (processDestroyed) {
-        // SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Destroyed");
-        // } else {
-        // SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Could not destroy process!");
-        // }
-
         destroyDescendants(processDescendants);
     }
 
     private static void destroyDescendants(List<ProcessHandle> processDescendants) {
+
         // Destroy descendants
         ProgressCounter counter = new ProgressCounter(processDescendants.size());
         SpecsLogs.debug("Found " + processDescendants.size() + " descendants processes");
         for (ProcessHandle handle : processDescendants) {
-            SpecsLogs
-                    .debug(() -> "SpecsSystem.executeProcess: Killing descendant process... " + counter.next());
+            SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Killing descendant process... " + counter.next());
 
             handle.destroyForcibly();
             SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Waiting killing...");
             try {
                 handle.onExit().get(1, TimeUnit.SECONDS);
                 SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Destroyed");
+
             } catch (TimeoutException t) {
-                SpecsLogs.debug(
-                        () -> "SpecsSystem.executeProcess: Timeout while destroying descendant process!");
+                SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Timeout while destroying descendant process!");
+
             } catch (Exception e) {
                 SpecsLogs.debug(() -> "SpecsSystem.executeProcess: Could not destroy descendant process!");
             }
         }
     }
-
-    /*
-    private static int executeProcess(Process process, Long timeoutNanos) {
-        try {
-            // System.out.println("EXECUTE PROCESS TIMEOUT:" + timeoutNanos + "ns");
-    
-            if (timeoutNanos == null) {
-                return process.waitFor();
-            }
-    
-            boolean processExited = process.waitFor(timeoutNanos, TimeUnit.NANOSECONDS);
-            // System.out.println("PROCESS EXITED: " + processExited);
-            // System.out.println("PROCESS EXIT VALUE: " + process.exitValue());
-            if (processExited) {
-                return process.exitValue();
-            }
-    
-            SpecsLogs.msgLib("SpecsSystem.executeProcess: Killing process...");
-            process.destroyForcibly();
-            SpecsLogs.msgLib("SpecsSystem.executeProcess: Waiting killing...");
-            boolean processDestroyed = process.waitFor(1, TimeUnit.SECONDS);
-            if (processDestroyed) {
-                SpecsLogs.msgLib("SpecsSystem.executeProcess: Destroyed");
-            } else {
-                SpecsLogs.msgInfo("SpecsSystem.executeProcess: Could not destroy process!");
-            }
-    
-            return -1;
-    
-            // SpecsLogs.msgInfo("Process timed out v2");
-            // return -1;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            // SpecsLogs.msgInfo("Process timed out");
-            return -1;
-        }
-    }
-    */
 
     public static ThreadFactory getDaemonThreadFactory() {
         return r -> {
