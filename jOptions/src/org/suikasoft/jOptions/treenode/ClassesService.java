@@ -31,27 +31,26 @@ public class ClassesService<T extends DataNode<T>> {
 
     private final Collection<String> astNodesPackages;
     private final Class<T> baseClass;
-    private final CustomClassnameMapper<T> customClassMap;
+    // private final CustomClassnameMapper<T> customClassMap;
     private final Map<String, Class<? extends T>> autoClassMap;
     private final Set<String> warnedClasses;
 
     private Class<? extends T> defaultClass;
 
-    public ClassesService(Class<T> baseClass, Collection<String> astNodesPackages,
-            CustomClassnameMapper<T> customClassMap) {
+    public ClassesService(Class<T> baseClass, Collection<String> astNodesPackages) {
 
         this.baseClass = baseClass;
         this.astNodesPackages = astNodesPackages;
-        this.customClassMap = customClassMap;
+        // this.customClassMap = customClassMap;
         this.autoClassMap = new HashMap<>();
         this.warnedClasses = new HashSet<>();
 
         defaultClass = null;
     }
 
-    public ClassesService(Class<T> baseClass, Collection<String> astNodesPackages) {
-        this(baseClass, astNodesPackages, new CustomClassnameMapper<T>());
-    }
+    // public ClassesService(Class<T> baseClass, Collection<String> astNodesPackages) {
+    // this(baseClass, astNodesPackages, new CustomClassnameMapper<T>());
+    // }
 
     public ClassesService(Class<T> baseClass, String... astNodesPackages) {
         this(baseClass, Arrays.asList(astNodesPackages));
@@ -62,20 +61,20 @@ public class ClassesService<T extends DataNode<T>> {
         return this;
     }
 
-    public CustomClassnameMapper<T> getCustomClassMap() {
-        return customClassMap;
-    }
+    // public CustomClassnameMapper<T> getCustomClassMap() {
+    // return customClassMap;
+    // }
 
     public Class<? extends T> getClass(String classname) {
 
-        // Try custom map
-        Class<? extends T> dataNodeClass = customClassMap.getClass(classname);
-        if (dataNodeClass != null) {
-            return dataNodeClass;
-        }
+        // // Try custom map
+        // Class<? extends T> dataNodeClass = customClassMap.getClass(classname);
+        // if (dataNodeClass != null) {
+        // return dataNodeClass;
+        // }
 
         // Try cached nodes
-        dataNodeClass = autoClassMap.get(classname);
+        Class<? extends T> dataNodeClass = autoClassMap.get(classname);
         if (dataNodeClass != null) {
             return dataNodeClass;
         }
@@ -124,6 +123,7 @@ public class ClassesService<T extends DataNode<T>> {
         for (var astNodesPackage : astNodesPackages) {
             // Append nodeClassname to basePackage
             var fullClassname = astNodesPackage + "." + classname;
+            // System.out.println("TRYING CLASS " + fullClassname);
             var nodeClass = getClass(classname, fullClassname);
 
             if (nodeClass != null) {
