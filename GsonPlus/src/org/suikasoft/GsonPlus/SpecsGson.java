@@ -13,8 +13,12 @@
 
 package org.suikasoft.GsonPlus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
 public class SpecsGson {
 
@@ -24,5 +28,21 @@ public class SpecsGson {
 
     public static <T> T fromJson(String json, Class<T> aClass) {
         return new Gson().fromJson(json, aClass);
+    }
+
+    public static <T> List<T> asList(JsonElement element, Class<? extends T> elementClass) {
+        if (!element.isJsonArray()) {
+            throw new RuntimeException("Can only be applied to arrays: " + element);
+        }
+
+        var array = element.getAsJsonArray();
+
+        List<T> list = new ArrayList<>(array.size());
+
+        for (var arrayElemen : array) {
+            list.add(elementClass.cast(arrayElemen));
+        }
+
+        return list;
     }
 }
