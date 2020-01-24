@@ -27,19 +27,29 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T> {
 
     private final DataStore data;
+    private boolean isLocked;
 
     public ADataClass(DataStore data) {
         this.data = data;
+        this.isLocked = false;
     }
 
     public ADataClass() {
         // this(DataStore.newInstance(getClass()));
         // this.data = DataStore.newInstance(getClass());
+
+        // Cannot use previous Constructor because we cannot call 'getClass()' from whitin 'this(...)'
         this.data = DataStore.newInstance(StoreDefinitions.fromInterface(getClass()), false);
     }
 
     protected DataStore getDataStore() {
         return data;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T lock() {
+        this.isLocked = true;
+        return (T) this;
     }
 
     @Override
@@ -72,6 +82,10 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     @Override
     @SuppressWarnings("unchecked")
     public <K, E extends K> T set(DataKey<K> key, E value) {
+        if (isLocked) {
+            throw new RuntimeException("Instance of DataClass '" + getClass() + "' is locked! Cannot be changed");
+        }
+
         data.set(key, value);
         return (T) this;
     }
@@ -82,6 +96,10 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     @Override
     @SuppressWarnings("unchecked")
     public T set(T instance) {
+        if (isLocked) {
+            throw new RuntimeException("Instance of DataClass '" + getClass() + "' is locked! Cannot be changed");
+        }
+
         this.data.addAll(((ADataClass<?>) instance).data);
         return (T) this;
     }
