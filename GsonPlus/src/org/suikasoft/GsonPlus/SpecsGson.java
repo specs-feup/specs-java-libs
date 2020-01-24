@@ -15,6 +15,7 @@ package org.suikasoft.GsonPlus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.google.gson.Gson;
@@ -45,5 +46,13 @@ public class SpecsGson {
         }
 
         return list;
+    }
+
+    public static <T> Optional<T> asOptional(JsonElement element, Function<JsonElement, T> mapper) {
+        if (element == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(mapper.apply(element));
     }
 }
