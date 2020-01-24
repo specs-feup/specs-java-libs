@@ -24,7 +24,9 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionBuilder;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
-public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T> {
+import pt.up.fe.specs.util.providers.StringProvider;
+
+public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>, StringProvider {
 
     private final DataStore data;
     private boolean isLocked;
@@ -105,11 +107,6 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     }
 
     @Override
-    public String toString() {
-        return data.toString();
-    }
-
-    @Override
     public <VT> boolean hasValue(DataKey<VT> key) {
         return data.hasValue(key);
     }
@@ -163,6 +160,16 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         }
 
         return true;
+    }
+
+    @Override
+    public String getString() {
+        return toString();
+    }
+
+    @Override
+    public String toString() {
+        return toInlinedString();
     }
 
     // @Override

@@ -45,7 +45,6 @@ public class DataClassUtils {
 
         if (dataClassValue instanceof Optional) {
             Optional<?> optional = (Optional<?>) dataClassValue;
-
             return optional.map(value -> toString(value)).orElse("Optional.empty");
         }
 

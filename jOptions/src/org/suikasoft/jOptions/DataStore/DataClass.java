@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.DataStore;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
@@ -150,5 +151,20 @@ public interface DataClass<T extends DataClass<T>> {
     // set(key, previousValue + amount);
     // return previousValue;
     // }
+
+    default String toInlinedString() {
+        var keys = getDataKeysWithValues();
+
+        if (getStoreDefinition().isPresent()) {
+            keys = getStoreDefinition().get().getKeys().stream()
+                    .filter(key -> hasValue(key))
+                    .collect(Collectors.toList());
+        }
+
+        return keys.stream()
+                .map(key -> key.getName() + ": " + DataClassUtils.toString(get(key)))
+                .collect(Collectors.joining(", ", "[", "]"));
+
+    }
 
 }
