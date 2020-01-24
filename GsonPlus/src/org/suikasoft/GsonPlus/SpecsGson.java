@@ -15,6 +15,7 @@ package org.suikasoft.GsonPlus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,7 +31,7 @@ public class SpecsGson {
         return new Gson().fromJson(json, aClass);
     }
 
-    public static <T> List<T> asList(JsonElement element, Class<? extends T> elementClass) {
+    public static <T> List<T> asList(JsonElement element, Function<JsonElement, T> mapper) {
         if (!element.isJsonArray()) {
             throw new RuntimeException("Can only be applied to arrays: " + element);
         }
@@ -40,7 +41,7 @@ public class SpecsGson {
         List<T> list = new ArrayList<>(array.size());
 
         for (var arrayElemen : array) {
-            list.add(elementClass.cast(arrayElemen));
+            list.add(mapper.apply(arrayElemen));
         }
 
         return list;
