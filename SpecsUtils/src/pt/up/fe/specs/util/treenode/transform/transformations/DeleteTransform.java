@@ -22,16 +22,16 @@ import pt.up.fe.specs.util.treenode.transform.ANodeTransform;
 public class DeleteTransform<K extends TreeNode<K>> extends ANodeTransform<K> {
 
     public DeleteTransform(K node) {
-	super("delete", Arrays.asList(node));
+        super("delete", Arrays.asList(node));
     }
 
     public K getNode() {
-	return getOperands().get(0);
+        return getOperands().get(0);
     }
 
     @Override
     public void execute() {
-	NodeInsertUtils.delete(getNode());
+        NodeInsertUtils.delete(getNode());
     }
 
 }
