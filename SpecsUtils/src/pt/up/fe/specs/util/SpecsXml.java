@@ -112,26 +112,26 @@ public class SpecsXml {
     }
 
     /**
-     * Returns the value of the attribute inside the given session.
+     * Returns the value of the attribute inside the given tag.
      *
      * @param doc
-     * @param section
+     * @param tag
      * @param attribute
      * @return
      */
-    public static String getAttribute(Document doc, String section, String attribute) {
-        NodeList nList = doc.getElementsByTagName(section);
+    public static String getAttribute(Document doc, String tag, String attribute) {
+        NodeList nList = doc.getElementsByTagName(tag);
 
-        return getAttribute(nList, section, attribute);
+        return getAttribute(nList, tag, attribute);
     }
 
-    public static String getAttribute(Element element, String section, String attribute) {
-        NodeList nList = element.getElementsByTagName(section);
+    public static String getAttribute(Element element, String tag, String attribute) {
+        NodeList nList = element.getElementsByTagName(tag);
 
-        return getAttribute(nList, section, attribute);
+        return getAttribute(nList, tag, attribute);
     }
 
-    private static String getAttribute(NodeList nList, String section, String attribute) {
+    private static String getAttribute(NodeList nList, String tag, String attribute) {
         // NodeList nList = doc.getElementsByTagName(section);
         /*
         	if (nList == null) {
@@ -140,19 +140,19 @@ public class SpecsXml {
         	}
          */
         if (nList.getLength() == 0) {
-            SpecsLogs.msgInfo("Could not find section '" + section + "'");
+            SpecsLogs.msgInfo("Could not find section '" + tag + "'");
             return null;
         }
 
         if (nList.getLength() > 1) {
-            SpecsLogs.msgInfo("Found more than one '" + section
+            SpecsLogs.msgInfo("Found more than one '" + tag
                     + "' section, returning the attribute of the first occcurence");
         }
 
         Node nNode = nList.item(0);
 
         if (nNode.getNodeType() != Node.ELEMENT_NODE) {
-            System.out.println("Node '" + section + "' is not an element");
+            System.out.println("Node '" + tag + "' is not an element");
             return null;
         }
 
@@ -162,23 +162,23 @@ public class SpecsXml {
 
     }
 
-    public static Element getSection(Element element, String section) {
-        NodeList nList = element.getElementsByTagName(section);
+    public static Element getElement(Element element, String tag) {
+        NodeList nList = element.getElementsByTagName(tag);
 
         if (nList.getLength() == 0) {
-            SpecsLogs.msgInfo("Could not find section '" + section + "'");
+            SpecsLogs.msgInfo("Could not find element with name '" + tag + "'");
             return null;
         }
 
         if (nList.getLength() > 1) {
-            SpecsLogs.msgInfo("Found more than one '" + section
-                    + "' section, returning the attribute of the first occcurence");
+            SpecsLogs.msgInfo("Found more than one '" + tag
+                    + "' element, returning the attribute of the first occcurence");
         }
 
         Node nNode = nList.item(0);
 
         if (nNode.getNodeType() != Node.ELEMENT_NODE) {
-            System.out.println("Node '" + section + "' is not an element");
+            System.out.println("Node '" + tag + "' is not an element");
             return null;
         }
 
@@ -187,8 +187,8 @@ public class SpecsXml {
         return eElement;
     }
 
-    public static String getSectionValue(Element element, String section) {
-        Element sectionElement = getSection(element, section);
+    public static String getElementText(Element element, String tag) {
+        Element sectionElement = getElement(element, tag);
 
         return sectionElement.getTextContent();
     }
@@ -218,12 +218,12 @@ public class SpecsXml {
 
     /*
     public static List<Node> getNodes(NodeList nodeList, String nodeTag) {
-
+    
     List<Node> nodes = new ArrayList<>();
     for (int i = 0; i < nodeList.getLength(); i++) {
         nodes.add(nodeList.item(i));
     }
-
+    
     return nodes;
     }
      */
