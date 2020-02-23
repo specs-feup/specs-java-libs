@@ -16,17 +16,12 @@ package pt.up.fe.specs.util.xml;
 import java.io.File;
 import java.io.InputStream;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import pt.up.fe.specs.util.SpecsXml;
 
-public class XmlDocument implements XmlNode {
+public class XmlDocument extends AXmlNode {
     /**
      * The document this element is part of.
      */
@@ -55,24 +50,6 @@ public class XmlDocument implements XmlNode {
 
     public static XmlDocument newInstanceFromUri(String uri) {
         return new XmlDocument(SpecsXml.getXmlRootFromUri(uri));
-    }
-
-    public void write(File outputFile) {
-        try {
-            // write the content into xml file
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer;
-
-            transformer = transformerFactory.newTransformer();
-
-            DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(outputFile);
-
-            transformer.transform(source, result);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Could not write XML file from document", e);
-        }
     }
 
 }

@@ -13,10 +13,19 @@
 
 package pt.up.fe.specs.util.xml;
 
+import java.io.File;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.Node;
+
+import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * Can represent the root of the XML document, or an XML element.
@@ -86,5 +95,40 @@ public interface XmlNode {
         var previousText = getText();
         getNode().setTextContent(text);
         return previousText;
+    }
+
+    default void write(StreamResult result) {
+        try {
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+
+            DOMSource source = new DOMSource(getNode());
+            // System.out.println("CHILD NODE : " + document.getChildNodes().item(0).getChildNodes().getLength());
+            transformer.transform(source, result);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not write XML  from document", e);
+        }
+    }
+
+    default void write(File outputFile) {
+        SpecsLogs.debug(() -> "Writing XML document " + outputFile);
+        StreamResult result = new StreamResult(outputFile);
+        write(result);
+    }
+
+    default public String getString() {
+        var stringWriter = new StringWriter();
+
+        StreamResult result = new StreamResult(stringWriter);
+        write(result);
+        // stringWriter.flush();
+        // try {
+        // stringWriter.close();
+        // } catch (IOException e) {
+        // throw new RuntimeException("Could not ", e);
+        // }
+        return stringWriter.toString();
     }
 }

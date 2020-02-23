@@ -16,7 +16,7 @@ package pt.up.fe.specs.util.xml;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class XmlElement implements XmlNode {
+public class XmlElement extends AXmlNode {
 
     private final Element element;
 

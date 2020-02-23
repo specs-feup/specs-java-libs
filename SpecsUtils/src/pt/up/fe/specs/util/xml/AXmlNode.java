@@ -13,19 +13,10 @@
 
 package pt.up.fe.specs.util.xml;
 
-import org.w3c.dom.Node;
-
-public class XmlGenericNode extends AXmlNode {
-
-    private final Node node;
-
-    public XmlGenericNode(Node node) {
-        this.node = node;
-    }
+public abstract class AXmlNode implements XmlNode {
 
     @Override
-    public Node getNode() {
-        return node;
+    public String toString() {
+        return getString();
     }
-
 }
