@@ -25,6 +25,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Node;
 
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -113,6 +114,8 @@ public interface XmlNode {
     }
 
     default void write(File outputFile) {
+        // Make sure folder exists
+        SpecsIo.mkdir(outputFile.getParent());
         SpecsLogs.debug(() -> "Writing XML document " + outputFile);
         StreamResult result = new StreamResult(outputFile);
         write(result);

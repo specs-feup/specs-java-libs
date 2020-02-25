@@ -13,6 +13,10 @@
 
 package pt.up.fe.specs.util.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -53,4 +57,22 @@ public class XmlElement extends AXmlNode {
         element.setAttribute(name, value);
         return previousValue;
     }
+
+    public List<String> getAttributes() {
+        var attributes = element.getAttributes();
+        var attributesNames = new ArrayList<String>(attributes.getLength());
+
+        for (int i = 0; i < attributes.getLength(); i++) {
+            var item = attributes.item(i);
+
+            if (!(item instanceof Attr)) {
+                continue;
+            }
+
+            attributesNames.add(((Attr) item).getName());
+        }
+
+        return attributesNames;
+    }
+
 }
