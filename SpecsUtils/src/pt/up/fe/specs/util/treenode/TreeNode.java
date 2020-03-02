@@ -242,7 +242,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * @param children
-     *            the children to set
+     *                     the children to set
      */
     void setChildren(Collection<? extends K> children);
 
@@ -362,7 +362,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      * Tests whether the given node is an ancestor of this node.
      *
      * @param node
-     *            the node to test
+     *                 the node to test
      * @return true if it is ancestor, false otherwise
      */
     default boolean isAncestor(K node) {
@@ -474,9 +474,9 @@ public interface TreeNode<K extends TreeNode<K>> {
      *
      * @param token
      * @param startIndex
-     *            (inclusive)
+     *                       (inclusive)
      * @param endIndex
-     *            (exclusive)
+     *                       (exclusive)
      */
     default void removeChildren(int startIndex, int endIndex) {
 
@@ -603,4 +603,15 @@ public interface TreeNode<K extends TreeNode<K>> {
         return parentChildren.subList(indexOfSelf() + 1, parentChildren.size());
     }
 
+    /**
+     * 
+     * @return the depth of this node (e.g., 0 if it has no parent, 1 if it is a child of the root node)
+     */
+    default int getDepth() {
+        if (!hasParent()) {
+            return 0;
+        }
+
+        return 1 + getParent().getDepth();
+    }
 }
