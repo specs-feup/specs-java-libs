@@ -41,8 +41,8 @@ import pt.up.fe.specs.util.logging.SpecsLogging;
  */
 public class SpecsLogs {
 
-    private final static EnumLogger<SpecsLoggerTag> SPECS_LOGGER = EnumLogger.newInstance(SpecsLoggerTag.class)
-            .addToIgnoreList(SpecsLogs.class);
+    private final static ThreadLocal<EnumLogger<SpecsLoggerTag>> SPECS_LOGGER = ThreadLocal
+            .withInitial(() -> EnumLogger.newInstance(SpecsLoggerTag.class).addToIgnoreList(SpecsLogs.class));
 
     // private final static String NEWLINE = System.getProperty("line.separator");
 
@@ -79,12 +79,12 @@ public class SpecsLogs {
      * @return logger for
      */
     public static Logger getLogger() {
-        return SPECS_LOGGER.getLogger(null);
+        return SPECS_LOGGER.get().getLogger(null);
         // return Logger.getLogger(SpecsLogs.LOGGING_TAG);
     }
 
     public static EnumLogger<SpecsLoggerTag> getSpecsLogger() {
-        return SPECS_LOGGER;
+        return SPECS_LOGGER.get();
         // return Logger.getLogger(SpecsLogs.LOGGING_TAG);
     }
 
@@ -119,8 +119,8 @@ public class SpecsLogs {
      * object reference before it exists.
      *
      * @param callerMethodIndex
-     *            the index indicating the depth of method calling. This method introduces 3 calls (index 0-2), index 3
-     *            is this method, index 4 is the caller index
+     *                              the index indicating the depth of method calling. This method introduces 3 calls
+     *                              (index 0-2), index 3 is this method, index 4 is the caller index
      * @return logger specific to the given object
      */
     /*
@@ -173,7 +173,7 @@ public class SpecsLogs {
      * Removes current handlers and adds the given Handlers to the root logger.
      *
      * @param handlers
-     *            the Handlers we want to set as the root Handlers.
+     *                     the Handlers we want to set as the root Handlers.
      */
     public static void setRootHandlers(Handler[] handlers) {
         final Logger logger = getRootLogger();
@@ -227,7 +227,7 @@ public class SpecsLogs {
      * Removes current handlers and adds the given Handlers to the root logger.
      *
      * @param handlers
-     *            the Handlers we want to set as the root Handlers.
+     *                     the Handlers we want to set as the root Handlers.
      */
     // public static void addHandler(Handler handler) {
     public static void addHandlers(List<Handler> handlers) {
@@ -418,7 +418,7 @@ public class SpecsLogs {
      * @param msg
      */
     public static void warn(String msg) {
-        SPECS_LOGGER.warn(msg);
+        SPECS_LOGGER.get().warn(msg);
     }
 
     public static void msgWarn(String msg) {
@@ -484,7 +484,7 @@ public class SpecsLogs {
         // msg = msg + "\nCause: [" + ourCause.getClass().getSimpleName() + "] " + ourCause.getMessage() + msgSource;
         msg = msg + catchLocation + "\n\nException message: " + causeString;
 
-        SPECS_LOGGER.log(Level.WARNING, null, msg, LogSourceInfo.getLogSourceInfo(Level.WARNING),
+        SPECS_LOGGER.get().log(Level.WARNING, null, msg, LogSourceInfo.getLogSourceInfo(Level.WARNING),
                 ourCause.getStackTrace());
 
         // final List<StackTraceElement> elements = Arrays.asList(ourCause.getStackTrace());
@@ -546,7 +546,7 @@ public class SpecsLogs {
     }
 
     public static void info(String msg) {
-        SPECS_LOGGER.info(msg);
+        SPECS_LOGGER.get().info(msg);
     }
 
     /**
@@ -576,7 +576,7 @@ public class SpecsLogs {
      * @param msg
      */
     public static void msgLib(String msg) {
-        SPECS_LOGGER.log(LogLevel.LIB, msg);
+        SPECS_LOGGER.get().log(LogLevel.LIB, msg);
         // msg = parseMessage(msg);
         // msgLib does not need support for printing the stack-trace, since it is to be used
         // to log information that does not represent programming errors.
@@ -594,7 +594,7 @@ public class SpecsLogs {
      * @param msg
      */
     public static void msgSevere(String msg) {
-        SPECS_LOGGER.log(Level.SEVERE, msg);
+        SPECS_LOGGER.get().log(Level.SEVERE, msg);
         // msg = parseMessage(msg);
         //
         // getLoggerDebug().severe(msg);
@@ -659,7 +659,7 @@ public class SpecsLogs {
     public static void debug(Supplier<String> string) {
         // To avoid resolving the string unnecessarily
         if (SpecsSystem.isDebug()) {
-            SPECS_LOGGER.debug(string.get());
+            SPECS_LOGGER.get().debug(string.get());
             // Prefix
             // String message = "[DEBUG] " + string.get();
             // msgInfo(message);
