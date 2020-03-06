@@ -1630,7 +1630,7 @@ public class SpecsIo {
     }
 
     /**
-     * Copy the given resource to the destination folder. Is destination file already exists, does nothing.
+     * Copy the given resource to the destination folder. If destination file already exists, overwrites.
      *
      * @param resource
      * @param destinationFolder
@@ -1639,7 +1639,7 @@ public class SpecsIo {
      */
     public static File resourceCopy(String resource, File destinationFolder, boolean useResourcePath) {
 
-        return resourceCopy(resource, destinationFolder, useResourcePath, false);
+        return resourceCopy(resource, destinationFolder, useResourcePath, true);
     }
 
     /**
