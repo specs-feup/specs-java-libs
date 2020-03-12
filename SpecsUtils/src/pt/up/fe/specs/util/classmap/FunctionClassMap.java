@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.Preconditions;
+import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
@@ -47,28 +47,43 @@ public class FunctionClassMap<T, R> {
     private final Function<T, ? extends R> defaultFunction;
 
     public FunctionClassMap() {
-	this(new HashMap<>(), true, null, null);
+        this(new HashMap<>(), true, null, null);
     }
 
     public <ER extends R> FunctionClassMap(ER defaultValue) {
-	this(new HashMap<>(), true, defaultValue, null);
+        this(new HashMap<>(), true, defaultValue, null);
     }
 
     public <ER extends R> FunctionClassMap(Function<T, ER> defaultFunction) {
-	this(new HashMap<>(), true, null, defaultFunction);
+        this(new HashMap<>(), true, null, defaultFunction);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <ER extends R> FunctionClassMap(FunctionClassMap<T, ER> functionClassMap) {
+        // this(functionClassMap.map, functionClassMap.supportInterfaces, functionClassMap.defaultValue,
+        // functionClassMap.defaultFunction);
+
+        this.map = new HashMap<>();
+        for (var keyPair : functionClassMap.map.entrySet()) {
+            this.map.put((Class<? extends T>) keyPair.getKey(), (Function<T, R>) keyPair.getValue());
+        }
+
+        this.supportInterfaces = functionClassMap.supportInterfaces;
+        this.defaultValue = functionClassMap.defaultValue;
+        this.defaultFunction = functionClassMap.defaultFunction;
     }
 
     private <ER extends R> FunctionClassMap(Map<Class<? extends T>, Function<? extends T, R>> map,
-	    boolean supportInterfaces,
-	    R defaultValue, Function<T, ER> defaultFunction) {
+            boolean supportInterfaces,
+            R defaultValue, Function<T, ER> defaultFunction) {
 
-	Preconditions.checkArgument(!(defaultFunction != null && defaultValue != null),
-		"Both defaults cannot be different than null at the same time");
+        Preconditions.checkArgument(!(defaultFunction != null && defaultValue != null),
+                "Both defaults cannot be different than null at the same time");
 
-	this.map = map;
-	this.supportInterfaces = supportInterfaces;
-	this.defaultValue = defaultValue;
-	this.defaultFunction = defaultFunction;
+        this.map = map;
+        this.supportInterfaces = supportInterfaces;
+        this.defaultValue = defaultValue;
+        this.defaultFunction = defaultFunction;
     }
 
     /**
@@ -86,49 +101,49 @@ public class FunctionClassMap<T, R> {
      * @param value
      */
     public <ET extends T, K extends ET> void put(Class<K> aClass,
-	    Function<ET, R> value) {
+            Function<ET, R> value) {
 
-	if (!this.supportInterfaces) {
-	    if (aClass.isInterface()) {
-		SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
-		return;
-	    }
-	}
+        if (!this.supportInterfaces) {
+            if (aClass.isInterface()) {
+                SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
+                return;
+            }
+        }
 
-	this.map.put(aClass, value);
+        this.map.put(aClass, value);
 
     }
 
     @SuppressWarnings("unchecked")
     private <TK extends T> Optional<Function<T, R>> get(Class<TK> key) {
-	Class<?> currentKey = key;
+        Class<?> currentKey = key;
 
-	while (currentKey != null) {
-	    // Test key
-	    Function<? extends T, R> result = this.map.get(currentKey);
-	    if (result != null) {
-		return Optional.of((Function<T, R>) result);
-	    }
+        while (currentKey != null) {
+            // Test key
+            Function<? extends T, R> result = this.map.get(currentKey);
+            if (result != null) {
+                return Optional.of((Function<T, R>) result);
+            }
 
-	    if (this.supportInterfaces) {
-		for (Class<?> interf : currentKey.getInterfaces()) {
-		    result = this.map.get(interf);
-		    if (result != null) {
-			return Optional.of((Function<T, R>) result);
-		    }
-		}
-	    }
+            if (this.supportInterfaces) {
+                for (Class<?> interf : currentKey.getInterfaces()) {
+                    result = this.map.get(interf);
+                    if (result != null) {
+                        return Optional.of((Function<T, R>) result);
+                    }
+                }
+            }
 
-	    currentKey = currentKey.getSuperclass();
-	}
+            currentKey = currentKey.getSuperclass();
+        }
 
-	return Optional.empty();
+        return Optional.empty();
 
     }
 
     @SuppressWarnings("unchecked")
     private <TK extends T> Optional<Function<T, R>> get(TK key) {
-	return get((Class<TK>) key.getClass());
+        return get((Class<TK>) key.getClass());
     }
 
     /**
@@ -138,43 +153,43 @@ public class FunctionClassMap<T, R> {
      * @param t
      */
     public R apply(T t) {
-	Optional<Function<T, R>> function = get(t);
+        Optional<Function<T, R>> function = get(t);
 
-	// Found function, apply it
-	if (function.isPresent()) {
-	    return function.get().apply(t);
-	}
+        // Found function, apply it
+        if (function.isPresent()) {
+            return function.get().apply(t);
+        }
 
-	// Try getting a default value
-	Optional<R> result = defaultValue(t);
-	if (result.isPresent()) {
-	    return result.get();
-	}
+        // Try getting a default value
+        Optional<R> result = defaultValue(t);
+        if (result.isPresent()) {
+            return result.get();
+        }
 
-	throw new NotImplementedException("Function not defined for class '"
-		+ t.getClass() + "'");
-	/*
-	if (function == null) {
-	    throw new NotImplementedException("BiConsumer not defined for class '"
-		    + t.getClass() + "'");
-	}
-	
-	return function.apply(t);
-	 */
+        throw new NotImplementedException("Function not defined for class '"
+                + t.getClass() + "'");
+        /*
+        if (function == null) {
+            throw new NotImplementedException("BiConsumer not defined for class '"
+        	    + t.getClass() + "'");
+        }
+        
+        return function.apply(t);
+         */
     }
 
     private Optional<R> defaultValue(T t) {
-	// Both defaults cannot be set at the same time, order does not matter
+        // Both defaults cannot be set at the same time, order does not matter
 
-	if (this.defaultValue != null) {
-	    return Optional.of(this.defaultValue);
-	}
+        if (this.defaultValue != null) {
+            return Optional.of(this.defaultValue);
+        }
 
-	if (this.defaultFunction != null) {
-	    return Optional.of(this.defaultFunction.apply(t));
-	}
+        if (this.defaultFunction != null) {
+            return Optional.of(this.defaultFunction.apply(t));
+        }
 
-	return Optional.empty();
+        return Optional.empty();
     }
 
     /**
@@ -184,11 +199,11 @@ public class FunctionClassMap<T, R> {
      * @return
      */
     public FunctionClassMap<T, R> setDefaultValue(R defaultValue) {
-	return new FunctionClassMap<>(this.map, this.supportInterfaces, defaultValue, null);
+        return new FunctionClassMap<>(this.map, this.supportInterfaces, defaultValue, null);
     }
 
     public <ER extends R> FunctionClassMap<T, R> setDefaultFunction(Function<T, ER> defaultFunction) {
-	return new FunctionClassMap<>(this.map, this.supportInterfaces, null, defaultFunction);
+        return new FunctionClassMap<>(this.map, this.supportInterfaces, null, defaultFunction);
     }
 
 }
