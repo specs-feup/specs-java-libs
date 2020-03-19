@@ -2007,6 +2007,7 @@ public class SpecsIo {
      * @return
      */
     public static Optional<String> getRelativePath(File file, File baseFile, boolean isStrict) {
+
         File originalFile = file;
         File originalBaseFile = baseFile;
         if (!baseFile.isDirectory()) {
@@ -2014,11 +2015,7 @@ public class SpecsIo {
             if (baseFile == null) {
                 baseFile = new File("");
             }
-            // throw new IllegalArgumentException("'" + startFolder
-            // + "' is not a folder (argument 'startFolder')");
         }
-
-        final String currentSeparator = File.separator;
 
         final String PREVIOUS_FOLDER = "..";
 
@@ -2042,7 +2039,7 @@ public class SpecsIo {
             return Optional.of("");
         }
 
-        // finds the parents of both files
+        // Finds the parents of both files
         List<String> currentFileParents = getParentNames(file);
         List<String> mainFolderParents = getParentNames(new File(mainFolder));
 
@@ -2056,10 +2053,11 @@ public class SpecsIo {
 
         }
 
-        // find the first different parent
+        // Find the first different parent
         int nbSimilarParents = 0;
 
         int currentFileNumParents = currentFileParents.size();
+
         // If current file is a folder, do not consider the last element for comparison
         if (file.isDirectory()) {
             currentFileNumParents--;
@@ -2075,10 +2073,7 @@ public class SpecsIo {
         // Writes the relative path
         StringBuilder relativePath = new StringBuilder();
 
-        // If file is a folder, needs to go back an extra time
-        // if (file.isDirectory()) {
-        // nbParentToGoBack++;
-        // }
+        final String currentSeparator = "/";
 
         for (int i = 0; i < nbParentToGoBack; i++) {
             relativePath.append(PREVIOUS_FOLDER);
@@ -2093,7 +2088,6 @@ public class SpecsIo {
         // Append last element
         relativePath.append(currentFileParents.get(currentFileParents.size() - 1));
 
-        // return relativePath;
         String relativePathResult = relativePath.toString();
 
         // Normalize path separator
