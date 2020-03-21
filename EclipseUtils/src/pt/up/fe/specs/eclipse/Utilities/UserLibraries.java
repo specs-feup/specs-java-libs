@@ -172,6 +172,12 @@ public class UserLibraries {
     }
 
     private static Optional<File> getJar(String value, EclipseProjects eclipseProjects) {
+        // If value points to an existing file (i.e., it is an absolute path), just return it
+        File tentativeFile = new File(value);
+        if(tentativeFile.isFile()) {
+            return Optional.of(tentativeFile);
+        }
+        
         // If starts with '/', remove it
         if (value.startsWith("/")) {
             value = value.substring(1);
