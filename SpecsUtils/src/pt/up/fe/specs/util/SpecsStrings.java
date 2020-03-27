@@ -2131,4 +2131,14 @@ public class SpecsStrings {
 
         return firstHalf.equals(new StringBuilder(secondHalf).reverse().toString());
     }
+
+    /**
+     * If the String is blank, returns null. Returns the string otherwise.
+     * 
+     * @param code
+     * @return
+     */
+    public static String nullIfEmpty(String string) {
+        return string.isBlank() ? null : string;
+    }
 }
