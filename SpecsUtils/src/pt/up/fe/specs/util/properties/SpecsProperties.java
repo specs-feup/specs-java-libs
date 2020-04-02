@@ -88,7 +88,7 @@ public class SpecsProperties {
      * returns null and logs the cause.
      * 
      * @param file
-     *            a File object representing a file.
+     *                 a File object representing a file.
      * @return If successfull, a Properties objects with the contents of the file. Null otherwise.
      */
     private static SpecsProperties load(InputStream inputStream) {
@@ -158,6 +158,12 @@ public class SpecsProperties {
         File file = new File(filename);
 
         return file.isFile() ? Optional.of(file) : Optional.empty();
+    }
+
+    public Optional<File> getExistingFolder(KeyProvider<String> key) {
+        var folder = getFolder(key);
+
+        return folder.isDirectory() ? Optional.of(folder) : Optional.empty();
     }
 
     public <T extends Enum<T> & StringProvider> Optional<T> getEnum(KeyProvider<String> key,
