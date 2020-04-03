@@ -98,6 +98,33 @@ public class SpecsGit {
         }
     }
 
+    public static Git clone(String repositoryPath, File outputFolder, CredentialsProvider cp) {
+        String repoName = getRepoName(repositoryPath);
+
+        // Get repo folder
+        File repoFolder = new File(outputFolder, repoName);
+
+        try {
+            SpecsLogs.msgInfo("Cloning repo '" + repositoryPath + "' to folder '" + repoFolder + "'");
+
+            var git = Git.cloneRepository()
+                    .setURI(repositoryPath)
+                    .setDirectory(repoFolder);
+
+            if (cp != null) {
+                git.setCredentialsProvider(cp);
+            }
+
+            Git repo = git.call();
+
+            repo.close();
+
+            return repo;
+        } catch (GitAPIException e) {
+            throw new RuntimeException("Could not clone repository '" + repositoryPath + "'", e);
+        }
+    }
+
     public static String getRepoName(String repositoryPath) {
         try {
             String repoPath = new URI(repositoryPath).getPath();
