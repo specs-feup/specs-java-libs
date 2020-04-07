@@ -167,7 +167,7 @@ public class SpecsIo {
      * If the method returns it is guaranteed that the folder exists.
      *
      * @param folderpath
-     *                       String representing a folder.
+     *            String representing a folder.
      * @return a File object representing a folder, or null if unsuccessful.
      */
     public static File mkdir(String folderpath) {
@@ -246,7 +246,7 @@ public class SpecsIo {
      * checks fail, throws an exception.
      *
      * @param filepath
-     *                     String representing an existing file.
+     *            String representing an existing file.
      * @return a File object representing a file, or null if unsuccessful.
      */
     public static File existingFile(String filepath) {
@@ -299,7 +299,7 @@ public class SpecsIo {
      * If an error occurs (ex.: the File argument does not represent a file) returns null and logs the cause.
      *
      * @param file
-     *                 a File object representing a file.
+     *            a File object representing a file.
      * @return a String with the contents of the file.
      */
     public static String read(File file) {
@@ -395,9 +395,9 @@ public class SpecsIo {
      * logs the cause and nothing is written.
      *
      * @param file
-     *                     a File object representing a file.
+     *            a File object representing a file.
      * @param contents
-     *                     a String with the content to write
+     *            a String with the content to write
      * @return true if write is successful. False otherwise.
      */
     public static boolean write(File file, String contents) {
@@ -425,9 +425,9 @@ public class SpecsIo {
      * is written.
      *
      * @param file
-     *                     a File object representing a file.
+     *            a File object representing a file.
      * @param contents
-     *                     a String with the content to write
+     *            a String with the content to write
      * @return true if write is successful. False otherwise.
      */
     public static boolean append(File file, String contents) {
@@ -524,7 +524,7 @@ public class SpecsIo {
      *
      * @deprecated
      * @param file
-     *                 a File object representing a file.
+     *            a File object representing a file.
      * @return If successfull, a Properties objects with the contents of the file. Null otherwise.
      */
     /*
@@ -560,9 +560,9 @@ public class SpecsIo {
      * result: 'readme'
      *
      * @param filename
-     *                      a string
+     *            a string
      * @param separator
-     *                      the extension separator
+     *            the extension separator
      * @return the name of the file without the extension and the separator
      */
     public static String removeExtension(String filename, String separator) {
@@ -585,7 +585,7 @@ public class SpecsIo {
      * result: 'readme'
      *
      * @param filename
-     *                     a string
+     *            a string
      * @return the name of the file without the extension and the separator
      */
     public static String removeExtension(String filename) {
@@ -606,10 +606,10 @@ public class SpecsIo {
      * Note: by default follows symlinks.
      *
      * @param path
-     *                       a File representing a folder or a file.
+     *            a File representing a folder or a file.
      *
      * @param extensions
-     *                       a set of strings
+     *            a set of strings
      *
      * @return all the files inside the given folder, excluding other folders, that have a certain extension as
      *         determined by the set.
@@ -625,13 +625,13 @@ public class SpecsIo {
 
     /**
      * @param folder
-     *                           a File representing a folder or a file.
+     *            a File representing a folder or a file.
      *
      * @param extensions
-     *                           a set of strings
+     *            a set of strings
      *
      * @param followSymlinks
-     *                           whether to follow symlinks
+     *            whether to follow symlinks
      *
      * @param cutoffFolders
      *
@@ -811,9 +811,9 @@ public class SpecsIo {
      * Note: by default follows symlinks.
      *
      * @param folder
-     *                      a File representing a folder or a file.
+     *            a File representing a folder or a file.
      * @param extension
-     *                      a string
+     *            a string
      * @return all the files inside the given folder, excluding other folders, that have a certain extension.
      */
     public static List<File> getFilesRecursive(File folder, String extension) {
@@ -823,13 +823,13 @@ public class SpecsIo {
 
     /**
      * @param path
-     *                           a File representing a folder or a file.
+     *            a File representing a folder or a file.
      *
      * @param extension
-     *                           a string
+     *            a string
      *
      * @param followSymlinks
-     *                           whether to follow symlinks
+     *            whether to follow symlinks
      *
      * @return all the files inside the given folder, excluding other folders, that have a certain extension.
      */
@@ -880,7 +880,7 @@ public class SpecsIo {
      * Note: by default this follows symlinks.
      *
      * @param path
-     *                 a File representing a path.
+     *            a File representing a path.
      *
      * @return all the files inside the given folder, excluding other folders.
      */
@@ -893,10 +893,10 @@ public class SpecsIo {
      *
      *
      * @param path
-     *                           a File representing a path.
+     *            a File representing a path.
      *
      * @param followSymlinks
-     *                           whether to follow symlinks (both files and directories)
+     *            whether to follow symlinks (both files and directories)
      *
      * @return all the files inside the given path, excluding other folders.
      */
@@ -950,7 +950,7 @@ public class SpecsIo {
 
     /**
      * @param folder
-     *                   a File representing a folder.
+     *            a File representing a folder.
      * @return all the folders inside the given folder, excluding other files.
      */
     public static List<File> getFolders(File folder) {
@@ -974,7 +974,7 @@ public class SpecsIo {
      * Do a depth-first listing of all folders inside the given folder.
      *
      * @param folder
-     *                   a File representing a folder.
+     *            a File representing a folder.
      * @return all the folders inside the given folder, excluding other files.
      */
     public static List<File> getFoldersRecursive(File folder) {
@@ -997,7 +997,7 @@ public class SpecsIo {
 
     /**
      * @param path
-     *                 a File representing an existing path.
+     *            a File representing an existing path.
      * @return if path is a folder, returns all the files inside the given folder, excluding other folders. Otherwise,
      *         returns a list with the given path
      */
@@ -1069,8 +1069,8 @@ public class SpecsIo {
      * @param destination
      * @return
      */
-    public static void copyFolder(File source, File destination, boolean verbose) {
-        copyFolder(source, destination, verbose, true);
+    public static List<File> copyFolder(File source, File destination, boolean verbose) {
+        return copyFolder(source, destination, verbose, true);
     }
 
     /**
@@ -1081,7 +1081,8 @@ public class SpecsIo {
      * @param verbose
      * @param overwrite
      */
-    public static void copyFolder(File source, File destination, boolean verbose, boolean overwrite) {
+    public static List<File> copyFolder(File source, File destination, boolean verbose, boolean overwrite) {
+        // public static void copyFolder(File source, File destination, boolean verbose, boolean overwrite) {
         if (!source.isDirectory()) {
             throw new RuntimeException("Source '" + source + "' is not a folder");
         }
@@ -1093,6 +1094,7 @@ public class SpecsIo {
 
         // Get all files in source
         List<File> files = SpecsIo.getFilesRecursive(source);
+        List<File> copiedFiles = new ArrayList<>();
         for (File file : files) {
             // Get destination file
             String relativePath = SpecsIo.getRelativePath(file, source);
@@ -1104,8 +1106,12 @@ public class SpecsIo {
             if (!overwrite && destFile.isFile()) {
                 continue;
             }
+
             SpecsIo.copy(file, destFile, verbose);
+            copiedFiles.add(destFile);
         }
+
+        return copiedFiles;
     }
 
     public static boolean copy(File source, File destination) {
@@ -1842,9 +1848,9 @@ public class SpecsIo {
      * Helper method that filters files that have a certain extension.
      *
      * @param fileOrFolder
-     *                         a File representing an existing file or folder.
+     *            a File representing an existing file or folder.
      * @param extension
-     *                         a string
+     *            a string
      * @return all the files that have a certain extension
      */
     // public static List<File> getFiles(File fileOrFolder, String extension) {
@@ -1949,9 +1955,9 @@ public class SpecsIo {
      * Returns true if the folder contains at least one file having the extension "extension".
      *
      * @param folder
-     *                      The folder to find the extension from.
+     *            The folder to find the extension from.
      * @param extension
-     *                      The extension to find in the folder.
+     *            The extension to find in the folder.
      *
      * @return true if the folder contains at least one file having the extension "extension".
      */
@@ -1990,7 +1996,7 @@ public class SpecsIo {
      * If the file does not share a common ancestor with baseFile, returns the absolute path to file.
      *
      * @param file
-     *                 The file the user needs the relative path of.
+     *            The file the user needs the relative path of.
      *
      * @return the relative path of the file given in parameter.
      */
@@ -2003,7 +2009,7 @@ public class SpecsIo {
      * @param file
      * @param baseFile
      * @param strict
-     *                     if true, returns empty Optional if the file is not a sub-path of baseFile.
+     *            if true, returns empty Optional if the file is not a sub-path of baseFile.
      * @return
      */
     public static Optional<String> getRelativePath(File file, File baseFile, boolean isStrict) {
@@ -2109,7 +2115,7 @@ public class SpecsIo {
      * The File ./parent1/parent2/file.f will return the value {., parent1, parent2, file.f}
      *
      * @param file
-     *                 The file to check.
+     *            The file to check.
      *
      * @return the name of each parent folder in an array.
      */
@@ -2359,7 +2365,7 @@ public class SpecsIo {
      * This function downloads the file specified in the URL.
      *
      * @param url
-     *                The URL of the file to be downloaded.
+     *            The URL of the file to be downloaded.
      * @return true if the file could be downloaded, false otherwise
      * @throws IOException
      */
@@ -2488,9 +2494,9 @@ public class SpecsIo {
      *
      * @author Greg Briggs
      * @param aClass
-     *                   Any java class that lives in the same place as the resources you want.
+     *            Any java class that lives in the same place as the resources you want.
      * @param path
-     *                   Should end with "/", but not start with one.
+     *            Should end with "/", but not start with one.
      * @return Just the name of each member item, not the full paths.
      * @throws URISyntaxException
      * @throws IOException
@@ -2759,7 +2765,7 @@ public class SpecsIo {
      * Deletes the given folder and all its contents.
      *
      * @param folder
-     *                   folder to delete
+     *            folder to delete
      * @return true if both the folder and its contents could be deleted
      */
     public static boolean deleteFolder(File folder) {
@@ -2810,8 +2816,7 @@ public class SpecsIo {
      * @param recursive
      * @param extensions
      * @param cutoffFolders
-     *                          accepts a folder, if returns true, that folder and its sub-folders will be ignored from
-     *                          the search
+     *            accepts a folder, if returns true, that folder and its sub-folders will be ignored from the search
      * @return
      */
     public static Map<String, File> getFileMap(List<File> sources, boolean recursive, Set<String> extensions,
