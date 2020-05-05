@@ -23,6 +23,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -92,6 +93,17 @@ public class SpecsGit {
             }
 
             return pullCmd.call();
+        } catch (GitAPIException | IOException e) {
+            SpecsLogs.info("Could not pull repository '" + repoFolder + "': " + e);
+            return null;
+        }
+    }
+
+    public static List<DiffEntry> diff(File repoFolder) {
+        try {
+            SpecsLogs.msgInfo("Diff repo in folder '" + repoFolder + "'");
+            Git gitRepo = Git.open(repoFolder);
+            return gitRepo.diff().call();
         } catch (GitAPIException | IOException e) {
             SpecsLogs.info("Could not pull repository '" + repoFolder + "': " + e);
             return null;
