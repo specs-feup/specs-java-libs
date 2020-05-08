@@ -124,9 +124,17 @@ public class JarPath {
         String jarfilePath = null;
 
         try {
+            var codeSource = this.programClass.getProtectionDomain().getCodeSource();
+            if (codeSource == null) {
+                return null;
+            }
 
-            jarfilePath = this.programClass.getProtectionDomain().getCodeSource().getLocation().toURI()
-                    .getPath();
+            var location = codeSource.getLocation();
+            if (location == null) {
+                return null;
+            }
+
+            jarfilePath = location.toURI().getPath();
 
         } catch (URISyntaxException e) {
             SpecsLogs.msgInfo("Problems decoding URI of jarpath\n" + e.getMessage());
