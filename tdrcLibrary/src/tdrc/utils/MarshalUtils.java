@@ -38,30 +38,41 @@ import com.sun.xml.bind.IDResolver;
 public class MarshalUtils {
 
     public static <T> T unmarshal(File fileSource, String sourceName, InputStream schemaFile, Class<T> rootType,
-            String packageName, boolean validate) throws JAXBException, SAXException {
-        return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate, null,
+            Class<?> objectFactoryClass, boolean validate) throws JAXBException, SAXException {
+        // String packageName, boolean validate) throws JAXBException, SAXException {
+        // return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate, null,
+        return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, objectFactoryClass, validate,
+                null,
                 null);
     }
 
     public static <T> T unmarshal(File fileSource, String sourceName, InputStream schemaFile, Class<T> rootType,
-            String packageName, boolean validate, ValidationEventHandler handler, IDResolver resolver)
+            Class<?> objectFactoryClass, boolean validate, ValidationEventHandler handler, IDResolver resolver)
+            // String packageName, boolean validate, ValidationEventHandler handler, IDResolver resolver)
             throws JAXBException, SAXException {
-        return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate,
+        // return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, packageName, validate,
+        return unmarshal(new StreamSource(fileSource), sourceName, schemaFile, rootType, objectFactoryClass, validate,
                 handler, resolver);
     }
 
     public static <T> T unmarshal(Source source, String sourceName, InputStream schemaFile, Class<T> rootType,
-            String packageName, boolean validate) throws JAXBException, SAXException {
-        return unmarshal(source, sourceName, schemaFile, rootType, packageName, validate, null, null);
+            Class<?> objectFactoryClass, boolean validate) throws JAXBException, SAXException {
+        // String packageName, boolean validate) throws JAXBException, SAXException {
+        return unmarshal(source, sourceName, schemaFile, rootType, objectFactoryClass, validate, null, null);
     }
 
     public static <T> T unmarshal(Source source, String sourceName, InputStream schemaFile, Class<T> rootType,
-            String packageName, boolean validate, ValidationEventHandler handler, IDResolver resolver)
+            Class<?> objectFactoryClass, boolean validate, ValidationEventHandler handler, IDResolver resolver)
+            // String packageName, boolean validate, ValidationEventHandler handler, IDResolver resolver)
             throws JAXBException, SAXException {
 
         final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// W3C_XML_SCHEMA_NS_URI);
-
-        final JAXBContext jc = JAXBContext.newInstance(packageName);
+        // System.out.println("BEFORE MarshalUtils.unmarshal");
+        // final JAXBContext jc = JAXBContext.newInstance(packageName);
+        final JAXBContext jc = JAXBContext.newInstance(objectFactoryClass);
+        // final JAXBContext jc = JAXBContext.newInstance(objectFactoryClass.getPackage().getName(),
+        // JAXBContext.class.getClassLoader());
+        // System.out.println("AFTER MarshalUtils.unmarshal");
 
         final Unmarshaller u = jc.createUnmarshaller();
 
@@ -87,11 +98,17 @@ public class MarshalUtils {
         return jaxbEl.getValue();
     }
 
-    public static <T> void marshal(T value, Class<T> elementClass, String packageName, QName q_name,
+    // public static <T> void marshal(T value, Class<T> elementClass, Class<?> packageName, QName q_name,
+    public static <T> void marshal(T value, Class<T> elementClass, Class<?> packageClass, QName q_name,
             OutputStream oStream) throws JAXBException {
 
         final JAXBElement<T> jaxbEl = createRootElement(value, q_name, elementClass);
-        final JAXBContext jc = JAXBContext.newInstance(packageName);
+        // System.out.println("BEFORE MarshalUtils.marshal");
+        // final JAXBContext jc = JAXBContext.newInstance(packageName);
+        final JAXBContext jc = JAXBContext.newInstance(packageClass);
+        // final JAXBContext jc = JAXBContext.newInstance(packageClass.getPackage().getName(),
+        // JAXBContext.class.getClassLoader());
+        // System.out.println("AFTER MarshalUtils.marshal");
         final Marshaller m = jc.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
