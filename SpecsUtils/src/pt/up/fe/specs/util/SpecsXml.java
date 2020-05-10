@@ -23,12 +23,16 @@ import java.util.Optional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Utility methods related with XML files.
@@ -57,15 +61,28 @@ public class SpecsXml {
         return getXmlRoot(SpecsIo.toInputStream(contents));
     }
 
-    public static Document getXmlRoot(InputStream inputStream) {
+    public static Document getXmlRoot(InputStream xmlDocument) {
+        return getXmlRoot(xmlDocument, null);
+    }
+
+    public static Document getXmlRoot(InputStream xmlDocument, InputStream schemaDocument) {
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder;
 
-            dBuilder = dbFactory.newDocumentBuilder();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(xmlDocument);
 
-            Document doc = dBuilder.parse(inputStream);
+            // If schema present, validate document
+            if (schemaDocument != null) {
+                var schemaFactory = SchemaFactory.newDefaultInstance();
+                // schemaFactory.setErrorHandler(errorHandler);
+                var schema = schemaFactory.newSchema(new StreamSource(schemaDocument));
+                var validator = schema.newValidator();
+                validator.validate(new DOMSource(doc));
+                // dbFactory.setSchema(schema);
+                // dbFactory.setValidating(true);
+            }
 
             // optional, but recommended
             // read this -
@@ -73,6 +90,8 @@ public class SpecsXml {
             doc.getDocumentElement().normalize();
 
             return doc;
+        } catch (SAXParseException e) {
+            throw new RuntimeException("XML document not according to schema", e);
         } catch (ParserConfigurationException e) {
             SpecsLogs.msgWarn("Error message:\n", e);
         } catch (SAXException e) {

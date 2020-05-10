@@ -45,7 +45,11 @@ public class XmlDocument extends AXmlNode {
     }
 
     public static XmlDocument newInstance(InputStream inputStream) {
-        return new XmlDocument(SpecsXml.getXmlRoot(inputStream));
+        return newInstance(inputStream, null);
+    }
+
+    public static XmlDocument newInstance(InputStream inputStream, InputStream schema) {
+        return new XmlDocument(SpecsXml.getXmlRoot(inputStream, schema));
     }
 
     public static XmlDocument newInstanceFromUri(String uri) {
