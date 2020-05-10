@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util.providers;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -213,4 +214,7 @@ public interface ResourceProvider extends FileResourceProvider {
         return getResourceName();
     }
 
+    default InputStream toStream() {
+        return SpecsIo.resourceToStream(this);
+    }
 }
