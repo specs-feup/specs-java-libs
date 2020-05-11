@@ -40,10 +40,31 @@ public class XmlElement extends AXmlNode {
     /**
      * 
      * @param name
-     * @return the value of the attribute with the given name, of empty string if no attribute with that name is present
+     * @return the value of the attribute with the given name, or empty string if no attribute with that name is present
      */
     public String getAttribute(String name) {
         return element.getAttribute(name);
+    }
+
+    public String getAttribute(String name, String defaultValue) {
+        var value = getAttribute(name);
+        return value.isEmpty() ? defaultValue : value;
+    }
+
+    /**
+     * 
+     * @param name
+     * @return the value of the attribute with the given name, or throws exception if no attribute with that name is
+     *         present
+     */
+    public String getAttributeStrict(String name) {
+        var result = getAttribute(name);
+
+        if (result.isEmpty()) {
+            throw new RuntimeException("Could not find mandatory attribute '" + name + "' in element " + getName());
+        }
+
+        return result;
     }
 
     /**
