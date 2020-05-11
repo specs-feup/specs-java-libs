@@ -81,6 +81,27 @@ public interface XmlNode {
 
     /**
      * 
+     * @param name
+     * @return the element that has the given name, null if no element is found, and exception if more than one element
+     *         with that name is found
+     */
+    default public XmlElement getElementByName(String name) {
+        var elements = getElementsByName(name);
+
+        if (elements.isEmpty()) {
+            return null;
+            // throw new RuntimeException("No element with name '" + name + "'");
+        }
+
+        if (elements.size() > 1) {
+            throw new RuntimeException("More than one element with name '" + name + "'");
+        }
+
+        return elements.get(0);
+    }
+
+    /**
+     * 
      * @return the text set for this node, or null if no text is set
      */
     default public String getText() {
