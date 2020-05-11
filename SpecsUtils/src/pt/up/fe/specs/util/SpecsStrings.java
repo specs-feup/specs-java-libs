@@ -2141,4 +2141,16 @@ public class SpecsStrings {
     public static String nullIfEmpty(String string) {
         return string.isBlank() ? null : string;
     }
+
+    /**
+     * Checks if two strings are identical, not considering empty spaces. Returns false if strings do not match.
+     */
+    public static boolean check(String expected, String actual) {
+
+        // Normalize both strings
+        actual = normalizeFileContents(actual, true);
+        expected = normalizeFileContents(expected, true);
+
+        return actual.equals(expected);
+    }
 }
