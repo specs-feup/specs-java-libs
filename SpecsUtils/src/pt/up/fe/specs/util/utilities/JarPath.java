@@ -69,19 +69,22 @@ public class JarPath {
             return jarPath;
         }
 
-        // 3. As last resort, return current directory. Warn user and recommend to set property
-        if (verbose) {
-            SpecsLogs.msgWarn("Could not find Jar path (maybe application is being run from "
-                    + "another application in a different process)");
-            SpecsLogs.msgInfo("Setting Jar path to current folder. Try passing the " + this.programName
-                    + " Jar location with the system property '" + this.jarPathProperty + "'");
-            SpecsLogs.msgInfo("Example: java -D" + this.jarPathProperty + "=<JAR_FOLDER> ...");
-
-        }
-
         jarPath = SpecsIo.getWorkingDir().getAbsolutePath();
         jarPath = jarPath.replace('\\', '/');
         jarPath = jarPath.substring(0, jarPath.lastIndexOf("/") + 1);
+
+        // 3. As last resort, return current directory. Warn user and recommend to set property
+        if (verbose) {
+            // SpecsLogs.msgWarn("Could not find Jar path (maybe application is being run from "
+            // + "another application in a different process)");
+            SpecsLogs.debug(() -> "Could not find Jar path (maybe application is being run from "
+                    + "another application in a different process)");
+            SpecsLogs.msgInfo(
+                    "Setting Jar path to current folder (" + jarPath + ")\n. Try passing the " + this.programName
+                            + " Jar location with the system property '" + this.jarPathProperty + "'");
+            SpecsLogs.msgInfo("Example: java -D" + this.jarPathProperty + "=<JAR_FOLDER> ...");
+
+        }
 
         return jarPath;
 
