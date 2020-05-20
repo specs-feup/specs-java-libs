@@ -147,6 +147,23 @@ public class FunctionClassMap<T, R> {
     }
 
     /**
+     * Calls the Function.apply associated with class of the value t, or Optional.empty if no mapping could be found.
+     * 
+     * @param t
+     */
+    public Optional<R> applyTry(T t) {
+        Optional<Function<T, R>> function = get(t);
+
+        // Found function, apply it
+        if (function.isPresent()) {
+            return Optional.ofNullable(function.get().apply(t));
+        }
+
+        // Try getting a default value
+        return defaultValue(t);
+    }
+
+    /**
      * Calls the Function.apply associated with class of the value t, or throws an Exception if no mapping could be
      * found.
      * 
