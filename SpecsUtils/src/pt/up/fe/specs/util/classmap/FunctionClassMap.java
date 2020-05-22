@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import pt.up.fe.specs.util.Preconditions;
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
@@ -129,12 +130,8 @@ public class FunctionClassMap<T, R> {
         }
 
         var function = this.map.get(mappedClass.get());
-        // var function = mappedClass.map(aClass -> this.map.get(aClass));
 
-        // if (function.isEmpty()) {
-        if (function == null) {
-            throw new RuntimeException("There should be a mapping for " + mappedClass.get() + ", verify");
-        }
+        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
         return Optional.of((Function<T, R>) function);
 

@@ -17,8 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
+import pt.up.fe.specs.util.utilities.ClassMapper;
 
 /**
  * Maps a class to a BiConsumer that receives an instance of that class being used as key and other object.
@@ -31,19 +32,21 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
 public class BiConsumerClassMap<T, U> {
 
     private final Map<Class<? extends T>, BiConsumer<? extends T, U>> map;
-    private final boolean supportInterfaces;
+    // private final boolean supportInterfaces;
     private final boolean ignoreNotFound;
+    private final ClassMapper classMapper;
 
-    private static final boolean DEFAULT_SUPPORT_INTERFACES = true;
+    // private static final boolean DEFAULT_SUPPORT_INTERFACES = true;
 
     public BiConsumerClassMap() {
-	this(BiConsumerClassMap.DEFAULT_SUPPORT_INTERFACES, false);
+        this(false, new ClassMapper());
     }
 
-    private BiConsumerClassMap(boolean supportInterfaces, boolean ignoreNotFound) {
-	this.map = new HashMap<>();
-	this.supportInterfaces = supportInterfaces;
-	this.ignoreNotFound = ignoreNotFound;
+    private BiConsumerClassMap(boolean ignoreNotFound, ClassMapper classMapper) {
+        this.map = new HashMap<>();
+        // this.supportInterfaces = supportInterfaces;
+        this.ignoreNotFound = ignoreNotFound;
+        this.classMapper = classMapper;
     }
 
     /**
@@ -52,7 +55,7 @@ public class BiConsumerClassMap<T, U> {
      * @return
      */
     public static <T, U> BiConsumerClassMap<T, U> newInstance(boolean ignoreNotFound) {
-	return new BiConsumerClassMap<>(BiConsumerClassMap.DEFAULT_SUPPORT_INTERFACES, ignoreNotFound);
+        return new BiConsumerClassMap<>(ignoreNotFound, new ClassMapper());
     }
 
     /**
@@ -70,48 +73,62 @@ public class BiConsumerClassMap<T, U> {
      * @param value
      */
     public <VS extends T, KS extends VS> void put(Class<KS> aClass,
-	    BiConsumer<VS, U> value) {
+            BiConsumer<VS, U> value) {
 
-	if (!this.supportInterfaces) {
-	    if (aClass.isInterface()) {
-		SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
-		return;
-	    }
-	}
+        // if (!this.supportInterfaces) {
+        // if (aClass.isInterface()) {
+        // SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
+        // return;
+        // }
+        // }
 
-	this.map.put(aClass, value);
+        this.map.put(aClass, value);
+        this.classMapper.add(aClass);
     }
 
     @SuppressWarnings("unchecked")
     private <TK extends T> BiConsumer<T, U> get(Class<TK> key) {
-	Class<?> currentKey = key;
+        // Map given class to a class supported by this instance
+        var mappedClass = classMapper.map(key);
 
-	while (currentKey != null) {
-	    // Test key
-	    BiConsumer<? extends T, U> result = this.map.get(currentKey);
-	    if (result != null) {
-		return (BiConsumer<T, U>) result;
-	    }
+        if (mappedClass.isEmpty()) {
+            return null;
+        }
 
-	    if (this.supportInterfaces) {
-		for (Class<?> interf : currentKey.getInterfaces()) {
-		    result = this.map.get(interf);
-		    if (result != null) {
-			return (BiConsumer<T, U>) result;
-		    }
-		}
-	    }
+        var function = this.map.get(mappedClass.get());
 
-	    currentKey = currentKey.getSuperclass();
-	}
+        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
-	return null;
+        return (BiConsumer<T, U>) function;
 
+        // Class<?> currentKey = key;
+        //
+        // while (currentKey != null) {
+        // // Test key
+        // BiConsumer<? extends T, U> result = this.map.get(currentKey);
+        // if (result != null) {
+        // return (BiConsumer<T, U>) result;
+        // }
+        //
+        // if (this.supportInterfaces) {
+        // for (Class<?> interf : currentKey.getInterfaces()) {
+        // result = this.map.get(interf);
+        // if (result != null) {
+        // return (BiConsumer<T, U>) result;
+        // }
+        // }
+        // }
+        //
+        // currentKey = currentKey.getSuperclass();
+        // }
+        //
+        // return null;
+        //
     }
 
     @SuppressWarnings("unchecked")
     private <TK extends T> BiConsumer<T, U> get(TK key) {
-	return get((Class<TK>) key.getClass());
+        return get((Class<TK>) key.getClass());
     }
 
     /**
@@ -122,20 +139,20 @@ public class BiConsumerClassMap<T, U> {
      * @param u
      */
     public void accept(T t, U u) {
-	BiConsumer<T, U> result = get(t);
+        BiConsumer<T, U> result = get(t);
 
-	if (result != null) {
-	    result.accept(t, u);
-	    return;
-	}
+        if (result != null) {
+            result.accept(t, u);
+            return;
+        }
 
-	// Just return
-	if (ignoreNotFound) {
-	    return;
-	}
+        // Just return
+        if (ignoreNotFound) {
+            return;
+        }
 
-	throw new NotImplementedException("BiConsumer not defined for class '"
-		+ t.getClass() + "'");
+        throw new NotImplementedException("BiConsumer not defined for class '"
+                + t.getClass() + "'");
     }
 
 }

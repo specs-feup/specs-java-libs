@@ -19,8 +19,9 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
-import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
+import pt.up.fe.specs.util.utilities.ClassMapper;
 
 /**
  * Maps a class T or subtype of T to a value V.
@@ -38,27 +39,31 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
 public class ClassMap<T, V> {
 
     private final Map<Class<? extends T>, V> map;
-    private final boolean supportInterfaces;
+    // private final boolean supportInterfaces;
     // Can be null
     private final V defaultValue;
 
+    private final ClassMapper classMapper;
+
     public ClassMap() {
-        this(new HashMap<>(), true, null);
+        this(new HashMap<>(), null, new ClassMapper());
     }
 
     public <ER extends V> ClassMap(ER defaultValue) {
-        this(new HashMap<>(), true, defaultValue);
+        this(new HashMap<>(), defaultValue, new ClassMapper());
     }
 
-    private ClassMap(Map<Class<? extends T>, V> map, boolean supportInterfaces, V defaultValue) {
+    private ClassMap(Map<Class<? extends T>, V> map, V defaultValue,
+            ClassMapper classMapper) {
 
         this.map = map;
-        this.supportInterfaces = supportInterfaces;
+        // this.supportInterfaces = supportInterfaces;
         this.defaultValue = defaultValue;
+        this.classMapper = classMapper;
     }
 
     public ClassMap<T, V> copy() {
-        return new ClassMap<>(new HashMap<>(this.map), this.supportInterfaces, this.defaultValue);
+        return new ClassMap<>(new HashMap<>(this.map), this.defaultValue, this.classMapper);
     }
 
     /**
@@ -78,13 +83,14 @@ public class ClassMap<T, V> {
     public <ET extends T, K extends ET> V put(Class<K> aClass,
             V value) {
 
-        if (!this.supportInterfaces) {
-            if (aClass.isInterface()) {
-                SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
-                return null;
-            }
-        }
+        // if (!this.supportInterfaces) {
+        // if (aClass.isInterface()) {
+        // SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
+        // return null;
+        // }
+        // }
 
+        classMapper.add(aClass);
         return this.map.put(aClass, value);
     }
 
@@ -93,16 +99,17 @@ public class ClassMap<T, V> {
      * @param key
      * @return the class that will be used to access the map, based on the given key
      */
+    /*
     public <TK extends T> Optional<Class<?>> getEquivalentKey(Class<TK> key) {
         Class<?> currentKey = key;
-
+    
         while (currentKey != null) {
             // Test key
             V result = this.map.get(currentKey);
             if (result != null) {
                 return Optional.of(currentKey);
             }
-
+    
             if (this.supportInterfaces) {
                 for (Class<?> interf : currentKey.getInterfaces()) {
                     result = this.map.get(interf);
@@ -111,23 +118,34 @@ public class ClassMap<T, V> {
                     }
                 }
             }
-
+    
             currentKey = currentKey.getSuperclass();
         }
-
+    
         return Optional.empty();
     }
+    */
 
     public <TK extends T> Optional<V> tryGet(Class<TK> key) {
-        Class<?> currentKey = key;
+        // Map given class to a class supported by this instance
+        var mappedClass = classMapper.map(key);
 
+        if (mappedClass.isPresent()) {
+            var result = this.map.get(mappedClass.get());
+            SpecsCheck.checkNotNull(result, () -> "Expected map to contain " + mappedClass.get());
+            return Optional.of(result);
+        }
+
+        /*
+        Class<?> currentKey = key;
+        
         while (currentKey != null) {
             // Test key
             V result = this.map.get(currentKey);
             if (result != null) {
                 return Optional.of(result);
             }
-
+        
             if (this.supportInterfaces) {
                 // System.out.println("INTERFACES OF " + currentKey + ": " +
                 // Arrays.toString(currentKey.getInterfaces()));
@@ -138,10 +156,10 @@ public class ClassMap<T, V> {
                     }
                 }
             }
-
+        
             currentKey = currentKey.getSuperclass();
         }
-
+        */
         // Return default value if present
         if (this.defaultValue != null) {
             return Optional.of(this.defaultValue);
@@ -175,7 +193,7 @@ public class ClassMap<T, V> {
      * @return
      */
     public ClassMap<T, V> setDefaultValue(V defaultValue) {
-        return new ClassMap<>(this.map, this.supportInterfaces, defaultValue);
+        return new ClassMap<>(this.map, defaultValue, this.classMapper);
     }
 
     public Set<Entry<Class<? extends T>, V>> entrySet() {

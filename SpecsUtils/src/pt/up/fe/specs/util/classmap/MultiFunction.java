@@ -19,9 +19,10 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.Preconditions;
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
+import pt.up.fe.specs.util.utilities.ClassMapper;
 
 /**
  * Maps a class T or subtype of T to a Function that accepts one argument T and produces a result R.
@@ -41,15 +42,16 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
 public class MultiFunction<T, R> {
 
     private final Map<Class<? extends T>, BiFunction<? extends MultiFunction<T, R>, ? extends T, ? extends R>> map;
-    private final boolean supportInterfaces;
+    // private final boolean supportInterfaces;
     // Can be null
     private final R defaultValue;
+    private final ClassMapper classMapper;
 
     // Can be null
     private final BiFunction<MultiFunction<T, R>, T, R> defaultFunction;
 
     public MultiFunction() {
-        this(new HashMap<>(), true, null, null);
+        this(new HashMap<>(), null, null, new ClassMapper());
     }
 
     // public <ER extends R> MultiFunction(ER defaultValue) {
@@ -62,22 +64,22 @@ public class MultiFunction<T, R> {
 
     public <EM extends MultiFunction<T, R>> MultiFunction(
             BiFunction<EM, T, R> defaultFunction) {
-        this(new HashMap<>(), true, null, defaultFunction);
+        this(new HashMap<>(), null, defaultFunction, new ClassMapper());
     }
 
     @SuppressWarnings("unchecked")
     private <EM extends MultiFunction<T, R>> MultiFunction(
             Map<Class<? extends T>, BiFunction<? extends MultiFunction<T, R>, ? extends T, ? extends R>> map,
-            boolean supportInterfaces, R defaultValue,
-            BiFunction<EM, T, R> defaultFunction) {
+            R defaultValue, BiFunction<EM, T, R> defaultFunction, ClassMapper classMapper) {
 
         Preconditions.checkArgument(!(defaultFunction != null && defaultValue != null),
                 "Both defaults cannot be different than null at the same time");
 
         this.map = map;
-        this.supportInterfaces = supportInterfaces;
+        // this.supportInterfaces = supportInterfaces;
         this.defaultValue = defaultValue;
         this.defaultFunction = (BiFunction<MultiFunction<T, R>, T, R>) defaultFunction;
+        this.classMapper = classMapper;
     }
 
     /**
@@ -97,14 +99,15 @@ public class MultiFunction<T, R> {
     public <EM extends MultiFunction<T, R>, ET extends T, K extends ET> void put(Class<K> aClass,
             BiFunction<EM, ET, R> value) {
 
-        if (!this.supportInterfaces) {
-            if (aClass.isInterface()) {
-                SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
-                return;
-            }
-        }
+        // if (!this.supportInterfaces) {
+        // if (aClass.isInterface()) {
+        // SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
+        // return;
+        // }
+        // }
 
         this.map.put(aClass, value);
+        this.classMapper.add(aClass);
     }
 
     public <ET extends T, K extends ET> void put(Class<K> aClass,
@@ -117,15 +120,28 @@ public class MultiFunction<T, R> {
 
     @SuppressWarnings("unchecked")
     private <TK extends T> Optional<BiFunction<MultiFunction<T, R>, T, R>> get(Class<TK> key) {
-        Class<?> currentKey = key;
+        // Map given class to a class supported by this instance
+        var mappedClass = classMapper.map(key);
 
+        if (mappedClass.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var function = this.map.get(mappedClass.get());
+
+        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
+
+        return Optional.of((BiFunction<MultiFunction<T, R>, T, R>) function);
+        /*
+        Class<?> currentKey = key;
+        
         while (currentKey != null) {
             // Test key
             BiFunction<? extends MultiFunction<T, R>, ? extends T, ? extends R> result = this.map.get(currentKey);
             if (result != null) {
                 return Optional.of((BiFunction<MultiFunction<T, R>, T, R>) result);
             }
-
+        
             if (this.supportInterfaces) {
                 for (Class<?> interf : currentKey.getInterfaces()) {
                     result = this.map.get(interf);
@@ -134,12 +150,12 @@ public class MultiFunction<T, R> {
                     }
                 }
             }
-
+        
             currentKey = currentKey.getSuperclass();
         }
-
+        
         return Optional.empty();
-
+        */
     }
 
     @SuppressWarnings("unchecked")
@@ -200,7 +216,7 @@ public class MultiFunction<T, R> {
      * @return
      */
     public MultiFunction<T, R> setDefaultValue(R defaultValue) {
-        return new MultiFunction<>(this.map, this.supportInterfaces, defaultValue, null);
+        return new MultiFunction<>(this.map, defaultValue, null, this.classMapper);
     }
 
     public <ER extends R> MultiFunction<T, R> setDefaultFunction(Function<T, ER> defaultFunction) {
@@ -210,7 +226,7 @@ public class MultiFunction<T, R> {
     public <EM extends MultiFunction<T, R>> MultiFunction<T, R> setDefaultFunction(
             BiFunction<EM, T, R> defaultFunction) {
 
-        return new MultiFunction<>(this.map, this.supportInterfaces, null, defaultFunction);
+        return new MultiFunction<>(this.map, null, defaultFunction, this.classMapper);
     }
 
 }
