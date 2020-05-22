@@ -773,7 +773,7 @@ public class SpecsSystem {
      * can find it.
      * 
      * @param path
-     *                 The path to add
+     *            The path to add
      */
     public static void addJavaLibraryPath(String path) {
         System.setProperty("java.library.path",
@@ -1119,7 +1119,7 @@ public class SpecsSystem {
      * Adds a jar file or directory to the classpath. From Utils4J.
      *
      * @param newpaths
-     *                     JAR filename(s) or directory(s) to add
+     *            JAR filename(s) or directory(s) to add
      * @return URLClassLoader after newpaths added if newpaths != null
      */
     public static ClassLoader addToClasspath(String... newpaths) {
@@ -1140,7 +1140,7 @@ public class SpecsSystem {
      * Adds to library path in ClassLoader returned by addToClassPath
      *
      * @param newpaths
-     *                     Path(s) to directory(s) holding OS library files
+     *            Path(s) to directory(s) holding OS library files
      */
     public static void addToLibraryPath(String... newpaths) {
         for (String newpath : Objects.requireNonNull(newpaths))
@@ -1554,6 +1554,13 @@ public class SpecsSystem {
         }
 
         return fields;
+    }
+
+    /**
+     * Stops the program with an exception.
+     */
+    public static void stop() {
+        throw new RuntimeException("STOP");
     }
 
 }
