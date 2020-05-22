@@ -125,14 +125,16 @@ public class ClassMap<T, V> {
             // Test key
             V result = this.map.get(currentKey);
             if (result != null) {
-                return Optional.of((V) result);
+                return Optional.of(result);
             }
 
             if (this.supportInterfaces) {
+                // System.out.println("INTERFACES OF " + currentKey + ": " +
+                // Arrays.toString(currentKey.getInterfaces()));
                 for (Class<?> interf : currentKey.getInterfaces()) {
                     result = this.map.get(interf);
                     if (result != null) {
-                        return Optional.of((V) result);
+                        return Optional.of(result);
                     }
                 }
             }
