@@ -76,24 +76,44 @@ public class ClassMapper {
 
         // Calculate mapping of current class
 
+        mapping = calculateMapping(aClass);
+
+        if (mapping == null) {
+            cacheMissing.add(aClass);
+            return Optional.empty();
+        }
+
+        cacheFound.put(aClass, mapping);
+        return Optional.of(mapping);
+
+    }
+
+    private Class<?> calculateMapping(Class<?> aClass) {
         /// Check if class is exactly one of the classes already present
         if (currentClasses.contains(aClass)) {
-            cacheFound.put(aClass, aClass);
-            return Optional.of(aClass);
+            return aClass;
         }
 
-        /// Iterate over all current classes, looking for the first one that is assignable from the parameter class
-        for (var currentClass : currentClasses) {
-            System.out.println(
-                    currentClass + " is assignable from " + aClass + ": " + currentClass.isAssignableFrom(aClass));
-            if (currentClass.isAssignableFrom(aClass)) {
-                cacheFound.put(aClass, currentClass);
-                return Optional.of(currentClass);
+        Class<?> currentClass = aClass;
+
+        while (currentClass != null) {
+            // Test current class
+            if (this.currentClasses.contains(currentClass)) {
+                return currentClass;
             }
+
+            // Test interfaces
+            for (Class<?> interf : currentClass.getInterfaces()) {
+                if (this.currentClasses.contains(interf)) {
+                    return interf;
+                }
+            }
+
+            // Go to the next super class
+            currentClass = currentClass.getSuperclass();
         }
 
-        /// Could not find compatible class, mark as missing class
-        cacheMissing.add(aClass);
-        return Optional.empty();
+        return null;
     }
+
 }
