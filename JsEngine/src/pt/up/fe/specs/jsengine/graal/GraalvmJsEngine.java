@@ -100,6 +100,7 @@ public class GraalvmJsEngine implements JsEngine {
         return ForOfType.NATIVE;
     }
 
+    @Override
     public Value eval(String code) {
         try {
             // Value value = asValue(engine.eval(code));
@@ -152,6 +153,7 @@ public class GraalvmJsEngine implements JsEngine {
     // }
     // }
 
+    @Override
     public Object newNativeArray() {
         return eval(NEW_ARRAY);
         // return new GenericBindings(evalOld(NEW_ARRAY));
