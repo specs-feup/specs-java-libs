@@ -2454,6 +2454,34 @@ public class SpecsIo {
     }
 
     /**
+     * Helper method which creates a temporary file in the system temporary folder with extension 'txt'.
+     * 
+     * 
+     * @return
+     */
+    public static File getTempFile() {
+        return getTempFile(null, "txt");
+    }
+
+    /**
+     * Creates a file with a random name in a temporary folder. This file will be deleted when the JVM exits.
+     * 
+     * @param folderName
+     * @return
+     */
+    public static File getTempFile(String folderName, String extension) {
+        File tempFolder = getTempFolder(folderName);
+
+        // Get a random filename
+        File randomFile = new File(tempFolder, UUID.randomUUID().toString() + "." + extension);
+        SpecsIo.write(randomFile, "");
+
+        deleteOnExit(randomFile);
+
+        return randomFile;
+    }
+
+    /**
      * Code taken from http://www.kodejava.org/how-do-i-get-operating-system-temporary-directory-folder/
      *
      * @return
