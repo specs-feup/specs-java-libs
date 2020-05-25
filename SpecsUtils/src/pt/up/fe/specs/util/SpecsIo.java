@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -2652,6 +2653,14 @@ public class SpecsIo {
 
     }
 
+    public static Optional<URL> parseUrl(String urlString) {
+        try {
+            return Optional.of(new URL(urlString));
+        } catch (MalformedURLException e) {
+            return Optional.empty();
+        }
+    }
+
     public static String getUrl(String urlString) {
 
         try {
@@ -3199,6 +3208,31 @@ public class SpecsIo {
 
     public static String getUniversalPathSeparator() {
         return UNIVERSAL_PATH_SEPARATOR;
+    }
+
+    public static Map<String, String> parseUrlQuery(URL url) {
+        Map<String, String> query = new HashMap<>();
+
+        var queryString = url.getQuery();
+        if (queryString == null) {
+            return query;
+        }
+
+        // Split string
+        for (var queryLine : queryString.split("&")) {
+            int equalIndex = queryLine.indexOf('=');
+            if (equalIndex == -1) {
+                SpecsLogs.info("Could not find '=' in URL query '" + queryLine + "'");
+                continue;
+            }
+
+            var key = queryLine.substring(0, equalIndex);
+            var value = queryLine.substring(equalIndex + 1, queryLine.length());
+
+            query.put(key, value);
+        }
+
+        return query;
     }
 
 }
