@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
@@ -152,5 +152,19 @@ public class IoUtilsTest {
         assertEquals("{=[path1, path4], prefix/=[path2, path3]}",
                 SpecsStrings.parsePathList("path1$prefix/$path2;path3$$path4", ";").toString());
 
+    }
+
+    @Test
+    public void testParseUrl() {
+        var urlString = "https://github.com/specs-feup/clava.git?folder=benchmarks/NAS&another=stuff";
+
+        var url = SpecsIo.parseUrl(urlString).get();
+        var query = SpecsIo.parseUrlQuery(url);
+
+        assertEquals("https", url.getProtocol());
+        assertEquals("github.com", url.getHost());
+        assertEquals("/specs-feup/clava.git", url.getPath());
+        assertEquals("benchmarks/NAS", query.get("folder"));
+        assertEquals("stuff", query.get("another"));
     }
 }
