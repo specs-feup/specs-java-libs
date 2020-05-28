@@ -16,6 +16,7 @@ package pt.up.fe.specs.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
@@ -49,6 +50,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -322,6 +324,13 @@ public class SpecsSystem {
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
+        return runProcess(builder, outputProcessor, errorProcessor, null, timeoutNanos);
+    }
+
+    public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor,
+            Consumer<OutputStream> input, Long timeoutNanos) {
+
         // The command in the builder might need processing (e.g., Windows system commands)
         processCommand(builder);
         SpecsLogs.debug(() -> "Launching Process: " + builder.command().stream().collect(Collectors.joining(" ")));
@@ -349,6 +358,14 @@ public class SpecsSystem {
         ExecutorService stderrThread = Executors.newSingleThreadExecutor();
         InputStream errorStream = process.getErrorStream();
         Future<E> errorFuture = stderrThread.submit(() -> errorProcessor.apply(errorStream));
+
+        if (input != null) {
+            ExecutorService stdinThread = Executors.newSingleThreadExecutor();
+            OutputStream inStream = process.getOutputStream();
+            stdinThread.submit(() -> input.accept(inStream));
+        }
+
+        // outputStream.
 
         // The ExecutorService objects are shutdown, as they will not
         // receive more tasks.

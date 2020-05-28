@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,12 +24,12 @@ public class CollectionUtilsTest {
 
     @Test
     public void getFirstIndex() {
-	List<Number> numbers = Arrays.asList(Integer.valueOf(2), Double.valueOf(3.5));
+        List<Number> numbers = Arrays.asList(Integer.valueOf(2), Double.valueOf(3.5));
 
-	assertTrue(SpecsCollections.getFirstIndex(numbers, Integer.class) == 0);
-	assertTrue(SpecsCollections.getFirstIndex(numbers, Double.class) == 1);
-	assertTrue(SpecsCollections.getFirstIndex(numbers, Number.class) == 0);
-	assertTrue(SpecsCollections.getFirstIndex(numbers, Float.class) == -1);
+        assertTrue(SpecsCollections.getFirstIndex(numbers, Integer.class) == 0);
+        assertTrue(SpecsCollections.getFirstIndex(numbers, Double.class) == 1);
+        assertTrue(SpecsCollections.getFirstIndex(numbers, Number.class) == 0);
+        assertTrue(SpecsCollections.getFirstIndex(numbers, Float.class) == -1);
     }
 
 }
