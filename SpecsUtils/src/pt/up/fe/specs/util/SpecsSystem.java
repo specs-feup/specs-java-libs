@@ -462,6 +462,9 @@ public class SpecsSystem {
         }*/
 
         int returnValue = timedOut ? -1 : process.exitValue();
+        if (timedOut) {
+            SpecsLogs.info("Process timed out after " + SpecsStrings.parseTime(timeoutNanos));
+        }
         destroyProcess(process);
         return new ProcessOutput<>(returnValue, output, error);
     }
