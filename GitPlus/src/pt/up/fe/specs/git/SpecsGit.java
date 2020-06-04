@@ -43,6 +43,10 @@ public class SpecsGit {
     private static final String SPECS_GIT_REPOS_FOLDER = "specs_git_repos";
 
     public static File parseRepositoryUrl(String repositoryPath) {
+        return parseRepositoryUrl(repositoryPath, true);
+    }
+
+    private static File parseRepositoryUrl(String repositoryPath, boolean firstTime) {
         String repoName = getRepoName(repositoryPath);
 
         // Get repo folder
@@ -72,6 +76,16 @@ public class SpecsGit {
             PullCommand pullCmd = gitRepo.pull();
             pullCmd.call();
         } catch (GitAPIException | IOException e) {
+            // Sometimes this is a problem that can be solved by deleting the folder and cloning again, try that
+            if (firstTime) {
+                SpecsLogs.info("Could not pull to folder '" + repoFolder + "', deleting folder and trying again");
+                var success = SpecsIo.deleteFolder(repoFolder);
+                if (!success) {
+                    throw new RuntimeException("Could not delete existing repo folder " + repoFolder.getAbsolutePath());
+                }
+                return parseRepositoryUrl(repositoryPath, false);
+            }
+
             throw new RuntimeException("Could not pull repository '" + repositoryPath + "'", e);
         }
 
