@@ -2483,6 +2483,23 @@ public class SpecsIo {
     }
 
     /**
+     * A randomly named folder in the OS temporary folder that is deleted when the virtual machine exits.
+     * 
+     * @return
+     */
+    public static File newRandomFolder() {
+        File tempFolder = getTempFolder();
+
+        // Get a random foldername
+        File randomFolder = new File(tempFolder, UUID.randomUUID().toString());
+        SpecsIo.mkdir(randomFolder);
+
+        deleteOnExit(randomFolder);
+
+        return randomFolder;
+    }
+
+    /**
      * Code taken from http://www.kodejava.org/how-do-i-get-operating-system-temporary-directory-folder/
      *
      * @return
