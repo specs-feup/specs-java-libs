@@ -47,6 +47,8 @@ public class TabbedPane extends JPanel {
     private final List<GuiTab> tabs;
     private GuiTab currentTab = null;
 
+    private final OptionsPanel optionsPanel;
+
     public TabbedPane(App application) {
         super(new GridLayout(1, 1));
 
@@ -65,7 +67,7 @@ public class TabbedPane extends JPanel {
         tabs.add(programPanel);
 
         // New options panel
-        OptionsPanel optionsPanel = new OptionsPanel(application, tabData);
+        optionsPanel = new OptionsPanel(application, tabData);
         tabs.add(optionsPanel);
 
         // Add other panels
@@ -121,6 +123,10 @@ public class TabbedPane extends JPanel {
         // The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
+    }
+
+    public OptionsPanel getOptionsPanel() {
+        return optionsPanel;
     }
 
 }

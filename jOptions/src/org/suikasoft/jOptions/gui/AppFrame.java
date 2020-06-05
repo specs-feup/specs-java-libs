@@ -56,6 +56,10 @@ public class AppFrame {
         }
     }
 
+    public TabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
     public void setFrameTitle(String frameTitle) {
         mainWindow.setTitle(frameTitle);
     }

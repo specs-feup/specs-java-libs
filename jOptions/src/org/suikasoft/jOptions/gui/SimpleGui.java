@@ -24,8 +24,14 @@ import org.suikasoft.jOptions.app.App;
  */
 public class SimpleGui {
 
+    private final AppFrame frame;
+
     public SimpleGui(App application) {
         frame = new AppFrame(application);
+    }
+
+    public AppFrame getAppFrame() {
+        return frame;
     }
 
     /**
@@ -49,5 +55,4 @@ public class SimpleGui {
         return frame.getMainWindow();
     }
 
-    private final AppFrame frame;
 }

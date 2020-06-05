@@ -298,6 +298,20 @@ public class KeyFactory {
     }
 
     /**
+     * A StringList DataKey which has predefined values for the GUI element.
+     * 
+     * @param string
+     * @return
+     */
+    // public static DataKey<StringList> stringListWithPredefinedValues(String id, List<String> predefinedLabelValues) {
+    //
+    // return new NormalKey<>(id, StringList.class)
+    // .setDefault(() -> new StringList(Collections.emptyList()))
+    // .setDecoder(StringList.getCodec())
+    // .setKeyPanelProvider((key, data) -> StringListPanel.newInstance(key, data, predefinedLabelValues));
+    // }
+
+    /**
      * A new OptionDefinition, using a converter with the default separator (;)
      * 
      * @param string

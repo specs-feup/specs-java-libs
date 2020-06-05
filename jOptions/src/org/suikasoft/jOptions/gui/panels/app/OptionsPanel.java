@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -26,9 +27,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.suikasoft.jOptions.JOptionKeys;
+import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.App;
 import org.suikasoft.jOptions.gui.AppFrame;
+import org.suikasoft.jOptions.gui.KeyPanel;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
@@ -97,6 +100,10 @@ public class OptionsPanel extends GuiTab {
 
         add(optionsPanel, BorderLayout.CENTER);
 
+    }
+
+    public Map<String, KeyPanel<? extends Object>> getPanels() {
+        return setupPanel.getPanels();
     }
 
     // public DataStore getOptionFile() {
@@ -292,6 +299,17 @@ public class OptionsPanel extends GuiTab {
     @Override
     public String getTabName() {
         return "Options";
+    }
+
+    public KeyPanel<? extends Object> getPanel(DataKey<?> key) {
+        var panel = getPanels().get(key.getName());
+
+        if (panel == null) {
+            throw new RuntimeException(
+                    "Could not find key '" + key + "' in OptionsPanel. Available options: " + getPanels().keySet());
+        }
+
+        return panel;
     }
 
 }
