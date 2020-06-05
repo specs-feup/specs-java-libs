@@ -177,12 +177,16 @@ public class ListDataStore implements DataStore {
 
         // If value is null, use default value
         if (value == null) {
-            Optional<T> defaultValue = key.getDefault();
-            if (!defaultValue.isPresent()) {
+            if (!key.hasDefaultValue()) {
                 throw new RuntimeException("No default value for key '" + key.getName() + "' in this object: " + this);
             }
 
-            value = defaultValue.get();
+            // if (!defaultValue.isPresent()) {
+            // throw new RuntimeException("No default value for key '" + key.getName() + "' in this object: " + this);
+            // }
+
+            Optional<T> defaultValue = key.getDefault();
+            value = defaultValue.orElse(null);
 
             // Storing value, in case it is a mutable value (e.g., a list)
             // if (hasKey) {

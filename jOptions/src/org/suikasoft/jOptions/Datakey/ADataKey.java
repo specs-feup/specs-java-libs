@@ -140,6 +140,11 @@ public abstract class ADataKey<T> implements DataKey<T> {
     }
 
     @Override
+    public boolean hasDefaultValue() {
+        return defaultValueProvider != null;
+    }
+
+    @Override
     public DataKey<T> setDefault(Supplier<? extends T> defaultValueProvider) {
         return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
                 customSetter, extraData);
@@ -230,6 +235,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
         return Optional.ofNullable(copyFunction);
     }
 
+    @Override
     public Optional<DataKeyExtraData> getExtraData() {
         return Optional.ofNullable(extraData);
     }

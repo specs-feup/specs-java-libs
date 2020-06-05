@@ -93,9 +93,11 @@ public interface DataKey<T> extends KeyProvider<String> {
      */
     Optional<T> getDefault();
 
-    default boolean hasDefaultValue() {
-        return getDefault().isPresent();
-    }
+    boolean hasDefaultValue();
+
+    // default boolean hasDefaultValue() {
+    // return getDefault().isPresent();
+    // }
 
     /**
      * 
