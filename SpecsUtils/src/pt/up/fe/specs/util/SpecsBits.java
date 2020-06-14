@@ -407,6 +407,44 @@ public class SpecsBits {
         return parseSignedBinary(binaryString.toString());
     }
 
+    /**
+     * Converts a 0-based, LSB-order bit to the corresponding index in a String representation of the number.
+     * 
+     * @param signalBit
+     * @param stringSize
+     * @return
+     */
+    public static int fromLsbToStringIndex(int signalBit, int stringSize) {
+        return stringSize - signalBit - 1;
+    }
+
+    /**
+     * Sign-extends the given String representing a binary value (only 0s and 1s).
+     * 
+     * @param binaryValue
+     * @param signalBit
+     *            the 0-based index, counting from the LSB, that represents the signal
+     * @return a String with the same size but where all values higher than signalBit are the same as the value at the
+     *         signalBit value.
+     */
+    public static String signExtend(String binaryValue, int signalBit) {
+        // If bit is not represented in the binary value, value does not need sign extension
+        if (signalBit >= binaryValue.length()) {
+            return binaryValue;
+        }
+
+        // Convert LSB signalBit to String index
+        // int lsbSignalIndex = binaryValue.length() - signalBit - 1;
+        int lsbSignalIndex = fromLsbToStringIndex(signalBit, binaryValue.length());
+
+        // Get signal bit
+        var signalValue = binaryValue.substring(lsbSignalIndex, lsbSignalIndex + 1);
+
+        // Replicate signal value up to signal bit
+        return SpecsStrings.buildLine(signalValue, lsbSignalIndex + 1)
+                + binaryValue.substring(lsbSignalIndex + 1, binaryValue.length());
+    }
+
     public static int parseSignedBinary(String binaryString) {
         if (binaryString.length() > 32) {
             SpecsLogs.msgWarn("Given string has more than 32 bits. Truncating MSB.");
