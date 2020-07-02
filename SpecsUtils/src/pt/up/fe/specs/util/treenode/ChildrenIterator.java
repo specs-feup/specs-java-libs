@@ -24,10 +24,11 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
 
     public ChildrenIterator(TreeNode<N> parent) {
 
-	this.parent = parent;
-	this.iterator = parent.getChildrenMutable().listIterator();
+        this.parent = parent;
+        // this.iterator = parent.getChildrenMutable().listIterator();
+        this.iterator = parent.getChildren().listIterator();
 
-	this.lastReturned = null;
+        this.lastReturned = null;
     }
 
     /*
@@ -38,79 +39,79 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
 
     @Override
     public boolean hasNext() {
-	return this.iterator.hasNext();
+        return this.iterator.hasNext();
     }
 
     @Override
     public N next() {
-	this.lastReturned = this.iterator.next();
-	return this.lastReturned;
+        this.lastReturned = this.iterator.next();
+        return this.lastReturned;
     }
 
     @Override
     public boolean hasPrevious() {
-	return this.iterator.hasPrevious();
+        return this.iterator.hasPrevious();
     }
 
     @Override
     public N previous() {
-	this.lastReturned = this.iterator.previous();
-	return this.lastReturned;
+        this.lastReturned = this.iterator.previous();
+        return this.lastReturned;
     }
 
     @Override
     public int nextIndex() {
-	return this.iterator.nextIndex();
+        return this.iterator.nextIndex();
     }
 
     @Override
     public int previousIndex() {
-	return this.iterator.previousIndex();
+        return this.iterator.previousIndex();
     }
 
     @Override
     public void remove() {
-	// Remove from list
-	this.iterator.remove();
+        // Remove from list
+        this.iterator.remove();
 
-	// Unlink child from this node
-	this.lastReturned.removeParent();
+        // Unlink child from this node
+        this.lastReturned.removeParent();
 
-	// Reset last returned
-	this.lastReturned = null;
+        // Reset last returned
+        this.lastReturned = null;
     }
 
     @Override
     public void set(N e) {
-	// Sanitize input node
-	N sanitizedToken = TreeNodeUtils.sanitizeNode(e);
+        // Sanitize input node
+        N sanitizedToken = TreeNodeUtils.sanitizeNode(e);
 
-	// Set parent
-	parent.setAsParentOf(sanitizedToken);
+        // Set parent
+        parent.setAsParentOf(sanitizedToken);
 
-	// Insert child
-	this.iterator.set(sanitizedToken);
+        // Insert child
+        this.iterator.set(sanitizedToken);
 
-	// Remove the previous child from the tree
-	this.lastReturned.removeParent();
+        // Remove the previous child from the tree
+        this.lastReturned.removeParent();
 
-	// Update last returned node
-	this.lastReturned = sanitizedToken;
+        // Update last returned node
+        this.lastReturned = sanitizedToken;
     }
 
     @Override
     public void add(N e) {
-	// Sanitize input node
-	N sanitizedToken = TreeNodeUtils.sanitizeNode(e);
+        // Sanitize input node
+        N sanitizedToken = TreeNodeUtils.sanitizeNode(e);
 
-	// Set parent
-	parent.setAsParentOf(sanitizedToken);
+        // Set parent
+        parent.setAsParentOf(sanitizedToken);
 
-	// Add node
-	this.iterator.add(sanitizedToken);
+        // Add node
+        this.iterator.add(sanitizedToken);
 
-	// Reset last returned
-	this.lastReturned = null;
+        // Reset last returned
+        this.lastReturned = null;
     }
 
     /**
@@ -122,15 +123,15 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * @param amount
      */
     public N back(int amount) {
-	for (int i = 0; i < amount; i++) {
-	    if (!hasPrevious()) {
-		return this.lastReturned;
-	    }
+        for (int i = 0; i < amount; i++) {
+            if (!hasPrevious()) {
+                return this.lastReturned;
+            }
 
-	    previous();
-	}
+            previous();
+        }
 
-	return this.lastReturned;
+        return this.lastReturned;
 
     }
 
@@ -140,15 +141,15 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * @return the next node that is an instance of the given class
      */
     public <K extends N> Optional<K> next(Class<K> nodeClass) {
-	// while (iterator.hasNext()) {
-	while (hasNext()) {
-	    N node = next();
-	    if (nodeClass.isInstance(node)) {
-		return Optional.of(nodeClass.cast(node));
-	    }
-	}
+        // while (iterator.hasNext()) {
+        while (hasNext()) {
+            N node = next();
+            if (nodeClass.isInstance(node)) {
+                return Optional.of(nodeClass.cast(node));
+            }
+        }
 
-	return Optional.empty();
+        return Optional.empty();
     }
 
     /**
@@ -157,14 +158,14 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * @return the next node that is NOT an instance of the given class
      */
     public <K extends N> Optional<N> nextNot(Class<K> nodeClass) {
-	while (hasNext()) {
-	    N node = next();
-	    if (!nodeClass.isInstance(node)) {
-		return Optional.of(node);
-	    }
-	}
+        while (hasNext()) {
+            N node = next();
+            if (!nodeClass.isInstance(node)) {
+                return Optional.of(node);
+            }
+        }
 
-	return Optional.empty();
+        return Optional.empty();
     }
 
     /**
@@ -179,23 +180,23 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * @return
      */
     public N move(int amount) {
-	if (amount == 0) {
-	    return this.lastReturned;
-	}
+        if (amount == 0) {
+            return this.lastReturned;
+        }
 
-	if (amount > 0) {
-	    for (int i = 0; i < amount; i++) {
-		next();
-	    }
-	    return this.lastReturned;
-	}
+        if (amount > 0) {
+            for (int i = 0; i < amount; i++) {
+                next();
+            }
+            return this.lastReturned;
+        }
 
-	// Less than 0
-	for (int i = 0; i < Math.abs(amount); i++) {
-	    previous();
-	}
+        // Less than 0
+        for (int i = 0; i < Math.abs(amount); i++) {
+            previous();
+        }
 
-	return this.lastReturned;
+        return this.lastReturned;
 
     }
 
@@ -212,19 +213,19 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * @param numberOfPreviousNodes
      */
     public void replace(N node, int numberOfPreviousNodes) {
-	// Delete nodes
-	for (int i = 0; i < numberOfPreviousNodes - 1; i++) {
-	    // Delete current node
-	    remove();
-	    // Go back
-	    previous();
-	}
+        // Delete nodes
+        for (int i = 0; i < numberOfPreviousNodes - 1; i++) {
+            // Delete current node
+            remove();
+            // Go back
+            previous();
+        }
 
-	// Set new node
-	set(node);
+        // Set new node
+        set(node);
 
-	// Move iterator forward
-	// iterator.next();
+        // Move iterator forward
+        // iterator.next();
     }
 
     /**
@@ -237,19 +238,19 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      */
     public <K extends N> Optional<K> nextOld(Class<K> nodeClass) {
 
-	// If iterator does not have next node, do nothing.
-	if (!hasNext()) {
-	    return Optional.empty();
-	}
+        // If iterator does not have next node, do nothing.
+        if (!hasNext()) {
+            return Optional.empty();
+        }
 
-	N nextNode = next();
+        N nextNode = next();
 
-	// If next node is not if the given class, return empty
-	if (!nodeClass.isInstance(nextNode)) {
-	    return Optional.empty();
-	}
+        // If next node is not if the given class, return empty
+        if (!nodeClass.isInstance(nextNode)) {
+            return Optional.empty();
+        }
 
-	return Optional.of(nodeClass.cast(nextNode));
+        return Optional.of(nodeClass.cast(nextNode));
     }
 
 }

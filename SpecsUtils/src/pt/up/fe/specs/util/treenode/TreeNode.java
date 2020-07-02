@@ -13,7 +13,8 @@
 
 package pt.up.fe.specs.util.treenode;
 
-import static pt.up.fe.specs.util.SpecsCollections.*;
+import static pt.up.fe.specs.util.SpecsCollections.cast;
+import static pt.up.fe.specs.util.SpecsCollections.subList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -242,7 +243,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * @param children
-     *                     the children to set
+     *            the children to set
      */
     void setChildren(Collection<? extends K> children);
 
@@ -362,7 +363,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      * Tests whether the given node is an ancestor of this node.
      *
      * @param node
-     *                 the node to test
+     *            the node to test
      * @return true if it is ancestor, false otherwise
      */
     default boolean isAncestor(K node) {
@@ -474,9 +475,9 @@ public interface TreeNode<K extends TreeNode<K>> {
      *
      * @param token
      * @param startIndex
-     *                       (inclusive)
+     *            (inclusive)
      * @param endIndex
-     *                       (exclusive)
+     *            (exclusive)
      */
     default void removeChildren(int startIndex, int endIndex) {
 
@@ -614,4 +615,5 @@ public interface TreeNode<K extends TreeNode<K>> {
 
         return 1 + getParent().getDepth();
     }
+
 }
