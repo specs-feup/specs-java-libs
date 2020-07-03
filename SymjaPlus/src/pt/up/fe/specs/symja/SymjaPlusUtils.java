@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.symja;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.matheclipse.core.eval.EvalUtilities;
@@ -28,6 +29,10 @@ import pt.up.fe.specs.util.SpecsLogs;
  * 
  */
 public class SymjaPlusUtils {
+
+    public static String simplify(String expression) {
+        return simplify(expression, new HashMap<>());
+    }
 
     public static String simplify(String expression, Map<String, String> constants) {
 
