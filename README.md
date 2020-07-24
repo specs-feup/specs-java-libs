@@ -17,6 +17,7 @@ Java libraries created or extended (-Plus suffix) by SPeCS research group
         * JavaCC - http://eclipse-javacc.sourceforge.net/
         * IvyDE - http://www.apache.org/dist/ant/ivyde/updatesite: Install Apache Ivy (tested with 2.4) and Apache IvyDE (tested with 2.2). After installing IvyDE you have to define de ivy settings file:
             *  Go to Window > Preferences > Ivy > Setting > Ivy Setting path > press "Workspace" and choose "ivysettings.xml"
+        * Antrl4IDE: Follow the steps 1, 2, 4 and 5 described [here](https://github.com/antlr4ide/antlr4ide#installation)
       2. Import projects from Git. Select "Import...->Git->Projects from Git->Existing Local Repository. Here you add the repository, by selecting the folder where you cloned this repository. The default option is "Import Eclipse Projects", do next, and choose the projects you want to import.
 
 # Installing Eclipse plugins using update site links
