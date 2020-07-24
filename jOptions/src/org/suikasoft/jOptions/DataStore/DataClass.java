@@ -49,6 +49,25 @@ public interface DataClass<T extends DataClass<T>> {
         return set(key, Optional.of(value));
     }
 
+    default Object getValue(String key) {
+        var def = getStoreDefinition().orElseThrow(
+                () -> new RuntimeException(".getValue() only supported if DataClass has a StoreDefinition"));
+
+        var datakey = def.getKey(key);
+
+        return get(datakey);
+    }
+
+    default Object setValue(String key, Object value) {
+        var def = getStoreDefinition().orElseThrow(
+                () -> new RuntimeException(".getValue() only supported if DataClass has a StoreDefinition"));
+
+        @SuppressWarnings("unchecked")
+        var datakey = (DataKey<Object>) def.getKey(key);
+
+        return set(datakey, datakey.getValueClass().cast(value));
+    }
+
     /**
      * 
      * @return an Optional containing a StoreDefinition, if defined. By default returns empty.

@@ -91,6 +91,12 @@ public interface StoreDefinition {
         return StoreDefinition.newInstance(aClass.getSimpleName(), StoreDefinitions.fromInterface(aClass).getKeys());
     }
 
+    /**
+     * 
+     * @param key
+     * @return the datakey with the same name as the given String. Throws an exception if no key is found with the given
+     *         name
+     */
     default DataKey<?> getKey(String key) {
         DataKey<?> dataKey = getKeyMap().get(key);
         if (dataKey == null) {
