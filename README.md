@@ -13,13 +13,13 @@ Java libraries created or extended (-Plus suffix) by SPeCS research group
       6. Go to Java > Code Style > Clean Up, choose "Import" and then select "cleanup.xml" and then click "Ok".
       <!-- 6. Go to Ivy > Settings, choose "File System" in the "Ivy settings path" option and browse to "ivysettings.xml". Click "Ok" -->
   3. Import the projects you want to.
-      1. For certain projects, you might need to install additional Eclipse plugins ([how to install Eclipse plugins using update site links](#installing-eclipse-plugin-using-update-site-links)), it is recommended that you install the plugins and restart Eclipse before importing the projects. Currently, the used plugins are:
+      1. For certain projects, you might need to install additional Eclipse plugins ([how to install Eclipse plugins using update site links](#installing-eclipse-plugins-using-update-site-links)), it is recommended that you install the plugins and restart Eclipse before importing the projects. Currently, the used plugins are:
         * JavaCC - http://eclipse-javacc.sourceforge.net/
         * IvyDE - http://www.apache.org/dist/ant/ivyde/updatesite: Install Apache Ivy (tested with 2.4) and Apache IvyDE (tested with 2.2). After installing IvyDE you have to define de ivy settings file:
             *  Go to Window > Preferences > Ivy > Setting > Ivy Setting path > press "Workspace" and choose "ivysettings.xml"
       2. Import projects from Git. Select "Import...->Git->Projects from Git->Existing Local Repository. Here you add the repository, by selecting the folder where you cloned this repository. The default option is "Import Eclipse Projects", do next, and choose the projects you want to import.
 
-# Installing Eclipse plugin using update site links
+# Installing Eclipse plugins using update site links
 
  1. Go to Help > Install New Software...
  2. Click "Add..."
