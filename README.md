@@ -16,7 +16,7 @@ Java libraries created or extended (-Plus suffix) by SPeCS research group
       1. For certain projects, you might need to install additional Eclipse plugins ([how to install Eclipse plugins using update site links](#installing-eclipse-plugins-using-update-site-links)), it is recommended that you install the plugins and restart Eclipse before importing the projects. Currently, the used plugins are:
         * JavaCC - http://eclipse-javacc.sourceforge.net/
         * IvyDE - http://www.apache.org/dist/ant/ivyde/updatesite: Install Apache Ivy (tested with 2.4) and Apache IvyDE (tested with 2.2). After installing IvyDE you have to define de ivy settings file:
-            *  Go to Window > Preferences > Ivy > Setting > Ivy Setting path > press "Workspace" and choose "ivysettings.xml"
+            *  Go to Window > Preferences > Ivy > Setting > Ivy Setting path > press "Workspace" and choose "ivysettings.xml" that is in the root of this repository
         * Antrl4IDE: Follow the steps 1, 2, 4 and 5 described [here](https://github.com/antlr4ide/antlr4ide#installation)
       2. Import projects from Git. Select "Import...->Git->Projects from Git->Existing Local Repository. Here you add the repository, by selecting the folder where you cloned this repository. The default option is "Import Eclipse Projects", do next, and choose the projects you want to import.
 
