@@ -15,6 +15,7 @@ package pt.up.fe.specs.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -837,4 +838,10 @@ public class SpecsCollections {
         return collection.stream();
     }
 
+    public static BitSet copy(BitSet bitSet) {
+        var copy = new BitSet();
+        copy.or(bitSet);
+
+        return copy;
+    }
 }
