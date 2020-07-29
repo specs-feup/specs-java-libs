@@ -70,7 +70,7 @@ public class ProgramPanel extends GuiTab {
 
     // private static final String OPTION_LAST_USED_FILE = "lastUsedFile";
     private static final String OPTION_LAST_USED_ITEMS = "lastUsedItems";
-    private static final int LAST_USED_ITEMS_CAPACITY = 5;
+    private static final int LAST_USED_ITEMS_CAPACITY = 10;
     // Items will be filenames, and they should not have the character '?'
     private static final String ITEMS_SEPARATOR_REGEX = "\\?";
     private static final String ITEMS_SEPARATOR = "?";
@@ -154,7 +154,7 @@ public class ProgramPanel extends GuiTab {
      */
     /**
      * @param showStackTrace
-     *            the showStackTrace to set
+     *                           the showStackTrace to set
      */
     /*
     public void setShowStackTrace(boolean showStackTrace) {
