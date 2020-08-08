@@ -27,6 +27,7 @@ import org.specs.generators.java.types.Primitive;
 import org.specs.generators.java.utils.UniqueList;
 import org.specs.generators.java.utils.Utils;
 
+import pt.up.fe.specs.util.SpecsLogs;
 import tdrc.utils.StringUtils;
 
 /**
@@ -280,6 +281,7 @@ public class Method implements IGenerate {
 
 	    } else {
 		methodStr.append("// TODO Auto-generated method stub\n");
+		SpecsLogs.warn("Potential bug: check this");
 		if (!returnType.equals(Primitive.VOID.getType())) {
 
 		    final String returnValue = JavaTypeFactory.getDefaultValue(returnType);
