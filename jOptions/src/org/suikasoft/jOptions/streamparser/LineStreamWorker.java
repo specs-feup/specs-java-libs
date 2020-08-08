@@ -27,6 +27,14 @@ public interface LineStreamWorker<T extends DataClass<T>> {
         return new GenericLineStreamWorker<>(id, init, apply);
     }
 
+    static <T extends DataClass<T>> LineStreamWorker<T> newInstance(String id, BiConsumer<LineStream, T> apply) {
+        // Do nothing
+        Consumer<T> init = data -> {
+        };
+
+        return new GenericLineStreamWorker<>(id, init, apply);
+    }
+
     /**
      * Id of this worker, precedes lines to parse in LineStream.
      * 
