@@ -14,8 +14,10 @@
 package org.suikasoft.jOptions.DataStore;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
+import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 // public class DataClassWrapper implements DataClass<DataClassWrapper> {
 public abstract class DataClassWrapper<T extends DataClass<T>> implements DataClass<T> {
@@ -64,4 +66,13 @@ public abstract class DataClassWrapper<T extends DataClass<T>> implements DataCl
         return data.getDataKeysWithValues();
     }
 
+    @Override
+    public Optional<StoreDefinition> getStoreDefinition() {
+        return data.getStoreDefinition();
+    }
+
+    @Override
+    public boolean isClosed() {
+        return data.isClosed();
+    }
 }
