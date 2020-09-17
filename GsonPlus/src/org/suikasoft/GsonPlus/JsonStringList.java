@@ -74,17 +74,17 @@ public class JsonStringList extends AbstractList<String> {
     }
 
     private static List<String> decode(String json) {
-        System.out.println("VALUES: " + json);
+        // System.out.println("VALUES: " + json);
 
         List<String> decoded;
         try {
-            String[] decodedPrim = new Gson().fromJson(json, String[].class);
+            String[] decodedPrim = new Gson().fromJson(json.strip(), String[].class);
             decoded = Arrays.asList(decodedPrim);
         } catch (JsonSyntaxException e) {
-            throw new IllegalArgumentException("Expected a list of strings as argument");
+            throw new IllegalArgumentException("Exception while deconding JSON of string list: " + e);
         }
 
-        System.out.println("LIST: " + decoded);
+        // System.out.println("LIST: " + decoded);
 
         return new JsonStringList(decoded);
     }
@@ -188,6 +188,7 @@ public class JsonStringList extends AbstractList<String> {
         return new JsonStringList(Arrays.asList(values));
     }
 
+    @Override
     public Stream<String> stream() {
         return getStringList().stream();
     }
