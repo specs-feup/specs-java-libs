@@ -60,7 +60,7 @@ public interface DataClass<T extends DataClass<T>> {
 
     default Object setValue(String key, Object value) {
         var def = getStoreDefinition().orElseThrow(
-                () -> new RuntimeException(".getValue() only supported if DataClass has a StoreDefinition"));
+                () -> new RuntimeException(".setValue() only supported if DataClass has a StoreDefinition"));
 
         @SuppressWarnings("unchecked")
         var datakey = (DataKey<Object>) def.getKey(key);
