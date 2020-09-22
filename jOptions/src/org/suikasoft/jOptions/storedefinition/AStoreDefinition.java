@@ -29,7 +29,8 @@ public abstract class AStoreDefinition implements StoreDefinition {
     // private final List<DataKey<?>> options;
     private final List<StoreSection> sections;
     private final DataStore defaultData;
-    private final transient Map<String, DataKey<?>> keyMap = new HashMap<>();
+    // private final transient Map<String, DataKey<?>> keyMap = new HashMap<>();
+    private final Map<String, DataKey<?>> keyMap = new HashMap<>();
 
     /**
      * @param appName
