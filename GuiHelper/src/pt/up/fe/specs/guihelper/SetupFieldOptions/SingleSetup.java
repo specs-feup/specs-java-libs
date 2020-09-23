@@ -42,5 +42,7 @@ public interface SingleSetup {
      * 
      * @return
      */
-    SetupDefinition getSetupOptions();
+    public default SetupDefinition getSetupOptions() {
+        return null;
+    };
 }

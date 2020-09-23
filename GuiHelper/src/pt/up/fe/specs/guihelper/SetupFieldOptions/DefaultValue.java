@@ -28,5 +28,7 @@ public interface DefaultValue {
      * 
      * @return
      */
-    FieldValue getDefaultValue();
+    public default FieldValue getDefaultValue() {
+        return null;
+    };
 }

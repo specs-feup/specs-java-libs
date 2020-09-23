@@ -74,7 +74,9 @@ public interface SetupFieldEnum {
      * 
      * @return
      */
-    String getSetupName();
+    public default String getSetupName() {
+        return this.name();
+    };
 
     /**
      * Inserts a space before each camel case.
@@ -82,6 +84,6 @@ public interface SetupFieldEnum {
      * @return
      */
     default String getParsedString() {
-	return SpecsStrings.camelCaseSeparate(name(), " ");
+        return SpecsStrings.camelCaseSeparate(name(), " ");
     }
 }
