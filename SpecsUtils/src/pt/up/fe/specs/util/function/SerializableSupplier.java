@@ -18,9 +18,4 @@ import java.util.function.Supplier;
 
 public interface SerializableSupplier<T> extends Supplier<T>, Serializable {
 
-    static <T extends Supplier<T> & Serializable> SerializableSupplier<T> newInstance(
-            SerializableSupplier<T> supplier) {
-
-        return supplier;
-    }
 }
