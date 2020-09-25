@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import pt.up.fe.specs.util.parsing.StringCodec;
 
@@ -22,13 +23,20 @@ public class EnumCodec<T extends Enum<T>> implements StringCodec<T> {
 
     private final Class<T> anEnum;
     private final Map<String, T> decodeMap;
+    private final Function<T, String> encoder;
 
     public EnumCodec(Class<T> anEnum) {
+        this(anEnum, value -> value.name());
+    }
+
+    public EnumCodec(Class<T> anEnum, Function<T, String> encoder) {
         this.anEnum = anEnum;
         this.decodeMap = new HashMap<>();
+        this.encoder = encoder;
 
         for (T enumValue : anEnum.getEnumConstants()) {
-            decodeMap.put(enumValue.toString(), enumValue);
+            // decodeMap.put(enumValue.toString(), enumValue);
+            decodeMap.put(encoder.apply(enumValue), enumValue);
         }
     }
 
@@ -50,7 +58,8 @@ public class EnumCodec<T extends Enum<T>> implements StringCodec<T> {
 
     @Override
     public String encode(T value) {
-        return value.toString();
+        return encoder.apply(value);
+        // return value.toString();
     }
 
 }

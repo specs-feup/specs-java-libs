@@ -24,6 +24,7 @@ import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.gui.KeyPanel;
 
+import pt.up.fe.specs.util.SpecsEnums;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSwing;
 
@@ -38,7 +39,8 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
     /**
      * INSTANCE VARIABLES
      */
-    private final JComboBox<T> comboBoxValues;
+    // private final JComboBox<T> comboBoxValues;
+    private final JComboBox<String> comboBoxValues;
     private final Collection<T> availableChoices;
 
     public EnumMultipleChoicePanel(DataKey<T> key, DataStore data) {
@@ -46,12 +48,17 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
 
         // comboBoxValues = new JComboBox<String>();
         comboBoxValues = new JComboBox<>();
+
         T[] enumConstants = key.getValueClass().getEnumConstants();
 
         availableChoices = new HashSet<>(Arrays.asList(enumConstants));
 
         for (T choice : enumConstants) {
-            comboBoxValues.addItem(choice);
+            // comboBoxValues.addItem(choice);
+            comboBoxValues.addItem(
+                    key.getDecoder()
+                            .map(codec -> codec.encode(choice))
+                            .orElse(choice.name()));
         }
 
         // Check if there is a default value
@@ -63,13 +70,23 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
         add(comboBoxValues, BorderLayout.CENTER);
     }
 
+    /*
     private JComboBox<T> getValues() {
+        return comboBoxValues;
+    }
+    */
+    private JComboBox<String> getValues() {
         return comboBoxValues;
     }
 
     @Override
     public T getValue() {
-        return getValues().getItemAt(getValues().getSelectedIndex());
+        var stringValue = getValues().getItemAt(getValues().getSelectedIndex());
+
+        return getKey().getDecoder()
+                .map(codec -> codec.decode(stringValue))
+                .orElse(SpecsEnums.valueOf(getKey().getValueClass(), stringValue));
+
     }
 
     @Override
