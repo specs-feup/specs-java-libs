@@ -55,19 +55,29 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
 
         for (T choice : enumConstants) {
             // comboBoxValues.addItem(choice);
-            comboBoxValues.addItem(
-                    key.getDecoder()
-                            .map(codec -> codec.encode(choice))
-                            .orElse(choice.name()));
+            comboBoxValues.addItem(valueToString(choice));
+            // key.getDecoder()
+            // .map(codec -> codec.encode(choice))
+            // .orElse(choice.name()));
         }
 
         // Check if there is a default value
-        if (getKey().getDefault().isPresent()) {
-            comboBoxValues.setSelectedItem(getKey().getDefault().get());
-        }
+        getKey().getDefault()
+                .map(defaultValue -> valueToString(defaultValue))
+                .ifPresent(comboBoxValues::setSelectedItem);
+
+        // if (getKey().getDefault().isPresent()) {
+        // comboBoxValues.setSelectedItem(getKey().getDefault().get());
+        // }
 
         setLayout(new BorderLayout());
         add(comboBoxValues, BorderLayout.CENTER);
+    }
+
+    private String valueToString(T value) {
+        return getKey().getDecoder()
+                .map(codec -> codec.encode(value))
+                .orElse(value.name());
     }
 
     /*
