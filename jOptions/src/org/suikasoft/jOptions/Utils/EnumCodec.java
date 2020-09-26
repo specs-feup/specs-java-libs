@@ -26,7 +26,8 @@ public class EnumCodec<T extends Enum<T>> implements StringCodec<T> {
     private final Function<T, String> encoder;
 
     public EnumCodec(Class<T> anEnum) {
-        this(anEnum, value -> value.name());
+        // this(anEnum, value -> value.name());
+        this(anEnum, value -> value.toString());
     }
 
     public EnumCodec(Class<T> anEnum, Function<T, String> encoder) {
