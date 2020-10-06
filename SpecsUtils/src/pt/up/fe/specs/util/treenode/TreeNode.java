@@ -87,6 +87,18 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      *
+     * @return the number of children in the node
+     */
+    default int getNumChildren() {
+        if (!this.hasChildren()) {
+            return 0;
+        }
+
+        return getChildren().size();
+    }
+
+    /**
+     *
      * @param child
      * @return the object that was really inserted in the tree (e.g., if child already had a parent, usually a copy is
      *         inserted)
@@ -154,6 +166,36 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
+     * Returns the nodes on the left of this node.
+     *
+     * @return
+     */
+    default List<K> getLeftSiblings() {
+        if (!this.hasParent()) {
+            SpecsLogs.warn("Asked for left siblings of a node that does not have a parent");
+            return Collections.emptyList();
+        }
+
+        List<K> parentChildren = getParent().getChildren();
+        return parentChildren.subList(0, indexOfSelf());
+    }
+
+    /**
+     * Returns the nodes on the right of this node.
+     *
+     * @return
+     */
+    default List<K> getRightSiblings() {
+        if (!this.hasParent()) {
+            SpecsLogs.warn("Asked for right siblings of a node that does not have a parent");
+            return Collections.emptyList();
+        }
+
+        List<K> parentChildren = getParent().getChildren();
+        return parentChildren.subList(indexOfSelf() + 1, parentChildren.size());
+    }
+
+    /**
      * Replaces the token at the specified position in this list with the specified token.
      *
      * @param index
@@ -188,6 +230,93 @@ public interface TreeNode<K extends TreeNode<K>> {
         var idx = this.getChildren().indexOf(oldChild);
         SpecsCheck.checkNotNull(oldChild, () -> "Child not found for this parent!");
         return this.setChild(idx, newChild);
+    }
+
+    /**
+     * Remove all children
+     */
+    default void removeChildren() {
+        while (this.hasChildren()) {
+            this.removeChild(0);
+        }
+    }
+
+    /**
+     * Removes the child at the specified position.
+     *
+     * <p>
+     * Puts the parent of the child as null.
+     *
+     * TODO: should remove all it's children recursively?
+     *
+     * @param index
+     * @return
+     */
+    default K removeChild(int index) {
+        if (!hasChildren()) {
+            throw new RuntimeException("Token does not have children, cannot remove a child.");
+        }
+
+        // get child and remove
+        var child = this.getChildren().get(index);
+        this.getChildren().remove(index);
+
+        // Unlink child from this node
+        child.removeParent();
+        return child;
+    }
+
+    /**
+     * Removes the children in the given index range.
+     *
+     *
+     * @param token
+     * @param startIndex
+     *            (inclusive)
+     * @param endIndex
+     *            (exclusive)
+     */
+    default void removeChildren(int startIndex, int endIndex) {
+
+        // Java doesn't support assertions in default methods.
+        // see https://bugs.openjdk.java.net/browse/JDK-8025141
+        // So we use exceptions instead.
+        if (endIndex < startIndex) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (getNumChildren() < endIndex) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        // Since we are removing children, start from the last
+        // element
+        for (int i = endIndex - 1; i >= startIndex; i--) {
+            this.removeChild(i);
+        }
+    }
+
+    /**
+     * Remove child by reference
+     * 
+     * @param child
+     * @return
+     */
+    default int removeChild(K child) {
+        // Find index of child
+        for (int i = 0; i < getNumChildren(); i++) {
+            if (getChild(i) != child) {
+                continue;
+            }
+
+            // Found child to remove
+            this.removeChild(i);
+
+            // Return index where it was found
+            return i;
+        }
+
+        SpecsLogs.msgWarn("Could not find child '" + child.toContentString() + "'");
+        return -1;
     }
 
     // Advanced Getter/Setter Methods /////////////////////////////////////////
@@ -248,38 +377,6 @@ public interface TreeNode<K extends TreeNode<K>> {
             addChild(child);
         }
     }*/
-
-    /**
-     * Returns the nodes on the left of this node.
-     *
-     * @return
-     */
-    default List<K> getLeftSiblings() {
-        if (!hasParent()) {
-            SpecsLogs.warn("Asked for left siblings of a node that does not have a parent");
-            return Collections.emptyList();
-        }
-
-        List<K> parentChildren = getParent().getChildren();
-
-        return parentChildren.subList(0, indexOfSelf());
-    }
-
-    /**
-     * Returns the nodes on the right of this node.
-     *
-     * @return
-     */
-    default List<K> getRightSiblings() {
-        if (!hasParent()) {
-            SpecsLogs.warn("Asked for right siblings of a node that does not have a parent");
-            return Collections.emptyList();
-        }
-
-        List<K> parentChildren = getParent().getChildren();
-
-        return parentChildren.subList(indexOfSelf() + 1, parentChildren.size());
-    }
 
     /**
      *
@@ -355,6 +452,84 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
+     *
+     * @param nodeClass
+     * @return the index of the first child that is an instance of the given class, or -1 if none is found
+     */
+    default int getChildIndex(Class<? extends K> nodeClass) {
+        for (int i = 0; i < getNumChildren(); i++) {
+            if (nodeClass.isInstance(getChild(i))) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param nodeClass
+     * @param index
+     * @return
+     */
+    default <T extends K> T getChild(Class<T> nodeClass, int index) {
+        return this.getChildTry(nodeClass, index).orElseThrow(
+                () -> new RuntimeException("Wanted a '"
+                        + nodeClass.getSimpleName() + "' at index '" + index
+                        + "', but is was a '" + getChild(index).getClass().getSimpleName() + "':\n" + this));
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param nodeClass
+     * @param index
+     * @return
+     */
+    default <T extends K> Optional<T> getChildTry(Class<T> nodeClass, int index) {
+        K childNode = this.getChild(index);
+        SpecsCheck.checkNotNull(childNode, () -> "No child at index "
+                + index + " of node '" + getClass()
+                + "' (children: " + getNumChildren() + ")");
+
+        if (!nodeClass.isInstance(childNode)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(nodeClass.cast(childNode));
+    }
+
+    /*
+    default boolean is(Class<? extends K> nodeClass) {
+    return nodeClass.isInstance(this);
+    }
+    */
+
+    /**
+     * Sets 'newChild' in 'token' at the position 'startIndex', and removes tokens from startIndex+1 (inclusive) to
+     * endIndex (exclusive).
+     *
+     * <p>
+     * If startIndex+1 is equal to endIndex, no tokens are removed from the list.
+     *
+     * @param newChild
+     * @param tokens
+     * @param startIndex
+     * @param endIndex
+     */
+    default void setChildAndRemove(K newChild, int startIndex, int endIndex) {
+
+        // Set the new token at the first position
+        setChild(startIndex, newChild);
+
+        // Remove other tokens
+        for (int i = endIndex - 1; i >= startIndex + 1; i--) {
+            removeChild(i);
+        }
+    }
+
+    /**
      * 
      * @param <N>
      * @param targetType
@@ -404,6 +579,60 @@ public interface TreeNode<K extends TreeNode<K>> {
                 iterator.remove();
             }
         }
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param type
+     * @return
+     */
+    default <T extends K> T getAncestor(Class<T> type) {
+        return getAncestorTry(type)
+                .orElseThrow(() -> new RuntimeException("Could not find ancestor of type '" + type + "'"));
+    }
+
+    /**
+     * Tests whether the given node is an ancestor of this node.
+     *
+     * @param node
+     *            the node to test
+     * @return true if it is ancestor, false otherwise
+     */
+    default boolean isAncestor(K node) {
+
+        K currentAncestor = this.getParent();
+
+        while (currentAncestor != null) {
+            if (node == currentAncestor) {
+                return true;
+            }
+            currentAncestor = currentAncestor.getParent();
+        }
+
+        return false;
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param type
+     * @return
+     */
+    default <T extends K> Optional<T> getAncestorTry(Class<T> type) {
+        // If no parent, return empty
+        if (!this.hasParent()) {
+            return Optional.empty();
+        }
+
+        // Check if parent is of the given type
+        K parent = this.getParent();
+
+        if (type.isInstance(parent)) {
+            return Optional.of(type.cast(parent));
+        }
+
+        return parent.getAncestorTry(type);
     }
 
     // Stream Methods /////////////////////////////////////////////////////////
@@ -569,117 +798,38 @@ public interface TreeNode<K extends TreeNode<K>> {
         return newToken;
     }
 
-    /////////////////////////////////////////////////////////
-
     /**
-     * Removes the child at the specified position.
+     * Returns an Iterator of the children of the node.
      *
-     * <p>
-     * Puts the parent of the child as null.
-     *
-     * TODO: should remove all it's children recursively?
-     *
-     * @param index
-     * @return
+     * @return a ListIterator over the children of the node. The iterator supports methods that modify the node (set,
+     *         remove, insert...)
      */
-    default K removeChild(int index) {
-        if (!hasChildren()) {
-            throw new RuntimeException("Token does not have children, cannot remove a child.");
-        }
-
-        // get child and remove
-        var child = this.getChildren().get(index);
-        this.getChildren().remove(index);
-
-        // Unlink child from this node
-        child.removeParent();
-        return child;
+    default ChildrenIterator<K> getChildrenIterator() {
+        return new ChildrenIterator<>(this);
     }
 
     /**
      *
-     * @return the number of children in the node
+     * @param child
+     * @return the index of the given child, or -1 if no child was found
      */
-    default int getNumChildren() {
-        if (!this.hasChildren()) {
-            return 0;
-        }
+    default int indexOfChild(K child) {
+        int index = 0;
 
-        return getChildren().size();
-    }
-
-    default void removeChildren() {
-        while (this.hasChildren()) {
-            removeChild(0);
-        }
-    }
-
-    default int removeChild(K child) {
-        // Find index of child
-        for (int i = 0; i < getNumChildren(); i++) {
-            if (getChild(i) != child) {
-                continue;
+        ListIterator<K> iterator = getChildrenIterator();
+        // Iterate until it finds the same object
+        while (iterator.hasNext()) {
+            // If child is the same object, return index
+            if (iterator.next() == child) {
+                return index;
             }
 
-            // Found child to remove
-            removeChild(i);
-
-            // Return index where it was found
-            return i;
+            // Otherwise, increment index and try again
+            index++;
         }
 
-        SpecsLogs.msgWarn("Could not find child '" + child.toContentString() + "'");
+        // Could not find the child
         return -1;
-    }
-
-    /**
-     * 
-     * @param <T>
-     * @param type
-     * @return
-     */
-    default <T extends K> T getAncestor(Class<T> type) {
-        return getAncestorTry(type)
-                .orElseThrow(() -> new RuntimeException("Could not find ancestor of type '" + type + "'"));
-    }
-
-    /**
-     * Tests whether the given node is an ancestor of this node.
-     *
-     * @param node
-     *            the node to test
-     * @return true if it is ancestor, false otherwise
-     */
-    default boolean isAncestor(K node) {
-
-        K currentAncestor = getParent();
-
-        while (currentAncestor != null) {
-            if (node == currentAncestor) {
-                return true;
-            }
-
-            currentAncestor = currentAncestor.getParent();
-        }
-
-        return false;
-
-    }
-
-    default <T extends K> Optional<T> getAncestorTry(Class<T> type) {
-        // If no parent, return empty
-        if (!hasParent()) {
-            return Optional.empty();
-        }
-
-        // Check if parent is of the given type
-        K parent = getParent();
-
-        if (type.isInstance(parent)) {
-            return Optional.of(type.cast(parent));
-        }
-
-        return parent.getAncestorTry(type);
     }
 
     /**
@@ -709,133 +859,6 @@ public interface TreeNode<K extends TreeNode<K>> {
         }
 
         return getParent().getChildren().indexOf(this);
-    }
-
-    /**
-     *
-     * @param nodeClass
-     * @return the index of the first child that is an instance of the given class, or -1 if none is found
-     */
-    default int getChildIndex(Class<? extends K> nodeClass) {
-        for (int i = 0; i < getNumChildren(); i++) {
-            if (nodeClass.isInstance(getChild(i))) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    default <T extends K> T getChild(Class<T> nodeClass, int index) {
-        return getChildTry(nodeClass, index)
-                .orElseThrow(
-                        () -> new RuntimeException("Wanted a '" + nodeClass.getSimpleName() + "' at index '" + index
-                                + "', but is was a '" + getChild(index).getClass().getSimpleName() + "':\n" + this));
-    }
-
-    default <T extends K> Optional<T> getChildTry(Class<T> nodeClass, int index) {
-        K childNode = getChild(index);
-
-        SpecsCheck.checkNotNull(childNode, () -> "No child at index " + index + " of node '" + getClass()
-                + "' (children: " + getNumChildren() + ")");
-
-        if (!nodeClass.isInstance(childNode)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(nodeClass.cast(childNode));
-    }
-
-    /*
-    default boolean is(Class<? extends K> nodeClass) {
-    return nodeClass.isInstance(this);
-    }
-    */
-
-    /**
-     * Removes the children in the given index range.
-     *
-     *
-     * @param token
-     * @param startIndex
-     *            (inclusive)
-     * @param endIndex
-     *            (exclusive)
-     */
-    default void removeChildren(int startIndex, int endIndex) {
-
-        // Java doesn't support assertions in default methods.
-        // see https://bugs.openjdk.java.net/browse/JDK-8025141
-        // So we use exceptions instead.
-        if (endIndex < startIndex) {
-            throw new IndexOutOfBoundsException();
-        }
-        if (getNumChildren() < endIndex) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        // Since we are removing children, start from the last
-        // element
-        for (int i = endIndex - 1; i >= startIndex; i--) {
-            removeChild(i);
-        }
-    }
-
-    /**
-     * Sets 'newChild' in 'token' at the position 'startIndex', and removes tokens from startIndex+1 (inclusive) to
-     * endIndex (exclusive).
-     *
-     * <p>
-     * If startIndex+1 is equal to endIndex, no tokens are removed from the list.
-     *
-     * @param newChild
-     * @param tokens
-     * @param startIndex
-     * @param endIndex
-     */
-    default void setChildAndRemove(K newChild, int startIndex, int endIndex) {
-
-        // Set the new token at the first position
-        setChild(startIndex, newChild);
-
-        // Remove other tokens
-        for (int i = endIndex - 1; i >= startIndex + 1; i--) {
-            removeChild(i);
-        }
-    }
-
-    /**
-     *
-     * @param child
-     * @return the index of the given child, or -1 if no child was found
-     */
-    default int indexOfChild(K child) {
-        int index = 0;
-
-        ListIterator<K> iterator = getChildrenIterator();
-        // Iterate until it finds the same object
-        while (iterator.hasNext()) {
-            // If child is the same object, return index
-            if (iterator.next() == child) {
-                return index;
-            }
-
-            // Otherwise, increment index and try again
-            index++;
-        }
-
-        // Could not find the child
-        return -1;
-    }
-
-    /**
-     * Returns an Iterator of the children of the node.
-     *
-     * @return a ListIterator over the children of the node. The iterator supports methods that modify the node (set,
-     *         remove, insert...)
-     */
-    default ChildrenIterator<K> getChildrenIterator() {
-        return new ChildrenIterator<>(this);
     }
 
     /**
