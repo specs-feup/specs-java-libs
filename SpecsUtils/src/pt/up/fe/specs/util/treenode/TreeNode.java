@@ -26,9 +26,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import pt.up.fe.specs.util.SpecsCheck;
+import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public interface TreeNode<K extends TreeNode<K>> {
+
+    // Methods implemented by {@link ATreeNode} ///////////////////////////////
 
     /**
      * Returns a reference to the object that implements this class.
@@ -69,6 +72,19 @@ public interface TreeNode<K extends TreeNode<K>> {
      */
     public List<K> getChildren();
 
+    // Basic Getter/Setter Methods ////////////////////////////////////////////
+
+    /**
+     * 
+     * @return
+     */
+    default public boolean hasChildren() {
+        if (getChildren().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      *
      * @param child
@@ -78,7 +94,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     default public K addChild(K child) {
         K sanitizedChild = TreeNodeUtils.sanitizeNode(child);
         this.setAsParentOf(sanitizedChild);
-        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        SpecsCheck.checkNotNull(sanitizedChild, () -> "Cannot use 'null' as children.");
         this.getChildren().add(sanitizedChild);
         return sanitizedChild;
     }
@@ -93,7 +109,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     default public K addChild(int idx, K child) {
         K sanitizedChild = TreeNodeUtils.sanitizeNode(child);
         this.setAsParentOf(sanitizedChild);
-        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        SpecsCheck.checkNotNull(sanitizedChild, () -> "Cannot use 'null' as children.");
         this.getChildren().add(idx, sanitizedChild);
         return sanitizedChild;
     }
@@ -138,6 +154,32 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
+     * Replaces the token at the specified position in this list with the specified token.
+     *
+     * @param index
+     * @param token
+     */
+    default public K setChild(int index, K token) {
+        if (!this.hasChildren()) {
+            throw new RuntimeException("Token does not have children, cannot set a child.");
+        }
+
+        K sanitizedToken = TreeNodeUtils.sanitizeNode(token);
+        this.setAsParentOf(sanitizedToken);
+        SpecsCheck.checkNotNull(sanitizedToken, () -> "Sanitized token is null");
+
+        // Insert child
+        K previousChild = this.getChildren().set(index, sanitizedToken);
+
+        // Remove parent from previous child at this index
+        if (previousChild != null) {
+            previousChild.removeParent();
+        }
+
+        return previousChild;
+    }
+
+    /**
      * 
      * @param oldChild
      * @param newChild
@@ -148,71 +190,95 @@ public interface TreeNode<K extends TreeNode<K>> {
         return this.setChild(idx, newChild);
     }
 
-    /////////////////////////////////////////////////////////
+    // Advanced Getter/Setter Methods /////////////////////////////////////////
 
     /**
+     * Sets this node as the parent of the given node. If the given node already has a parent, throws an exception.
      *
-     * @return a mutable view of the children
+     * @param childToken
      */
-    List<K> getChildrenMutable();
-
-    default Iterator<K> iterator() {
-        return getChildren().iterator();
+    default void setAsParentOf(K childToken) {
+        if (childToken.getParent() != null) {
+            throw new RuntimeException("Parent should be null.");
+        }
+        childToken.setParent(getThis());
     }
 
-    default boolean hasChildren() {
-        if (getChildren().isEmpty()) {
-            return false;
+    /**
+     * 
+     * @param <EK>
+     * @param children
+     */
+    default <EK extends K> void addChildren(List<EK> children) {
+        // If the same list (reference) create a copy, to avoid problems when
+        // adding the list to itself
+        if (!children.isEmpty() && children == this.getChildren()) {
+            SpecsLogs.msgWarn("Adding the list to itself");
+            children = SpecsFactory.newArrayList(children);
         }
 
-        return true;
+        for (K child : children) {
+            addChild(child);
+        }
     }
 
     /**
-     * Prints the node.
+     * @param children
+     *            the children to set
+     */
+    default void setChildren(Collection<? extends K> children) {
+
+        // Remove previous children in this node
+        for (int i = 0; i < this.getNumChildren(); i++) {
+            this.removeChild(0);
+        }
+
+        // Add new children
+        for (K child : children) {
+            addChild(child);
+        }
+    }
+
+    /*
+     * TODO: this was a method with the same name in the interface, 
+     * which was immediately override by the above method in the ATreeNode
+     * 
+    default <EK extends K> void addChildren(List<EK> children) {
+        for (EK child : children) {
+            addChild(child);
+        }
+    }*/
+
+    /**
+     * Returns the nodes on the left of this node.
      *
      * @return
      */
-    default String toNodeString() {
-        String prefix = getNodeName();
-        // String prefix = getType().toString();
-        String content = toContentString();
-        if (content.isEmpty()) {
-            return prefix;
+    default List<K> getLeftSiblings() {
+        if (!hasParent()) {
+            SpecsLogs.warn("Asked for left siblings of a node that does not have a parent");
+            return Collections.emptyList();
         }
 
-        return prefix + ": " + content;
+        List<K> parentChildren = getParent().getChildren();
+
+        return parentChildren.subList(0, indexOfSelf());
     }
 
-    default Stream<K> getChildrenStream() {
-        return getChildren().stream();
-    }
-
-    default Stream<K> getDescendantsStream() {
-        return getChildrenStream().flatMap(c -> c.getDescendantsAndSelfStream());
-    }
-
-    @SuppressWarnings("unchecked")
-    default Stream<K> getDescendantsAndSelfStream() {
-        return Stream.concat(Stream.of((K) this), getDescendantsStream());
-    }
-
-    default Stream<K> getAscendantsStream() {
-        return getAscendantsAndSelfStream().skip(1);
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    default Stream<K> getAscendantsAndSelfStream() {
-        List ascendantsAndSelf = new ArrayList<>();
-
-        TreeNode node = this;
-        while (node != null) {
-            ascendantsAndSelf.add(node);
-
-            node = node.getParent();
+    /**
+     * Returns the nodes on the right of this node.
+     *
+     * @return
+     */
+    default List<K> getRightSiblings() {
+        if (!hasParent()) {
+            SpecsLogs.warn("Asked for right siblings of a node that does not have a parent");
+            return Collections.emptyList();
         }
 
-        return ascendantsAndSelf.stream();
+        List<K> parentChildren = getParent().getChildren();
+
+        return parentChildren.subList(indexOfSelf() + 1, parentChildren.size());
     }
 
     /**
@@ -236,41 +302,11 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * TODO: Rename to getChildren when current getChildren gets renamed.
-     *
-     * @param targetType
-     * @return
-     */
-    /*default <N extends K> List<N> getChildrenV2(Class<N> targetType) {
-        return getChildrenStream().filter(node -> targetType.isInstance(node))
-                .map(node -> targetType.cast(node))
-                .collect(Collectors.toList());
-    }*/
-
-    default <N extends K> List<N> getDescendantsAndSelf(Class<N> targetType) {
-        return getDescendantsAndSelfStream().filter(node -> targetType.isInstance(node))
-                .map(node -> targetType.cast(node))
-                .collect(Collectors.toList());
-    }
-
-    default <N extends K> Optional<N> getFirstDescendantsAndSelf(Class<N> targetType) {
-        return getDescendantsAndSelfStream().filter(node -> targetType.isInstance(node))
-                .map(node -> targetType.cast(node))
-                .findFirst();
-    }
-
-    default <N extends K> List<N> getAscendantsAndSelf(Class<N> targetType) {
-        return getAscendantsAndSelfStream().filter(targetType::isInstance)
-                .map(targetType::cast)
-                .collect(Collectors.toList());
-    }
-
-    /**
      *
      * @param index1
      * @param index2
      * @param indexes
-     * @return the child after travelling the given indexes
+     * @return the child after traveling the given indexes
      */
 
     default K getChild(int index1, int index2, int... indexes) {
@@ -284,16 +320,14 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * TODO: Rename to castChildren.
      *
-     * @param aClass
+     * @param targetType
      * @return
      */
-    default <T extends K> List<T> getChildren(Class<T> aClass) {
-        return getChildren().stream()
-                .map(aClass::cast)
+    default <N extends K> List<N> getChildren(Class<N> targetType) {
+        return getChildrenStream().filter(node -> targetType.isInstance(node))
+                .map(node -> targetType.cast(node))
                 .collect(Collectors.toList());
-
     }
 
     /**
@@ -309,49 +343,233 @@ public interface TreeNode<K extends TreeNode<K>> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 
+     * @param <T>
+     * @param aClass
+     * @param startIndex
+     * @return
+     */
     default <T extends K> List<T> getChildren(Class<T> aClass, int startIndex) {
         return cast(subList(getChildren(), startIndex), aClass);
     }
 
-    // Object getContent();
+    /**
+     * 
+     * @param <N>
+     * @param targetType
+     * @return
+     */
+    default <N extends K> List<N> getDescendantsAndSelf(Class<N> targetType) {
+        return getDescendantsAndSelfStream().filter(node -> targetType.isInstance(node))
+                .map(node -> targetType.cast(node))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 
+     * @param <N>
+     * @param targetType
+     * @return
+     */
+    default <N extends K> Optional<N> getFirstDescendantsAndSelf(Class<N> targetType) {
+        return getDescendantsAndSelfStream().filter(node -> targetType.isInstance(node))
+                .map(node -> targetType.cast(node))
+                .findFirst();
+    }
+
+    /**
+     * 
+     * @param <N>
+     * @param targetType
+     * @return
+     */
+    default <N extends K> List<N> getAscendantsAndSelf(Class<N> targetType) {
+        return getAscendantsAndSelfStream().filter(targetType::isInstance)
+                .map(targetType::cast)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Removes the children that are an instance of the given class.
+     *
+     * @param token
+     * @param type
+     */
+    default void removeChildren(Class<? extends K> type) {
+
+        ChildrenIterator<K> iterator = getChildrenIterator();
+        while (iterator.hasNext()) {
+            if (type.isInstance(iterator.next())) {
+                iterator.remove();
+            }
+        }
+    }
+
+    // Stream Methods /////////////////////////////////////////////////////////
+
+    /**
+     * 
+     * @return
+     */
+    default Stream<K> getChildrenStream() {
+        return getChildren().stream();
+    }
+
+    /**
+     * 
+     * @return
+     */
+    default Stream<K> getDescendantsStream() {
+        return getChildrenStream().flatMap(c -> c.getDescendantsAndSelfStream());
+    }
+
+    /**
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    default Stream<K> getDescendantsAndSelfStream() {
+        return Stream.concat(Stream.of((K) this), getDescendantsStream());
+    }
+
+    /**
+     * 
+     * @return
+     */
+    default Stream<K> getAscendantsStream() {
+        return getAscendantsAndSelfStream().skip(1);
+    }
+
+    /**
+     * 
+     * @return
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    default Stream<K> getAscendantsAndSelfStream() {
+        List ascendantsAndSelf = new ArrayList<>();
+
+        TreeNode node = this;
+        while (node != null) {
+            ascendantsAndSelf.add(node);
+
+            node = node.getParent();
+        }
+
+        return ascendantsAndSelf.stream();
+    }
+
+    // Output/Printing Methods ///////////////////////////////////////////////
 
     /**
      *
      * @return a string representing the contents of the node
      */
-    String toContentString();
+    default String toContentString() {
+        return "";
+    }
 
     /**
-     * If getContent() returns null, this method returns an empty string.
+     * By default, returns the name of the class.
      *
      * @return
      */
-    // default String toContentString() {
-    // Object content = getContent();
-    // if (content == null) {
-    // return "";
-    // }
-    //
-    // return getContent().toString();
-    // }
+    default String getNodeName() {
+        return getClass().getSimpleName();
+    }
 
     /**
-     * @param children
-     *            the children to set
+     * Prints the node.
+     *
+     * @return
      */
-    void setChildren(Collection<? extends K> children);
+    default String toNodeString() {
+        String prefix = getNodeName();
+        String content = toContentString();
+        if (content.isEmpty()) {
+            return prefix;
+        }
+
+        return prefix + ": " + content;
+    }
+
+    // Utility Methods ////////////////////////////////////////////////////////
+
+    /**
+     * 
+     * @return Iterator to start of collection of children nodes
+     */
+    default Iterator<K> iterator() {
+        return getChildren().iterator();
+    }
 
     /**
      *
-     * @return the number of children in the node
+     * @param aClass
+     * @return
      */
-    default int getNumChildren() {
-        if (!hasChildren()) {
-            return 0;
+    default <T extends K> List<T> castChildren(Class<T> aClass) {
+        return getChildren().stream().map(aClass::cast).collect(Collectors.toList());
+    }
+
+    /**
+     * Normalizes the token according to a given bypass set. The nodes in the bypass set can have only one child.
+     *
+     * @param bypassSet
+     * @return
+     */
+    default K normalize(Collection<Class<? extends K>> bypassSet) {
+
+        // If node is in bypass set, return normalized child
+        for (Class<? extends K> bypassNode : bypassSet) {
+            if (bypassNode.isInstance(this)) {
+
+                if (getNumChildren() != 1) {
+                    throw new RuntimeException("Expected only one child");
+                }
+
+                return this.getChild(0).normalize(bypassSet);
+            }
         }
 
-        return getChildren().size();
+        // Node is not in bypass set, return it
+        return getThis();
     }
+
+    /**
+     * Returns a new shallow copy of the node with the same content and type, but not children.
+     *
+     * @return
+     */
+    public K copyShallow();
+
+    /**
+     * Creates a deep copy of the node, including children. No guarantees are made regarding the contents of each node,
+     * they can be the same object as in the original node, and if mutable, changing the content in one node might be
+     * reflected in the copy.
+     * 
+     * @return a deep copy of the current token.
+     */
+    default K copy() {
+        K newToken = this.copyShallow();
+
+        // Check new token does not have children
+        if (newToken.getNumChildren() != 0) {
+            throw new RuntimeException("Node '"
+                    + newToken.getClass().getSimpleName() + "' of type '"
+                    + newToken.getNodeName() + "' still has children after copyPrivate(), check implementation");
+        }
+
+        // Copy children of token
+        for (K child : this.getChildren()) {
+            K newChildToken = child.copy();
+            newToken.addChild(newChildToken);
+        }
+
+        return newToken;
+    }
+
+    /////////////////////////////////////////////////////////
 
     /**
      * Removes the child at the specified position.
@@ -364,10 +582,34 @@ public interface TreeNode<K extends TreeNode<K>> {
      * @param index
      * @return
      */
-    K removeChild(int index);
+    default K removeChild(int index) {
+        if (!hasChildren()) {
+            throw new RuntimeException("Token does not have children, cannot remove a child.");
+        }
+
+        // get child and remove
+        var child = this.getChildren().get(index);
+        this.getChildren().remove(index);
+
+        // Unlink child from this node
+        child.removeParent();
+        return child;
+    }
+
+    /**
+     *
+     * @return the number of children in the node
+     */
+    default int getNumChildren() {
+        if (!this.hasChildren()) {
+            return 0;
+        }
+
+        return getChildren().size();
+    }
 
     default void removeChildren() {
-        while (hasChildren()) {
+        while (this.hasChildren()) {
             removeChild(0);
         }
     }
@@ -389,36 +631,6 @@ public interface TreeNode<K extends TreeNode<K>> {
         SpecsLogs.msgWarn("Could not find child '" + child.toContentString() + "'");
         return -1;
     }
-
-    /**
-     * Replaces the token at the specified position in this list with the specified token.
-     *
-     * @param index
-     * @param token
-     */
-    K setChild(int index, K token);
-
-    default <EK extends K> void addChildren(List<EK> children) {
-        for (EK child : children) {
-            addChild(child);
-        }
-    }
-
-    /**
-     * Returns a deep copy of the current token.
-     *
-     * TODO: This should be abstract; Remove return empty instance
-     *
-     * @return
-     */
-    K copy();
-
-    /**
-     * Returns a new copy of the node with the same content and type, but not children.
-     *
-     * @return
-     */
-    K copyShallow();
 
     /**
      * 
@@ -474,7 +686,15 @@ public interface TreeNode<K extends TreeNode<K>> {
      *
      * @return the uppermost parent of this node
      */
-    public K getRoot();
+    default K getRoot() {
+        K parent = getParent();
+        if (parent == null) {
+            return getThis();
+        }
+
+        // Recursively call the function on the parent
+        return parent.getRoot();
+    }
 
     default boolean hasParent() {
         return getParent() != null;
@@ -531,15 +751,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     return nodeClass.isInstance(this);
     }
     */
-
-    /**
-     * By default, returns the name of the class.
-     *
-     * @return
-     */
-    default String getNodeName() {
-        return getClass().getSimpleName();
-    }
 
     /**
      * Removes the children in the given index range.
@@ -630,50 +841,21 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      * Detaches this node from the parent. If this node does not have a parent, throws an exception.
      */
-    public void detach();
-
-    /**
-     * Sets this node as the parent of the given node. If the given node already has a parent, throws an exception.
-     *
-     * @param childToken
-     */
-    default void setAsParentOf(K childToken) {
-        if (childToken.getParent() != null) {
-            throw new RuntimeException("Parent should be null.");
-        }
-        childToken.setParent(getThis());
-    }
-
-    /**
-     * Returns the nodes on the left of this node.
-     *
-     * @return
-     */
-    default List<K> getLeftSiblings() {
-        if (!hasParent()) {
-            SpecsLogs.warn("Asked for left siblings of a node that does not have a parent");
-            return Collections.emptyList();
+    default void detach() {
+        if (!this.hasParent()) {
+            throw new RuntimeException("Does not have a parent");
         }
 
-        List<K> parentChildren = getParent().getChildren();
+        int indexOfSelf = this.indexOfSelf();
 
-        return parentChildren.subList(0, indexOfSelf());
-    }
-
-    /**
-     * Returns the nodes on the right of this node.
-     *
-     * @return
-     */
-    default List<K> getRightSiblings() {
-        if (!hasParent()) {
-            SpecsLogs.warn("Asked for right siblings of a node that does not have a parent");
-            return Collections.emptyList();
+        // Already removed from parent, just unset parent
+        if (indexOfSelf == -1) {
+            this.removeParent();
+            return;
         }
 
-        List<K> parentChildren = getParent().getChildren();
-
-        return parentChildren.subList(indexOfSelf() + 1, parentChildren.size());
+        // Remove itself from parent
+        this.getParent().removeChild(indexOfSelf);
     }
 
     /**
