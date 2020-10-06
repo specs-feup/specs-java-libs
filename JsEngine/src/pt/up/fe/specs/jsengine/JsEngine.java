@@ -240,7 +240,7 @@ public interface JsEngine {
     Collection<Object> getValues(Object object);
 
     /**
-     * Converts an objecto to the given Java class.
+     * Converts an object to the given Java class.
      * 
      * @param <T>
      * @param object
@@ -281,4 +281,28 @@ public interface JsEngine {
         return get(getBindings(), key, targetClass);
     }
 
+    /**
+     * Converts a given Java object to a more compatible type in JavaScript.
+     * 
+     * Conversions currently being made:<br>
+     * - null to undefined;<br>
+     * - Java array to JS array;
+     * 
+     * @param javaObject
+     * @return
+     */
+    default Object toJs(Object javaObject) {
+
+        // Null
+        if (javaObject == null) {
+            return getUndefined();
+        }
+
+        // Array
+        if (javaObject.getClass().isArray()) {
+            return toNativeArray((Object[]) javaObject);
+        }
+
+        return javaObject;
+    }
 }
