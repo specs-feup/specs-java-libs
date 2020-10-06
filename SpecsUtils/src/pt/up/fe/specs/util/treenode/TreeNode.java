@@ -13,8 +13,7 @@
 
 package pt.up.fe.specs.util.treenode;
 
-import static pt.up.fe.specs.util.SpecsCollections.cast;
-import static pt.up.fe.specs.util.SpecsCollections.subList;
+import static pt.up.fe.specs.util.SpecsCollections.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +29,126 @@ import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public interface TreeNode<K extends TreeNode<K>> {
+
+    /**
+     * Returns a reference to the object that implements this class.
+     *
+     * <p>
+     * This method is needed because of generics not having information about K.
+     *
+     * @return
+     */
+    public K getThis();
+
+    /**
+     * 
+     * @return
+     */
+    public K getParent();
+
+    /**
+     * Unsets the parent of this node.
+     * 
+     * @return
+     */
+    public void removeParent();
+
+    /**
+     * 
+     * @return
+     */
+    public void setParent(K parent);
+
+    /**
+     * Returns an unmodifiable view of the children of the token.
+     *
+     * <p>
+     * To modify the children of the token use methods such as addChild() or removeChild().
+     *
+     * @return the children
+     */
+    public List<K> getChildren();
+
+    /**
+     *
+     * @param child
+     * @return the object that was really inserted in the tree (e.g., if child already had a parent, usually a copy is
+     *         inserted)
+     */
+    default public K addChild(K child) {
+        K sanitizedChild = TreeNodeUtils.sanitizeNode(child);
+        this.setAsParentOf(sanitizedChild);
+        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        this.getChildren().add(sanitizedChild);
+        return sanitizedChild;
+    }
+
+    /**
+     *
+     *
+     * @param index
+     * @param child
+     * @return
+     */
+    default public K addChild(int idx, K child) {
+        K sanitizedChild = TreeNodeUtils.sanitizeNode(child);
+        this.setAsParentOf(sanitizedChild);
+        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        this.getChildren().add(idx, sanitizedChild);
+        return sanitizedChild;
+    }
+
+    /**
+     * 
+     * @param child
+     * @param sibling
+     * @return
+     */
+    default public K addChildLeftOf(K child, K sibling) {
+        var idx = this.getChildren().indexOf(sibling);
+        SpecsCheck.checkNotNull(sibling, () -> "Sibling not found for this parent!");
+        return this.addChild(idx, child);
+    }
+
+    /**
+     * 
+     * @param child
+     * @param sibling
+     * @return
+     */
+    default public K addChildRightOf(K child, K sibling) {
+        var idx = this.getChildren().indexOf(sibling);
+        SpecsCheck.checkNotNull(sibling, () -> "Sibling not found for this parent!");
+        return this.addChild(idx + 1, child);
+    }
+
+    /**
+     * Returns the child token at the specified position.
+     *
+     * @param index
+     * @return
+     */
+    default public K getChild(int idx) {
+        if (!this.hasChildren()) {
+            SpecsLogs.warn("Tried to get child with index '"
+                    + idx + "', but children size is " + getNumChildren());
+            return null;
+        }
+        return this.getChildren().get(idx);
+    }
+
+    /**
+     * 
+     * @param oldChild
+     * @param newChild
+     */
+    default public K replaceChild(K oldChild, K newChild) {
+        var idx = this.getChildren().indexOf(oldChild);
+        SpecsCheck.checkNotNull(oldChild, () -> "Child not found for this parent!");
+        return this.setChild(idx, newChild);
+    }
+
+    /////////////////////////////////////////////////////////
 
     /**
      *
@@ -63,21 +182,6 @@ public interface TreeNode<K extends TreeNode<K>> {
         }
 
         return prefix + ": " + content;
-    }
-
-    /**
-     * Returns the child token at the specified position.
-     *
-     * @param index
-     * @return
-     */
-    default K getChild(int index) {
-        if (!hasChildren()) {
-            SpecsLogs.warn("Tried to get child with index '" + index + "', but children size is " + getNumChildren());
-            return null;
-        }
-
-        return getChildren().get(index);
     }
 
     default Stream<K> getChildrenStream() {
@@ -137,11 +241,11 @@ public interface TreeNode<K extends TreeNode<K>> {
      * @param targetType
      * @return
      */
-    default <N extends K> List<N> getChildrenV2(Class<N> targetType) {
+    /*default <N extends K> List<N> getChildrenV2(Class<N> targetType) {
         return getChildrenStream().filter(node -> targetType.isInstance(node))
                 .map(node -> targetType.cast(node))
                 .collect(Collectors.toList());
-    }
+    }*/
 
     default <N extends K> List<N> getDescendantsAndSelf(Class<N> targetType) {
         return getDescendantsAndSelfStream().filter(node -> targetType.isInstance(node))
@@ -178,16 +282,6 @@ public interface TreeNode<K extends TreeNode<K>> {
 
         return currentChild;
     }
-
-    /**
-     * Returns an unmodifiable view of the children of the token.
-     *
-     * <p>
-     * To modify the children of the token use methods such as addChild() or removeChild().
-     *
-     * @return the children
-     */
-    List<K> getChildren();
 
     /**
      * TODO: Rename to castChildren.
@@ -304,33 +398,10 @@ public interface TreeNode<K extends TreeNode<K>> {
      */
     K setChild(int index, K token);
 
-    /**
-     *
-     * @param child
-     * @return the object that was really inserted in the tree (e.g., if child already had a parent, usually a copy is
-     *         inserted)
-     */
-    // boolean addChild(K child);
-    K addChild(K child);
-
-    /**
-     *
-     *
-     * @param index
-     * @param child
-     * @return
-     */
-    K addChild(int index, K child);
-
-    // default <EK extends K> boolean addChildren(List<EK> children) {
     default <EK extends K> void addChildren(List<EK> children) {
-        // boolean changed = false;
         for (EK child : children) {
             addChild(child);
-            // changed = true;
         }
-
-        // return changed;
     }
 
     /**
@@ -350,10 +421,11 @@ public interface TreeNode<K extends TreeNode<K>> {
     K copyShallow();
 
     /**
-     * @return the first ancestor of the given type
+     * 
+     * @param <T>
+     * @param type
+     * @return
      */
-    public K getParent();
-
     default <T extends K> T getAncestor(Class<T> type) {
         return getAncestorTry(type)
                 .orElseThrow(() -> new RuntimeException("Could not find ancestor of type '" + type + "'"));
@@ -556,11 +628,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * Unsets the parent of this node.
-     */
-    public void removeParent();
-
-    /**
      * Detaches this node from the parent. If this node does not have a parent, throws an exception.
      */
     public void detach();
@@ -570,7 +637,12 @@ public interface TreeNode<K extends TreeNode<K>> {
      *
      * @param childToken
      */
-    void setAsParentOf(K childToken);
+    default void setAsParentOf(K childToken) {
+        if (childToken.getParent() != null) {
+            throw new RuntimeException("Parent should be null.");
+        }
+        childToken.setParent(getThis());
+    }
 
     /**
      * Returns the nodes on the left of this node.

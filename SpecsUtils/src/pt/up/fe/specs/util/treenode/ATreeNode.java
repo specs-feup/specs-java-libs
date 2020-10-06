@@ -29,8 +29,8 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
+    protected K parent; // TODO: private?
     private List<K> children;
-    protected K parent;
 
     public ATreeNode(Collection<? extends K> children) {
         // this.children = SpecsFactory.newLinkedList();
@@ -52,18 +52,17 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         this.parent = null;
     }
 
-    private void addChildPrivate(K child) {
-        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
-        this.children.add(child);
+    @Override
+    public void setParent(K parent) {
+        this.parent = parent;
     }
 
-    private void addChildPrivate(int index, K child) {
-        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
-        this.children.add(index, child);
-    }
-
-    private List<K> initChildren(Collection<? extends K> children) {
-        return new ArrayList<>();
+    /**
+     * @return the parent of this node, or null if the node does not have a parent
+     */
+    @Override
+    public K getParent() {
+        return this.parent;
     }
 
     /* (non-Javadoc)
@@ -84,6 +83,22 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     @Override
     public List<K> getChildrenMutable() {
         return this.children;
+    }
+
+    /*
+    private void addChildPrivate(K child) {
+        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        this.children.add(child);
+    }
+    
+    private void addChildPrivate(int index, K child) {
+        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        this.children.add(index, child);
+    }
+    */
+
+    private List<K> initChildren(Collection<? extends K> children) {
+        return new ArrayList<>();
     }
 
     /* (non-Javadoc)
@@ -149,16 +164,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     @Override
-    public void setAsParentOf(K childToken) {
-
-        if (childToken.getParent() != null) {
-            throw new RuntimeException("Parent should be null.");
-        }
-
-        childToken.parent = getThis();
-    }
-
-    @Override
     public void detach() {
         // Check if it has a parent
         if (!hasParent()) {
@@ -189,16 +194,16 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     /* (non-Javadoc)
      * @see pt.up.fe.specs.util.treenode.TreeNode#addChild(K)
      */
-    @Override
+    /*@Override
     // public boolean addChild(K child) {
     public K addChild(K child) {
         K sanitizedChild = TreeNodeUtils.sanitizeNode(child);
         setAsParentOf(sanitizedChild);
-
+    
         addChildPrivate(sanitizedChild);
-
+    
         return sanitizedChild;
-    }
+    }*/
 
     @Override
     public <EK extends K> void addChildren(List<EK> children) {
@@ -217,16 +222,16 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     /* (non-Javadoc)
      * @see pt.up.fe.specs.util.treenode.TreeNode#addChild(int, K)
      */
-    @Override
+    /*@Override
     public K addChild(int index, K child) {
         K sanitizedToken = TreeNodeUtils.sanitizeNode(child);
         setAsParentOf(sanitizedToken);
-
+    
         // Insert child
         addChildPrivate(index, sanitizedToken);
-
+    
         return sanitizedToken;
-    }
+    }*/
 
     /**
      * Returns a new copy of the node with the same content and type, but not children.
@@ -265,24 +270,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         }
 
         return newToken;
-    }
-
-    /**
-     * Returns a reference to the object that implements this class.
-     *
-     * <p>
-     * This method is needed because of generics not having information about K.
-     *
-     * @return
-     */
-    protected abstract K getThis();
-
-    /**
-     * @return the parent of this node, or null if the node does not have a parent
-     */
-    @Override
-    public K getParent() {
-        return this.parent;
     }
 
     /**
