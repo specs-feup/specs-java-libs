@@ -71,7 +71,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     @Override
     public List<K> getChildren() {
-        return this.children;
+        return Collections.unmodifiableList(this.children);
     }
 
     /**
