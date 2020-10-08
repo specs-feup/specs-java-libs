@@ -71,7 +71,10 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     @Override
     public List<K> getChildren() {
-        return Collections.unmodifiableList(this.children);
+        return this.children;
+
+        // Currently cannot enforce immutable children view due to MATISSE passes that directly modify children
+        // return Collections.unmodifiableList(this.children);
     }
 
     /**
@@ -79,10 +82,10 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      * 
      * @return a mutable view of the children
      */
-    @Override
-    public List<K> getChildrenMutable() {
-        return this.children;
-    }
+    // @Override
+    // public List<K> getChildrenMutable() {
+    // return this.children;
+    // }
 
     /* (non-Javadoc)
      * @see pt.up.fe.specs.util.treenode.TreeNode#setChildren(java.util.Collection)

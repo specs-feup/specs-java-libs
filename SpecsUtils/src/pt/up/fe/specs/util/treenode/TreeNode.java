@@ -35,7 +35,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      *
      * @return a mutable view of the children
      */
-    List<K> getChildrenMutable();
+    // List<K> getChildrenMutable();
 
     /**
      * 
