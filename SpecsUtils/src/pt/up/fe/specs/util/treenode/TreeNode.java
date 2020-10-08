@@ -620,4 +620,25 @@ public interface TreeNode<K extends TreeNode<K>> {
         return 1 + getParent().getDepth();
     }
 
+    /**
+     * 
+     * @param child
+     *            the child left of which the sibling will be inserted
+     * @param sibling
+     *            the node to be inserted
+     */
+    default public void addChildLeftOf(K child, K sibling) {
+        var idx = indexOfChild(child);
+        addChild(idx, sibling);
+    }
+
+    default public void addChildRightOf(K child, K sibling) {
+        var idx = indexOfChild(child);
+        addChild(idx + 1, sibling);
+    }
+
+    default public void replaceChild(K oldChild, K newChild) {
+        NodeInsertUtils.replace(oldChild, newChild);
+    }
+
 }
