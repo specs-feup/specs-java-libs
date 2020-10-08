@@ -37,6 +37,10 @@ public interface TreeNode<K extends TreeNode<K>> {
      */
     List<K> getChildrenMutable();
 
+    /**
+     * 
+     * @return
+     */
     default Iterator<K> iterator() {
         return getChildren().iterator();
     }

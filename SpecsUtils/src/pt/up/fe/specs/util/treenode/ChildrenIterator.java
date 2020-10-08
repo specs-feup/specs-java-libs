@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.util.treenode;
 
-import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Optional;
 
@@ -28,7 +27,8 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
         this.parent = parent;
         // this.iterator = parent.getChildrenMutable().listIterator();
         // Create a mutable iterator
-        this.iterator = new ArrayList<>(parent.getChildren()).listIterator();
+        // this.iterator = new ArrayList<>(parent.getChildren()).listIterator();
+        this.iterator = parent.getChildrenMutable().listIterator();
 
         this.lastReturned = null;
     }

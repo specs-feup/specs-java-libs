@@ -75,12 +75,10 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * TODO: Remove?
      * 
-     * @deprecated getChildren is mutable
+     * 
      * @return a mutable view of the children
      */
-    @Deprecated
     @Override
     public List<K> getChildrenMutable() {
         return this.children;
