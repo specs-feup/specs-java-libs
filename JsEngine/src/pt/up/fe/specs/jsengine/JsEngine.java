@@ -13,7 +13,9 @@
 
 package pt.up.fe.specs.jsengine;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -105,6 +107,22 @@ public interface JsEngine {
      * @return a javascript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(int[] values) {
+
+        Object[] newObject = new Object[values.length];
+        for (int i = 0; i < values.length; i++) {
+            newObject[i] = values[i];
+        }
+        return toNativeArray(newObject);
+    }
+
+    /**
+     * Converts an array of longs to a JavaScript array
+     *
+     * @param values
+     *            the array of values
+     * @return a javascript array containing all the elements in values, with the same indexes
+     */
+    default Object toNativeArray(long[] values) {
 
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -286,7 +304,8 @@ public interface JsEngine {
      * 
      * Conversions currently being made:<br>
      * - null to undefined;<br>
-     * - Java array to JS array;
+     * - Java array to JS array;<br>
+     * - Java List to JS array;<br>
      * 
      * @param javaObject
      * @return
@@ -298,10 +317,75 @@ public interface JsEngine {
             return getUndefined();
         }
 
+        var objectClass = javaObject.getClass();
+
         // Array
-        if (javaObject.getClass().isArray()) {
-            return toNativeArray((Object[]) javaObject);
+        if (objectClass.isArray()) {
+            var componentClass = objectClass.getComponentType();
+
+            if (!componentClass.isPrimitive()) {
+                var objectArray = (Object[]) javaObject;
+                var convertedObjectArray = Arrays.stream(objectArray).map(this::toJs).toArray();
+                return toNativeArray(convertedObjectArray);
+            }
+
+            if (componentClass.equals(int.class)) {
+                return toNativeArray((int[]) javaObject);
+            }
+
+            if (componentClass.equals(long.class)) {
+                return toNativeArray((long[]) javaObject);
+            }
+
+            if (componentClass.equals(double.class)) {
+                return toNativeArray((double[]) javaObject);
+            }
+
+            if (componentClass.equals(float.class)) {
+                return toNativeArray((float[]) javaObject);
+            }
+
+            if (componentClass.equals(boolean.class)) {
+                return toNativeArray((boolean[]) javaObject);
+            }
+
+            if (componentClass.equals(char.class)) {
+                return toNativeArray((char[]) javaObject);
+            }
+
+            if (componentClass.equals(byte.class)) {
+                return toNativeArray((byte[]) javaObject);
+            }
+
+            if (componentClass.equals(short.class)) {
+                return toNativeArray((short[]) javaObject);
+            }
+
+            throw new RuntimeException("Not implemented for array class " + componentClass);
         }
+
+        // If a List, apply adapt over all elements of the list and convert to array
+        if (javaObject instanceof List) {
+            var valueList = (List<?>) javaObject;
+
+            // var newValue = new Object[valueList.size()];
+            //
+            // for (var i = 0; i < valueList.size(); i++) {
+            // var valueElement = valueList.get(i);
+            // newValue[i] = toJs(valueElement);
+            // }
+
+            return toNativeArray(valueList.stream().map(this::toJs).toArray());
+        }
+
+        // // If DataClass, wrap around special version that converts nodes into join points
+        // if (value instanceof DataClass) {
+        // // System.out.println("ASDADASD");
+        // var dataClass = (DataClass<?>) value;
+        // return new CxxWeaverDataClass(dataClass);
+        // }
+        //
+        // * - DataClass to JsDataClass
 
         return javaObject;
     }
