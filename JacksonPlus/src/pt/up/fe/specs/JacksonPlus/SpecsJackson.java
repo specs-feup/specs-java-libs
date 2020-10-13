@@ -21,6 +21,8 @@ import java.io.FileWriter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 /**
  * Wrapper class with utility methods to use Jackson.
@@ -32,18 +34,35 @@ public class SpecsJackson {
 
     public static <T> T fromFile(String filePath, Class<T> clazz) {
 
+        return fromFile(filePath, clazz, false);
+    }
+
+    public static <T> T fromFile(String filePath, Class<T> clazz, boolean hasTypeInfo) {
+
         File file = new File(filePath);
 
-        return fromFile(file, clazz);
+        return fromFile(file, clazz, hasTypeInfo);
     }
 
     public static <T> T fromFile(File file, Class<T> clazz) {
+
+        return fromFile(file, clazz, false);
+    }
+
+    public static <T> T fromFile(File file, Class<T> clazz, boolean hasTypeInfo) {
 
         try {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
 
             ObjectMapper mapper = new ObjectMapper();
+
+            if (hasTypeInfo) {
+                PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+                        .allowIfBaseType(Object.class)
+                        .build();
+                mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
+            }
             T object = mapper.readValue(br, clazz);
             return object;
         } catch (Exception e) {
@@ -53,34 +72,71 @@ public class SpecsJackson {
 
     public static <T> T fromString(String string, Class<T> clazz) {
 
+        return fromString(string, clazz, false);
+    }
+
+    public static <T> T fromString(String string, Class<T> clazz, boolean hasTypeInfo) {
+
         try {
             ObjectMapper mapper = new ObjectMapper();
+
+            if (hasTypeInfo) {
+                PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+                        .allowIfBaseType(Object.class)
+                        .build();
+                mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
+            }
+
             T object = mapper.readValue(string, clazz);
             return object;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public static <T> void toFile(T object, File file) {
+
+        toFile(object, file, false);
+    }
+
+    public static <T> void toFile(T object, File file, boolean embedTypeInfo) {
 
         try {
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
 
             ObjectMapper mapper = new ObjectMapper();
+
+            if (embedTypeInfo) {
+                PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+                        .allowIfBaseType(Object.class)
+                        .build();
+                mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
+            }
+
             mapper.writeValue(bw, object);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public static <T> String toString(T object) {
 
+        return toString(object, false);
+    }
+
+    public static <T> String toString(T object, boolean embedTypeInfo) {
+
         try {
             ObjectMapper mapper = new ObjectMapper();
+
+            if (embedTypeInfo) {
+                PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+                        .allowIfBaseType(Object.class)
+                        .build();
+                mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
+            }
+
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
