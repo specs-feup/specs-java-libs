@@ -779,24 +779,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      * 
      * @return a deep copy of the current token.
      */
-    default K copy() {
-        K newToken = this.copyShallow();
-
-        // Check new token does not have children
-        if (newToken.getNumChildren() != 0) {
-            throw new RuntimeException("Node '"
-                    + newToken.getClass().getSimpleName() + "' of type '"
-                    + newToken.getNodeName() + "' still has children after copyPrivate(), check implementation");
-        }
-
-        // Copy children of token
-        for (K child : this.getChildren()) {
-            K newChildToken = child.copy();
-            newToken.addChild(newChildToken);
-        }
-
-        return newToken;
-    }
+    public K copy();
 
     /**
      * Returns an Iterator of the children of the node.

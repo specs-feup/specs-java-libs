@@ -89,6 +89,26 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         return copyPrivate();
     }
 
+    @Override
+    public K copy() {
+        K newToken = this.copyShallow();
+
+        // Check new token does not have children
+        if (newToken.getNumChildren() != 0) {
+            throw new RuntimeException("Node '"
+                    + newToken.getClass().getSimpleName() + "' of type '"
+                    + newToken.getNodeName() + "' still has children after copyPrivate(), check implementation");
+        }
+
+        // Copy children of token
+        for (K child : this.getChildren()) {
+            K newChildToken = child.copy();
+            newToken.addChild(newChildToken);
+        }
+
+        return newToken;
+    }
+
     /**
      * Prints the tree.
      */
