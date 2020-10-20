@@ -306,6 +306,7 @@ public interface JsEngine {
      * - null to undefined;<br>
      * - Java array to JS array;<br>
      * - Java List to JS array;<br>
+     * - Java Set to JS array;<br>
      * 
      * @param javaObject
      * @return
@@ -374,6 +375,13 @@ public interface JsEngine {
             // var valueElement = valueList.get(i);
             // newValue[i] = toJs(valueElement);
             // }
+
+            return toNativeArray(valueList.stream().map(this::toJs).toArray());
+        }
+        
+        // If a Set, apply adapt over all elements of the Set and convert to array
+        if (javaObject instanceof Set) {
+            var valueList = (Set<?>) javaObject;
 
             return toNativeArray(valueList.stream().map(this::toJs).toArray());
         }
