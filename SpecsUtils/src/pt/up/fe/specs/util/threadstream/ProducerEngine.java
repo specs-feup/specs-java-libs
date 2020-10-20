@@ -66,7 +66,7 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
         /*
          * Thread list
          */
-        var<Thread> threads = new ArrayList<Thread>();
+        var threads = new ArrayList<Thread>();
 
         /*
          * One produce thread
