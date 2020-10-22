@@ -15,5 +15,10 @@ public interface ObjectStream<T> extends AutoCloseable {
     /*
      * 
      */
+    public T peekNext();
+
+    /*
+     * 
+     */
     public boolean isClosed();
 }

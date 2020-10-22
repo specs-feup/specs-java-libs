@@ -59,8 +59,14 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
     }
 
     @Override
+    public T peekNext() {
+        return this.nextT;
+    }
+
+    @Override
     public boolean hasNext() {
-        return this.nextT != null;
+        // return this.nextT != null;
+        return !this.isClosed();
     }
 
     @Override

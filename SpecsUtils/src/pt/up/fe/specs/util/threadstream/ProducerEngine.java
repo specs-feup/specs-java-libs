@@ -58,6 +58,20 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
         consumer.provide(this.producer.newChannel());
     }
 
+    /*
+     * 
+     */
+    public ConsumerThread<T, ?> getConsumer(int idx) {
+        return this.consumers.get(idx);
+    }
+
+    /*
+     * 
+     */
+    public List<ConsumerThread<T, ?>> getConsumers() {
+        return consumers;
+    }
+
     /**
      * Launches all threads
      */
