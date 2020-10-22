@@ -1,0 +1,74 @@
+JacC(ijk,  3,  4) =  + dw(ijk,  1,  4) &
+      + dw(ijk, 30,  4) &
+      + dw(ijk, 46,  4)
+      JacC(ijk,  4,  4) =  - dw(ijk,  1,  4) &
+      - dw(ijk, 30,  4) &
+      - dw(ijk, 31,  4) &
+      - dw(ijk, 33,  4) &
+      - dw(ijk, 36,  4) &
+      - dw(ijk, 43,  4) &
+      - dw(ijk, 47,  4) &
+      - dw(ijk, 80,  4) &
+      - dw(ijk, 82,  4) &
+      - dw(ijk, 85,  4)
+      JacC(ijk, 18,  4) =  + dw(ijk,  1,  4) &
+      - dw(ijk, 30,  4) &
+      - dw(ijk, 31,  4)
+      JacC(ijk,  1,  1) =  - dw(ijk,  2,  1) &
+      - dw(ijk,  3,  1) &
+      - dw(ijk, 19,  1) &
+      - dw(ijk, 23,  1) &
+      - dw(ijk, 24,  1) &
+      - dw(ijk, 42,  1) &
+      - dw(ijk, 43,  1) &
+      - dw(ijk, 76,  1) &
+      - dw(ijk, 77,  1) &
+      - dw(ijk, 78,  1) &
+      - dw(ijk, 79,  1) &
+      - dw(ijk, 84,  1)
+      JacC(ijk, 15,  1) =  + dw(ijk,  2,  1) &
+      + dw(ijk,  3,  1)
+      JacC(ijk, 19,  1) =  + dw(ijk,  2,  1)
+      JacC(ijk, 18,  1) =  + dw(ijk,  3,  1) &
+      - dw(ijk, 19,  1) &
+      + 0.9000000000000000D-01*dw(ijk, 77,  1)
+      JacC(ijk,  3,  7) =  + dw(ijk,  4,  7)
+      JacC(ijk,  7,  7) =  - dw(ijk,  4,  7) &
+      - dw(ijk, 39,  7)
+      JacC(ijk, 20,  7) =  + dw(ijk,  4,  7) &
+      - dw(ijk, 39,  7)
+      JacC(ijk,  4,  8) =  + dw(ijk,  5,  8)
+      JacC(ijk,  8,  8) =  - dw(ijk,  5,  8) &
+      - dw(ijk, 40,  8)
+      JacC(ijk, 20,  8) =  + dw(ijk,  5,  8) &
+      - dw(ijk, 40,  8)
+      JacC(ijk,  4,  9) = + 0.6500000000000000D+00*dw(ijk,  6,  9) &
+      + dw(ijk, 37,  9) &
+      + dw(ijk, 41,  9)
+      JacC(ijk,  5,  9) = + 0.3500000000000000D+00*dw(ijk,  6,  9)
+      JacC(ijk,  9,  9) =  - dw(ijk,  6,  9) &
+      - dw(ijk, 37,  9) &
+      - dw(ijk, 41,  9)
+      JacC(ijk, 20,  9) = + 0.3500000000000000D+00*dw(ijk,  6,  9) &
+      - dw(ijk, 41,  9)
+      JacC(ijk, 21,  9) = + 0.6500000000000000D+00*dw(ijk,  6,  9) &
+      + dw(ijk, 37,  9)
+      JacC(ijk,  3,  5) =  + dw(ijk,  7,  5) &
+      - dw(ijk, 45,  5) &
+      + dw(ijk, 46,  5)
+      JacC(ijk,  5,  5) =  - dw(ijk,  7,  5) &
+      - dw(ijk,  8,  5) &
+      - dw(ijk, 34,  5) &
+      - dw(ijk, 38,  5) &
+      - dw(ijk, 45,  5) &
+      - dw(ijk, 46,  5) &
+      - dw(ijk, 47,  5) &
+      - 0.2000000000000000D+01*dw(ijk, 49,  5) &
+      - 0.2000000000000000D+01*dw(ijk, 49,  5) &
+      - dw(ijk, 69,  5) &
+      - dw(ijk, 70,  5) &
+      - dw(ijk, 71,  5) &
+      - dw(ijk, 72,  5) &
+      - dw(ijk, 73,  5) &
+      - dw(ijk, 74,  5) &
+      - 0.4000000000000000D+00*dw(ijk, 75,  5) 
