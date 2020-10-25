@@ -13,10 +13,12 @@
 
 package pt.up.fe.specs.jsengine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import com.google.gson.JsonArray;
 
 /**
  * Represents the JavaScript engine used by LARA.
@@ -307,6 +309,7 @@ public interface JsEngine {
      * - Java array to JS array;<br>
      * - Java List to JS array;<br>
      * - Java Set to JS array;<br>
+     * - JsonArray to JS array;<br>
      * 
      * @param javaObject
      * @return
@@ -384,6 +387,17 @@ public interface JsEngine {
             var valueList = (Set<?>) javaObject;
 
             return toNativeArray(valueList.stream().map(this::toJs).toArray());
+        }
+        
+        // If a JsonArray, convert to List and call toJs() again
+        if (javaObject instanceof JsonArray) {
+        	var jsonArray = (JsonArray) javaObject;
+        	
+        	var list = new ArrayList<Object>();
+        	for (int i=0; i< jsonArray.size(); i++) {
+        	    list.add(jsonArray.get(i) );
+        	}
+            return toJs(list);
         }
 
         // // If DataClass, wrap around special version that converts nodes into join points
