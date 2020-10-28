@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.util.system;
 
+import java.util.Optional;
+
 /**
  * Represents the output of a process.
  * 
@@ -26,11 +28,21 @@ public class ProcessOutput<O, E> {
     private final int returnValue;
     private final O stdOut;
     private final E stdErr;
+    private final Exception outputException;
 
     public ProcessOutput(int returnValue, O stdOut, E stdErr) {
+        this(returnValue, stdOut, stdErr, null);
+    }
+
+    public ProcessOutput(int returnValue, O stdOut, E stdErr, Exception outputException) {
         this.returnValue = returnValue;
         this.stdOut = stdOut;
         this.stdErr = stdErr;
+        this.outputException = outputException;
+    }
+
+    public Optional<Exception> getOutputException() {
+        return Optional.ofNullable(outputException);
     }
 
     /**

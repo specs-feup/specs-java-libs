@@ -439,6 +439,7 @@ public class SpecsSystem {
                     + process.info().commandLine().orElse("<NOT AVAILABLE>") + "'");
         }
 
+        Exception outputException = null;
         try {
             output = outputFuture.get(10, TimeUnit.SECONDS);
             error = errorFuture.get(10, TimeUnit.SECONDS);
@@ -450,6 +451,7 @@ public class SpecsSystem {
 
         } catch (Exception e) {
             SpecsLogs.info("Exception while waiting for output/error streams: " + e.getMessage());
+            outputException = e;
         }
 
         // wait for notify (?)
@@ -466,7 +468,7 @@ public class SpecsSystem {
         }
 
         destroyProcess(process);
-        return new ProcessOutput<>(returnValue, output, error);
+        return new ProcessOutput<>(returnValue, output, error, outputException);
     }
 
     private static void destroyProcess(Process process) {
