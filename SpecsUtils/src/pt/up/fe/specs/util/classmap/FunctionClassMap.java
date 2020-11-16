@@ -163,6 +163,7 @@ public class FunctionClassMap<T, R> {
 
     @SuppressWarnings("unchecked")
     private <TK extends T> Optional<Function<T, R>> get(TK key) {
+        SpecsCheck.checkNotNull(key, () -> "Used a null key in " + FunctionClassMap.class.getSimpleName());
         return get((Class<TK>) key.getClass());
     }
 
