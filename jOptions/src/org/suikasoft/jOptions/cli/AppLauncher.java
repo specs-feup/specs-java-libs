@@ -142,6 +142,7 @@ public class AppLauncher {
 
         File setupFile = new File(args.get(0));
         DataStore setupData = app.getPersistence().loadData(setupFile);
+
         if (setupData == null) {
             return false;
         }
@@ -204,11 +205,14 @@ public class AppLauncher {
 
         new CommandLineUtils(app.getDefinition()).addArgs(setupData, args);
 
-        File tempFile = new File(baseFolder, app.getClass().getSimpleName() + "__temp_config.xml");
+        // File tempFile = new File(baseFolder, app.getClass().getSimpleName() + "__temp_config.xml");
+        File tempFile = new File(baseFolder, app.getClass().getSimpleName() + "__temp_config.data");
+
         app.getPersistence().saveData(tempFile, setupData, true);
 
         // Execute
         SpecsLogs.msgInfo("Executing application '" + app.getName() + "'.");
+
         execute(tempFile);
 
         tempFile.delete();

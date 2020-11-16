@@ -339,6 +339,10 @@ public class KeyFactory {
      * @return
      */
     public static DataKey<FileList> fileList(String optionName, String extension) {
+        return fileList(optionName);
+    }
+
+    private static DataKey<FileList> fileList(String optionName) {
 
         return KeyFactory.object(optionName, FileList.class).setDefault(() -> new FileList())
                 .setStoreDefinition(FileList.getStoreDefinition())

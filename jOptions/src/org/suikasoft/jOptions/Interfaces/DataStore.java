@@ -497,6 +497,7 @@ public interface DataStore extends DataClass<DataStore> {
         return newInstance(StoreDefinitions.fromInterface(aClass));
     }
 
+    @Override
     default String toInlinedString() {
         Collection<String> keys = getKeysWithValues();
 
