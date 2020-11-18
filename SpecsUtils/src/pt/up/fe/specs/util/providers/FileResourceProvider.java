@@ -14,10 +14,12 @@
 package pt.up.fe.specs.util.providers;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.prefs.Preferences;
 
 import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.providers.impl.GenericFileResourceProvider;
 
@@ -59,6 +61,20 @@ public interface FileResourceProvider {
 
         public boolean isNewFile() {
             return newFile;
+        }
+
+        public void makeExecutable(boolean isLinux) {
+            // If file is new and we are in a flavor of Linux, make file executable
+            if (isNewFile() && isLinux) {
+                SpecsSystem.runProcess(Arrays.asList("chmod", "+x", getFile().getAbsolutePath()), false, true);
+            }
+
+            // If on Linux, make folders and files accessible to all users
+            if (isLinux) {
+                SpecsSystem.runProcess(Arrays.asList("chmod", "-R", "777", getFile().getParentFile().getAbsolutePath()),
+                        false, true);
+            }
+
         }
     }
 
