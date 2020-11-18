@@ -2389,7 +2389,6 @@ public class SpecsIo {
             // Get filename
             String path = url.getPath();
             String filename = path.substring(path.lastIndexOf('/') + 1, path.length());
-
             if (filename.isEmpty()) {
                 SpecsLogs.info("Could not get a filename for the url '" + url + "'");
                 return null;
