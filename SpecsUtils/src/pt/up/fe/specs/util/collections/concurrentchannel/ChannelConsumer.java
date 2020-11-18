@@ -23,8 +23,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class ChannelConsumer<T> {
 
+    private final BlockingQueue<T> channel;
+
     ChannelConsumer(BlockingQueue<T> channel) {
-	this.channel = channel;
+        this.channel = channel;
     }
 
     /**
@@ -33,7 +35,7 @@ public class ChannelConsumer<T> {
      * @return the head of this queue, or null if this queue is empty
      */
     public T poll() {
-	return this.channel.poll();
+        return this.channel.poll();
     }
 
     /**
@@ -49,7 +51,7 @@ public class ChannelConsumer<T> {
      *             if interrupted while waiting
      */
     public T poll(long timeout, TimeUnit unit) throws InterruptedException {
-	return this.channel.poll(timeout, unit);
+        return this.channel.poll(timeout, unit);
     }
 
     /**
@@ -60,11 +62,7 @@ public class ChannelConsumer<T> {
      *             if interrupted while waiting
      */
     public T take() throws InterruptedException {
-	return this.channel.take();
+        return this.channel.take();
     }
 
-    // /
-    // INSTANCE VARIABLES
-    // /
-    private final BlockingQueue<T> channel;
 }

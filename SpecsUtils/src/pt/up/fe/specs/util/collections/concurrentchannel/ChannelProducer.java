@@ -16,6 +16,8 @@ package pt.up.fe.specs.util.collections.concurrentchannel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import pt.up.fe.specs.util.SpecsLogs;
+
 /**
  * Can only be created by a ConcurrentChannel objects, and represents a producer end of that channel.
  *
@@ -23,8 +25,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class ChannelProducer<T> {
 
+    private final BlockingQueue<T> channel;
+
     ChannelProducer(BlockingQueue<T> channel) {
-	this.channel = channel;
+        this.channel = channel;
     }
 
     /**
@@ -39,7 +43,7 @@ public class ChannelProducer<T> {
      * @return true if the element was added to this queue, else false
      */
     public boolean offer(T e) {
-	return this.channel.offer(e);
+        return this.channel.offer(e);
     }
 
     /**
@@ -56,22 +60,32 @@ public class ChannelProducer<T> {
      * @throws InterruptedException
      */
     public boolean offer(T e, long timeout, TimeUnit unit) throws InterruptedException {
-	return this.channel.offer(e, timeout, unit);
+        return this.channel.offer(e, timeout, unit);
+    }
+
+    /**
+     * Inserts the specified element into this queue, waiting if necessary for space to become available.
+     * 
+     * @param e
+     */
+    public void put(T e) {
+        try {
+            this.channel.put(e);
+        } catch (InterruptedException ex) {
+            SpecsLogs.info("Interrupted while ChannelProducer.put(): " + ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
     }
 
     /**
      * Empties the channel.
      */
     public void clear() {
-	T t = this.channel.poll();
+        T t = this.channel.poll();
 
-	while (t != null) {
-	    t = this.channel.poll();
-	}
+        while (t != null) {
+            t = this.channel.poll();
+        }
     }
 
-    // /
-    // INSTANCE VARIABLES
-    // /
-    private final BlockingQueue<T> channel;
 }
