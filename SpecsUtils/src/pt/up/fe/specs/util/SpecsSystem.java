@@ -1093,16 +1093,40 @@ public class SpecsSystem {
      * @return
      */
     public static double getJavaVersionNumber() {
-        String version = System.getProperty("java.version");
-        // System.out.println("JAVA VERSION:" + version);
-        int pos = version.lastIndexOf('.');
+        var javaVersion = getJavaVersion();
 
-        if (pos == -1) {
-            int dashPos = version.indexOf('-');
-            return Double.parseDouble(version.substring(0, dashPos));
-        }
-        // pos = version.indexOf('.', pos + 1);
-        return Double.parseDouble(version.substring(0, pos));
+        var minorVersion = javaVersion.size() > 1 ? javaVersion.get(1) : "0";
+
+        String versionNumber = javaVersion.get(0) + "." + minorVersion;
+
+        return Double.parseDouble(versionNumber);
+
+        // String version = System.getProperty("java.version");
+        // // System.out.println("JAVA VERSION:" + version);
+        //
+        // int pos = version.lastIndexOf('.');
+        //
+        // if (pos == -1) {
+        // int dashPos = version.indexOf('-');
+        // return Double.parseDouble(version.substring(0, dashPos));
+        // }
+        // // pos = version.indexOf('.', pos + 1);
+        // return Double.parseDouble(version.substring(0, pos));
+    }
+
+    public static List<Integer> getJavaVersion() {
+        // Get property
+        String version = System.getProperty("java.version");
+
+        // Split into parts, can be separated with . or _
+        var javaVersion = Arrays.stream(version.split("\\.|_"))
+                .map(number -> Integer.parseInt(number))
+                .collect(Collectors.toList());
+
+        SpecsCheck.checkArgument(!javaVersion.isEmpty(),
+                () -> "Could not obtain separate Java version numbers from string '" + version + "'");
+
+        return javaVersion;
     }
 
     /***** Methods for dynamically extending the classpath *****/
