@@ -71,9 +71,11 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     private Context.Builder createBuilder() {
+
         Context.Builder contextBuilder = Context.newBuilder("js")
-                // .allowAllAccess(true)
+                .allowAllAccess(true)
                 .allowHostAccess(HostAccess.ALL)
+                // .option("js.load-from-url", "true")
                 // .allowIO(true)
                 // .allowCreateThread(true)
                 // .allowNativeAccess(true)
