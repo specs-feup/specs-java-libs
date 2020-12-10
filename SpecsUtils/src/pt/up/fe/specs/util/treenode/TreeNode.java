@@ -449,7 +449,7 @@ public interface TreeNode<K extends TreeNode<K>> {
         K childNode = getChild(index);
 
         SpecsCheck.checkNotNull(childNode, () -> "No child at index " + index + " of node '" + getClass()
-                + "' (children: " + getNumChildren() + ")");
+                + "' (children: " + getNumChildren() + "):\n" + this);
 
         if (!nodeClass.isInstance(childNode)) {
             return Optional.empty();
