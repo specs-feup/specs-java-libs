@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.streamparser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -243,4 +244,16 @@ public class LineStreamParsers {
         return values;
     }
 
+    /**
+     * 
+     * 
+     * @param lines
+     * @param parser
+     * @return if next line is empty, return empty Optional, otherwise returns Optional with line
+     */
+    public static Optional<String> optionalString(LineStream lines) {
+        var line = lines.nextLine();
+
+        return line.isEmpty() ? Optional.empty() : Optional.of(line);
+    }
 }
