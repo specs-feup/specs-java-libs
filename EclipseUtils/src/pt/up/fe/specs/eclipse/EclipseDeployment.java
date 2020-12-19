@@ -278,10 +278,14 @@ public class EclipseDeployment {
 
     }
 
+    // Creates a JAR file with additional library JARs inside a folder. Optionally, zips the JAR file and folders.
+    // private static void buildSubfolderZip(EclipseDeploymentData data, boolean zip) {
+
     /**
      * Creates a zip file with a JAR and additional library JARs inside a folder.
      */
     private static void buildSubfolderZip(EclipseDeploymentData data) {
+
         ClasspathParser parser = ClasspathParser.newFromWorkspace(data.workspaceFolder);
 
         ClasspathFiles classpathFiles = parser.getClasspath(data.projetName);

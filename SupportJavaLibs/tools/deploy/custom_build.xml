@@ -1,0 +1,35 @@
+<project default="create_run_jar" name="Create Runnable Jar for Eclipse Project">
+
+	<target name="create_run_jar">
+
+		<!--		<trycatch>
+			<try> 
+-->
+		<java jar="${deployer_loc}/eclipse-deployer.jar" fork="true" failonerror="true">
+			<arg value="${deploy.script}" />
+			<arg value="WorkspaceFolder=${workspace_loc}" />
+		</java>
+		
+		<delete dir="temp" />
+		<delete file="build.xml" />
+		<delete file="jar-in-jar-loader.zip" />
+		<delete file="suika.properties" />
+		
+		<!--			</try>
+			<catch>
+				<echo>Investigate exceptions in the run!</echo>
+			</catch>
+
+		</trycatch>
+-->
+	</target>
+
+	
+<!--	<target name="clean_up" depends="create_run_jar">
+		<delete dir="temp" />
+		<delete file="build.xml" />
+		<delete file="jar-in-jar-loader.zip" />
+		<delete file="suika.properties" />
+	</target>
+-->
+</project>

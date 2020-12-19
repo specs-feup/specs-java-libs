@@ -15,6 +15,7 @@ package pt.up.fe.specs.eclipse;
 
 public enum JarType {
 
+    // Subfolder,
     SubfolderZip,
     OneJar,
     RepackJar,
