@@ -113,7 +113,7 @@ public interface DataClass<T extends DataClass<T>> {
      * @param key
      * @return
      */
-    default Number inc(DataKey<Number> key) {
+    default Number inc(DataKey<? extends Number> key) {
         // if (Integer.class.isAssignableFrom(key.getValueClass())) {
         // return inc(key, (int) 1);
         // }
@@ -131,15 +131,15 @@ public interface DataClass<T extends DataClass<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    default <N extends Number> N inc(DataKey<N> key, N amount) {
+    default <N1 extends Number, N2 extends Number> N1 inc(DataKey<N1> key, N2 amount) {
         // Check if value is already present
         if (!hasValue(key)) {
-            set(key, (N) SpecsNumbers.zero(key.getValueClass()));
+            set(key, (N1) SpecsNumbers.zero(key.getValueClass()));
         }
 
-        Number previousValue = get(key);
-        set(key, (N) SpecsNumbers.add(previousValue, amount));
-        return (N) previousValue;
+        N1 previousValue = get(key);
+        set(key, (N1) SpecsNumbers.add(previousValue, amount));
+        return previousValue;
     }
 
     /**
@@ -158,6 +158,16 @@ public interface DataClass<T extends DataClass<T>> {
             Number amount = dataClass.get(numberKey);
             inc(numberKey, amount);
         }
+    }
+
+    default Integer incInt(DataKey<Integer> key) {
+        return incInt(key, 1);
+    }
+
+    default Integer incInt(DataKey<Integer> key, int amount) {
+        Integer previousValue = get(key);
+        set(key, previousValue + amount);
+        return previousValue;
     }
 
     // default Integer inc(DataKey<Integer> key, int amount) {
