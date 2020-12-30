@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util;
 
 import java.awt.BorderLayout;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -78,6 +79,11 @@ public class SpecsSwing {
      * @return
      */
     public static boolean setSystemLookAndFeel() {
+        // Only set if there is a display available
+        if (GraphicsEnvironment.isHeadless()) {
+            return true;
+        }
+
         try {
             String lookAndFeel = getSystemLookAndFeel();
 
