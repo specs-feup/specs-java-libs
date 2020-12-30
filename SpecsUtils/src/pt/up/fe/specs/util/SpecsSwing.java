@@ -280,7 +280,7 @@ public class SpecsSwing {
         JFrame frame = new JFrame();
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        // frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         frame.setResizable(true);
 
