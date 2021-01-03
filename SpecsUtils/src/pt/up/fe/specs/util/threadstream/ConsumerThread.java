@@ -27,6 +27,10 @@ public class ConsumerThread<T, K> implements Runnable {
         this.ostream = ostream;
     }
 
+    public ObjectStream<T> getOstream() {
+        return ostream;
+    }
+
     /*
      * Threaded workload
      */
