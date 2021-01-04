@@ -16,7 +16,6 @@ package pt.up.fe.specs.util;
 import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -323,7 +322,7 @@ public class SpecsSwing {
         try {
             GraphicsDevice[] screenDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
             return screenDevices == null || screenDevices.length == 0;
-        } catch (HeadlessException e) {
+        } catch (Exception e) {
             return true;
         }
     }
