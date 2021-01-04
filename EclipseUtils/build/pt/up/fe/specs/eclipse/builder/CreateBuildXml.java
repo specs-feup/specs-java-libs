@@ -261,6 +261,7 @@ public class CreateBuildXml {
         ClasspathFiles classpathFiles = parser.getClasspath(projectName);
 
         String targetName = BuildUtils.getJUnitTargetName(projectName);
+        String compileTargetName = BuildUtils.getCompileTargetName(projectName);
         String testsFolder = classpathFiles.getProjectFolder().getAbsolutePath();
         String binFoldername = BuildUtils.getBinFoldername(classpathFiles);
         String fileset = BuildUtils.buildFileset(projectName, parser);
@@ -276,6 +277,7 @@ public class CreateBuildXml {
         Replacer projectBuild = new Replacer(BuildResource.JUNIT_TEMPLATE);
 
         projectBuild.replace("<JUNIT_TARGET_NAME>", targetName);
+        projectBuild.replace("<COMPILE_TARGET_NAME>", compileTargetName);
         projectBuild.replace("<PROJECT_NAME>", projectName);
         projectBuild.replace("<TESTS_FOLDER>", testsFolder);
         projectBuild.replace("<FILESET>", fileset);

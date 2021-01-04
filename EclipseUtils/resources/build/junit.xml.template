@@ -5,7 +5,7 @@
         <pathelement location="<BIN_FOLDER>" />    
   </path>  	
 
-<target name="<JUNIT_TARGET_NAME>" depends="compile">
+<target name="<JUNIT_TARGET_NAME>" depends="<COMPILE_TARGET_NAME>">
   <!-- 'haltonfailure' is 'no' so that other tests are executed even if one fails -->
   <junit haltonfailure="no" failureproperty="test.failed" fork="true" forkmode="once">
   	<jvmarg value="-ea" /> 
