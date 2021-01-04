@@ -114,7 +114,7 @@ public class BuildUtils {
      * @param projects
      * @return
      */
-    public static String getJUnitTargetDependencies(List<String> projects) {
+    public static String getJUnitTargetDependencies(Collection<String> projects) {
 
         if (projects.isEmpty()) {
             return "";
