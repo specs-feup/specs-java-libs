@@ -14,7 +14,9 @@
 package pt.up.fe.specs.util;
 
 import java.awt.BorderLayout;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +29,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.TableModel;
 
 import pt.up.fe.specs.util.swing.MapModel;
@@ -75,12 +76,14 @@ public class SpecsSwing {
     }
 
     /**
+     * Sets the system Look&Feel for Swing components.
      * 
-     * @return
+     * @return true if no problem occurred, false otherwise
      */
     public static boolean setSystemLookAndFeel() {
+
         // Only set if there is a display available
-        if (GraphicsEnvironment.isHeadless()) {
+        if (SpecsSwing.isHeadless()) {
             return true;
         }
 
@@ -95,18 +98,8 @@ public class SpecsSwing {
             // "com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             // "com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             return true;
-        } catch (UnsupportedLookAndFeelException e) {
-            // handle exception
-            SpecsLogs.getLogger().warning(e.getMessage());
-        } catch (ClassNotFoundException e) {
-            // handle exception
-            SpecsLogs.getLogger().warning(e.getMessage());
-        } catch (InstantiationException e) {
-            // handle exception
-            SpecsLogs.getLogger().warning(e.getMessage());
-        } catch (IllegalAccessException e) {
-            // handle exception
-            SpecsLogs.getLogger().warning(e.getMessage());
+        } catch (Exception e) {
+            SpecsLogs.warn("Could not set system Look&Feel", e);
         }
 
         return false;
@@ -315,5 +308,23 @@ public class SpecsSwing {
         });
 
         return frame;
+    }
+
+    /**
+     * Taken from here: https://stackoverflow.com/a/16611566
+     * 
+     * @return true if no screen is available for displaying Swing components, false otherwise
+     */
+    public static boolean isHeadless() {
+        if (GraphicsEnvironment.isHeadless()) {
+            return true;
+        }
+
+        try {
+            GraphicsDevice[] screenDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+            return screenDevices == null || screenDevices.length == 0;
+        } catch (HeadlessException e) {
+            return true;
+        }
     }
 }

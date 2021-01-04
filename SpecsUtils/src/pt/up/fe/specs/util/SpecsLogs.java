@@ -119,8 +119,8 @@ public class SpecsLogs {
      * object reference before it exists.
      *
      * @param callerMethodIndex
-     *                              the index indicating the depth of method calling. This method introduces 3 calls
-     *                              (index 0-2), index 3 is this method, index 4 is the caller index
+     *            the index indicating the depth of method calling. This method introduces 3 calls (index 0-2), index 3
+     *            is this method, index 4 is the caller index
      * @return logger specific to the given object
      */
     /*
@@ -173,7 +173,7 @@ public class SpecsLogs {
      * Removes current handlers and adds the given Handlers to the root logger.
      *
      * @param handlers
-     *                     the Handlers we want to set as the root Handlers.
+     *            the Handlers we want to set as the root Handlers.
      */
     public static void setRootHandlers(Handler[] handlers) {
         final Logger logger = getRootLogger();
@@ -227,7 +227,7 @@ public class SpecsLogs {
      * Removes current handlers and adds the given Handlers to the root logger.
      *
      * @param handlers
-     *                     the Handlers we want to set as the root Handlers.
+     *            the Handlers we want to set as the root Handlers.
      */
     // public static void addHandler(Handler handler) {
     public static void addHandlers(List<Handler> handlers) {
@@ -421,6 +421,11 @@ public class SpecsLogs {
         SPECS_LOGGER.get().warn(msg);
     }
 
+    /**
+     * @deprecated use warn() instead
+     * @param msg
+     */
+    @Deprecated
     public static void msgWarn(String msg) {
         warn(msg);
     }
@@ -455,7 +460,17 @@ public class SpecsLogs {
     }
     */
 
+    /**
+     * @deprecated use warn() instead
+     * @param msg
+     * @param ourCause
+     */
+    @Deprecated
     public static void msgWarn(String msg, Throwable ourCause) {
+        warn(msg, ourCause);
+    }
+
+    public static void warn(String msg, Throwable ourCause) {
 
         // Get the root cause
         while (ourCause.getCause() != null) {
