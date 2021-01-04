@@ -115,6 +115,18 @@ public class BuildUtils {
      * @return
      */
     public static String getJUnitTargetDependencies(Collection<String> projects) {
+        return getJUnitTargetDependencies(projects, false);
+    }
+
+    /**
+     * 
+     * @param projects
+     * @param isFirst
+     *            must be true if the target dependencies are the first elements of the property where they will be
+     *            used.
+     * @return
+     */
+    public static String getJUnitTargetDependencies(Collection<String> projects, boolean isFirst) {
 
         if (projects.isEmpty()) {
             return "";
@@ -122,10 +134,17 @@ public class BuildUtils {
 
         StringBuilder builder = new StringBuilder();
 
+        boolean skipFirstComma = isFirst;
+
         // Append all (there is already a "depends" of the junit target)
         for (String projectName : projects) {
             // for (int i = 0; i < projects.size(); i++) {
-            builder.append(",");
+            if (skipFirstComma) {
+                skipFirstComma = false;
+            } else {
+                builder.append(",");
+            }
+
             builder.append(getJUnitTargetName(projectName));
         }
 
