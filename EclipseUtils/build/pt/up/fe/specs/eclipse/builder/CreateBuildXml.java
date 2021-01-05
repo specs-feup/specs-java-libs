@@ -267,12 +267,14 @@ public class CreateBuildXml {
         String fileset = BuildUtils.buildFileset(projectName, parser);
         String junitSourceFolders = BuildUtils.buildJUnitSources(classpathFiles);
 
-        File reportsFolder = SpecsIo.mkdir(repFolder, "reports");
+        // File reportsFolder = SpecsIo.mkdir(repFolder, "reports");
+        //
+        // // Clean reports
+        // SpecsIo.deleteFolderContents(reportsFolder);
+        //
+        // String reportsDir = reportsFolder.getAbsolutePath();
 
-        // Clean reports
-        SpecsIo.deleteFolderContents(reportsFolder);
-
-        String reportsDir = reportsFolder.getAbsolutePath();
+        String reportsDir = BuildUtils.getReportsDir(repFolder);
 
         Replacer projectBuild = new Replacer(BuildResource.JUNIT_TEMPLATE);
 
@@ -297,12 +299,14 @@ public class CreateBuildXml {
         String fileset = BuildUtils.buildFileset(projectName, parser);
         String junitSourceFolders = BuildUtils.buildBenchmarkerSources(classpathFiles);
 
-        File reportsFolder = SpecsIo.mkdir(repFolder, "reports");
+        // File reportsFolder = SpecsIo.mkdir(repFolder, "reports");
+        //
+        // // Clean reports
+        // SpecsIo.deleteFolderContents(reportsFolder);
+        //
+        // String reportsDir = reportsFolder.getAbsolutePath();
 
-        // Clean reports
-        SpecsIo.deleteFolderContents(reportsFolder);
-
-        String reportsDir = reportsFolder.getAbsolutePath();
+        String reportsDir = BuildUtils.getReportsDir(repFolder);
 
         Replacer projectBuild = new Replacer(BuildResource.BENCHMARKER_TEMPLATE);
 

@@ -30,6 +30,8 @@ import pt.up.fe.specs.util.utilities.Replacer;
 
 public class BuildUtils {
 
+    private static final String REPORTS_FOLDERNAME = "reports-eclipse-build";
+
     // private static final String RESOURCES_FOLDER = "resources";
 
     /**
@@ -519,4 +521,25 @@ public class BuildUtils {
         return task.toString();
     }
 
+    /**
+     * Helper method which uses the current working directory as the base folder.
+     * 
+     * @return
+     */
+    public static String getReportsDir() {
+        return getReportsDir(SpecsIo.getWorkingDir());
+    }
+
+    public static String getReportsDir(File baseFolder) {
+        // public static String getReportsDir(File baseFolder, String foldernameSuffix) {
+
+        // SpecsCheck.checkArgument(!foldernameSuffix.isBlank(), () -> "Foldername suffix cannot be empty.");
+
+        File reportsFolder = SpecsIo.mkdir(baseFolder, REPORTS_FOLDERNAME);
+
+        // Clean reports
+        SpecsIo.deleteFolderContents(reportsFolder);
+
+        return SpecsIo.getCanonicalPath(reportsFolder);
+    }
 }
