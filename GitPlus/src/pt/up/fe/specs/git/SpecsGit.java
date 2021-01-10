@@ -57,10 +57,17 @@ public class SpecsGit {
         if (!repoFolder.exists() || SpecsIo.isEmptyFolder(repoFolder)) {
             try {
                 SpecsLogs.msgInfo("Cloning repo '" + repositoryPath + "' to folder '" + repoFolder + "'");
+
                 Git.cloneRepository()
                         .setURI(repositoryPath)
                         .setDirectory(repoFolder)
+                        .setCredentialsProvider(getCredentials(repositoryPath))
                         .call();
+                // Check if there is a login/pass in the url
+                // CredentialsProvider cp = getCredentials(repositoryPath);
+                // System.out.println("SETTING NULL");
+                // clone.setCredentialsProvider(null);
+                // clone.call();
 
                 return repoFolder;
             } catch (GitAPIException e) {
@@ -73,7 +80,9 @@ public class SpecsGit {
         try {
             SpecsLogs.msgInfo("Pulling repo '" + repositoryPath + "' in folder '" + repoFolder + "'");
             Git gitRepo = Git.open(repoFolder);
-            PullCommand pullCmd = gitRepo.pull();
+            PullCommand pullCmd = gitRepo
+                    .pull()
+                    .setCredentialsProvider(getCredentials(repositoryPath));
             pullCmd.call();
         } catch (GitAPIException | IOException e) {
             // Sometimes this is a problem that can be solved by deleting the folder and cloning again, try that
@@ -90,6 +99,53 @@ public class SpecsGit {
         }
 
         return repoFolder;
+    }
+
+    private static CredentialsProvider getCredentials(String repositoryPath) {
+
+        var currentString = repositoryPath;
+
+        // Remove prefixes
+        if (currentString.startsWith("http://")) {
+            currentString = currentString.substring("http://".length());
+        }
+
+        if (currentString.startsWith("https://")) {
+            currentString = currentString.substring("https://".length());
+        }
+
+        var firstSlashIndex = currentString.indexOf('/');
+        if (firstSlashIndex != -1) {
+            currentString = currentString.substring(0, firstSlashIndex);
+        }
+
+        // System.out.println("CURRENT INDEX: " + currentString);
+
+        // Check if there is a login/pass in the url
+        var atIndex = currentString.indexOf('@');
+
+        // No login
+        if (atIndex == -1) {
+            return null;
+        }
+
+        var loginPass = currentString.substring(0, atIndex);
+        // System.out.println("LOGIN PASS: " + loginPass);
+
+        // Split login pass
+        var colonIndex = loginPass.indexOf(':');
+
+        if (colonIndex == -1) {
+            SpecsLogs.debug(
+                    "Specified git url with login information but no password (expected ':'), ignoring information");
+            return null;
+        }
+
+        var login = loginPass.substring(0, colonIndex);
+        var pass = loginPass.substring(colonIndex + 1, loginPass.length());
+        // System.out.println("LOGIN: " + login);
+        // System.out.println("PASS: " + pass);
+        return new UsernamePasswordCredentialsProvider(login, pass);
     }
 
     public static PullResult pull(File repoFolder) {
