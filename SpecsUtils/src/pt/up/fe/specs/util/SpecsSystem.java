@@ -17,6 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.VarHandle;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
@@ -798,14 +801,29 @@ public class SpecsSystem {
      *            The path to add
      */
     public static void addJavaLibraryPath(String path) {
+
         System.setProperty("java.library.path",
                 System.getProperty("java.library.path") + File.pathSeparatorChar + path);
-        Field sysPathsField;
+        // Field sysPathsField;
+
         try {
-            sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-            sysPathsField.setAccessible(true);
-            sysPathsField.set(null, null);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            Lookup cl = MethodHandles.privateLookupIn(ClassLoader.class, MethodHandles.lookup());
+            VarHandle sys_paths = cl.findStaticVarHandle(ClassLoader.class, "sys_paths", String[].class);
+
+            var value = (String[]) sys_paths.get();
+
+            // If not set, create new array with path
+            if (value == null) {
+                var paths = new String[1];
+                paths[0] = path;
+                sys_paths.set(paths);
+                return;
+            }
+
+            var newValue = Arrays.copyOf(value, value.length + 1);
+            newValue[value.length] = path;
+            sys_paths.set(newValue);
+        } catch (Exception e) {
             // Not supposed to happen
             throw new RuntimeException(e);
         }
