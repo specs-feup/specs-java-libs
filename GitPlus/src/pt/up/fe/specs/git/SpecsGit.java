@@ -13,11 +13,14 @@
 
 package pt.up.fe.specs.git;
 
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
@@ -25,6 +28,7 @@ import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.dircache.DirCache;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
@@ -42,9 +46,85 @@ public class SpecsGit {
 
     private static final String SPECS_GIT_REPOS_FOLDER = "specs_git_repos";
 
+    private static final String URL_PARAM_BRANCH = "branch";
+
     public static File parseRepositoryUrl(String repositoryPath) {
-        return parseRepositoryUrl(repositoryPath, true);
+        var repoFolder = parseRepositoryUrl(repositoryPath, true);
+
+        // Check if the git repo is working
+        Git git = null;
+        try {
+            git = Git.open(repoFolder);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not open git repository in folder '" + repoFolder + "'", e);
+        }
+
+        // Get url options
+        var urlOptions = SpecsIo.parseUrl(repositoryPath)
+                .map(url -> SpecsIo.parseUrlQuery(url))
+                .orElse(new HashMap<>());
+
+        // Check if correct branch
+        var branch = urlOptions.get(URL_PARAM_BRANCH);
+        if (branch != null) {
+            checkout(git, branch);
+        }
+
+        return repoFolder;
     }
+
+    public static void checkout(Git git, String branchName) {
+        try {
+            // System.out.println("SETTING TO BRANCH " + branch);
+
+            var currentBranch = git.getRepository().getBranch();
+
+            // System.out.println("CURRENT BRANCH: " + currentBranch);
+
+            // Checkout branch
+            if (!branchName.equals(currentBranch)) {
+
+                // Taken from here: https://stackoverflow.com/a/57365145
+
+                var createBranch = !git.branchList()
+                        .call()
+                        .stream()
+                        .map(Ref::getName)
+                        .collect(Collectors.toList())
+                        .contains("refs/heads/" + branchName);
+
+                git.checkout().setCreateBranch(createBranch)
+                        .setName(branchName)
+                        .call();
+
+                // var currentFullBranch = git.getRepository().getFullBranch();
+                // var startPoint = currentFullBranch.substring(0, currentFullBranch.length() -
+                // currentBranch.length())
+                // + branch;
+                //
+                // git.checkout().setCreateBranch(true)
+                // .setName(branch)
+                // .setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
+                // // .setStartPoint(startPoint)
+                // .call();
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Could not checkout repository '" + git + "' to branch '" + branchName + "'", e);
+        }
+    }
+
+    // public static String getBranchName(Git git) {
+    // try {
+    // var fullBranch = git.getRepository().getFullBranch();
+    // var lastSlash = fullBranch.lastIndexOf('/');
+    // return lastSlash != -1 ? fullBranch.substring(lastSlash + 1, fullBranch.length()) : fullBranch;
+    // } catch (IOException e) {
+    // throw new RuntimeException("Could not get the name of the branch of the git repository " + git, e);
+    // }
+    //
+    // }
 
     private static File parseRepositoryUrl(String repositoryPath, boolean firstTime) {
         String repoName = getRepoName(repositoryPath);
@@ -122,7 +202,8 @@ public class SpecsGit {
         // System.out.println("CURRENT INDEX: " + currentString);
 
         // Check if there is a login/pass in the url
-        var atIndex = currentString.indexOf('@');
+        // Look for last index, in case the login has an '@'
+        var atIndex = currentString.lastIndexOf('@');
 
         // No login
         if (atIndex == -1) {
@@ -135,10 +216,21 @@ public class SpecsGit {
         // Split login pass
         var colonIndex = loginPass.indexOf(':');
 
+        // Only login, ask for password
         if (colonIndex == -1) {
-            SpecsLogs.debug(
-                    "Specified git url with login information but no password (expected ':'), ignoring information");
-            return null;
+
+            var login = loginPass;
+
+            Console console = System.console();
+            if (console == null) {
+                SpecsLogs.info(
+                        "Specified git url with login information but no password (expected ':'), and could not use the console");
+                return null;
+            }
+
+            char[] passwordArray = console.readPassword("Enter password for user '" + login + "': ");
+
+            return new UsernamePasswordCredentialsProvider(login, new String(passwordArray));
         }
 
         var login = loginPass.substring(0, colonIndex);
