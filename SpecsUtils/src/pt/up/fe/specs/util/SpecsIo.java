@@ -435,13 +435,13 @@ public class SpecsIo {
         // Check null argument. If null, it would raise and exception and stop
         // the program when used to create the File object.
         if (file == null) {
-            SpecsLogs.msgWarn("Input 'file' is null.");
+            SpecsLogs.warn("Input 'file' is null.");
             // Logger.getLogger(IoUtils.class.getName()).warning("Input 'file' is null.");
             return false;
         }
 
         if (contents == null) {
-            SpecsLogs.msgWarn("Input 'contents' is null.");
+            SpecsLogs.warn("Input 'contents' is null.");
             return false;
         }
 
@@ -504,7 +504,7 @@ public class SpecsIo {
             }
 
         } catch (IOException ex) {
-            SpecsLogs.msgWarn("Problems when accessing file '" + file.getPath()
+            SpecsLogs.warn("Problems when accessing file '" + file.getPath()
                     + "'. Check if folder exists before writing the file.", ex);
             // SpecsLogs.msgWarn(ex);
             // SpecsLogs.msgInfo("Problems when accessing file '" + file.getPath()

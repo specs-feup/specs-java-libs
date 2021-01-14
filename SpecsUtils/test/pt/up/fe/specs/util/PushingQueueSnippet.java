@@ -24,61 +24,61 @@ public class PushingQueueSnippet {
     @Test
     public void test() {
 
-	int times = 100000;
+        int times = 100000;
 
-	for (int i = 10; i < 100; i += 10) {
-	    int capacity = i;
-	    PushingQueue<Integer> arrayQueue = new ArrayPushingQueue<>(capacity);
-	    PushingQueue<Integer> linkedQueue = new LinkedPushingQueue<>(capacity);
+        for (int i = 10; i < 100; i += 10) {
+            int capacity = i;
+            PushingQueue<Integer> arrayQueue = new ArrayPushingQueue<>(capacity);
+            PushingQueue<Integer> linkedQueue = new LinkedPushingQueue<>(capacity);
 
-	    // Warm up
-	    measure(arrayQueue, capacity, times);
-	    measure(linkedQueue, capacity, times);
+            // Warm up
+            measure(arrayQueue, capacity, times);
+            measure(linkedQueue, capacity, times);
 
-	    long arrayTime = measure(arrayQueue, capacity, times);
-	    long linkedTime = measure(linkedQueue, capacity, times);
+            long arrayTime = measure(arrayQueue, capacity, times);
+            long linkedTime = measure(linkedQueue, capacity, times);
 
-	    System.out.println("Elements:" + capacity);
-	    System.out.println("ARRAY TIME:" + SpecsStrings.parseTime(arrayTime));
-	    System.out.println("LINKED TIME:" + SpecsStrings.parseTime(linkedTime));
-	}
-	/*
-		int capacity = 10000;
-
-		PushingQueueOld<Integer> queue = new PushingQueueOld<>(capacity);
-
-		long tic = System.nanoTime();
-		for (int i = 0; i < capacity; i++) {
-		    queue.insertElement(i);
-		}
-		long toc = System.nanoTime();
-		System.out.println("INIT TIME:" + ParseUtils.parseTime(toc - tic));
-
-		tic = System.nanoTime();
-		for (int i = 0; i < capacity; i++) {
-		    queue.insertElement(i);
-		}
-		toc = System.nanoTime();
-		System.out.println("PUSHING TIME:" + ParseUtils.parseTime(toc - tic));
-	 */
+            System.out.println("Elements:" + capacity);
+            System.out.println("ARRAY TIME:" + SpecsStrings.parseTime(arrayTime));
+            System.out.println("LINKED TIME:" + SpecsStrings.parseTime(linkedTime));
+        }
+        /*
+        	int capacity = 10000;
+        
+        	PushingQueueOld<Integer> queue = new PushingQueueOld<>(capacity);
+        
+        	long tic = System.nanoTime();
+        	for (int i = 0; i < capacity; i++) {
+        	    queue.insertElement(i);
+        	}
+        	long toc = System.nanoTime();
+        	System.out.println("INIT TIME:" + ParseUtils.parseTime(toc - tic));
+        
+        	tic = System.nanoTime();
+        	for (int i = 0; i < capacity; i++) {
+        	    queue.insertElement(i);
+        	}
+        	toc = System.nanoTime();
+        	System.out.println("PUSHING TIME:" + ParseUtils.parseTime(toc - tic));
+         */
     }
 
     private static long measure(PushingQueue<Integer> queue, int capacity, int times) {
 
-	// Fill queue
-	for (int i = 0; i < capacity; i++) {
-	    queue.insertElement(i);
-	}
+        // Fill queue
+        for (int i = 0; i < capacity; i++) {
+            queue.insertElement(i);
+        }
 
-	// Measure now that is filled
-	long tic = System.nanoTime();
-	for (int i = 0; i < capacity * times; i++) {
-	    queue.insertElement(i);
-	}
+        // Measure now that is filled
+        long tic = System.nanoTime();
+        for (int i = 0; i < capacity * times; i++) {
+            queue.insertElement(i);
+        }
 
-	long toc = System.nanoTime();
+        long toc = System.nanoTime();
 
-	return toc - tic;
+        return toc - tic;
     }
 
 }

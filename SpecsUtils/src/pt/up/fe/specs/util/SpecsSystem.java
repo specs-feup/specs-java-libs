@@ -727,6 +727,11 @@ public class SpecsSystem {
         T run();
     }
 
+    /**
+     * 
+     * @param callGc
+     * @return the current amount of memory, in bytes
+     */
     public static long getUsedMemory(boolean callGc) {
         if (callGc) {
             System.gc();
@@ -735,6 +740,14 @@ public class SpecsSystem {
         System.gc();
 
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+    }
+
+    public static long getUsedMemoryMb(boolean callGc) {
+        var usedMemory = getUsedMemory(callGc);
+
+        long mbFactor = (long) Math.pow(1024, 2);
+
+        return usedMemory / mbFactor;
     }
 
     /**
