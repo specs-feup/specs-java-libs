@@ -66,6 +66,20 @@ public class SpecsArray {
         throw new RuntimeException("Not implemented for array class " + componentClass);
     }
 
+    /**
+     * 
+     * @param anArray
+     * 
+     * @return the last element of the array, or null if the array is empty
+     */
+    public static <T> T last(T[] array) {
+        if (array.length == 0) {
+            return null;
+        }
+
+        return array[array.length - 1];
+    }
+
     /*
     public static <T, ET extends T> T[] concant(T[] array, ET newValue) {
         @SuppressWarnings("unchecked")
