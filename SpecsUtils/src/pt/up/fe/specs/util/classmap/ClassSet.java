@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util.classmap;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -58,6 +59,10 @@ public class ClassSet<E> {
      */
     @SuppressWarnings("unchecked")
     public void addAll(Class<? extends E>... classes) {
+        addAll(Arrays.asList(classes));
+    }
+
+    public void addAll(Collection<Class<? extends E>> classes) {
         for (Class<? extends E> aClass : classes) {
             add(aClass);
         }
