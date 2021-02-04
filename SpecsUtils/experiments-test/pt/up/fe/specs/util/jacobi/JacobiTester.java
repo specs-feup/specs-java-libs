@@ -102,4 +102,7 @@ public class JacobiTester {
 
     }
 
+    public static void main(String[] args) {
+        new JacobiTester().testJacobiIndexes();
+    }
 }
