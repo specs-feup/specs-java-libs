@@ -1889,12 +1889,17 @@ public class SpecsIo {
     private static List<File> getFilesWithPattern(File folder, String pattern) {
         List<File> files = new ArrayList<>();
 
+        if (!folder.isDirectory()) {
+            SpecsLogs.info("Given folder for getting files with pattern does not exist: '" + folder + "'");
+            return files;
+        }
+
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
                 Paths.get(folder.getAbsolutePath()), pattern)) {
 
             dirStream.forEach(path -> files.add(new File(path.toString())));
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Error while getting files with pattern '" + pattern + "'", e);
+            SpecsLogs.info("Exception while getting files with pattern , returning empty list: " + e.getMessage());
         }
 
         return files;
