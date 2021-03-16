@@ -366,6 +366,7 @@ public class SpecsSystem {
             ExecutorService stdinThread = Executors.newSingleThreadExecutor();
             OutputStream inStream = process.getOutputStream();
             stdinThread.submit(() -> input.accept(inStream));
+            stdinThread.shutdown();
         }
 
         // outputStream.
