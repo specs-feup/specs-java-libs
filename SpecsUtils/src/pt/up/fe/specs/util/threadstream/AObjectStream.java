@@ -65,7 +65,10 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
 
     @Override
     public boolean hasNext() {
-        return this.nextT != null;
+        if (this.inited == false)
+            return true;
+        else
+            return this.nextT != null;
         // return !this.isClosed();
     }
 
