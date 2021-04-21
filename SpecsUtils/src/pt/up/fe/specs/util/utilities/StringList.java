@@ -101,8 +101,7 @@ public class StringList implements Iterable<String> {
         List<String> strings = SpecsFactory.newArrayList();
 
         for (File file : files) {
-
-            strings.add(file.getName());
+            strings.add(file.getAbsolutePath());
         }
 
         return new StringList(strings);
