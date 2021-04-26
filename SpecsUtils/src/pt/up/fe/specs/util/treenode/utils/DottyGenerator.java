@@ -35,7 +35,7 @@ public class DottyGenerator<K extends TreeNode<K>> extends TreeNodeWalker<K> {
     public void generateDotty(TreeNode<K> rootNode) {
 
         System.out.println("digraph D {");
-        super.visit(rootNode);
+        this.visit(rootNode);
         System.out.println("}");
     }
 
