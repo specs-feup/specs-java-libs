@@ -9,13 +9,13 @@ package pt.up.fe.specs.util.treenode;
  */
 public abstract class TreeNodeWalker<K extends TreeNode<K>> {
 
-    protected void visitChildren(TreeNode<K> node) {
+    protected void visitChildren(K node) {
         for (var c : node.getChildren()) {
             this.visit(c);
         }
     }
 
-    public void visit(TreeNode<K> node) {
+    public void visit(K node) {
         this.visitChildren(node);
     };
 }
