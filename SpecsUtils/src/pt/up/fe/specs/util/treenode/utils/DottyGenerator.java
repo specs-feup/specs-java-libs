@@ -28,6 +28,10 @@ public class DottyGenerator<K extends TreeNode<K>> extends TreeNodeWalker<K> {
 
         // this node name
         var me = node.toContentString();
+        if (me.isBlank()) {
+            me = node.getNodeName();
+        }
+
         var tagname = node.hashCode();
 
         // my label
