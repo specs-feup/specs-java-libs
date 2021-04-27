@@ -387,31 +387,46 @@ public class SpecsSystem {
     private static void processCommand(ProcessBuilder builder) {
 
         // For now, do nothing if it is not Windows
-        if (!isWindows()) {
-            return;
-        }
+//        if (!isWindows()) {
+//            return;
+//        }
 
         // Do nothing if no command
         if (builder.command().isEmpty()) {
             return;
         }
 
-        // Check if command is a file that exists in the working folder
-        File workingDir = builder.directory();
-        File command = new File(workingDir, builder.command().get(0));
+        if(isWindows()) {
+            // Check if command is a file that exists in the working folder
+            File workingDir = builder.directory();
+            File command = new File(workingDir, builder.command().get(0));
 
-        // If command is a file that exists, do nothing
-        if (command.isFile()) {
-            return;
+            // If command is a file that exists, do nothing
+            if (command.isFile()) {
+                return;
+            }
+
+            // Update command
+            List<String> newCommand = new ArrayList<>(builder.command().size() + 2);
+            newCommand.add("cmd");
+            newCommand.add("/c");
+            newCommand.addAll(builder.command());
+
+            builder.command(newCommand);        	
+        }
+        else if(isLinux()) {
+            // Update command
+            List<String> newCommand = new ArrayList<>(4);
+            newCommand.add("bash");
+            // Same user
+            newCommand.add("-l");
+            // Command
+            newCommand.add("-c");
+            newCommand.add(builder.command().stream().collect(Collectors.joining(" ")));
+
+            builder.command(newCommand);        	
         }
 
-        // Update command
-        List<String> newCommand = new ArrayList<>(builder.command().size() + 2);
-        newCommand.add("cmd");
-        newCommand.add("/c");
-        newCommand.addAll(builder.command());
-
-        builder.command(newCommand);
     }
 
     private static <O, E> ProcessOutput<O, E> executeProcess(Process process,
