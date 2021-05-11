@@ -3256,4 +3256,15 @@ public class SpecsIo {
         return query;
     }
 
+    public static File sanitizeWorkingDir(String workingDir) {
+
+        File workingFolder = new File(workingDir);
+        if (!workingFolder.isDirectory()) {
+            SpecsLogs.info("Provided an non-existing working directory: " + workingDir);
+            return SpecsIo.getWorkingDir();
+        }
+
+        return workingFolder;
+    }
+
 }
