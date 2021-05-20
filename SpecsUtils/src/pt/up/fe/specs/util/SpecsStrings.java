@@ -1824,6 +1824,16 @@ public class SpecsStrings {
     }
 
     /**
+     * Overload which uses '_' as separator and capitalizes the first letter.
+     * 
+     * @param string
+     * @return
+     */
+    public static String toCamelCase(String string) {
+        return toCamelCase(string, "_", true);
+    }
+
+    /**
      * Transforms a string into camelCase.
      * 
      * <p>
