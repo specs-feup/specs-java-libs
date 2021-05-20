@@ -47,10 +47,6 @@ public class SpecsEnums {
      * Transforms a String into a constant of the same name in a specific Enum. Returns null instead of throwing
      * exceptions.
      * 
-     * <p>
-     * If a null is returned, does not warn to the console.
-     * 
-     * TODO: Change return type to Optional
      * 
      * @param <T>
      *            The Enum where the constant is
@@ -58,19 +54,16 @@ public class SpecsEnums {
      *            the Class object of the enum type from which to return a constant
      * @param name
      *            the name of the constant to return
-     * @return the constant of enum with the same name, or null if not found.
+     * @return the constant of enum with the same name, or the first element (ordinal order) if not found, with a
+     *         warning
      */
     public static <T extends Enum<T>> T valueOf(Class<T> enumType, String name) {
         try {
             return Enum.valueOf(enumType, name);
-        } catch (IllegalArgumentException ex) {
-            // LoggingUtils.getLogger().
-            // warning("Enumeration '"+enumType+"' does not have value '"+name+"'.");
-            return null;
-        } catch (NullPointerException ex) {
-            // LoggingUtils.getLogger().
-            // warning("Parameter 'name' is null.");
-            return null;
+        } catch (Exception e) {
+            var firstElement = enumType.getEnumConstants()[0];
+            SpecsLogs.warn("Exception while retrieving enum, returning first element '" + firstElement + "'", e);
+            return firstElement;
         }
     }
 
@@ -420,6 +413,25 @@ public class SpecsEnums {
 
     public static <T extends Enum<T>> T[] values(Class<T> enumClass) {
         return getHelper(enumClass).values();
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param anEnum
+     * @return the next enum, according to the ordinal order, or the first enum if this one is the last
+     */
+    public static <T extends Enum<T>> T nextEnum(T anEnum) {
+        @SuppressWarnings("unchecked")
+        var enums = ((Class<T>) anEnum.getClass()).getEnumConstants();
+
+        var ordinal = anEnum.ordinal();
+
+        if (ordinal < enums.length - 1) {
+            return enums[ordinal + 1];
+        }
+
+        return enums[0];
     }
 
 }
