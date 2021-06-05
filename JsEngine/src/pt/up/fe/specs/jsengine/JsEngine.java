@@ -18,7 +18,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
 import com.google.gson.JsonArray;
+
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * Represents the JavaScript engine used by LARA.
@@ -233,6 +236,10 @@ public interface JsEngine {
 
     Object eval(String script, Object scope);
 
+    default Object eval(String code, JsFileType type) {
+        throw new NotImplementedException(this);
+    }
+
     // default Bindings createBindings() {
     // return getEngine().createBindings();
     // }
@@ -381,22 +388,22 @@ public interface JsEngine {
 
             return toNativeArray(valueList.stream().map(this::toJs).toArray());
         }
-        
+
         // If a Set, apply adapt over all elements of the Set and convert to array
         if (javaObject instanceof Set) {
             var valueList = (Set<?>) javaObject;
 
             return toNativeArray(valueList.stream().map(this::toJs).toArray());
         }
-        
+
         // If a JsonArray, convert to List and call toJs() again
         if (javaObject instanceof JsonArray) {
-        	var jsonArray = (JsonArray) javaObject;
-        	
-        	var list = new ArrayList<Object>();
-        	for (int i=0; i< jsonArray.size(); i++) {
-        	    list.add(jsonArray.get(i) );
-        	}
+            var jsonArray = (JsonArray) javaObject;
+
+            var list = new ArrayList<Object>();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                list.add(jsonArray.get(i));
+            }
             return toJs(list);
         }
 
