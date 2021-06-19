@@ -682,7 +682,7 @@ public class SpecsStrings {
                 return true;
             }
         } catch (PatternSyntaxException ex) {
-            SpecsLogs.msgWarn(ex.getMessage());
+            SpecsLogs.warn(ex.getMessage());
         }
 
         return false;
