@@ -29,14 +29,17 @@
 <!--
 		<dependency org="org.graalvm.js" name="js-scriptengine" rev="19.1.1" conf="default"/>
 		<dependency org="org.graalvm.js" name="js" rev="19.1.1"/>
-	-->	
+	-->
+	
 	<!--
 		<dependency org="org.graalvm.js" name="js-scriptengine" rev="20.3.0" conf="default"/>
 		<dependency org="org.graalvm.js" name="js" rev="20.3.0"/>		
 -->
-		<dependency org="org.graalvm.js" name="js-scriptengine" rev="21.1.0" conf="default"/>
-		<dependency org="org.graalvm.js" name="js" rev="21.1.0"/>				
-		
+
+		<!-- Version 21.1.0 breaks LARA (e.g. $jp.descendants("name") is not found) -->
+		<dependency org="org.graalvm.js" name="js-scriptengine" rev="21.0.0" conf="default"/>
+		<dependency org="org.graalvm.js" name="js" rev="21.0.0"/>				
+
       <dependency org="com.google.code.gson" name="gson" rev="2.4"/>	
 		<!--<dependency org="org.graalvm.sdk" name="graal-sdk" rev="19.1.1"/>-->
 

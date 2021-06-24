@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -31,7 +32,9 @@ import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
+import com.oracle.truffle.js.runtime.builtins.JSErrorObject;
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
+import com.oracle.truffle.polyglot.SpecsPolyglot;
 
 import pt.up.fe.specs.jsengine.ForOfType;
 import pt.up.fe.specs.jsengine.JsEngine;
@@ -546,6 +549,17 @@ public class GraalvmJsEngine implements JsEngine {
     public boolean supportsProperties() {
         // TODO: use nashorn compatibility
         return false;
+    }
+    
+    @Override
+    public Optional<Throwable> getException(Object possibleError) {
+    	var exception = SpecsPolyglot.getException(possibleError);
+/*
+    	if(exception != null) {
+    		exception.printJSStackTrace();
+    	}
+  */  
+    	return Optional.ofNullable(exception);
     }
 
 }
