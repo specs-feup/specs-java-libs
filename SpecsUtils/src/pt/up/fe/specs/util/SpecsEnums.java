@@ -15,19 +15,23 @@ package pt.up.fe.specs.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.enums.EnumHelper;
 import pt.up.fe.specs.util.providers.KeyProvider;
+import pt.up.fe.specs.util.providers.StringProvider;
 
 /**
  * Methods for Enumeration manipulation.
@@ -59,10 +63,17 @@ public class SpecsEnums {
      */
     public static <T extends Enum<T>> T valueOf(Class<T> enumType, String name) {
         try {
+            // If enum implements StringProvider, use EnumHelper
+            // if (StringProvider.class.isAssignableFrom(enumType)) {
+            // return getHelper(enumType).fromName(name);
+            // }
+
             return Enum.valueOf(enumType, name);
         } catch (Exception e) {
+
             var firstElement = enumType.getEnumConstants()[0];
-            SpecsLogs.warn("Exception while retrieving enum, returning first element '" + firstElement + "'", e);
+            SpecsLogs.warn("Exception while retrieving enum with name '" + name + "' from type '" + enumType
+                    + "', returning first element '" + firstElement + "'", e);
             return firstElement;
         }
     }
@@ -108,7 +119,7 @@ public class SpecsEnums {
     }
 
     /**
-     * Builds an unmmodifiable table which maps the name of the enum to the enum itself.
+     * Builds an unmmodifiable table which maps the string representation of the enum to the enum itself.
      * 
      * <p>
      * This table can be useful to get the enum correspondent to a particular option in String format which was
@@ -123,6 +134,39 @@ public class SpecsEnums {
 
         for (K enume : values) {
             aMap.put(enume.toString(), enume);
+        }
+
+        return Collections.unmodifiableMap(aMap);
+    }
+
+    /**
+     * Builds a n unmodifiable of the enum to the enum itself. If the enum implements StringProvider, .getString() is
+     * used instead of .name().
+     * 
+     * 
+     * <p>
+     * This table can be useful to get the enum correspondent to a particular option in String format which was
+     * collected from, for example, a config file.
+     * 
+     * @param <K>
+     * @param values
+     * @return
+     */
+    public static <K extends Enum<K>> Map<String, K> buildNamesMap(Class<K> enumClass, Collection<K> excludeList) {
+        Map<String, K> aMap = new LinkedHashMap<>();
+
+        Function<K, String> toString = StringProvider.class.isAssignableFrom(enumClass)
+                ? anEnum -> ((StringProvider) anEnum).getString()
+                : anEnum -> anEnum.name();
+
+        var excludeSet = new HashSet<K>(excludeList);
+
+        for (K enume : enumClass.getEnumConstants()) {
+            if (excludeSet.contains(enume)) {
+                continue;
+            }
+
+            aMap.put(toString.apply(enume), enume);
         }
 
         return Collections.unmodifiableMap(aMap);
