@@ -347,6 +347,8 @@ public class XmlPersistence implements AppPersistence {
             // Before it was not being check if key existed or not, and added default values.
             // Will it break stuff not putting the default values?
             if (data.hasValue(key)) {
+                // Should not encode values before saving, this will be a normal DataStore
+                // XStream will try to serialize the contents
                 storeToSave.setRaw(key, data.get(key));
             }
         }
