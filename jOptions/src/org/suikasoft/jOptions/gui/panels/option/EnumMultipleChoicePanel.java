@@ -95,7 +95,7 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
 
         return getKey().getDecoder()
                 .map(codec -> codec.decode(stringValue))
-                .orElse(SpecsEnums.valueOf(getKey().getValueClass(), stringValue));
+                .orElseGet(() -> SpecsEnums.valueOf(getKey().getValueClass(), stringValue));
 
     }
 
@@ -109,15 +109,14 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
         }
 
         if (!availableChoices.contains(currentValue)) {
-            SpecsLogs.msgWarn(
+            SpecsLogs.warn(
                     "Could not find choice '" + currentValue + "'. Available " + "choices: " + availableChoices);
             currentValue = getKey().getValueClass().getEnumConstants()[0];
         }
 
         T finalValue = currentValue;
 
-        SpecsSwing.runOnSwing(() -> comboBoxValues.setSelectedItem(finalValue));
-
+        SpecsSwing.runOnSwing(() -> comboBoxValues.setSelectedItem(valueToString(finalValue)));
     }
 
 }
