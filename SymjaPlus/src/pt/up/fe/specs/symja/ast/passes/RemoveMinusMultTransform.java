@@ -20,30 +20,29 @@ import pt.up.fe.specs.symja.ast.SymjaNode;
 import pt.up.fe.specs.symja.ast.SymjaOperator;
 import pt.up.fe.specs.symja.ast.SymjaSymbol;
 import pt.up.fe.specs.symja.ast.SymjaToC;
+import pt.up.fe.specs.symja.ast.VisitAllTransform;
 import pt.up.fe.specs.util.treenode.transform.TransformQueue;
-import pt.up.fe.specs.util.treenode.transform.TransformResult;
-import pt.up.fe.specs.util.treenode.transform.TransformRule;
 import pt.up.fe.specs.util.treenode.transform.util.TraversalStrategy;
 
-public class RemoveMinusMultTransform implements TransformRule<SymjaNode, TransformResult> {
+public class RemoveMinusMultTransform implements VisitAllTransform {
 
     @Override
-    public TransformResult apply(SymjaNode node, TransformQueue<SymjaNode> queue) {
+    public void applyAll(SymjaNode node, TransformQueue<SymjaNode> queue) {
 
         if (!(node instanceof SymjaFunction)) {
-            return TransformResult.empty();
+            return;
         }
 
         var operator = node.getChild(SymjaOperator.class, 0);
 
         var symbol = operator.get(SymjaOperator.OPERATOR);
         if (symbol != Operator.Times) {
-            return TransformResult.empty();
+            return;
         }
 
         var leftOperand = node.getChild(1);
         if (!SymjaToC.convert(leftOperand).equals("-1")) {
-            return TransformResult.empty();
+            return;
         }
         // if (!leftOperand.toString().equals("-1")) {
 
@@ -55,7 +54,7 @@ public class RemoveMinusMultTransform implements TransformRule<SymjaNode, Transf
             var newInteger = SymjaNode.newNode(SymjaInteger.class);
             newInteger.set(SymjaInteger.VALUE_STRING, "-" + rightOperand.get(SymjaInteger.VALUE_STRING));
             queue.replace(node, newInteger);
-            return TransformResult.empty();
+            return;
         }
 
         if (rightOperand instanceof SymjaSymbol) {
@@ -63,12 +62,8 @@ public class RemoveMinusMultTransform implements TransformRule<SymjaNode, Transf
             var newSymbol = SymjaNode.newNode(SymjaSymbol.class);
             newSymbol.set(SymjaSymbol.SYMBOL, "-" + rightOperand.get(SymjaSymbol.SYMBOL));
             queue.replace(node, newSymbol);
-            return TransformResult.empty();
+            return;
         }
-
-        // System.out.println("node: " + operator);
-        // System.out.println("LEFT: " + leftOperand);
-        return TransformResult.empty();
 
     }
 

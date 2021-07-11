@@ -16,29 +16,28 @@ package pt.up.fe.specs.symja.ast.passes;
 import pt.up.fe.specs.symja.ast.SymjaFunction;
 import pt.up.fe.specs.symja.ast.SymjaNode;
 import pt.up.fe.specs.symja.ast.SymjaOperator;
+import pt.up.fe.specs.symja.ast.VisitAllTransform;
 import pt.up.fe.specs.util.treenode.transform.TransformQueue;
-import pt.up.fe.specs.util.treenode.transform.TransformResult;
-import pt.up.fe.specs.util.treenode.transform.TransformRule;
 import pt.up.fe.specs.util.treenode.transform.util.TraversalStrategy;
 
-public class RemoveRedundantParenthesisTransform implements TransformRule<SymjaNode, TransformResult> {
+public class RemoveRedundantParenthesisTransform implements VisitAllTransform {
 
     @Override
-    public TransformResult apply(SymjaNode node, TransformQueue<SymjaNode> queue) {
+    public void applyAll(SymjaNode node, TransformQueue<SymjaNode> queue) {
 
         if (!(node instanceof SymjaFunction)) {
-            return TransformResult.empty();
+            return;
         }
 
         if (!node.hasParent()) {
             node.set(SymjaFunction.HAS_PARENTHESIS, false);
-            return TransformResult.empty();
+            return;
         }
 
         var parent = node.getParent();
 
         if (!(parent instanceof SymjaFunction)) {
-            return TransformResult.empty();
+            return;
         }
 
         var operator = (SymjaOperator) node.getChild(0);
@@ -57,7 +56,7 @@ public class RemoveRedundantParenthesisTransform implements TransformRule<SymjaN
         // System.out.println("PARENT OPERATOR: " + parent.getChild(0));
         // var operator = node.getChild(SymjaOperator.class, 0);
 
-        return TransformResult.empty();
+        return;
 
     }
 
