@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.symja.ast.passes;
 
+import java.util.Arrays;
+
 import pt.up.fe.specs.symja.ast.Operator;
 import pt.up.fe.specs.symja.ast.SymjaFunction;
 import pt.up.fe.specs.symja.ast.SymjaInteger;
@@ -52,16 +54,25 @@ public class RemoveMinusMultTransform implements VisitAllTransform {
 
         if (rightOperand instanceof SymjaInteger) {
             var newInteger = SymjaNode.newNode(SymjaInteger.class);
-            newInteger.set(SymjaInteger.VALUE_STRING, "-" + rightOperand.get(SymjaInteger.VALUE_STRING));
-            queue.replace(node, newInteger);
+            newInteger.set(SymjaInteger.VALUE_STRING, rightOperand.get(SymjaInteger.VALUE_STRING));
+            var unaryMinus = SymjaNode.newNode(SymjaOperator.class);
+            unaryMinus.set(SymjaOperator.OPERATOR, Operator.UnaryMinus);
+
+            var newFunction = SymjaNode.newNode(SymjaFunction.class, Arrays.asList(unaryMinus, newInteger));
+
+            queue.replace(node, newFunction);
             return;
         }
 
         if (rightOperand instanceof SymjaSymbol) {
-            // TODO: Replace with SymjaFunction with first child unary minus and second child symbol
             var newSymbol = SymjaNode.newNode(SymjaSymbol.class);
-            newSymbol.set(SymjaSymbol.SYMBOL, "-" + rightOperand.get(SymjaSymbol.SYMBOL));
-            queue.replace(node, newSymbol);
+            newSymbol.set(SymjaSymbol.SYMBOL, rightOperand.get(SymjaSymbol.SYMBOL));
+            var unaryMinus = SymjaNode.newNode(SymjaOperator.class);
+            unaryMinus.set(SymjaOperator.OPERATOR, Operator.UnaryMinus);
+
+            var newFunction = SymjaNode.newNode(SymjaFunction.class, Arrays.asList(unaryMinus, newSymbol));
+
+            queue.replace(node, newFunction);
             return;
         }
 

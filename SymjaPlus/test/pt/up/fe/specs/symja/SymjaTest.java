@@ -24,6 +24,7 @@ import pt.up.fe.specs.symja.ast.SymjaAst;
 import pt.up.fe.specs.symja.ast.SymjaToC;
 import pt.up.fe.specs.symja.ast.passes.RemoveMinusMultTransform;
 import pt.up.fe.specs.symja.ast.passes.RemoveRedundantParenthesisTransform;
+import pt.up.fe.specs.symja.ast.passes.ReplaceUnaryMinusTransform;
 
 /**
  * @author Joao Bispo
@@ -53,22 +54,26 @@ public class SymjaTest {
     @Test
     public void parser() {
 
-        var symjaNode = SymjaAst.parse("N*M*i - (N*M*(i-1)+1) + 1");
+        // var symjaNode = SymjaAst.parse("N*M*i - (N*M*(i-1)+1) + 1");
         // var symjaNode = SymjaAst.parse("N^2");
         // var symjaNode = SymjaAst.parse("1 + Plus");
-        // var symjaNode = SymjaAst.parse("(N*M*(i-N))");
+        var symjaNode = SymjaAst.parse("(N*M*(i-N))");
 
         System.out.println(symjaNode.toString());
 
         System.out.println("C Code: " + SymjaToC.convert(symjaNode));
 
+        new RemoveMinusMultTransform().visit(symjaNode);
+
+        System.out.println("C Code After Remove Minus One transform: " + SymjaToC.convert(symjaNode));
+
+        new ReplaceUnaryMinusTransform().visit(symjaNode);
+
+        System.out.println("C Code After Replace Unary Minus: " + SymjaToC.convert(symjaNode));
+
         new RemoveRedundantParenthesisTransform().visit(symjaNode);
 
         System.out.println("C Code After parenthesis: " + SymjaToC.convert(symjaNode));
-
-        new RemoveMinusMultTransform().visit(symjaNode);
-
-        System.out.println("C Code After transform: " + SymjaToC.convert(symjaNode));
 
         // var p = new Parser();
         // var root = (FunctionNode) p.parse("N*M*i - (N*M*(i-1)+1) + 1");

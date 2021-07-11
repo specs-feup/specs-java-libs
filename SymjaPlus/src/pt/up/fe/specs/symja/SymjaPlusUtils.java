@@ -26,6 +26,7 @@ import pt.up.fe.specs.symja.ast.SymjaAst;
 import pt.up.fe.specs.symja.ast.SymjaToC;
 import pt.up.fe.specs.symja.ast.passes.RemoveMinusMultTransform;
 import pt.up.fe.specs.symja.ast.passes.RemoveRedundantParenthesisTransform;
+import pt.up.fe.specs.symja.ast.passes.ReplaceUnaryMinusTransform;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -103,8 +104,9 @@ public class SymjaPlusUtils {
         var symjaNode = SymjaAst.parse(expression);
 
         // Apply transformations
-        new RemoveRedundantParenthesisTransform().visit(symjaNode);
         new RemoveMinusMultTransform().visit(symjaNode);
+        new ReplaceUnaryMinusTransform().visit(symjaNode);
+        new RemoveRedundantParenthesisTransform().visit(symjaNode);
 
         // Convert to C
         return SymjaToC.convert(symjaNode);

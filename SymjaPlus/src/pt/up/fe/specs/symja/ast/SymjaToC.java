@@ -62,8 +62,12 @@ public class SymjaToC {
         var symbol = operator.get(SymjaOperator.OPERATOR);
         switch (symbol) {
         case Plus:
+        case Minus:
         case Times:
-            return convertTwoOperandOperator(symbol, operands);
+            return convertTwoOperandsOperator(symbol, operands);
+        case UnaryMinus:
+            SpecsCheck.checkSize(operands, 1);
+            return convertOneOperandOperator(symbol, operands.get(0), true);
         case Power:
             return "pow(" + CONVERTERS.apply(operands.get(0)) + ", " + CONVERTERS.apply(operands.get(1)) + ")";
         default:
@@ -72,9 +76,19 @@ public class SymjaToC {
 
     }
 
-    private static String convertTwoOperandOperator(Operator operator, List<SymjaNode> operands) {
+    private static String convertTwoOperandsOperator(Operator operator, List<SymjaNode> operands) {
         SpecsCheck.checkSize(operands, 2);
         return CONVERTERS.apply(operands.get(0)) + " " + operator.getSymbol() + " " + CONVERTERS.apply(operands.get(1));
+    }
+
+    private static String convertOneOperandOperator(Operator operator, SymjaNode operand, boolean isPrefix) {
+        // TODO: To be more correct, there should be an Operator interface, with UnaryOperator and BinaryOperator
+        // subclasses, and the UnaryOperator subclass would have a method .isPrefix()
+        if (isPrefix) {
+            return operator.getSymbol() + CONVERTERS.apply(operand);
+        }
+
+        return CONVERTERS.apply(operand) + operator.getSymbol();
     }
 
     private static String defaultConverter(SymjaNode node) {

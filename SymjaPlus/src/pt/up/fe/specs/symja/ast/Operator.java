@@ -15,8 +15,10 @@ package pt.up.fe.specs.symja.ast;
 
 public enum Operator {
     Plus("+", 2),
+    Minus("-", 2),
     Times("*", 3),
-    Power("^", 4);
+    Power("^", 4),
+    UnaryMinus("-", 4); // What priority it should have?
 
     private final String symbol;
     private final int priority;
