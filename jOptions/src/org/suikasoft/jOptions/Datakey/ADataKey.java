@@ -232,6 +232,14 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     @Override
     public Optional<Function<T, T>> getCopyFunction() {
+        // By default, use encoder/decoder
+        if (copyFunction == null && getDecoder().isPresent()) {
+            var codec = getDecoder().get();
+            Function<T, T> copy = value -> codec.decode(codec.encode(value));
+            // copyFunction = copy;
+            return Optional.of(copy);
+        }
+
         return Optional.ofNullable(copyFunction);
     }
 

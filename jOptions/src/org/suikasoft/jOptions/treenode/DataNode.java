@@ -115,7 +115,11 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
 
         // Copy all data
         for (var key : getDataKeysWithValues()) {
-            newNode.setValue(key.getName(), get(key));
+            // var stringValue = key.copy((Object) get(key));
+            // var copyValue = key.decode(stringValue);
+            // newNode.setValue(key.getName(), copyValue);
+            newNode.setValue(key.getName(), key.copyRaw(get(key)));
+            // newNode.setValue(key.getName(), get(key));
         }
 
         return newNode;
