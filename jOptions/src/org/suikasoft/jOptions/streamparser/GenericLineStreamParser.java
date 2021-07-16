@@ -71,10 +71,9 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
             if (worker == null) {
                 // Check if id should be ignored
                 // return getLineIgnore().test(id);
-
                 return false;
             }
-
+            // System.out.println("Worker: " + id);
             worker.apply(lineStream, data);
 
             return true;
