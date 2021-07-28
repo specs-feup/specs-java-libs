@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -843,5 +844,20 @@ public class SpecsCollections {
         copy.or(bitSet);
 
         return copy;
+    }
+
+    public static <T> T[] newArray(Class<T> targetClass, int size) {
+
+        // newInstance returns a new array
+        @SuppressWarnings("unchecked")
+        var newArray = (T[]) Array.newInstance(targetClass, size);
+
+        return newArray;
+    }
+
+    public static <T1, T2> List<T2> toList(T1[] array, Function<T1, T2> mapper) {
+        return Arrays.stream(array)
+                .map(value -> mapper.apply(value))
+                .collect(Collectors.toList());
     }
 }
