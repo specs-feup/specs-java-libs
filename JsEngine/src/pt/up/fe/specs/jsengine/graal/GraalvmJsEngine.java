@@ -32,7 +32,6 @@ import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
-import com.oracle.truffle.js.runtime.builtins.JSErrorObject;
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import com.oracle.truffle.polyglot.SpecsPolyglot;
 
@@ -211,7 +210,7 @@ public class GraalvmJsEngine implements JsEngine {
     public Value toNativeArray(Object[] values) {
         Value array = eval(NEW_ARRAY);
         for (int i = 0; i < values.length; i++) {
-            array.setArrayElement(i, values[i]);
+            array.setArrayElement(i, toJs(values[i]));
         }
 
         return array;
@@ -225,14 +224,14 @@ public class GraalvmJsEngine implements JsEngine {
         // return bindings;
     }
 
-    public Object toNativeArrayV2(Object[] values) {
-        Value array = eval(NEW_ARRAY);
-        for (int i = 0; i < values.length; i++) {
-            array.setArrayElement(i, values[i]);
-        }
-
-        return array;
-    }
+    // public Object toNativeArrayV2(Object[] values) {
+    // Value array = eval(NEW_ARRAY);
+    // for (int i = 0; i < values.length; i++) {
+    // array.setArrayElement(i, values[i]);
+    // }
+    //
+    // return array;
+    // }
 
     /**
      * Based on this site: http://programmaticallyspeaking.com/nashorns-jsobject-in-context.html
@@ -550,16 +549,16 @@ public class GraalvmJsEngine implements JsEngine {
         // TODO: use nashorn compatibility
         return false;
     }
-    
+
     @Override
     public Optional<Throwable> getException(Object possibleError) {
-    	var exception = SpecsPolyglot.getException(possibleError);
-/*
-    	if(exception != null) {
-    		exception.printJSStackTrace();
-    	}
-  */  
-    	return Optional.ofNullable(exception);
+        var exception = SpecsPolyglot.getException(possibleError);
+        /*
+            	if(exception != null) {
+            		exception.printJSStackTrace();
+            	}
+          */
+        return Optional.ofNullable(exception);
     }
 
 }
