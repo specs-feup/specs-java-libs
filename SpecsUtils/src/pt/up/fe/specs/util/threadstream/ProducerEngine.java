@@ -101,7 +101,7 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
         /*
          * Wait for all
          */
-        for (var thread : threads)
+        for (var thread : threads.subList(1, threads.size()))
             try {
                 thread.join();
 

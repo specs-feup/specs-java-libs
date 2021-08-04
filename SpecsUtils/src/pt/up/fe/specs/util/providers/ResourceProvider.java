@@ -162,6 +162,10 @@ public interface ResourceProvider extends FileResourceProvider {
         return getResourceLocation();
     }
 
+    default File write() {
+        return write(SpecsIo.getWorkingDir());
+    }
+
     /**
      * Helper method which by default overwrites the file.
      */
@@ -176,7 +180,9 @@ public interface ResourceProvider extends FileResourceProvider {
 
     default File write(File folder, boolean overwrite, Function<String, String> nameMapper) {
         Preconditions.checkArgument(folder.isDirectory(), folder + " does not exist");
-        File outputFile = new File(folder, nameMapper.apply(getResourceName()));
+
+        var filename = nameMapper.apply(getResourceName());
+        File outputFile = new File(folder, filename);
 
         // File file already exists and should not overwrite, return
         if (outputFile.exists() & !overwrite) {
@@ -184,7 +190,10 @@ public interface ResourceProvider extends FileResourceProvider {
         }
 
         // Write file
+        boolean success = SpecsIo.resourceCopyWithName(getResource(), filename, folder);
+        /*
         boolean success = SpecsIo.write(outputFile, SpecsIo.getResource(this));
+        */
         if (!success) {
             throw new RuntimeException("Could not write file '" + outputFile + "'");
         }

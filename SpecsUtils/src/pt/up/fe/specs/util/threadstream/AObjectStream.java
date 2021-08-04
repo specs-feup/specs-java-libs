@@ -18,7 +18,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
      */
     protected abstract T consumeFromProvider();
 
-    private T getNext() {
+    protected T getNext() {
 
         if (this.isClosed())
             return null;
@@ -27,7 +27,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
 
         // convert poison to null
         if (inst == this.poison) {
-            this.close();
+            this.isClosed = true;
             inst = null;
         }
 
@@ -49,7 +49,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
         }
 
         if (this.nextT == null) {
-            this.close();
+            this.isClosed = true;
             return null;
         }
 
@@ -75,10 +75,5 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
     @Override
     public boolean isClosed() {
         return this.isClosed;
-    }
-
-    @Override
-    public void close() {
-        this.isClosed = true;
     }
 }

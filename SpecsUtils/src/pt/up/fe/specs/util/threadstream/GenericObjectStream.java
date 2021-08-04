@@ -22,4 +22,10 @@ public class GenericObjectStream<T> extends AObjectStream<T> implements ObjectSt
         }
         return ret;
     }
+
+    @Override
+    public void close() throws Exception {
+        // TODO Auto-generated method stub
+        // TODO: how to implement here??
+    }
 }

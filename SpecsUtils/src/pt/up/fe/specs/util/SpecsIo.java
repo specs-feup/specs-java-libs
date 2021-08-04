@@ -1762,27 +1762,29 @@ public class SpecsIo {
         return destination;
     }
 
-    public static void resourceCopyWithName(String resource, String resourceFinalName, File destinationFolder) {
+    public static boolean resourceCopyWithName(String resource, String resourceFinalName, File destinationFolder) {
 
         // Check if destination file already exists
         File destination = new File(destinationFolder, resourceFinalName);
         if (destination.isFile()) {
-            return;
+            return true;
         }
 
         // Get the resource contents
         try (InputStream stream = SpecsIo.resourceToStream(resource);) {
             if (stream == null) {
 
-                SpecsLogs.msgWarn("Skipping resource '" + resource + "'.");
-                return;
+                SpecsLogs.warn("Skipping resource '" + resource + "'.");
+                return false;
             }
 
             SpecsIo.copy(stream, destination);
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Could not copy resource", e);
-            return;
+            SpecsLogs.warn("Could not copy resource", e);
+            return false;
         }
+
+        return true;
     }
 
     /**
