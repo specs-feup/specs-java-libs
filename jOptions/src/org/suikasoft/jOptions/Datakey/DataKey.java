@@ -139,6 +139,7 @@ public interface DataKey<T> extends KeyProvider<String> {
     Optional<KeyPanelProvider<T>> getKeyPanelProvider();
 
     default KeyPanel<T> getPanel(DataStore data) {
+
         return getKeyPanelProvider()
                 .orElseThrow(() -> new RuntimeException(
                         "No panel defined for key '" + getName() + "' of type '" + getValueClass() + "'"))

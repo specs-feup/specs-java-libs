@@ -30,7 +30,7 @@
 		<dependency org="com.google.guava" name="guava" rev="19.0"/>
 	
 		<!-- for ant -->
-		<dependency org="org.apache.ant" name="ant" rev="1.9.1"/>
+		<!-- <dependency org="org.apache.ant" name="ant" rev="1.9.1"/> -->
 	    <dependency org="org.apache.ant" name="ant-jsch" rev="1.10.6">
 	    	<!-- Duplicated transitive dependency -->
 	    	<exclude org="xml-apis" name="xml-apis"/>

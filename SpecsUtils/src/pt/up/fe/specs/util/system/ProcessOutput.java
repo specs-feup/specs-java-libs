@@ -76,4 +76,20 @@ public class ProcessOutput<O, E> {
         return this.stdErr;
     }
 
+    @Override
+    public String toString() {
+        var output = new StringBuilder();
+
+        output.append("Return value: " + returnValue + "\n");
+
+        output.append("StdOut: " + stdOut + "\n");
+        output.append("StdErr: " + stdErr + "\n");
+
+        if (outputException != null) {
+            output.append("Exception: " + outputException);
+        }
+
+        return output.toString();
+    }
+
 }

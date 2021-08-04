@@ -17,11 +17,13 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.suikasoft.jOptions.DataStore.DataClass;
 import org.suikasoft.jOptions.DataStore.GenericDataClass;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
 import pt.up.fe.specs.util.system.Copyable;
@@ -109,7 +111,18 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
     @SuppressWarnings("unchecked") // getClass() will always return a Class<K>
     @Override
     protected K copyPrivate() {
-        return newInstance((Class<K>) getClass(), Collections.emptyList());
+        var newNode = newInstance((Class<K>) getClass(), Collections.emptyList());
+
+        // Copy all data
+        for (var key : getDataKeysWithValues()) {
+            // var stringValue = key.copy((Object) get(key));
+            // var copyValue = key.decode(stringValue);
+            // newNode.setValue(key.getName(), copyValue);
+            newNode.setValue(key.getName(), key.copyRaw(get(key)));
+            // newNode.setValue(key.getName(), get(key));
+        }
+
+        return newNode;
     }
 
     /*** STATIC HELPER METHODS ***/
@@ -143,4 +156,8 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
         }
     }
 
+    @Override
+    public Optional<StoreDefinition> getStoreDefinition() {
+        return getData().getStoreDefinition();
+    }
 }

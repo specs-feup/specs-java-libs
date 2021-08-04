@@ -22,6 +22,11 @@ import org.matheclipse.core.form.output.OutputFormFactory;
 import org.matheclipse.core.interfaces.IExpr;
 
 import edu.jas.kern.ComputerThreads;
+import pt.up.fe.specs.symja.ast.SymjaAst;
+import pt.up.fe.specs.symja.ast.SymjaToC;
+import pt.up.fe.specs.symja.ast.passes.RemoveMinusMultTransform;
+import pt.up.fe.specs.symja.ast.passes.RemoveRedundantParenthesisTransform;
+import pt.up.fe.specs.symja.ast.passes.ReplaceUnaryMinusTransform;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -92,5 +97,18 @@ public class SymjaPlusUtils {
         }
 
         return output;
+    }
+
+    public static String convertToC(String expression) {
+        // Convert to Symja AST
+        var symjaNode = SymjaAst.parse(expression);
+
+        // Apply transformations
+        new RemoveMinusMultTransform().visit(symjaNode);
+        new ReplaceUnaryMinusTransform().visit(symjaNode);
+        new RemoveRedundantParenthesisTransform().visit(symjaNode);
+
+        // Convert to C
+        return SymjaToC.convert(symjaNode);
     }
 }

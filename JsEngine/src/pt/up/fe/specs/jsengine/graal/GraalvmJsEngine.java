@@ -13,11 +13,13 @@
 
 package pt.up.fe.specs.jsengine.graal;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -27,14 +29,18 @@ import javax.script.Bindings;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.PolyglotException;
+import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
+import com.oracle.truffle.polyglot.SpecsPolyglot;
 
 import pt.up.fe.specs.jsengine.ForOfType;
 import pt.up.fe.specs.jsengine.JsEngine;
 import pt.up.fe.specs.jsengine.JsEngineResource;
+import pt.up.fe.specs.jsengine.JsFileType;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 public class GraalvmJsEngine implements JsEngine {
 
@@ -103,10 +109,37 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     @Override
+    public Object eval(String code, JsFileType type) {
+        switch (type) {
+        case NORMAL:
+            return eval(code);
+        case MODULE:
+            try {
+                return eval(Source.newBuilder("js", new StringBuilder(code), "loaded_js_resource")
+                        .mimeType("application/javascript+module").build());
+            } catch (IOException e) {
+                throw new RuntimeException("Could not load JS code", e);
+            }
+        default:
+            throw new NotImplementedException(type);
+        }
+
+    }
+
+    @Override
     public Value eval(String code) {
         try {
+            return eval(Source.newBuilder("js", new StringBuilder(code), "loaded_js_resource").build());
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load JS code", e);
+        }
+    }
+
+    private Value eval(Source code) {
+        try {
             // Value value = asValue(engine.eval(code));
-            Value value = engine.getPolyglotContext().eval("js", code);
+            // Value value = engine.getPolyglotContext().eval("js", code);
+            Value value = engine.getPolyglotContext().eval(code);
 
             // if (value.hasMembers() || value.hasArrayElements()) {
             // return asBindings(value);
@@ -177,7 +210,7 @@ public class GraalvmJsEngine implements JsEngine {
     public Value toNativeArray(Object[] values) {
         Value array = eval(NEW_ARRAY);
         for (int i = 0; i < values.length; i++) {
-            array.setArrayElement(i, values[i]);
+            array.setArrayElement(i, toJs(values[i]));
         }
 
         return array;
@@ -191,14 +224,14 @@ public class GraalvmJsEngine implements JsEngine {
         // return bindings;
     }
 
-    public Object toNativeArrayV2(Object[] values) {
-        Value array = eval(NEW_ARRAY);
-        for (int i = 0; i < values.length; i++) {
-            array.setArrayElement(i, values[i]);
-        }
-
-        return array;
-    }
+    // public Object toNativeArrayV2(Object[] values) {
+    // Value array = eval(NEW_ARRAY);
+    // for (int i = 0; i < values.length; i++) {
+    // array.setArrayElement(i, values[i]);
+    // }
+    //
+    // return array;
+    // }
 
     /**
      * Based on this site: http://programmaticallyspeaking.com/nashorns-jsobject-in-context.html
@@ -515,6 +548,17 @@ public class GraalvmJsEngine implements JsEngine {
     public boolean supportsProperties() {
         // TODO: use nashorn compatibility
         return false;
+    }
+
+    @Override
+    public Optional<Throwable> getException(Object possibleError) {
+        var exception = SpecsPolyglot.getException(possibleError);
+        /*
+            	if(exception != null) {
+            		exception.printJSStackTrace();
+            	}
+          */
+        return Optional.ofNullable(exception);
     }
 
 }

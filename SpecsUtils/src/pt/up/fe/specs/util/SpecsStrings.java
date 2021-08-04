@@ -682,7 +682,7 @@ public class SpecsStrings {
                 return true;
             }
         } catch (PatternSyntaxException ex) {
-            SpecsLogs.msgWarn(ex.getMessage());
+            SpecsLogs.warn(ex.getMessage());
         }
 
         return false;
@@ -1821,6 +1821,16 @@ public class SpecsStrings {
         }
 
         return escapedString.toString();
+    }
+
+    /**
+     * Overload which uses '_' as separator and capitalizes the first letter.
+     * 
+     * @param string
+     * @return
+     */
+    public static String toCamelCase(String string) {
+        return toCamelCase(string, "_", true);
     }
 
     /**

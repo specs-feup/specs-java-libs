@@ -19,13 +19,14 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import pt.up.fe.specs.util.SpecsEnums;
 import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.lazy.ThreadSafeLazy;
 
 public class EnumHelper<T extends Enum<T>> {
 
     private final Class<T> enumClass;
-    // private final Lazy<Map<String, T>> namesTranslationMap;
+    private final Lazy<Map<String, T>> namesTranslationMap;
     private final Lazy<T[]> enumValues;
 
     public EnumHelper(Class<T> enumClass) {
@@ -35,23 +36,22 @@ public class EnumHelper<T extends Enum<T>> {
     public EnumHelper(Class<T> enumClass, Collection<T> excludeList) {
         this.enumClass = enumClass;
         enumValues = Lazy.newInstance(() -> enumClass.getEnumConstants());
-        // namesTranslationMap = Lazy.newInstance(() -> buildNamesTranslationMap(enumValues.get()));
+        namesTranslationMap = Lazy.newInstance(() -> SpecsEnums.buildNamesMap(enumClass, excludeList));
     }
 
-    /*
-    private static <T extends Enum<T> & StringProvider> Map<String, T> buildTranslationMap(Class<T> enumClass,
-            Collection<T> excludeList) {
-    
-        Map<String, T> translationMap = SpecsEnums.buildMap(enumClass);
-    
-        excludeList.stream()
-                .map(exclude -> exclude.getString())
-                .forEach(key -> translationMap.remove(key));
-    
-        return translationMap;
-    
-    }
-    */
+    // private static <T extends Enum<T>> Map<String, T> buildTranslationMap(Class<T> enumClass,
+    // Collection<T> excludeList) {
+    //
+    // Map<String, T> translationMap = SpecsEnums.buildNamesMap(enumClass, excludeList);
+    //
+    // // excludeList.stream()
+    // // .map(exclude -> translationMap.get(exclude))
+    // // .forEach(key -> translationMap.remove(key));
+    //
+    // return translationMap;
+    //
+    // }
+
     // private Map<String, T> buildNamesTranslationMap(T[] values) {
     // Map<String, T> map = new HashMap<>();
     //
@@ -78,7 +78,8 @@ public class EnumHelper<T extends Enum<T>> {
     */
     public T fromName(String name) {
         return fromNameTry(name).orElseThrow(() -> new RuntimeException(
-                "Could not find enum with name '" + name + "', available names:" + Arrays.toString(values())));
+                "Could not find enum with name '" + name + "', available names:" + namesTranslationMap.get().keySet()));
+        // "Could not find enum with name '" + name + "', available names:" + Arrays.toString(values())));
         // return Enum.valueOf(enumClass, name);
 
         // return fromNameTry(name)
@@ -86,11 +87,13 @@ public class EnumHelper<T extends Enum<T>> {
     }
 
     public Optional<T> fromNameTry(String name) {
-        try {
-            return Optional.of(Enum.valueOf(enumClass, name));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        // try {
+        var anEnum = namesTranslationMap.get().get(name);
+        return Optional.ofNullable(anEnum);
+        // return Optional.of(Enum.valueOf(enumClass, name));
+        // } catch (Exception e) {
+        // return Optional.empty();
+        // }s
         // return fromNameTry(name)
         // .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, namesTranslationMap.get())));
     }
@@ -114,7 +117,7 @@ public class EnumHelper<T extends Enum<T>> {
 
     protected String getErrorMessage(String name, Map<String, T> translationMap) {
         return "Enum '" + enumClass.getSimpleName() + "' does not contain an enum with the name '" + name
-                + "'. Available enums: " + translationMap;
+                + "'. Available enums: " + translationMap.keySet();
     }
 
     /*

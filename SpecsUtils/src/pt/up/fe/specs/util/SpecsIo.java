@@ -1327,7 +1327,7 @@ public class SpecsIo {
         // Load the file as a resource
         InputStream stream = classLoader.getResourceAsStream(resourceName);
         if (stream == null) {
-            SpecsLogs.msgWarn("Could not load resource '" + resourceName + "'.");
+            SpecsLogs.warn("Could not load resource '" + resourceName + "'.");
 
         }
         return stream;
@@ -3256,6 +3256,17 @@ public class SpecsIo {
         }
 
         return query;
+    }
+
+    public static File sanitizeWorkingDir(String workingDir) {
+
+        File workingFolder = new File(workingDir);
+        if (!workingFolder.isDirectory()) {
+            SpecsLogs.info("Provided an non-existing working directory: " + workingDir);
+            return SpecsIo.getWorkingDir();
+        }
+
+        return workingFolder;
     }
 
 }

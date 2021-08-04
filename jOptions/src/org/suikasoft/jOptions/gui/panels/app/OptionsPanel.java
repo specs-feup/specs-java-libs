@@ -270,9 +270,10 @@ public class OptionsPanel extends GuiTab {
         }
 
         DataStore newMap = app.getPersistence().loadData(file);
+
         // SetupData newMap = GuiHelperUtils.loadData(file);
         if (newMap == null) {
-            SpecsLogs.msgWarn("Given file '" + optionsFilename + "' is not a compatible options file.");
+            SpecsLogs.warn("Given file '" + optionsFilename + "' is not a compatible options file.");
             outputFile = null;
             saveButton.setEnabled(false);
             updateFileInfoString();
