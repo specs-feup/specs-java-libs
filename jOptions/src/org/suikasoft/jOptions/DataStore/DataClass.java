@@ -196,4 +196,32 @@ public interface DataClass<T extends DataClass<T>> {
 
     }
 
+    /**
+     * Makes a shallow copy of the value that has the same mapping in the given source.
+     * 
+     * <p>
+     * This function should be safe to use as long as the keys refer to immutable objects.
+     * 
+     * @param <K>
+     * @param <E>
+     * @param key
+     * @param source
+     * @return
+     */
+    default <K, E extends K> T copyValue(DataKey<K> key, T source) {
+        var value = source.get(key);
+        // Not many keys implement copy...
+        // // System.out.println("SOURCE: " + source.get(key));
+        // if (key.getCopyFunction().isPresent()) {
+        // value = key.copy(value);
+        // SpecsLogs.info("Copy successful");
+        // } else {
+        // SpecsLogs.info(
+        // "DataClass.copyValue: could not copy value of DataKey '" + key
+        // + "', using the original value");
+        // }
+
+        return set(key, value);
+    }
+
 }
