@@ -3269,4 +3269,27 @@ public class SpecsIo {
         return workingFolder;
     }
 
+    /**
+     * The depth of a given File. If file has the path foo/bar/a.cpp, depth is 3.
+     * 
+     * @param file
+     * @return
+     */
+    public static int getDepth(File file) {
+        if (file == null || file.getPath().isBlank()) {
+            return 0;
+        }
+
+        // Count 1 for current file
+        var depth = 1;
+        var parent = file.getParentFile();
+        // Add one for each parent
+        while (parent != null) {
+            depth++;
+            file = parent;
+            parent = file.getParentFile();
+        }
+
+        return depth;
+    }
 }
