@@ -71,7 +71,7 @@ public interface ResourceProvider extends FileResourceProvider {
         ResourceProvider[] resourcesArray = getClass().getEnumConstants();
 
         if (resourcesArray == null) {
-            SpecsLogs.msgWarn("Class '" + getClass() + "' is not an enum, returning empty list");
+            SpecsLogs.warn("Class '" + getClass() + "' is not an enum, returning empty list");
             return Collections.emptyList();
         }
 

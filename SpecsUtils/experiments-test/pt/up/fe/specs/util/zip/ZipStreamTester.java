@@ -40,7 +40,7 @@ public class ZipStreamTester {
             zipPrintStream.print(test);
 
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         }
 
     }

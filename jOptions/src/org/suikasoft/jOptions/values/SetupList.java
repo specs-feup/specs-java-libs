@@ -105,7 +105,7 @@ public class SetupList implements DataStore {
 
     public DataStore getPreferredSetup() {
         if (mapOfSetups.isEmpty()) {
-            SpecsLogs.msgWarn("There are no setups.");
+            SpecsLogs.warn("There are no setups.");
             return null;
         }
 

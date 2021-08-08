@@ -117,7 +117,7 @@ public class StreamCatcher implements Runnable {
 	    }
 
 	} catch (IOException e) {
-	    SpecsLogs.msgWarn("IOException during program execution:" + e.getMessage());
+	    SpecsLogs.warn("IOException during program execution:" + e.getMessage());
 	}
     }
 

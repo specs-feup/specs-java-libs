@@ -123,7 +123,7 @@ public class AccumulatorMap<T> {
 
         Integer value = this.accMap.get(element);
         if (value == null) {
-            SpecsLogs.msgWarn("Map does not contain any instance of '" + element + "'");
+            SpecsLogs.warn("Map does not contain any instance of '" + element + "'");
             return false;
         }
 

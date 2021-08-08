@@ -117,10 +117,10 @@ public class CsvWriter {
 
     public CsvWriter addLine(List<String> elements) {
         if (!isHeaderSet()) {
-            SpecsLogs.msgWarn("Header not set yet, cannot verify size of line.");
+            SpecsLogs.warn("Header not set yet, cannot verify size of line.");
         } else {
             if (this.header.size() != elements.size()) {
-                SpecsLogs.msgWarn("Number of elements (" + elements.size() +
+                SpecsLogs.warn("Number of elements (" + elements.size() +
                         ") different than header elements (" + this.header.size() + ").");
             }
         }
@@ -196,7 +196,7 @@ public class CsvWriter {
 
     public String buildCsv() {
         if (!isHeaderSet()) {
-            SpecsLogs.msgWarn("Header was not set.");
+            SpecsLogs.warn("Header was not set.");
             return null;
         }
 

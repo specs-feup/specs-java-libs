@@ -398,7 +398,7 @@ public class SpecsGit {
             return gitAdd.call();
 
         } catch (Exception e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
             return null;
         }
     }

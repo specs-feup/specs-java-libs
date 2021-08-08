@@ -53,7 +53,7 @@ public class NodeInsertUtils {
 
         K parent = baseToken.getParent();
         if (parent == null) {
-            SpecsLogs.msgWarn("Given 'baseToken' does not have a parent:\n" + baseToken);
+            SpecsLogs.warn("Given 'baseToken' does not have a parent:\n" + baseToken);
             return;
         }
 
@@ -99,7 +99,7 @@ public class NodeInsertUtils {
 
         K parent = baseToken.getParent();
         if (parent == null) {
-            SpecsLogs.msgWarn("Given 'baseToken' does not have a parent.");
+            SpecsLogs.warn("Given 'baseToken' does not have a parent.");
             return;
         }
 
@@ -176,7 +176,7 @@ public class NodeInsertUtils {
 
         K parent = baseToken.getParent();
         if (parent == null) {
-            SpecsLogs.msgWarn("Given 'baseToken' does not have a parent.");
+            SpecsLogs.warn("Given 'baseToken' does not have a parent.");
             return;
         }
 
@@ -195,7 +195,7 @@ public class NodeInsertUtils {
     public static <K extends TreeNode<K>> void set(K baseToken, K newToken) {
 
         if (newToken.hasChildren()) {
-            SpecsLogs.msgWarn("New token to replace has children, they will be ignored.");
+            SpecsLogs.warn("New token to replace has children, they will be ignored.");
         }
 
         if (!baseToken.hasParent()) {

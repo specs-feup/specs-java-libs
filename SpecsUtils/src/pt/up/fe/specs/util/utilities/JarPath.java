@@ -75,7 +75,7 @@ public class JarPath {
 
         // 3. As last resort, return current directory. Warn user and recommend to set property
         if (verbose) {
-            // SpecsLogs.msgWarn("Could not find Jar path (maybe application is being run from "
+            // SpecsLogs.warn("Could not find Jar path (maybe application is being run from "
             // + "another application in a different process)");
             SpecsLogs.debug(() -> "Could not find Jar path (maybe application is being run from "
                     + "another application in a different process)");

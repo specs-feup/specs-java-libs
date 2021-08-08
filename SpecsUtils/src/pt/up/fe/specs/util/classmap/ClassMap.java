@@ -85,7 +85,7 @@ public class ClassMap<T, V> {
 
         // if (!this.supportInterfaces) {
         // if (aClass.isInterface()) {
-        // SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
+        // SpecsLogs.warn("Support for interfaces is disabled, map is unchanged");
         // return null;
         // }
         // }

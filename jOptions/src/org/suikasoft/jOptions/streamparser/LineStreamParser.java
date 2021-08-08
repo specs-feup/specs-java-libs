@@ -89,7 +89,7 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
                     try {
                         parse(currentLine, lines);
                     } catch (Exception e) {
-                        SpecsLogs.msgWarn("Problems while parsing '" + currentLine + "'", e);
+                        SpecsLogs.warn("Problems while parsing '" + currentLine + "'", e);
                     }
 
                     continue;

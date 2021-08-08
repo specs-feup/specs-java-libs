@@ -156,7 +156,7 @@ public abstract class SpecsWorker implements GearmanFunction {
             SpecsLogs.msgInfo("[SpecsWorker] Finished '" + getWorkerName() + "', "
                     + SpecsStrings.parseTime(workEnd - workStart) + " (id " + id + ")");
         } catch (TimeoutException e) {
-            SpecsLogs.msgWarn("[SpecsWorker] Timeout during worker execution", e);
+            SpecsLogs.warn("[SpecsWorker] Timeout during worker execution", e);
             // future.cancel(true);
             future.cancel(true);
             SpecsLogs.msgInfo("Worker [" + Thread.currentThread().getName() + "]: putting thread/task to sleep... ");
@@ -165,7 +165,7 @@ public abstract class SpecsWorker implements GearmanFunction {
             // return getErrorOutput(getTimeoutMessage());
             result = getErrorOutput(getTimeoutMessage());
         } catch (Exception e) {
-            SpecsLogs.msgWarn("[SpecsWorker] Exception during worker execution", e);
+            SpecsLogs.warn("[SpecsWorker] Exception during worker execution", e);
             future.cancel(true);
             task.interrupt();
             // executor.shutdownNow();
@@ -198,7 +198,7 @@ public abstract class SpecsWorker implements GearmanFunction {
             SpecsLogs.msgInfo("Task [" + Thread.currentThread().getName() + "] Awake!");
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt(); // set interrupt flag
-            SpecsLogs.msgWarn("Interrupted:\n", e);
+            SpecsLogs.warn("Interrupted:\n", e);
         }
     }
     */
@@ -310,7 +310,7 @@ public abstract class SpecsWorker implements GearmanFunction {
                 Thread.sleep(2_000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // set interrupt flag
-                SpecsLogs.msgWarn("Thread was interrupted:\n", e);
+                SpecsLogs.warn("Thread was interrupted:\n", e);
             }
 
             // If thread is still alive, kill it forcefully
@@ -329,7 +329,7 @@ public abstract class SpecsWorker implements GearmanFunction {
                 SpecsLogs.msgInfo("Task in thread " + taskThread.getName() + " awake!");
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // set interrupt flag
-                SpecsLogs.msgWarn("Interrupted:\n", e);
+                SpecsLogs.warn("Interrupted:\n", e);
             }
             */
         }

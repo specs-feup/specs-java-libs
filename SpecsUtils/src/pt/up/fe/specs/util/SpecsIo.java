@@ -225,7 +225,7 @@ public class SpecsIo {
 
         // Check if folder exists
         if (folder.exists()) {
-            SpecsLogs.msgWarn("Folder created (" + folder.getAbsolutePath() + ") but 'mkdirs' returned false.");
+            SpecsLogs.warn("Folder created (" + folder.getAbsolutePath() + ") but 'mkdirs' returned false.");
             return folder;
         }
 
@@ -345,7 +345,7 @@ public class SpecsIo {
             try {
                 closeable.close();
             } catch (IOException e) {
-                SpecsLogs.msgWarn("Problem while closing resource", e);
+                SpecsLogs.warn("Problem while closing resource", e);
             }
         }
     }
@@ -377,10 +377,10 @@ public class SpecsIo {
             }
 
         } catch (FileNotFoundException ex) {
-            SpecsLogs.msgWarn("FileNotFoundException", ex);
+            SpecsLogs.warn("FileNotFoundException", ex);
             stringBuilder = new StringBuilder(0);
         } catch (IOException ex) {
-            SpecsLogs.msgWarn("IOException", ex);
+            SpecsLogs.warn("IOException", ex);
             stringBuilder = new StringBuilder(0);
         }
 
@@ -405,12 +405,12 @@ public class SpecsIo {
         // Check null argument. If null, it would raise and exception and stop
         // the program when used to create the File object.
         if (file == null) {
-            SpecsLogs.msgWarn("Input 'file' is null.");
+            SpecsLogs.warn("Input 'file' is null.");
             return false;
         }
 
         if (contents == null) {
-            SpecsLogs.msgWarn("Input 'contents' is null.");
+            SpecsLogs.warn("Input 'contents' is null.");
             return false;
         }
 
@@ -506,7 +506,7 @@ public class SpecsIo {
         } catch (IOException ex) {
             SpecsLogs.warn("Problems when accessing file '" + file.getPath()
                     + "'. Check if folder exists before writing the file.", ex);
-            // SpecsLogs.msgWarn(ex);
+            // SpecsLogs.warn(ex);
             // SpecsLogs.msgInfo("Problems when accessing file '" + file.getPath()
             // + "'. Check if folder exists before writing the file.");
             isSuccess = false;
@@ -839,7 +839,7 @@ public class SpecsIo {
     
         // if (!path.isDirectory()) {
         if (!path.exists()) {
-            SpecsLogs.msgWarn("Path '" + path + "' does not exist.");
+            SpecsLogs.warn("Path '" + path + "' does not exist.");
             return null;
         }
     
@@ -1159,10 +1159,10 @@ public class SpecsIo {
             return copy(in, destination);
 
         } catch (FileNotFoundException ex) {
-            SpecsLogs.msgWarn("Could not find file", ex);
+            SpecsLogs.warn("Could not find file", ex);
             success = false;
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Failed to close stream", e);
+            SpecsLogs.warn("Failed to close stream", e);
             success = false;
         }
 
@@ -1206,7 +1206,7 @@ public class SpecsIo {
             SpecsLogs.msgLib("Copied stream to file '" + destination.getPath() + "'.");
 
         } catch (IOException e) {
-            SpecsLogs.msgWarn("IoException while copying stream to file '" + destination + "'", e);
+            SpecsLogs.warn("IoException while copying stream to file '" + destination + "'", e);
             success = false;
         }
 
@@ -1229,7 +1229,7 @@ public class SpecsIo {
         }
 
         if (!folder.isDirectory()) {
-            SpecsLogs.msgWarn("Not a folder");
+            SpecsLogs.warn("Not a folder");
             return false;
         }
 
@@ -1282,7 +1282,7 @@ public class SpecsIo {
             return SpecsIo.read(inputStream);
 
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Could not open resource '" + resourceName + "'", e);
+            SpecsLogs.warn("Could not open resource '" + resourceName + "'", e);
             return "";
         }
     }
@@ -1364,7 +1364,7 @@ public class SpecsIo {
     public static boolean extractZipResource(InputStream resource, File folder) {
         boolean success = true;
         if (!folder.isDirectory()) {
-            SpecsLogs.msgWarn("Given folder '" + folder.getPath() + "' does not exist.");
+            SpecsLogs.warn("Given folder '" + folder.getPath() + "' does not exist.");
             return false;
         }
 
@@ -1391,7 +1391,7 @@ public class SpecsIo {
             }
 
         } catch (IOException ex) {
-            SpecsLogs.msgWarn("IoException while unzipping to folder '" + folder + "'", ex);
+            SpecsLogs.warn("IoException while unzipping to folder '" + folder + "'", ex);
             success = false;
         }
 
@@ -1442,7 +1442,7 @@ public class SpecsIo {
             return data;
 
         } catch (IOException ex) {
-            SpecsLogs.msgWarn("IOException while reading bytes from object '" + obj + "'", ex);
+            SpecsLogs.warn("IOException while reading bytes from object '" + obj + "'", ex);
             return null;
         }
 
@@ -1487,7 +1487,7 @@ public class SpecsIo {
             SpecsLogs.msgLib("Object written to file '" + file + "'.");
 
         } catch (IOException ex) {
-            SpecsLogs.msgWarn("IOException while writing an object to file '" + file + "'", ex);
+            SpecsLogs.warn("IOException while writing an object to file '" + file + "'", ex);
             return false;
         }
 
@@ -1510,11 +1510,11 @@ public class SpecsIo {
             return recovedObject;
 
         } catch (FileNotFoundException ex) {
-            SpecsLogs.msgWarn(ex.toString());
+            SpecsLogs.warn(ex.toString());
         } catch (IOException ex) {
-            SpecsLogs.msgWarn(ex.toString());
+            SpecsLogs.warn(ex.toString());
         } catch (ClassNotFoundException ex) {
-            SpecsLogs.msgWarn(ex.toString());
+            SpecsLogs.warn(ex.toString());
         }
 
         return null;
@@ -1535,7 +1535,7 @@ public class SpecsIo {
             return data;
 
         } catch (Exception ex) {
-            SpecsLogs.msgWarn("Exception while reading bytes from file '" + file + "'", ex);
+            SpecsLogs.warn("Exception while reading bytes from file '" + file + "'", ex);
         }
 
         return null;
@@ -1574,9 +1574,9 @@ public class SpecsIo {
             return byteArray;
 
         } catch (FileNotFoundException ex) {
-            SpecsLogs.msgWarn("File not found", ex);
+            SpecsLogs.warn("File not found", ex);
         } catch (IOException ex) {
-            SpecsLogs.msgWarn("IoExpection", ex);
+            SpecsLogs.warn("IoExpection", ex);
         }
         /*
         finally {
@@ -1755,7 +1755,7 @@ public class SpecsIo {
 
             SpecsIo.copy(stream, destination);
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Skipping resource '" + resource + "'.", e);
+            SpecsLogs.warn("Skipping resource '" + resource + "'.", e);
             return null;
         }
 
@@ -1805,7 +1805,7 @@ public class SpecsIo {
 
         if (!baseInputFileParent.startsWith(baseInputPathname)) {
             // LoggingUtils.getLogger().warning(
-            SpecsLogs.msgWarn("Base parent '" + baseInputFileParent + "' does not start with " + "'"
+            SpecsLogs.warn("Base parent '" + baseInputFileParent + "' does not start with " + "'"
                     + baseInputPathname + "'");
             return null;
         }
@@ -1952,7 +1952,7 @@ public class SpecsIo {
                 continue;
             }
             
-            SpecsLogs.msgWarn("Could not hand path, is neither a file or a folder: " + currentPatternPath);
+            SpecsLogs.warn("Could not hand path, is neither a file or a folder: " + currentPatternPath);
             */
         }
 
@@ -2041,7 +2041,7 @@ public class SpecsIo {
             File absoluteFile = file.getAbsoluteFile();
             file = absoluteFile.getCanonicalFile();
         } catch (IOException e) {
-            SpecsLogs.msgWarn(
+            SpecsLogs.warn(
                     "Could not convert given files to canonical paths. File: " + originalFile + "; Base file: "
                             + originalBaseFile,
                     e);
@@ -2697,7 +2697,7 @@ public class SpecsIo {
             }
 
         } catch (Exception e) {
-            SpecsLogs.msgWarn("Exception while getting the contents of URL '" + urlString + "'", e);
+            SpecsLogs.warn("Exception while getting the contents of URL '" + urlString + "'", e);
         }
 
         return null;
@@ -2834,7 +2834,7 @@ public class SpecsIo {
         }
 
         if (!folder.isDirectory()) {
-            SpecsLogs.msgWarn("Given file does not represent a folder:'" + folder + "'");
+            SpecsLogs.warn("Given file does not represent a folder:'" + folder + "'");
             return true;
         }
 
@@ -2996,7 +2996,7 @@ public class SpecsIo {
             }
 
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Exception while zipping archive:\n", e);
+            SpecsLogs.warn("Exception while zipping archive:\n", e);
         }
     }
 
@@ -3037,7 +3037,7 @@ public class SpecsIo {
             boolean hasFile = dirStream.iterator().hasNext();
             return !hasFile;
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Could not process path", e);
+            SpecsLogs.warn("Could not process path", e);
         }
 
         return false;
@@ -3084,7 +3084,7 @@ public class SpecsIo {
         try {
             stream.close();
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Exception while closing a stream", e);
+            SpecsLogs.warn("Exception while closing a stream", e);
         }
     }
 

@@ -144,7 +144,7 @@ public class SpecsFactory {
             InputStream stream = new FileInputStream(file);
             return stream;
         } catch (FileNotFoundException e) {
-            SpecsLogs.msgWarn("Could not find file '" + file + "'");
+            SpecsLogs.warn("Could not find file '" + file + "'");
             return null;
         }
     }

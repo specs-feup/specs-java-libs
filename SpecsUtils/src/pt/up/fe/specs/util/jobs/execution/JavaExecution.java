@@ -35,7 +35,7 @@ public class JavaExecution implements Execution {
 	try {
 	    this.runnable.run();
 	} catch (Exception e) {
-	    SpecsLogs.msgWarn(e.getMessage(), e);
+	    SpecsLogs.warn(e.getMessage(), e);
 	    this.interrupted = true;
 	    return -1;
 	}

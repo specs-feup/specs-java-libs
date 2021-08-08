@@ -195,9 +195,9 @@ public class Gprofer {
         if (checkReturn && result.isError()) {
 
             SpecsLogs.setPrintStackTrace(false);
-            SpecsLogs.msgWarn("Could not profile the binary \"" + binary + "\". Execution terminated with error.");
-            SpecsLogs.msgWarn("stdout: " + result.getStdOut());
-            SpecsLogs.msgWarn("stderr: " + result.getStdErr());
+            SpecsLogs.warn("Could not profile the binary \"" + binary + "\". Execution terminated with error.");
+            SpecsLogs.warn("stdout: " + result.getStdOut());
+            SpecsLogs.warn("stderr: " + result.getStdErr());
             SpecsLogs.setPrintStackTrace(true);
 
             throw new RuntimeException();

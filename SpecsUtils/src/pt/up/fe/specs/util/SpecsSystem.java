@@ -786,7 +786,7 @@ public class SpecsSystem {
             SpecsLogs.msgInfo(memoryUsage);
 
         } catch (Throwable t) {
-            SpecsLogs.msgWarn("Exception in agent", t);
+            SpecsLogs.warn("Exception in agent", t);
         }
     }
 
@@ -1106,7 +1106,7 @@ public class SpecsSystem {
         // process.waitFor();
         // return process.exitValue();
         // } catch (IOException e) {
-        // SpecsLogs.msgWarn("Exception which executing process:\n", e);
+        // SpecsLogs.warn("Exception which executing process:\n", e);
         // } catch (InterruptedException e) {
         // Thread.currentThread().interrupt();
         // SpecsLogs.msgInfo("Failed to complete execution on process");

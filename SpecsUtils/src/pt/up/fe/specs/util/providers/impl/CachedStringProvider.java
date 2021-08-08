@@ -41,7 +41,7 @@ public class CachedStringProvider implements StringProvider {
 	if (!this.contents.isPresent()) {
 	    String string = this.provider.getString();
 	    if (string == null) {
-		SpecsLogs.msgWarn("Could not get contents from provider");
+		SpecsLogs.warn("Could not get contents from provider");
 	    }
 
 	    this.contents = Optional.of(string);

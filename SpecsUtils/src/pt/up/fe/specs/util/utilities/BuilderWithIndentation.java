@@ -55,7 +55,7 @@ public class BuilderWithIndentation {
 
     public BuilderWithIndentation decreaseIndentation() {
         if (currentIdentation == 0) {
-            SpecsLogs.msgWarn("Decreasing indentation when its value is already zero.");
+            SpecsLogs.warn("Decreasing indentation when its value is already zero.");
             return this;
         }
 

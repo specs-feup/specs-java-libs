@@ -62,7 +62,7 @@ public class SpecsCollections {
 
             K previousKey = invertedMap.put(value, key);
             if (previousKey != null) {
-                SpecsLogs.msgWarn("There are two keys ('" + key + "' and '" + previousKey
+                SpecsLogs.warn("There are two keys ('" + key + "' and '" + previousKey
                         + "') for the same value '" + value + "'");
                 return null;
             }
@@ -80,7 +80,7 @@ public class SpecsCollections {
     public static <K> K last(List<K> lines) {
         if (lines.isEmpty()) {
             // TODO: Throw exception instead of returning null
-            SpecsLogs.msgWarn(
+            SpecsLogs.warn(
                     "This method should not be called with empty lists, if the list can be empty call lastTry() instead");
             return null;
         }
@@ -163,7 +163,7 @@ public class SpecsCollections {
             if (superClass.isInstance(element)) {
                 list.add(superClass.cast(element));
             } else {
-                SpecsLogs.msgWarn("Could not add object of class '" + element.getClass() + "' to list of '"
+                SpecsLogs.warn("Could not add object of class '" + element.getClass() + "' to list of '"
                         + superClass + "'");
             }
         }

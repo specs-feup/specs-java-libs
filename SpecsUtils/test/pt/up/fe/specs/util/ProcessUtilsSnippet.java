@@ -70,6 +70,6 @@ public class ProcessUtilsSnippet {
         System.out.println("C");
         System.out.println("2 - Another line");
         SpecsLogs.msgInfo("3 - A third line");
-        SpecsLogs.msgWarn("4 - A fourth line");
+        SpecsLogs.warn("4 - A fourth line");
     }
 }

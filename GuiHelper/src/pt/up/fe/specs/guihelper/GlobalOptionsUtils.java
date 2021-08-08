@@ -120,7 +120,7 @@ public class GlobalOptionsUtils {
 	case string:
 	    return prefs.get(name, "");
 	default:
-	    SpecsLogs.msgWarn("Case not defined:" + field.getType());
+	    SpecsLogs.warn("Case not defined:" + field.getType());
 	    return null;
 	}
     }
@@ -148,7 +148,7 @@ public class GlobalOptionsUtils {
 	    prefs.put(name, setupAccess.getString(field));
 	    return true;
 	default:
-	    SpecsLogs.msgWarn("Case not defined:" + field.getType());
+	    SpecsLogs.warn("Case not defined:" + field.getType());
 	    return false;
 	}
     }

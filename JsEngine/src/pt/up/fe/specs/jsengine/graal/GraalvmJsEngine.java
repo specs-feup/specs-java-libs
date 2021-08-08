@@ -459,7 +459,7 @@ public class GraalvmJsEngine implements JsEngine {
 
     @Override
     public void nashornWarning(String message) {
-        SpecsLogs.msgWarn(message);
+        SpecsLogs.warn(message);
     }
 
     @Override

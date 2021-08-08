@@ -52,7 +52,7 @@ public class SpecsXml {
         try {
             fileInputStream.close();
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Could not close file input stream:\n", e);
+            SpecsLogs.warn("Could not close file input stream:\n", e);
         }
         return xmlDoc;
     }
@@ -93,11 +93,11 @@ public class SpecsXml {
         } catch (SAXParseException e) {
             throw new RuntimeException("XML document not according to schema", e);
         } catch (ParserConfigurationException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         } catch (SAXException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         }
 
         return null;
@@ -120,11 +120,11 @@ public class SpecsXml {
 
             return doc;
         } catch (ParserConfigurationException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         } catch (SAXException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         } catch (IOException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         }
 
         return null;
@@ -252,7 +252,7 @@ public class SpecsXml {
             return Optional.of(((Element) node).getAttribute(attrName));
         }
 
-        SpecsLogs.msgWarn("Given node that is not an element (" + node + "). Check if this works");
+        SpecsLogs.warn("Given node that is not an element (" + node + "). Check if this works");
 
         Node attribute = node.getAttributes().getNamedItem(attrName);
         if (attribute == null) {

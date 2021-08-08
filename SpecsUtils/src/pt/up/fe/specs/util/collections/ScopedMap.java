@@ -208,7 +208,7 @@ public class ScopedMap<V> {
 	for (List<String> key : map.getKeys()) {
 	    V symbol = map.getSymbol(key);
 	    if (symbol == null) {
-		SpecsLogs.msgWarn("Null symbol for key '" + key + "'. Table:\n" + map.rootNode);
+		SpecsLogs.warn("Null symbol for key '" + key + "'. Table:\n" + map.rootNode);
 	    }
 
 	    this.rootNode.addSymbol(key, symbol);

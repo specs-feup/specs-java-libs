@@ -76,12 +76,12 @@ public class EclipseDeploymentLauncher implements AppDefaultConfig, AppSource {
         try {
             data = EclipseDeploymentSetup.newData(setupData);
         } catch (Exception e) {
-            SpecsLogs.msgWarn("Exception while building configuration data.", e);
+            SpecsLogs.warn("Exception while building configuration data.", e);
             return -1;
         }
 
         if (data == null) {
-            SpecsLogs.msgWarn("Configuration data is null.");
+            SpecsLogs.warn("Configuration data is null.");
             return -1;
         }
 

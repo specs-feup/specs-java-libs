@@ -66,7 +66,7 @@ public class MappingsCollector {
 	    ObjectXml<?> nestedXml = object.getNestedXml().get(fieldType);
 	    // ObjectXml nestedXml = object.getNestedXml().get(fieldType);
 	    if (nestedXml == null) {
-		SpecsLogs.msgWarn("Class '" + fieldType.getSimpleName()
+		SpecsLogs.warn("Class '" + fieldType.getSimpleName()
 			+ "' which implements interface '"
 			+ XmlSerializable.class.getSimpleName()
 			+ "' was not added to the nested XMLs of '"

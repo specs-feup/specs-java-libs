@@ -44,7 +44,7 @@ public class ProgressCounter {
         if (this.currentCount <= this.max_count) {
             this.currentCount += 1;
         } else {
-            SpecsLogs.msgWarn("Already reached the maximum count (" + this.max_count + ")");
+            SpecsLogs.warn("Already reached the maximum count (" + this.max_count + ")");
         }
 
         return this.currentCount;

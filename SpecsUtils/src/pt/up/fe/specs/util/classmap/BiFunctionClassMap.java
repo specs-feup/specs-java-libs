@@ -60,7 +60,7 @@ public class BiFunctionClassMap<T, U, R> {
 
         // if (!this.supportInterfaces) {
         // if (aClass.isInterface()) {
-        // SpecsLogs.msgWarn("Support for interfaces is disabled, map is unchanged");
+        // SpecsLogs.warn("Support for interfaces is disabled, map is unchanged");
         // return;
         // }
         // }

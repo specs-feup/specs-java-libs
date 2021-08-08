@@ -76,7 +76,7 @@ public class StreamToString implements Function<InputStream, String> {
             reader.close();
 
         } catch (IOException e) {
-            SpecsLogs.msgWarn("IOException during program execution:" + e.getMessage());
+            SpecsLogs.warn("IOException during program execution:" + e.getMessage());
         }
 
         return output.toString();

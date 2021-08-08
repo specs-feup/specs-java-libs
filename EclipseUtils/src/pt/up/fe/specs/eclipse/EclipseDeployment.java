@@ -76,7 +76,7 @@ public class EclipseDeployment {
 
         // Check if case is defined
         if (!EclipseDeployment.DEPLOY_BUILDER.containsKey(data.jarType)) {
-            SpecsLogs.msgWarn("Case not defined:" + data.jarType);
+            SpecsLogs.warn("Case not defined:" + data.jarType);
         }
 
         // Build JAR
@@ -137,7 +137,7 @@ public class EclipseDeployment {
             TaskExecutor task = EclipseDeployment.tasks.get(setupName);
 
             if (task == null) {
-                SpecsLogs.msgWarn("Could not find task for setup '" + setupName + "'");
+                SpecsLogs.warn("Could not find task for setup '" + setupName + "'");
                 continue;
             }
 

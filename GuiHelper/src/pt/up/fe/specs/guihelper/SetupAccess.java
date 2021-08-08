@@ -68,7 +68,7 @@ public class SetupAccess {
         if (!testTypes(setupField.getType(), rawType)) {
             // LoggingUtils.getLogger().
             // warning("SetupField '"+setupField+"' is not of same type as "
-            SpecsLogs.msgWarn("SetupField '" + setupField + "' is not of same type as "
+            SpecsLogs.warn("SetupField '" + setupField + "' is not of same type as "
                     + "the getter internal type '" + rawType + "'.");
 
             return null;
@@ -402,7 +402,7 @@ public class SetupAccess {
 
         String enumString = getString(setupField);
         if (enumString == null) {
-            SpecsLogs.msgWarn("Given field should be a String.");
+            SpecsLogs.warn("Given field should be a String.");
             return null;
         }
 
@@ -416,7 +416,7 @@ public class SetupAccess {
         T newEnum = SpecsEnums.valueOf(enumType, enumString);
 
         if (newEnum == null) {
-            SpecsLogs.msgWarn("Could not find name '" + enumString + "' in '" + enumType + "'");
+            SpecsLogs.warn("Could not find name '" + enumString + "' in '" + enumType + "'");
             return null;
         }
 
@@ -437,7 +437,7 @@ public class SetupAccess {
 
         StringList stringList = getStringList(setupField);
         if (stringList == null) {
-            SpecsLogs.msgWarn("Given field should resolve to StringList.");
+            SpecsLogs.warn("Given field should resolve to StringList.");
             return null;
         }
 
@@ -446,7 +446,7 @@ public class SetupAccess {
             T newEnum = SpecsEnums.valueOf(enumType, enumString);
 
             if (newEnum == null) {
-                SpecsLogs.msgWarn("Could not find name '" + enumString + "' in '" + enumType + "'");
+                SpecsLogs.warn("Could not find name '" + enumString + "' in '" + enumType + "'");
                 continue;
             }
 

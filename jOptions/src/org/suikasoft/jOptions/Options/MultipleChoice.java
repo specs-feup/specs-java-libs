@@ -147,7 +147,7 @@ public class MultipleChoice {
         Integer index = choicesMap.get(choice);
 
         if (index == null) {
-            SpecsLogs.msgWarn("Choice '" + choice + "' not available. Available choices:"
+            SpecsLogs.warn("Choice '" + choice + "' not available. Available choices:"
                     + choices);
             return this;
         }

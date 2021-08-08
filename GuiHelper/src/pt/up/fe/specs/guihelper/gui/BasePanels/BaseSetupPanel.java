@@ -76,7 +76,7 @@ public class BaseSetupPanel extends JPanel implements ComponentListener {
 	    // FieldPanel panel = PanelUtils.newPanel(key);
 	    FieldPanel panel = PanelUtils.newPanel(key);
 	    if (panel == null) {
-		SpecsLogs.msgWarn("Could not create panel for option '" + key + "'");
+		SpecsLogs.warn("Could not create panel for option '" + key + "'");
 		continue;
 	    }
 

@@ -83,7 +83,7 @@ public class XStreamFile<T> {
     public T fromXml(String xmlContents) {
         Object dataInstance = xstream.fromXML(xmlContents);
         if (!config.getTargetClass().isInstance(dataInstance)) {
-            SpecsLogs.msgWarn(
+            SpecsLogs.warn(
                     "Given file does not represent a '" + config.getTargetClass() + "' object.");
             return null;
         }

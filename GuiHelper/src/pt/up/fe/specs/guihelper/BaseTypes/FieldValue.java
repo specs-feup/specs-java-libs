@@ -61,14 +61,14 @@ public class FieldValue implements Serializable {
 	value = parseValue(value, type);
 
 	if (value == null) {
-	    SpecsLogs.msgWarn("Null values not supported.");
+	    SpecsLogs.warn("Null values not supported.");
 	    return null;
 	}
 
 	// Verify if object class is compatible with the given type
 	boolean success = testFieldValue(value, type);
 	if (!success) {
-	    SpecsLogs.msgWarn("'" + value.getClass() + "' of given object is not compatible with FieldType '"
+	    SpecsLogs.warn("'" + value.getClass() + "' of given object is not compatible with FieldType '"
 		    + type + "'." + " Should be '" + type.getRawType().getRawClass() + "'");
 	    // (new Exception()).printStackTrace();
 	    return null;

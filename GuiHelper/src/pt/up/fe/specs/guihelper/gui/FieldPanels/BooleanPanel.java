@@ -69,7 +69,7 @@ public class BooleanPanel extends FieldPanel {
       //final Boolean b = (Boolean)option;
       final Boolean b = SpecsStrings.parseBoolean(option.toString());
       if(b == null) {
-	  SpecsLogs.msgWarn("Could not update panel, expecting true or false, received '"+option+"'.");
+	  SpecsLogs.warn("Could not update panel, expecting true or false, received '"+option+"'.");
 	  return;
       }
 

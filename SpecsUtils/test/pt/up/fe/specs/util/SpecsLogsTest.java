@@ -26,12 +26,12 @@ public class SpecsLogsTest {
     @Test
     public void test() {
 
-        SpecsLogs.msgWarn("Warning level");
+        SpecsLogs.warn("Warning level");
 
         try {
             throwException();
         } catch (Exception e) {
-            SpecsLogs.msgWarn("Catching an exception", e);
+            SpecsLogs.warn("Catching an exception", e);
         }
     }
 

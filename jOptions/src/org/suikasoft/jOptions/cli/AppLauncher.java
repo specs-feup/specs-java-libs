@@ -230,7 +230,7 @@ public class AppLauncher {
         try {
             result = app.getKernel().execute(setupData);
         } catch (Exception e) {
-            SpecsLogs.msgWarn("(Program Exception) - " + e.getMessage(), e);
+            SpecsLogs.warn("(Program Exception) - " + e.getMessage(), e);
         }
 
         return result;

@@ -296,7 +296,7 @@ public interface TreeNode<K extends TreeNode<K>> {
             return i;
         }
 
-        SpecsLogs.msgWarn("Could not find child '" + child.toContentString() + "'");
+        SpecsLogs.warn("Could not find child '" + child.toContentString() + "'");
         return -1;
     }
 

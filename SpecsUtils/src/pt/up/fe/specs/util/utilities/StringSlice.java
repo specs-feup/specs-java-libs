@@ -240,7 +240,7 @@ public class StringSlice implements CharSequence {
         }
 
         if (other instanceof String) {
-            SpecsLogs.msgWarn("Using StringSlice.equals(String). Use equalsString instead.");
+            SpecsLogs.warn("Using StringSlice.equals(String). Use equalsString instead.");
         }
 
         if (!(other instanceof StringSlice)) {

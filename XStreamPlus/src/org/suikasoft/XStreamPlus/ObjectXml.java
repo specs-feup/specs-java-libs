@@ -85,7 +85,7 @@ public abstract class ObjectXml<T> {
     protected void addNestedXml(ObjectXml<?> objectXml) {
 	ObjectXml<?> returnObject = nestedXml.put(objectXml.getTargetClass(), objectXml);
 	if (returnObject != null) {
-	    SpecsLogs.msgWarn("Replacing ObjectXml for class '" + objectXml.getTargetClass()
+	    SpecsLogs.warn("Replacing ObjectXml for class '" + objectXml.getTargetClass()
 		    + "'.");
 	}
     }

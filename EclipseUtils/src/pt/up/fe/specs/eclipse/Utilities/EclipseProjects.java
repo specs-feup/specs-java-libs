@@ -144,7 +144,7 @@ public class EclipseProjects {
             try {
                 projectFoldername = java.net.URLDecoder.decode(projectFoldername, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                SpecsLogs.msgWarn("Could not parse project folder name '" + projectFoldername + "'", e);
+                SpecsLogs.warn("Could not parse project folder name '" + projectFoldername + "'", e);
                 projectFoldername = null;
             }
 

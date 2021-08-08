@@ -50,7 +50,7 @@ public class XmlPersistence extends PersistenceFormat {
 
 	// Show warning message
 	if (!replacedClasses.isEmpty()) {
-	    SpecsLogs.msgWarn("Overlap in the following key mappings:"
+	    SpecsLogs.warn("Overlap in the following key mappings:"
 		    + replacedClasses);
 	}
 

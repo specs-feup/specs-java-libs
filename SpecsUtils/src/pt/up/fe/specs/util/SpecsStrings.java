@@ -100,7 +100,7 @@ public class SpecsStrings {
         try {
             intResult = Integer.parseInt(integer);
         } catch (NumberFormatException e) {
-            SpecsLogs.msgWarn("Couldn''t parse '" + integer + "' into an integer. Returning " + intResult + ".");
+            SpecsLogs.warn("Couldn''t parse '" + integer + "' into an integer. Returning " + intResult + ".");
             // Logger.getLogger(ParseUtils.class.getName()).log(
             // Level.WARNING,
             // "Couldn''t parse '" + integer + "' into an integer. Returning " + intResult
@@ -667,7 +667,7 @@ public class SpecsStrings {
                 return capturedGroups;
             }
         } catch (PatternSyntaxException ex) {
-            SpecsLogs.msgWarn(ex.getMessage());
+            SpecsLogs.warn(ex.getMessage());
         }
 
         return Collections.emptyList();
@@ -1169,7 +1169,7 @@ public class SpecsStrings {
             return parsedNumber;
         } catch (ParseException e) {
             if (verbose) {
-                SpecsLogs.msgWarn("Could not parse number '" + number + "', returning null");
+                SpecsLogs.warn("Could not parse number '" + number + "', returning null");
             }
             return null;
         }
@@ -1250,7 +1250,7 @@ public class SpecsStrings {
             Long longNumber = Long.decode(number);
             parsedNumber = longNumber.intValue();
         } catch (NumberFormatException ex) {
-            SpecsLogs.msgWarn("Could not decode '" + number + "' into an integer. Returning null");
+            SpecsLogs.warn("Could not decode '" + number + "' into an integer. Returning null");
             return null;
         }
         return parsedNumber;
@@ -1636,7 +1636,7 @@ public class SpecsStrings {
             return symbol;
         }
 
-        SpecsLogs.msgWarn("Case not defined:" + timeunit);
+        SpecsLogs.warn("Case not defined:" + timeunit);
         return timeunit.name();
     }
 
@@ -1919,7 +1919,7 @@ public class SpecsStrings {
                 return Optional.of(Integer.parseInt(value, 10));
             } catch (NumberFormatException e) {
                 // Since we check the regex, this should never happen
-                SpecsLogs.msgWarn("Unexpected NumberFormatException for " + value);
+                SpecsLogs.warn("Unexpected NumberFormatException for " + value);
             }
         }
 

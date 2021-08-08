@@ -49,7 +49,7 @@ public class JobProgress {
 
     public void nextMessage() {
 	if (this.counter >= this.numJobs) {
-	    SpecsLogs.msgWarn("Already showed the total number of steps.");
+	    SpecsLogs.warn("Already showed the total number of steps.");
 	}
 
 	this.counter++;

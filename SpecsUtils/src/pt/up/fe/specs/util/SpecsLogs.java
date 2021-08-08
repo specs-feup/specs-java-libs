@@ -697,7 +697,7 @@ public class SpecsLogs {
      * @param untestedAction
      */
     public static void untested(String untestedAction) {
-        SpecsLogs.msgWarn(
+        SpecsLogs.warn(
                 "Untested:" + untestedAction + ". Please contact the developers in order to add this case as a test.");
     }
 

@@ -99,7 +99,7 @@ public class SpecsProperties {
             props.load(inputStream);
             inputStream.close();
         } catch (IOException ex) {
-            SpecsLogs.msgWarn("IOException: " + ex.getMessage());
+            SpecsLogs.warn("IOException: " + ex.getMessage());
             return null;
         }
 
@@ -192,7 +192,7 @@ public class SpecsProperties {
             outStream.close();
 
         } catch (IOException ex) {
-            SpecsLogs.msgWarn("Could not save properties object to file '" + outputfile + "'", ex);
+            SpecsLogs.warn("Could not save properties object to file '" + outputfile + "'", ex);
             return false;
         }
 

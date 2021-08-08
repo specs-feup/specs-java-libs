@@ -177,7 +177,7 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
         }
         
         if (!availableChoices.contains(currentValue)) {
-            SpecsLogs.msgWarn(
+            SpecsLogs.warn(
                     "Could not find choice '" + currentValue + "'. Available " + "choices: " + availableChoices);
             currentValue = getKey().getValueClass().getEnumConstants()[0];
         }

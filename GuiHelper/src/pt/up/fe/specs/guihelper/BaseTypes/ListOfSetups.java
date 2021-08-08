@@ -78,12 +78,12 @@ public class ListOfSetups {
 
     public SetupData getPreferredSetup() {
 	if (mapOfSetups.isEmpty()) {
-	    SpecsLogs.msgWarn("There are no setups.");
+	    SpecsLogs.warn("There are no setups.");
 	    return null;
 	}
 
 	if (preferredIndex == null) {
-	    SpecsLogs.msgWarn("Preferred index not set, returning first setup.");
+	    SpecsLogs.warn("Preferred index not set, returning first setup.");
 	    return mapOfSetups.get(0);
 	}
 

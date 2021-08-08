@@ -447,7 +447,7 @@ public class SpecsBits {
 
     public static int parseSignedBinary(String binaryString) {
         if (binaryString.length() > 32) {
-            SpecsLogs.msgWarn("Given string has more than 32 bits. Truncating MSB.");
+            SpecsLogs.warn("Given string has more than 32 bits. Truncating MSB.");
             binaryString = binaryString.substring(0, 32);
         }
 
@@ -467,7 +467,7 @@ public class SpecsBits {
             } else if (binaryString.charAt(i) == '1') {
                 builder.append('0');
             } else {
-                SpecsLogs.msgWarn("Binary string has char '" + binaryString.charAt(i) + "'.");
+                SpecsLogs.warn("Binary string has char '" + binaryString.charAt(i) + "'.");
             }
         }
         String invertedString = builder.toString();

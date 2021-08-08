@@ -40,7 +40,7 @@ public class ActionsMap {
 	EventAction previousAction = this.actionsMap.put(eventId, action);
 
 	if (previousAction != null) {
-	    SpecsLogs.msgWarn("Event '" + eventId + "' already in table. Replacing action '"
+	    SpecsLogs.warn("Event '" + eventId + "' already in table. Replacing action '"
 		    + previousAction + "' with action '" + action + "'");
 	}
 
@@ -57,7 +57,7 @@ public class ActionsMap {
 	EventAction action = this.actionsMap.get(event.getId());
 
 	if (action == null) {
-	    SpecsLogs.msgWarn("Could not find an action for event '" + event.getId() + "'");
+	    SpecsLogs.warn("Could not find an action for event '" + event.getId() + "'");
 	    return;
 	}
 

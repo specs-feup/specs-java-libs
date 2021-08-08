@@ -60,7 +60,7 @@ public class RawValueUtils {
 	    return decoder.decode(value);
 	}
 
-	SpecsLogs.msgWarn("Could not find a valid converter for option " + optionDef);
+	SpecsLogs.warn("Could not find a valid converter for option " + optionDef);
 	return null;
 
     }

@@ -67,7 +67,7 @@ public class IntegerPanel extends KeyPanel<Integer> {
         Integer result = SpecsStrings.decodeInteger(stringValue, () -> getKey().getDefault().orElse(0));
 
         if (result == null) {
-            SpecsLogs.msgWarn("IS NULL!");
+            SpecsLogs.warn("IS NULL!");
         }
 
         return result;

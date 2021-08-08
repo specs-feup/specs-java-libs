@@ -42,7 +42,7 @@ public class InputFiles {
     public static InputFiles newInstance(String inputPath) {
 	File inputPathFile = new File(inputPath);
 	if (!inputPathFile.exists()) {
-	    SpecsLogs.msgWarn("Input path '" + inputPathFile + "' does not exist.");
+	    SpecsLogs.warn("Input path '" + inputPathFile + "' does not exist.");
 	    return null;
 	}
 

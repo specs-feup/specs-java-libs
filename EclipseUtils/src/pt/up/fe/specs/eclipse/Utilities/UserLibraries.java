@@ -122,7 +122,7 @@ public class UserLibraries {
 
             // Sanity check
             if (!element.getNodeName().equals("userlibrary")) {
-                SpecsLogs.msgWarn("NOT A USER LIBRARY: " + element.getNodeName());
+                SpecsLogs.warn("NOT A USER LIBRARY: " + element.getNodeName());
                 continue;
             }
 

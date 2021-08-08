@@ -92,7 +92,7 @@ public class StoreDefinitionBuilder {
     public StoreDefinitionBuilder addKey(DataKey<?> key) {
         // Check if key is not already added
         if (addedKeys.contains(key.getName())) {
-            SpecsLogs.msgWarn("Duplicated key while building Store Definition: '" + key.getName() + "'");
+            SpecsLogs.warn("Duplicated key while building Store Definition: '" + key.getName() + "'");
             return this;
         }
 

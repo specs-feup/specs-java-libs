@@ -65,7 +65,7 @@ public class EventController implements EventNotifier, EventRegister {
 	// Check if event is already on table
 	Collection<EventReceiver> receivers = this.registeredListeners.get(eventId);
 	if (receivers == null) {
-	    SpecsLogs.msgWarn("No receivers mapped to EventId '" + eventId + "'");
+	    SpecsLogs.warn("No receivers mapped to EventId '" + eventId + "'");
 	    return;
 	}
 

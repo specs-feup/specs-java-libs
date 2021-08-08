@@ -285,7 +285,7 @@ public class ClasspathParser {
         for (Element childElem : SpecsXml.getElementChildren(classpath.getDocumentElement(), "classpathentry")) {
 
             // if (!childElem.getLocalName().equals("classpathentry")) {
-            // SpecsLogs.msgWarn("Entry not parsed:" + childElem.getLocalName());
+            // SpecsLogs.warn("Entry not parsed:" + childElem.getLocalName());
             // continue;
             // }
 
@@ -343,7 +343,7 @@ public class ClasspathParser {
                     // List<File> jars = userLibraries.get().getJars(library);
                     List<File> jars = projectUserLibraries.getJars(library);
                     if (jars == null) {
-                        SpecsLogs.msgWarn("User library '" + library + "' not found, when processing project '"
+                        SpecsLogs.warn("User library '" + library + "' not found, when processing project '"
                                 + projectName + "'.");
                         continue;
                     }
@@ -374,7 +374,7 @@ public class ClasspathParser {
                     continue;
                 }
 
-                SpecsLogs.msgWarn("Does not know how to interpret container '" + pathValue + "' in project '"
+                SpecsLogs.warn("Does not know how to interpret container '" + pathValue + "' in project '"
                         + projectName + "', ignoring.");
                 continue;
             }
@@ -393,7 +393,7 @@ public class ClasspathParser {
                     }
 
                 } else if (accessRulesValue.equals("true")) {
-                    SpecsLogs.msgWarn("Check if it is correct to ignore '" + pathValue + "'");
+                    SpecsLogs.warn("Check if it is correct to ignore '" + pathValue + "'");
                     continue;
                 }
 

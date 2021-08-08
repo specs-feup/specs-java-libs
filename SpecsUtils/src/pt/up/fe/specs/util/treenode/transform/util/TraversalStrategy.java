@@ -60,7 +60,7 @@ public enum TraversalStrategy {
             topDownTraversal(node, rule, queue);
             return;
         default:
-            SpecsLogs.msgWarn("Case not defined:" + this);
+            SpecsLogs.warn("Case not defined:" + this);
             return;
         }
     }

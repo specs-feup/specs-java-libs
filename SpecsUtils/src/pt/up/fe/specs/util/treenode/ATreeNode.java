@@ -206,7 +206,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         // If the same list (reference) create a copy, to avoid problems when
         // adding the list to itself
         if (!children.isEmpty() && children == this.children) {
-            SpecsLogs.msgWarn("Adding the list to itself");
+            SpecsLogs.warn("Adding the list to itself");
             children = SpecsFactory.newArrayList(children);
         }
 

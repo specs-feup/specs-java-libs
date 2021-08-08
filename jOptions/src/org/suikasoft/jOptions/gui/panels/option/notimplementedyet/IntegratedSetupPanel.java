@@ -45,7 +45,7 @@ public class IntegratedSetupPanel extends FieldPanel {
 	// Initiallize objects
 	SetupDefinition setupDefinition = setup.getSetupOptions();
 	if (setupDefinition == null) {
-	    SpecsLogs.msgWarn("null SetupDefinition inside '" + setup.getClass() + "'");
+	    SpecsLogs.warn("null SetupDefinition inside '" + setup.getClass() + "'");
 	} else {
 	    initChoices(setupDefinition);
 	}

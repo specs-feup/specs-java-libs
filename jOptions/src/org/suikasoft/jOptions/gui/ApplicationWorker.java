@@ -144,12 +144,12 @@ public class ApplicationWorker {
 	if (ourCause == null) {
 	    // LoggingUtils.getLogger().
 	    // info("\nAn Exception" + prefix + ", but could not get cause.");
-	    SpecsLogs.msgWarn("\nAn Exception" + prefix + ", but could not get cause.");
+	    SpecsLogs.warn("\nAn Exception" + prefix + ", but could not get cause.");
 	} else {
 	    // LoggingUtils.msgInfo("\n"+ourCause.toString());
 	    SpecsLogs.msgInfo("");
 	    // LoggingUtils.msgInfo(ourCause.getMessage());
-	    SpecsLogs.msgWarn(ourCause.toString(), ourCause);
+	    SpecsLogs.warn(ourCause.toString(), ourCause);
 	    /*
 	    LoggingUtils.msgInfo("\nPrinting the stack trace:");
 	         //info("\n"+ourCause.toString() + prefix + ". Printing the stack trace:\n");

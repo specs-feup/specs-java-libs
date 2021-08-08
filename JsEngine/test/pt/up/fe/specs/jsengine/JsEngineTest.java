@@ -118,7 +118,7 @@ public class JsEngineTest {
             System.out.println("BINDINGS: " + b);
 
         } catch (ScriptException e) {
-            SpecsLogs.msgWarn("Error message:\n", e);
+            SpecsLogs.warn("Error message:\n", e);
         }
     }
 
