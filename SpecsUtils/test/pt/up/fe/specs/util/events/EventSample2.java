@@ -13,9 +13,6 @@
 
 package pt.up.fe.specs.util.events;
 
-import pt.up.fe.specs.util.events.Event;
-import pt.up.fe.specs.util.events.EventId;
-
 public enum EventSample2 implements EventId {
 
     EVENT_1;

@@ -13,11 +13,10 @@
 
 package pt.up.fe.specs.util.utilities;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import pt.up.fe.specs.util.utilities.StringSlice;
 
 public class StringSliceTest {
 

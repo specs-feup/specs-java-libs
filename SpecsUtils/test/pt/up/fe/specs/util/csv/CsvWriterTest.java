@@ -13,12 +13,9 @@
 
 package pt.up.fe.specs.util.csv;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import pt.up.fe.specs.util.csv.CsvField;
-import pt.up.fe.specs.util.csv.CsvWriter;
 
 public class CsvWriterTest {
 

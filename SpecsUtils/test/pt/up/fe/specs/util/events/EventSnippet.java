@@ -19,10 +19,6 @@ import java.util.Collection;
 import org.junit.Test;
 
 import pt.up.fe.specs.util.SpecsFactory;
-import pt.up.fe.specs.util.events.Event;
-import pt.up.fe.specs.util.events.EventController;
-import pt.up.fe.specs.util.events.EventId;
-import pt.up.fe.specs.util.events.EventReceiver;
 
 public class EventSnippet {
 

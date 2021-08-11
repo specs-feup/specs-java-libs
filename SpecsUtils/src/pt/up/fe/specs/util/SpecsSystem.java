@@ -387,16 +387,16 @@ public class SpecsSystem {
     private static void processCommand(ProcessBuilder builder) {
 
         // For now, do nothing if it is not Windows
-//        if (!isWindows()) {
-//            return;
-//        }
+        // if (!isWindows()) {
+        // return;
+        // }
 
         // Do nothing if no command
         if (builder.command().isEmpty()) {
             return;
         }
 
-        if(isWindows()) {
+        if (isWindows()) {
             // Check if command is a file that exists in the working folder
             File workingDir = builder.directory();
             File command = new File(workingDir, builder.command().get(0));
@@ -412,9 +412,8 @@ public class SpecsSystem {
             newCommand.add("/c");
             newCommand.addAll(builder.command());
 
-            builder.command(newCommand);        	
-        }
-        else if(isLinux()) {
+            builder.command(newCommand);
+        } else if (isLinux()) {
             // Update command
             List<String> newCommand = new ArrayList<>(4);
             newCommand.add("bash");
@@ -424,7 +423,7 @@ public class SpecsSystem {
             newCommand.add("-c");
             newCommand.add(builder.command().stream().collect(Collectors.joining(" ")));
 
-            builder.command(newCommand);        	
+            builder.command(newCommand);
         }
 
     }
@@ -633,11 +632,11 @@ public class SpecsSystem {
 
     }
 
-    private static void fixes() {
-        // To avoid illegal reflective accesses in Java 10 while library is not upgraded
-        // https://stackoverflow.com/questions/33255578/old-jaxb-and-jdk8-metaspace-outofmemory-issue
-        System.getProperties().setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
-    }
+    // private static void fixes() {
+    // // To avoid illegal reflective accesses in Java 10 while library is not upgraded
+    // // https://stackoverflow.com/questions/33255578/old-jaxb-and-jdk8-metaspace-outofmemory-issue
+    // System.getProperties().setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
+    // }
 
     /**
      *

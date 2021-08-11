@@ -15,8 +15,8 @@ package pt.up.fe.specs.util.utilities;
 
 import java.util.Collection;
 
-import pt.up.fe.specs.util.SpecsMath;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsMath;
 
 /**
  * Calculates several types of averages.

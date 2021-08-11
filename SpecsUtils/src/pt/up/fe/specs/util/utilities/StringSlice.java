@@ -322,7 +322,11 @@ public class StringSlice implements CharSequence {
     // return SpecsStrings.indexOfFirstWhiteSpace(toString());
     // }
 
-    @Deprecated
+    /**
+     * 
+     * @param aChar
+     * @return
+     */
     public int lastIndexOf(char aChar) {
 
         // Look for character, starting from the end
