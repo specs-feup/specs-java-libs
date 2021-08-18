@@ -17,12 +17,11 @@ import java.util.Collection;
 import java.util.Collections;
 
 import pt.up.fe.specs.jsengine.graal.GraalvmJsEngine;
-import pt.up.fe.specs.jsengine.nashorn.NashornEngine;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 public enum JsEngineType {
 
-    NASHORN,
+    // NASHORN,
     GRAALVM_COMPAT,
     GRAALVM;
 
@@ -39,8 +38,8 @@ public enum JsEngineType {
         // System.out.println("THREAD CLASS LOADER: " + Thread.currentThread().getContextClassLoader());
         // Thread.currentThread().setContextClassLoader(GraalJSScriptEngine.class.getClassLoader());
         switch (this) {
-        case NASHORN:
-            return new NashornEngine(forbiddenClasses);
+        // case NASHORN:
+        // return new NashornEngine(forbiddenClasses);
         case GRAALVM_COMPAT:
             return new GraalvmJsEngine(forbiddenClasses, true);
         case GRAALVM:
