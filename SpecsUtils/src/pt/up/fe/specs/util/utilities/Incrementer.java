@@ -26,6 +26,12 @@ public class Incrementer {
         return count;
     }
 
+    public int getAndIncrement() {
+        var current = count;
+        count++;
+        return current;
+    }
+
     public int getCurrent() {
         return count;
     }
