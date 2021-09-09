@@ -860,4 +860,10 @@ public class SpecsCollections {
                 .map(value -> mapper.apply(value))
                 .collect(Collectors.toList());
     }
+
+    // @SuppressWarnings("unchecked")
+    // public static <T> T[] arrayGenerator(int size, Class<T> aClass) {
+    // return (T[]) Array.newInstance(aClass, size);
+    // // return aClass.arrayType(). T[size];
+    // }
 }

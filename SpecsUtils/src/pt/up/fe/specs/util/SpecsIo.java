@@ -1859,9 +1859,9 @@ public class SpecsIo {
     // public static List<File> getFiles(File fileOrFolder, String extension) {
     public static SpecsList<File> getFiles(File fileOrFolder, String extension) {
         // ExtensionFilter filter = new ExtensionFilter(extension);
-        String suffix = DEFAULT_EXTENSION_SEPARATOR + extension;
+        String suffix = DEFAULT_EXTENSION_SEPARATOR + extension.toLowerCase();
         List<File> fileList = getFiles(fileOrFolder).stream()
-                .filter(currentFile -> currentFile.getName().endsWith(suffix))
+                .filter(currentFile -> currentFile.getName().toLowerCase().endsWith(suffix))
                 .collect(Collectors.toList());
 
         return SpecsList.convert(fileList);
