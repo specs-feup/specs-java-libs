@@ -93,4 +93,42 @@ public class SymjaTest {
         // }
         // }
     }
+
+    @Test
+    public void adiExpressions() {
+        eval("((((5 + 1 + 1) * ((n - 1) - 1) + (1 + 1) * ((n - 2) - 1 + 1) + 3 + 1) *"
+                + "              ((n - 1) - 1) +"
+                + "          ((5 + 1 + 1) * ((n - 1) - 1) + (1 + 1) * ((n - 2) - 1 + 1) + 3 + 1) *"
+                + "              ((n - 1) - 1) +"
+                + "          1) *"
+                + "         ((tsteps)-1 + 1)) *"
+                + "        (1)");
+
+        eval("((((2) * ((n - 1) - 1)) * ((n - 1) - 1) +\r\n"
+                + "                ((2) * ((n - 1) - 1)) * ((n - 1) - 1)) *\r\n"
+                + "                   ((tsteps)-1 + 1) +\r\n"
+                + "               7) *\r\n"
+                + "              (1)");
+
+        eval("((((4 + 2) * ((n - 1) - 1) + (1) * ((n - 2) - 1 + 1)) * ((n - 1) - 1) +\r\n"
+                + "          ((4 + 2) * ((n - 1) - 1) + (1) * ((n - 2) - 1 + 1)) * ((n - 1) - 1)) *\r\n"
+                + "             ((tsteps)-1 + 1) +\r\n"
+                + "         2) *\r\n"
+                + "        (1)");
+
+        eval("((((7) * ((n - 1) - 1) + (1) * ((n - 2) - 1 + 1)) * ((n - 1) - 1) +\r\n"
+                + "          ((7) * ((n - 1) - 1) + (1) * ((n - 2) - 1 + 1)) * ((n - 1) - 1)) *\r\n"
+                + "             ((tsteps)-1 + 1) +\r\n"
+                + "         4) *\r\n"
+                + "        (1)");
+    }
+
+    private void eval(String expression) {
+        var simplified1 = SymjaPlusUtils
+                .simplify(expression);
+
+        var simplified1C = SymjaPlusUtils.convertToC(simplified1);
+        System.out.println("Symja: " + simplified1);
+        System.out.println("C: " + simplified1C);
+    }
 }
