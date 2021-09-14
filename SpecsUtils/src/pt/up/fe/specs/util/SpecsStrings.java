@@ -2163,4 +2163,57 @@ public class SpecsStrings {
 
         return actual.equals(expected);
     }
+
+    /**
+     * Normalizes the given string so that it represents a JSON object.
+     * 
+     * <p>
+     * - If the input is a single string that ends in .json, interprets as an existing file whose contents will be
+     * returned;<br>
+     * - If the string does not start with { or ends with }, introduces those characters;
+     * 
+     * @param trim
+     * @return
+     */
+    public static String normalizeJsonObject(String json) {
+        return normalizeJsonObject(json, null);
+    }
+
+    /**
+     * 
+     * @param json
+     * @param baseFolder
+     *            if json represents a relative path to a json file and baseFolder is not null, uses baseFolder as the
+     *            parent of the relative path
+     * @return
+     */
+    public static String normalizeJsonObject(String json, File baseFolder) {
+        // Check if string is an existing JSON file
+
+        if (json.endsWith(".json")) {
+            var jsonFile = new File(json);
+
+            if (baseFolder != null && !jsonFile.isAbsolute()) {
+                jsonFile = new File(baseFolder, jsonFile.getPath());
+            }
+
+            if (!jsonFile.isFile()) {
+                throw new RuntimeException(
+                        "Tried to interpret '" + jsonFile + "' as a JSON file, but file does not exist.");
+            }
+
+            return SpecsIo.read(jsonFile);
+        }
+
+        // Normalize to object
+        if (!json.startsWith("{") && !json.startsWith("[")) {
+            json = "{" + json;
+        }
+
+        if (!json.endsWith("}") && !json.endsWith("]")) {
+            json = json + "}";
+        }
+
+        return json;
+    }
 }
