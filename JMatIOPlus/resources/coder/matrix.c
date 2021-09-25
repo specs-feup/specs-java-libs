@@ -1,0 +1,3 @@
+
+emxArray_<CODER_TYPE>* <VARIABLE_NAME> = NULL;
+emxInit_<CODER_TYPE>(&<VARIABLE_NAME>, <NUM_DIMS>);

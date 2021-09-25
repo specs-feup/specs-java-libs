@@ -1,0 +1,4 @@
+ for (<NUMEL_VAR> = 0; <NUMEL_VAR> < <TOTAL_ELEMENTS>; <NUMEL_VAR>++) {
+   <VAR_NAME>->data[<NUMEL_VAR>] = <STATIC_VAR_NAME>[<NUMEL_VAR>];
+ }
+ 
