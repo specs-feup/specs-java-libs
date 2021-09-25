@@ -9,4 +9,10 @@
     <library name="symja" systemlibrary="false">
         <archive path="/SupportJavaLibs/libs/symja/matheclipse-core-1.0.0-SNAPSHOT-jar-with-dependencies.jar"/>
     </library>
+    <library name="z3" systemlibrary="false">
+        <archive path="/SupportJavaLibs/libs/z3/com.microsoft.z3.jar"/>
+    </library>	
+    <library name="mvel" systemlibrary="false">
+        <archive path="/SupportJavaLibs/libs/mvel/mvel2-2.1.3.Final.jar"/>
+    </library>		
 </eclipse-userlibraries>
