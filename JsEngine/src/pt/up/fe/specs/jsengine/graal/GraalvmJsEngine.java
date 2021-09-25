@@ -457,6 +457,10 @@ public class GraalvmJsEngine implements JsEngine {
         return asValue(value).asBoolean();
     }
 
+    public double asDouble(Object value) {
+    	return asValue(value).asDouble();
+    }
+    
     @Override
     public void nashornWarning(String message) {
         SpecsLogs.warn(message);
@@ -467,6 +471,13 @@ public class GraalvmJsEngine implements JsEngine {
         return asValue(object).hasArrayElements();
     }
 
+
+    @Override
+    public boolean isNumber(Object object) {
+        return asValue(object).isNumber();
+    }
+
+    
     @Override
     public boolean isUndefined(Object object) {
         return asValue(object).isNull();
@@ -560,5 +571,16 @@ public class GraalvmJsEngine implements JsEngine {
           */
         return Optional.ofNullable(exception);
     }
+
+	@Override
+	public Object call(Object function, Object... args) {
+		var functionValue = asValue(function);
+		
+		if(!functionValue.canExecute()) {
+			throw new RuntimeException("Cannot execute object '" + function.toString() + "'");
+		}
+
+		return functionValue.execute(args);
+	}
 
 }

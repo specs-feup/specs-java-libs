@@ -63,6 +63,8 @@ public interface JsEngine {
 
     boolean asBoolean(Object value);
 
+    double asDouble(Object value);
+    
     /**
      * 
      * @return the Bindings of the engine scope
@@ -237,6 +239,8 @@ public interface JsEngine {
 
     Object eval(String script, Object scope);
 
+    Object call(Object function, Object... args);
+    
     default Object eval(String code, JsFileType type) {
         throw new NotImplementedException(this);
     }
@@ -256,6 +260,14 @@ public interface JsEngine {
      */
     boolean isArray(Object object);
 
+    
+    /**
+     * 
+     * @param object
+     * @return true if the given object is a number, false otherwise
+     */
+    boolean isNumber(Object object);
+    
     // Object put(Bindings var, String member, Object value);
 
     // public Object remove(Bindings object, Object key);
