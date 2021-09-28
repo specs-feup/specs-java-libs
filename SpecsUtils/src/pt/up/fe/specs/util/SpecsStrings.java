@@ -2205,15 +2205,13 @@ public class SpecsStrings {
             return SpecsIo.read(jsonFile);
         }
 
+        var normalizedJson = json.trim();
+
         // Normalize to object
-        if (!json.startsWith("{") && !json.startsWith("[")) {
-            json = "{" + json;
+        if (!normalizedJson.startsWith("{")) {
+            normalizedJson = "{" + normalizedJson + "}";
         }
 
-        if (!json.endsWith("}") && !json.endsWith("]")) {
-            json = json + "}";
-        }
-
-        return json;
+        return normalizedJson;
     }
 }
