@@ -148,6 +148,7 @@ public class GraalvmJsEngine implements JsEngine {
             return value;
 
         } catch (PolyglotException e) {
+
             // System.out.println("CUASE: " + e.getCause());
             // System.out.println("Is host ex? " + ((PolyglotException) e).isHostException());
             // System.out.println("Is guest ex? " + ((PolyglotException) e).isGuestException());
@@ -160,10 +161,14 @@ public class GraalvmJsEngine implements JsEngine {
                     throw new RuntimeException("Should not launch this exception", unreachableException);
                 }
 
-                // System.out.println("PE:" + pe.getClass());
-                // System.out.println("PE CAUSE: " + pe.getCause());
+                // System.out.println("PE:" + e.getClass());
+                // System.out.println("PE CAUSE: " + e.getCause());
+                // System.out.println("PE STACK:");
                 // e.getPolyglotStackTrace();
-                // pe.printStackTrace();
+                // System.out.println("NORMAL STACK:");
+                // e.printStackTrace();
+                // System.out.println("HOST:");
+                hostException.printStackTrace();
                 throw new RuntimeException(e.getMessage(), hostException);
             }
 
@@ -171,7 +176,6 @@ public class GraalvmJsEngine implements JsEngine {
         }
 
         catch (Exception e) {
-
             // System.out.println("class: " + e.getClass());
             // e.printStackTrace();
             throw new RuntimeException("Could not evaluate JavaScript code", e);
@@ -457,10 +461,11 @@ public class GraalvmJsEngine implements JsEngine {
         return asValue(value).asBoolean();
     }
 
+    @Override
     public double asDouble(Object value) {
-    	return asValue(value).asDouble();
+        return asValue(value).asDouble();
     }
-    
+
     @Override
     public void nashornWarning(String message) {
         SpecsLogs.warn(message);
@@ -471,13 +476,11 @@ public class GraalvmJsEngine implements JsEngine {
         return asValue(object).hasArrayElements();
     }
 
-
     @Override
     public boolean isNumber(Object object) {
         return asValue(object).isNumber();
     }
 
-    
     @Override
     public boolean isUndefined(Object object) {
         return asValue(object).isNull();
@@ -572,15 +575,15 @@ public class GraalvmJsEngine implements JsEngine {
         return Optional.ofNullable(exception);
     }
 
-	@Override
-	public Object call(Object function, Object... args) {
-		var functionValue = asValue(function);
-		
-		if(!functionValue.canExecute()) {
-			throw new RuntimeException("Cannot execute object '" + function.toString() + "'");
-		}
+    @Override
+    public Object call(Object function, Object... args) {
+        var functionValue = asValue(function);
 
-		return functionValue.execute(args);
-	}
+        if (!functionValue.canExecute()) {
+            throw new RuntimeException("Cannot execute object '" + function.toString() + "'");
+        }
+
+        return functionValue.execute(args);
+    }
 
 }
