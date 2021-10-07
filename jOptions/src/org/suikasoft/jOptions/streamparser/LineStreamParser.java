@@ -97,6 +97,7 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
 
                 // If line should not be ignored, add to warnings
                 if (!getLineIgnore().test(currentLine)) {
+                    // System.out.println("LINE NOT PARSED! Next line: " + lines.peekNextLine());
                     // Add line to the warnings
                     if (storeLinesNotParsed) {
                         linesNotParsed.append(currentLine).append("\n");
