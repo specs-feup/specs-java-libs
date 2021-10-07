@@ -13,7 +13,11 @@
 
 package pt.up.fe.specs.util;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
+
+import pt.up.fe.specs.util.lazy.Lazy;
 
 /**
  * Utility methods related to Graphviz graphs.
@@ -21,6 +25,33 @@ import java.util.List;
  * @author Joao Bispo
  */
 public class SpecsGraphviz {
+
+    private static final Lazy<Boolean> IS_DOT_AVAILABLE = Lazy.newInstance(SpecsGraphviz::checkDot);
+
+    private static boolean checkDot() {
+        var result = SpecsSystem.runProcess(Arrays.asList("dot", "-?"), false, false);
+        return result.getReturnValue() == 0;
+    }
+
+    public static boolean isDotAvailable() {
+        return IS_DOT_AVAILABLE.get();
+    }
+
+    public static void renderDot(File dotFile, DotRenderFormat format) {
+        var outputFilename = SpecsIo.removeExtension(dotFile) + "." + format.getExtension();
+        var outputFile = new File(dotFile.getParentFile(), outputFilename);
+        renderDot(dotFile, format, outputFile);
+    }
+
+    public static void renderDot(File dotFile, DotRenderFormat format, File outputFile) {
+        var command = Arrays.asList("dot", format.getFlag(), dotFile.getAbsolutePath(), "-o",
+                outputFile.getAbsolutePath());
+
+        var result = SpecsSystem.runProcess(command, false, false);
+        if (result.getReturnValue() == 0) {
+            SpecsLogs.debug(() -> "Rendered dot file '" + dotFile.getAbsolutePath() + "' as " + format);
+        }
+    }
 
     public static String generateGraph(List<String> declarations, List<String> connections) {
         StringBuilder builder = new StringBuilder();
