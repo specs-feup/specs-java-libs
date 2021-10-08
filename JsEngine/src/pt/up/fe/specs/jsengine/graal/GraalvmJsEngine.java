@@ -109,13 +109,13 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     @Override
-    public Object eval(String code, JsFileType type) {
+    public Object eval(String code, JsFileType type, String source) {
         switch (type) {
         case NORMAL:
             return eval(code);
         case MODULE:
             try {
-                return eval(Source.newBuilder("js", new StringBuilder(code), "loaded_js_resource")
+                return eval(Source.newBuilder("js", new StringBuilder(code), source)
                         .mimeType("application/javascript+module").build());
             } catch (IOException e) {
                 throw new RuntimeException("Could not load JS code", e);
@@ -128,8 +128,14 @@ public class GraalvmJsEngine implements JsEngine {
 
     @Override
     public Value eval(String code) {
+        // var tempFolder = SpecsIo.getTempFolder("temp_js_code");
+        // var tempFile = new File(tempFolder, UUID.randomUUID() + ".js");
+        // SpecsIo.deleteOnExit(tempFile);
+        // SpecsIo.write(tempFile, code);
+
         try {
-            return eval(Source.newBuilder("js", new StringBuilder(code), "loaded_js_resource").build());
+            // return eval(Source.newBuilder("js", new StringBuilder(code), tempFile.getAbsolutePath()).build());
+            return eval(Source.newBuilder("js", new StringBuilder(code), "unnamed_js_code").build());
         } catch (IOException e) {
             throw new RuntimeException("Could not load JS code", e);
         }
