@@ -1661,7 +1661,7 @@ public class SpecsSystem {
      * 
      * @return
      */
-    public static String getImplementationVersion() {
+    public static String getBuildNumber() {
         // Check if manifest file exists
         if (!SpecsIo.hasResource("META-INF/MANIFEST.MF")) {
             return null;
@@ -1669,7 +1669,7 @@ public class SpecsSystem {
         try {
             var manifest = new Manifest(SpecsIo.resourceToStream("META-INF/MANIFEST.MF"));
             var attr = manifest.getMainAttributes();
-            return attr.getValue("Implementation-Version");
+            return attr.getValue("Build-Number");
         } catch (IOException e) {
             SpecsLogs.info("Could not read manifest file: " + e.getMessage());
             return null;
