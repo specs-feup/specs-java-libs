@@ -18,20 +18,21 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 public enum LibraryResource implements ResourceProvider {
     WIN64_LIBZ3("win64/libz3.dll"),
     WIN64_LIBZ3JAVA("win64/libz3java.dll"),
+    LINUX64_LIBZ3("linux64/libz3.so"),
     LINUX64_LIBZ3JAVA("linux64/libz3java.so");
 
     private final String path;
 
     private LibraryResource(String path) {
-	this.path = path;
+        this.path = path;
     }
 
     @Override
     public String getResource() {
-	return this.path;
+        return this.path;
     }
 
     public String getFileName() {
-	return this.path.substring(this.path.indexOf('/') + 1);
+        return this.path.substring(this.path.indexOf('/') + 1);
     }
 }

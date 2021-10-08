@@ -16,8 +16,8 @@ package pt.up.fe.specs.z3helper;
 import java.io.File;
 import java.io.IOException;
 
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.lang.SpecsPlatforms;
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
 
 /**
@@ -74,7 +74,7 @@ public class Z3LibraryLoader {
 
     private static boolean loadLinux64Libraries() throws IOException {
 
-        prepareResourcesForLoading(LibraryResource.LINUX64_LIBZ3JAVA);
+        prepareResourcesForLoading(LibraryResource.LINUX64_LIBZ3, LibraryResource.LINUX64_LIBZ3JAVA);
 
         try {
             System.loadLibrary("z3java");
@@ -90,9 +90,10 @@ public class Z3LibraryLoader {
     }
 
     private static void prepareResourcesForLoading(LibraryResource... resources) throws IOException {
-        File directory = SpecsIo.getJarPath(Z3LibraryLoader.class).get();
-        String path = directory.getAbsoluteFile().toString();
-        SpecsSystem.addJavaLibraryPath(path);
+        File directory = SpecsIo.getWorkingDir();
+        // File directory = SpecsIo.getJarPath(Z3LibraryLoader.class).get();
+        // String path = directory.getAbsoluteFile().toString();
+        // SpecsSystem.addJavaLibraryPath(path);
 
         for (LibraryResource resource : resources) {
             copyResource(directory, resource);
