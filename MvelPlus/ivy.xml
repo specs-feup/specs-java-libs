@@ -26,6 +26,7 @@
 	</info>
 	
 	<dependencies>
-		<dependency org="org.mvel" name="mvel2" rev="2.1.3.Final"/>
+<!--		<dependency org="org.mvel" name="mvel2" rev="2.1.3.Final"/>-->
+		<dependency org="org.mvel" name="mvel2" rev="2.4.13.Final"/>		
 	</dependencies>
 </ivy-module>

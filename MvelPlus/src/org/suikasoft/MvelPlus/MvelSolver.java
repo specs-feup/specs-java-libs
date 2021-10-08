@@ -26,11 +26,11 @@ public class MvelSolver {
      * @return
      */
     public static Object eval(String expression) {
-	try {
-	    return MVEL.eval(expression);
-	} catch (Exception e) {
-	    return null;
-	}
+        try {
+            return MVEL.eval(expression);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -40,11 +40,11 @@ public class MvelSolver {
      * @return
      */
     public static String evalToString(String expression) {
-	try {
-	    return MVEL.evalToString(expression);
-	} catch (Exception e) {
-	    return null;
-	}
+        try {
+            return MVEL.evalToString(expression);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -55,52 +55,52 @@ public class MvelSolver {
      */
     public static Integer evaltoInteger(String expression) {
 
-	// Get number
-	Number number = evaltoNumber(expression);
-	if (number == null) {
-	    return null;
-	}
+        // Get number
+        Number number = evaltoNumber(expression);
+        if (number == null) {
+            return null;
+        }
 
-	if (number instanceof Double) {
-	    SpecsLogs.warn("Given expression resolved to a double (" + number + ")");
-	    return null;
-	}
+        if (number instanceof Double) {
+            SpecsLogs.warn("Given expression resolved to a double (" + number + ")");
+            return null;
+        }
 
-	int intValue = number.intValue();
+        int intValue = number.intValue();
 
-	if ((number.longValue() - intValue) != 0) {
-	    SpecsLogs.warn("Loss of precision, evaluated value '" + number.longValue()
-		    + "' but returning '" + intValue + "'.");
-	    return intValue;
-	}
+        if ((number.longValue() - intValue) != 0) {
+            SpecsLogs.warn("Loss of precision, evaluated value '" + number.longValue()
+                    + "' but returning '" + intValue + "'.");
+            return intValue;
+        }
 
-	return intValue;
+        return intValue;
     }
 
     /*
     public static Integer evaltoInteger(String expression) {
-
+    
     // Evaluate expression
     Object returnValue = MvelSolver.eval(expression);
-
+    
     // Check if there is a return value
     if (returnValue == null) {
         return null;
     }
-
+    
     // Parse the result as a double
     double resultDouble = Double.parseDouble(returnValue.toString());
-
+    
     // Cast to integer
     int resultInt = (int) resultDouble;
-
+    
     // Check if value had
     double diff = resultDouble - (double) resultInt;
     if (diff != 0) {
         LoggingUtils.msgWarn("Given expression resolved to a double (" + resultDouble + ")");
         return null;
     }
-
+    
     return resultInt;
     }
     */
@@ -114,28 +114,28 @@ public class MvelSolver {
      */
     public static Number evaltoNumber(String expression) {
 
-	// Evaluate expression
-	Object returnValue = MvelSolver.eval(expression);
+        // Evaluate expression
+        Object returnValue = MvelSolver.eval(expression);
 
-	// Check if there is a return value
-	if (returnValue == null) {
-	    return null;
-	}
+        // Check if there is a return value
+        if (returnValue == null) {
+            return null;
+        }
 
-	// Parse the result as a double
-	Double resultDouble = Double.valueOf(returnValue.toString());
+        // Parse the result as a double
+        Double resultDouble = Double.valueOf(returnValue.toString());
 
-	// Cast to integer
-	Long resultLong = resultDouble.longValue();
+        // Cast to integer
+        Long resultLong = resultDouble.longValue();
 
-	// Check if value had decimal part
-	double diff = resultDouble - (double) resultLong;
-	if (diff != 0) {
-	    return resultDouble;
-	    // LoggingUtils.msgWarn("Given expression resolved to a double (" + resultDouble + ")");
-	    // return null;
-	}
+        // Check if value had decimal part
+        double diff = resultDouble - (double) resultLong;
+        if (diff != 0) {
+            return resultDouble;
+            // LoggingUtils.msgWarn("Given expression resolved to a double (" + resultDouble + ")");
+            // return null;
+        }
 
-	return resultLong;
+        return resultLong;
     }
 }
