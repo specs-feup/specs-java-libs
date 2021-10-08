@@ -56,6 +56,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -1655,4 +1656,24 @@ public class SpecsSystem {
         throw new RuntimeException("STOP");
     }
 
+    /**
+     * Reads the implementation version that is in the manifest file. Reads property Implementation-Version.
+     * 
+     * @return
+     */
+    public static String getImplementationVersion() {
+        // Check if manifest file exists
+        if (!SpecsIo.hasResource("META-INF/MANIFEST.MF")) {
+            return null;
+        }
+        try {
+            var manifest = new Manifest(SpecsIo.resourceToStream("META-INF/MANIFEST.MF"));
+            var attr = manifest.getMainAttributes();
+            return attr.getValue("Implementation-Version");
+        } catch (IOException e) {
+            SpecsLogs.info("Could not read manifest file: " + e.getMessage());
+            return null;
+        }
+
+    }
 }
