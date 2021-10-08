@@ -826,6 +826,8 @@ public class SpecsSystem {
      * Adds a path to the java.library.path property, and flushes the path cache so that subsequent System.load calls
      * can find it.
      * 
+     * @deprecated this will not work in OpenJDK
+     * 
      * @param path
      *            The path to add
      */
