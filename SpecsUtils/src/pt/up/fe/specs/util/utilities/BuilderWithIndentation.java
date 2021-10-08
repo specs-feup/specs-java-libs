@@ -22,7 +22,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 public class BuilderWithIndentation {
 
     public final static String DEFAULT_NEWLINE = System.getProperty("line.separator");
-    public final static String DEFAULT_TAB = "   ";
+    public final static String DEFAULT_TAB = "\t";
 
     // The builder used to create the string
     private final StringBuilder builder;
