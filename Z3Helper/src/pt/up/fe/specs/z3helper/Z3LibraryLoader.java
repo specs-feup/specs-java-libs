@@ -90,7 +90,19 @@ public class Z3LibraryLoader {
     }
 
     private static void prepareResourcesForLoading(LibraryResource... resources) throws IOException {
-        File directory = SpecsIo.getWorkingDir();
+
+        // Check if libraries are already available
+        if (areLibsAvailable(resources)) {
+            return;
+        }
+
+        // // Get a directory that is on the Java library path
+        // var libraryPaths = System.getProperty("java.library.path");
+        // var fileSeparator = System.getProperty("file.separator");
+        // var libraryFolders = libraryPaths.split(fileSeparator);
+
+        // File directory = SpecsIo.getWorkingDir();
+        File directory = SpecsIo.getFirstLibraryFolder();
         // File directory = SpecsIo.getJarPath(Z3LibraryLoader.class).get();
         // String path = directory.getAbsoluteFile().toString();
         // SpecsSystem.addJavaLibraryPath(path);
@@ -98,6 +110,22 @@ public class Z3LibraryLoader {
         for (LibraryResource resource : resources) {
             copyResource(directory, resource);
         }
+    }
+
+    private static boolean areLibsAvailable(LibraryResource... resources) {
+        // Check if resources already exist
+        var libFolders = SpecsIo.getLibraryFolders();
+        for (var resource : resources) {
+            for (var libFolder : libFolders) {
+                if (new File(libFolder, resource.getFilename()).isFile()) {
+                    break;
+                }
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     private static File copyResource(File directory, LibraryResource resource) {
