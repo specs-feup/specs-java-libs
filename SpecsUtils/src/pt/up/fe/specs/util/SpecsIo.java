@@ -3292,4 +3292,36 @@ public class SpecsIo {
 
         return depth;
     }
+
+    /**
+     * 
+     * @return the first folder in java.library.path that is writable. Throws exception if no folder that can be written
+     *         is found
+     */
+    public static File getFirstLibraryFolder() {
+        var libraryFolders = getLibraryFolders();
+        for (var libraryFolder : libraryFolders) {
+            if (libraryFolder.canWrite()) {
+                return libraryFolder;
+            }
+        }
+
+        throw new RuntimeException(
+                "Could not find a writtable library path folder, please executed with more elevated privileges. Found folders: "
+                        + libraryFolders);
+    }
+
+    /**
+     * 
+     * @return the list of folders in java.library.path
+     */
+    public static List<File> getLibraryFolders() {
+        // Get a directory that is on the Java library path
+        var libraryPaths = System.getProperty("java.library.path");
+        var fileSeparator = File.pathSeparator;
+        var libraryFolders = libraryPaths.split(fileSeparator);
+
+        return Arrays.asList(libraryFolders).stream().map(lib -> new File(lib)).collect(Collectors.toList());
+    }
+
 }
