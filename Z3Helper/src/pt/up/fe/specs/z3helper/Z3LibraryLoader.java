@@ -121,16 +121,20 @@ public class Z3LibraryLoader {
         var libFolders = SpecsIo.getLibraryFolders();
         var foundLibs = new ArrayList<File>();
         for (var resource : resources) {
+            var foundLib = false;
             for (var libFolder : libFolders) {
-                System.out.println("LIB FOLDER: " + libFolder);
+                // System.out.println("LIB FOLDER: " + libFolder);
                 var libFile = new File(libFolder, resource.getFilename());
-                System.out.println("lib file: " + libFile);
-                System.out.println("Is file: " + libFile.isFile());
+                // System.out.println("lib file: " + libFile);
+                // System.out.println("Is file: " + libFile.isFile());
                 if (libFile.isFile()) {
                     foundLibs.add(libFile);
+                    foundLib = true;
                     break;
                 }
+            }
 
+            if (foundLib == false) {
                 SpecsLogs.info("Could not find Z3 library " + resource.getFileName());
                 return false;
             }
