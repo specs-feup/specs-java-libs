@@ -3308,7 +3308,7 @@ public class SpecsIo {
         }
 
         throw new RuntimeException(
-                "Could not find a writtable library path folder, please executed with more elevated privileges. Found folders: "
+                "Could not find a writtable library path folder, please execute with more elevated privileges. Found folders: "
                         + libraryFolders);
     }
 
