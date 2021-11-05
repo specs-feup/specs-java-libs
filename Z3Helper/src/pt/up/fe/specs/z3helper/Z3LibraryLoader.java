@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import pt.up.fe.specs.lang.SpecsPlatforms;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSystem;
 
 /**
@@ -44,6 +45,8 @@ public class Z3LibraryLoader {
         if (Z3LibraryLoader.loaded) {
             return false;
         }
+
+        SpecsLogs.info("Looking for Z3 libraries in the following folders: " + SpecsIo.getLibraryFolders());
 
         if (SpecsSystem.is64Bit()) {
             if (SpecsPlatforms.isWindows()) {
