@@ -15,6 +15,7 @@ package pt.up.fe.specs.z3helper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import pt.up.fe.specs.lang.SpecsPlatforms;
 import pt.up.fe.specs.util.SpecsIo;
@@ -118,15 +119,24 @@ public class Z3LibraryLoader {
     private static boolean areLibsAvailable(LibraryResource... resources) {
         // Check if resources already exist
         var libFolders = SpecsIo.getLibraryFolders();
+        var foundLibs = new ArrayList<File>();
         for (var resource : resources) {
             for (var libFolder : libFolders) {
-                if (new File(libFolder, resource.getFilename()).isFile()) {
+                // System.out.println("LIB FOLDER: " + libFolder);
+                var libFile = new File(libFolder, resource.getFilename());
+                // System.out.println("lib file: " + libFile);
+                // System.out.println("Is file: " + libFile.isFile());
+                if (libFile.isFile()) {
+                    foundLibs.add(libFile);
                     break;
                 }
-            }
 
-            return false;
+                SpecsLogs.info("Could not find Z3 library " + resource.getFileName());
+                return false;
+            }
         }
+
+        SpecsLogs.info("Using the following Z3 libraries: " + foundLibs);
 
         return true;
     }
