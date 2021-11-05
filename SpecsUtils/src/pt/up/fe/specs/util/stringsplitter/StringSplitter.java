@@ -166,4 +166,14 @@ public class StringSplitter {
     public void setTrim(boolean trim) {
         currentString = currentString.setTrim(trim);
     }
+
+    public char peekChar() {
+        return currentString.charAt(0);
+    }
+
+    public char nextChar() {
+        var result = currentString.charAt(0);
+        currentString = currentString.substring(1);
+        return result;
+    }
 }
