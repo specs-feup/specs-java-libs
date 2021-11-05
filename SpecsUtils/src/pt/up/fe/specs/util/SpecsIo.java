@@ -3301,7 +3301,8 @@ public class SpecsIo {
     public static File getFirstLibraryFolder() {
         var libraryFolders = getLibraryFolders();
         for (var libraryFolder : libraryFolders) {
-            if (libraryFolder.canWrite()) {
+            // if (libraryFolder.canWrite() && libraryFolder.canRead()) {
+            if (SpecsIo.canWrite(libraryFolder)) {
                 return libraryFolder;
             }
         }
@@ -3309,6 +3310,30 @@ public class SpecsIo {
         throw new RuntimeException(
                 "Could not find a writtable library path folder, please executed with more elevated privileges. Found folders: "
                         + libraryFolders);
+    }
+
+    public static boolean canWrite(File folder) {
+        if (!folder.isDirectory()) {
+            return false;
+        }
+
+        // Fallback
+        var testFile = new File(folder, "__test__specs__can__write__.dummy");
+
+        // If exists, try deleting it
+        if (testFile.isFile()) {
+            return testFile.delete();
+        }
+
+        // If it does not exist, create file
+        try {
+            var success = testFile.createNewFile();
+            testFile.delete();
+            return success;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     /**
