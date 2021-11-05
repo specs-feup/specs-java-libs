@@ -122,10 +122,10 @@ public class Z3LibraryLoader {
         var foundLibs = new ArrayList<File>();
         for (var resource : resources) {
             for (var libFolder : libFolders) {
-                // System.out.println("LIB FOLDER: " + libFolder);
+                System.out.println("LIB FOLDER: " + libFolder);
                 var libFile = new File(libFolder, resource.getFilename());
-                // System.out.println("lib file: " + libFile);
-                // System.out.println("Is file: " + libFile.isFile());
+                System.out.println("lib file: " + libFile);
+                System.out.println("Is file: " + libFile.isFile());
                 if (libFile.isFile()) {
                     foundLibs.add(libFile);
                     break;
