@@ -14,7 +14,8 @@
             <!--</url>  -->
 			<ibiblio name="jitpack.io" root="https://jitpack.io" m2compatible="true"/>
 			<ibiblio name="bedatadriven" root="https://nexus.bedatadriven.com/content/groups/public/" m2compatible="true"/>
-			<ibiblio name="sonatype" root="https://oss.sonatype.org/content/groups/public" m2compatible="true"/>			
+			<ibiblio name="sonatype" root="https://oss.sonatype.org/content/groups/public" m2compatible="true"/>	
+			<ibiblio name="sonatype_snapshots" root="https://oss.sonatype.org/content/repositories/snapshots" m2compatible="true"/>				
 			<!-- For Symja -->
 			<!-- <ibiblio name="oss.sonatype.snapshots" root="https://oss.sonatype.org/content/repositories/snapshots/" m2compatible="true"/> -->
 			<!--<ibiblio name="sonatype-oss-staging" root="https://oss.sonatype.org/content/repositories/staging" m2compatible="true"/>-->		
