@@ -16,18 +16,13 @@ package pt.up.fe.specs.symja;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.matheclipse.core.eval.EvalUtilities;
-import org.matheclipse.core.expression.F;
-import org.matheclipse.core.form.output.OutputFormFactory;
-import org.matheclipse.core.interfaces.IExpr;
+import org.matheclipse.core.eval.ExprEvaluator;
 
-import edu.jas.kern.ComputerThreads;
 import pt.up.fe.specs.symja.ast.SymjaAst;
 import pt.up.fe.specs.symja.ast.SymjaToC;
 import pt.up.fe.specs.symja.ast.passes.RemoveMinusMultTransform;
 import pt.up.fe.specs.symja.ast.passes.RemoveRedundantParenthesisTransform;
 import pt.up.fe.specs.symja.ast.passes.ReplaceUnaryMinusTransform;
-import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * @author Joao Bispo
@@ -35,66 +30,84 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class SymjaPlusUtils {
 
+    private static final ThreadLocal<ExprEvaluator> EVALUATOR = ThreadLocal
+            .withInitial(() -> new ExprEvaluator(false, (short) 30));
+
     public static String simplify(String expression) {
         return simplify(expression, new HashMap<>());
+    }
+
+    private static ExprEvaluator evaluator() {
+        return EVALUATOR.get();
     }
 
     public static String simplify(String expression, Map<String, String> constants) {
 
         assert constants != null;
 
-        // Static initialization of the MathEclipse engine
-        F.initSymbols();
+        // EvalEngine engine = new EvalEngine();
+        // var fScriptEngine = new MathScriptEngine(engine);
 
-        EvalUtilities util = new EvalUtilities();
+        // Static initialization of the MathEclipse engine
+        // F.initSymbols();
+
+        // EvalUtilities util = new EvalUtilities();
+        // var evaluator = new ExprEvaluator(false, (short) 30);
 
         // Initialize constants
-        try {
+        // try {
 
-            for (String constantName : constants.keySet()) {
-                String constantValue = constants.get(constantName);
+        // Clear variables
+        evaluator().clearVariables();
 
-                String expr = constantName + " = " + constantValue;
-                util.evaluate(expr);
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-        } finally {
-            // Call terminate() only one time at the end of the program
-            ComputerThreads.terminate();
+        for (String constantName : constants.keySet()) {
+            String constantValue = constants.get(constantName);
+
+            // String expr = constantName + " = " + constantValue;
+
+            evaluator().defineVariable(constantName, evaluator().eval(constantValue));
         }
+        // } catch (final Exception e) {
+        // e.printStackTrace();
+        // } finally {
+        // Call terminate() only one time at the end of the program
+        // ComputerThreads.terminate();
+        // }
 
         // Calculate simplified expression
-        String output = null;
-        try {
-            StringBuilder buf = new StringBuilder();
-            IExpr result = util.evaluate("ExpandAll[" + expression + "]");
+        // String output = null;
+        // try {
+        // StringBuilder buf = new StringBuilder();
+        // IExpr result = util.evaluate("ExpandAll[" + expression + "]");
+        // // IExpr result = util.evaluate("check(" + expression + ")");
+        //
+        // OutputFormFactory outputFormat = OutputFormFactory.get();
+        // outputFormat.convert(buf, result);
+        // output = buf.toString();
 
-            OutputFormFactory outputFormat = OutputFormFactory.get();
-            outputFormat.convert(buf, result);
-            output = buf.toString();
+        var output = evaluator().eval("expand(" + expression + ")").toString();
 
-        } catch (final Exception e) {
-            SpecsLogs.msgLib("Exception in Symja:" + e.getMessage());
-        } finally {
-            // Call terminate() only one time at the end of the program
-            ComputerThreads.terminate();
-        }
+        // } catch (final Exception e) {
+        // SpecsLogs.msgLib("Exception in Symja:" + e.getMessage());
+        // } finally {
+        // Call terminate() only one time at the end of the program
+        // ComputerThreads.terminate();
+        // }
 
-        // Clear constants
-        try {
-
-            for (String constantName : constants.keySet()) {
-                String expr = "ClearAll[" + constantName + "]";
-                util.evaluate(expr);
-            }
-
-        } catch (final Exception e) {
-            e.printStackTrace();
-        } finally {
-            // Call terminate() only one time at the end of the program
-            ComputerThreads.terminate();
-        }
+        // // Clear constants
+        // try {
+        //
+        // for (String constantName : constants.keySet()) {
+        // String expr = "ClearAll[" + constantName + "]";
+        // util.evaluate(expr);
+        // }
+        //
+        // } catch (final Exception e) {
+        // e.printStackTrace();
+        // } finally {
+        // // Call terminate() only one time at the end of the program
+        // ComputerThreads.terminate();
+        // }
 
         return output;
     }

@@ -24,7 +24,7 @@
         module="SymjaPlus"
         status="release">
 	</info>
-	
+		
 	<dependencies> 
 		<dependency org="org.matheclipse" name="matheclipse-core" rev="2.0.0-SNAPSHOT">
 		    <exclude org="org.apfloat" module="apfloat"/>
@@ -35,7 +35,16 @@
 		<dependency org="org.matheclipse" name="matheclipse-gpl" rev="2.0.0-SNAPSHOT">
 		    <exclude org="org.apache.logging.log4j" module="log4j-1.2-api"/>
 		</dependency>
-		<!-- Dependency for Symja -->
-		<dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.14.1"/>	
+		<!-- Dependency for Symja --> 
+		<dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.11.2"/>
+		<!--
+		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.11.2">
+		    <exclude org="org.apache.logging.log4j" module="log4j-core-java9"/>	
+		</dependency>
+		-->
+		<!--<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.14.0"/>-->				
+
+
+		<!--<dependency org="org.matheclipse" name="matheclipse-script" rev="2.0.0-SNAPSHOT"/>-->
 	</dependencies>			
 </ivy-module>

@@ -77,8 +77,21 @@ public class SymjaToC {
     }
 
     private static String convertTwoOperandsOperator(Operator operator, List<SymjaNode> operands) {
-        SpecsCheck.checkSize(operands, 2);
-        return CONVERTERS.apply(operands.get(0)) + " " + operator.getSymbol() + " " + CONVERTERS.apply(operands.get(1));
+        StringBuilder code = new StringBuilder();
+
+        // Append first operand
+        code.append(CONVERTERS.apply(operands.get(0)));
+        for (int i = 1; i < operands.size(); i++) {
+            code.append(" " + operator.getSymbol() + " " + CONVERTERS.apply(operands.get(i)));
+        }
+
+        return code.toString();
+
+        // // SpecsCheck.checkSize(operands, 2);
+        // SpecsCheck.checkArgument(operands.size() >= 2,
+        // "Expected number of operands to be at least 2, is " + operands.size());
+        // return CONVERTERS.apply(operands.get(0)) + " " + operator.getSymbol() + " " +
+        // CONVERTERS.apply(operands.get(1));
     }
 
     private static String convertOneOperandOperator(Operator operator, SymjaNode operand, boolean isPrefix) {
