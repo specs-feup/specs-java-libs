@@ -86,12 +86,6 @@ public class SymjaToC {
         }
 
         return code.toString();
-
-        // // SpecsCheck.checkSize(operands, 2);
-        // SpecsCheck.checkArgument(operands.size() >= 2,
-        // "Expected number of operands to be at least 2, is " + operands.size());
-        // return CONVERTERS.apply(operands.get(0)) + " " + operator.getSymbol() + " " +
-        // CONVERTERS.apply(operands.get(1));
     }
 
     private static String convertOneOperandOperator(Operator operator, SymjaNode operand, boolean isPrefix) {
