@@ -422,7 +422,9 @@ public class SpecsSystem {
             newCommand.add("-l");
             // Command
             newCommand.add("-c");
-            newCommand.add(builder.command().stream().collect(Collectors.joining(" ")));
+            newCommand.add(builder.command().stream()
+                    .map(arg -> arg.replace(" ", "\\ "))
+                    .collect(Collectors.joining(" ")));
 
             builder.command(newCommand);
         }
@@ -831,6 +833,7 @@ public class SpecsSystem {
      * @param path
      *            The path to add
      */
+    @Deprecated
     public static void addJavaLibraryPath(String path) {
 
         System.setProperty("java.library.path",
