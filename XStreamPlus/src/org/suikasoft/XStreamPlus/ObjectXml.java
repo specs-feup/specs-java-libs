@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
  * Base for transforming an object to and from XML.
@@ -33,6 +34,11 @@ public abstract class ObjectXml<T> {
 
     private final Map<Class<?>, ObjectXml<?>> nestedXml = new HashMap<>();
     private final Map<String, Class<?>> mappings = new HashMap<>();
+    private final XStreamFile<T> xstreamFile;
+
+    public ObjectXml() {
+        xstreamFile = new XStreamFile<>(this);
+    }
 
     /**
      * Alias mappings, for assigning names to classes. Can be null.
@@ -40,27 +46,28 @@ public abstract class ObjectXml<T> {
      * @return
      */
     public Map<String, Class<?>> getMappings() {
-	return mappings;
+        return mappings;
     }
 
     public void addMappings(String name, Class<?> aClass) {
-	if (mappings.containsKey(name)) {
-	    throw new RuntimeException("Mapping for name '" + name + "' already present");
-	}
+        if (mappings.containsKey(name)) {
+            throw new RuntimeException("Mapping for name '" + name + "' already present");
+        }
 
-	mappings.put(name, aClass);
+        mappings.put(name, aClass);
+        xstreamFile.getXstream().alias(name, aClass);
     }
 
     public void addMappings(Map<String, Class<?>> mappings) {
-	for (Entry<String, Class<?>> entry : mappings.entrySet()) {
-	    addMappings(entry.getKey(), entry.getValue());
-	}
+        for (Entry<String, Class<?>> entry : mappings.entrySet()) {
+            addMappings(entry.getKey(), entry.getValue());
+        }
     }
 
     public void addMappings(List<Class<?>> classes) {
-	for (Class<?> aClass : classes) {
-	    addMappings(aClass.getSimpleName(), aClass);
-	}
+        for (Class<?> aClass : classes) {
+            addMappings(aClass.getSimpleName(), aClass);
+        }
     }
 
     /**
@@ -71,27 +78,32 @@ public abstract class ObjectXml<T> {
     public abstract Class<T> getTargetClass();
 
     public String toXml(Object object) {
-	return getXStreamFile().toXml(object);
+        return getXStreamFile().toXml(object);
     }
 
     public T fromXml(String xmlContents) {
-	return getXStreamFile().fromXml(xmlContents);
+        return getXStreamFile().fromXml(xmlContents);
     }
 
     protected XStreamFile<T> getXStreamFile() {
-	return new XStreamFile<>(this);
+        return xstreamFile;
+        // return new XStreamFile<>(this);
     }
 
     protected void addNestedXml(ObjectXml<?> objectXml) {
-	ObjectXml<?> returnObject = nestedXml.put(objectXml.getTargetClass(), objectXml);
-	if (returnObject != null) {
-	    SpecsLogs.warn("Replacing ObjectXml for class '" + objectXml.getTargetClass()
-		    + "'.");
-	}
+        ObjectXml<?> returnObject = nestedXml.put(objectXml.getTargetClass(), objectXml);
+        if (returnObject != null) {
+            SpecsLogs.warn("Replacing ObjectXml for class '" + objectXml.getTargetClass()
+                    + "'.");
+        }
     }
 
     public Map<Class<?>, ObjectXml<?>> getNestedXml() {
-	return nestedXml;
+        return nestedXml;
+    }
+
+    public <V> void registerConverter(Class<V> supportedClass, StringCodec<V> converter) {
+        getXStreamFile().getXstream().registerConverter(new StringConverter<>(supportedClass, converter));
     }
 
 }
