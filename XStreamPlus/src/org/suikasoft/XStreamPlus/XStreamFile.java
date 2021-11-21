@@ -49,6 +49,11 @@ public class XStreamFile<T> {
         this.config = object;
         xstream = newXStream();
         useCompactRepresentation = false;
+        // xstream.addPermission(new AnyTypePermission());
+        // xstream.allowTypesByWildcard(new String[] {
+        // "org.suikasoft.**",
+        // "com.mydomain.utilitylibraries.**"
+        // });
     }
 
     public static <T> XStreamFile<T> newInstance(ObjectXml<T> object) {

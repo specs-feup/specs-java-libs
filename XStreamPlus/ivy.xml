@@ -26,7 +26,8 @@
 	</info>
 	
 	<dependencies>
-		<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.8"> 
+		<!--<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.8"> -->
+		<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.18"> 		
 	<!--	<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.11.1">  -->
 <!--			<exclude org="xpp3" name="xpp3_min"/> -->
 <!--			<exclude org="xmlpull" name="xmlpull"/> -->

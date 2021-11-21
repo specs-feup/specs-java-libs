@@ -16,6 +16,7 @@ package org.suikasoft.XStreamPlus;
 import java.io.File;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.security.AnyTypePermission;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
@@ -33,6 +34,9 @@ public class XStreamUtils {
     public static XStream newXStream() {
 
         var xstream = new XStream();
+        xstream.addPermission(new AnyTypePermission());
+
+        // var xstream = new XStream(new DomDriver());
 
         // XStream.setupDefaultSecurity(xstream);
         // xstream.allowTypesByWildcard(new String[] {
