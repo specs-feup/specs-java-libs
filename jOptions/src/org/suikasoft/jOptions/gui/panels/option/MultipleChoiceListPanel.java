@@ -71,7 +71,7 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
                 .orElseThrow(() -> new RuntimeException("Key '" + key.getName() + "' must define extra data"));
 
         @SuppressWarnings("unchecked")
-        List<T> defaultValues = (List<T>) extraData.get(MultipleChoiceListKey.AVAILABLE_CHOICES);
+        List<T> defaultValues = extraData.get(MultipleChoiceListKey.AVAILABLE_CHOICES);
 
         // var defaultValues = key.getAvailableChoices();
         // var defaultValues = key.getDefault().orElseThrow(

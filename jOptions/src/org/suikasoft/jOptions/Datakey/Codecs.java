@@ -64,8 +64,10 @@ public class Codecs {
     }
 
     private static String filesWithBaseFoldersEncoder(Map<File, File> value) {
+
         MultiMap<String, String> basesToPaths = new MultiMap<>();
         for (var entry : value.entrySet()) {
+
             String base = entry.getValue() == null ? "" : entry.getValue().toString();
 
             String path = base.isEmpty() ? entry.getKey().toString()

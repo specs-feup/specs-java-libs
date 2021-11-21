@@ -55,9 +55,11 @@ public class XmlPersistence implements AppPersistence {
      */
     @Deprecated
     public XmlPersistence(Collection<DataKey<?>> options) {
-        this.options = options;
-        xmlMappings = getObjectXml();
-        definition = null;
+        // this.options = options;
+        // // definition = null;
+        // definition = StoreDefinition.newInstance("", options);
+        // xmlMappings = getObjectXml(definition);
+        this(StoreDefinition.newInstance("DefinitionCreatedByXmlPersistence", options));
     }
 
     /**
@@ -79,7 +81,7 @@ public class XmlPersistence implements AppPersistence {
 
     public XmlPersistence(StoreDefinition storeDefinition) {
         options = storeDefinition.getKeys();
-        xmlMappings = getObjectXml();
+        xmlMappings = getObjectXml(storeDefinition);
         definition = storeDefinition;
     }
 
@@ -301,8 +303,9 @@ public class XmlPersistence implements AppPersistence {
         return data;
     }
 
-    public static ObjectXml<DataStore> getObjectXml() {
-        return new DataStoreXml();
+    // public static ObjectXml<DataStore> getObjectXml(Collection<DataKey<?>> keys) {
+    public static ObjectXml<DataStore> getObjectXml(StoreDefinition storeDefinition) {
+        return new DataStoreXml(storeDefinition);
     }
 
     /* (non-Javadoc)
