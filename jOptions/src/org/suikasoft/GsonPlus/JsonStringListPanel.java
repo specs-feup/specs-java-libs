@@ -35,7 +35,8 @@ import pt.up.fe.specs.util.SpecsSwing;
  * 
  * @author Joao Bispo
  */
-public class JsonStringListPanel extends KeyPanel<List<String>> {
+// public class JsonStringListPanel extends KeyPanel<List<String>> {
+public class JsonStringListPanel extends KeyPanel<JsonStringList> {
 
     private static final long serialVersionUID = 1L;
 
@@ -52,11 +53,13 @@ public class JsonStringListPanel extends KeyPanel<List<String>> {
     private final JList<String> jListValues;
     private final DefaultListModel<String> values;
 
-    public static JsonStringListPanel newInstance(DataKey<List<String>> key, DataStore data) {
+    public static JsonStringListPanel newInstance(DataKey<JsonStringList> key, DataStore data) {
+        // public static JsonStringListPanel newInstance(DataKey<List<String>> key, DataStore data) {
         return new JsonStringListPanel(key, data);
     }
 
-    public JsonStringListPanel(DataKey<List<String>> key, DataStore data) {
+    // public JsonStringListPanel(DataKey<List<String>> key, DataStore data) {
+    public JsonStringListPanel(DataKey<JsonStringList> key, DataStore data) {
         super(key, data);
 
         jListValues = new JList<>();
@@ -182,7 +185,8 @@ public class JsonStringListPanel extends KeyPanel<List<String>> {
     }
 
     @Override
-    public <ET extends List<String>> void setValue(ET stringList) {
+    public <ET extends JsonStringList> void setValue(ET stringList) {
+        // public <ET extends List<String>> void setValue(ET stringList) {
 
         SpecsSwing.runOnSwing(() -> {
             values.clear();

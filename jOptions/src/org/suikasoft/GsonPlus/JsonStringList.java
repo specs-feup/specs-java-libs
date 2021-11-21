@@ -61,7 +61,8 @@ public class JsonStringList extends AbstractList<String> {
     }
     */
 
-    public static StringCodec<List<String>> getCodec() {
+    // public static StringCodec<List<String>> getCodec() {
+    public static StringCodec<JsonStringList> getCodec() {
         return StringCodec.newInstance(JsonStringList::encode, args -> new JsonStringList(decode(args)));
     }
 
@@ -193,23 +194,28 @@ public class JsonStringList extends AbstractList<String> {
         return getStringList().stream();
     }
 
-    public static DataKey<List<String>> newKey(String id) {
+    public static DataKey<JsonStringList> newKey(String id) {
+        // public static DataKey<List<String>> newKey(String id) {
         return newKey(id, new JsonStringList());
     }
 
     // TODO: ???
-    public static DataKey<List<String>> newKey(String id, List<String> defaultValue) {
-        return KeyFactory.generic(id, (List<String>) new JsonStringList())
+    public static DataKey<JsonStringList> newKey(String id, List<String> defaultValue) {
+        // public static DataKey<List<String>> newKey(String id, List<String> defaultValue) {
+        // return KeyFactory.generic(id, (List<String>) new JsonStringList())
+        return KeyFactory.generic(id, new JsonStringList())
                 .setDefault(() -> new JsonStringList(defaultValue))
                 // .setDecoder(value -> new StringList(value))
                 .setDecoder(JsonStringList.getCodec())
                 .setKeyPanelProvider(JsonStringListPanel::newInstance)
                 .setCustomSetter(JsonStringList::customSetter);
+        // .setXstreamConverter();
     }
 
-    private static List<String> customSetter(List<String> value, DataStore data) {
+    // private static List<String> customSetter(List<String> value, DataStore data) {
+    private static JsonStringList customSetter(List<String> value, DataStore data) {
         if (value instanceof JsonStringList) {
-            return value;
+            return (JsonStringList) value;
         }
 
         return new JsonStringList(value);
