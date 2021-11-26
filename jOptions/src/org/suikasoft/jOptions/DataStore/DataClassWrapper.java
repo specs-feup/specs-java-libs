@@ -75,4 +75,9 @@ public abstract class DataClassWrapper<T extends DataClass<T>> implements DataCl
     public boolean isClosed() {
         return data.isClosed();
     }
+
+    @Override
+    public String toString() {
+        return toInlinedString();
+    }
 }
