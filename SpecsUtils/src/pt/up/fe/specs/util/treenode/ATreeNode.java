@@ -36,10 +36,8 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         // this.children = SpecsFactory.newLinkedList();
         this.children = initChildren(children);
 
-        // Safety if given list is null
+        // In case given list is null
         if (children == null) {
-            // This list is immutable, this means that we will not be able to add children to this node
-            // Do we want to keep it like this?
             children = Collections.emptyList();
         }
 
@@ -63,7 +61,11 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     private List<K> initChildren(Collection<? extends K> children) {
-        return new ArrayList<>();
+        if (children == null) {
+            return new ArrayList<>();
+        }
+
+        return new ArrayList<>(children.size());
     }
 
     /* (non-Javadoc)
