@@ -160,4 +160,10 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
     public Optional<StoreDefinition> getStoreDefinition() {
         return getData().getStoreDefinition();
     }
+
+    @Override
+    public String toContentString() {
+        return getData().toInlinedString();
+    }
+
 }
