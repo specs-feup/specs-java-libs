@@ -13,13 +13,11 @@
 
 package pt.up.fe.specs.jsengine;
 
-import java.io.File;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 import pt.up.fe.specs.jsengine.libs.JsEsprima;
-import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
 
 public class EsprimaTester {
@@ -28,7 +26,8 @@ public class EsprimaTester {
     public void test() {
         SpecsSystem.programStandardInit();
 
-        var code = SpecsIo.read(new File("C:\\Temp\\2021-12-02 JsDoc Test\\navier.js"));
+        // var code = SpecsIo.read(new File("C:\\Temp\\2021-12-02 JsDoc Test\\navier.js"));
+        var code = PROGRAM_1;
 
         var program = JsEsprima.parse(code);
 
