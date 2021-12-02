@@ -30,4 +30,33 @@ public class DwAccess {
     public String toString() {
         return "DwAccess [x=" + x + ", y=" + y + ", constant=" + constant + ", signal=" + signal + "]";
     }
+
+    /**
+     * @return the x
+     */
+    public String getX() {
+        return x;
+    }
+
+    /**
+     * @return the y
+     */
+    public String getY() {
+        return y;
+    }
+
+    /**
+     * @return the constant
+     */
+    public String getConstant() {
+        return constant;
+    }
+
+    /**
+     * @return the signal
+     */
+    public String getSignal() {
+        return signal;
+    }
+
 }
