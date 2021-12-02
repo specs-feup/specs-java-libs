@@ -66,6 +66,14 @@ public interface JsEngine {
     double asDouble(Object value);
 
     /**
+     * Attempts to convert a JS bindings value to a Java object.
+     * 
+     * @param value
+     * @return
+     */
+    Object toJava(Object value);
+
+    /**
      * 
      * @return the Bindings of the engine scope
      */
@@ -266,6 +274,27 @@ public interface JsEngine {
      * @return true if the given object is a number, false otherwise
      */
     boolean isNumber(Object object);
+
+    /**
+     * 
+     * @param object
+     * @return true if the given object has members, false otherwise
+     */
+    boolean isObject(Object object);
+
+    /**
+     * 
+     * @param object
+     * @return true if the given object is a string, false otherwise
+     */
+    boolean isString(Object object);
+
+    /**
+     * 
+     * @param object
+     * @return true if the given object is a boolean, false otherwise
+     */
+    boolean isBoolean(Object object);
 
     // Object put(Bindings var, String member, Object value);
 

@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -488,6 +489,23 @@ public class GraalvmJsEngine implements JsEngine {
     }
 
     @Override
+    public boolean isObject(Object object) {
+        return asValue(object).hasMembers();
+
+    }
+
+    @Override
+    public boolean isString(Object object) {
+        return asValue(object).isString();
+    }
+
+    @Override
+    public boolean isBoolean(Object object) {
+        return asValue(object).isBoolean();
+
+    }
+
+    @Override
     public boolean isUndefined(Object object) {
         return asValue(object).isNull();
     }
@@ -522,6 +540,57 @@ public class GraalvmJsEngine implements JsEngine {
         }
 
         throw new RuntimeException("Not supported for class '" + object.getClass() + "'");
+    }
+
+    @Override
+    public Object toJava(Object jsValue) {
+
+        var value = asValue(jsValue);
+
+        // Java object
+        if (value.isHostObject()) {
+            return value.asHostObject();
+        }
+
+        // String
+        if (value.isString()) {
+            return value.asString();
+        }
+
+        // Number
+        if (value.isNumber()) {
+            return value.asDouble();
+        }
+
+        // Boolean
+        if (value.isBoolean()) {
+            return value.asBoolean();
+        }
+
+        // Array
+        if (value.hasArrayElements()) {
+            return LongStream.range(0, value.getArraySize())
+                    .mapToObj(index -> toJava(value.getArrayElement(index)))
+                    .collect(Collectors.toList());
+        }
+
+        // Map
+        if (value.hasMembers()) {
+            Map<String, Object> map = new LinkedHashMap<>();
+
+            for (var key : value.getMemberKeys()) {
+                map.put(key, toJava(value.getMember(key)));
+            }
+
+            return map;
+        }
+
+        // null
+        if (value.isNull()) {
+            return null;
+        }
+
+        throw new NotImplementedException(value.getMetaQualifiedName());
     }
 
     @Override
