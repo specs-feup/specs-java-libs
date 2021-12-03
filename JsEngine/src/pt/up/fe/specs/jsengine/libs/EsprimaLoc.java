@@ -17,6 +17,8 @@ import java.util.Map;
 
 public class EsprimaLoc {
 
+    private static final EsprimaLoc UNDEFINED = new EsprimaLoc(-1, -1, -1, -1);
+
     private final int startLine;
     private final int startCol;
     private final int endLine;
@@ -74,6 +76,10 @@ public class EsprimaLoc {
     public String toString() {
         return "EsprimaLoc [startLine=" + startLine + ", startCol=" + startCol + ", endLine=" + endLine + ", endCol="
                 + endCol + "]";
+    }
+
+    public static EsprimaLoc undefined() {
+        return UNDEFINED;
     }
 
 }

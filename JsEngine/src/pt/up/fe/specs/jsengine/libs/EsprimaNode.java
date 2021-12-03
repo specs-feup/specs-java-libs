@@ -156,6 +156,10 @@ public class EsprimaNode {
     }
 
     public EsprimaComment getComment() {
+        if (!node.containsKey("comments")) {
+            return EsprimaComment.empty();
+        }
+
         return (EsprimaComment) node.get("comments");
     }
 }
