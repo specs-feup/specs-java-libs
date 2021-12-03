@@ -122,7 +122,7 @@ public class EsprimaNode {
                 .collect(Collectors.toList());
     }
 
-    private <T> List<T> getAsList(String key, Class<T> elementType) {
+    public <T> List<T> getAsList(String key, Class<T> elementType) {
         var value = node.get(key);
 
         if (value == null) {
@@ -137,6 +137,43 @@ public class EsprimaNode {
         var list = (List<Object>) value;
 
         return list.stream().map(elementType::cast).collect(Collectors.toList());
+    }
+
+    public EsprimaNode getAsNode(String key) {
+        var value = getExistingValue(key, Map.class);
+        @SuppressWarnings("unchecked")
+        var node = new EsprimaNode(value);
+        return node;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<EsprimaNode> getAsNodes(String key) {
+        var values = getExistingValue(key, List.class);
+
+        List<EsprimaNode> nodes = new ArrayList<>();
+
+        values.stream()
+                .forEach(value -> nodes.add(new EsprimaNode((Map<String, Object>) value)));
+
+        // var a = values.stream()
+        // .map(value -> new EsprimaNode((Map<String, Object>) value))
+        // .collect(Collectors.toList());
+
+        return nodes;
+
+        // return values.stream()
+        // .map(value -> (Map<String, Object>) value)
+        // .map(value -> new EsprimaNode(value))
+        // .collect(Collectors.toList());
+        // @SuppressWarnings("unchecked")
+        // var node = new EsprimaNode(value);
+        // return node;
+    }
+
+    private <T> T getExistingValue(String key, Class<T> valueClass) {
+        var value = node.get(key);
+        SpecsCheck.checkNotNull(value, () -> "Expected value with key '" + key + "' to exist");
+        return valueClass.cast(value);
     }
 
     @Override
@@ -161,5 +198,21 @@ public class EsprimaNode {
         }
 
         return (EsprimaComment) node.get("comments");
+    }
+
+    public Set<String> getKeys() {
+        return node.keySet();
+    }
+
+    public String getAsString(String key) {
+        return getExistingValue(key, String.class);
+    }
+
+    public Map<String, Object> getNode() {
+        return node;
+    }
+
+    public boolean getAsBool(String key) {
+        return getExistingValue(key, Boolean.class);
     }
 }

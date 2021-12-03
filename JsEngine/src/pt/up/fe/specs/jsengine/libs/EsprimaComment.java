@@ -75,6 +75,8 @@ public class EsprimaComment {
         switch (type) {
         case "Block":
             return "/*" + contents + "*/";
+        case "Line":
+            return "//" + contents;
         default:
             throw new NotImplementedException("Not implemented for comments of type '" + type + "'");
         }
