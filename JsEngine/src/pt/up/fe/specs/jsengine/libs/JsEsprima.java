@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.jsengine.libs;
 
-import java.io.File;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -56,6 +55,7 @@ public class JsEsprima {
         var normalizedCode = jsCode.replace("`", "\\`");
         var engine = getEngine();
 
+        // Obtain JSON string representing the AST
         var result = engine
                 .eval("code = `" + normalizedCode + "`; "
                         + "var ast = esprima.parse(code, {loc:true,comment:true}); "
@@ -63,7 +63,7 @@ public class JsEsprima {
                         + "string;")
                 .toString();
 
-        SpecsIo.write(new File("js.json"), result);
+        // SpecsIo.write(new File("js.json"), result);
 
         var program = new EsprimaNode(new Gson().fromJson(result, Map.class));
 
