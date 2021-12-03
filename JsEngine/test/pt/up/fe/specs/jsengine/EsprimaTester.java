@@ -35,7 +35,7 @@ public class EsprimaTester {
         // System.out.println("Program children:" + JsEsprima.getChildren(program));
         // System.out.println("Program descendants:" + JsEsprima.getDescendants(program));
 
-        var functions = JsEsprima.getDescendantsAndSelfStream(program)
+        var functions = program.getDescendantsAndSelfStream()
                 .filter(node -> ((String) node.get("type")).equals("FunctionDeclaration"))
                 .collect(Collectors.toList());
 
@@ -44,8 +44,7 @@ public class EsprimaTester {
         // functions.stream().map(f -> ((Map) f.get("id")).get("name")).forEach(n -> System.out.println(n));
         functions.stream().map(f -> f.get("comments")).forEach(n -> System.out.println(n));
 
-        var numNodes = JsEsprima.getDescendantsAndSelfStream(program)
-                .count();
+        var numNodes = program.getDescendantsAndSelfStream().count();
 
         System.out.println("NUM NODES: " + numNodes);
     }

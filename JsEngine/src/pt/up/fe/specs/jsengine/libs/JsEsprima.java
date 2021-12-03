@@ -13,14 +13,8 @@
 
 package pt.up.fe.specs.jsengine.libs;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.io.File;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.google.gson.Gson;
 
@@ -33,8 +27,6 @@ public class JsEsprima {
 
     private static final ThreadLocal<JsEngine> ESPRIMA_ENGINE = ThreadLocal
             .withInitial(JsEsprima::newBabelEngine);
-
-    private static final Set<String> IGNORE_KEYS = new HashSet<>(Arrays.asList("type", "loc", "comments"));
 
     private static JsEngine newBabelEngine() {
         // Create JsEngine
@@ -54,12 +46,12 @@ public class JsEsprima {
         return ESPRIMA_ENGINE.get();
     }
 
-    public static Map<String, Object> parse(String jsCode) {
+    public static EsprimaNode parse(String jsCode) {
         return parse(jsCode, "<unknown source>");
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<String, Object> parse(String jsCode, String path) {
+    public static EsprimaNode parse(String jsCode, String path) {
         // Escape back-ticks
         var normalizedCode = jsCode.replace("`", "\\`");
         var engine = getEngine();
@@ -71,9 +63,13 @@ public class JsEsprima {
                         + "string;")
                 .toString();
 
-        // SpecsIo.write(new File("js.json"), result);
+        SpecsIo.write(new File("js.json"), result);
 
-        return new Gson().fromJson(result, Map.class);
+        var program = new EsprimaNode(new Gson().fromJson(result, Map.class));
+
+        associateComments(program);
+
+        return program;
         // @SuppressWarnings("unchecked")
         // var astRoot = (Map<String, Object>) engine.toJava(result);
 
@@ -94,61 +90,37 @@ public class JsEsprima {
 
     }
 
-    public static List<Map<String, Object>> getChildren(Map<String, Object> node) {
-        var children = new ArrayList<Map<String, Object>>();
+    private static void associateComments(EsprimaNode program) {
+        var comments = program.getComments();
 
-        for (var entry : node.entrySet()) {
-
-            // Ignore certain keys
-            if (IGNORE_KEYS.contains(entry.getKey())) {
-                continue;
-            }
-
-            var value = entry.getValue();
-
-            // If a Map, consider a child
-            if (value instanceof Map) {
-                @SuppressWarnings("unchecked")
-                var child = (Map<String, Object>) value;
-                children.add(child);
-                continue;
-            }
-
-            // If not a list, ignore
-            if (!(value instanceof List)) {
-                continue;
-            }
-
-            @SuppressWarnings("unchecked")
-            var partialChildren = (List<Map<String, Object>>) value;
-
-            // If it has a child, check if Map
-            if (!partialChildren.isEmpty() && !(partialChildren.get(0) instanceof Map)) {
-                continue;
-            }
-
-            // Assume they are children
-            children.addAll(partialChildren);
+        if (comments.isEmpty()) {
+            return;
         }
 
-        return children;
-    }
+        var nodes = program.getDescendants();
 
-    public static List<Map<String, Object>> getDescendants(Map<String, Object> node) {
-        return getDescendantsStream(node).collect(Collectors.toList());
-    }
+        var commentsIterator = comments.iterator();
 
-    public static Stream<Map<String, Object>> getChildrenStream(Map<String, Object> node) {
-        return JsEsprima.getChildren(node).stream();
-    }
+        var currentComment = commentsIterator.next();
+        // System.out.println("COMMENT LOC: " + currentComment.getLoc());
 
-    public static Stream<Map<String, Object>> getDescendantsStream(Map<String, Object> node) {
-        return JsEsprima.getChildrenStream(node)
-                .flatMap(c -> JsEsprima.getDescendantsAndSelfStream(c));
-    }
+        NODES: for (var node : nodes) {
+            var nodeLoc = node.getLoc();
+            // System.out.println("NODE LOC: " + nodeLoc);
 
-    public static Stream<Map<String, Object>> getDescendantsAndSelfStream(Map<String, Object> node) {
-        return Stream.concat(Stream.of(node), getDescendantsStream(node));
+            // If node start line is the same or greater than the comment, associate node with comment
+            while (nodeLoc.getStartLine() >= currentComment.getLoc().getStartLine()) {
+                // System.out.println("FOUND ASSOCIATION: " + node.getType() + " @ " + node.getLoc());
+                node.setComment(currentComment);
+
+                if (!commentsIterator.hasNext()) {
+                    break NODES;
+                }
+
+                currentComment = commentsIterator.next();
+                // System.out.println("COMMENT LOC: " + currentComment.getLoc());
+            }
+        }
     }
 
     // private static GenericDataNode convert(Object result, JsEngine engine) {
