@@ -590,7 +590,9 @@ public class GraalvmJsEngine implements JsEngine {
             return null;
         }
 
-        throw new NotImplementedException(value.getMetaQualifiedName());
+        // Jenkins could not find the symbol getMetaQualifiedName() for some reason
+        // throw new NotImplementedException(value.getMetaQualifiedName());
+        throw new NotImplementedException("Not implemented for value " + value);
     }
 
     @Override
