@@ -215,4 +215,8 @@ public class EsprimaNode {
     public boolean getAsBool(String key) {
         return getExistingValue(key, Boolean.class);
     }
+
+    public boolean hasValueFor(String key) {
+        return node.get(key) != null;
+    }
 }
