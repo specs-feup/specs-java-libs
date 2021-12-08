@@ -861,6 +861,19 @@ public class SpecsCollections {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 
+     * @param list
+     * @param targetClass
+     * @return a list with the elements that are an instance of the given class
+     */
+    public static <T> List<T> get(List<? super T> list, Class<T> targetClass) {
+        return list.stream()
+                .filter(targetClass::isInstance)
+                .map(targetClass::cast)
+                .collect(Collectors.toList());
+    }
+
     // @SuppressWarnings("unchecked")
     // public static <T> T[] arrayGenerator(int size, Class<T> aClass) {
     // return (T[]) Array.newInstance(aClass, size);
