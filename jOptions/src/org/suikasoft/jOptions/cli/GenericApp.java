@@ -22,6 +22,7 @@ import org.suikasoft.jOptions.app.App;
 import org.suikasoft.jOptions.app.AppKernel;
 import org.suikasoft.jOptions.app.AppPersistence;
 import org.suikasoft.jOptions.gui.panels.app.TabProvider;
+import org.suikasoft.jOptions.persistence.XmlPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import pt.up.fe.specs.util.providers.ResourceProvider;
@@ -40,12 +41,6 @@ public class GenericApp implements App {
     private final Class<?> nodeClass;
     private final ResourceProvider icon;
 
-    public GenericApp(String name, StoreDefinition definition,
-            AppPersistence persistence, AppKernel kernel) {
-
-        this(name, definition, persistence, kernel, Collections.emptyList(), null, null);
-    }
-
     private GenericApp(String name, StoreDefinition definition,
             AppPersistence persistence, AppKernel kernel, Collection<TabProvider> otherTabs, Class<?> nodeClass,
             ResourceProvider icon) {
@@ -57,6 +52,17 @@ public class GenericApp implements App {
         this.otherTabs = otherTabs;
         this.nodeClass = nodeClass;
         this.icon = icon;
+    }
+
+    public GenericApp(String name, StoreDefinition definition,
+            AppPersistence persistence, AppKernel kernel) {
+
+        this(name, definition, persistence, kernel, Collections.emptyList(), null, null);
+    }
+
+    public GenericApp(String name, StoreDefinition definition, AppKernel kernel) {
+
+        this(name, definition, new XmlPersistence(definition), kernel, Collections.emptyList(), null, null);
     }
 
     /* (non-Javadoc)
