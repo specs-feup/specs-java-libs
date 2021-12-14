@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.App;
+import org.suikasoft.jOptions.app.AppKernel;
 import org.suikasoft.jOptions.app.AppPersistence;
 import org.suikasoft.jOptions.cli.CommandLineUtils;
 import org.suikasoft.jOptions.gui.SimpleGui;
@@ -144,6 +145,11 @@ public class JOptionsUtils {
         // Otherwise, launch command-line mode
         boolean success = CommandLineUtils.launch(app, args);
         return success ? 0 : -1;
+    }
+
+    public static int executeApp(AppKernel app, List<String> args) {
+        // Instantiate App from AppKernel
+        return executeApp(App.newInstance(app), args);
     }
 
 }
