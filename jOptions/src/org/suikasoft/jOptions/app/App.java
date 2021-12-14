@@ -28,6 +28,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
  * @author Joao Bispo
  *
  */
+@FunctionalInterface
 public interface App {
 
     AppKernel getKernel();
@@ -43,9 +44,14 @@ public interface App {
     /**
      * The options available for this app.
      *
+     * <p>
+     * By default, creates a StoreDefinition from the DataKeys in the AppKernel class.
+     * 
      * @return
      */
-    StoreDefinition getDefinition();
+    default StoreDefinition getDefinition() {
+        return StoreDefinition.newInstanceFromInterface(getClass());
+    }
 
     /**
      * The interface for loading and storing configurations.
@@ -87,6 +93,11 @@ public interface App {
             AppPersistence persistence, AppKernel kernel) {
 
         return newInstance(definition.getName(), definition, persistence, kernel);
+    }
+
+    static App newInstance(AppKernel kernel) {
+        var storeDefinition = StoreDefinition.newInstanceFromInterface(kernel.getClass());
+        return newInstance(storeDefinition, new XmlPersistence(storeDefinition), kernel);
     }
 
 }
