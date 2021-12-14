@@ -242,6 +242,10 @@ public class CommandLineUtils {
 
         for (DataKey<?> option : optionDefs) {
             builder.append(option);
+            var label = option.getLabel();
+            if (!label.isBlank()) {
+                builder.append(" - ").append(label);
+            }
             builder.append("\n");
 
         }
