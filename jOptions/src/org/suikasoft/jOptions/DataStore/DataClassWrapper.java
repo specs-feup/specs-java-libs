@@ -67,8 +67,8 @@ public abstract class DataClassWrapper<T extends DataClass<T>> implements DataCl
     }
 
     @Override
-    public Optional<StoreDefinition> getStoreDefinition() {
-        return data.getStoreDefinition();
+    public Optional<StoreDefinition> getStoreDefinitionTry() {
+        return data.getStoreDefinitionTry();
     }
 
     @Override

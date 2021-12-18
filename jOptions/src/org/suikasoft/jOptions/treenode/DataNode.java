@@ -51,6 +51,12 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
         return data;
     }
 
+    /**
+     * 
+     * @return the class of the base node class of the tree
+     */
+    protected abstract Class<K> getBaseClass();
+
     /*** DataClass IMPLEMENTATION ***/
 
     @Override
@@ -157,8 +163,8 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
     }
 
     @Override
-    public Optional<StoreDefinition> getStoreDefinition() {
-        return getData().getStoreDefinition();
+    public Optional<StoreDefinition> getStoreDefinitionTry() {
+        return getData().getStoreDefinitionTry();
     }
 
     @Override

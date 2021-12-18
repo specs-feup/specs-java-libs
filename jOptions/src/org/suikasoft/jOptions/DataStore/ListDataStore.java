@@ -142,7 +142,7 @@ public class ListDataStore implements DataStore {
     }
 
     @Override
-    public Optional<StoreDefinition> getStoreDefinition() {
+    public Optional<StoreDefinition> getStoreDefinitionTry() {
         return Optional.of(keys);
     }
 

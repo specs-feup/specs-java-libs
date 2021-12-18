@@ -38,14 +38,18 @@ public class SymjaNode extends DataNode<SymjaNode> {
         super(data, children);
     }
 
-    @Override
-    public String toContentString() {
-        return getData().toInlinedString();
-    }
+    // @Override
+    // public String toContentString() {
+    // return getData().toInlinedString();
+    // }
 
     @Override
     protected SymjaNode getThis() {
         return this;
     }
 
+    @Override
+    protected Class<SymjaNode> getBaseClass() {
+        return SymjaNode.class;
+    }
 }

@@ -123,7 +123,7 @@ public class JOptionsUtils {
     }
 
     public static void saveDataStore(File file, DataStore data) {
-        XmlPersistence persistence = data.getStoreDefinition().map(XmlPersistence::new).orElse(new XmlPersistence());
+        XmlPersistence persistence = data.getStoreDefinitionTry().map(XmlPersistence::new).orElse(new XmlPersistence());
         persistence.saveData(file, data);
     }
 

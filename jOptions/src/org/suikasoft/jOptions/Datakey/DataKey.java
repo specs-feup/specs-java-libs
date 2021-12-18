@@ -200,11 +200,11 @@ public interface DataKey<T> extends KeyProvider<String> {
 
             if (value instanceof DataStore) {
                 DataStore dataStoreValue = (DataStore) value;
-                if (dataStoreValue.getStoreDefinition().isPresent()) {
+                if (dataStoreValue.getStoreDefinitionTry().isPresent()) {
                     // Close parenthesis
                     builder.append(")");
 
-                    String dataStoreString = DataKey.toString(dataStoreValue.getStoreDefinition().get().getKeys());
+                    String dataStoreString = DataKey.toString(dataStoreValue.getStoreDefinitionTry().get().getKeys());
                     for (String line : StringLines.newInstance(dataStoreString)) {
                         builder.append("\n").append("   ").append(line);
                     }

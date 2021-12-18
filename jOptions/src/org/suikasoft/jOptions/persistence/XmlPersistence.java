@@ -338,7 +338,7 @@ public class XmlPersistence implements AppPersistence {
     }
 
     public static DataStore getDataStoreToSave(DataStore data) {
-        Optional<StoreDefinition> def = data.getStoreDefinition();
+        Optional<StoreDefinition> def = data.getStoreDefinitionTry();
 
         if (!def.isPresent()) {
             return DataStore.newInstance(data.getName(), data);

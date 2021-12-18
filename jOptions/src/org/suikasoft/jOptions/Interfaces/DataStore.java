@@ -131,7 +131,7 @@ public interface DataStore extends DataClass<DataStore> {
     @Override
     default DataStore set(DataStore dataStore) {
 
-        StoreDefinition definition = getStoreDefinition().orElse(null);
+        StoreDefinition definition = getStoreDefinitionTry().orElse(null);
 
         // for (DataKey<?> key : dataStore.keysWithValues()) {
         for (String key : dataStore.getKeysWithValues()) {
@@ -407,7 +407,7 @@ public interface DataStore extends DataClass<DataStore> {
     default DataStore copy() {
         // Otherwise, tries to use the
         // object copy constructor.
-        if (!getStoreDefinition().isPresent()) {
+        if (!getStoreDefinitionTry().isPresent()) {
             throw new RuntimeException("No StoreDefinition defined, cannot copy. DataStore: " + this);
             // DataStore copy = DataStore.newInstance(getName());
             //
@@ -418,7 +418,7 @@ public interface DataStore extends DataClass<DataStore> {
             // return copy;
         }
 
-        StoreDefinition def = getStoreDefinition().get();
+        StoreDefinition def = getStoreDefinitionTry().get();
         // .orElseThrow(
         // () -> new RuntimeException("Can only copy DataStores that have defined a StoreDefinition"));
 
@@ -508,8 +508,8 @@ public interface DataStore extends DataClass<DataStore> {
         // .collect((Collection<String>) Collectors.toList()))
         // .orElse(getKeysWithValues());
 
-        if (getStoreDefinition().isPresent()) {
-            keys = getStoreDefinition().get().getKeys().stream()
+        if (getStoreDefinitionTry().isPresent()) {
+            keys = getStoreDefinitionTry().get().getKeys().stream()
                     .filter(key -> hasValue(key))
                     .map(key -> key.getName())
                     .collect(Collectors.toList());
@@ -549,7 +549,7 @@ public interface DataStore extends DataClass<DataStore> {
 
     @Override
     default Collection<DataKey<?>> getDataKeysWithValues() {
-        StoreDefinition storeDefinition = getStoreDefinition().orElse(null);
+        StoreDefinition storeDefinition = getStoreDefinitionTry().orElse(null);
 
         if (storeDefinition == null) {
             // SpecsLogs.msgInfo(

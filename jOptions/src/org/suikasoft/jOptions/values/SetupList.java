@@ -243,8 +243,8 @@ public class SetupList implements DataStore {
     }
 
     @Override
-    public Optional<StoreDefinition> getStoreDefinition() {
-        return getPreferredSetup().getStoreDefinition();
+    public Optional<StoreDefinition> getStoreDefinitionTry() {
+        return getPreferredSetup().getStoreDefinitionTry();
     }
 
     @Override

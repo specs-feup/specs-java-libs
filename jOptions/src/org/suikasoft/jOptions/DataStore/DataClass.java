@@ -50,7 +50,7 @@ public interface DataClass<T extends DataClass<T>> {
     }
 
     default Object getValue(String key) {
-        var def = getStoreDefinition().orElseThrow(
+        var def = getStoreDefinitionTry().orElseThrow(
                 () -> new RuntimeException(".getValue() only supported if DataClass has a StoreDefinition"));
 
         var datakey = def.getKey(key);
@@ -59,7 +59,7 @@ public interface DataClass<T extends DataClass<T>> {
     }
 
     default Object setValue(String key, Object value) {
-        var def = getStoreDefinition().orElseThrow(
+        var def = getStoreDefinitionTry().orElseThrow(
                 () -> new RuntimeException(".setValue() only supported if DataClass has a StoreDefinition"));
 
         @SuppressWarnings("unchecked")
@@ -72,8 +72,12 @@ public interface DataClass<T extends DataClass<T>> {
      * 
      * @return an Optional containing a StoreDefinition, if defined. By default returns empty.
      */
-    default Optional<StoreDefinition> getStoreDefinition() {
+    default Optional<StoreDefinition> getStoreDefinitionTry() {
         return Optional.empty();
+    }
+
+    default StoreDefinition getStoreDefinition() {
+        return getStoreDefinitionTry().orElseThrow(() -> new RuntimeException("No StoreDefinition defined"));
     }
 
     // default T set(DataKey<Optional<T>> key, T value) {
@@ -184,8 +188,8 @@ public interface DataClass<T extends DataClass<T>> {
     default String toInlinedString() {
         var keys = getDataKeysWithValues();
 
-        if (getStoreDefinition().isPresent()) {
-            keys = getStoreDefinition().get().getKeys().stream()
+        if (getStoreDefinitionTry().isPresent()) {
+            keys = getStoreDefinitionTry().get().getKeys().stream()
                     .filter(key -> hasValue(key))
                     .collect(Collectors.toList());
         }
@@ -224,4 +228,7 @@ public interface DataClass<T extends DataClass<T>> {
         return set(key, value);
     }
 
+    // default List<DataKey<?>> getKeys() {
+    // return getStoreDefinition().getKeys();
+    // }
 }

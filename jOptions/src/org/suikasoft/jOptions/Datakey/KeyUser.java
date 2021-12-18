@@ -57,11 +57,11 @@ public interface KeyUser {
      * @param noDefaults
      */
     default void check(DataStore data, boolean noDefaults) {
-	if (!data.getStoreDefinition().isPresent()) {
+	if (!data.getStoreDefinitionTry().isPresent()) {
 	    throw new RuntimeException("This method requires that the DataStore has a StoreDefinition");
 	}
 
-	for (DataKey<?> key : data.getStoreDefinition().get().getKeys()) {
+	for (DataKey<?> key : data.getStoreDefinitionTry().get().getKeys()) {
 	    // Check if the key is present
 	    if (data.hasValue(key)) {
 		continue;

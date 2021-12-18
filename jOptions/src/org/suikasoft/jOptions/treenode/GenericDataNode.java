@@ -32,4 +32,9 @@ public class GenericDataNode extends DataNode<GenericDataNode> {
         return this;
     }
 
+    @Override
+    protected Class<GenericDataNode> getBaseClass() {
+        return GenericDataNode.class;
+    }
+
 }

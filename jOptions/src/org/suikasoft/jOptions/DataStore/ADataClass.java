@@ -60,8 +60,8 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     }
 
     @Override
-    public Optional<StoreDefinition> getStoreDefinition() {
-        return data.getStoreDefinition()
+    public Optional<StoreDefinition> getStoreDefinitionTry() {
+        return data.getStoreDefinitionTry()
                 .map(def -> new StoreDefinitionBuilder(getDataClassName()).addDefinition(def).build());
     }
 
@@ -113,7 +113,7 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
 
     @Override
     public Collection<DataKey<?>> getDataKeysWithValues() {
-        StoreDefinition storeDefinition = data.getStoreDefinition().get();
+        StoreDefinition storeDefinition = data.getStoreDefinitionTry().get();
 
         List<DataKey<?>> keysWithValues = new ArrayList<>();
         for (String keyId : data.getKeysWithValues()) {
