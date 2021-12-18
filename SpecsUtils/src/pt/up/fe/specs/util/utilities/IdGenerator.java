@@ -22,19 +22,28 @@ import pt.up.fe.specs.util.collections.AccumulatorMap;
  */
 public class IdGenerator {
 
+    private final String id;
     private final AccumulatorMap<String> acc;
 
     public IdGenerator() {
+        this((String) null);
+    }
+
+    public IdGenerator(String id) {
+        this.id = id;
         this.acc = new AccumulatorMap<>();
     }
 
     public IdGenerator(IdGenerator idGenerator) {
         this.acc = new AccumulatorMap<>(idGenerator.acc);
+        this.id = idGenerator.id;
     }
 
     public String next(String prefix) {
-        Integer suffixValue = acc.add(prefix);
+        var actualPrefix = id != null ? id + prefix : prefix;
 
-        return prefix + suffixValue;
+        Integer suffixValue = acc.add(actualPrefix);
+
+        return actualPrefix + suffixValue;
     }
 }
