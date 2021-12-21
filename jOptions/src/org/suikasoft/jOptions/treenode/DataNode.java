@@ -47,7 +47,8 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
         this.dataClass = new GenericDataClass<>(this.data);
     }
 
-    protected DataStore getData() {
+    public DataStore getData() {
+        // protected DataStore getData() {
         return data;
     }
 
