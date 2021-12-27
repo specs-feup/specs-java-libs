@@ -561,7 +561,7 @@ public class SpecsCollections {
 
     }
 
-    public static <T, M> List<M> map(List<T> list, Function<T, M> mapper) {
+    public static <T, M> List<M> map(Collection<T> list, Function<T, M> mapper) {
         return list.stream()
                 .map(mapper)
                 .collect(Collectors.toList());
