@@ -26,6 +26,7 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.system.Copyable;
 import pt.up.fe.specs.util.treenode.ATreeNode;
 
@@ -173,4 +174,7 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
         return getData().toInlinedString();
     }
 
+    protected String ln() {
+        return SpecsIo.getNewline();
+    }
 }
