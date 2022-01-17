@@ -48,7 +48,7 @@ public class SpecsThreadLocal<T> {
         threadLocal.remove();
     }
 
-    public void removeWithWarning(T dataStore) {
+    public void removeWithWarning() {
         if (!isSet()) {
             SpecsLogs.msgInfo(
                     "Removing value of ThreadLocal of " + aClass.getName() + " that has no value set");
