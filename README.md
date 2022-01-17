@@ -4,7 +4,7 @@ Java libraries created or extended (-Plus suffix) by SPeCS research group
 # Configuring Eclipse
 
   1. Create an Eclipse workspace on a folder outside of the repository. The workspace is local and should not be shared.
-  2. Import the configurations in the folder SupportJavaLibs/configs/
+  2. Import the configurations in the folder `SupportJavaLibs/configs/`
       1. Go to Window > Preferences
       2. Go to Java > Code Style > Code Templates, press "Import" and choose "codetemplates.xml"
       3. Go to Java > Code Style > Formatter, press "Import" and choose "java_code_formatter.xml".
