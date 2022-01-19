@@ -245,13 +245,17 @@ public interface JsEngine {
 
     Object eval(String code);
 
-    Object eval(String script, Object scope);
+    Object eval(String script, Object scope, JsFileType type);
 
-    Object call(Object function, Object... args);
+    default Object eval(String code, JsFileType type) {
+        return eval(code, type, "unnamed_code_of_type_" + type.getExtension());
+    }
 
     default Object eval(String code, JsFileType type, String source) {
         throw new NotImplementedException(this);
     }
+
+    Object call(Object function, Object... args);
 
     // default Bindings createBindings() {
     // return getEngine().createBindings();

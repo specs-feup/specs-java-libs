@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.jsengine;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
@@ -157,7 +157,7 @@ public class JsEngineTest {
 
         // assertEquals("Hello", engine1.eval("var b = this.aString; b;", engine1.asBindings(scope)).toString());
         // assertEquals("Hello", engine1.eval("var b = aString; b;", engine1.asBindings(scope)).toString());
-        assertEquals("Hello", engine1.eval("var b = aString; b;", scope).toString());
+        assertEquals("Hello", engine1.eval("var b = aString; b;", scope, JsFileType.NORMAL).toString());
         // assertEquals("undefined", engine1.eval("var b = this.aString; b;").toString());
         assertEquals("true", engine1.eval("typeof aString === 'undefined'").toString());
     }

@@ -111,6 +111,9 @@ public class GraalvmJsEngine implements JsEngine {
 
     @Override
     public Object eval(String code, JsFileType type, String source) {
+        // GraalVM documentation indicates that only .mjs files should be loaded as modules
+        // https://www.graalvm.org/reference-manual/js/Modules/
+
         switch (type) {
         case NORMAL:
             return eval(code);
@@ -119,8 +122,15 @@ public class GraalvmJsEngine implements JsEngine {
                 return eval(Source.newBuilder("js", new StringBuilder(code), source)
                         .mimeType("application/javascript+module").build());
             } catch (IOException e) {
-                throw new RuntimeException("Could not load JS code", e);
+                throw new RuntimeException("Could not load JS code as module", e);
             }
+            // case COMMON:
+            // try {
+            // return eval(Source.newBuilder("js", new StringBuilder(code), source)
+            // .build());
+            // } catch (IOException e) {
+            // throw new RuntimeException("Could not load JS code as common javascript", e);
+            // }
         default:
             throw new NotImplementedException(type);
         }
@@ -136,7 +146,9 @@ public class GraalvmJsEngine implements JsEngine {
 
         try {
             // return eval(Source.newBuilder("js", new StringBuilder(code), tempFile.getAbsolutePath()).build());
-            return eval(Source.newBuilder("js", new StringBuilder(code), "unnamed_js_code").build());
+            return eval(Source.newBuilder("js", new StringBuilder(code), "unnamed_js_code")
+                    // .mimeType("application/javascript+module")
+                    .build());
         } catch (IOException e) {
             throw new RuntimeException("Could not load JS code", e);
         }
@@ -291,7 +303,7 @@ public class GraalvmJsEngine implements JsEngine {
      * Adds the members in the given scope before evaluating the code.
      */
     @Override
-    public Object eval(String code, Object scope) {
+    public Object eval(String code, Object scope, JsFileType type) {
 
         Value scopeValue = asValue(scope);
 
@@ -319,7 +331,7 @@ public class GraalvmJsEngine implements JsEngine {
         }
 
         // Execute new code
-        Value result = eval(code);
+        var result = eval(code, type);
 
         // Restore previous values
         for (var entry : previousValues.entrySet()) {
