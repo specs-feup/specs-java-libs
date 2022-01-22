@@ -120,7 +120,8 @@ public class GraalvmJsEngine implements JsEngine {
         case MODULE:
             try {
                 return eval(Source.newBuilder("js", new StringBuilder(code), source)
-                        .mimeType("application/javascript+module").build());
+                        .mimeType("application/javascript+module")
+                        .build());
             } catch (IOException e) {
                 throw new RuntimeException("Could not load JS code as module", e);
             }
@@ -139,6 +140,7 @@ public class GraalvmJsEngine implements JsEngine {
 
     @Override
     public Value eval(String code) {
+
         // var tempFolder = SpecsIo.getTempFolder("temp_js_code");
         // var tempFile = new File(tempFolder, UUID.randomUUID() + ".js");
         // SpecsIo.deleteOnExit(tempFile);
