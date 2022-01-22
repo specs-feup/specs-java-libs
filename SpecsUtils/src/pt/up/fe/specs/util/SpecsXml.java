@@ -360,4 +360,11 @@ public class SpecsXml {
         return children;
     }
 
+    public static void toTree(Node rootNode, String spacer) {
+        System.out.println(spacer + rootNode.getNodeName() + " -> " + rootNode.getNodeValue());
+        NodeList nl = rootNode.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++)
+            toTree(nl.item(i), spacer + "   ");
+    }
+
 }
