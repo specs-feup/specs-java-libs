@@ -153,13 +153,12 @@ public interface ResourceProvider extends FileResourceProvider {
     }
 
     /**
-     * Returns the path that should be used when copying this resource. By default returns the same as
-     * getResourceLocation().
+     * Returns the path that should be used when copying this resource. By default returns the same as getResource().
      * 
      * @return
      */
     default String getFileLocation() {
-        return getResourceLocation();
+        return getResource();
     }
 
     default File write() {
