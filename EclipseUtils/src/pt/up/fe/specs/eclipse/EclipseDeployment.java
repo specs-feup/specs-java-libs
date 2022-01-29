@@ -36,6 +36,7 @@ import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
 import pt.up.fe.specs.lang.SpecsPlatforms;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 import pt.up.fe.specs.util.utilities.Replacer;
 
@@ -330,6 +331,8 @@ public class EclipseDeployment {
         template = template.replace("<JAR_LIST>", jarList);
         template = template.replace("<MAIN_FILESET>", mainFileset);
         template = template.replace("<JAR_ZIPFILESET>", jarZipfileset);
+        template = template.replace("<BUILD_NUMBER_ATTR>", SpecsSystem.getBuildNumberAttr());
+        template = template.replace("<BUILD_NUMBER>", data.getBuildNumber());
 
         // System.out.println("IVY RESOLVE 1:\n" + BuildUtils.getResolveTasks(parser, dependentProjects));
         // System.out.println("IVY RESOLVE 2:\n" + BuildUtils.getResolveTask(classpathFiles));

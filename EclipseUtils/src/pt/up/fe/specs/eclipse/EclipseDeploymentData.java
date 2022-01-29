@@ -16,6 +16,7 @@ package pt.up.fe.specs.eclipse;
 import java.io.File;
 
 import pt.up.fe.specs.guihelper.BaseTypes.ListOfSetups;
+import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.properties.SpecsProperties;
 
 /**
@@ -36,6 +37,7 @@ public class EclipseDeploymentData {
     public final ListOfSetups tasks;
 
     private File resultFile;
+    private final String buildNumber;
 
     public EclipseDeploymentData(File workspaceFolder, String projetName, String nameOfOutputJar, String mainClass,
             JarType jarType, SpecsProperties pomInfo, File developersXml, String version, ListOfSetups tasks) {
@@ -50,6 +52,7 @@ public class EclipseDeploymentData {
         this.version = version;
         this.tasks = tasks;
         this.resultFile = null;
+        this.buildNumber = SpecsSystem.createBuildNumber();
     }
 
     public void setResultFile(File resultFile) {
@@ -60,4 +63,7 @@ public class EclipseDeploymentData {
         return resultFile;
     }
 
+    public String getBuildNumber() {
+        return buildNumber;
+    }
 }
