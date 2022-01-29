@@ -33,6 +33,8 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -87,6 +89,8 @@ public class SpecsSystem {
 
     private static final Map<String, Method> CACHED_METHODS = new HashMap<>();
     private static final Map<String, Optional<Field>> CACHED_FIELDS = new HashMap<>();
+
+    private static final String BUILD_NUMBER_ATTR = "Build-Number";
 
     private static boolean testIsDebug() {
 
@@ -612,8 +616,8 @@ public class SpecsSystem {
      * Method with standard initialization procedures for a Java SE program.
      *
      * <p>
-     * Turns off Security Manager, for Java WebStart, and setups the logger. Additionally, looks for the file
-     * 'suika.properties' on the running folder and applies its options.
+     * Setups the logger and the Look&Feel for Swing. Additionally, looks for the file 'suika.properties' on the working
+     * folder and applies its options.
      */
     public static void programStandardInit() {
         // fixes();
@@ -1674,11 +1678,24 @@ public class SpecsSystem {
         try {
             var manifest = new Manifest(SpecsIo.resourceToStream("META-INF/MANIFEST.MF"));
             var attr = manifest.getMainAttributes();
-            return attr.getValue("Build-Number");
+            return attr.getValue(getBuildNumberAttr());
         } catch (IOException e) {
             SpecsLogs.info("Could not read manifest file: " + e.getMessage());
             return null;
         }
 
+    }
+
+    /**
+     * @return the name of the attribute for SPeCS build number
+     */
+    public static String getBuildNumberAttr() {
+        return BUILD_NUMBER_ATTR;
+    }
+
+    public static String createBuildNumber() {
+        var dtf = DateTimeFormatter.ofPattern("uuuuMMdd-HHmm");
+        var now = LocalDateTime.now();
+        return dtf.format(now); // 20210322-16:37
     }
 }
