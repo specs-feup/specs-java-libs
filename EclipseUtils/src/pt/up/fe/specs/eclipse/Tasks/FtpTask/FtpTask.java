@@ -41,7 +41,7 @@ public class FtpTask implements TaskExecutor {
         File outputJar = DeployUtils.getResultFile(data);
 
         // Check if it needs name a name change
-        outputJar = TaskUtils.updateOutput(outputJar, ftpData.outputJarFilename);
+        outputJar = TaskUtils.updateOutput(outputJar, ftpData.outputJarFilename, data);
 
         // Get ANT script
         String antftp = buildScript(outputJar, ftpData);

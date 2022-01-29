@@ -16,6 +16,7 @@ package pt.up.fe.specs.eclipse.Tasks;
 import java.io.File;
 import java.util.Map;
 
+import pt.up.fe.specs.eclipse.EclipseDeploymentData;
 import pt.up.fe.specs.eclipse.Tasks.Copy.CopySetup;
 import pt.up.fe.specs.eclipse.Tasks.Copy.CopyTask;
 import pt.up.fe.specs.eclipse.Tasks.FtpTask.FtpSetup;
@@ -74,12 +75,15 @@ public class TaskUtils {
      * @param newName
      * @return
      */
-    public static File updateOutput(File file, String newName) {
+    public static File updateOutput(File file, String newName, EclipseDeploymentData data) {
 
         // If newName is null, return original file
         if (newName == null) {
             return file;
         }
+
+        // Process macros
+        newName = DeployUtils.processFilename(newName, data);
 
         // Update newName if extension needs to be changed
         if (!SpecsIo.getExtension(file).equals(SpecsIo.getExtension(newName))) {

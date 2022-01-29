@@ -49,7 +49,7 @@ public class SftpTask implements TaskExecutor {
         File outputJar = DeployUtils.getResultFile(data);
 
         // Check if it needs a name change
-        outputJar = TaskUtils.updateOutput(outputJar, sftpData.outputJarFilename);
+        outputJar = TaskUtils.updateOutput(outputJar, sftpData.outputJarFilename, data);
         /*
         	if(sftpData.outputJarFilename != null) {
         	    // New file in temporary folder

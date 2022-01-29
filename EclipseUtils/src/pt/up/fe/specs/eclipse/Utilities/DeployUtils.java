@@ -47,6 +47,8 @@ public class DeployUtils {
 
     // private static final String PREFIX_PROP_USER_LIB = "org.eclipse.jdt.core.userLibrary";
 
+    private static final String MACRO_BUILD_NUMBER = "${BUILD_NUMBER}";
+
     private static final String TEMPORARY_FOLDER = "temp";
     private static final String PREFIX = "           ";
 
@@ -207,11 +209,22 @@ public class DeployUtils {
      * @param jarFilename
      * @return
      */
-    public static File getOutputJar(String jarFilename) {
+    public static File getOutputJar(EclipseDeploymentData data) {
+        // Process JAR filename
+        var jarFilename = processFilename(data.nameOfOutputJar, data);
+
         // The output jar will be in a temporary folder
         File tempFolder = getTempFolder();
 
         return new File(tempFolder, jarFilename);
+    }
+
+    public static String processFilename(String filename, EclipseDeploymentData data) {
+
+        // Replace macro for build number
+        filename = filename.replace(MACRO_BUILD_NUMBER, data.getBuildNumber());
+
+        return filename;
     }
 
     /**

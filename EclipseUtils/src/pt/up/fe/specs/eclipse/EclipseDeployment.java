@@ -62,10 +62,17 @@ public class EclipseDeployment {
     }
 
     private final EclipseDeploymentData data;
+    // private final Map<String, TaskExecutor> taskMap;
 
     public EclipseDeployment(EclipseDeploymentData data) {
         this.data = data;
+        // this.taskMap = buildTasks();
     }
+
+    // private Map<String, TaskExecutor> buildTasks() {
+    // // TODO Auto-generated method stub
+    // return null;
+    // }
 
     public int execute() {
 
@@ -186,7 +193,7 @@ public class EclipseDeployment {
         String template = SpecsIo.getResource(DeployResource.DEPLOY_JAR_IN_JAR_TEMPLATE);
 
         // Output JAR
-        File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+        File outputJar = DeployUtils.getOutputJar(data);
 
         template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
         template = template.replace("<MAIN_CLASS>", data.mainClass);
@@ -243,7 +250,7 @@ public class EclipseDeployment {
         String template = SpecsIo.getResource(DeployResource.DEPLOY_REPACK_TEMPLATE);
 
         // Output JAR
-        File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+        File outputJar = DeployUtils.getOutputJar(data);
 
         template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
         template = template.replace("<MAIN_CLASS>", data.mainClass);
@@ -304,7 +311,7 @@ public class EclipseDeployment {
         String template = SpecsIo.getResource(DeployResource.DEPLOY_SUBFOLDER_ZIP_TEMPLATE);
 
         // Output JAR
-        File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+        File outputJar = DeployUtils.getOutputJar(data);
         String outputJarname = outputJar.getName();
         String outputJarFoldername = outputJar.getParent();
         String libFoldername = data.projetName + "_lib";
@@ -383,7 +390,7 @@ public class EclipseDeployment {
         // String jarList = DeployUtils.buildJarList(classpathFiles, ivyFolders);
 
         // Output JAR
-        File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+        File outputJar = DeployUtils.getOutputJar(data);
 
         // Subfolder name
         String subFoldername = "libs";
@@ -515,7 +522,7 @@ public class EclipseDeployment {
         String template = SpecsIo.getResource(DeployResource.DEPLOY_ONE_JAR_TEMPLATE);
 
         // Output JAR
-        File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
+        File outputJar = DeployUtils.getOutputJar(data);
 
         template = template.replace("<OUTPUT_JAR_FILE>", outputJar.getAbsolutePath());
         template = template.replace("<MAIN_CLASS>", data.mainClass);

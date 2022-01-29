@@ -49,7 +49,7 @@ public class CopyTask implements TaskExecutor {
         // File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
         File outputJar = DeployUtils.getResultFile(data);
 
-        outputJar = TaskUtils.updateOutput(outputJar, copyData.outputJarFilename);
+        outputJar = TaskUtils.updateOutput(outputJar, copyData.outputJarFilename, data);
 
         // Get output file
         // File outputFile = getOutputFile(outputJar, outputFolder, copyData.outputJarFilename);
