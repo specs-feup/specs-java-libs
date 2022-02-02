@@ -383,7 +383,12 @@ public class LineStream implements AutoCloseable {
             return Collections.emptyList();
         }
 
-        return lastLines.stream().collect(Collectors.toList());
+        var lines = lastLines.stream().collect(Collectors.toCollection(() -> new ArrayList<>()));
+
+        // Lines are stored in reversed order, last ones first
+        Collections.reverse(lines);
+
+        return lines;
     }
 
 }
