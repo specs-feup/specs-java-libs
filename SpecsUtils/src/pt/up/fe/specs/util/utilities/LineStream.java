@@ -22,14 +22,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.collections.pushingqueue.ArrayPushingQueue;
+import pt.up.fe.specs.util.collections.pushingqueue.PushingQueue;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 /**
@@ -55,6 +59,9 @@ public class LineStream implements AutoCloseable {
     private long readLines;
     private long readChars;
 
+    // Debug
+    private final PushingQueue<String> lastLines;
+
     /**
      * Default CharSet used in file operations.
      */
@@ -65,7 +72,7 @@ public class LineStream implements AutoCloseable {
      * 
      * @param reader
      */
-    private LineStream(BufferedReader reader, Optional<String> filename) {
+    private LineStream(BufferedReader reader, Optional<String> filename, Integer lastLines) {
         this.reader = reader;
         name = filename;
 
@@ -78,6 +85,8 @@ public class LineStream implements AutoCloseable {
 
         this.readLines = 0;
         this.readChars = 0;
+
+        this.lastLines = lastLines != null ? new ArrayPushingQueue<>(lastLines) : null;
     }
 
     public void setDumpFile(File file) {
@@ -178,9 +187,20 @@ public class LineStream implements AutoCloseable {
      *         RuntimeException.
      */
     public static LineStream newInstance(Reader reader, Optional<String> name) {
-        final BufferedReader newReader = new BufferedReader(reader);
-        return new LineStream(newReader, name);
+        return newInstance(reader, name, null);
+    }
 
+    /**
+     * 
+     * @param reader
+     * @param name
+     * @param lastLines
+     * @return a new LineStream backed by the given Reader. If the object could not be created, throws a
+     *         RuntimeException.
+     */
+    public static LineStream newInstance(Reader reader, Optional<String> name, Integer lastLines) {
+        final BufferedReader newReader = new BufferedReader(reader);
+        return new LineStream(newReader, name, lastLines);
     }
 
     public int getLastLineIndex() {
@@ -246,6 +266,11 @@ public class LineStream implements AutoCloseable {
             if (line == null) {
                 fileEnded = true;
                 reader.close();
+            }
+
+            // Store line, if active
+            if (lastLines != null) {
+                lastLines.insertElement(line);
             }
 
             return line;
@@ -350,6 +375,15 @@ public class LineStream implements AutoCloseable {
         } catch (final IOException e) {
             SpecsLogs.warn("Could not close LineReader.", e);
         }
+    }
+
+    public List<String> getLastLines() {
+        if (lastLines == null) {
+            SpecsLogs.debug(() -> "LineStream.getLastLines(): not storing last lines");
+            return Collections.emptyList();
+        }
+
+        return lastLines.stream().collect(Collectors.toList());
     }
 
 }
