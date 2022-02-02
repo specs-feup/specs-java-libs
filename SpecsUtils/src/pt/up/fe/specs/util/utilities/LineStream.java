@@ -60,7 +60,7 @@ public class LineStream implements AutoCloseable {
     private long readChars;
 
     // Debug
-    private final PushingQueue<String> lastLines;
+    private PushingQueue<String> lastLines;
 
     /**
      * Default CharSet used in file operations.
@@ -72,7 +72,7 @@ public class LineStream implements AutoCloseable {
      * 
      * @param reader
      */
-    private LineStream(BufferedReader reader, Optional<String> filename, Integer lastLines) {
+    private LineStream(BufferedReader reader, Optional<String> filename) {
         this.reader = reader;
         name = filename;
 
@@ -86,7 +86,7 @@ public class LineStream implements AutoCloseable {
         this.readLines = 0;
         this.readChars = 0;
 
-        this.lastLines = lastLines != null ? new ArrayPushingQueue<>(lastLines) : null;
+        this.lastLines = null;
     }
 
     public void setDumpFile(File file) {
@@ -187,20 +187,8 @@ public class LineStream implements AutoCloseable {
      *         RuntimeException.
      */
     public static LineStream newInstance(Reader reader, Optional<String> name) {
-        return newInstance(reader, name, null);
-    }
-
-    /**
-     * 
-     * @param reader
-     * @param name
-     * @param lastLines
-     * @return a new LineStream backed by the given Reader. If the object could not be created, throws a
-     *         RuntimeException.
-     */
-    public static LineStream newInstance(Reader reader, Optional<String> name, Integer lastLines) {
         final BufferedReader newReader = new BufferedReader(reader);
-        return new LineStream(newReader, name, lastLines);
+        return new LineStream(newReader, name);
     }
 
     public int getLastLineIndex() {
@@ -375,6 +363,18 @@ public class LineStream implements AutoCloseable {
         } catch (final IOException e) {
             SpecsLogs.warn("Could not close LineReader.", e);
         }
+    }
+
+    public void enableLastLines(int numLastLines) {
+        if (this.lastLines != null) {
+            SpecsLogs.debug(() -> "LineStream.enableLastLines(): already enabled, erasing previous information");
+        }
+
+        this.lastLines = new ArrayPushingQueue<>(numLastLines);
+    }
+
+    public void disableLastLines() {
+        this.lastLines = null;
     }
 
     public List<String> getLastLines() {
