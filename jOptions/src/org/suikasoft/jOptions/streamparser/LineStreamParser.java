@@ -23,6 +23,7 @@ import org.suikasoft.jOptions.DataStore.ADataClass;
 import org.suikasoft.jOptions.DataStore.DataClass;
 
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable {
@@ -78,6 +79,9 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
 
         try (LineStream lines = LineStream.newInstance(inputStream, null)) {
             lines.setDumpFile(dumpFile);
+            if (SpecsSystem.isDebug()) {
+                lines.enableLastLines(10);
+            }
 
             while (lines.hasNextLine()) {
 
@@ -100,6 +104,12 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
                     // System.out.println("LINE NOT PARSED! Next line: " + lines.peekNextLine());
                     // Add line to the warnings
                     if (storeLinesNotParsed) {
+                        if (SpecsSystem.isDebug()) {
+                            SpecsLogs.debug(() -> "LineStreamParser: line not parsed, '" + currentLine
+                                    + "'\nPrevious lines:\n" + lines.getLastLines());
+
+                        }
+
                         linesNotParsed.append(currentLine).append("\n");
                     }
 
