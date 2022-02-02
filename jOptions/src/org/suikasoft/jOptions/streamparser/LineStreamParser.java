@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.DataStore.ADataClass;
 import org.suikasoft.jOptions.DataStore.DataClass;
@@ -106,7 +107,8 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
                     if (storeLinesNotParsed) {
                         if (SpecsSystem.isDebug()) {
                             SpecsLogs.debug(() -> "LineStreamParser: line not parsed, '" + currentLine
-                                    + "'\nPrevious lines:\n" + lines.getLastLines());
+                                    + "'\nPrevious lines:\n"
+                                    + lines.getLastLines().stream().collect(Collectors.joining("\n")));
 
                         }
 
