@@ -13,11 +13,13 @@
 
 package org.suikasoft.jOptions;
 
+import java.util.Optional;
+
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
 
 public interface JOptionKeys {
 
-    DataKey<String> CURRENT_FOLDER_PATH = KeyFactory.string("joptions_current_folder_path");
+    DataKey<Optional<String>> CURRENT_FOLDER_PATH = KeyFactory.optional("joptions_current_folder_path");
     DataKey<Boolean> USE_RELATIVE_PATHS = KeyFactory.bool("joptions_use_relative_paths");
 }

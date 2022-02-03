@@ -207,11 +207,13 @@ public class KeyFactory {
 
         // If it has a working folder set
         var workingFolder = dataStore.get(JOptionKeys.CURRENT_FOLDER_PATH);
-        if (!workingFolder.isEmpty()) {
+        // if (!workingFolder.isEmpty()) {
+        if (workingFolder.isPresent()) {
 
             // If path is not absolute, create new file with working folder as parent
             if (!currentFile.isAbsolute()) {
-                File parentFolder = new File(workingFolder);
+                // File parentFolder = new File(workingFolder);
+                File parentFolder = new File(workingFolder.get());
                 currentFile = new File(parentFolder, currentFile.getPath());
             }
 
@@ -227,11 +229,13 @@ public class KeyFactory {
         }
 
         // If relative paths is enabled, make relative path with working folder.
-        if (!workingFolder.isEmpty() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
-            currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder)));
+        // if (!workingFolder.isEmpty() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
+        if (workingFolder.isPresent() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
+            currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder.get())));
         }
 
-        if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && !workingFolder.isEmpty()) {
+        // if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && !workingFolder.isEmpty()) {
+        if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && workingFolder.isPresent()) {
             currentFile = SpecsIo.getCanonicalFile(currentFile);
         }
 
@@ -571,7 +575,8 @@ public class KeyFactory {
     public static Map<File, File> customSetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
 
         // If it has no working folder set, just return value
-        Optional<String> workingFolderTry = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        // Optional<String> workingFolderTry = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        Optional<String> workingFolderTry = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
         if (!workingFolderTry.isPresent()) {
             // System.out.println("NO CURRENT FOLDER PATH");
             return value;

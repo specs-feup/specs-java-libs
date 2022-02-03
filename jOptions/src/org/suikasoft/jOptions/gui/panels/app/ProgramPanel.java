@@ -154,7 +154,7 @@ public class ProgramPanel extends GuiTab {
      */
     /**
      * @param showStackTrace
-     *                           the showStackTrace to set
+     *            the showStackTrace to set
      */
     /*
     public void setShowStackTrace(boolean showStackTrace) {
@@ -385,7 +385,8 @@ public class ProgramPanel extends GuiTab {
         // String workingFolderPath = configFile.getAbsoluteFile().getParent();
 
         getData().set(AppKeys.CONFIG_FILE, new File(getFilenameTextField().getEditor().getItem().toString()));
-        getData().set(JOptionKeys.CURRENT_FOLDER_PATH, workingFolder.getPath());
+        getData().set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(workingFolder.getPath()));
+        // getData().set(JOptionKeys.CURRENT_FOLDER_PATH, workingFolder.getPath());
     }
 
     /* (non-Javadoc)

@@ -19,6 +19,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -142,7 +143,8 @@ public class OptionsPanel extends GuiTab {
             updateFileInfoString();
 
             // Update current folder path
-            getData().set(JOptionKeys.CURRENT_FOLDER_PATH, SpecsIo.getCanonicalFile(file).getParent());
+            getData().set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(SpecsIo.getCanonicalFile(file).getParent()));
+            // getData().set(JOptionKeys.CURRENT_FOLDER_PATH, SpecsIo.getCanonicalFile(file).getParent());
             // updateFile(file);
         }
     }

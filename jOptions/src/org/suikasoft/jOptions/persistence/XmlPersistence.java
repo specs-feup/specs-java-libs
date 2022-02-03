@@ -139,7 +139,7 @@ public class XmlPersistence implements AppPersistence {
             // return null;
         }
 
-        parsedObject.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
+        parsedObject.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         parsedObject.set(JOptionKeys.USE_RELATIVE_PATHS, false);
 
         // If no definition defined, show warning and return parsed object
@@ -183,7 +183,7 @@ public class XmlPersistence implements AppPersistence {
         }
 
         // Set configuration file information
-        dataStore.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
+        dataStore.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         // dataStore.set(JOptionKeys.USE_RELATIVE_PATHS, false);
 
         // dataStore.set(parsedObject);
@@ -320,7 +320,7 @@ public class XmlPersistence implements AppPersistence {
         // }
 
         // When saving, set config file and use relative paths
-        data.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
+        data.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         data.set(JOptionKeys.USE_RELATIVE_PATHS, true);
 
         // DataStore to write. Use same name to avoid conflicts

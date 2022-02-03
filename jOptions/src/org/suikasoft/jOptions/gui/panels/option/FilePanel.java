@@ -113,7 +113,7 @@ public class FilePanel extends KeyPanel<File> {
 
         File currentFile = getFile(textField.getText(), getKey(), getData());
         if (currentFile.getPath().isEmpty()) {
-            Optional<String> currentFolderPath = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+            Optional<String> currentFolderPath = getData().get(JOptionKeys.CURRENT_FOLDER_PATH);
             if (currentFolderPath.isPresent()) {
                 currentFile = SpecsIo.getCanonicalFile(new File(currentFolderPath.get()));
             }
@@ -129,7 +129,7 @@ public class FilePanel extends KeyPanel<File> {
         File file = fc.getSelectedFile();
 
         // Try to make path relative to current setup file
-        Optional<String> currentFolderPath = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        Optional<String> currentFolderPath = getData().get(JOptionKeys.CURRENT_FOLDER_PATH);
         if (currentFolderPath.isPresent()) {
             String relativePath = SpecsIo.getRelativePath(file, new File(currentFolderPath.get()));
 
@@ -145,7 +145,7 @@ public class FilePanel extends KeyPanel<File> {
 
     private static File getFile(String fieldValue, DataKey<File> key, DataStore data) {
 
-        Optional<String> currentFolderPath = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        Optional<String> currentFolderPath = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
         if (!currentFolderPath.isPresent()) {
             // LoggingUtils.msgWarn("CHECK THIS CASE, WHEN CONFIG IS NOT DEFINED");
             return new File(fieldValue);
@@ -154,7 +154,7 @@ public class FilePanel extends KeyPanel<File> {
         DataStore tempData = DataStore.newInstance("FilePanelTemp", data);
         // When reading a value from the GUI to the user DataStore, use absolute path
 
-        tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, currentFolderPath.get());
+        tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(currentFolderPath.get()));
         tempData.set(JOptionKeys.USE_RELATIVE_PATHS, false);
         tempData.setString(key, fieldValue);
 
@@ -179,7 +179,7 @@ public class FilePanel extends KeyPanel<File> {
 
         // When showing the path in the GUI, make it relative to the current setup file
 
-        Optional<String> currentFolder = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        Optional<String> currentFolder = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
         // System.out.println("GUI SET ENTRY VALUE:" + currentValue);
         // System.out.println("GUI SET CURRENT FOLDER:" + currentFolder);
         if (currentFolder.isPresent()) {

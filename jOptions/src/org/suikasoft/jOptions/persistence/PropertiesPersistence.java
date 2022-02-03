@@ -63,7 +63,7 @@ public class PropertiesPersistence implements AppPersistence {
             dataStore.add(dataKey, dataKey.decode(value));
         }
 
-        dataStore.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
+        dataStore.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         dataStore.set(JOptionKeys.USE_RELATIVE_PATHS, false);
 
         return dataStore;
@@ -81,7 +81,7 @@ public class PropertiesPersistence implements AppPersistence {
         // }
 
         // When saving, set config file and use relative paths
-        data.set(JOptionKeys.CURRENT_FOLDER_PATH, file.getAbsoluteFile().getParent());
+        data.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         data.set(JOptionKeys.USE_RELATIVE_PATHS, true);
 
         // DataStore to write. Use same name to avoid conflicts
