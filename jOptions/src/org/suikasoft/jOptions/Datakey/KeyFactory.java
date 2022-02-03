@@ -217,12 +217,13 @@ public class KeyFactory {
         // System.out.println("CUSTOM GETTER - MAKE RELATIVE:" + dataStore.get(JOptionKeys.USE_RELATIVE_PATHS));
 
         // If it has a working folder set
-        Optional<String> workingFolder = dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
-        if (workingFolder.isPresent()) {
+        // Optional<String> workingFolder = dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
+        var workingFolder = dataStore.get(JOptionKeys.CURRENT_FOLDER_PATH);
+        // if (workingFolder.isPresent()) {
+        if (!workingFolder.isEmpty()) {
             // If path is not absolute, create new file with working folder as parent
-
             if (!currentFile.isAbsolute()) {
-                File parentFolder = new File(workingFolder.get());
+                File parentFolder = new File(workingFolder);
                 currentFile = new File(parentFolder, currentFile.getPath());
             }
 
@@ -239,11 +240,13 @@ public class KeyFactory {
         }
 
         // If relative paths is enabled, make relative path with working folder.
-        if (workingFolder.isPresent() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
-            currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder.get())));
+        // if (workingFolder.isPresent() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
+        if (!workingFolder.isEmpty() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
+            currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder)));
         }
 
-        if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && workingFolder.isPresent()) {
+        // if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && workingFolder.isPresent()) {
+        if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && !workingFolder.isEmpty()) {
             currentFile = SpecsIo.getCanonicalFile(currentFile);
         }
 
