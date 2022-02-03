@@ -198,29 +198,17 @@ public class KeyFactory {
     public static File customGetterFile(File file, DataStore dataStore, boolean isFolder, boolean isFile,
             boolean create, boolean exists) {
 
-        // System.out.println("RECEIVED:" + file);
         // If an empty path, return an empty path
         if (file.getPath().isEmpty() && !isFolder && isFile && !create) {
-            // System.out.println("RETURN 0:" + file);
-            /*
-            if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
-                return file.getAbsoluteFile();
-            }
-            */
             return file;
         }
 
         File currentFile = file;
 
-        // System.out.println("CUSTOM GETTER - CURRENT FOLDER:" +
-        // dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH));
-        // System.out.println("CUSTOM GETTER - MAKE RELATIVE:" + dataStore.get(JOptionKeys.USE_RELATIVE_PATHS));
-
         // If it has a working folder set
-        // Optional<String> workingFolder = dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
         var workingFolder = dataStore.get(JOptionKeys.CURRENT_FOLDER_PATH);
-        // if (workingFolder.isPresent()) {
         if (!workingFolder.isEmpty()) {
+
             // If path is not absolute, create new file with working folder as parent
             if (!currentFile.isAbsolute()) {
                 File parentFolder = new File(workingFolder);
@@ -228,7 +216,6 @@ public class KeyFactory {
             }
 
         }
-        // System.out.println("CUSTOM GET FOLDER:" + dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH));
 
         currentFile = processPath(isFolder, isFile, create, currentFile);
 
@@ -240,12 +227,10 @@ public class KeyFactory {
         }
 
         // If relative paths is enabled, make relative path with working folder.
-        // if (workingFolder.isPresent() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
         if (!workingFolder.isEmpty() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
             currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder)));
         }
 
-        // if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && workingFolder.isPresent()) {
         if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && !workingFolder.isEmpty()) {
             currentFile = SpecsIo.getCanonicalFile(currentFile);
         }
@@ -265,6 +250,7 @@ public class KeyFactory {
 
         // Is a file
         if (isFile) {
+
             // Test if it is not a folder
             if (currentFile.isDirectory()) {
                 throw new RuntimeException("File key has directory as value: '"
@@ -409,7 +395,6 @@ public class KeyFactory {
         return setupList(id, definitions);
     }
 
-    // public static DataKey<DataStore> dataStore(String id, StoreDefinitionProvider provider) {
     public static DataKey<DataStore> dataStore(String id, StoreDefinition definition) {
 
         return object(id, DataStore.class)
@@ -432,6 +417,7 @@ public class KeyFactory {
 
         DataStore dataStore = DataStore.newInstance(definition);
         for (Entry<String, String> entry : map.entrySet()) {
+
             // Determine key
             DataKey<?> key = definition.getKey(entry.getKey());
 
@@ -468,12 +454,6 @@ public class KeyFactory {
         SpecsCheck.checkArgument(enums.length > 0, () -> "Must give at least one enum");
 
         return multiplechoiceList(id, new EnumCodec<>((Class<T>) enums[0].getClass()), Arrays.asList(enums));
-
-        //
-        // return generic(id, (List<T>) new ArrayList<>(Arrays.asList(enums[0])))
-        // .setDefault(() -> new ArrayList<>(Arrays.asList(enums)))
-        // .setDecoder(new MultiEnumCodec<>((Class<T>) enums[0].getClass()))
-        // .setKeyPanelProvider((key, data) -> new MultiEnumMultipleChoicePanel<>(key, data));
     }
 
     /**
@@ -589,9 +569,7 @@ public class KeyFactory {
     }
 
     public static Map<File, File> customSetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
-        // System.out.println("CUSTOM SETTER: ");
-        // System.out.println("ACCESSING " + JOptionKeys.CURRENT_FOLDER_PATH.getKey());
-        // System.out.println("OH DATA: " + data);
+
         // If it has no working folder set, just return value
         Optional<String> workingFolderTry = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
         if (!workingFolderTry.isPresent()) {
@@ -613,20 +591,10 @@ public class KeyFactory {
                     : SpecsIo.getRelativePath(previousBase, workingFolder, true).orElse(previousBase.toString());
 
             // New path must take into account base
-            // String newPath = SpecsIo.getRelativePath(previousPath, new File(workingFolder, newBase), true)
-            // .orElse(previousPath.toString());
             String newPath = SpecsIo.getRelativePath(previousPath, workingFolder, true)
                     .orElse(previousPath.toString());
 
-            // File newPath = customGetterFile(entry.getKey(), data, false, false, false, true);
-            // File newBase = customGetterFile(oldBase, data, true, false, false, true);
-
             processedMap.put(new File(newPath), new File(newBase));
-
-            // System.out.println("PATH BEFORE:" + previousPath);
-            // System.out.println("PATH AFTER:" + newPath);
-            // System.out.println("BASE BEFORE:" + previousBase);
-            // System.out.println("BASE AFTER:" + newBase);
         }
 
         return processedMap;
