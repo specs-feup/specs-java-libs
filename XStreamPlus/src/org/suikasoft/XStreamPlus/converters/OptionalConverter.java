@@ -21,11 +21,19 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 public class OptionalConverter extends AbstractSingleValueConverter {
 
     private static final String EMPTY_OPTIONAL = "%XSTREAM_EMPTY_OPTIONAL%";
+    // private static final String OPTIONAL_PREFIX = "OPTIONAL";
 
     private final XStream xstream;
 
+    // private int counter;
+    // private Map<String, Optional<?>> optionals;
+    // private Set<Long> seenOptionals;
+
     public OptionalConverter(XStream xstream) {
         this.xstream = xstream;
+        // this.counter = 0;
+        // this.optionals = new HashMap<>();
+        // this.seenOptionals = new HashSet<>();
     }
 
     @SuppressWarnings("rawtypes")
@@ -40,16 +48,22 @@ public class OptionalConverter extends AbstractSingleValueConverter {
             return Optional.empty();
         }
 
+        // var opt = Optional.of(10);
+
         return Optional.of(xstream.fromXML(str));
     }
 
     @Override
     public String toString(Object obj) {
+
         Optional<?> optional = (Optional<?>) obj;
 
         if (optional.isEmpty()) {
             return EMPTY_OPTIONAL;
         }
+
+        // If optional is present, associate with an ID
+        // var optionalI
 
         return xstream.toXML(optional.get());
     }
