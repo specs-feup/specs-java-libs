@@ -15,57 +15,57 @@ package org.suikasoft.XStreamPlus.converters;
 
 import java.util.Optional;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-public class OptionalConverter extends AbstractSingleValueConverter {
+public class OptionalConverter implements Converter {
 
-    private static final String EMPTY_OPTIONAL = "%XSTREAM_EMPTY_OPTIONAL%";
-    // private static final String OPTIONAL_PREFIX = "OPTIONAL";
-
-    private final XStream xstream;
-
-    // private int counter;
-    // private Map<String, Optional<?>> optionals;
-    // private Set<Long> seenOptionals;
-
-    public OptionalConverter(XStream xstream) {
-        this.xstream = xstream;
-        // this.counter = 0;
-        // this.optionals = new HashMap<>();
-        // this.seenOptionals = new HashSet<>();
-    }
-
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean canConvert(Class type) {
         return type.equals(Optional.class);
     }
 
     @Override
-    public Object fromString(String str) {
-        if (str.equals(EMPTY_OPTIONAL)) {
-            return Optional.empty();
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        var optional = (Optional<?>) source;
+
+        writer.addAttribute("isPresent", Boolean.toString(optional.isPresent()));
+
+        if (optional.isPresent()) {
+            var value = optional.get();
+            writer.startNode("value");
+            writer.addAttribute("classname", value.getClass().getName());
+            context.convertAnother(value);
+            writer.endNode();
         }
 
-        // var opt = Optional.of(10);
-
-        return Optional.of(xstream.fromXML(str));
     }
 
     @Override
-    public String toString(Object obj) {
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 
-        Optional<?> optional = (Optional<?>) obj;
+        var isPresent = Boolean.parseBoolean(reader.getAttribute("isPresent"));
 
-        if (optional.isEmpty()) {
-            return EMPTY_OPTIONAL;
+        if (!isPresent) {
+            return Optional.empty();
         }
 
-        // If optional is present, associate with an ID
-        // var optionalI
+        reader.moveDown();
+        var dummyOptional = Optional.of("dummy");
+        var classname = reader.getAttribute("classname");
+        Class<?> valueClass;
+        try {
+            valueClass = Class.forName(classname);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Could not unmarshal optional", e);
+        }
+        var value = context.convertAnother(dummyOptional, valueClass);
+        reader.moveUp();
 
-        return xstream.toXML(optional.get());
+        return Optional.of(value);
     }
 
 }

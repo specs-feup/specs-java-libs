@@ -15,7 +15,7 @@ package org.suikasoft.XStreamPlus;
 
 import java.io.File;
 
-import org.suikasoft.XStreamPlus.converters.OptionalConverterV2;
+import org.suikasoft.XStreamPlus.converters.OptionalConverter;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.security.AnyTypePermission;
@@ -38,7 +38,7 @@ public class XStreamUtils {
         var xstream = new XStream();
         xstream.addPermission(new AnyTypePermission());
         // xstream.registerConverter(new OptionalConverter(xstream));
-        xstream.registerConverter(new OptionalConverterV2());
+        xstream.registerConverter(new OptionalConverter());
         // var xstream = new XStream(new DomDriver());
 
         // XStream.setupDefaultSecurity(xstream);
