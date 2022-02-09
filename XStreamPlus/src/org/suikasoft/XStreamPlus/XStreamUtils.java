@@ -22,8 +22,6 @@ import com.thoughtworks.xstream.security.AnyTypePermission;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.SpecsSystem;
-import pt.up.fe.specs.util.utilities.PrintOnce;
 
 /**
  * Utility methods related to XStreamPlus package.
@@ -36,10 +34,6 @@ import pt.up.fe.specs.util.utilities.PrintOnce;
 public class XStreamUtils {
 
     public static XStream newXStream() {
-
-        if (SpecsSystem.getJavaVersionNumber() > 16) {
-            PrintOnce.info("Java version 17 or higher detected, XML serialization might not work");
-        }
 
         var xstream = new XStream();
         xstream.addPermission(new AnyTypePermission());
