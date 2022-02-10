@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.jsengine.graal;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -200,6 +201,18 @@ public class GraalvmJsEngine implements JsEngine {
             // System.out.println("class: " + e.getClass());
             // e.printStackTrace();
             throw new RuntimeException("Could not evaluate JavaScript code", e);
+        }
+    }
+    
+    @Override
+    public Object evalFile(File jsFile) {
+        try {
+            return engine.getPolyglotContext().eval(Source.newBuilder("js", jsFile).build());
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load main file.", e);
+        } catch (final PolyglotException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
