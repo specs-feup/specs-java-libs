@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.jsengine;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -252,6 +253,10 @@ public interface JsEngine {
     }
 
     default Object eval(String code, JsFileType type, String source) {
+        throw new NotImplementedException(this);
+    }
+    
+    default Object evalFile(File jsFile) {
         throw new NotImplementedException(this);
     }
 
