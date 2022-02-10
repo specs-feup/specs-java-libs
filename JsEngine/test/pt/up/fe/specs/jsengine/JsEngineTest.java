@@ -286,4 +286,16 @@ public class JsEngineTest {
         engine.eval("print(['Using print() '], 'with ', 'several objects\\n')");
         engine.eval("print('Using print() with substitution arguments, like %d and %s\\n', 10, 'aString')");
     }
+
+    @Test
+    public void testSymbol() {
+        // var engine = JsEngineType.GRAALVM_COMPAT.newEngine();
+        var engine = JsEngineType.GRAALVM.newEngine();
+        engine.eval("var a = Symbol; var b = Symbol.iterator");
+
+        System.out.println("Symbol: " + engine.get("a").toString());
+        System.out.println("Symbol.iterator: " + engine.get("b").toString());
+        // assertEquals("10", engine.get("a").toString());
+        // assertEquals("hello", engine.get("b", String.class));
+    }
 }
