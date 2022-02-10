@@ -59,6 +59,9 @@ public class GraalvmJsEngine implements JsEngine {
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility) {
 
+        // TODO: Might be necessary when GraalVM version is updated
+        // System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
+
         this.forbiddenClasses = blacklistedClasses.stream().map(Class::getName).collect(Collectors.toSet());
         this.nashornCompatibility = nashornCompatibility;
 
