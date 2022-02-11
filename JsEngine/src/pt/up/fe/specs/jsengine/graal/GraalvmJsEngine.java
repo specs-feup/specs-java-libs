@@ -152,6 +152,11 @@ public class GraalvmJsEngine implements JsEngine {
 
     @Override
     public Value eval(String code) {
+        return eval(code, "unnamed_js_code");
+    }
+
+    @Override
+    public Value eval(String code, String source) {
 
         // var tempFolder = SpecsIo.getTempFolder("temp_js_code");
         // var tempFile = new File(tempFolder, UUID.randomUUID() + ".js");
@@ -160,7 +165,7 @@ public class GraalvmJsEngine implements JsEngine {
 
         try {
             // return eval(Source.newBuilder("js", new StringBuilder(code), tempFile.getAbsolutePath()).build());
-            return eval(Source.newBuilder("js", new StringBuilder(code), "unnamed_js_code")
+            return eval(Source.newBuilder("js", new StringBuilder(code), source)
                     // .mimeType("application/javascript+module")
                     .build());
         } catch (IOException e) {

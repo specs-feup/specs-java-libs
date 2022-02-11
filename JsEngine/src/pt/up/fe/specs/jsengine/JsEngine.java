@@ -244,7 +244,18 @@ public interface JsEngine {
         return toNativeArray(newObject);
     }
 
-    Object eval(String code);
+    /**
+     * Evaluates the given string of JavaScript code. It is preferable to use the version that accepts a string with a
+     * description of the source.
+     * 
+     * @param code
+     * @return
+     */
+    default Object eval(String code) {
+        return eval(code, "unnamed_js_code");
+    }
+
+    Object eval(String code, String source);
 
     Object eval(String script, Object scope, JsFileType type);
 
@@ -255,7 +266,7 @@ public interface JsEngine {
     default Object eval(String code, JsFileType type, String source) {
         throw new NotImplementedException(this);
     }
-    
+
     default Object evalFile(File jsFile) {
         throw new NotImplementedException(this);
     }
