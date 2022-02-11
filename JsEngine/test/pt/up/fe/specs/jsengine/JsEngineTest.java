@@ -157,7 +157,10 @@ public class JsEngineTest {
 
         // assertEquals("Hello", engine1.eval("var b = this.aString; b;", engine1.asBindings(scope)).toString());
         // assertEquals("Hello", engine1.eval("var b = aString; b;", engine1.asBindings(scope)).toString());
-        assertEquals("Hello", engine1.eval("var b = aString; b;", scope, JsFileType.NORMAL).toString());
+        assertEquals("Hello",
+                engine1.eval("var b = aString; b;", scope, JsFileType.NORMAL, "JsEngineTest.testEvalWithBindings()")
+                        .toString(),
+                "Hello");
         // assertEquals("undefined", engine1.eval("var b = this.aString; b;").toString());
         assertEquals("true", engine1.eval("typeof aString === 'undefined'").toString());
     }

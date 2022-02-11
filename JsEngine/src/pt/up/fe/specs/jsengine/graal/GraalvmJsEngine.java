@@ -334,7 +334,7 @@ public class GraalvmJsEngine implements JsEngine {
      * Adds the members in the given scope before evaluating the code.
      */
     @Override
-    public Object eval(String code, Object scope, JsFileType type) {
+    public Object eval(String code, Object scope, JsFileType type, String source) {
 
         Value scopeValue = asValue(scope);
 
@@ -362,7 +362,7 @@ public class GraalvmJsEngine implements JsEngine {
         }
 
         // Execute new code
-        var result = eval(code, type);
+        var result = eval(code, type, source);
 
         // Restore previous values
         for (var entry : previousValues.entrySet()) {
