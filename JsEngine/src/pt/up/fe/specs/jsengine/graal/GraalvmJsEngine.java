@@ -206,7 +206,7 @@ public class GraalvmJsEngine implements JsEngine {
             throw new RuntimeException("Could not evaluate JavaScript code", e);
         }
     }
-    
+
     @Override
     public Object evalFile(File jsFile) {
         try {
@@ -214,8 +214,8 @@ public class GraalvmJsEngine implements JsEngine {
         } catch (IOException e) {
             throw new RuntimeException("Could not load main file.", e);
         } catch (final PolyglotException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
+            // e.printStackTrace();
+            throw new RuntimeException("Exception when evaluating javascript", e);
         }
     }
 
