@@ -257,15 +257,7 @@ public interface JsEngine {
 
     Object eval(String code, String source);
 
-    // default Object eval(String script, Object scope, JsFileType type) {
-    // return eval(script, scope, type, "unnamed_js_code_with_scope");
-    // }
-
     Object eval(String script, Object scope, JsFileType type, String source);
-
-    // default Object eval(String code, JsFileType type) {
-    // return eval(code, type, "unnamed_code_of_type_" + type.getExtension());
-    // }
 
     default Object eval(String code, JsFileType type, String source) {
         throw new NotImplementedException(this);

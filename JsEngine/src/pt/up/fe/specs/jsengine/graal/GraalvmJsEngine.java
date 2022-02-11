@@ -103,11 +103,6 @@ public class GraalvmJsEngine implements JsEngine {
         this(Collections.emptyList());
     }
 
-    // @Override
-    // public GraalJSScriptEngine getEngine() {
-    // return engine;
-    // }
-
     @Override
     public ForOfType getForOfType() {
         return ForOfType.NATIVE;
