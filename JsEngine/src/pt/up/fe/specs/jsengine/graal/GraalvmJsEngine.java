@@ -118,12 +118,20 @@ public class GraalvmJsEngine implements JsEngine {
         // GraalVM documentation indicates that only .mjs files should be loaded as modules
         // https://www.graalvm.org/reference-manual/js/Modules/
 
+        var graalSource = Source.newBuilder("js", new StringBuilder(code), source);
+
         switch (type) {
         case NORMAL:
-            return eval(code);
+            // return eval(code);
+            try {
+                return eval(graalSource.build());
+            } catch (IOException e) {
+                throw new RuntimeException("Could not load JS code as script", e);
+            }
         case MODULE:
             try {
-                return eval(Source.newBuilder("js", new StringBuilder(code), source)
+                // return eval(Source.newBuilder("js", new StringBuilder(code), source)
+                return eval(graalSource
                         .mimeType("application/javascript+module")
                         .build());
             } catch (IOException e) {
