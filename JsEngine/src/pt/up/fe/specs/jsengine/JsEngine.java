@@ -451,9 +451,10 @@ public interface JsEngine {
         // Check if there is a conversion rule for the class of this object
         var rules = getToJsRules();
         var processedObject = rules.applyTry(javaObject);
-        if (processedObject.isPresent()) {
-            System.out.println("PROCESSED OBJECT");
-        }
+
+        // if (processedObject.isPresent()) {
+        // System.out.println("PROCESSED OBJECT");
+        // }
 
         return processedObject.orElse(javaObject);
         // return rules.applyTry(javaObject).orElse(javaObject);
