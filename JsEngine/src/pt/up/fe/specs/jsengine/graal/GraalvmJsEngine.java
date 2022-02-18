@@ -37,14 +37,14 @@ import org.graalvm.polyglot.Value;
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import com.oracle.truffle.polyglot.SpecsPolyglot;
 
+import pt.up.fe.specs.jsengine.AJsEngine;
 import pt.up.fe.specs.jsengine.ForOfType;
-import pt.up.fe.specs.jsengine.JsEngine;
 import pt.up.fe.specs.jsengine.JsEngineResource;
 import pt.up.fe.specs.jsengine.JsFileType;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
-public class GraalvmJsEngine implements JsEngine {
+public class GraalvmJsEngine extends AJsEngine {
 
     private static final String NEW_ARRAY = "[]"; // Faster
     private static final String NEW_MAP = "a = {}; a";
@@ -205,6 +205,7 @@ public class GraalvmJsEngine implements JsEngine {
                 throw new RuntimeException(e.getMessage(), hostException);
             }
 
+            e.printStackTrace();
             throw new RuntimeException("Polyglot exception while evaluating JavaScript code", e);
         }
 
