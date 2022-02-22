@@ -1598,8 +1598,15 @@ public class SpecsSystem {
      * @return
      */
     public static Object invokeAsGetter(Object object, String methodName) {
+        // Special cases
+        // if (methodName.equals("toString")) {
+        // return object.toString();
+        // }
+
+        // System.out.println("MEthod name: '" + methodName + "'");
         Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
         // Class<?> invokingClass = object.getClass();
+        SpecsLogs.debug(() -> "invokeAsGetter: processing '" + methodName + "' for class '" + invokingClass + "'");
 
         // Check if getter is a field
         var field = getField(invokingClass, methodName);
@@ -1607,6 +1614,7 @@ public class SpecsSystem {
         if (field.isPresent()) {
             return field.map(f -> {
                 try {
+                    SpecsLogs.debug(() -> "invokeAsGetter: found field");
                     return f.get(object);
                 } catch (Exception e) {
                     throw new RuntimeException(
@@ -1618,21 +1626,49 @@ public class SpecsSystem {
         // Check if it as a method with the same name and arity 0
         Method invokingMethod = getMethod(invokingClass, methodName);
 
-        // If null, try camelCase getter
-        if (invokingMethod == null) {
-            String getterName = "get" + methodName.substring(0, 1).toUpperCase()
-                    + methodName.substring(1, methodName.length());
-            return invoke(object, getterName);
+        if (invokingMethod != null) {
+            try {
+                SpecsLogs.debug(() -> "invokeAsGetter: found method with arity 0");
+                return invokingMethod.invoke(object);
+            } catch (Exception e) {
+                throw new RuntimeException("Error while invoking method '" + methodName + "' in class " + invokingClass,
+                        e);
+            }
         }
 
-        SpecsCheck.checkNotNull(invokingMethod,
-                () -> "Could not find method '" + methodName + "' for object " + object);
+        // Try camelCase getter
+        String getterName = "get" + methodName.substring(0, 1).toUpperCase()
+                + methodName.substring(1, methodName.length());
 
-        try {
-            return invokingMethod.invoke(object);
-        } catch (Exception e) {
-            throw new RuntimeException("Error while invoking method '" + methodName + "'", e);
+        invokingMethod = getMethod(invokingClass, getterName);
+        if (invokingMethod != null) {
+            try {
+                SpecsLogs.debug(() -> "invokeAsGetter: found camelCase getter ('" + getterName + "')");
+                return invokingMethod.invoke(object);
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Error while invoking camelCase getter '" + getterName + "' in class " + invokingClass, e);
+            }
         }
+
+        throw new RuntimeException(
+                "Could not resolve property '" + methodName + "' for instance of class '" + invokingClass + "'");
+
+        // // If null, try camelCase getter
+        // if (invokingMethod == null) {
+        // String getterName = "get" + methodName.substring(0, 1).toUpperCase()
+        // + methodName.substring(1, methodName.length());
+        // return invoke(object, getterName);
+        // }
+        //
+        // SpecsCheck.checkNotNull(invokingMethod,
+        // () -> "Could not find method '" + methodName + "' for object " + object);
+        //
+        // try {
+        // return invokingMethod.invoke(object);
+        // } catch (Exception e) {
+        // throw new RuntimeException("Error while invoking method '" + methodName + "'", e);
+        // }
     }
 
     public static <K, T> List<T> getStaticFields(Class<? extends K> aClass, Class<? extends T> type) {
