@@ -58,6 +58,11 @@ public class GraalvmJsEngine extends AJsEngine {
         this(blacklistedClasses, false);
     }
 
+    // private static Object test(Object v) {
+    // System.out.println("Interception conversion of object " + v);
+    // return v;
+    // }
+
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility) {
 
         // TODO: Might be necessary when GraalVM version is updated
@@ -74,6 +79,9 @@ public class GraalvmJsEngine extends AJsEngine {
         // Load Java compatibility layer
         eval(JsEngineResource.JAVA_COMPATIBILITY.read());
 
+        // Add rule to ignore polyglot values
+        addToJsRule(Value.class, this::valueToJs);
+
         // List<ScriptEngineFactory> engines = (new ScriptEngineManager()).getEngineFactories();
         // System.out.println("Available Engines");
         // for (ScriptEngineFactory f : engines) {
@@ -81,9 +89,28 @@ public class GraalvmJsEngine extends AJsEngine {
         // }
     }
 
+    private Object valueToJs(Value value) {
+        // If a host object, convert (is this necessary?)
+        if (value.isHostObject()) {
+            SpecsLogs.debug(
+                    () -> "GraalvmJsEngie.valueToJs(): Case where we have a Value that is a host object, check if ok. "
+                            + value.asHostObject().getClass());
+            return toJs(value.asHostObject());
+        }
+
+        // Otherwise, already converted
+        return value;
+
+    }
+
     private Context.Builder createBuilder() {
 
+        // var hostAccess = HostAccess.newBuilder()
+        // .targetTypeMapping(Object.class, Object.class, v -> true, GraalvmJsEngine::test)
+        // .build();
+
         Context.Builder contextBuilder = Context.newBuilder("js")
+                // .allowHostAccess(hostAccess)
                 .allowAllAccess(true)
                 .allowHostAccess(HostAccess.ALL)
                 // .option("js.load-from-url", "true")
