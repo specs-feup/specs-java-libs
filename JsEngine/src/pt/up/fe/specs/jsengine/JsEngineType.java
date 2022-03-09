@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.jsengine;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -32,7 +33,7 @@ public enum JsEngineType {
      * @param forbiddenClasses
      * @return
      */
-    public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses) {
+    public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses, Path engineWorkingDirectory) {
         // System.out.println("TEST CLASSLOADER " + Test.class.getClassLoader());
         // System.out.println("JS ENGINE CLASS LOADER: " + GraalJSScriptEngine.class.getClassLoader());
         // System.out.println("THREAD CLASS LOADER: " + Thread.currentThread().getContextClassLoader());
@@ -41,15 +42,15 @@ public enum JsEngineType {
         // case NASHORN:
         // return new NashornEngine(forbiddenClasses);
         case GRAALVM_COMPAT:
-            return new GraalvmJsEngine(forbiddenClasses, true);
+            return new GraalvmJsEngine(forbiddenClasses, true, engineWorkingDirectory);
         case GRAALVM:
-            return new GraalvmJsEngine(forbiddenClasses);
+            return new GraalvmJsEngine(forbiddenClasses, false, engineWorkingDirectory);
         default:
             throw new NotImplementedException(type);
         }
     }
 
     public JsEngine newEngine() {
-        return newEngine(this, Collections.emptyList());
+        return newEngine(this, Collections.emptyList(), null);
     }
 }
