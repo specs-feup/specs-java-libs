@@ -108,7 +108,8 @@ public class GraalvmJsEngine implements JsEngine {
                 .allowHostClassLookup(name -> !forbiddenClasses.contains(name));
 
         if (engineWorkingDirectory != null) {
-            FileSystem fs = FileSystem.newDefaultFileSystem();
+            // FileSystem fs = FileSystem.newDefaultFileSystem();
+            FileSystem fs = new CustomGraalFileSystem();
             fs.setCurrentWorkingDirectory(engineWorkingDirectory);
             contextBuilder.fileSystem(fs);
         }
