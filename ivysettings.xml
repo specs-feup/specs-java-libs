@@ -21,7 +21,8 @@
 			<!--<ibiblio name="sonatype-oss-staging" root="https://oss.sonatype.org/content/repositories/staging" m2compatible="true"/>-->		
 			<!--<ibiblio name="orekit" root="https://packages.orekit.org/repository/maven-public/" m2compatible="true"/>-->
 			<!-- For stuff like jsyntaxpane -->
-			<ibiblio name="clojars" root="https://repo.clojars.org/" m2compatible="true"/>			
+			<ibiblio name="clojars" root="https://repo.clojars.org/" m2compatible="true"/>		
+			<ibiblio name="google" root="https://maven.google.com" m2compatible="true"/>
         </chain>
     </resolvers>
 </ivysettings>
