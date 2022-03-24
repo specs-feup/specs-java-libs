@@ -125,18 +125,25 @@ public class OptionsPanel extends GuiTab {
     private void saveAsButtonActionPerformed(ActionEvent evt) {
         // JFileChooser fc;
 
+        // If no output file, choose current folder
         if (outputFile == null) {
             fileChooser.setCurrentDirectory(new File("./"));
-            // fc = new JFileChooser(new File("./"));
-        } else {
+        }
+        // If output file exists, choose as folder
+        else if (outputFile.exists()) {
             fileChooser.setCurrentDirectory(outputFile);
-            // fc = new JFileChooser(outputFile);
+        }
+        // Otherwise, use current folder as default
+        else {
+            fileChooser.setCurrentDirectory(new File("./"));
         }
 
-        // int returnVal = fc.showOpenDialog(this);
+        // app.getPersistence().saveData(outputFile, setupPanel.getData());
+
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
+
             // Files returned from this chooser cannot be folders
             outputFile = file;
             saveButton.setEnabled(true);
@@ -146,6 +153,9 @@ public class OptionsPanel extends GuiTab {
             getData().set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(SpecsIo.getCanonicalFile(file).getParent()));
             // getData().set(JOptionKeys.CURRENT_FOLDER_PATH, SpecsIo.getCanonicalFile(file).getParent());
             // updateFile(file);
+
+            // Automatically save data
+            app.getPersistence().saveData(outputFile, setupPanel.getData());
         }
     }
 
