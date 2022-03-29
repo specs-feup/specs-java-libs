@@ -14,7 +14,9 @@
 package pt.up.fe.specs.jadx;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -29,6 +31,9 @@ public class SpecsJadx {
 
     private static final Map<File, File> CACHED_DECOMPILATIONS = new HashMap<>();
     private static final String CACHE_FOLDERNAME = "specs_jadx_cache";
+
+    private static List<String> CACHE_FILTER = new ArrayList<>();
+    private Predicate<String> classFilter = cls -> (true);
 
     static {
         var baseCacheFolder = getCacheFolder();
@@ -45,7 +50,14 @@ public class SpecsJadx {
         return decompileAPK(apk, null);
     }
 
-    public File decompileAPK(File apk, Predicate<String> classFilter) throws DecompilationFailedException {
+    public File decompileAPK(File apk, List<String> packageFilter) throws DecompilationFailedException {
+
+        // Delete cache if filter changed
+        if (packageFilter != null && (!packageFilter.containsAll(CACHE_FILTER)
+                || !CACHE_FILTER.containsAll(packageFilter))) {
+            CACHED_DECOMPILATIONS.remove(apk);
+            CACHE_FILTER = new ArrayList<String>(packageFilter);
+        }
 
         if (CACHED_DECOMPILATIONS.containsKey(apk)) {
             var folder = CACHED_DECOMPILATIONS.get(apk);
@@ -65,14 +77,23 @@ public class SpecsJadx {
         jadxArgs.setSkipResources(true);
         jadxArgs.setOutDir(outputFolder);
 
-        if (classFilter != null)
+        if (packageFilter != null && packageFilter.size() > 0) {
+
+            classFilter = cls -> packageFilter.stream()
+                    .anyMatch(prefix -> cls.startsWith(prefix));
+
             jadxArgs.setClassFilter(classFilter);
+            SpecsLogs.info(
+                    String.format("Jadx: DECOMPILE FILTER | %s", packageFilter));
+        }
 
         try (JadxDecompiler jadx = new JadxDecompiler(jadxArgs)) {
             jadx.load();
+
             SpecsLogs.info(
-                    String.format("Jadx: DECOMPILING | Found %d packages and %d classes", jadx.getPackages().size(),
-                            jadx.getClasses().size()));
+                    String.format("Jadx: DECOMPILING | Found %d packages and %d classes",
+                            jadx.getPackages().stream().filter(pac -> classFilter.test(pac.getFullName())).count(),
+                            jadx.getClasses().stream().filter(cls -> classFilter.test(cls.getFullName())).count()));
 
             jadx.save(3000, new ProgressListener() {
                 @Override
