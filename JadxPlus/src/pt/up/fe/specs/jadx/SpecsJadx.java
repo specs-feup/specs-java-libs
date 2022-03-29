@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import jadx.api.JadxArgs;
 import jadx.api.JadxDecompiler;
@@ -41,6 +42,10 @@ public class SpecsJadx {
     }
 
     public File decompileAPK(File apk) throws DecompilationFailedException {
+        return decompileAPK(apk, null);
+    }
+
+    public File decompileAPK(File apk, Predicate<String> classFilter) throws DecompilationFailedException {
 
         if (CACHED_DECOMPILATIONS.containsKey(apk)) {
             var folder = CACHED_DECOMPILATIONS.get(apk);
@@ -60,11 +65,8 @@ public class SpecsJadx {
         jadxArgs.setSkipResources(true);
         jadxArgs.setOutDir(outputFolder);
 
-        /*
-         * TODO: Silence Jadx
-         * https://github.com/skylot/jadx/issues/162
-         * https://github.com/skylot/jadx/issues/735#issuecomment-519466109
-         */
+        if (classFilter != null)
+            jadxArgs.setClassFilter(classFilter);
 
         try (JadxDecompiler jadx = new JadxDecompiler(jadxArgs)) {
             jadx.load();
@@ -72,7 +74,7 @@ public class SpecsJadx {
                     String.format("Jadx: DECOMPILING | Found %d packages and %d classes", jadx.getPackages().size(),
                             jadx.getClasses().size()));
 
-            jadx.save(1000, new ProgressListener() {
+            jadx.save(3000, new ProgressListener() {
                 @Override
                 public void progress(long done, long total) {
                     SpecsLogs.info(String.format("Jadx: DECOMPILING | %d%%", (done * 100L) / total));
