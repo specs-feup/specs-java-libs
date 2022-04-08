@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./
+        working-directory: './'
 
     steps:
     - uses: actions/checkout@v3
@@ -27,7 +27,7 @@ jobs:
         distribution: 'temurin'
     - name: Generate build.xml
       run: | 
-#        cd .. 
+    #   cd .. 
         ls
         wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
         java -jar eclipse-build.jar specs-java-libs -u specs-java-libs/repo.userlibraries -i specs-java-libs/ivysettings.xml --jvm-javac
