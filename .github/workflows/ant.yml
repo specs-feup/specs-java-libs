@@ -23,8 +23,9 @@ jobs:
         distribution: 'temurin'
     - name: Previous folder
       run: | 
-         cd .. 
-         ls
+        ls
+        cd .. 
+        ls
     - name: Download eclipse-build
       run: wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
     - name: Generate build.xml
