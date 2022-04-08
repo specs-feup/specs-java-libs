@@ -5,7 +5,7 @@ name: Java CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master , testing-workflow ]
   pull_request:
     branches: [ master ]
 
