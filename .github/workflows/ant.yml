@@ -28,4 +28,6 @@ jobs:
         wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
         java -jar eclipse-build.jar specs-java-libs -u specs-java-libs/repo.userlibraries -i specs-java-libs/ivysettings.xml --jvm-javac
     - name: Build with Ant
-      run: ant -noinput -buildfile build.xml
+      run: |
+        cd ..
+        ant -noinput -buildfile build.xml
