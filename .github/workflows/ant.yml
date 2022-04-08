@@ -38,12 +38,12 @@ jobs:
     #    wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
     #    java -jar eclipse-build.jar specs-java-libs -u specs-java-libs/repo.userlibraries -i specs-java-libs/ivysettings.xml --jvm-javac
     #    wget -N -O /usr/share/ant/lib/ivy-2.5.0.jar specs.fe.up.pt/libs/ivy-2.5.0.jar
-    - name: Build with Ant
-      run: |
-        # cd ..
-        # ant -noinput -buildfile build.xml
-        ant build.xml
-        ls ./reports-eclipse-build
+    #- name: Build with Ant
+    #  run: |
+    #    # cd ..
+    #    # ant -noinput -buildfile build.xml
+    #    ant build.xml
+    #    ls ./reports-eclipse-build
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v3.0.1
       if: always() # always run even if the previous step fails
