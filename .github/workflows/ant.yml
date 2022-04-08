@@ -33,7 +33,8 @@ jobs:
     #    cd ..
     #    ant -noinput -buildfile build.xml
     - name: Publish Test Report
+      run: cd ..
       uses: mikepenz/action-junit-report@v3.0.1
       if: always() # always run even if the previous step fails
       with:
-        report_paths: '../**/reports/TEST-*.xml'
+        report_paths: '**/reports/TEST-*.xml'
