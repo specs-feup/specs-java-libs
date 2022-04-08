@@ -36,7 +36,7 @@ jobs:
         wget -N -O /usr/share/ant/lib/ivy-2.5.0.jar specs.fe.up.pt/libs/ivy-2.5.0.jar
     - name: Build with Ant
       run: |
-        cd ..
+        # cd ..
         ant -noinput -buildfile build.xml
         ls ./reports-eclipse-build
     - name: Publish Test Report
