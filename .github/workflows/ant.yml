@@ -21,14 +21,11 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-    - name: Previous folder
+    - name: Generate build.xml
       run: | 
-        ls
         cd .. 
         ls
-    - name: Download eclipse-build
-      run: wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
-    - name: Generate build.xml
-      run: java -jar eclipse-build.jar specs-java-libs -u specs-java-libs/repo.userlibraries -i specs-java-libs/ivysettings.xml --jvm-javac
+        wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
+        java -jar eclipse-build.jar specs-java-libs -u specs-java-libs/repo.userlibraries -i specs-java-libs/ivysettings.xml --jvm-javac
     - name: Build with Ant
       run: ant -noinput -buildfile build.xml
