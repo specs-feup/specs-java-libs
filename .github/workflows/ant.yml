@@ -14,6 +14,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -23,7 +27,7 @@ jobs:
         distribution: 'temurin'
     - name: Generate build.xml
       run: | 
-        cd .. 
+#        cd .. 
         ls
         wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
         java -jar eclipse-build.jar specs-java-libs -u specs-java-libs/repo.userlibraries -i specs-java-libs/ivysettings.xml --jvm-javac
@@ -33,7 +37,6 @@ jobs:
     #    cd ..
     #    ant -noinput -buildfile build.xml
     - name: Publish Test Report
-      run: cd ..
       uses: mikepenz/action-junit-report@v3.0.1
       if: always() # always run even if the previous step fails
       with:
