@@ -32,6 +32,11 @@ jobs:
     #    #ls
     #    #echo 'folder'
     #    #ls ./reports-eclipse-build
+    - name: Checkout branch
+      run: |
+        cd specs-java-libs
+        git checkout testing-workflow
+        git pull
     - name: Show folder contents
       run: |
         echo 'Current folder:'
