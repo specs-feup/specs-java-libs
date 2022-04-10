@@ -36,8 +36,8 @@ jobs:
       run: |
         echo 'Current folder:'
         ls
-        echo 'Folder reports-eclipse-build:'        
-        ls reports-eclipse-build        
+        #echo 'Folder reports-eclipse-build:'        
+        #ls reports-eclipse-build        
         echo 'Folder specs-java-libs/junit-reports:'                
         ls ./specs-java-libs/junit-reports
     #- name: Generate build.xml
