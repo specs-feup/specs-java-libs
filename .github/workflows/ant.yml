@@ -38,7 +38,7 @@ jobs:
         cd specs-java-libs
         git checkout testing-workflow
         git pull
-        ln -s ../specs-java-libs/junit-reports test-results
+        ln ../specs-java-libs/junit-reports test-results
     - name: Show folder contents
       run: |
         echo 'Current folder:'
