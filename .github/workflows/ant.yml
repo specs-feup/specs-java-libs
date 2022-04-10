@@ -65,6 +65,6 @@ jobs:
       with:
         #report_paths: '**/reports-eclipse-build/TEST-*.xml'
         #report_paths: '**/reports-eclipse-build/*.xml'      
-        report_paths: './../specs-java-libs/junit-reports/*.xml'      
+        report_paths: '~/specs-java-libs/junit-reports/*.xml'      
         summary: true
         #exclude_sources: ''
