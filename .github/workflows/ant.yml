@@ -28,7 +28,7 @@ jobs:
     - name: Eclipse Build
       run: |
         wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
-        java -jar eclipse-build.jar --config https://raw.githubusercontent.com/specs-feup/specs-java-libs/testing-workflow/eclipse.build
+        java -jar eclipse-build.jar --config https://raw.githubusercontent.com/specs-feup/specs-java-libs/master/eclipse.build
         #ls
         #echo 'folder'
         #ls ./reports-eclipse-build
