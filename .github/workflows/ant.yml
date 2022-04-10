@@ -34,6 +34,7 @@ jobs:
     #    #ls ./reports-eclipse-build
     - name: Checkout branch
       run: |
+        git clone https://github.com/specs-feup/specs-java-libs.git
         cd specs-java-libs
         git checkout testing-workflow
         git pull
