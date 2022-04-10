@@ -58,3 +58,4 @@ jobs:
         #report_paths: '**/reports-eclipse-build/TEST-*.xml'
         report_paths: '**/reports-eclipse-build/*.xml'      
         summary: true
+        exclude_sources: ''
