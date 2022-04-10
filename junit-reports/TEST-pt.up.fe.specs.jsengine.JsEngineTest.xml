@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="MININT-0CDNVTD" name="pt.up.fe.specs.jsengine.JsEngineTest" skipped="0" tests="14" time="1.116" timestamp="2022-04-10T20:06:09">
+  <properties>
+    <property name="user.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test" />
+    <property name="ivy.resolve.default.type.filter" value="*" />
+    <property name="java.vm.compressedOopsMode.ivy.specs-java-libs.settings" value="Zero based" />
+    <property name="java.home" value="C:\Program Files\Java\jdk-15" />
+    <property name="user.script.ivy.specs-java-libs.settings" value="" />
+    <property name="jdk.debug.ivy.specs-java-libs.settings" value="release" />
+    <property name="java.vendor.ivy.specs-java-libs.settings" value="Oracle Corporation" />
+    <property name="java.vendor.url.ivy.specs-java-libs.settings" value="https://java.oracle.com/" />
+    <property name="ivy.home" value="C:\Users\JBispo\.ivy2" />
+    <property name="user.home.ivy.specs-java-libs.settings" value="C:\Users\JBispo" />
+    <property name="ivy.deliver.ivy.pattern.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test/distrib/[type]s/[artifact]-[revision](-[classifier]).[ext]" />
+    <property name="java.runtime.name.ivy.specs-java-libs.settings" value="OpenJDK Runtime Environment" />
+    <property name="sun.os.patch.level" value="" />
+    <property name="ivy.dep.file" value="ivy.xml" />
+    <property name="java.vendor.url" value="https://java.oracle.com/" />
+    <property name="java.version" value="15" />
+    <property name="sun.stdout.encoding" value="cp437" />
+    <property name="sun.java.launcher.ivy.specs-java-libs.settings" value="SUN_STANDARD" />
+    <property name="ivy.module" value="JsEngine" />
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/" />
+    <property name="java.version.date" value="2020-09-15" />
+    <property name="jdk.debug" value="release" />
+    <property name="user.variant.ivy.specs-java-libs.settings" value="" />
+    <property name="java.specification.vendor.ivy.specs-java-libs.settings" value="Oracle Corporation" />
+    <property name="file.encoding.ivy.specs-java-libs.settings" value="Cp1252" />
+    <property name="ivy.default.always.check.exact.revision" value="false" />
+    <property name="ivy.settings.file.ivy.specs-java-libs.settings" value="C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\ivysettings.xml" />
+    <property name="ivy.status.ivy.specs-java-libs.settings" value="integration" />
+    <property name="user.name" value="JBispo" />
+    <property name="ivy.configurations.ivy.specs-java-libs.settings" value="*" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="ivy.lib.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test/lib" />
+    <property name="sun.jnu.encoding" value="Cp1252" />
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment" />
+    <property name="ivy.project.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="user.timezone" value="Europe/Lisbon" />
+    <property name="path.separator" value=";" />
+    <property name="user.script" value="" />
+    <property name="java.runtime.version.ivy.specs-java-libs.settings" value="15+36-1562" />
+    <property name="ivy.default.conf.dir" value="jar:file:/C:/Users/JBispo/Desktop/test/eclipse-build.jar!/org/apache/ivy/core/settings" />
+    <property name="file.encoding" value="Cp1252" />
+    <property name="ant.project.default-target" value="junit" />
+    <property name="ivy.targets.copied" value="true" />
+    <property name="ivy.parents.count" value="0" />
+    <property name="ivy.retrieve.pattern.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test/lib/[artifact]-[revision](-[classifier]).[ext]" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner pt.up.fe.specs.jsengine.JsEngineTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=false outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,C:\Users\JBispo\Desktop\test\reports-eclipse-build\TEST-pt.up.fe.specs.jsengine.JsEngineTest.xml crashfile=C:\Users\JBispo\Desktop\test\junitvmwatcher694828036717251146.properties propsfile=C:\Users\JBispo\Desktop\test\junit913414322103358633.properties" />
+    <property name="java.version.ivy.specs-java-libs.settings" value="15" />
+    <property name="java.net.maven.pattern" value="[organisation]/jars/[module]-[revision](-[classifier]).[ext]" />
+    <property name="ivy.settings.file" value="ivysettings.xml" />
+    <property name="java.io.tmpdir" value="C:\Users\JBispo\AppData\Local\Temp\" />
+    <property name="ivy.default.conf.dir.ivy.specs-java-libs.settings" value="jar:file:/C:/Users/JBispo/Desktop/test/eclipse-build.jar!/org/apache/ivy/core/settings" />
+    <property name="ivy.cache.ttl.default" value="10s" />
+    <property name="java.class.path.ivy.specs-java-libs.settings" value="eclipse-build.jar" />
+    <property name="user.language" value="en" />
+    <property name="java.vm.name.ivy.specs-java-libs.settings" value="OpenJDK 64-Bit Server VM" />
+    <property name="line.separator" value="&#xd;&#xa;" />
+    <property name="sun.boot.library.path.ivy.specs-java-libs.settings" value="C:\Program Files\Java\jdk-15\bin" />
+    <property name="ivy.default.settings.dir.ivy.specs-java-libs.settings" value="jar:file:/C:/Users/JBispo/Desktop/test/eclipse-build.jar!/org/apache/ivy/core/settings" />
+    <property name="java.vm.specification.vendor.ivy.specs-java-libs.settings" value="Oracle Corporation" />
+    <property name="ivy.build.artifacts.dir" value="C:\Users\JBispo\Desktop\test/build/artifacts" />
+    <property name="sun.stdout.encoding.ivy.specs-java-libs.settings" value="cp437" />
+    <property name="ivy.default.always.check.exact.revision.ivy.specs-java-libs.settings" value="false" />
+    <property name="ivy.settings.dir.url" value="file:/C:/Users/JBispo/AppData/Local/Temp/specs_git_repos/specs-java-libs/" />
+    <property name="java.vm.info" value="mixed mode, sharing" />
+    <property name="ivy.status" value="integration" />
+    <property name="ivy.lib.dir" value="C:\Users\JBispo\Desktop\test/lib" />
+    <property name="basedir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="ivy.publish.src.artifacts.pattern.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test/distrib/[type]s/[artifact]-[revision](-[classifier]).[ext]" />
+    <property name="sun.os.patch.level.ivy.specs-java-libs.settings" value="" />
+    <property name="ivy.default.ivy.user.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\.ivy2" />
+    <property name="sun.io.unicode.encoding.ivy.specs-java-libs.settings" value="UnicodeLittle" />
+    <property name="ivy.cache.dir" value="C:\Users\JBispo\.ivy2\cache" />
+    <property name="java.net.maven.pattern.ivy.specs-java-libs.settings" value="[organisation]/jars/[module]-[revision](-[classifier]).[ext]" />
+    <property name="ivy.conf.file.ivy.specs-java-libs.settings" value="C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\ivysettings.xml" />
+    <property name="ant.version" value="Apache Ant(TM) version 1.10.6 compiled on May 2 2019" />
+    <property name="os.name.ivy.specs-java-libs.settings" value="Windows 10" />
+    <property name="java.io.tmpdir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\AppData\Local\Temp\" />
+    <property name="ivy.default.settings.dir" value="jar:file:/C:/Users/JBispo/Desktop/test/eclipse-build.jar!/org/apache/ivy/core/settings" />
+    <property name="java.library.path.ivy.specs-java-libs.settings" value="C:\Program Files\Java\jdk-15\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;.;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.3\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.3\libnvvp;C:\Python38\Scripts\;C:\Python38\;C:\Program Files\Java\jdk-15\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Apps\bin;C:\msys64\mingw64\x86_64-w64-mingw32\include;C:\msys64\mingw64\bin;C:\Apps\apache-maven-3.6.3\bin;C:\Program Files\PuTTY\;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Apps\apache-ant-1.10.9\bin;C:\Program Files\dotnet\;C:\Users\JBispo\Desktop\MIEIC05_Aula01\javacc-javacc-7.0.10\scripts;C:\Apps\gradle-6.8.3\bin;C:\Program Files\NVIDIA Corporation\Nsight Compute 2021.1.1\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Portugal Identity Card\;C:\Apps\Graphviz\bin;;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\TortoiseGit\bin;C:\Users\JBispo\AppData\Local\Microsoft\WindowsApps;C:\Users\JBispo\AppData\Roaming\npm;C:\Users\JBispo\AppData\Local\Programs\Microsoft VS Code\bin;;." />
+    <property name="ivy.configurations" value="*" />
+    <property name="java.specification.version.ivy.specs-java-libs.settings" value="15" />
+    <property name="java.class.version.ivy.specs-java-libs.settings" value="59.0" />
+    <property name="ivy.settings.url" value="file:/C:/Users/JBispo/AppData/Local/Temp/specs_git_repos/specs-java-libs/ivysettings.xml" />
+    <property name="os.name" value="Windows 10" />
+    <property name="java.specification.vendor" value="Oracle Corporation" />
+    <property name="ivy.checksums" value="sha1,md5" />
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM" />
+    <property name="ivy.log.modules.in.use" value="false" />
+    <property name="ivy.version" value="2.5.0-rc1" />
+    <property name="ivy.report.output.pattern" value="[organisation]-[module]-[conf].[ext]" />
+    <property name="sun.awt.enableExtraMouseButtons" value="true" />
+    <property name="ivy.conf.url" value="file:/C:/Users/JBispo/AppData/Local/Temp/specs_git_repos/specs-java-libs/ivysettings.xml" />
+    <property name="sun.arch.data.model.ivy.specs-java-libs.settings" value="64" />
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-15\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;.;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.3\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.3\libnvvp;C:\Python38\Scripts\;C:\Python38\;C:\Program Files\Java\jdk-15\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Apps\bin;C:\msys64\mingw64\x86_64-w64-mingw32\include;C:\msys64\mingw64\bin;C:\Apps\apache-maven-3.6.3\bin;C:\Program Files\PuTTY\;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Apps\apache-ant-1.10.9\bin;C:\Program Files\dotnet\;C:\Users\JBispo\Desktop\MIEIC05_Aula01\javacc-javacc-7.0.10\scripts;C:\Apps\gradle-6.8.3\bin;C:\Program Files\NVIDIA Corporation\Nsight Compute 2021.1.1\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Portugal Identity Card\;C:\Apps\Graphviz\bin;;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\TortoiseGit\bin;C:\Users\JBispo\AppData\Local\Microsoft\WindowsApps;C:\Users\JBispo\AppData\Roaming\npm;C:\Users\JBispo\AppData\Local\Programs\Microsoft VS Code\bin;;." />
+    <property name="java.vm.vendor.ivy.specs-java-libs.settings" value="Oracle Corporation" />
+    <property name="ant.java.version" value="15" />
+    <property name="ivy.resolve.default.type.filter.ivy.specs-java-libs.settings" value="*" />
+    <property name="java.class.version" value="59.0" />
+    <property name="basedir" value="C:\Users\JBispo\Desktop\test" />
+    <property name="ivy.buildlist.ivyfilepath.ivy.specs-java-libs.settings" value="ivy.xml" />
+    <property name="ivy.settings.dir.url.ivy.specs-java-libs.settings" value="file:/C:/Users/JBispo/AppData/Local/Temp/specs_git_repos/specs-java-libs/" />
+    <property name="ivy.dep.file.ivy.specs-java-libs.settings" value="ivy.xml" />
+    <property name="ivy.resolved.configurations" value="default" />
+    <property name="ivy.cache.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\.ivy2\cache" />
+    <property name="java.home.ivy.specs-java-libs.settings" value="C:\Program Files\Java\jdk-15" />
+    <property name="ivy.deliver.ivy.pattern" value="C:\Users\JBispo\Desktop\test/distrib/[type]s/[artifact]-[revision](-[classifier]).[ext]" />
+    <property name="ivy.basedir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test" />
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-15\bin" />
+    <property name="ivy.report.output.pattern.ivy.specs-java-libs.settings" value="[organisation]-[module]-[conf].[ext]" />
+    <property name="ivy.basedir" value="C:\Users\JBispo\Desktop\test" />
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers" />
+    <property name="user.variant" value="" />
+    <property name="file.separator.ivy.specs-java-libs.settings" value="\" />
+    <property name="ant.file.Build file for Eclipse projects" value="C:\Users\JBispo\Desktop\test\build.xml" />
+    <property name="java.vendor.url.bug.ivy.specs-java-libs.settings" value="https://bugreport.java.com/bugreport/" />
+    <property name="user.country.ivy.specs-java-libs.settings" value="GB" />
+    <property name="ivy.resolver.default.check.modified" value="false" />
+    <property name="ivy.conf.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs" />
+    <property name="ivy.nb.targets.copied" value="12" />
+    <property name="ant.project.name" value="Build file for Eclipse projects" />
+    <property name="line.separator.ivy.specs-java-libs.settings" value="&#xd;&#xa;" />
+    <property name="sun.awt.enableExtraMouseButtons.ivy.specs-java-libs.settings" value="true" />
+    <property name="ivy.home.ivy.specs-java-libs.settings" value="C:\Users\JBispo\.ivy2" />
+    <property name="java.vm.specification.version" value="15" />
+    <property name="ant.file.type.Build file for Eclipse projects" value="file" />
+    <property name="ivy.cache.ttl.default.ivy.specs-java-libs.settings" value="10s" />
+    <property name="sun.cpu.isalist" value="amd64" />
+    <property name="sun.stderr.encoding" value="cp437" />
+    <property name="ivy.build.artifacts.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test/build/artifacts" />
+    <property name="java.vm.compressedOopsMode" value="Zero based" />
+    <property name="os.version.ivy.specs-java-libs.settings" value="10.0" />
+    <property name="ivy.deps.changed" value="false" />
+    <property name="os.version" value="10.0" />
+    <property name="path.separator.ivy.specs-java-libs.settings" value=";" />
+    <property name="user.home" value="C:\Users\JBispo" />
+    <property name="java.version.date.ivy.specs-java-libs.settings" value="2020-09-15" />
+    <property name="java.vm.vendor" value="Oracle Corporation" />
+    <property name="ivy.organisation" value="specs.fe.up.pt" />
+    <property name="user.dir" value="C:\Users\JBispo\Desktop\test" />
+    <property name="user.timezone.ivy.specs-java-libs.settings" value="Europe/Lisbon" />
+    <property name="ivy.conf.url.ivy.specs-java-libs.settings" value="file:/C:/Users/JBispo/AppData/Local/Temp/specs_git_repos/specs-java-libs/ivysettings.xml" />
+    <property name="ivy.publish.src.artifacts.pattern" value="C:\Users\JBispo\Desktop\test/distrib/[type]s/[artifact]-[revision](-[classifier]).[ext]" />
+    <property name="ivy.settings.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs" />
+    <property name="java.vm.specification.name.ivy.specs-java-libs.settings" value="Java Virtual Machine Specification" />
+    <property name="user.language.ivy.specs-java-libs.settings" value="en" />
+    <property name="ivy.distrib.dir" value="C:\Users\JBispo\Desktop\test/distrib" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="sun.cpu.endian.ivy.specs-java-libs.settings" value="little" />
+    <property name="ivy.revision" value="working@MININT-0CDNVTD" />
+    <property name="ivy.distrib.dir.ivy.specs-java-libs.settings" value="C:\Users\JBispo\Desktop\test/distrib" />
+    <property name="java.vm.version" value="15+36-1562" />
+    <property name="sun.java.command.ivy.specs-java-libs.settings" value="eclipse-build.jar --config https://raw.githubusercontent.com/specs-feup/specs-java-libs/testing-workflow/eclipse.build" />
+    <property name="ivy.default.ivy.user.dir" value="C:\Users\JBispo\.ivy2" />
+    <property name="java.class.path" value="C:\Users\JBispo\Desktop\test\junit.jar;C:\Users\JBispo\Desktop\test\hamcrest.core.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\SpecsUtils\bin;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\bin;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\GuiHelper\bin;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\bin;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\bin;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\graal-sdk-jar-21.0.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\gson-jar-2.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\gson-javadoc-2.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\gson-source-2.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\icu4j-jar-67.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\js-jar-21.0.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\js-javadoc-21.0.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\js-scriptengine-jar-21.0.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\js-source-21.0.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\junit-jar-3.8.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\regex-jar-21.0.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy\truffle-api-jar-21.0.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\activation-jar-1.1.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\cglib-nodep-jar-2.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\commons-lang-jar-2.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\dom4j-jar-1.6.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\javax.activation-api-jar-1.2.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\jaxb-api-jar-2.3.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\jaxws-rt-jar-2.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\jdom-jar-1.1.3.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\jdom2-jar-2.0.5.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\jettison-bundle-1.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\jmock-jar-1.0.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\joda-time-jar-1.6.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\json-jar-20080701.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\junit-jar-3.8.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\kxml2-min-jar-2.3.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\mxparser-jar-1.2.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\stax-api-jar-1.0.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\stax-jar-1.2.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\wstx-asl-jar-3.2.7.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\xml-writer-jar-0.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\xmlpull-jar-1.1.3.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\xom-jar-1.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\xpp3_min-jar-1.1.4c.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\xstream-jar-1.4.18.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\xstream-javadoc-1.4.18.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\XStreamPlus\ivy\xstream-source-1.4.18.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\bcel-jar-6.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\commons-lang3-jar-3.6.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\commons-lang3-javadoc-3.6.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\commons-lang3-source-3.6.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\commons-math3-jar-3.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\commons-text-jar-1.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\commons-text-javadoc-1.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\commons-text-source-1.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\easymock-jar-3.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\hamcrest-all-jar-1.3.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\hamcrest-core-jar-1.3.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\jmh-core-jar-1.17.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\jmh-generator-annprocess-jar-1.17.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\jopt-simple-jar-4.6.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\junit-jar-4.12.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\CommonsLangPlus\ivy\objenesis-jar-2.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\activation-jar-1.1.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\animal-sniffer-annotations-jar-1.14.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\cglib-nodep-jar-2.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\commons-lang-jar-2.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\dom4j-jar-1.6.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\error_prone_annotations-jar-2.0.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\gson-jar-2.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\gson-javadoc-2.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\gson-source-2.4.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\guava-bundle-19.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\guava-javadoc-19.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\guava-source-19.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\j2objc-annotations-jar-0.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\javax.activation-api-jar-1.2.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\jaxb-api-jar-2.3.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\jaxws-rt-jar-2.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\jdom-jar-1.1.3.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\jdom2-jar-2.0.5.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\jettison-bundle-1.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\jmock-jar-1.0.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\joda-time-jar-1.6.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\json-jar-20080701.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\jsr305-jar-1.3.9.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\junit-jar-3.8.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\kxml2-min-jar-2.3.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\mxparser-jar-1.2.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\stax-api-jar-1.0.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\stax-jar-1.2.0.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\wstx-asl-jar-3.2.7.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\xml-writer-jar-0.2.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\xmlpull-jar-1.1.3.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\xom-jar-1.1.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\xpp3_min-jar-1.1.4c.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\xstream-jar-1.4.18.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\xstream-javadoc-1.4.18.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\jOptions\ivy\xstream-source-1.4.18.jar;C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\bin;C:\Program Files\Portugal Identity Card;C:\Users\JBispo\Desktop\test\eclipse-build.jar" />
+    <property name="ivy.checksums.ivy.specs-java-libs.settings" value="sha1,md5" />
+    <property name="os.arch" value="amd64" />
+    <property name="ivy.conf.file" value="C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\ivysettings.xml" />
+    <property name="sun.stderr.encoding.ivy.specs-java-libs.settings" value="cp437" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="ant.core.lib" value="C:\Users\JBispo\Desktop\test\eclipse-build.jar" />
+    <property name="ivy.settings.dir" value="C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs" />
+    <property name="java.vm.specification.vendor" value="Oracle Corporation" />
+    <property name="file.separator" value="\" />
+    <property name="ivy.settings.url.ivy.specs-java-libs.settings" value="file:/C:/Users/JBispo/AppData/Local/Temp/specs_git_repos/specs-java-libs/ivysettings.xml" />
+    <property name="user.name.ivy.specs-java-libs.settings" value="JBispo" />
+    <property name="java.vm.info.ivy.specs-java-libs.settings" value="mixed mode, sharing" />
+    <property name="java.runtime.version" value="15+36-1562" />
+    <property name="sun.cpu.isalist.ivy.specs-java-libs.settings" value="amd64" />
+    <property name="java.vm.version.ivy.specs-java-libs.settings" value="15+36-1562" />
+    <property name="sun.management.compiler.ivy.specs-java-libs.settings" value="HotSpot 64-Bit Tiered Compilers" />
+    <property name="ivy.log.modules.in.use.ivy.specs-java-libs.settings" value="false" />
+    <property name="ivy.conf.dir" value="C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs" />
+    <property name="ivy.retrieve.pattern" value="C:\Users\JBispo\Desktop\test/lib/[artifact]-[revision](-[classifier]).[ext]" />
+    <property name="sun.jnu.encoding.ivy.specs-java-libs.settings" value="Cp1252" />
+    <property name="user.country" value="GB" />
+    <property name="ivy.resolved.file" value="C:\Users\JBispo\AppData\Local\Temp\specs_git_repos\specs-java-libs\JsEngine\ivy.xml" />
+    <property name="ivy.resolver.default.check.modified.ivy.specs-java-libs.settings" value="false" />
+    <property name="os.arch.ivy.specs-java-libs.settings" value="amd64" />
+    <property name="java.specification.name.ivy.specs-java-libs.settings" value="Java Platform API Specification" />
+    <property name="java.vendor" value="Oracle Corporation" />
+    <property name="ivy.project.dir" value="C:\Users\JBispo\Desktop\test" />
+    <property name="java.vm.specification.version.ivy.specs-java-libs.settings" value="15" />
+    <property name="java.specification.version" value="15" />
+    <property name="ivy.buildlist.ivyfilepath" value="ivy.xml" />
+    <property name="sun.arch.data.model" value="64" />
+  </properties>
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testAccessors" time="0.759" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testGet" time="0.027" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testPrint" time="0.071" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testArrowFunction" time="0.033" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testToString" time="0.013" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testUndefined" time="0.012" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testGetterSetter" time="0.019" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testStringify" time="0.018" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testEvalWithBindings" time="0.022" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testGetValues" time="0.012" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testIsArray" time="0.01" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testSymbol" time="0.015" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testClosures" time="0.018" />
+  <testcase classname="pt.up.fe.specs.jsengine.JsEngineTest" name="testNewArray" time="0.013" />
+  <system-out><![CDATA[Using print()
+Using console.log()
+Using print() with several objects
+Using print() with substitution arguments, like 10 and aString
+Symbol: function Symbol() { [native code] }
+Symbol.iterator: Symbol(Symbol.iterator)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

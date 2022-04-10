@@ -1,0 +1,33 @@
+<html xmlns:string="xalan://java.lang.String" xmlns:lxslt="http://xml.apache.org/xslt">
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Standard Output from SymjaTest</title>
+    </head>
+    <body>
+        <pre>SymjaFunction: SymjaFunction []
+  SymjaOperator: SymjaOperator [operator: Times]
+  SymjaSymbol: SymjaSymbol [symbol: N]
+  SymjaSymbol: SymjaSymbol [symbol: M]
+  SymjaFunction: SymjaFunction []
+    SymjaOperator: SymjaOperator [operator: Plus]
+    SymjaSymbol: SymjaSymbol [symbol: i]
+    SymjaFunction: SymjaFunction []
+      SymjaOperator: SymjaOperator [operator: Times]
+      SymjaInteger: SymjaInteger [valueString: -1]
+      SymjaSymbol: SymjaSymbol [symbol: N]
+
+C Code: (N * M * (i + (-1 * N)))
+C Code After Remove Minus One transform: (N * M * (i + (-N)))
+C Code After Replace Unary Minus: (N * M * (i - N))
+C Code After parenthesis: N * M * (i - N)
+Symja: 57*tsteps-64*n*tsteps+18*n^2*tsteps
+C: 57 * tsteps + -1 * (64 * n * tsteps) + 18 * pow(n, 2) * tsteps
+Symja: 7+16*tsteps-16*n*tsteps+4*n^2*tsteps
+C: 7 + 16 * tsteps + -1 * (16 * n * tsteps) + 4 * pow(n, 2) * tsteps
+Symja: 2+56*tsteps-56*n*tsteps+14*n^2*tsteps
+C: 2 + 56 * tsteps + -1 * (56 * n * tsteps) + 14 * pow(n, 2) * tsteps
+Symja: 4+64*tsteps-64*n*tsteps+16*n^2*tsteps
+C: 4 + 64 * tsteps + -1 * (64 * n * tsteps) + 16 * pow(n, 2) * tsteps
+</pre>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+<html xmlns:string="xalan://java.lang.String" xmlns:lxslt="http://xml.apache.org/xslt">
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Standard Output from TasksTest</title>
+    </head>
+    <body>
+        <pre>Output:
+&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;project default="ssh_transfer" name="Upload a file through SSH"&gt;
+
+
+	&lt;!--ANT 1.7 is required --&gt;
+	&lt;!-- FTP Transfer --&gt;
+	&lt;target name="ssh_transfer"&gt;
+		&lt;echo message="Using a secure connection over SSH. Make sure you are inside a network that permits the communication! (e.g., by using a VPN)"/&gt;
+		&lt;echo message="Transfering 'new_name.txt' to host:destinationFolder"/&gt;	
+		&lt;scp file="C:\Users\JBispo\AppData\Local\Temp\specs_ant\renamedFile\new_name.txt" todir="login:pass@host:destinationFolder"
+			port="port"
+			trust="yes" /&gt;
+
+		
+	&lt;/target&gt;
+&lt;/project&gt;
+
+</pre>
+    </body>
+</html>
