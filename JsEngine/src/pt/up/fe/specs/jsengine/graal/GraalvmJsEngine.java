@@ -232,7 +232,13 @@ public class GraalvmJsEngine extends AJsEngine {
                 throw new RuntimeException(e.getMessage(), hostException);
             }
 
-            e.printStackTrace();
+            // Throwable currentEx = e;
+            // // System.out.println("CAUSE: " + e.getCause());
+            // while (currentEx != null) {
+            // currentEx.printStackTrace();
+            // currentEx = currentEx.getCause();
+            // }
+
             throw new RuntimeException("Polyglot exception while evaluating JavaScript code", e);
         }
 
