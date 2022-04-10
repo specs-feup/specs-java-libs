@@ -25,19 +25,21 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-    - name: Eclipse Build
-      run: |
-        wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
-        java -jar eclipse-build.jar --config https://raw.githubusercontent.com/specs-feup/specs-java-libs/testing-workflow/eclipse.build
-        #ls
-        #echo 'folder'
-        #ls ./reports-eclipse-build
+    #- name: Eclipse Build
+    #  run: |
+    #    wget -N http://specs.fe.up.pt/tools/eclipse-build.jar
+    #    java -jar eclipse-build.jar --config https://raw.githubusercontent.com/specs-feup/specs-java-libs/testing-workflow/eclipse.build
+    #    #ls
+    #    #echo 'folder'
+    #    #ls ./reports-eclipse-build
     - name: Show folder contents
       run: |
         echo 'Current folder:'
         ls
-        echo 'Folder 'reports-eclipse-build':'        
+        echo 'Folder reports-eclipse-build:'        
         ls reports-eclipse-build        
+        echo 'Folder specs-java-libs/junit-reports:'                
+        ls ./specs-java-libs/junit-reports
     #- name: Generate build.xml
     #  run: | 
     #    # cd .. 
@@ -56,6 +58,7 @@ jobs:
       if: always() # always run even if the previous step fails
       with:
         #report_paths: '**/reports-eclipse-build/TEST-*.xml'
-        report_paths: '**/reports-eclipse-build/*.xml'      
+        #report_paths: '**/reports-eclipse-build/*.xml'      
+        report_paths: '**/junit-reports/*.xml'      
         summary: true
-        exclude_sources: ''
+        #exclude_sources: ''
