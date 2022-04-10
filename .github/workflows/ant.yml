@@ -45,8 +45,8 @@ jobs:
         ls
         #echo 'Folder reports-eclipse-build:'        
         #ls reports-eclipse-build        
-        echo 'Folder specs-java-libs/junit-reports:'                
-        ls ./specs-java-libs/junit-reports
+        #echo 'Folder specs-java-libs/junit-reports:'                
+        #ls ./specs-java-libs/junit-reports
         echo 'Folder specs-java-libs/test-results:'
         ls ./specs-java-libs/test-results
     #- name: Generate build.xml
@@ -68,6 +68,6 @@ jobs:
       with:
         #report_paths: '**/reports-eclipse-build/TEST-*.xml'
         #report_paths: '**/reports-eclipse-build/*.xml'      
-        report_paths: '**/test-results/TEST-*.xml'      
+        report_paths: 'test-results/*.xml'      
         summary: true
         #exclude_sources: ''
