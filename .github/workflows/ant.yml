@@ -38,7 +38,9 @@ jobs:
         cd specs-java-libs
         git checkout testing-workflow
         git pull
-        ln ../specs-java-libs/junit-reports test-results
+        # ln ../specs-java-libs/junit-reports test-results
+        mkdir test-results
+        cp -a junit-reports/. test-results/
     - name: Show folder contents
       run: |
         echo 'Current folder:'
@@ -77,6 +79,8 @@ jobs:
       with:
         #report_paths: '**/reports-eclipse-build/TEST-*.xml'
         #report_paths: '**/reports-eclipse-build/*.xml'      
+        # Tried relative paths (not supported) and symlinks (are not followed)
+        # Resorted to copying the tests to a folder in the repo folder
         report_paths: 'junit-reports/*.xml'      
         summary: true
         #exclude_sources: ''        
