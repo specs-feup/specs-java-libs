@@ -22,6 +22,7 @@ import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -346,6 +347,17 @@ public class SpecsSwing {
             var command = "explorer.exe /select, " + file.getAbsoluteFile();
             try {
                 Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                SpecsLogs.info("Problem while trying to open folder for file '" + file + "': " + e.getMessage());
+                return false;
+            }
+            return true;
+            // return;
+        }
+
+        if (SpecsSystem.isLinux()) {
+            try {
+                Runtime.getRuntime().exec(Arrays.asList("gio", "open", file.getAbsolutePath()).toArray(new String[0]));
             } catch (IOException e) {
                 SpecsLogs.info("Problem while trying to open folder for file '" + file + "': " + e.getMessage());
                 return false;
