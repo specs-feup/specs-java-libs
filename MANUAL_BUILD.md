@@ -22,7 +22,7 @@ be needed to build the projects:
  * Several projects make use of JavaCC to generate parsers
  * ANTLR might be used in some external projects that make use of this documentation
 
-To understand with tools are needed to build a specific project, check the .project file for it. It
+To understand which tools are needed to build a specific project, check the .project file for it. It
 will contain a list under `<natures>`, which determine the tools that will be used.
 
 ## Dependencies
@@ -70,6 +70,10 @@ You can check the .project file for each project to get an idea of the required 
 
 This means that first the JavaCC tool will be run to generate a parser, and then a Java build will occur,
 probably generating a Jar file for the project.
+
+While the development lifecycle in Eclipse uses this information, `eclipse-build` uses a separate 'source of
+truth', a `commands.build` file in the project's root, to get its build steps. In the future, syncronizing
+on a single file might be warranted.
 
 Some projects might have building or running configurations under their /run directory, warranting more
 specific build documentation.
