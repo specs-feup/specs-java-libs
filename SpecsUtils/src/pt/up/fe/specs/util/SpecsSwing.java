@@ -343,7 +343,7 @@ public class SpecsSwing {
         // Tested on Java 15, Desktop.browseFileDirectory() was not working for Windows
         if (SpecsSystem.isWindows()) {
 
-            var command = "explorer.exe /select, " + SpecsIo.normalizePath(file.getAbsoluteFile());
+            var command = "explorer.exe /select, " + file.getAbsoluteFile();
             try {
                 Runtime.getRuntime().exec(command);
             } catch (IOException e) {
