@@ -357,7 +357,9 @@ public class SpecsSwing {
 
         if (SpecsSystem.isLinux()) {
             try {
-                Runtime.getRuntime().exec(Arrays.asList("gio", "open", file.getAbsolutePath()).toArray(new String[0]));
+                var folderToOpen = file.isFile() ? file.getParentFile() : file;
+                Runtime.getRuntime()
+                        .exec(Arrays.asList("gio", "open", folderToOpen.getAbsolutePath()).toArray(new String[0]));
             } catch (IOException e) {
                 SpecsLogs.info("Problem while trying to open folder for file '" + file + "': " + e.getMessage());
                 return false;
