@@ -1,0 +1,7 @@
+java_library(
+    name = "SpecsUtils",
+    srcs = glob(["src/pt/up/fe/specs/util/**/*.java"]),
+    resource_strip_prefix = "SpecsUtils/resources",
+    resources = glob(["resources/*.properties"]),
+    visibility = ["//visibility:public"],
+)

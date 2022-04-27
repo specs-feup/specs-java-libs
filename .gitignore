@@ -37,3 +37,5 @@ ivy/
 ### ignore media formats
 *.mp4
 *.wmv
+
+bazel-*
