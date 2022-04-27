@@ -197,8 +197,14 @@ public class GraalvmJsEngine extends AJsEngine {
 
     private Value eval(Source code) {
         try {
+            // var writer = new StringWriter();
+            // code.getReader().transferTo(writer);
+            // writer.close();
+            // System.out.println("EVAL CODE:\n" + writer.toString());
+
             // Value value = asValue(engine.eval(code));
             // Value value = engine.getPolyglotContext().eval("js", code);
+
             Value value = engine.getPolyglotContext().eval(code);
 
             // if (value.hasMembers() || value.hasArrayElements()) {

@@ -28,11 +28,15 @@ public class JsBabel {
         var engine = JsEngineType.GRAALVM.newEngine();
 
         // Get Babel source code
-        var babelSource = JsEngineWebResources.BABEL.writeVersioned(SpecsIo.getTempFolder("specs_js-engine"),
+        var babelSource = JsEngineWebResources.BABEL_LATEST.writeVersioned(SpecsIo.getTempFolder("specs_js-engine"),
                 JsBabel.class);
 
         // Load babel
         engine.eval(SpecsIo.read(babelSource.getFile()));
+
+        // Load toES5 function
+        engine.eval(
+                "function toES6(code) {return Babel.transform(code, { presets: [\"env\"], targets: {\"chrome\": \"58\"} }).code;}");
 
         return engine;
     }
@@ -41,20 +45,27 @@ public class JsBabel {
         return BABEL_ENGINE.get();
     }
 
+    /*
     public static void parse(String jsCode) {
         // Escape back-ticks
         var normalizedCode = jsCode.replace("`", "\\`");
-
+    
         System.out.println("HELLO:");
-
+    
         var result = getEngine()
-                // .eval("code = `" + normalizedCode + "`; ast = require(\"@babel/parser\").parse(code); ast;");
-                .eval("code = `" + normalizedCode + "`; Babel.transform(code, { presets: [\"env\"] });");
-        // .eval("code = `" + normalizedCode + "`; Babel.parseSync;");
-
-        System.out.println("RESUT: " + result);
+                .eval("code = `" + normalizedCode + "`; Babel.transform(code, { presets: [\"env\"] }).code;");
+    
+        System.out.println("RESULT: " + result);
         // babelParser.parse(code, [options])
-
+    
         throw new RuntimeException("Parsing using Babel is not implemented, use JsEsprima instead");
+    }
+    */
+
+    public static String toES6(String jsCode) {
+        var toEs5Function = getEngine().get("toES6");
+        var es5Code = getEngine().call(toEs5Function, jsCode);
+
+        return es5Code.toString();
     }
 }

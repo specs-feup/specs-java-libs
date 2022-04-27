@@ -23,6 +23,8 @@ public interface JsEngineWebResources {
 
     // Taken from https://unpkg.com/browse/@babel/standalone@7.15.6/
     WebResourceProvider BABEL = create("babel.min.js", "v7.15.6");
+    WebResourceProvider BABEL_LATEST = WebResourceProvider.newInstance("https://unpkg.com/@babel/standalone/",
+            "babel.js");
     WebResourceProvider ESPRIMA = create("esprima.js", "v4.0.1");
 
 }
