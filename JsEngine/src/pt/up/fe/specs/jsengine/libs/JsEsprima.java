@@ -51,22 +51,11 @@ public class JsEsprima {
     }
 
     public static EsprimaNode parse(String jsCode) {
-        // try {
         return parse(jsCode, "<unknown source>");
-        // } catch (Exception e) {
-        // If there is a problem during parsing, try transpiling to an older version of EcmaScript
-        // var es5Code = JsBabel.toES5(jsCode);
-        // System.out.println("ES5 Code:\n" + es5Code);
-        // return parse(es5Code, "<unknown source>");
-        // throw e;
-        // }
-
     }
 
     @SuppressWarnings("unchecked")
     public static EsprimaNode parse(String jsCode, String path) {
-        // Escape back-ticks
-        // var normalizedCode = jsCode.replace("`", "\\`");
         var engine = getEngine();
 
         // Obtain JSON string representing the AST
@@ -77,23 +66,12 @@ public class JsEsprima {
         try {
             result = engine.call(parseFunction, jsCode).toString();
         } catch (Exception e) {
-            SpecsLogs.info("Parsing with Esprima failed, transpiling with Babel and trying again");
             // If there is a problem during parsing, try transpiling to an older version of EcmaScript
+            SpecsLogs.info("Parsing with Esprima failed, transpiling with Babel and trying again");
             var es5Code = JsBabel.toES6(jsCode);
-            // System.out.println("Transpile code:\n" + es5Code);
-            // System.out.println("ES5 Code:\n" + es5Code);
+
             result = engine.call(parseFunction, es5Code).toString();
         }
-
-        /* 
-        var result = engine
-                .eval("code = `" + normalizedCode + "`; "
-                        + "var ast = esprima.parse(code, {loc:true,comment:true}); "
-                        + "var string = JSON.stringify(ast);"
-                        + "string;")
-                .toString();
-        */
-        // SpecsIo.write(new File("js.json"), result);
 
         var program = new EsprimaNode(new Gson().fromJson(result, Map.class));
 
@@ -135,22 +113,4 @@ public class JsEsprima {
         }
     }
 
-    // private static GenericDataNode convert(Object result, JsEngine engine) {
-    // System.out.println("Keys: " + engine.keySet(result));
-    //
-    // // Create node
-    // var node = new GenericDataNode();
-    // var children = new ArrayList<GenericDataNode>();
-    //
-    // for (var key : engine.keySet(result)) {
-    // var value = engine.get(result, key);
-    //
-    // // Boolean
-    //
-    // System.out.println("KEY: " + key + "; Value: " + value);
-    // }
-    //
-    // // TODO Auto-generated method stub
-    // return null;
-    // }
 }

@@ -28,13 +28,15 @@ public class JsBabel {
         var engine = JsEngineType.GRAALVM.newEngine();
 
         // Get Babel source code
-        var babelSource = JsEngineWebResources.BABEL_LATEST.writeVersioned(SpecsIo.getTempFolder("specs_js-engine"),
+        var babelSource = JsEngineWebResources.BABEL.writeVersioned(SpecsIo.getTempFolder("specs_js-engine"),
                 JsBabel.class);
 
         // Load babel
         engine.eval(SpecsIo.read(babelSource.getFile()));
 
-        // Load toES5 function
+        // Load toES6 function
+        // Using Chrome 58 as target due to being the value that appears as example in Babel documentation, and Esprima
+        // apparently supporting it
         engine.eval(
                 "function toES6(code) {return Babel.transform(code, { presets: [\"env\"], targets: {\"chrome\": \"58\"} }).code;}");
 
@@ -44,23 +46,6 @@ public class JsBabel {
     private static JsEngine getEngine() {
         return BABEL_ENGINE.get();
     }
-
-    /*
-    public static void parse(String jsCode) {
-        // Escape back-ticks
-        var normalizedCode = jsCode.replace("`", "\\`");
-    
-        System.out.println("HELLO:");
-    
-        var result = getEngine()
-                .eval("code = `" + normalizedCode + "`; Babel.transform(code, { presets: [\"env\"] }).code;");
-    
-        System.out.println("RESULT: " + result);
-        // babelParser.parse(code, [options])
-    
-        throw new RuntimeException("Parsing using Babel is not implemented, use JsEsprima instead");
-    }
-    */
 
     public static String toES6(String jsCode) {
         var toEs5Function = getEngine().get("toES6");
