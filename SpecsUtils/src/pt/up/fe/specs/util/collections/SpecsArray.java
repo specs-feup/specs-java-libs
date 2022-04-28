@@ -22,7 +22,8 @@ public class SpecsArray {
      */
     public static int getLength(Object object) {
         var objectClass = object.getClass();
-        if (!objectClass.getClass().isArray()) {
+
+        if (!objectClass.isArray()) {
             return -1;
         }
 
