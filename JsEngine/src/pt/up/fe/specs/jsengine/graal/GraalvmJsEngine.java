@@ -262,8 +262,10 @@ public class GraalvmJsEngine extends AJsEngine {
         } catch (IOException e) {
             throw new RuntimeException("Could not load main file.", e);
         } catch (final PolyglotException e) {
-            // e.printStackTrace();
-            throw new RuntimeException("Exception when evaluating javascript", e);
+            // If host exception, convert to it first
+            // Usually has more information about the problem that happened
+            Throwable t = e.isHostException() ? e.asHostException() : e;
+            throw new RuntimeException("Exception when evaluating javascript", t);
         }
     }
 
