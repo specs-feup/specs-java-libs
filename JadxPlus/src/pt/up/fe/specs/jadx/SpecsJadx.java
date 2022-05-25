@@ -74,15 +74,21 @@ public class SpecsJadx {
 
         JadxArgs jadxArgs = new JadxArgs();
         jadxArgs.setInputFile(apk);
-        jadxArgs.setSkipResources(true);
         jadxArgs.setOutDir(outputFolder);
+        jadxArgs.setDebugInfo(false);
+        jadxArgs.setSkipResources(true);
 
         if (packageFilter != null && packageFilter.size() > 0) {
 
-            classFilter = cls -> packageFilter.stream()
-                    .anyMatch(prefix -> cls.startsWith(prefix));
+            packageFilter.stream().forEach(p -> System.out.println(p));
+
+            for (String pattern : packageFilter) {
+                String[] arr = stripPattern(pattern);
+                classFilter = classFilter.and(buildFilter(arr[0], arr[1]));
+            }
 
             jadxArgs.setClassFilter(classFilter);
+            jadxArgs.setIncludeDependencies(false);
             SpecsLogs.info(
                     String.format("Jadx: DECOMPILE FILTER | %s", packageFilter));
         }
@@ -108,5 +114,48 @@ public class SpecsJadx {
         } catch (Exception e) {
             throw new DecompilationFailedException(e.getMessage(), e);
         }
+    }
+
+    private String[] stripPattern(String pattern) {
+
+        String[] filter = new String[2];
+        filter[0] = "";
+        filter[1] = pattern;
+
+        if (pattern.charAt(0) == '!') {
+            filter[0] = "!";
+            filter[1] = pattern.substring(1);
+        }
+
+        if (filter[1].charAt(0) == '?') {
+            filter[0] = filter[0] + "s";
+            filter[1] = filter[1].substring(1);
+        }
+
+        if (filter[1].charAt(filter[1].length() - 1) == '?') {
+            filter[0] = filter[0] + "e";
+            filter[1] = filter[1].substring(0, filter[1].length() - 1);
+        }
+
+        return filter;
+    }
+
+    private Predicate<String> buildFilter(String pattern, String packageName) {
+
+        if (pattern.isEmpty())
+            return (str) -> str.equals(packageName);
+
+        boolean negate = pattern.charAt(0) == '!';
+
+        if (pattern.endsWith("se"))
+            return (str) -> str.contains(packageName) != negate;
+
+        if (pattern.endsWith("s"))
+            return (str) -> str.startsWith(packageName) != negate;
+
+        if (pattern.endsWith("e"))
+            return (str) -> str.endsWith(packageName) != negate;
+
+        return (str) -> true;
     }
 }
