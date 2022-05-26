@@ -874,6 +874,20 @@ public class SpecsCollections {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Converts the definition to an optional. If the list contains more than one element, throws an exception.
+     * 
+     * @param definition
+     * @return
+     */
+    public static <K> Optional<K> toOptional(Collection<K> collection) {
+        SpecsCheck.checkArgument(collection.size() < 2,
+                () -> "Expected list to only have one element or none, it has " + collection.size() + ": "
+                        + collection);
+
+        return collection.stream().findFirst();
+    }
+
     // @SuppressWarnings("unchecked")
     // public static <T> T[] arrayGenerator(int size, Class<T> aClass) {
     // return (T[]) Array.newInstance(aClass, size);
