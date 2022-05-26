@@ -26,8 +26,8 @@
 	</info>
 	<dependencies>
 
-		<dependency org="io.github.skylot" name="jadx-core" rev="1.3.4"/>
-		<dependency org="io.github.skylot" name="jadx-dex-input" rev="1.3.4"/>
+		<dependency org="io.github.skylot" name="jadx-core" rev="1.4.0"/>
+		<dependency org="io.github.skylot" name="jadx-dex-input" rev="1.4.0"/>
 
 	</dependencies>
 </ivy-module>
