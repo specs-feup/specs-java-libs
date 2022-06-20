@@ -743,4 +743,10 @@ public class GraalvmJsEngine extends AJsEngine {
         return functionValue.execute(args);
     }
 
+    @Override
+    public boolean isFunction(Object object) {
+        var functionValue = asValue(object);
+
+        return functionValue.canExecute();
+    }
 }

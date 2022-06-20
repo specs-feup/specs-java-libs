@@ -310,6 +310,13 @@ public interface JsEngine {
      */
     boolean isBoolean(Object object);
 
+    /**
+     * 
+     * @param object
+     * @return true if the object can be called (executed)
+     */
+    boolean isFunction(Object object);
+
     // Object put(Bindings var, String member, Object value);
 
     // public Object remove(Bindings object, Object key);
