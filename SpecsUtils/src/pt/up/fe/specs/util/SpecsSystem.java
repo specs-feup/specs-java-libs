@@ -1144,45 +1144,41 @@ public class SpecsSystem {
     // }
 
     /**
-     * Based on this: https://stackoverflow.com/a/2591122/1189808
+     * Returns a double based on the major (feature) and minor (interim) segments of the runtime version.
      * 
-     * @return
+     * Example: if the version string is "16.3.2-internal+11-specsbuild-20220403", the return will be `16.3`.
      */
     public static double getJavaVersionNumber() {
-        var javaVersion = getJavaVersion();
+        var version = Runtime.version();
 
-        var minorVersion = javaVersion.size() > 1 ? javaVersion.get(1) : "0";
+        var major = version.feature();
+        var minor = version.interim();
 
-        String versionNumber = javaVersion.get(0) + "." + minorVersion;
+        String versionNumber = major + "." + minor;
 
         return Double.parseDouble(versionNumber);
-
-        // String version = System.getProperty("java.version");
-        // // System.out.println("JAVA VERSION:" + version);
-        //
-        // int pos = version.lastIndexOf('.');
-        //
-        // if (pos == -1) {
-        // int dashPos = version.indexOf('-');
-        // return Double.parseDouble(version.substring(0, dashPos));
-        // }
-        // // pos = version.indexOf('.', pos + 1);
-        // return Double.parseDouble(version.substring(0, pos));
     }
 
+    /**
+     * Returns the components of the version number of the running Java VM as an immutable list.
+     * 
+     * Example: if the version string is "16.3.2-internal+11-specsbuild-20220403", the return will be `[16, 3, 2]`.
+     */
     public static List<Integer> getJavaVersion() {
         // Get property
-        String version = System.getProperty("java.version");
+        var version = Runtime.version();
 
-        // Split into parts, can be separated with . or _
-        var javaVersion = Arrays.stream(version.split("\\.|_"))
-                .map(number -> Integer.parseInt(number))
-                .collect(Collectors.toList());
+        return version.version();
+    }
 
-        SpecsCheck.checkArgument(!javaVersion.isEmpty(),
-                () -> "Could not obtain separate Java version numbers from string '" + version + "'");
+    public static boolean hasMinimumJavaVersion(int major) {
+        var version = Runtime.version();
+        return major >= version.feature();
+    }
 
-        return javaVersion;
+    public static boolean hasMinimumJavaVersion(int major, int minor) {
+        var version = Runtime.version();
+        return major > version.feature() || (major == version.feature() && minor >= version.interim());
     }
 
     /***** Methods for dynamically extending the classpath *****/
