@@ -1171,6 +1171,16 @@ public class SpecsSystem {
         return version.version();
     }
 
+    public static boolean hasMinimumJavaVersion(int major) {
+        var version = Runtime.version();
+        return major >= version.feature();
+    }
+
+    public static boolean hasMinimumJavaVersion(int major, int minor) {
+        var version = Runtime.version();
+        return major > version.feature() || (major == version.feature() && minor >= version.interim());
+    }
+
     /***** Methods for dynamically extending the classpath *****/
     /***** Taken from https://stackoverflow.com/a/42052857/1189808 *****/
     private static class SpclClassLoader extends URLClassLoader {
