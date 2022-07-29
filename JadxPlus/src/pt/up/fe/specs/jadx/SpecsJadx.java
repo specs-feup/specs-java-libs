@@ -15,6 +15,7 @@ package pt.up.fe.specs.jadx;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,11 @@ import java.util.function.Predicate;
 import jadx.api.JadxArgs;
 import jadx.api.JadxDecompiler;
 import jadx.api.JadxDecompiler.ProgressListener;
+import jadx.api.ResourceFile;
+import jadx.api.ResourceType;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsXml;
 
 public class SpecsJadx {
 
@@ -77,24 +81,45 @@ public class SpecsJadx {
         jadxArgs.setOutDir(outputFolder);
         jadxArgs.setDebugInfo(false);
         jadxArgs.setSkipResources(true);
+        jadxArgs.setIncludeDependencies(false);
 
-        if (packageFilter != null && packageFilter.size() > 0) {
+        boolean grabFilterFromManifest = false;
+        if (packageFilter != null) {
 
-            packageFilter.stream().forEach(p -> System.out.println(p));
-
-            for (String pattern : packageFilter) {
-                String[] arr = stripPattern(pattern);
-                classFilter = classFilter.and(buildFilter(arr[0], arr[1]));
+            if (packageFilter.size() == 1 && packageFilter.get(0).equals("package!")) {
+                grabFilterFromManifest = true;
             }
 
-            jadxArgs.setClassFilter(classFilter);
-            jadxArgs.setIncludeDependencies(false);
-            SpecsLogs.info(
-                    String.format("Jadx: DECOMPILE FILTER | %s", packageFilter));
+            else {
+                for (String pattern : packageFilter) {
+                    String[] arr = stripPattern(pattern);
+                    classFilter = classFilter.and(buildFilter(arr[0], arr[1]));
+                }
+            }
+
         }
 
         try (JadxDecompiler jadx = new JadxDecompiler(jadxArgs)) {
+
             jadx.load();
+
+            if (grabFilterFromManifest) {
+                ResourceFile manifest = jadx.getResources().stream()
+                        .filter(res -> res.getType() == ResourceType.MANIFEST)
+                        .findFirst().orElse(null);
+                if (manifest != null) {
+                    // Get package from manifest
+                    String packageName = SpecsXml.getXmlRoot(manifest.loadContent().getText().getCodeStr())
+                            .getElementsByTagName("manifest").item(0).getAttributes().getNamedItem("package")
+                            .getTextContent();
+                    packageFilter = Arrays.asList(packageName);
+                    classFilter = cls -> cls.startsWith(packageName);
+                }
+            }
+
+            jadxArgs.setClassFilter(classFilter);
+            SpecsLogs.info(
+                    String.format("Jadx: DECOMPILE FILTER | %s", packageFilter));
 
             SpecsLogs.info(
                     String.format("Jadx: DECOMPILING | Found %d packages and %d classes",
