@@ -21,6 +21,7 @@ import org.suikasoft.jOptions.JOptionKeys;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.AppPersistence;
+import org.suikasoft.jOptions.gui.panels.app.AppKeys;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import pt.up.fe.specs.util.SpecsIo;
@@ -63,6 +64,7 @@ public class PropertiesPersistence implements AppPersistence {
             dataStore.add(dataKey, dataKey.decode(value));
         }
 
+        dataStore.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
         dataStore.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         dataStore.set(JOptionKeys.USE_RELATIVE_PATHS, false);
 
@@ -81,6 +83,7 @@ public class PropertiesPersistence implements AppPersistence {
         // }
 
         // When saving, set config file and use relative paths
+        data.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
         data.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         data.set(JOptionKeys.USE_RELATIVE_PATHS, true);
 
@@ -91,6 +94,7 @@ public class PropertiesPersistence implements AppPersistence {
         boolean result = write(file, storeToSave);
 
         // Remove
+        data.remove(AppKeys.CONFIG_FILE);
         data.remove(JOptionKeys.CURRENT_FOLDER_PATH);
         data.remove(JOptionKeys.USE_RELATIVE_PATHS);
 

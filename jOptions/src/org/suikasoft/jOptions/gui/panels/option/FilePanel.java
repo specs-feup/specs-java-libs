@@ -31,6 +31,7 @@ import org.suikasoft.jOptions.JOptionKeys;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.gui.KeyPanel;
+import org.suikasoft.jOptions.gui.panels.app.AppKeys;
 
 import pt.up.fe.specs.util.SpecsIo;
 
@@ -156,6 +157,8 @@ public class FilePanel extends KeyPanel<File> {
 
         tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(currentFolderPath.get()));
         tempData.set(JOptionKeys.USE_RELATIVE_PATHS, false);
+        data.getTry(AppKeys.CONFIG_FILE).ifPresent(file -> tempData.set(AppKeys.CONFIG_FILE, file));
+
         tempData.setString(key, fieldValue);
 
         File value = tempData.get(key);
