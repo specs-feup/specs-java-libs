@@ -3349,4 +3349,17 @@ public class SpecsIo {
         return Arrays.asList(libraryFolders).stream().map(lib -> new File(lib)).collect(Collectors.toList());
     }
 
+    /**
+     * Removes query information of an URL string.
+     * 
+     * @param urlString
+     * @return
+     */
+    public static String cleanUrl(String urlString) {
+        var url = parseUrl(urlString)
+                .orElseThrow(() -> new RuntimeException("Could not parse URL '" + urlString + "'"));
+
+        return url.getProtocol() + "://" + url.getHost() + url.getPath();
+    }
+
 }
