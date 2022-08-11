@@ -17,6 +17,12 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * TODO: Candidate for using GitManager.
+ * 
+ * @author Joao Bispo
+ *
+ */
 public class GitRepos {
 
     // Maps repo names to the folder where they are in the system
