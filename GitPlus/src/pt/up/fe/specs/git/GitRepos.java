@@ -27,28 +27,36 @@ public class GitRepos {
 
     // Maps repo names to the folder where they are in the system
     // One instance per JVM
-    private static final Map<String, File> REPOS = new ConcurrentHashMap<>();
+    private static final Map<String, GitRepo> REPOS = new ConcurrentHashMap<>();
 
-    // Maps repo names to the folder where they are in the system
-    // private final Map<String, File> repos;
+    // public GitRepos() {
+    //
+    // }
 
-    public GitRepos() {
-        // this.repos = new HashMap<>();
+    public GitRepo getRepo(String repositoryPath) {
+        var repo = REPOS.get(repositoryPath);
+
+        if (repo == null) {
+            repo = GitRepo.newInstance(repositoryPath);
+            REPOS.put(repositoryPath, repo);
+        }
+
+        return repo;
     }
 
     public File getFolder(String repositoryPath) {
+        return getRepo(repositoryPath).getWorkFolder();
         // Get repo name
-        String repoName = SpecsGit.getRepoName(repositoryPath);
+        // String repoName = SpecsGit.getRepoName(repositoryPath);
 
         // Check if it is already in the map
         // File repoFolder = repos.get(repoName);
-        File repoFolder = REPOS.get(repoName);
-        if (repoFolder == null) {
-            repoFolder = SpecsGit.parseRepositoryUrl(repositoryPath);
-            // repos.put(repoName, repoFolder);
-            REPOS.put(repoName, repoFolder);
-        }
-
-        return repoFolder;
+        // var repo = REPOS.get(repositoryPath);
+        // if (repo == null) {
+        // repo = GitRepo.newInstance(repositoryPath);
+        // REPOS.put(repositoryPath, repo);
+        // }
+        //
+        // return repoFolder;
     }
 }
