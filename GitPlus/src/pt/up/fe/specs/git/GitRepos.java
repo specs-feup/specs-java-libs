@@ -33,7 +33,7 @@ public class GitRepos {
     //
     // }
 
-    public GitRepo getRepo(String repositoryPath) {
+    public static GitRepo getRepo(String repositoryPath) {
         var repo = REPOS.get(repositoryPath);
 
         if (repo == null) {
