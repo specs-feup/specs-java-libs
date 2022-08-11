@@ -55,6 +55,10 @@ public class GitRepo {
                             + "'");
         }
 
+        if (foldername != null) {
+            SpecsLogs.msgInfo("Setting work folder as '" + workFolder.getAbsolutePath() + "'");
+        }
+
         return workFolder;
     }
 
