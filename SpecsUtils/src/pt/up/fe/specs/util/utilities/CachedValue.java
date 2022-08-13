@@ -36,4 +36,11 @@ public class CachedValue<T> {
         return value.get();
     }
 
+    /**
+     * Mark cache as stale
+     */
+    public void stale() {
+        value = new SoftReference<>(supplier.get());
+    }
+
 }
