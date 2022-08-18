@@ -43,9 +43,9 @@ public class FunctionClassMap<T, R> {
     private final Map<Class<? extends T>, Function<? extends T, R>> map;
     // private final boolean supportInterfaces;
     // Can be null
-    private final R defaultValue;
+    private R defaultValue;
     // Can be null
-    private final Function<T, ? extends R> defaultFunction;
+    private Function<T, ? extends R> defaultFunction;
 
     private final ClassMapper classMapper;
 
@@ -236,12 +236,16 @@ public class FunctionClassMap<T, R> {
      * @param defaultValue
      * @return
      */
-    public FunctionClassMap<T, R> setDefaultValue(R defaultValue) {
-        return new FunctionClassMap<>(this.map, defaultValue, null, this.classMapper);
+    public void setDefaultValue(R defaultValue) {
+        this.defaultFunction = null;
+        this.defaultValue = defaultValue;
+        // return new FunctionClassMap<>(this.map, defaultValue, null, this.classMapper);
     }
 
-    public <ER extends R> FunctionClassMap<T, R> setDefaultFunction(Function<T, ER> defaultFunction) {
-        return new FunctionClassMap<>(this.map, null, defaultFunction, this.classMapper);
+    public <ER extends R> void setDefaultFunction(Function<T, ER> defaultFunction) {
+        this.defaultFunction = defaultFunction;
+        this.defaultValue = null;
+        // return new FunctionClassMap<>(this.map, null, defaultFunction, this.classMapper);
     }
 
 }
