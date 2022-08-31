@@ -82,6 +82,10 @@ public class SpecsJadx {
         jadxArgs.setDebugInfo(false);
         jadxArgs.setSkipResources(true);
         jadxArgs.setIncludeDependencies(false);
+        jadxArgs.setDeobfuscationOn(true);
+        // jadxArgs.setDeobfuscationMinLength(3);
+        // jadxArgs.setDeobfuscationMinLength(64);
+        // jadxArgs.setUseSourceNameAsClassAlias(true);
 
         boolean grabFilterFromManifest = false;
         if (packageFilter != null) {
