@@ -39,7 +39,16 @@ public class GitRepo {
         this.repoUrl = repoUrl;
         this.options = options;
         this.repoFolder = createRepoFolder();
-        prepareRepo();
+
+        try {
+            prepareRepo();
+        } catch (Exception e) {
+            SpecsLogs.info(
+                    "Problem while preparing repo folder '" + repoFolder.getAbsolutePath() + "':" + e.getMessage());
+            SpecsLogs.info("Deleting folder and trying again");
+            prepareRepo();
+        }
+
         this.workFolder = createWorkFolder();
     }
 
