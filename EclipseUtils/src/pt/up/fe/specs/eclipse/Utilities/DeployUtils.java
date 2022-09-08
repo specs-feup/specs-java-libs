@@ -32,6 +32,7 @@ import pt.up.fe.specs.eclipse.Classpath.ClasspathFiles;
 import pt.up.fe.specs.eclipse.Classpath.ClasspathParser;
 import pt.up.fe.specs.eclipse.Classpath.Dependency;
 import pt.up.fe.specs.eclipse.builder.BuildResource;
+import pt.up.fe.specs.eclipse.builder.BuildUtils;
 import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
@@ -689,6 +690,15 @@ public class DeployUtils {
         SpecsLogs.debug("Skipped " + skippedJars + " out of " + jarFiles.size());
 
         return jarZipfileset.toString();
+    }
+
+    public static Collection<String> getIvyFolders(ClasspathParser parser, String projectName) {
+        Collection<String> dependentProjects = parser.getDependentProjects(projectName);
+        Collection<String> projectsWithIvy = BuildUtils.filterProjectsWithIvy(parser, dependentProjects);
+
+        return projectsWithIvy.stream()
+                .map(ivyProject -> BuildUtils.getIvyJarFoldername(parser.getClasspath(ivyProject).getProjectFolder()))
+                .collect(Collectors.toList());
     }
 
 }
