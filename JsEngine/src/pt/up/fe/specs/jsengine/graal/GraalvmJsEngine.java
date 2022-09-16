@@ -19,10 +19,12 @@ import java.net.URI;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.AccessMode;
 import java.nio.file.DirectoryStream;
+import java.nio.file.InvalidPathException;
 import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.LinkOption;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.util.Arrays;
 import java.util.Collection;
@@ -108,10 +110,18 @@ public class GraalvmJsEngine implements JsEngine {
                 .allowHostClassLookup(name -> !forbiddenClasses.contains(name));
 
         if (engineWorkingDirectory != null) {
-            // FileSystem fs = FileSystem.newDefaultFileSystem();
-            FileSystem fs = new CustomGraalFileSystem();
+            FileSystem fs = FileSystem.newDefaultFileSystem();
             fs.setCurrentWorkingDirectory(engineWorkingDirectory);
             contextBuilder.fileSystem(fs);
+            /*
+             */
+            try {
+                Path path = Paths.get(engineWorkingDirectory + "/node_modules");
+
+                //contextBuilder.option("js.commonjs-require", "true");
+                //contextBuilder.option("js.commonjs-require-cwd", path.toString());
+                contextBuilder.option("js.ecmascript-version", "2022");
+            } catch (InvalidPathException e) {}
         }
 
         if (this.nashornCompatibility) {
