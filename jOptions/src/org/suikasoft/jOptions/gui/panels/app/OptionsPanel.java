@@ -281,11 +281,18 @@ public class OptionsPanel extends GuiTab {
             return DataStore.newInstance(app.getDefinition());
         }
 
-        DataStore newMap = app.getPersistence().loadData(file);
+        DataStore newMap;
+
+        try {
+            newMap = app.getPersistence().loadData(file);
+        } catch (Exception e) {
+            SpecsLogs.info("Could not parse configuration file");
+            newMap = null;
+        }
 
         // SetupData newMap = GuiHelperUtils.loadData(file);
         if (newMap == null) {
-            SpecsLogs.warn("Given file '" + optionsFilename + "' is not a compatible options file.");
+            SpecsLogs.info("Given file '" + optionsFilename + "' is not a compatible options file.");
             outputFile = null;
             saveButton.setEnabled(false);
             updateFileInfoString();
