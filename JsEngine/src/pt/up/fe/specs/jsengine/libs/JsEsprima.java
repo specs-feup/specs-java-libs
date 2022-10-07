@@ -21,22 +21,27 @@ import pt.up.fe.specs.jsengine.JsEngine;
 import pt.up.fe.specs.jsengine.JsEngineType;
 import pt.up.fe.specs.jsengine.JsEngineWebResources;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsLogs;
 
 public class JsEsprima {
 
     private static final ThreadLocal<JsEngine> ESPRIMA_ENGINE = ThreadLocal
-            .withInitial(JsEsprima::newBabelEngine);
+            .withInitial(JsEsprima::newEsprimaEngine);
 
-    private static JsEngine newBabelEngine() {
+    private static JsEngine newEsprimaEngine() {
         // Create JsEngine
         var engine = JsEngineType.GRAALVM.newEngine();
 
-        // Get Babel source code
-        var babelSource = JsEngineWebResources.ESPRIMA.writeVersioned(SpecsIo.getTempFolder("specs_js-engine"),
+        // Get Esprima source code
+        var esprimaSource = JsEngineWebResources.ESPRIMA.writeVersioned(SpecsIo.getTempFolder("specs_js-engine"),
                 JsEsprima.class);
 
-        // Load babel
-        engine.eval(SpecsIo.read(babelSource.getFile()));
+        // Load Esprima
+        engine.eval(SpecsIo.read(esprimaSource.getFile()));
+
+        // Load parse function
+        engine.eval(
+                "function parse(code) {var ast = esprima.parse(code, {loc:true,comment:true}); return JSON.stringify(ast);}");
 
         return engine;
     }
@@ -51,43 +56,28 @@ public class JsEsprima {
 
     @SuppressWarnings("unchecked")
     public static EsprimaNode parse(String jsCode, String path) {
-        // Escape back-ticks
-        var normalizedCode = jsCode.replace("`", "\\`");
         var engine = getEngine();
 
         // Obtain JSON string representing the AST
-        var result = engine
-                .eval("code = `" + normalizedCode + "`; "
-                        + "var ast = esprima.parse(code, {loc:true,comment:true}); "
-                        + "var string = JSON.stringify(ast);"
-                        + "string;")
-                .toString();
+        var parseFunction = engine.get("parse");
 
-        // SpecsIo.write(new File("js.json"), result);
+        var result = "";
+
+        try {
+            result = engine.call(parseFunction, jsCode).toString();
+        } catch (Exception e) {
+            // If there is a problem during parsing, try transpiling to an older version of EcmaScript
+            SpecsLogs.info("Parsing with Esprima failed, transpiling with Babel and trying again");
+            var es5Code = JsBabel.toES6(jsCode);
+
+            result = engine.call(parseFunction, es5Code).toString();
+        }
 
         var program = new EsprimaNode(new Gson().fromJson(result, Map.class));
 
         associateComments(program);
 
         return program;
-        // @SuppressWarnings("unchecked")
-        // var astRoot = (Map<String, Object>) engine.toJava(result);
-
-        // return astRoot;
-        // GenericDataNode astRoot = convert(result, engine);
-
-        // System.out.println("AST: " + astRoot);
-        // var ast = engine.convert(result, String.class);
-        //
-        // // String stringAst = (String) javascriptEngine.get("string");
-        // JsonParser jsonParser = new JsonParser();
-        //
-        // JsonElement jsonTree = jsonParser.parse(ast);
-        // JsonObject program = jsonTree.getAsJsonObject();
-        // program.addProperty("path", path);
-        //
-        // System.out.println("RESUT: " + program);
-
     }
 
     private static void associateComments(EsprimaNode program) {
@@ -123,22 +113,4 @@ public class JsEsprima {
         }
     }
 
-    // private static GenericDataNode convert(Object result, JsEngine engine) {
-    // System.out.println("Keys: " + engine.keySet(result));
-    //
-    // // Create node
-    // var node = new GenericDataNode();
-    // var children = new ArrayList<GenericDataNode>();
-    //
-    // for (var key : engine.keySet(result)) {
-    // var value = engine.get(result, key);
-    //
-    // // Boolean
-    //
-    // System.out.println("KEY: " + key + "; Value: " + value);
-    // }
-    //
-    // // TODO Auto-generated method stub
-    // return null;
-    // }
 }

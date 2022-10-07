@@ -86,6 +86,10 @@ public class EnumHelper<T extends Enum<T>> {
         // .orElseThrow(() -> new IllegalArgumentException(getErrorMessage(name, namesTranslationMap.get())));
     }
 
+    // public String messageNameNotFound(String name) {
+    // return "Could not find enum with name '" + name + "', available names:" + namesTranslationMap.get().keySet();
+    // }
+
     public Optional<T> fromNameTry(String name) {
         // try {
         var anEnum = namesTranslationMap.get().get(name);
@@ -191,6 +195,16 @@ public class EnumHelper<T extends Enum<T>> {
 
     public T[] values() {
         return enumValues.get();
+    }
+
+    /**
+     * The names used to map Strings to Enums. Might not be the same as the Enum name, if the Enum implements
+     * StringProvider.
+     * 
+     * @return
+     */
+    public Collection<String> names() {
+        return this.namesTranslationMap.get().keySet();
     }
 
 }

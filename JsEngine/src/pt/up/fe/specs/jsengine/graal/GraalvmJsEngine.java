@@ -49,14 +49,14 @@ import org.graalvm.polyglot.io.FileSystem;
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import com.oracle.truffle.polyglot.SpecsPolyglot;
 
+import pt.up.fe.specs.jsengine.AJsEngine;
 import pt.up.fe.specs.jsengine.ForOfType;
-import pt.up.fe.specs.jsengine.JsEngine;
 import pt.up.fe.specs.jsengine.JsEngineResource;
 import pt.up.fe.specs.jsengine.JsFileType;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
-public class GraalvmJsEngine implements JsEngine {
+public class GraalvmJsEngine extends AJsEngine {
 
     private static final String NEW_ARRAY = "[]"; // Faster
     private static final String NEW_MAP = "a = {}; a";
@@ -69,6 +69,11 @@ public class GraalvmJsEngine implements JsEngine {
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses) {
         this(blacklistedClasses, false);
     }
+
+    // private static Object test(Object v) {
+    // System.out.println("Interception conversion of object " + v);
+    // return v;
+    // }
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility) {
         this(blacklistedClasses, nashornCompatibility, null);
@@ -91,6 +96,9 @@ public class GraalvmJsEngine implements JsEngine {
         // Load Java compatibility layer
         eval(JsEngineResource.JAVA_COMPATIBILITY.read());
 
+        // Add rule to ignore polyglot values
+        addToJsRule(Value.class, this::valueToJs);
+
         // List<ScriptEngineFactory> engines = (new ScriptEngineManager()).getEngineFactories();
         // System.out.println("Available Engines");
         // for (ScriptEngineFactory f : engines) {
@@ -98,8 +106,28 @@ public class GraalvmJsEngine implements JsEngine {
         // }
     }
 
-    private Context.Builder createBuilder(Path engineWorkingDirectory) {
+    private Object valueToJs(Value value) {
+        // If a host object, convert (is this necessary?)
+        if (value.isHostObject()) {
+            SpecsLogs.debug(
+                    () -> "GraalvmJsEngie.valueToJs(): Case where we have a Value that is a host object, check if ok. "
+                            + value.asHostObject().getClass());
+            return toJs(value.asHostObject());
+        }
+
+        // Otherwise, already converted
+        return value;
+
+    }
+
+    private Context.Builder createBuilder() {
+
+        // var hostAccess = HostAccess.newBuilder()
+        // .targetTypeMapping(Object.class, Object.class, v -> true, GraalvmJsEngine::test)
+        // .build();
+
         Context.Builder contextBuilder = Context.newBuilder("js")
+                // .allowHostAccess(hostAccess)
                 .allowAllAccess(true)
                 .allowHostAccess(HostAccess.ALL)
                 // .option("js.load-from-url", "true")
@@ -201,8 +229,14 @@ public class GraalvmJsEngine implements JsEngine {
 
     private Value eval(Source code) {
         try {
+            // var writer = new StringWriter();
+            // code.getReader().transferTo(writer);
+            // writer.close();
+            // System.out.println("EVAL CODE:\n" + writer.toString());
+
             // Value value = asValue(engine.eval(code));
             // Value value = engine.getPolyglotContext().eval("js", code);
+
             Value value = engine.getPolyglotContext().eval(code);
 
             // if (value.hasMembers() || value.hasArrayElements()) {
@@ -236,6 +270,13 @@ public class GraalvmJsEngine implements JsEngine {
                 throw new RuntimeException(e.getMessage(), hostException);
             }
 
+            // Throwable currentEx = e;
+            // // System.out.println("CAUSE: " + e.getCause());
+            // while (currentEx != null) {
+            // currentEx.printStackTrace();
+            // currentEx = currentEx.getCause();
+            // }
+
             throw new RuntimeException("Polyglot exception while evaluating JavaScript code", e);
         }
 
@@ -253,8 +294,10 @@ public class GraalvmJsEngine implements JsEngine {
         } catch (IOException e) {
             throw new RuntimeException("Could not load main file.", e);
         } catch (final PolyglotException e) {
-            // e.printStackTrace();
-            throw new RuntimeException("Exception when evaluating javascript", e);
+            // If host exception, convert to it first
+            // Usually has more information about the problem that happened
+            Throwable t = e.isHostException() ? e.asHostException() : e;
+            throw new RuntimeException("Exception when evaluating javascript", t);
         }
     }
 
@@ -732,4 +775,10 @@ public class GraalvmJsEngine implements JsEngine {
         return functionValue.execute(args);
     }
 
+    @Override
+    public boolean isFunction(Object object) {
+        var functionValue = asValue(object);
+
+        return functionValue.canExecute();
+}
 }

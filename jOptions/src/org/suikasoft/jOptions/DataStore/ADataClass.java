@@ -24,6 +24,7 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionBuilder;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 
+import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.providers.StringProvider;
 
 public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>, StringProvider {
@@ -117,6 +118,12 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
 
         List<DataKey<?>> keysWithValues = new ArrayList<>();
         for (String keyId : data.getKeysWithValues()) {
+            if (!storeDefinition.hasKey(keyId)) {
+                SpecsLogs.info("getDataKeysWithValues(): found value with key that does not belong to this DataClass ('"
+                        + keyId + "')");
+                continue;
+            }
+
             keysWithValues.add(storeDefinition.getKey(keyId));
         }
 

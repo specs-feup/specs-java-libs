@@ -14,15 +14,13 @@
 package pt.up.fe.specs.jsengine;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
-import com.google.gson.JsonArray;
-
+import pt.up.fe.specs.util.classmap.FunctionClassMap;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
@@ -312,6 +310,13 @@ public interface JsEngine {
      */
     boolean isBoolean(Object object);
 
+    /**
+     * 
+     * @param object
+     * @return true if the object can be called (executed)
+     */
+    boolean isFunction(Object object);
+
     // Object put(Bindings var, String member, Object value);
 
     // public Object remove(Bindings object, Object key);
@@ -366,9 +371,27 @@ public interface JsEngine {
     }
 
     /**
+     * Adds a JS conversion rule for objects that are instances of a given class.
+     * 
+     * @param key
+     * @param rule
+     */
+    // void addToJsRule(Class<?> key, BiFunction<Object, JsEngine, Object> rule);
+    <VS, KS extends VS> void addToJsRule(Class<KS> key, Function<VS, Object> rule);
+
+    /**
+     * Maps classes to JS conversion rules.
+     * 
+     * @return
+     */
+    FunctionClassMap<Object, Object> getToJsRules();
+
+    /**
      * Converts a given Java object to a more compatible type in JavaScript.
      * 
-     * Conversions currently being made:<br>
+     * New conversion rules can be added with the method
+     * 
+     * Conversions currently supported by default:<br>
      * - null to undefined;<br>
      * - Java array to JS array;<br>
      * - Java List to JS array;<br>
@@ -432,37 +455,48 @@ public interface JsEngine {
             throw new RuntimeException("Not implemented for array class " + componentClass);
         }
 
-        // If a List, apply adapt over all elements of the list and convert to array
-        if (javaObject instanceof List) {
-            var valueList = (List<?>) javaObject;
+        // Check if there is a conversion rule for the class of this object
+        var rules = getToJsRules();
+        var processedObject = rules.applyTry(javaObject);
 
-            // var newValue = new Object[valueList.size()];
-            //
-            // for (var i = 0; i < valueList.size(); i++) {
-            // var valueElement = valueList.get(i);
-            // newValue[i] = toJs(valueElement);
-            // }
+        // if (processedObject.isPresent()) {
+        // System.out.println("PROCESSED OBJECT");
+        // }
 
-            return toNativeArray(valueList.stream().map(this::toJs).toArray());
-        }
+        return processedObject.orElse(javaObject);
+        // return rules.applyTry(javaObject).orElse(javaObject);
 
-        // If a Set, apply adapt over all elements of the Set and convert to array
-        if (javaObject instanceof Set) {
-            var valueList = (Set<?>) javaObject;
-
-            return toNativeArray(valueList.stream().map(this::toJs).toArray());
-        }
-
-        // If a JsonArray, convert to List and call toJs() again
-        if (javaObject instanceof JsonArray) {
-            var jsonArray = (JsonArray) javaObject;
-
-            var list = new ArrayList<Object>();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                list.add(jsonArray.get(i));
-            }
-            return toJs(list);
-        }
+        // // If a List, apply adapt over all elements of the list and convert to array
+        // if (javaObject instanceof List) {
+        // var valueList = (List<?>) javaObject;
+        //
+        // // var newValue = new Object[valueList.size()];
+        // //
+        // // for (var i = 0; i < valueList.size(); i++) {
+        // // var valueElement = valueList.get(i);
+        // // newValue[i] = toJs(valueElement);
+        // // }
+        //
+        // return toNativeArray(valueList.stream().map(this::toJs).toArray());
+        // }
+        //
+        // // If a Set, apply adapt over all elements of the Set and convert to array
+        // if (javaObject instanceof Set) {
+        // var valueList = (Set<?>) javaObject;
+        //
+        // return toNativeArray(valueList.stream().map(this::toJs).toArray());
+        // }
+        //
+        // // If a JsonArray, convert to List and call toJs() again
+        // if (javaObject instanceof JsonArray) {
+        // var jsonArray = (JsonArray) javaObject;
+        //
+        // var list = new ArrayList<Object>();
+        // for (int i = 0; i < jsonArray.size(); i++) {
+        // list.add(jsonArray.get(i));
+        // }
+        // return toJs(list);
+        // }
 
         // // If DataClass, wrap around special version that converts nodes into join points
         // if (value instanceof DataClass) {
@@ -473,7 +507,7 @@ public interface JsEngine {
         //
         // * - DataClass to JsDataClass
 
-        return javaObject;
+        // return javaObject;
     }
 
     /**

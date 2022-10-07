@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -476,6 +477,48 @@ public class SpecsEnums {
         }
 
         return enums[0];
+    }
+
+    /**
+     * Converts a map with string keys to a map
+     * 
+     * @param <T>
+     * @param <R>
+     * @param enumClass
+     * @param map
+     * @return
+     */
+    public static <T extends Enum<T>, R> EnumMap<T, R> toEnumMap(Class<T> enumClass,
+            Map<String, R> map) {
+
+        var enumMap = new EnumMap<T, R>(enumClass);
+
+        for (var entry : map.entrySet()) {
+            var key = entry.getKey();
+
+            // Convert key to enum
+            var enumValue = toEnumTry(enumClass, key).orElse(null);
+
+            if (enumValue == null) {
+                SpecsLogs.info("Could not map '" + key + "' to a predefined value, available values: "
+                        + getHelper(enumClass).names());
+                continue;
+            }
+
+            enumMap.put(enumValue, entry.getValue());
+        }
+
+        return enumMap;
+    }
+
+    /**
+     * Uses enum helpers, supports interface StringProvider.
+     * 
+     * @param enumClass
+     * @param value
+     */
+    public static <T extends Enum<T>> Optional<T> toEnumTry(Class<T> enumClass, String name) {
+        return getHelper(enumClass).fromNameTry(name);
     }
 
 }

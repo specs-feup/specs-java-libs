@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -181,7 +182,7 @@ public class SpecsGit {
         return repoFolder;
     }
 
-    private static CredentialsProvider getCredentials(String repositoryPath) {
+    public static CredentialsProvider getCredentials(String repositoryPath) {
 
         var currentString = repositoryPath;
 
@@ -413,5 +414,34 @@ public class SpecsGit {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static boolean isBranchName(Git repo, String commit) {
+        // Check if commit value is the name of a branch
+        // Taken from here: https://stackoverflow.com/a/57365145
+    
+        try {
+    
+            // for (var branchRef : repo.branchList().setListMode(ListMode.REMOTE).call()) {
+            // System.out.println("BRANCH: " + branchRef.getName());
+            // }
+    
+            // Pattern to search for
+            var commitPattern = "refs/remotes/origin/" + commit;
+    
+            return repo.branchList()
+                    // So that it returns all remotes
+                    .setListMode(ListMode.REMOTE)
+                    .call()
+                    .stream()
+                    .map(Ref::getName)
+                    .filter(name -> name.equals(commitPattern))
+                    .findFirst()
+                    .isPresent();
+    
+        } catch (GitAPIException e) {
+            throw new RuntimeException("Could not get list of repository branches", e);
+        }
+    
     }
 }

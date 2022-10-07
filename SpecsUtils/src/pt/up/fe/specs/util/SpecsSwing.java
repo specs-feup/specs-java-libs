@@ -15,10 +15,14 @@ package pt.up.fe.specs.util;
 
 import java.awt.AWTError;
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -327,5 +331,45 @@ public class SpecsSwing {
         } catch (HeadlessException | AWTError e) {
             return true;
         }
+    }
+
+    /**
+     * Opens a folder containing the file and selects it in a default system file manager.
+     */
+    public static boolean browseFileDirectory(File file) {
+        if (!file.exists()) {
+            SpecsLogs.debug(() -> "SpecsSwing.browseFileDirectory(): file '" + file + "' does not exist");
+        }
+
+        // Tested on Java 15, Desktop.browseFileDirectory() was not working for Windows
+        if (SpecsSystem.isWindows()) {
+
+            var command = "explorer.exe /select, " + file.getAbsoluteFile();
+            try {
+                Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                SpecsLogs.info("Problem while trying to open folder for file '" + file + "': " + e.getMessage());
+                return false;
+            }
+            return true;
+            // return;
+        }
+
+        if (SpecsSystem.isLinux()) {
+            try {
+                var folderToOpen = file.isFile() ? file.getParentFile() : file;
+                Runtime.getRuntime()
+                        .exec(Arrays.asList("gio", "open", folderToOpen.getAbsolutePath()).toArray(new String[0]));
+            } catch (IOException e) {
+                SpecsLogs.info("Problem while trying to open folder for file '" + file + "': " + e.getMessage());
+                return false;
+            }
+            return true;
+            // return;
+        }
+
+        Desktop.getDesktop().browseFileDirectory(file);
+        return true;
+        // return;
     }
 }

@@ -27,6 +27,7 @@ import org.suikasoft.jOptions.JOptionKeys;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.AppPersistence;
+import org.suikasoft.jOptions.gui.panels.app.AppKeys;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import com.google.common.base.Preconditions;
@@ -139,6 +140,7 @@ public class XmlPersistence implements AppPersistence {
             // return null;
         }
 
+        parsedObject.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
         parsedObject.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         parsedObject.set(JOptionKeys.USE_RELATIVE_PATHS, false);
 
@@ -183,6 +185,7 @@ public class XmlPersistence implements AppPersistence {
         }
 
         // Set configuration file information
+        dataStore.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
         dataStore.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         // dataStore.set(JOptionKeys.USE_RELATIVE_PATHS, false);
 
@@ -320,6 +323,7 @@ public class XmlPersistence implements AppPersistence {
         // }
 
         // When saving, set config file and use relative paths
+        data.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
         data.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         data.set(JOptionKeys.USE_RELATIVE_PATHS, true);
 
@@ -330,6 +334,7 @@ public class XmlPersistence implements AppPersistence {
         boolean result = XStreamUtils.write(file, storeToSave, xmlMappings);
 
         // Remove
+        data.remove(AppKeys.CONFIG_FILE);
         data.remove(JOptionKeys.CURRENT_FOLDER_PATH);
         data.remove(JOptionKeys.USE_RELATIVE_PATHS);
 

@@ -33,11 +33,11 @@ public class Utils {
      * @return {@link StringBuilder} with indentation
      */
     public static StringBuilder indent(int indentation) {
-	final StringBuilder indentationBuffer = new StringBuilder();
-	for (int i = 0; i < indentation; i++) {
-	    indentationBuffer.append(Utils.INDENTER);
-	}
-	return indentationBuffer;
+        final StringBuilder indentationBuffer = new StringBuilder();
+        for (int i = 0; i < indentation; i++) {
+            indentationBuffer.append(Utils.INDENTER);
+        }
+        return indentationBuffer;
     }
 
     /**
@@ -51,10 +51,10 @@ public class Utils {
      */
 
     public static boolean generateToFile(File outputDir, ClassType java, boolean replace) {
-	final String pack = java.getClassPackage();
-	final String name = java.getName();
-	final File outputClass = getFilePath(outputDir, pack, name);
-	return writeToFile(outputClass, java, replace);
+        final String pack = java.getClassPackage();
+        final String name = java.getName();
+        final File outputClass = getFilePath(outputDir, pack, name);
+        return writeToFile(outputClass, java, replace);
     }
 
     /**
@@ -69,16 +69,16 @@ public class Utils {
      * @return {@link File} containing the new file path
      */
     private static File getFilePath(File outputDir, String pack, String name) {
-	final String fileSeparator = System.getProperty("file.separator");
-	String filePath = outputDir.getAbsolutePath() + fileSeparator;
-	if (!pack.isEmpty()) {
-	    final String pathPack = pack.replace(".", fileSeparator);
-	    filePath += pathPack + fileSeparator;
-	}
-	makeDirs(new File(filePath));
-	filePath += name + ".java";
-	final File outputClass = new File(filePath);
-	return outputClass;
+        final String fileSeparator = System.getProperty("file.separator");
+        String filePath = outputDir.getAbsolutePath() + fileSeparator;
+        if (!pack.isEmpty()) {
+            final String pathPack = pack.replace(".", fileSeparator);
+            filePath += pathPack + fileSeparator;
+        }
+        makeDirs(new File(filePath));
+        filePath += name + ".java";
+        final File outputClass = new File(filePath);
+        return outputClass;
     }
 
     /**
@@ -92,22 +92,22 @@ public class Utils {
      *            replace existing file?
      */
     private static boolean writeToFile(File outputFile, IGenerate java, boolean replace) {
-	final StringBuilder generatedJava = java.generateCode(0);
-	if (replace || !outputFile.exists()) {
-	    SpecsIo.write(outputFile, generatedJava.toString());
-	    return true;
-	}
-	return false;
+        final StringBuilder generatedJava = java.generateCode(0);
+        if (replace || !outputFile.exists()) {
+            SpecsIo.write(outputFile, generatedJava.toString());
+            return true;
+        }
+        return false;
     }
 
     public static void makeDirs(File dir) {
-	if (!dir.exists()) {
-	    dir.mkdirs();
-	}
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
     }
 
     public static String firstCharToUpper(String string) {
-	return string.substring(0, 1).toUpperCase() + string.substring(1);
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
 }

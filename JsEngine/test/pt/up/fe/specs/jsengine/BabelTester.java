@@ -16,6 +16,7 @@ package pt.up.fe.specs.jsengine;
 import org.junit.Test;
 
 import pt.up.fe.specs.jsengine.libs.JsBabel;
+import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsSystem;
 
 public class BabelTester {
@@ -24,7 +25,7 @@ public class BabelTester {
     public void test() {
         SpecsSystem.programStandardInit();
 
-        JsBabel.parse("/** \r\n"
+        JsBabel.toES6("/** \r\n"
                 + " * \r\n"
                 + " */\r\n"
                 + "function runNavierStokes()\r\n"
@@ -39,6 +40,14 @@ public class BabelTester {
                 + "\r\n"
                 + "");
 
+    }
+
+    @Test
+    public void testGraph() {
+        SpecsSystem.programStandardInit();
+
+        var es5Code = JsBabel.toES6(SpecsIo.getResource("pt/up/fe/specs/jsengine/test/Graphs.js"));
+        System.out.println("ES5: " + es5Code);
     }
 
 }

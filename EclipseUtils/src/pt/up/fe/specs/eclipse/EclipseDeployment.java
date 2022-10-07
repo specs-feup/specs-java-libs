@@ -263,6 +263,9 @@ public class EclipseDeployment {
         template = template.replace("<USE_IVY>", BuildUtils.getIvyDependency(parser));
         template = template.replace("<IVY_DEPENDENCIES>", BuildUtils.getIvyDepends(projectsWithIvy));
         template = template.replace("<DELETE_IVY>", DeployUtils.getDeleteIvyFolders(ivyFolders));
+        template = template.replace("<BUILD_NUMBER_ATTR>", SpecsSystem.getBuildNumberAttr());
+        template = template.replace("<BUILD_NUMBER>", data.getBuildNumber());
+
         // System.out.println("BUILD FILE:\n" + template);
         // Save script
         File buildFile = new File(EclipseDeployment.BUILD_FILE);
