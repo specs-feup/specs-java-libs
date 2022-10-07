@@ -15,17 +15,7 @@ package pt.up.fe.specs.jsengine.graal;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.file.AccessMode;
-import java.nio.file.DirectoryStream;
-import java.nio.file.InvalidPathException;
-import java.nio.file.DirectoryStream.Filter;
-import java.nio.file.LinkOption;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -120,7 +110,7 @@ public class GraalvmJsEngine extends AJsEngine {
 
     }
 
-    private Context.Builder createBuilder() {
+    private Context.Builder createBuilder(Path engineWorkingDirectory) {
 
         // var hostAccess = HostAccess.newBuilder()
         // .targetTypeMapping(Object.class, Object.class, v -> true, GraalvmJsEngine::test)
@@ -143,14 +133,15 @@ public class GraalvmJsEngine extends AJsEngine {
             contextBuilder.fileSystem(fs);
             /*
              */
-            try {
-                Path path = Paths.get(engineWorkingDirectory + "/node_modules");
-
-                //contextBuilder.option("js.commonjs-require", "true");
-                //contextBuilder.option("js.commonjs-require-cwd", path.toString());
-                contextBuilder.option("js.ecmascript-version", "2022");
-            } catch (InvalidPathException e) {}
         }
+
+        // Path path = Paths.get(engineWorkingDirectory + "/node_modules");
+
+        // contextBuilder.option("js.commonjs-require", "true");
+        // contextBuilder.option("js.commonjs-require-cwd", path.toString());
+
+        // Set JS version
+        contextBuilder.option("js.ecmascript-version", "2022");
 
         if (this.nashornCompatibility) {
             contextBuilder.allowExperimentalOptions(true).option("js.nashorn-compat", "true");
@@ -780,5 +771,5 @@ public class GraalvmJsEngine extends AJsEngine {
         var functionValue = asValue(object);
 
         return functionValue.canExecute();
-}
+    }
 }
