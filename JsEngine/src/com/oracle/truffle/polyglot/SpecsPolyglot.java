@@ -6,11 +6,11 @@ import com.oracle.truffle.js.runtime.builtins.JSErrorObject;
 public class SpecsPolyglot {
 
     public static GraalJSException getException(Object possibleError) {
-        if (!(possibleError instanceof HostWrapper)) {
+        if (!(possibleError instanceof PolyglotWrapper)) {
             return null;
         }
 
-        var hostWrapper = (HostWrapper) possibleError;
+        var hostWrapper = (PolyglotWrapper) possibleError;
 
         var guestObject = hostWrapper.getGuestObject();
 

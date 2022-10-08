@@ -15,6 +15,7 @@ package pt.up.fe.specs.jsengine.graal;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,6 +34,7 @@ import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.io.FileSystem;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import com.oracle.truffle.polyglot.SpecsPolyglot;
@@ -64,6 +66,11 @@ public class GraalvmJsEngine extends AJsEngine {
     // }
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility) {
+        this(blacklistedClasses, nashornCompatibility, null);
+    }
+
+    public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
+            Path engineWorkingDirectory) {
 
         // TODO: Might be necessary when GraalVM version is updated
         // System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
@@ -71,7 +78,7 @@ public class GraalvmJsEngine extends AJsEngine {
         this.forbiddenClasses = blacklistedClasses.stream().map(Class::getName).collect(Collectors.toSet());
         this.nashornCompatibility = nashornCompatibility;
 
-        Context.Builder contextBuilder = createBuilder();
+        Context.Builder contextBuilder = createBuilder(engineWorkingDirectory);
         // System.out.println("CLASS LOADER: " + GraalvmJsEngine.class.getClassLoader());
         // Thread.currentThread().setContextClassLoader(classLoader);
         this.engine = GraalJSScriptEngine.create(null, contextBuilder);
@@ -103,7 +110,7 @@ public class GraalvmJsEngine extends AJsEngine {
 
     }
 
-    private Context.Builder createBuilder() {
+    private Context.Builder createBuilder(Path engineWorkingDirectory) {
 
         // var hostAccess = HostAccess.newBuilder()
         // .targetTypeMapping(Object.class, Object.class, v -> true, GraalvmJsEngine::test)
@@ -119,6 +126,22 @@ public class GraalvmJsEngine extends AJsEngine {
                 // .allowNativeAccess(true)
                 // .allowPolyglotAccess(PolyglotAccess.ALL)
                 .allowHostClassLookup(name -> !forbiddenClasses.contains(name));
+
+        if (engineWorkingDirectory != null) {
+            FileSystem fs = FileSystem.newDefaultFileSystem();
+            fs.setCurrentWorkingDirectory(engineWorkingDirectory);
+            contextBuilder.fileSystem(fs);
+            /*
+             */
+        }
+
+        // Path path = Paths.get(engineWorkingDirectory + "/node_modules");
+
+        // contextBuilder.option("js.commonjs-require", "true");
+        // contextBuilder.option("js.commonjs-require-cwd", path.toString());
+
+        // Set JS version
+        contextBuilder.option("js.ecmascript-version", "2022");
 
         if (this.nashornCompatibility) {
             contextBuilder.allowExperimentalOptions(true).option("js.nashorn-compat", "true");
