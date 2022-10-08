@@ -131,14 +131,12 @@ public class GraalvmJsEngine extends AJsEngine {
             FileSystem fs = FileSystem.newDefaultFileSystem();
             fs.setCurrentWorkingDirectory(engineWorkingDirectory);
             contextBuilder.fileSystem(fs);
-            /*
-             */
+
+            // Path path = Paths.get(engineWorkingDirectory + "/node_modules");
+
+            // contextBuilder.option("js.commonjs-require", "true");
+            // contextBuilder.option("js.commonjs-require-cwd", path.toString());
         }
-
-        // Path path = Paths.get(engineWorkingDirectory + "/node_modules");
-
-        // contextBuilder.option("js.commonjs-require", "true");
-        // contextBuilder.option("js.commonjs-require-cwd", path.toString());
 
         // Set JS version
         contextBuilder.option("js.ecmascript-version", "2022");
