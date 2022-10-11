@@ -30,6 +30,7 @@ import java.util.stream.LongStream;
 import javax.script.Bindings;
 
 import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
@@ -81,7 +82,12 @@ public class GraalvmJsEngine extends AJsEngine {
         Context.Builder contextBuilder = createBuilder(engineWorkingDirectory);
         // System.out.println("CLASS LOADER: " + GraalvmJsEngine.class.getClassLoader());
         // Thread.currentThread().setContextClassLoader(classLoader);
-        this.engine = GraalJSScriptEngine.create(null, contextBuilder);
+
+        var baseEngine = Engine.newBuilder()
+                .option("engine.WarnInterpreterOnly", "false")
+                .build();
+
+        this.engine = GraalJSScriptEngine.create(baseEngine, contextBuilder);
 
         // Load Java compatibility layer
         eval(JsEngineResource.JAVA_COMPATIBILITY.read());
