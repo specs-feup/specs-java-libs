@@ -310,6 +310,7 @@ public class SpecsSwing {
         SpecsSwing.runOnSwing(() -> {
             frame.pack();
             frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         });
 
         return frame;
