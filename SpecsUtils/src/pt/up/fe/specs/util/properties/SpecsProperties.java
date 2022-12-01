@@ -88,7 +88,7 @@ public class SpecsProperties {
      * returns null and logs the cause.
      * 
      * @param file
-     *                 a File object representing a file.
+     *            a File object representing a file.
      * @return If successfull, a Properties objects with the contents of the file. Null otherwise.
      */
     private static SpecsProperties load(InputStream inputStream) {
@@ -104,6 +104,10 @@ public class SpecsProperties {
         }
 
         return new SpecsProperties(props);
+    }
+
+    public boolean hasKey(KeyProvider<String> key) {
+        return props.keySet().contains(key.getKey());
     }
 
     /**
@@ -231,5 +235,13 @@ public class SpecsProperties {
         json.append("}");
 
         return json.toString();
+    }
+
+    public String getOrElse(KeyProvider<String> key, String defaultValue) {
+        if (!hasKey(key)) {
+            return defaultValue;
+        }
+
+        return get(key);
     }
 }
