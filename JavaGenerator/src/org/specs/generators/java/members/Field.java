@@ -124,7 +124,7 @@ public class Field implements IGenerate {
         for (final Annotation annot : annotations) {
             fieldStr.append(Utils.indent(indentation));
             fieldStr.append(annot);
-            fieldStr.append("\n");
+            fieldStr.append(ln());
         }
 
         fieldStr.append(privacy);

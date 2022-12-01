@@ -57,7 +57,7 @@ public class Method implements IGenerate {
      *            the name for the method
      */
     public Method(JavaType returnType, String name) {
-	init(returnType, name);
+        init(returnType, name);
     }
 
     /**
@@ -71,8 +71,8 @@ public class Method implements IGenerate {
      *            the privacy level
      */
     public Method(JavaType returnType, String name, Privacy privacy) {
-	init(returnType, name);
-	this.privacy = privacy;
+        init(returnType, name);
+        this.privacy = privacy;
     }
 
     /**
@@ -86,8 +86,8 @@ public class Method implements IGenerate {
      *            the modifier for the method
      */
     public Method(JavaType returnType, String name, Modifier modifier) {
-	init(returnType, name);
-	modifiers.add(modifier);
+        init(returnType, name);
+        modifiers.add(modifier);
     }
 
     /**
@@ -103,9 +103,9 @@ public class Method implements IGenerate {
      *            the modifier for the method
      */
     public Method(JavaType returnType, String name, Privacy privacy, Modifier modifier) {
-	init(returnType, name);
-	this.privacy = privacy;
-	modifiers.add(modifier);
+        init(returnType, name);
+        this.privacy = privacy;
+        modifiers.add(modifier);
     }
 
     /**
@@ -115,15 +115,15 @@ public class Method implements IGenerate {
      * @param name
      */
     private void init(JavaType returnType, String name) {
-	this.name = name;
-	this.returnType = returnType;
-	privacy = Privacy.PUBLIC;
-	annotations = new UniqueList<>();
-	modifiers = new ArrayList<>();
-	arguments = new ArrayList<>();
-	javaDocComment = new JavaDoc();
-	body = true;
-	methodBody = new StringBuffer();
+        this.name = name;
+        this.returnType = returnType;
+        privacy = Privacy.PUBLIC;
+        annotations = new UniqueList<>();
+        modifiers = new ArrayList<>();
+        arguments = new ArrayList<>();
+        javaDocComment = new JavaDoc();
+        body = true;
+        methodBody = new StringBuffer();
     }
 
     /**
@@ -133,9 +133,9 @@ public class Method implements IGenerate {
      *            the new modifier
      */
     public void add(Modifier newMod) {
-	if (!modifiers.contains(newMod)) {
-	    modifiers.add(newMod);
-	}
+        if (!modifiers.contains(newMod)) {
+            modifiers.add(newMod);
+        }
     }
 
     /**
@@ -146,7 +146,7 @@ public class Method implements IGenerate {
      * @return true if the annotation was successfully removed
      */
     public boolean remove(Modifier mod) {
-	return modifiers.remove(mod);
+        return modifiers.remove(mod);
     }
 
     /**
@@ -156,7 +156,7 @@ public class Method implements IGenerate {
      *            new modifier
      */
     public void addArgument(JavaType classType, String name) {
-	addArgument(new Argument(classType, name));
+        addArgument(new Argument(classType, name));
     }
 
     /**
@@ -166,7 +166,7 @@ public class Method implements IGenerate {
      *            new modifier
      */
     public void addArgument(Argument argument) {
-	arguments.add(argument);
+        arguments.add(argument);
     }
 
     /**
@@ -176,8 +176,8 @@ public class Method implements IGenerate {
      *            new modifier
      */
     public void addArgument(Class<?> classType, String name) {
-	final Argument newArg = new Argument(new JavaType(classType), name);
-	arguments.add(newArg);
+        final Argument newArg = new Argument(new JavaType(classType), name);
+        arguments.add(newArg);
     }
 
     /**
@@ -188,7 +188,7 @@ public class Method implements IGenerate {
      * @return the {@link StringBuilder} with the new comment
      */
     public StringBuilder appendComment(String comment) {
-	return javaDocComment.appendComment(comment);
+        return javaDocComment.appendComment(comment);
     }
 
     /**
@@ -198,7 +198,7 @@ public class Method implements IGenerate {
      *            the new tag to add
      */
     public void addJavaDocTag(JDocTag tag) {
-	javaDocComment.addTag(tag);
+        javaDocComment.addTag(tag);
     }
 
     /**
@@ -210,7 +210,7 @@ public class Method implements IGenerate {
      *            the tag description
      */
     public void addJavaDocTag(JDocTag tag, String description) {
-	javaDocComment.addTag(tag, description);
+        javaDocComment.addTag(tag, description);
     }
 
     /**
@@ -221,7 +221,7 @@ public class Method implements IGenerate {
      * @return true if the annotation was successfully added
      */
     public boolean add(Annotation annotation) {
-	return annotations.add(annotation);
+        return annotations.add(annotation);
     }
 
     /**
@@ -232,7 +232,7 @@ public class Method implements IGenerate {
      * @return true if the annotation was successfully removed
      */
     public boolean remove(Annotation annotation) {
-	return annotations.remove(annotation);
+        return annotations.remove(annotation);
     }
 
     /**
@@ -244,63 +244,63 @@ public class Method implements IGenerate {
      */
     @Override
     public StringBuilder generateCode(int indentation) {
-	final StringBuilder methodStr = javaDocComment.generateCode(indentation);
-	methodStr.append("\n");
+        final StringBuilder methodStr = javaDocComment.generateCode(indentation);
+        methodStr.append(ln());
 
-	for (final Annotation annot : annotations) {
-	    methodStr.append(Utils.indent(indentation));
-	    methodStr.append(annot);
-	    methodStr.append("\n");
-	}
+        for (final Annotation annot : annotations) {
+            methodStr.append(Utils.indent(indentation));
+            methodStr.append(annot);
+            methodStr.append(ln());
+        }
 
-	methodStr.append(Utils.indent(indentation));
+        methodStr.append(Utils.indent(indentation));
 
-	methodStr.append(privacy);
-	for (final Modifier mod : modifiers) {
-	    methodStr.append(" ");
-	    methodStr.append(mod);
-	}
-	methodStr.append(" ");
-	methodStr.append(returnType.getSimpleType());
-	methodStr.append(" ");
-	methodStr.append(name);
-	methodStr.append("(");
-	final String joinedArgs = StringUtils.join(arguments, Argument::toString, ", ");
-	methodStr.append(joinedArgs);
+        methodStr.append(privacy);
+        for (final Modifier mod : modifiers) {
+            methodStr.append(" ");
+            methodStr.append(mod);
+        }
+        methodStr.append(" ");
+        methodStr.append(returnType.getSimpleType());
+        methodStr.append(" ");
+        methodStr.append(name);
+        methodStr.append("(");
+        final String joinedArgs = StringUtils.join(arguments, Argument::toString, ", ");
+        methodStr.append(joinedArgs);
 
-	methodStr.append(")");
-	if (!body || modifiers.contains(Modifier.ABSTRACT)) {
-	    methodStr.append(";");
-	} else {
-	    methodStr.append(" {\n");
-	    final StringBuilder indent = Utils.indent(indentation + 1);
-	    methodStr.append(indent);
-	    if (methodBody.length() != 0) {
-		final String bodyCode = methodBody.toString().replace("\n", "\n" + indent).trim();
-		methodStr.append(bodyCode);
+        methodStr.append(")");
+        if (!body || modifiers.contains(Modifier.ABSTRACT)) {
+            methodStr.append(";");
+        } else {
+            methodStr.append(" {" + ln());
+            final StringBuilder indent = Utils.indent(indentation + 1);
+            methodStr.append(indent);
+            if (methodBody.length() != 0) {
+                final String bodyCode = methodBody.toString().replace(ln(), ln() + indent).trim();
+                methodStr.append(bodyCode);
 
-	    } else {
-		methodStr.append("// TODO Auto-generated method stub\n");
-		SpecsLogs.warn("Potential bug: check this");
-		if (!returnType.equals(Primitive.VOID.getType())) {
+            } else {
+                methodStr.append("// TODO Auto-generated method stub" + ln());
+                SpecsLogs.warn("Potential bug: check this");
+                if (!returnType.equals(Primitive.VOID.getType())) {
 
-		    final String returnValue = JavaTypeFactory.getDefaultValue(returnType);
-		    methodStr.append(indent);
-		    methodStr.append("return ");
-		    methodStr.append(returnValue);
-		    methodStr.append(";");
-		}
-	    }
-	    methodStr.append("\n");
-	    methodStr.append(Utils.indent(indentation));
-	    methodStr.append("}");
-	}
-	return methodStr;
+                    final String returnValue = JavaTypeFactory.getDefaultValue(returnType);
+                    methodStr.append(indent);
+                    methodStr.append("return ");
+                    methodStr.append(returnValue);
+                    methodStr.append(";");
+                }
+            }
+            methodStr.append(ln());
+            methodStr.append(Utils.indent(indentation));
+            methodStr.append("}");
+        }
+        return methodStr;
     }
 
     @Override
     public String toString() {
-	return generateCode(0).toString();
+        return generateCode(0).toString();
     }
 
     /**
@@ -308,14 +308,14 @@ public class Method implements IGenerate {
      *            the body to set
      */
     public void setBody(boolean body) {
-	this.body = body;
+        this.body = body;
     }
 
     /**
      * @return the methodBody
      */
     public StringBuffer getMethodBody() {
-	return methodBody;
+        return methodBody;
     }
 
     /**
@@ -323,7 +323,7 @@ public class Method implements IGenerate {
      *            the methodBody to set
      */
     public void setMethodBody(StringBuffer methodBody) {
-	this.methodBody = methodBody;
+        this.methodBody = methodBody;
     }
 
     /**
@@ -333,7 +333,7 @@ public class Method implements IGenerate {
      *            the code to append
      */
     public void appendCode(StringBuffer code) {
-	methodBody.append(code);
+        methodBody.append(code);
     }
 
     /**
@@ -343,7 +343,7 @@ public class Method implements IGenerate {
      *            the code to append
      */
     public void appendCode(String code) {
-	methodBody.append(code);
+        methodBody.append(code);
     }
 
     /**
@@ -353,14 +353,14 @@ public class Method implements IGenerate {
      *            the code to append
      */
     public void appendCodeln(String code) {
-	methodBody.append(code + "\n");
+        methodBody.append(code + ln());
     }
 
     /**
      * @return the returnType
      */
     public JavaType getReturnType() {
-	return returnType;
+        return returnType;
     }
 
     /**
@@ -368,14 +368,14 @@ public class Method implements IGenerate {
      *            the returnType to set
      */
     public void setReturnType(JavaType returnType) {
-	this.returnType = returnType;
+        this.returnType = returnType;
     }
 
     /**
      * @return the name
      */
     public String getName() {
-	return name;
+        return name;
     }
 
     /**
@@ -383,14 +383,14 @@ public class Method implements IGenerate {
      *            the name to set
      */
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     /**
      * @return the privacy
      */
     public Privacy getPrivacy() {
-	return privacy;
+        return privacy;
     }
 
     /**
@@ -398,14 +398,14 @@ public class Method implements IGenerate {
      *            the privacy to set
      */
     public void setPrivacy(Privacy privacy) {
-	this.privacy = privacy;
+        this.privacy = privacy;
     }
 
     /**
      * @return the javaDocComment
      */
     public JavaDoc getJavaDocComment() {
-	return javaDocComment;
+        return javaDocComment;
     }
 
     /**
@@ -413,14 +413,14 @@ public class Method implements IGenerate {
      *            the javaDocComment to set
      */
     public void setJavaDocComment(JavaDoc javaDocComment) {
-	this.javaDocComment = javaDocComment;
+        this.javaDocComment = javaDocComment;
     }
 
     /**
      * @return the modifiers
      */
     public List<Modifier> getModifiers() {
-	return modifiers;
+        return modifiers;
     }
 
     /**
@@ -428,14 +428,14 @@ public class Method implements IGenerate {
      *            the modifiers to set
      */
     public void setModifiers(List<Modifier> modifiers) {
-	this.modifiers = modifiers;
+        this.modifiers = modifiers;
     }
 
     /**
      * @return the arguments
      */
     public List<Argument> getParams() {
-	return arguments;
+        return arguments;
     }
 
     /**
@@ -443,29 +443,29 @@ public class Method implements IGenerate {
      *            the arguments to set
      */
     public void setArguments(List<Argument> arguments) {
-	this.arguments = arguments;
+        this.arguments = arguments;
     }
 
     /**
      * @return the body
      */
     public boolean isBody() {
-	return body;
+        return body;
     }
 
     public void clearCode() {
-	methodBody.delete(0, methodBody.length());
+        methodBody.delete(0, methodBody.length());
     }
 
     @Override
     public Method clone() {
-	final Method clone = new Method(returnType.clone(), name, privacy);
-	annotations.forEach(an -> clone.add(an));
-	modifiers.forEach(mod -> clone.add(mod));
-	arguments.forEach(arg -> clone.addArgument(arg.clone()));
-	clone.setJavaDocComment(getJavaDocComment().clone());
-	clone.setMethodBody(new StringBuffer(methodBody.toString()));
-	clone.body = body;
-	return clone;
+        final Method clone = new Method(returnType.clone(), name, privacy);
+        annotations.forEach(an -> clone.add(an));
+        modifiers.forEach(mod -> clone.add(mod));
+        arguments.forEach(arg -> clone.addArgument(arg.clone()));
+        clone.setJavaDocComment(getJavaDocComment().clone());
+        clone.setMethodBody(new StringBuffer(methodBody.toString()));
+        clone.body = body;
+        return clone;
     }
 }

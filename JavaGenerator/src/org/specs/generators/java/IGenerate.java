@@ -15,10 +15,16 @@
  */
 package org.specs.generators.java;
 
+import pt.up.fe.specs.util.SpecsIo;
+
 /**
  * @author Tiago
  * 
  */
 public interface IGenerate {
-	public StringBuilder generateCode(int indentation);
+    public StringBuilder generateCode(int indentation);
+
+    default String ln() {
+        return SpecsIo.getNewline();
+    }
 }

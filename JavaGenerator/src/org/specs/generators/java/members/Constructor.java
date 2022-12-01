@@ -48,9 +48,9 @@ public class Constructor implements IGenerate {
      *            the class pertaining the constructor
      */
     public Constructor(JavaClass javaClass) {
-	this.javaClass = javaClass;
-	privacy = Privacy.PUBLIC;
-	init(javaClass);
+        this.javaClass = javaClass;
+        privacy = Privacy.PUBLIC;
+        init(javaClass);
     }
 
     /**
@@ -60,9 +60,9 @@ public class Constructor implements IGenerate {
      *            the enum pertaining the constructor
      */
     public Constructor(JavaEnum javaEnum) {
-	this.javaEnum = javaEnum;
-	privacy = Privacy.PRIVATE;
-	init(javaEnum);
+        this.javaEnum = javaEnum;
+        privacy = Privacy.PRIVATE;
+        init(javaEnum);
     }
 
     /**
@@ -71,10 +71,10 @@ public class Constructor implements IGenerate {
      * @param javaClass
      */
     private void init(JavaClass javaClass) {
-	arguments = new ArrayList<>();
-	javaDocComment = new JavaDoc();
-	javaClass.add(this);
-	methodBody = new StringBuffer();
+        arguments = new ArrayList<>();
+        javaDocComment = new JavaDoc();
+        javaClass.add(this);
+        methodBody = new StringBuffer();
     }
 
     /**
@@ -86,9 +86,9 @@ public class Constructor implements IGenerate {
      *            the class pertaining the constructor
      */
     public Constructor(Privacy privacy, JavaClass javaClass) {
-	this.javaClass = javaClass;
-	this.privacy = privacy;
-	init(javaClass);
+        this.javaClass = javaClass;
+        this.privacy = privacy;
+        init(javaClass);
     }
 
     /**
@@ -98,8 +98,8 @@ public class Constructor implements IGenerate {
      *            new modifier
      */
     public void addArgument(JavaType classType, String name) {
-	final Argument newArg = new Argument(classType, name);
-	arguments.add(newArg);
+        final Argument newArg = new Argument(classType, name);
+        arguments.add(newArg);
     }
 
     /**
@@ -109,8 +109,8 @@ public class Constructor implements IGenerate {
      *            new modifier
      */
     public void addArgument(Field field) {
-	final Argument newArg = new Argument(field.getType(), field.getName());
-	arguments.add(newArg);
+        final Argument newArg = new Argument(field.getType(), field.getName());
+        arguments.add(newArg);
     }
 
     /**
@@ -120,7 +120,7 @@ public class Constructor implements IGenerate {
      *            new modifier
      */
     public void addArguments(Collection<Field> field) {
-	field.forEach(this::addArgument);
+        field.forEach(this::addArgument);
     }
 
     /**
@@ -132,37 +132,37 @@ public class Constructor implements IGenerate {
      */
     @Override
     public StringBuilder generateCode(int indentation) {
-	final StringBuilder indent0 = Utils.indent(indentation);
-	final StringBuilder constructorStr = javaDocComment.generateCode(indentation);
-	constructorStr.append("\n");
-	constructorStr.append(indent0);
-	constructorStr.append(privacy);
-	constructorStr.append(" ");
-	if (javaEnum != null) {
-	    constructorStr.append(javaEnum.getName());
-	} else {
-	    constructorStr.append(javaClass.getName());
-	}
-	constructorStr.append("(");
+        final StringBuilder indent0 = Utils.indent(indentation);
+        final StringBuilder constructorStr = javaDocComment.generateCode(indentation);
+        constructorStr.append(ln());
+        constructorStr.append(indent0);
+        constructorStr.append(privacy);
+        constructorStr.append(" ");
+        if (javaEnum != null) {
+            constructorStr.append(javaEnum.getName());
+        } else {
+            constructorStr.append(javaClass.getName());
+        }
+        constructorStr.append("(");
 
-	final String joinedArguments = StringUtils.join(arguments, Argument::toString, ", ");
-	constructorStr.append(joinedArguments);
-	constructorStr.append(")");
+        final String joinedArguments = StringUtils.join(arguments, Argument::toString, ", ");
+        constructorStr.append(joinedArguments);
+        constructorStr.append(")");
 
-	constructorStr.append("{");
-	final StringBuilder indent = Utils.indent(indentation + 1);
-	if (methodBody.length() != 0) {
-	    constructorStr.append("\n" + indent);
-	    final String bodyCode = methodBody.toString().replace("\n", "\n" + indent).trim();
-	    constructorStr.append(bodyCode);
-	    constructorStr.append("\n" + indent0);
-	} else {
-	    // constructorStr.append("// TODO Auto-generated constructor
-	    // stub\n");
-	    // constructorStr.append(Utils.indent(indentation));
-	}
-	constructorStr.append("}");
-	return constructorStr;
+        constructorStr.append("{");
+        final StringBuilder indent = Utils.indent(indentation + 1);
+        if (methodBody.length() != 0) {
+            constructorStr.append(ln() + indent);
+            final String bodyCode = methodBody.toString().replace(ln(), ln() + indent).trim();
+            constructorStr.append(bodyCode);
+            constructorStr.append(ln() + indent0);
+        } else {
+            // constructorStr.append("// TODO Auto-generated constructor
+            // stub\n");
+            // constructorStr.append(Utils.indent(indentation));
+        }
+        constructorStr.append("}");
+        return constructorStr;
     }
 
     /**
@@ -173,7 +173,7 @@ public class Constructor implements IGenerate {
      * @return the {@link StringBuilder} with the new comment
      */
     public StringBuilder appendComment(String comment) {
-	return javaDocComment.appendComment(comment);
+        return javaDocComment.appendComment(comment);
     }
 
     /**
@@ -183,7 +183,7 @@ public class Constructor implements IGenerate {
      *            the new tag to add
      */
     public void addJavaDocTag(JDocTag tag) {
-	javaDocComment.addTag(tag);
+        javaDocComment.addTag(tag);
     }
 
     /**
@@ -195,19 +195,19 @@ public class Constructor implements IGenerate {
      *            the tag description
      */
     public void addJavaDocTag(JDocTag tag, String description) {
-	javaDocComment.addTag(tag, description);
+        javaDocComment.addTag(tag, description);
     }
 
     @Override
     public String toString() {
-	return generateCode(0).toString();
+        return generateCode(0).toString();
     }
 
     /**
      * @return the privacy
      */
     public Privacy getPrivacy() {
-	return privacy;
+        return privacy;
     }
 
     /**
@@ -215,14 +215,14 @@ public class Constructor implements IGenerate {
      *            the privacy to set
      */
     public void setPrivacy(Privacy privacy) {
-	this.privacy = privacy;
+        this.privacy = privacy;
     }
 
     /**
      * @return the javaClass
      */
     public JavaClass getJavaClass() {
-	return javaClass;
+        return javaClass;
     }
 
     /**
@@ -230,14 +230,14 @@ public class Constructor implements IGenerate {
      *            the javaClass to set
      */
     public void setJavaClass(JavaClass javaClass) {
-	this.javaClass = javaClass;
+        this.javaClass = javaClass;
     }
 
     /**
      * @return the arguments
      */
     public List<Argument> getArguments() {
-	return arguments;
+        return arguments;
     }
 
     /**
@@ -245,14 +245,14 @@ public class Constructor implements IGenerate {
      *            the arguments to set
      */
     public void setArguments(List<Argument> arguments) {
-	this.arguments = arguments;
+        this.arguments = arguments;
     }
 
     /**
      * @return the methodBody
      */
     public StringBuffer getMethodBody() {
-	return methodBody;
+        return methodBody;
     }
 
     /**
@@ -260,7 +260,7 @@ public class Constructor implements IGenerate {
      *            the methodBody to set
      */
     public void setMethodBody(StringBuffer methodBody) {
-	this.methodBody = methodBody;
+        this.methodBody = methodBody;
     }
 
     /**
@@ -270,7 +270,7 @@ public class Constructor implements IGenerate {
      *            the code to append
      */
     public void appendCode(String code) {
-	methodBody.append(code);
+        methodBody.append(code);
     }
 
     /**
@@ -280,7 +280,7 @@ public class Constructor implements IGenerate {
      *            the code to append
      */
     public void appendCode(StringBuffer code) {
-	methodBody.append(code);
+        methodBody.append(code);
     }
 
     /**
@@ -290,20 +290,20 @@ public class Constructor implements IGenerate {
      *            use the set methods instead of assignments;
      */
     public void appendDefaultCode(boolean useSetters) {
-	Consumer<Argument> generateAssignment;
-	if (useSetters) {
-	    generateAssignment = arg -> {
-		final String name = arg.getName();
-		final String firstCharToUpper = StringUtils.firstCharToUpper(name);
-		appendCode("this.set" + firstCharToUpper + "(" + name + ");\n");
-	    };
-	} else {
-	    generateAssignment = arg -> appendCode("this." + arg.getName() + " = " + arg.getName() + ";\n");
-	}
-	arguments.forEach(generateAssignment);
+        Consumer<Argument> generateAssignment;
+        if (useSetters) {
+            generateAssignment = arg -> {
+                final String name = arg.getName();
+                final String firstCharToUpper = StringUtils.firstCharToUpper(name);
+                appendCode("this.set" + firstCharToUpper + "(" + name + ");" + ln());
+            };
+        } else {
+            generateAssignment = arg -> appendCode("this." + arg.getName() + " = " + arg.getName() + ";" + ln());
+        }
+        arguments.forEach(generateAssignment);
     }
 
     public void clearCode() {
-	methodBody.delete(0, methodBody.length());
+        methodBody.delete(0, methodBody.length());
     }
 }

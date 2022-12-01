@@ -350,27 +350,21 @@ public abstract class ClassType implements IGenerate {
             if (!getClassPackage().isEmpty()) {
                 classGen.append("package ");
                 classGen.append(getClassPackage());
-                classGen.append(";\n\n");
+                classGen.append(";" + ln() + ln());
             }
 
-            getAllImports().forEach(i -> classGen.append("import " + i + ";\n"));
-            //
-            // for (final String importPack : imports) {
-            // classGen.append("import ");
-            // classGen.append(importPack);
-            // classGen.append(";\n");
-            // }
+            getAllImports().forEach(i -> classGen.append("import " + i + ";" + ln()));
 
-            classGen.append("\n");
+            classGen.append(ln());
         } // else my parent deals with the imports
 
         classGen.append(getJavaDocComment().generateCode(indentation));
-        classGen.append("\n");
+        classGen.append(ln());
         final StringBuilder indentStr = Utils.indent(indentation);
         for (final Annotation annot : getAnnotations()) {
             classGen.append(indentStr);
             classGen.append(annot);
-            classGen.append("\n");
+            classGen.append(ln());
         }
 
         if (!getPrivacy().equals(Privacy.PACKAGE_PROTECTED)) {
@@ -392,11 +386,10 @@ public abstract class ClassType implements IGenerate {
         StringBuilder classGen = new StringBuilder();
         if (!getInnerTypes().isEmpty()) {
             final String joinMethods = StringUtils.join(getInnerTypes(),
-                    i -> i.generateCode(indentation + 1).toString(), "\n\n");
-            // .collect(Collectors.joining("\n\n"));
+                    i -> i.generateCode(indentation + 1).toString(), ln() + ln());
             classGen.append(joinMethods);
         }
-        classGen.append(Utils.indent(indentation) + "}\n");
+        classGen.append(Utils.indent(indentation) + "}" + ln());
         return classGen;
     }
 }

@@ -116,7 +116,7 @@ public class JavaClass extends ClassType {
         }
 
         addImplements(classGen);
-        classGen.append(" {\n\n");
+        classGen.append(" {" + ln() + ln());
 
         addFields(indentation, classGen);
         addConstructors(indentation, classGen);
@@ -131,14 +131,13 @@ public class JavaClass extends ClassType {
 
         if (!methods.isEmpty()) {
             final StringBuilder indent1 = Utils.indent(indentation + 1);
-            // classGen.append(indent1);
-            // classGen.append("//Methods\n");
+
             classGen.append(indent1);
             final String joinMethods = StringUtils.join(methods,
-                    method -> method.generateCode(indentation + 1).toString(), "\n\n");
+                    method -> method.generateCode(indentation + 1).toString(), ln() + ln());
             classGen.append(joinMethods.trim());
 
-            classGen.append("\n");
+            classGen.append(ln());
 
         }
     }
@@ -146,14 +145,13 @@ public class JavaClass extends ClassType {
     protected void addConstructors(int indentation, final StringBuilder classGen) {
         if (!constructors.isEmpty()) {
             final StringBuilder indent1 = Utils.indent(indentation + 1);
-            // classGen.append(indent1);
-            // classGen.append("//Constructors\n");
+
             classGen.append(indent1);
             final String constStr = StringUtils.join(constructors,
-                    constr -> constr.generateCode(indentation + 1).toString(), "\n");
+                    constr -> constr.generateCode(indentation + 1).toString(), ln());
             classGen.append(constStr.trim());
 
-            classGen.append("\n");
+            classGen.append(ln());
             // classGen.append(Utils.indent(1));
         }
     }
@@ -162,18 +160,17 @@ public class JavaClass extends ClassType {
 
         if (!fields.isEmpty()) {
             final StringBuilder indent1 = Utils.indent(indentation + 1);
-            // classGen.append(indent1);
-            // classGen.append("//Fields\n");
+
             classGen.append(indent1);
             final String fieldsStr = StringUtils.join(fields, field -> field.generateCode(indentation + 1).toString(),
-                    "\n");
+                    ln());
             classGen.append(fieldsStr.trim());
             /*
              * for (Field field : fields) { StringBuilder fieldBuf =
              * field.generateCode(1); classGen.append(fieldBuf);
              * classGen.append("\n"); }
              */
-            classGen.append("\n\n");
+            classGen.append(ln() + ln());
 
         }
     }

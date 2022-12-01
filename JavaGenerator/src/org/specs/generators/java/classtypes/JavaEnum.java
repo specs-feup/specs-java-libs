@@ -45,8 +45,8 @@ public class JavaEnum extends JavaClass {
      *            the class package
      */
     public JavaEnum(String name, String classPackage) {
-	super(name, classPackage);
-	init();
+        super(name, classPackage);
+        init();
     }
 
     /**
@@ -54,21 +54,21 @@ public class JavaEnum extends JavaClass {
      */
     private void init() {
 
-	// interfaces = new UniqueList<>();
-	items = new UniqueList<>();
-	// fields = new UniqueList<>();
-	// methods = new UniqueList<>();
-	// constructors = new UniqueList<>();
+        // interfaces = new UniqueList<>();
+        items = new UniqueList<>();
+        // fields = new UniqueList<>();
+        // methods = new UniqueList<>();
+        // constructors = new UniqueList<>();
     }
 
     @Override
     public void setSuperClass(JavaType superClass) {
-	throw new RuntimeException("An enum cannot have a super class.");
+        throw new RuntimeException("An enum cannot have a super class.");
     }
 
     @Override
     public JavaType getSuperClass() {
-	throw new RuntimeException("An enum does not have a super class.");
+        throw new RuntimeException("An enum does not have a super class.");
     }
 
     /**
@@ -80,35 +80,32 @@ public class JavaEnum extends JavaClass {
      */
     @Override
     public StringBuilder generateCode(int indentation) {
-	final StringBuilder classGen = generateClassHeader(indentation);
+        final StringBuilder classGen = generateClassHeader(indentation);
 
-	classGen.append("enum ");
-	classGen.append(getName());
-	classGen.append(" ");
-	addImplements(classGen);
-	classGen.append("{\n");
-	// StringBuilder indent = Utils.indent(1);
-	// classGen.append(indent);
-	// classGen.append("//Items\n");
+        classGen.append("enum ");
+        classGen.append(getName());
+        classGen.append(" ");
+        addImplements(classGen);
+        classGen.append("{" + ln());
 
-	addItems(indentation, classGen);
-	addFields(indentation, classGen);
+        addItems(indentation, classGen);
+        addFields(indentation, classGen);
 
-	addConstructors(indentation, classGen);
+        addConstructors(indentation, classGen);
 
-	addMethods(indentation, classGen);
+        addMethods(indentation, classGen);
 
-	classGen.append(generateClassTail(indentation));
-	return classGen;
+        classGen.append(generateClassTail(indentation));
+        return classGen;
 
     }
 
     private void addItems(int indentation, final StringBuilder classGen) {
-	final String joinedItems = StringUtils.join(items, i -> i.generateCode(indentation + 1).toString(), ",\n");
-	if (!joinedItems.isEmpty()) {
-	    classGen.append(joinedItems);
-	    classGen.append(";\n");
-	}
+        final String joinedItems = StringUtils.join(items, i -> i.generateCode(indentation + 1).toString(), "," + ln());
+        if (!joinedItems.isEmpty()) {
+            classGen.append(joinedItems);
+            classGen.append(";" + ln());
+        }
     }
 
     /**
@@ -118,7 +115,7 @@ public class JavaEnum extends JavaClass {
      *            the item to append
      */
     public void add(EnumItem item) {
-	items.add(item);
+        items.add(item);
     }
 
     /**
@@ -128,6 +125,6 @@ public class JavaEnum extends JavaClass {
      *            the name for the new Item
      */
     public void addItem(String name) {
-	items.add(new EnumItem(name));
+        items.add(new EnumItem(name));
     }
 }
