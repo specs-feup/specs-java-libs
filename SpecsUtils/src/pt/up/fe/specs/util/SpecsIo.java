@@ -108,7 +108,8 @@ public class SpecsIo {
     }
 
     public static String getNewline() {
-        return System.lineSeparator();
+        return "\n";
+        // return System.lineSeparator();
     }
 
     //
