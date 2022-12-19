@@ -1204,7 +1204,7 @@ public class SpecsIo {
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
-            SpecsLogs.msgLib("Copied stream to file '" + destination.getPath() + "'.");
+            SpecsLogs.debug(() -> "Copied stream to file '" + destination.getAbsolutePath() + "'.");
 
         } catch (IOException e) {
             SpecsLogs.warn("IoException while copying stream to file '" + destination + "'", e);
