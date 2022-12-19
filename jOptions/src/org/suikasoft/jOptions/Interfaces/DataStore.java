@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.Interfaces;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +36,6 @@ import com.google.common.base.Preconditions;
 
 import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
-import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * A key-value store for arbitrary objects, with type-safe keys.
@@ -573,7 +573,7 @@ public interface DataStore extends DataClass<DataStore> {
      * @return If this DataStore was loaded using AppPersistence, returns the instance that was used to load it
      */
     default Optional<AppPersistence> getPersistence() {
-        throw new NotImplementedException(this);
+        return Optional.empty();
     }
 
     /**
@@ -583,6 +583,26 @@ public interface DataStore extends DataClass<DataStore> {
      * @return
      */
     default DataStore setPersistence(AppPersistence persistence) {
-        throw new NotImplementedException(this);
+        // Do nothing
+        return this;
+    }
+
+    /**
+     * 
+     * @return if this DataStore was loaded using a configuration file, returns the File that was used
+     */
+    default Optional<File> getConfigFile() {
+        return Optional.empty();
+    }
+
+    /**
+     * Sets the File that was used to load this DataStore
+     * 
+     * @param configFile
+     * @return
+     */
+    default DataStore setConfigFile(File configFile) {
+        // Do nothing
+        return this;
     }
 }

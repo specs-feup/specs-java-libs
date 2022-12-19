@@ -85,14 +85,19 @@ public class JOptionsUtils {
     public static DataStore loadDataStore(String optionsFilename, Class<?> classForJarPath,
             StoreDefinition storeDefinition, AppPersistence persistence) {
 
-        DataStore localData = DataStore.newInstance(storeDefinition);
+        // DataStore localData = DataStore.newInstance(storeDefinition);
 
         // Look for options in two places, JAR folder and current folder
-        loadOptionsNearJar(classForJarPath, optionsFilename, localData, storeDefinition, persistence);
+        DataStore localData = loadOptionsNearJar(classForJarPath, optionsFilename, storeDefinition,
+                persistence);
 
         // Try to find local options in current working folder and load them
         File localOptionsFile = new File(SpecsIo.getWorkingDir(), optionsFilename);
         if (localOptionsFile.isFile()) {
+            if (localData.getConfigFile().isEmpty()) {
+                localData.setConfigFile(localOptionsFile);
+            }
+
             localData.addAll(persistence.loadData(localOptionsFile));
         }
 
@@ -107,21 +112,26 @@ public class JOptionsUtils {
      * @param localData
      * @param storeDefinition
      * @param persistence
+     * 
+     * @return the options file that was used, if found
      */
-    private static void loadOptionsNearJar(Class<?> classForJarpath, String optionsFilename, DataStore localData,
+    private static DataStore loadOptionsNearJar(Class<?> classForJarpath, String optionsFilename,
             StoreDefinition storeDefinition, AppPersistence persistence) {
+
+        var localData = DataStore.newInstance(storeDefinition);
 
         // If can find jar path, try to load options near jar
         Optional<File> jarFolderTry = SpecsIo.getJarPath(classForJarpath);
 
-        // If cannot find jar folder, just return
+        // If cannot find jar folder, just return an empty DataStore
         if (!jarFolderTry.isPresent()) {
-            return;
+            return localData;
         }
 
         File jarFolder = jarFolderTry.get();
 
         File localOptionsFile = new File(jarFolder, optionsFilename);
+        localData.setConfigFile(localOptionsFile);
 
         if (localOptionsFile.isFile()) {
             SpecsLogs.debug(() -> "Loading options in file '" + SpecsIo.getCanonicalPath(localOptionsFile) + "'");
@@ -137,6 +147,7 @@ public class JOptionsUtils {
             persistence.saveData(localOptionsFile, emptyData);
         }
 
+        return localData;
     }
 
     public static void saveDataStore(File file, DataStore data) {

@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.DataStore;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,7 @@ public abstract class ADataStore implements DataStore {
     private final Map<String, Object> values;
     private StoreDefinition definition;
     private AppPersistence persistence;
+    private File configFile;
 
     // private SetupFile setupFile;
     private boolean strict;
@@ -348,6 +350,17 @@ public abstract class ADataStore implements DataStore {
     @Override
     public Optional<AppPersistence> getPersistence() {
         return Optional.ofNullable(persistence);
+    }
+
+    @Override
+    public Optional<File> getConfigFile() {
+        return Optional.ofNullable(configFile);
+    }
+
+    @Override
+    public DataStore setConfigFile(File configFile) {
+        this.configFile = configFile;
+        return this;
     }
 
 }
