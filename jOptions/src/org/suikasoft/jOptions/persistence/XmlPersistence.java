@@ -104,6 +104,7 @@ public class XmlPersistence implements AppPersistence {
      */
     @Override
     public DataStore loadData(File file) {
+
         // Read first line, to check if it is from previous format
         try (LineStream lines = LineStream.newInstance(file)) {
             while (lines.hasNextLine()) {
@@ -140,6 +141,9 @@ public class XmlPersistence implements AppPersistence {
             // return null;
         }
 
+        // Set AppPersistence
+        parsedObject.setPersistence(this);
+
         parsedObject.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
         parsedObject.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
         parsedObject.set(JOptionKeys.USE_RELATIVE_PATHS, false);
@@ -158,6 +162,9 @@ public class XmlPersistence implements AppPersistence {
 
         // Create DataStore to return
         DataStore dataStore = DataStore.newInstance(definition);
+
+        // Set AppPersistence
+        dataStore.setPersistence(this);
 
         // Check that they refer to the same dataStore
         if (!dataStore.getName().equals(parsedObject.getName())) {
@@ -237,6 +244,9 @@ public class XmlPersistence implements AppPersistence {
 
         }
 
+        // Set AppPersistence
+        baseData.setPersistence(this);
+
         return baseData;
     }
 
@@ -288,6 +298,9 @@ public class XmlPersistence implements AppPersistence {
 
         StoreDefinition definition = StoreDefinition.newInstance(parsedObject.getSetupName(), options);
         DataStore data = DataStore.newInstance(definition);
+
+        // Set AppPersistence
+        data.setPersistence(this);
 
         // Add values
         for (Entry<String, FieldValue> entry : parsedObject.getDataset().entrySet()) {

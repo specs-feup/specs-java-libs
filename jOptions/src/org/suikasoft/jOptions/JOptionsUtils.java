@@ -49,7 +49,22 @@ public class JOptionsUtils {
     }
 
     /**
-     * Loads a DataStore file, from predefined places.
+     * Helper method which uses standard XmlPersistence as the default AppPersistence.
+     * 
+     * @param optionsFilename
+     * @param storeDefinition
+     * @return
+     */
+
+    public static DataStore loadDataStore(String optionsFilename, Class<?> classForJarPath,
+            StoreDefinition storeDefinition) {
+        XmlPersistence persistence = new XmlPersistence(storeDefinition);
+
+        return loadDataStore(optionsFilename, classForJarPath, storeDefinition, persistence);
+    }
+
+    /**
+     * * Loads a DataStore file, from predefined places.
      *
      * <p>
      * The method will look for the file in the following places:<br>
@@ -60,16 +75,17 @@ public class JOptionsUtils {
      * If finds the file in multiple locations, cumulatively adds the options to the final DataStore. If the file in the
      * jar path is not found, it is created.
      * 
+     * 
      * @param optionsFilename
+     * @param classForJarPath
      * @param storeDefinition
+     * @param persistence
      * @return
      */
-
     public static DataStore loadDataStore(String optionsFilename, Class<?> classForJarPath,
-            StoreDefinition storeDefinition) {
+            StoreDefinition storeDefinition, AppPersistence persistence) {
 
         DataStore localData = DataStore.newInstance(storeDefinition);
-        XmlPersistence persistence = new XmlPersistence(storeDefinition);
 
         // Look for options in two places, JAR folder and current folder
         loadOptionsNearJar(classForJarPath, optionsFilename, localData, storeDefinition, persistence);
@@ -108,14 +124,15 @@ public class JOptionsUtils {
         File localOptionsFile = new File(jarFolder, optionsFilename);
 
         if (localOptionsFile.isFile()) {
+            SpecsLogs.debug(() -> "Loading options in file '" + SpecsIo.getCanonicalPath(localOptionsFile) + "'");
             localData.addAll(persistence.loadData(localOptionsFile));
         }
         // Only create default local_options.xml near the JAR if it is in a folder that can be written
         else if (SpecsIo.canWriteFolder(jarFolder)) {
             SpecsLogs
-                    .msgInfo("Local options file not found near JAR, creating file:"
+                    .msgInfo("Options file '" + optionsFilename + "' not found near JAR, creating empty file:"
                             + SpecsIo.getCanonicalPath(localOptionsFile));
-            SpecsLogs.msgInfo("Local options File can also be on working directory.");
+            SpecsLogs.msgInfo("This file can also be on the working directory.");
             DataStore emptyData = DataStore.newInstance(storeDefinition);
             persistence.saveData(localOptionsFile, emptyData);
         }
