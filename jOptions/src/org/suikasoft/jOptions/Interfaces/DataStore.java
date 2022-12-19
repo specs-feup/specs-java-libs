@@ -26,6 +26,7 @@ import org.suikasoft.jOptions.DataStore.DataStoreContainer;
 import org.suikasoft.jOptions.DataStore.ListDataStore;
 import org.suikasoft.jOptions.DataStore.SimpleDataStore;
 import org.suikasoft.jOptions.Datakey.DataKey;
+import org.suikasoft.jOptions.app.AppPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionProvider;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
@@ -34,6 +35,7 @@ import com.google.common.base.Preconditions;
 
 import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
  * A key-value store for arbitrary objects, with type-safe keys.
@@ -565,4 +567,22 @@ public interface DataStore extends DataClass<DataStore> {
         return keysWithValues;
     }
 
+    /**
+     * 
+     * 
+     * @return If this DataStore was loaded using AppPersistence, returns the instance that was used to load it
+     */
+    default Optional<AppPersistence> getPersistence() {
+        throw new NotImplementedException(this);
+    }
+
+    /**
+     * Sets the AppPersistence instance that was used to load this DataStore
+     * 
+     * @param persistence
+     * @return
+     */
+    default DataStore setPersistence(AppPersistence persistence) {
+        throw new NotImplementedException(this);
+    }
 }

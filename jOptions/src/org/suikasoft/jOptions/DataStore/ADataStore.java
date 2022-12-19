@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.suikasoft.jOptions.Datakey.CustomGetter;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.app.AppPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import com.google.common.base.Preconditions;
@@ -33,6 +34,7 @@ public abstract class ADataStore implements DataStore {
     private final String name;
     private final Map<String, Object> values;
     private StoreDefinition definition;
+    private AppPersistence persistence;
 
     // private SetupFile setupFile;
     private boolean strict;
@@ -336,5 +338,16 @@ public abstract class ADataStore implements DataStore {
     // Object get(String id) {
     // return getValuesMap().get(id);
     // }
+
+    @Override
+    public DataStore setPersistence(AppPersistence persistence) {
+        this.persistence = persistence;
+        return this;
+    }
+
+    @Override
+    public Optional<AppPersistence> getPersistence() {
+        return Optional.ofNullable(persistence);
+    }
 
 }
