@@ -293,6 +293,10 @@ public class LineStream implements AutoCloseable {
         return readLines(LineStream.newInstance(file));
     }
 
+    public static List<String> readLines(String string) {
+        return readLines(LineStream.newInstance(string));
+    }
+
     private static List<String> readLines(LineStream lineReader) {
         final List<String> lines = new ArrayList<>();
         String line = null;

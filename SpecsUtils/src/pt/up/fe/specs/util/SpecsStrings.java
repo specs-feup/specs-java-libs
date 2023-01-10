@@ -654,7 +654,6 @@ public class SpecsStrings {
             // Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
 
             Matcher regexMatcher = pattern.matcher(contents);
-
             if (regexMatcher.find()) {
                 int numGroups = regexMatcher.groupCount();
                 List<String> capturedGroups = SpecsFactory.newArrayList();
@@ -2213,5 +2212,18 @@ public class SpecsStrings {
         }
 
         return normalizedJson;
+    }
+
+    /**
+     * 
+     * @param string
+     * @return the last char in the String or throws exception if String is empty
+     */
+    public static char lastChar(String string) {
+        if (string.isEmpty()) {
+            throw new RuntimeException("String is empty");
+        }
+
+        return string.charAt(string.length() - 1);
     }
 }
