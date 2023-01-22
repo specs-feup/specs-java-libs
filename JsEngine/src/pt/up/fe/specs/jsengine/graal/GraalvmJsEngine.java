@@ -92,6 +92,9 @@ public class GraalvmJsEngine extends AJsEngine {
         // Load Java compatibility layer
         eval(JsEngineResource.JAVA_COMPATIBILITY.read());
 
+        // Load support for regexes
+        eval(JsEngineResource.GET_REGEX_GROUPS.read());
+
         // Add rule to ignore polyglot values
         addToJsRule(Value.class, this::valueToJs);
 

@@ -20,6 +20,7 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
  *
  */
 public enum JsEngineResource implements ResourceProvider {
+    GET_REGEX_GROUPS("getRegexGroups.js"),
     JAVA_COMPATIBILITY("JavaCompatibility.js");
 
     private static final String BASE_PATH = "pt/up/fe/specs/jsengine/";
@@ -44,4 +45,7 @@ public enum JsEngineResource implements ResourceProvider {
         return resource;
     }
 
+    public static String getRegexGroupsName() {
+        return "jsengine_getRegexGroups";
+    }
 }

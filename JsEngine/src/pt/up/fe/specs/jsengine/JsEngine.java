@@ -16,6 +16,7 @@ package pt.up.fe.specs.jsengine;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -517,5 +518,16 @@ public interface JsEngine {
      */
     default Optional<Throwable> getException(Object possibleError) {
         throw new NotImplementedException(this);
+    }
+
+    /**
+     * 
+     * @param contents
+     *            the string to apply the regex to
+     * @param regex
+     * @return
+     */
+    default List<String> regexGroups(String contents, String regex) {
+        return null;
     }
 }
