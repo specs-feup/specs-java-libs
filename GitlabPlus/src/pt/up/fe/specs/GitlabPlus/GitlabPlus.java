@@ -1,6 +1,5 @@
 package pt.up.fe.specs.GitlabPlus;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.lazy.LazyString;
 
 /**
@@ -52,16 +52,9 @@ public class GitlabPlus {
     }
 
     private static final String TOKEN_FILE_NAME = "_token";
-    private static final String DEBUG_FILE_NAME = "_debug";
 
     private static final LazyString token = new LazyString(() -> SpecsIo.read(TOKEN_FILE_NAME).trim());
-    private static boolean debug = false;
-    static {
-        File f = new File(DEBUG_FILE_NAME);
-        if (f.exists() && !f.isDirectory()) {
-            debug = true;
-        }
-    }
+    private static boolean debug = SpecsSystem.isDebug();
 
     public static Optional<String> addUserToProject(String projectId, String username, Role role)
             throws URISyntaxException, IOException, InterruptedException {
@@ -87,11 +80,7 @@ public class GitlabPlus {
         HttpClient client = HttpClient.newHttpClient();
         var response = client.send(request, BodyHandlers.ofString());
 
-        if (debug) {
-            System.out.println(request);
-            System.out.println(response);
-            System.out.println(response.body());
-        }
+        debugPrint(request, response);
 
         if (response.statusCode() != 201) {
 
@@ -99,6 +88,15 @@ public class GitlabPlus {
         }
 
         return Optional.of(getIdFromObject(response));
+    }
+
+    private static void debugPrint(HttpRequest request, HttpResponse<String> response) {
+
+        if (debug) {
+            System.out.println(request);
+            System.out.println(response);
+            System.out.println(response.body());
+        }
     }
 
     public static Optional<String> createRepository(Map<String, String> data)
