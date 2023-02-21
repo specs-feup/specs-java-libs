@@ -11,14 +11,12 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.GitlabPlus;
+package pt.up.fe.specs.gitlab;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-
-import pt.up.fe.specs.GitlabPlus.GitlabPlus.Role;
 
 public class Main {
 

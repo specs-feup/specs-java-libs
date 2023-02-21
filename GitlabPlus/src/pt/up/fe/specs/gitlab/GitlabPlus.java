@@ -1,4 +1,4 @@
-package pt.up.fe.specs.GitlabPlus;
+package pt.up.fe.specs.gitlab;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,23 +33,6 @@ import pt.up.fe.specs.util.lazy.LazyString;
  */
 
 public class GitlabPlus {
-
-    public enum Role {
-        DEVELOPER("30"),
-        MAINTAINER("40"),
-        OWNER("50");
-
-        private final String level;
-
-        private Role(String level) {
-            this.level = level;
-        }
-
-        @Override
-        public String toString() {
-            return level;
-        }
-    }
 
     private static final String TOKEN_FILE_NAME = "_token";
 
@@ -99,6 +82,7 @@ public class GitlabPlus {
         }
     }
 
+    // TODO: change signature to include required arguments and optional as map
     public static Optional<String> createRepository(Map<String, String> data)
             throws URISyntaxException, IOException, InterruptedException {
 
