@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 
+import pt.up.fe.specs.jsengine.graal.GraalJsNodeEngine;
 import pt.up.fe.specs.jsengine.graal.GraalvmJsEngine;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
@@ -24,7 +25,8 @@ public enum JsEngineType {
 
     // NASHORN,
     GRAALVM_COMPAT,
-    GRAALVM;
+    GRAALVM,
+    GRAAL_NODE;
 
     /**
      * Creates a new engine, according to the type. TODO: Move to JsEngineType
@@ -45,6 +47,8 @@ public enum JsEngineType {
             return new GraalvmJsEngine(forbiddenClasses, true, engineWorkingDirectory);
         case GRAALVM:
             return new GraalvmJsEngine(forbiddenClasses, false, engineWorkingDirectory);
+        case GRAAL_NODE:
+            return new GraalJsNodeEngine();
         default:
             throw new NotImplementedException(type);
         }
