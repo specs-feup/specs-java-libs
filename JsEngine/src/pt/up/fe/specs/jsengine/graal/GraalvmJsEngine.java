@@ -120,7 +120,7 @@ public class GraalvmJsEngine extends AJsEngine {
                 .option("engine.WarnInterpreterOnly", "false");
                 // Expose JavaScript debugging interface
                 //.option("inspect", "9930");
-
+        
 
         if (engineWorkingDirectory != null) {
             contextBuilder.option("js.commonjs-require", "true");
@@ -224,8 +224,11 @@ public class GraalvmJsEngine extends AJsEngine {
 
     @Override
     public Object evalFile(File jsFile) {
+        /*
+        return this.context.eval("js", "module.exports = require('" + jsFile.getAbsolutePath().toString() + "');");
+         */
         try {
-            return engine.getPolyglotContext().eval(Source.newBuilder("js", jsFile).build());
+            return this.context.eval(Source.newBuilder("js", jsFile).build());
         } catch (IOException e) {
             throw new RuntimeException("Could not load main file.", e);
         } catch (final PolyglotException e) {
@@ -234,6 +237,7 @@ public class GraalvmJsEngine extends AJsEngine {
             Throwable t = e.isHostException() ? e.asHostException() : e;
             throw new RuntimeException("Exception when evaluating javascript", t);
         }
+    }
 
     @Override
     public Object newNativeArray() {
