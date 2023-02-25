@@ -39,6 +39,9 @@
 		<!-- Version 21.1.0 breaks LARA (e.g. $jp.descendants("name") is not found) -->
 		<dependency org="org.graalvm.js" name="js-scriptengine" rev="22.3.1" conf="default"/>
 		<dependency org="org.graalvm.js" name="js" rev="22.3.1"/>
+		<!-- https://mvnrepository.com/artifact/org.graalvm.tools/chromeinspector -->
+		<dependency org="org.graalvm.tools" name="chromeinspector" rev="22.3.1"/>
+		
 
       <dependency org="com.google.code.gson" name="gson" rev="2.4"/>	
 		<!--<dependency org="org.graalvm.sdk" name="graal-sdk" rev="19.1.1"/>-->
