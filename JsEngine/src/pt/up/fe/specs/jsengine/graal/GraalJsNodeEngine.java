@@ -14,6 +14,7 @@
 package pt.up.fe.specs.jsengine.graal;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -25,6 +26,8 @@ import pt.up.fe.specs.jsengine.ForOfType;
 import pt.up.fe.specs.jsengine.JsFileType;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
+import net.plan99.nodejs.java.NodeJS;
+
 public class GraalJsNodeEngine extends AJsEngine {
     
 
@@ -35,9 +38,13 @@ public class GraalJsNodeEngine extends AJsEngine {
 
     @Override
     public Object evalFile(File jsFile) {
-        return NodeJS.runJS(() ->
-                    NodeJS.eval("(require(" + jsFile.getAbsolutePath().toString() + "))")
+        var result = NodeJS.runJS(() -> 
+            NodeJS.eval( "var main = require(\"" + jsFile.getAbsolutePath().toString() + "\"); main();").toString()
+            //NodeJS.eval("(require('" + jsFile.getAbsolutePath().toString() + "'))")
                 );
+        
+        //System.out.println(result.toString());
+        return result;
     }
 
     @Override
