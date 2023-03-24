@@ -510,7 +510,8 @@ public class KeyFactory {
     @SuppressWarnings("unchecked")
     public static <T> DataKey<List<T>> list(String id, Class<T> elementClass) {
         return generic(id, () -> (List<T>) new ArrayList<>())
-                .setCustomSetter((value, data) -> KeyFactory.listCustomSetter(value, data, elementClass));
+                .setCustomSetter((value, data) -> KeyFactory.listCustomSetter(value, data, elementClass))
+                .setCopyFunction(ArrayList::new);
         // .setDefault(() -> new ArrayList<>());
 
     }
