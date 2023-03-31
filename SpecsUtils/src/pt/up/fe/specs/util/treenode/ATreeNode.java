@@ -271,14 +271,26 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * Returns a reference to the object that implements this class.
+     * Returns a reference to the object that implements this interface.
      *
      * <p>
-     * This method is needed because of generics not having information about K.
+     * This method is needed because of Java generics not having information about K.
      *
+     * 
      * @return
      */
-    // protected abstract K getThis();
+    @SuppressWarnings("unchecked")
+    protected K getThis() {
+        return (K) this;
+    }
+
+    /**
+     * 
+     * @return a String with a tree-representation of this node
+     */
+    public String toTree() {
+        return TreeNodeUtils.toString(getThis(), "");
+    }
 
     /**
      * @return the parent of this node, or null if the node does not have a parent
