@@ -641,4 +641,22 @@ public interface TreeNode<K extends TreeNode<K>> {
         NodeInsertUtils.replace(oldChild, newChild);
     }
 
+    /**
+     * Returns a reference to the object that implements this interface.
+     *
+     * <p>
+     * This method is needed because of Java generics not having information about K.
+     * 
+     * @return
+     */
+    K getThis();
+
+    /**
+     * 
+     * @return a String with a tree-representation of this node
+     */
+    default String toTree() {
+        return TreeNodeUtils.toString(getThis(), "");
+    }
+
 }

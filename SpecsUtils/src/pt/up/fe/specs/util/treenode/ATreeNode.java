@@ -278,7 +278,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      *
      * @return
      */
-    protected abstract K getThis();
+    // protected abstract K getThis();
 
     /**
      * @return the parent of this node, or null if the node does not have a parent
