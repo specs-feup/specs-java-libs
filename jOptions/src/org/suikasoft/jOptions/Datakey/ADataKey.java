@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import org.suikasoft.jOptions.gui.KeyPanelProvider;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
+import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 public abstract class ADataKey<T> implements DataKey<T> {
@@ -228,6 +229,11 @@ public abstract class ADataKey<T> implements DataKey<T> {
     public DataKey<T> setCopyFunction(Function<T, T> copyFunction) {
         return copy(id, defaultValueProvider, decoder, customGetter, panelProvider, label, definition, copyFunction,
                 customSetter, extraData);
+    }
+
+    @Override
+    public DataKey<T> setValueClass(Class<?> valueClass) {
+        throw new NotImplementedException(this);
     }
 
     @Override

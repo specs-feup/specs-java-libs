@@ -49,6 +49,13 @@ public interface DataKey<T> extends KeyProvider<String> {
      */
     Class<T> getValueClass();
 
+    /**
+     * 
+     * @param valueClass
+     * @return
+     */
+    DataKey<T> setValueClass(Class<?> valueClass);
+
     String getName();
 
     default String getTypeName() {

@@ -31,6 +31,7 @@ import pt.up.fe.specs.util.parsing.StringCodec;
 public class GenericKey<T> extends ADataKey<T> {
 
     private final T exampleInstance;
+    private transient Class<T> valueClass = null;
 
     /**
      *
@@ -61,7 +62,14 @@ public class GenericKey<T> extends ADataKey<T> {
     @SuppressWarnings("unchecked")
     @Override
     public Class<T> getValueClass() {
-        return (Class<T>) exampleInstance.getClass();
+        return valueClass != null ? valueClass : (Class<T>) exampleInstance.getClass();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public DataKey<T> setValueClass(Class<?> valueClass) {
+        this.valueClass = (Class<T>) valueClass;
+        return this;
     }
 
     @Override
