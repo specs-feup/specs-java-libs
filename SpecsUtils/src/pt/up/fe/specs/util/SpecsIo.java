@@ -1179,6 +1179,7 @@ public class SpecsIo {
      * @param source
      * @param destination
      * @return
+     * @throws IOException
      */
     public static boolean copy(InputStream source, File destination) {
         // Preconditions.checkArgument(source != null);
@@ -1194,23 +1195,31 @@ public class SpecsIo {
             parentFile.mkdirs();
         }
 
+        try {
+            Files.copy(source, destination.toPath());
+            SpecsLogs.debug(() -> "Copied stream to file '" + destination.getAbsolutePath() + "'.");
+        } catch (IOException e) {
+            SpecsLogs.warn("IoException while copying stream to file '" + destination + "'", e);
+            success = false;
+        }
+        /*
         // Using 'finally' style 2 as described in http://www.javapractices.com/topic/TopicAction.do?Id=25
         try (OutputStream out = new FileOutputStream(f2); InputStream in = source) {
-
+        
             // For Overwrite the file.
-
+        
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
             SpecsLogs.debug(() -> "Copied stream to file '" + destination.getAbsolutePath() + "'.");
-
+        
         } catch (IOException e) {
             SpecsLogs.warn("IoException while copying stream to file '" + destination + "'", e);
             success = false;
         }
-
+        */
         return success;
     }
 
