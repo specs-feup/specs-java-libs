@@ -40,6 +40,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -1196,7 +1197,7 @@ public class SpecsIo {
         }
 
         try {
-            Files.copy(source, destination.toPath());
+            Files.copy(source, destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
             SpecsLogs.debug(() -> "Copied stream to file '" + destination.getAbsolutePath() + "'.");
         } catch (IOException e) {
             SpecsLogs.warn("IoException while copying stream to file '" + destination + "'", e);
