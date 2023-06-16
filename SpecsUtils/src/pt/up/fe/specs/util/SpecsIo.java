@@ -3061,6 +3061,20 @@ public class SpecsIo {
      * @return
      */
     public static String getMd5(File file) {
+        try (InputStream is = Files.newInputStream(Paths.get(file.getAbsolutePath()))) {
+            return getMd5(is);
+        } catch (IOException e) {
+            throw new RuntimeException("Problems while using file '" + file + "'", e);
+        }
+
+    }
+
+    public static String getMd5(String contents) {
+        return getMd5(new ByteArrayInputStream(contents.getBytes()));
+    }
+
+    public static String getMd5(InputStream is) {
+
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
@@ -3068,7 +3082,8 @@ public class SpecsIo {
             throw new RuntimeException("Could not find MD5 algorithm", e);
         }
 
-        try (InputStream is = Files.newInputStream(Paths.get(file.getAbsolutePath()));
+        // InputStream is = Files.newInputStream(Paths.get(file.getAbsolutePath()));
+        try (
                 BufferedInputStream bis = new BufferedInputStream(is);
                 DigestInputStream dis = new DigestInputStream(bis, md)) {
 
@@ -3077,7 +3092,8 @@ public class SpecsIo {
             }
             /* Read decorated stream (dis) to EOF as normal... */
         } catch (IOException e) {
-            throw new RuntimeException("Problems while using file '" + file + "'", e);
+            throw new RuntimeException("Could not calculate MD5", e);
+            // throw new RuntimeException("Problems while using file '" + file + "'", e);
         }
 
         byte[] digest = md.digest();
