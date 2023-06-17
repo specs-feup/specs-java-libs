@@ -39,7 +39,7 @@ public class ResourcesAsFiles {
 
     private final Map<String, File> resourceFolders;
 
-    public ResourcesAsFiles(Map<String, File> resourceFolders) {
+    public ResourcesAsFiles() {
         this.resourceFolders = new HashMap<>();
     }
 
