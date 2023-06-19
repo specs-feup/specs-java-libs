@@ -38,9 +38,15 @@ public class ResourcesAsFiles {
     private final static String CHECKSUM_FILENAME = "checksum.txt";
 
     private final Map<String, File> resourceFolders;
+    private final String subpath;
+
+    public ResourcesAsFiles(String subpath) {
+        this.resourceFolders = new HashMap<>();
+        this.subpath = subpath;
+    }
 
     public ResourcesAsFiles() {
-        this.resourceFolders = new HashMap<>();
+        this(null);
     }
 
     public File getApiFolder(ResourceCollection resourceCollection) {
@@ -138,8 +144,13 @@ public class ResourcesAsFiles {
     }
 
     private File getResourcesFolder(ResourceCollection resourceCollection) {
-        return SpecsIo.getTempFolder(resourceCollection.getId());
+        var baseFolder = SpecsIo.getTempFolder(resourceCollection.getId());
 
+        if (subpath != null) {
+            baseFolder = SpecsIo.mkdir(baseFolder, subpath);
+        }
+
+        return baseFolder;
     }
 
     private void extractResources(Collection<ResourceProvider> resources, File destination) {
