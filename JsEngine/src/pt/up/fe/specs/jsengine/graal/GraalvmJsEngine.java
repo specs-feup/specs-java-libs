@@ -72,6 +72,11 @@ public class GraalvmJsEngine extends AJsEngine {
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
             Path engineWorkingDirectory) {
+        this(blacklistedClasses, nashornCompatibility, engineWorkingDirectory, null);
+    }
+
+    public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
+            Path engineWorkingDirectory, File nodeModulesFolder) {
 
         // TODO: Might be necessary when GraalVM version is updated
         // System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
@@ -79,7 +84,7 @@ public class GraalvmJsEngine extends AJsEngine {
         this.forbiddenClasses = blacklistedClasses.stream().map(Class::getName).collect(Collectors.toSet());
         this.nashornCompatibility = nashornCompatibility;
 
-        Context.Builder contextBuilder = createBuilder(engineWorkingDirectory);
+        Context.Builder contextBuilder = createBuilder(engineWorkingDirectory, nodeModulesFolder);
         // System.out.println("CLASS LOADER: " + GraalvmJsEngine.class.getClassLoader());
         // Thread.currentThread().setContextClassLoader(classLoader);
 
@@ -116,7 +121,7 @@ public class GraalvmJsEngine extends AJsEngine {
 
     }
 
-    private Context.Builder createBuilder(Path engineWorkingDirectory) {
+    private Context.Builder createBuilder(Path engineWorkingDirectory, File nodeModulesFolder) {
 
         // var hostAccess = HostAccess.newBuilder()
         // .targetTypeMapping(Object.class, Object.class, v -> true, GraalvmJsEngine::test)
@@ -140,8 +145,20 @@ public class GraalvmJsEngine extends AJsEngine {
 
             // Path path = Paths.get(engineWorkingDirectory + "/node_modules");
 
-            // contextBuilder.option("js.commonjs-require", "true");
-            // contextBuilder.option("js.commonjs-require-cwd", path.toString());
+        }
+
+        if (nodeModulesFolder != null) {
+            // Check folder is called 'node_modules' or if contains a folder 'node_modules'
+            if (!nodeModulesFolder.getName().equals("node_modules")
+                    && !(new File(nodeModulesFolder, "node_modules").isDirectory())) {
+
+                throw new RuntimeException(
+                        "Given node modules folder is not called node_modules, nor contains a node_modules folder: "
+                                + nodeModulesFolder.getAbsolutePath());
+            }
+
+            contextBuilder.option("js.commonjs-require", "true");
+            contextBuilder.option("js.commonjs-require-cwd", nodeModulesFolder.getAbsolutePath());
         }
 
         // Set JS version
