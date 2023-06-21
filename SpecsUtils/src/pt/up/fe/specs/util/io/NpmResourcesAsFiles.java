@@ -33,20 +33,16 @@ import pt.up.fe.specs.util.utilities.StringLines;
  * @author JBispo
  *
  */
-public class ResourcesAsFiles {
+public class NpmResourcesAsFiles {
 
     private final static String CHECKSUM_FILENAME = "checksum.txt";
 
     private final Map<String, File> resourceFolders;
     private final String subpath;
 
-    public ResourcesAsFiles(String subpath) {
+    public NpmResourcesAsFiles() {
         this.resourceFolders = new HashMap<>();
-        this.subpath = subpath;
-    }
-
-    public ResourcesAsFiles() {
-        this(null);
+        this.subpath = "node_modules";
     }
 
     public File getApiFolder(ResourceCollection resourceCollection) {
