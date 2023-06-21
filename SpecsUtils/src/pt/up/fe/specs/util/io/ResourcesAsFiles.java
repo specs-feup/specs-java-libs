@@ -56,6 +56,10 @@ public class ResourcesAsFiles {
         // Build folder
         if (apisFolder == null) {
             apisFolder = buildFolder(resourceCollection);
+
+            // Create package.json in parent folder, because we are using node_modules subpath
+            SpecsIo.write(new File(apisFolder.getParent(), "package.json"), "{ \"type\" : \"module\" }");
+
             resourceFolders.put(key, apisFolder);
         }
 
