@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.StringLines;
 
@@ -57,6 +58,7 @@ public class NpmResourcesAsFiles {
             SpecsIo.write(new File(apisFolder.getParent(), "package.json"), "{ \"type\" : \"module\" }");
 
             resourceFolders.put(key, apisFolder);
+            SpecsLogs.info("Associated key '" + key + "' to folder '" + apisFolder.getAbsolutePath() + "'");
         }
 
         return apisFolder;
