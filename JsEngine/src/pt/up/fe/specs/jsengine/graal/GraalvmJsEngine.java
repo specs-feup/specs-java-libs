@@ -34,6 +34,7 @@ import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Source.Builder;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.io.FileSystem;
 
@@ -181,10 +182,15 @@ public class GraalvmJsEngine extends AJsEngine {
 
     @Override
     public Object eval(String code, JsFileType type, String source) {
+        var graalSource = Source.newBuilder("js", new StringBuilder(code), source);
+        return eval(graalSource, type);
+    }
+
+    private Object eval(Builder graalSource, JsFileType type) {
         // GraalVM documentation indicates that only .mjs files should be loaded as modules
         // https://www.graalvm.org/reference-manual/js/Modules/
 
-        var graalSource = Source.newBuilder("js", new StringBuilder(code), source);
+        // var graalSource = Source.newBuilder("js", new StringBuilder(code), source);
 
         switch (type) {
         case NORMAL:
@@ -203,6 +209,12 @@ public class GraalvmJsEngine extends AJsEngine {
             } catch (IOException e) {
                 throw new RuntimeException("Could not load JS code as module", e);
             }
+            // catch (final PolyglotException e) {
+            // // If host exception, convert to it first
+            // // Usually has more information about the problem that happened
+            // Throwable t = e.isHostException() ? e.asHostException() : e;
+            // throw new RuntimeException("Exception when evaluating javascript", t);
+            // }
             // case COMMON:
             // try {
             // return eval(Source.newBuilder("js", new StringBuilder(code), source)
@@ -300,17 +312,21 @@ public class GraalvmJsEngine extends AJsEngine {
     }
 
     @Override
-    public Object evalFile(File jsFile) {
-        try {
-            return engine.getPolyglotContext().eval(Source.newBuilder("js", jsFile).build());
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load main file.", e);
-        } catch (final PolyglotException e) {
-            // If host exception, convert to it first
-            // Usually has more information about the problem that happened
-            Throwable t = e.isHostException() ? e.asHostException() : e;
-            throw new RuntimeException("Exception when evaluating javascript", t);
+    public Object evalFile(File jsFile, JsFileType type, String content) {
+        // return eval(Source.newBuilder("js", jsFile), type);
+        // try {
+        // return engine.getPolyglotContext().eval(Source.newBuilder("js", jsFile).build());
+        var builder = Source.newBuilder("js", jsFile);
+        if (content != null) {
+            builder.content(content);
         }
+        return eval(builder, type);
+        // } catch (final PolyglotException e) {
+        // // If host exception, convert to it first
+        // // Usually has more information about the problem that happened
+        // Throwable t = e.isHostException() ? e.asHostException() : e;
+        // throw new RuntimeException("Exception when evaluating javascript", t);
+        // }
     }
 
     // @SuppressWarnings("unchecked")

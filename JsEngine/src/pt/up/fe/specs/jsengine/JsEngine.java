@@ -253,8 +253,25 @@ public interface JsEngine {
         return eval(code, "unnamed_js_code");
     }
 
+    /**
+     * 
+     * @param code
+     * @param source
+     *            a String identifying the source
+     * @return
+     */
     Object eval(String code, String source);
 
+    /**
+     * 
+     * @param script
+     * @param scope
+     * @param type
+     * @param source
+     *            a String identifying the source. If the code is loaded as module and this function has been called
+     *            before with the same value for source, it might consider the module is already in cache
+     * @return
+     */
     Object eval(String script, Object scope, JsFileType type, String source);
 
     default Object eval(String code, JsFileType type, String source) {
@@ -262,6 +279,23 @@ public interface JsEngine {
     }
 
     default Object evalFile(File jsFile) {
+        return evalFile(jsFile, JsFileType.NORMAL);
+    }
+
+    default Object evalFile(File jsFile, JsFileType type) {
+        return evalFile(jsFile, type, null);
+    }
+
+    /**
+     * 
+     * @param jsFile
+     * @param type
+     * @param content
+     *            if the contents of the file need to be changed, but you need to load as a file, so that the relative
+     *            paths in imports keep working
+     * @return
+     */
+    default Object evalFile(File jsFile, JsFileType type, String content) {
         throw new NotImplementedException(this);
     }
 
