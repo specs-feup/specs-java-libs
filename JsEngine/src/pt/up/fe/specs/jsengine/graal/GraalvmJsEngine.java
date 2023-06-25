@@ -54,18 +54,12 @@ public class GraalvmJsEngine extends AJsEngine {
     private static final String NEW_MAP = "a = {}; a";
 
     private final GraalJSScriptEngine engine;
-    // private final Context.Builder contextBuilder;
     private final Set<String> forbiddenClasses;
     private final boolean nashornCompatibility;
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses) {
         this(blacklistedClasses, false);
     }
-
-    // private static Object test(Object v) {
-    // System.out.println("Interception conversion of object " + v);
-    // return v;
-    // }
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility) {
         this(blacklistedClasses, nashornCompatibility, null);
@@ -190,11 +184,8 @@ public class GraalvmJsEngine extends AJsEngine {
         // GraalVM documentation indicates that only .mjs files should be loaded as modules
         // https://www.graalvm.org/reference-manual/js/Modules/
 
-        // var graalSource = Source.newBuilder("js", new StringBuilder(code), source);
-
         switch (type) {
         case NORMAL:
-            // return eval(code);
             try {
                 return eval(graalSource.build());
             } catch (IOException e) {
@@ -202,26 +193,12 @@ public class GraalvmJsEngine extends AJsEngine {
             }
         case MODULE:
             try {
-                // return eval(Source.newBuilder("js", new StringBuilder(code), source)
                 return eval(graalSource
                         .mimeType("application/javascript+module")
                         .build());
             } catch (IOException e) {
                 throw new RuntimeException("Could not load JS code as module", e);
             }
-            // catch (final PolyglotException e) {
-            // // If host exception, convert to it first
-            // // Usually has more information about the problem that happened
-            // Throwable t = e.isHostException() ? e.asHostException() : e;
-            // throw new RuntimeException("Exception when evaluating javascript", t);
-            // }
-            // case COMMON:
-            // try {
-            // return eval(Source.newBuilder("js", new StringBuilder(code), source)
-            // .build());
-            // } catch (IOException e) {
-            // throw new RuntimeException("Could not load JS code as common javascript", e);
-            // }
         default:
             throw new NotImplementedException(type);
         }
@@ -236,13 +213,7 @@ public class GraalvmJsEngine extends AJsEngine {
     @Override
     public Value eval(String code, String source) {
 
-        // var tempFolder = SpecsIo.getTempFolder("temp_js_code");
-        // var tempFile = new File(tempFolder, UUID.randomUUID() + ".js");
-        // SpecsIo.deleteOnExit(tempFile);
-        // SpecsIo.write(tempFile, code);
-
         try {
-            // return eval(Source.newBuilder("js", new StringBuilder(code), tempFile.getAbsolutePath()).build());
             return eval(Source.newBuilder("js", new StringBuilder(code), source)
                     // .mimeType("application/javascript+module")
                     .build());
@@ -313,43 +284,17 @@ public class GraalvmJsEngine extends AJsEngine {
 
     @Override
     public Object evalFile(File jsFile, JsFileType type, String content) {
-        // return eval(Source.newBuilder("js", jsFile), type);
-        // try {
-        // return engine.getPolyglotContext().eval(Source.newBuilder("js", jsFile).build());
+
         var builder = Source.newBuilder("js", jsFile);
         if (content != null) {
             builder.content(content);
         }
         return eval(builder, type);
-        // } catch (final PolyglotException e) {
-        // // If host exception, convert to it first
-        // // Usually has more information about the problem that happened
-        // Throwable t = e.isHostException() ? e.asHostException() : e;
-        // throw new RuntimeException("Exception when evaluating javascript", t);
-        // }
     }
-
-    // @SuppressWarnings("unchecked")
-    // public Map<String, Object> evalOld(String code) {
-    //
-    // try {
-    // return (Map<String, Object>) engine.eval(code);
-    // } catch (ScriptException e) {
-    // throw new RuntimeException("Could not execute code: '" + code + "'", e);
-    // }
-    // }
 
     @Override
     public Object newNativeArray() {
         return eval(NEW_ARRAY);
-        // return new GenericBindings(evalOld(NEW_ARRAY));
-        // try {
-        // Map<String, Object> array = (Map<String, Object>) engine.eval(NEW_ARRAY);
-        //
-        // return new GenericBindings(array);
-        // } catch (ScriptException e) {
-        // throw new DefaultLARAException("Could not create new array ", e);
-        // }
     }
 
     @Override
@@ -365,24 +310,7 @@ public class GraalvmJsEngine extends AJsEngine {
         }
 
         return array;
-
-        // System.out.println("ARRAY: " + array);
-        // System.out.println("AS BINDINGS: " + asBindings(array));
-        // var bindings = asBindings(array);
-        // System.out.println("ARRAY: " + array);
-        // System.out.println("BINDINGS: " + bindings);
-
-        // return bindings;
     }
-
-    // public Object toNativeArrayV2(Object[] values) {
-    // Value array = eval(NEW_ARRAY);
-    // for (int i = 0; i < values.length; i++) {
-    // array.setArrayElement(i, values[i]);
-    // }
-    //
-    // return array;
-    // }
 
     /**
      * Based on this site: http://programmaticallyspeaking.com/nashorns-jsobject-in-context.html
@@ -475,111 +403,6 @@ public class GraalvmJsEngine extends AJsEngine {
         return result;
     }
 
-    // /**
-    // * This implementation is slow, since Graal does not support sharing Contexts between engines.
-    // *
-    // * <p>
-    // * A new engine will be created, and the contents of the given scope will be converted to code and loaded into the
-    // * new engine, before executing the code.
-    // */
-    // public Object evalOld(String code, Object scope) {
-    // // try {
-    // // engine.getPolyglotContext().eval("js", code);
-    // //
-    // //
-    // // System.out.println("ENGINE CONTEXT: " + engine.getPolyglotContext());
-    // // return engine.eval(code, asBindings(scope));
-    // // } catch (ScriptException e) {
-    // // throw new RuntimeException("Could not evaluate script with custom scope:\n" + code, e);
-    // // }
-    //
-    // // var newEngine = GraalJSScriptEngine.create(engine.getPolyglotEngine(), contextBuilder);
-    // // Context context = Context.create("js");
-    // // Context context = Context.newBuilder("js").build();
-    // Context context = createBuilder().build();
-    // // Context context = engine.getPolyglotContext();
-    //
-    // // Context context = contextBuilder.build();
-    //
-    // // Value b = newEngine.getPolyglotContext().getBindings("js");
-    // // Value b = asValue(newEngine.getBindings(ScriptContext.ENGINE_SCOPE));
-    // // Value b = asValue(newEngine.getContext().getBindings(ScriptContext.ENGINE_SCOPE));
-    // // try {
-    // // System.out.println("typeof a: " + newEngine.eval("typeof a"));
-    // // b.putMember("a", 10);
-    // // System.out.println("typeof a 2: " + newEngine.eval("typeof a"));
-    // // } catch (ScriptException e) {
-    // // throw new RuntimeException(e);
-    // // }
-    //
-    // // Value b = context.getBindings("js");
-    // //
-    // // System.out.println("typeof a: " + context.eval("js", "typeof foo"));
-    // // b.putMember("foo", 10);
-    // // System.out.println("typeof a 2: " + context.eval("js", "foo"));
-    //
-    // // Context context = newEngine.getPolyglotContext();
-    // Value jsBindings = context.getBindings("js");
-    //
-    // // GraalvmJsEngine newEngine = new GraalvmJsEngine();
-    // // Value newBindings = newEngine.engine.getPolyglotContext().getBindings("js");
-    // // Value newBindings = asValue(newEngine.engine.getBindings(ScriptContext.ENGINE_SCOPE));
-    //
-    // Value scopeValue = asValue(scope);
-    //
-    // // Add scope code
-    // // System.out.println("SCOPE BEFORE: " + jsBindings.getMemberKeys());
-    // for (String key : scopeValue.getMemberKeys()) {
-    // // System.out.println("KEY: " + key);
-    // Value value = scopeValue.getMember(key);
-    //
-    // // If value is undefined, set the key as undefined
-    // if (value.isNull()) {
-    // context.eval("js", key + " = undefined");
-    // continue;
-    // }
-    // // System.out.println("VALUE: " + value);
-    //
-    // // Otherwise, add the value
-    // jsBindings.putMember(key, value);
-    // // System.out.printlsn("COULD PUT");
-    // }
-    // // System.out.println("SCOPE AFTER: " + jsBindings.getMemberKeys());
-    // // System.out.println("CODE: " + code);
-    // // Execute new code
-    // Value result = context.eval("js", code);
-    // // System.out.println("RESULT: " + result);
-    // return result;
-    //
-    // // GraalvmJsEngine newEngine = new GraalvmJsEngine();
-    // // Value scopeValue = asValue(scope);
-    // //
-    // // // Add scope code
-    // // for (String key : scopeValue.getMemberKeys()) {
-    // // newEngine.eval(key + " = " + stringify(scopeValue.getMember(key)));
-    // // }
-    // //
-    // // // Execute new code
-    // // return newEngine.eval(code);
-    //
-    // // newEngine.getPolyglotContext().
-    // // var newScriptContext = new SimpleScriptContext();
-    // // newScriptContext.setBindings(scope, ScriptContext.ENGINE_SCOPE);
-    // // try {
-    // // return newEngine.eval(code, newScriptContext);
-    // // } catch (ScriptException e) {
-    // // throw new RuntimeException(e);
-    // // }
-    // // newEngine.getEngine().setBindings(scope, ScriptContext.ENGINE_SCOPE);
-    // // return newEngine.eval(code);
-    // // Bindings previousBindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-    // // engine.setBindings(scope, ScriptContext.ENGINE_SCOPE);
-    // // Value result = eval(code);
-    // // engine.setBindings(previousBindings, ScriptContext.ENGINE_SCOPE);
-    // // return result;
-    //
-    // }
-
     public Value asValue(Object object) {
         if (object instanceof GraalvmBindings) {
             return ((GraalvmBindings) object).getValue();
@@ -599,7 +422,6 @@ public class GraalvmJsEngine extends AJsEngine {
             return (Bindings) value;
         }
 
-        // return new GraalvmBindings(this, asValue(value).as(Bindings.class));
         return new GraalvmBindings(this.asValue(value));
     }
 
