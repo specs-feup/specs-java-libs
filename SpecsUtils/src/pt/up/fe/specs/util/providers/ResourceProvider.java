@@ -142,7 +142,8 @@ public interface ResourceProvider extends FileResourceProvider {
      * @return
      */
     default String getResourceLocation() {
-        String resourcePath = getResource();
+        String resourcePath = getFileLocation();
+        // String resourcePath = getResource();
         // Remove resource name
         int slashIndex = resourcePath.lastIndexOf('/');
         if (slashIndex == -1) {
