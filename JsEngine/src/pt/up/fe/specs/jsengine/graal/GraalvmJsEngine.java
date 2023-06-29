@@ -287,8 +287,6 @@ public class GraalvmJsEngine extends AJsEngine {
 
         var builder = Source.newBuilder("js", jsFile);
         if (content != null) {
-            // System.out.println("CONTENT:\n" + content);
-            // SpecsIo.write(jsFile, content);
             builder.content(content);
         }
         return eval(builder, type);

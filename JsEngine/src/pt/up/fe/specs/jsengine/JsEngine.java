@@ -493,55 +493,7 @@ public interface JsEngine {
         var rules = getToJsRules();
         var processedObject = rules.applyTry(javaObject);
 
-        // if (processedObject.isPresent()) {
-        // System.out.println("PROCESSED OBJECT");
-        // }
-
         return processedObject.orElse(javaObject);
-        // return rules.applyTry(javaObject).orElse(javaObject);
-
-        // // If a List, apply adapt over all elements of the list and convert to array
-        // if (javaObject instanceof List) {
-        // var valueList = (List<?>) javaObject;
-        //
-        // // var newValue = new Object[valueList.size()];
-        // //
-        // // for (var i = 0; i < valueList.size(); i++) {
-        // // var valueElement = valueList.get(i);
-        // // newValue[i] = toJs(valueElement);
-        // // }
-        //
-        // return toNativeArray(valueList.stream().map(this::toJs).toArray());
-        // }
-        //
-        // // If a Set, apply adapt over all elements of the Set and convert to array
-        // if (javaObject instanceof Set) {
-        // var valueList = (Set<?>) javaObject;
-        //
-        // return toNativeArray(valueList.stream().map(this::toJs).toArray());
-        // }
-        //
-        // // If a JsonArray, convert to List and call toJs() again
-        // if (javaObject instanceof JsonArray) {
-        // var jsonArray = (JsonArray) javaObject;
-        //
-        // var list = new ArrayList<Object>();
-        // for (int i = 0; i < jsonArray.size(); i++) {
-        // list.add(jsonArray.get(i));
-        // }
-        // return toJs(list);
-        // }
-
-        // // If DataClass, wrap around special version that converts nodes into join points
-        // if (value instanceof DataClass) {
-        // // System.out.println("ASDADASD");
-        // var dataClass = (DataClass<?>) value;
-        // return new CxxWeaverDataClass(dataClass);
-        // }
-        //
-        // * - DataClass to JsDataClass
-
-        // return javaObject;
     }
 
     /**
