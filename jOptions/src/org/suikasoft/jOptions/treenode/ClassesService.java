@@ -199,12 +199,12 @@ public class ClassesService<T extends DataNode<T>> {
         return null;
     }
 
-    public BiFunction<DataStore, List<? extends T>, T> getLaraNodeBuilder(
+    public BiFunction<DataStore, List<? extends T>, T> getNodeBuilder(
             Class<? extends T> dataNodeClass) {
 
         // Create builder
         try {
-            Constructor<? extends T> constructor = (Constructor<? extends T>) dataNodeClass.getConstructor(
+            Constructor<? extends T> constructor = dataNodeClass.getConstructor(
                     DataStore.class,
                     Collection.class);
 
