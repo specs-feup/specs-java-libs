@@ -36,7 +36,7 @@ public enum JsEngineType {
      * @return
      */
     public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses, Path engineWorkingDirectory) {
-        return newEngine(type, forbiddenClasses, engineWorkingDirectory, null, null);
+        return newEngine(type, forbiddenClasses, engineWorkingDirectory, null, System.out);
     }
 
     public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses, Path engineWorkingDirectory,
