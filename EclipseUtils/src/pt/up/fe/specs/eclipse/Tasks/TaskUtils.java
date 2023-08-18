@@ -14,6 +14,8 @@
 package pt.up.fe.specs.eclipse.Tasks;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.eclipse.EclipseDeploymentData;
@@ -48,6 +50,19 @@ public class TaskUtils {
     }
 
     public static Map<Class<? extends SetupFieldEnum>, TaskExecutor> getTasks() {
+        return tasks;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Enum<?> & SetupFieldEnum> List<Class<T>> getTasksList() {
+
+        var tasks = new ArrayList<Class<T>>();
+
+        for (var task : TaskUtils.getTasks().keySet()) {
+            // Tasks are classes that are enums and also SetupFieldEnum
+            tasks.add((Class<T>) task);
+        }
+
         return tasks;
     }
 
