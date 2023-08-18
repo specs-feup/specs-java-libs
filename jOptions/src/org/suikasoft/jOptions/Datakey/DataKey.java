@@ -115,6 +115,8 @@ public interface DataKey<T> extends KeyProvider<String> {
      */
     DataKey<T> setDefault(Supplier<? extends T> defaultValue);
 
+    DataKey<T> setDefaultRaw(Supplier<?> defaultValue);
+
     default DataKey<T> setDefaultString(String stringValue) {
         if (!getDecoder().isPresent()) {
             throw new RuntimeException("Can only use this method if a decoder was set before");

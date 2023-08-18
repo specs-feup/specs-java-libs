@@ -151,6 +151,14 @@ public abstract class ADataKey<T> implements DataKey<T> {
                 customSetter, extraData);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public DataKey<T> setDefaultRaw(Supplier<?> defaultValueProvider) {
+        return copy(id, (Supplier<? extends T>) defaultValueProvider, decoder, customGetter, panelProvider, label,
+                definition, copyFunction,
+                customSetter, extraData);
+    }
+
     @Override
     public DataKey<T> setCustomGetter(CustomGetter<T> customGetter) {
         // Adding interface 'Serializable', so that it can save lambda expressions
