@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.storedefinition;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +54,8 @@ public abstract class AStoreDefinition implements StoreDefinition {
         check(sections);
 
         this.appName = appName;
-        this.sections = sections;
+        // To control list, and avoid Arrays.asList(), which is not serializable by XStream
+        this.sections = new ArrayList<>(sections);
         this.defaultData = defaultData;
     }
 
