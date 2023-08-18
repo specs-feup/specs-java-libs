@@ -41,6 +41,7 @@ import org.suikasoft.jOptions.gui.panels.option.FilePanel;
 import org.suikasoft.jOptions.gui.panels.option.FilesWithBaseFoldersPanel;
 import org.suikasoft.jOptions.gui.panels.option.IntegerPanel;
 import org.suikasoft.jOptions.gui.panels.option.MultipleChoiceListPanel;
+import org.suikasoft.jOptions.gui.panels.option.SetupListPanel;
 import org.suikasoft.jOptions.gui.panels.option.StringListPanel;
 import org.suikasoft.jOptions.gui.panels.option.StringPanel;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
@@ -386,7 +387,8 @@ public class KeyFactory {
     // }
 
     public static DataKey<SetupList> setupList(String id, List<StoreDefinition> definitions) {
-        return object(id, SetupList.class).setDefault(() -> SetupList.newInstance(id, definitions));
+        return object(id, SetupList.class).setDefault(() -> SetupList.newInstance(id, new ArrayList<>(definitions)))
+                .setKeyPanelProvider((key, data) -> new SetupListPanel(key, data, definitions));
     }
 
     public static DataKey<SetupList> setupList(String id, StoreDefinitionProvider... providers) {

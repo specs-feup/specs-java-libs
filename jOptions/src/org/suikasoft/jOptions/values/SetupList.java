@@ -13,17 +13,20 @@
 
 package org.suikasoft.jOptions.values;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
-import pt.up.fe.specs.util.SpecsFactory;
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -37,6 +40,11 @@ public class SetupList implements DataStore {
     private final String setupListName;
     // private List<SimpleSetup> setupList;
     private final Map<String, DataStore> mapOfSetups;
+
+    // Using separate list inst of LinkedHashMap because XStream does not support Arrays.ArrayList, which LinkedHashMap
+    // uses
+    private final List<String> keys;
+
     // private Integer preferredIndex;
     private String preferredSetupName;
 
@@ -45,8 +53,11 @@ public class SetupList implements DataStore {
     public SetupList(String setupListName, Collection<DataStore> listOfSetups) {
         this.setupListName = setupListName;
 
-        mapOfSetups = SpecsFactory.newLinkedHashMap();
+        // mapOfSetups = SpecsFactory.newLinkedHashMap();
+        mapOfSetups = new HashMap<>();
+        keys = new ArrayList<>();
         for (DataStore setup : listOfSetups) {
+            keys.add(setup.getName());
             DataStore previousSetup = mapOfSetups.put(setup.getName(), setup);
             if (previousSetup != null) {
                 throw new RuntimeException("Could not build SetupList, two of the given setups have the same name ("
@@ -69,7 +80,8 @@ public class SetupList implements DataStore {
      */
     // public static SetupList newInstanceWithEnum(String setupListName, Class<?>... setupProviders) {
     public static SetupList newInstance(String setupListName, List<StoreDefinition> storeDefinitions) {
-        List<DataStore> listOfSetups = SpecsFactory.newArrayList();
+        List<DataStore> listOfSetups = new ArrayList<>();
+        // SpecsFactory.newArrayList();
 
         for (StoreDefinition definition : storeDefinitions) {
             DataStore aSetup = DataStore.newInstance(definition);
@@ -88,8 +100,14 @@ public class SetupList implements DataStore {
     /**
      * @return the listOfSetups
      */
-    public Map<String, DataStore> getMap() {
+    private Map<String, DataStore> getMap() {
         return mapOfSetups;
+    }
+
+    public Collection<DataStore> getDataStores() {
+        return keys.stream()
+                .map(key -> mapOfSetups.get(key))
+                .collect(Collectors.toList());
     }
 
     public void setPreferredSetup(String setupName) {
@@ -124,14 +142,16 @@ public class SetupList implements DataStore {
      * @return
      */
     private String getFirstSetup() {
-        return mapOfSetups.keySet().iterator().next();
+        SpecsCheck.checkArgument(!keys.isEmpty(), () -> "There are no setups!");
+        return keys.get(0);
+        // return mapOfSetups.keySet().iterator().next();
     }
 
     /**
      * @return
      */
     public int getNumSetups() {
-        return mapOfSetups.size();
+        return keys.size();
     }
 
     @Override
@@ -145,7 +165,9 @@ public class SetupList implements DataStore {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        for (DataStore setup : mapOfSetups.values()) {
+        for (var key : keys) {
+            // for (DataStore setup : mapOfSetups.values()) {
+            DataStore setup = mapOfSetups.get(key);
             if (builder.length() != 0) {
                 builder.append(", ");
             }
