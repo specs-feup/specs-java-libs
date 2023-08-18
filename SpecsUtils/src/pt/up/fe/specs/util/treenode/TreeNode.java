@@ -219,6 +219,27 @@ public interface TreeNode<K extends TreeNode<K>> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Searches for a child of the given class. If more than one child is found, throws exception.
+     * 
+     * @param <T>
+     * @param aClass
+     * @return
+     */
+    default <T extends K> Optional<T> getChildOf(Class<T> aClass) {
+        var children = getChildrenOf(aClass);
+
+        if (children.size() > 1) {
+            throw new RuntimeException("Found more than one child of class " + aClass);
+        }
+
+        if (children.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(children.get(0));
+    }
+
     default <T extends K> List<T> getChildren(Class<T> aClass, int startIndex) {
         return cast(subList(getChildren(), startIndex), aClass);
     }
