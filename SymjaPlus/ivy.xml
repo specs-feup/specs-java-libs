@@ -33,9 +33,8 @@
 		<dependency org="org.apfloat" name="apfloat" rev="1.10.1"/>
 
 
-		<dependency org="org.hipparchus" name="hipparchus" rev="2.0">
-		    <artifact name="hipparchus" type="pom" ext="pom"/>
-		</dependency>
+		<dependency org="org.hipparchus" name="hipparchus-core" rev="2.0"/>
+
 	
 		<dependency org="org.matheclipse" name="matheclipse-gpl" rev="2.0.0">
 		    <exclude org="org.apache.logging.log4j" module="log4j-1.2-api"/>
