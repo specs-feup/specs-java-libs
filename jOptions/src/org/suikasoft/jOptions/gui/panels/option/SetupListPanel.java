@@ -291,9 +291,15 @@ public class SetupListPanel extends KeyPanel<SetupList> {
         List<DataStore> dataStores = new ArrayList<>();
 
         // Go to each panel collect the DataStores
-        for (var setupPanel : elementsOptionPanels) {
+        for (int i = 0; i < elementsOptionPanels.size(); i++) {
+            // for (var setupPanel : elementsOptionPanels) {
+            var setupPanel = elementsOptionPanels.get(i);
             var data = setupPanel.getValue();
-            dataStores.add(data);
+            // Adapt name
+            var newName = elementsBox.getItemAt(i);
+            var adaptedDataStore = DataStore.newInstance(newName, data);
+
+            dataStores.add(adaptedDataStore);
             // System.out.println("DATA: " + data);
         }
 
@@ -316,6 +322,23 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     }
 
     /**
+     * TODO: This kind of logic should be part of SetupList
+     * 
+     * @param setupName
+     * @return
+     */
+    public static String toOriginalEnum(String setupName) {
+
+        // Remove
+        var dashIndex = setupName.indexOf("-");
+        if (dashIndex == -1) {
+            return setupName;
+        }
+
+        return setupName.substring(dashIndex + 1).strip();
+    }
+
+    /**
      * Loads a single DataStore.
      * 
      * @param aClass
@@ -324,7 +347,13 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     private void loadElement(DataStore table) {
 
         // Build name
-        String enumName = table.getName();
+        var enumName = toOriginalEnum(table.getName());
+
+        // // Remove
+        // var dashIndex = enumName.indexOf("-");
+        // if (dashIndex != -1) {
+        // enumName = enumName.substring(dashIndex + 1).strip();
+        // }
 
         int setupIndex = choicesBoxShadow.indexOf(enumName);
 
