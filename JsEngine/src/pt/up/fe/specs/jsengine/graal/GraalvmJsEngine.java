@@ -101,24 +101,9 @@ public class GraalvmJsEngine extends AJsEngine {
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
-
-        registerDefaultGlobalMethods();
-
+        
         // Add rule to ignore polyglot values
         addToJsRule(Value.class, this::valueToJs);
-    }
-
-    /**
-     * Registers global methods with default values that Weaver APIs are supposed to override.
-     * This is to prevent added complexity in other areas of the infrastructure.
-     */
-    private void registerDefaultGlobalMethods() {
-        try {
-            engine.eval("globalThis.wrapJoinPoint = function(obj) { return obj; };");
-            engine.eval("globalThis.unwrapJoinPoint = function(obj) { return obj; };");
-        } catch (ScriptException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private Object valueToJs(Value value) {
