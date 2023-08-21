@@ -26,17 +26,22 @@
 	</info>
 	
 	<dependencies>
-		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="4.0.0.201505050340-m2" />
+		<!--<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="4.0.0.201505050340-m2" />-->
+		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="6.6.0.202305301015-r"/>		
 		<dependency org="com.google.guava" name="guava" rev="19.0"/>
 	
 		<!-- for ant -->
 		<!-- <dependency org="org.apache.ant" name="ant" rev="1.9.1"/> -->
-	    <dependency org="org.apache.ant" name="ant-jsch" rev="1.10.6">
+	    
+	    <!--<dependency org="org.apache.ant" name="ant-jsch" rev="1.10.6">-->
 	    	<!-- Duplicated transitive dependency -->
-	    	<exclude org="xml-apis" name="xml-apis"/>
+<!--	    	<exclude org="xml-apis" name="xml-apis"/>
 	    </dependency>
+-->	    
+	    <dependency org="org.apache.ant" name="ant-jsch" rev="1.10.13"/>
 		
-		<dependency org="org.apache.ivy" name="ivy" rev="2.5.0-rc1"/> 
+		<!--<dependency org="org.apache.ivy" name="ivy" rev="2.5.0-rc1"/> -->
+		<dependency org="org.apache.ivy" name="ivy" rev="2.5.1"/>
 		
 		<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.25"/>
 	
