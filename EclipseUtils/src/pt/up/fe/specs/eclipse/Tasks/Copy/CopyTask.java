@@ -46,13 +46,11 @@ public class CopyTask implements TaskExecutor {
         }
 
         // Get file to copy
-        // File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
         File outputJar = DeployUtils.getResultFile(data);
 
         outputJar = TaskUtils.updateOutput(outputJar, copyData.outputJarFilename, data);
 
         // Get output file
-        // File outputFile = getOutputFile(outputJar, outputFolder, copyData.outputJarFilename);
         File outputFile = new File(outputFolder, outputJar.getName());
 
         // Only show message if file does not exist. Otherwise, copy will warn on overwriting
@@ -68,25 +66,6 @@ public class CopyTask implements TaskExecutor {
             return;
         }
 
-        // Check if it needs name a name change
-        // outputJar = TaskUtils.updateOutput(outputJar, copyData.outputJarFilename);
-
-    }
-
-    /**
-     * @param outputJar
-     * @param outputFolder
-     * @param outputJarFilename
-     * @return
-     */
-    private static File getOutputFile(File outputFile, File outputFolder, String outputFilename) {
-
-        // If there are no changes to the name of the output file
-        if (outputFilename == null) {
-            return new File(outputFolder, outputFile.getName());
-        }
-
-        return new File(outputFolder, outputFilename);
     }
 
 }

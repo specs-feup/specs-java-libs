@@ -132,7 +132,7 @@ public class EclipseDeployment {
     /**
      *
      */
-    private void processTasks() {
+    public void processTasks() {
 
         ProgressCounter progress = new ProgressCounter(data.tasks.getNumSetups());
 
@@ -145,7 +145,8 @@ public class EclipseDeployment {
             TaskExecutor task = EclipseDeployment.tasks.get(setupName);
 
             if (task == null) {
-                SpecsLogs.warn("Could not find task for setup '" + setupName + "'");
+                SpecsLogs.warn("Could not find task for setup '" + setupName + "', available names: "
+                        + EclipseDeployment.tasks.keySet());
                 continue;
             }
 

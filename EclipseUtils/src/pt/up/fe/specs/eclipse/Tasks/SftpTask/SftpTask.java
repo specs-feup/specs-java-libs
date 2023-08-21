@@ -42,14 +42,16 @@ public class SftpTask implements TaskExecutor {
 
         // Get SftpData
         SftpData sftpData = SftpSetup.newData(setup);
-        SpecsLogs.msgInfo("Transfering '" + data.nameOfOutputJar + "' to " + sftpData.host + ":"
-                + sftpData.destinationFolder);
 
         // File outputJar = DeployUtils.getOutputJar(data.nameOfOutputJar);
         File outputJar = DeployUtils.getResultFile(data);
 
         // Check if it needs a name change
         outputJar = TaskUtils.updateOutput(outputJar, sftpData.outputJarFilename, data);
+
+        SpecsLogs.msgInfo("Transfering '" + outputJar.getName() + "' to " + sftpData.host + ":"
+                + sftpData.destinationFolder);
+
         /*
         	if(sftpData.outputJarFilename != null) {
         	    // New file in temporary folder

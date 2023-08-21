@@ -22,6 +22,7 @@ import pt.up.fe.specs.eclipse.Tasks.TaskUtils;
 import pt.up.fe.specs.eclipse.Utilities.DeployUtils;
 import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
 import pt.up.fe.specs.util.SpecsIo;
+import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * @author Joao Bispo
@@ -42,6 +43,9 @@ public class FtpTask implements TaskExecutor {
 
         // Check if it needs name a name change
         outputJar = TaskUtils.updateOutput(outputJar, ftpData.outputJarFilename, data);
+
+        SpecsLogs.msgInfo("Transfering '" + outputJar.getName() + "' to " + ftpData.host + ":"
+                + ftpData.destinationFolder);
 
         // Get ANT script
         String antftp = buildScript(outputJar, ftpData);
