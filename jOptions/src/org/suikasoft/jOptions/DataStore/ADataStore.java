@@ -25,8 +25,6 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.AppPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
-import com.google.common.base.Preconditions;
-
 import pt.up.fe.specs.util.SpecsCheck;
 
 public abstract class ADataStore implements DataStore {
@@ -45,9 +43,13 @@ public abstract class ADataStore implements DataStore {
             StoreDefinition definition) {
 
         if (definition != null) {
-            Preconditions.checkArgument(name == definition.getName(),
-                    "Name of the DataStore (" + name + ") and of the definition (" + definition.getName()
-                            + ") do not agree");
+            // If names do not agree, create new StoreDefinition with new name
+            if (!name.equals(definition.getName())) {
+                definition = StoreDefinition.newInstance(name, definition.getKeys());
+            }
+            // Preconditions.checkArgument(name == definition.getName(),
+            // "Name of the DataStore (" + name + ") and of the definition (" + definition.getName()
+            // + ") do not agree");
         }
 
         // data = null;
@@ -63,6 +65,7 @@ public abstract class ADataStore implements DataStore {
         // this(new SimpleSetup(name, dataStore), dataStore.getKeyMap());
         // this(name, new HashMap<>(dataStore.getValuesMap()), dataStore.getStoreDefinition().orElse(null));
         this(name, new HashMap<>(), dataStore.getStoreDefinitionTry().orElse(null));
+
         // this(name, new HashMap<>(), definition);
 
         set(dataStore);
