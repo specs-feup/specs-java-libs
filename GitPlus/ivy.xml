@@ -21,14 +21,15 @@
        xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info
         organisation="specs.fe.up.pt"
-        module="EclipseMultiBuild"
+        module="GitPlus"
         status="release">
 	</info>
 	
 	<dependencies>
 		<dependency org="com.google.guava" name="guava" rev="19.0"/>
 		
-		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="4.0.0.201505050340-m2" />
+		<!--<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="4.0.0.201505050340-m2" />-->
+		<dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="6.6.0.202305301015-r"/>
 		<!-- jgit has a dependency to classes in this jar -->
 		<!--<dependency org="org.slf4j" name="slf4j-api" rev="1.7.25"/>-->
 		<!-- <dependency org="org.slf4j" name="slf4j-simple" rev="1.7.25"/> -->
