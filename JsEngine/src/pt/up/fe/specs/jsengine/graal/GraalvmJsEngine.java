@@ -69,7 +69,7 @@ public class GraalvmJsEngine extends AJsEngine {
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
             Path engineWorkingDirectory) {
-        this(blacklistedClasses, nashornCompatibility, engineWorkingDirectory, null, null);
+        this(blacklistedClasses, nashornCompatibility, engineWorkingDirectory, null, System.out);
     }
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
