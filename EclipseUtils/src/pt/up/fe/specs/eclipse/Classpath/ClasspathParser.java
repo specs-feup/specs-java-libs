@@ -41,6 +41,7 @@ import pt.up.fe.specs.eclipse.Utilities.EclipseProjects;
 import pt.up.fe.specs.eclipse.Utilities.License;
 import pt.up.fe.specs.eclipse.Utilities.UserLibraries;
 import pt.up.fe.specs.eclipse.builder.BuildResource;
+import pt.up.fe.specs.eclipse.builder.BuildUtils;
 import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
@@ -627,6 +628,40 @@ public class ClasspathParser {
         }
 
         return dependencies;
+    }
+
+    public void cleanIvyFolders(String rootProjectName) {
+
+        var projects = getEclipseProjects();
+
+        var projectNames = getDependentProjectsAndSelf(rootProjectName);
+
+        SpecsLogs.info("Cleaning ivy folders of potentially " + projectNames.size()
+                + " projects (some projects might not have ivy folders)");
+
+        var counter = 0;
+        for (var projectName : projectNames) {
+
+            var ivyFolder = BuildUtils.getIvyJarFolder(projects.getProjectFolder(projectName));
+
+            // If not a directory, ignore
+            if (!ivyFolder.isDirectory()) {
+                SpecsLogs.info("Skipping " + projectName);
+                continue;
+            }
+
+            // Clean folder contents
+            SpecsLogs.info("Cleaning " + projectName);
+            SpecsIo.deleteFolderContents(ivyFolder);
+            counter++;
+        }
+
+        if (counter == 0) {
+            SpecsLogs.info("Did not find 'ivy' folders to clean");
+        } else {
+            SpecsLogs.info("Cleaned " + counter + " 'ivy' folders");
+        }
+
     }
 
 }
