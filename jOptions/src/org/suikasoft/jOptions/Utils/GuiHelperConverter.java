@@ -15,15 +15,22 @@ package org.suikasoft.jOptions.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
+import org.suikasoft.jOptions.gui.panels.option.SetupListPanel;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
+import org.suikasoft.jOptions.values.SetupList;
 
 import pt.up.fe.specs.guihelper.Base.SetupFieldEnum;
+import pt.up.fe.specs.guihelper.BaseTypes.ListOfSetups;
+import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
 import pt.up.fe.specs.guihelper.SetupFieldOptions.DefaultValue;
+import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
@@ -90,5 +97,59 @@ public class GuiHelperConverter {
             throw new NotImplementedException(setupKey.getType());
         }
 
+    }
+
+    public static <T extends Enum<?> & SetupFieldEnum> ListOfSetups toListOfSetups(SetupList setupList,
+            List<Class<T>> tasksList) {
+
+        Map<String, Map<String, SetupFieldEnum>> tasksKeys = new HashMap<>();
+        for (var taskList : tasksList) {
+            var setupName = taskList.getSimpleName();
+
+            var taskKeys = getSetupFields(taskList);
+            tasksKeys.put(setupName, taskKeys);
+        }
+        // System.out.println("TASK LIST: " + tasksKeys);
+
+        var listOfSetups = new ArrayList<SetupData>();
+        for (var dataStore : setupList.getDataStores()) {
+            // System.out.println("DATASTORE: " + dataStore);
+
+            // Get setup name
+            // String setupName = aClass.getEnumConstants()[0].getSetupName();
+
+            var setupName = SetupListPanel.toOriginalEnum(dataStore.getName());
+
+            var setupDataMapping = tasksKeys.get(setupName);
+            SpecsCheck.checkNotNull(setupDataMapping,
+                    () -> "Could not find setup with name '" + setupName + "', available: " + tasksKeys.keySet());
+
+            var oldSetupName = setupDataMapping.values().stream().findFirst()
+                    .orElseThrow(() -> new RuntimeException("Expected to find at least one key in the setup"))
+                    .getSetupName();
+            var setupData = new SetupData(oldSetupName);
+            listOfSetups.add(setupData);
+
+            for (var key : dataStore.getKeysWithValues()) {
+                var setupField = setupDataMapping.get(key);
+                SpecsCheck.checkNotNull(setupField,
+                        () -> "Could not find key with name '" + key + "', available: " + setupDataMapping.keySet());
+                setupData.put(setupField, dataStore.get(key));
+            }
+        }
+
+        return new ListOfSetups(listOfSetups);
+    }
+
+    private static <T extends Enum<?> & SetupFieldEnum> Map<String, SetupFieldEnum> getSetupFields(Class<T> taskList) {
+
+        var taskKeys = new HashMap<String, SetupFieldEnum>();
+
+        for (var key : taskList.getEnumConstants()) {
+            var keyName = key.name();
+            taskKeys.put(keyName, key);
+        }
+
+        return taskKeys;
     }
 }
