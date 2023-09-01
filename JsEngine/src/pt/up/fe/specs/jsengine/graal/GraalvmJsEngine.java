@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
@@ -37,6 +38,7 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Source.Builder;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.io.FileSystem;
+import org.graalvm.polyglot.proxy.ProxyExecutable;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import com.oracle.truffle.polyglot.SpecsPolyglot;
@@ -193,9 +195,31 @@ public class GraalvmJsEngine extends AJsEngine {
             }
         case MODULE:
             try {
-                return eval(graalSource
+                var result = eval(graalSource
                         .mimeType("application/javascript+module")
                         .build());
+
+                /*
+                // Modules can return Promises, usually we want to wait on them
+                var simpleName = result.getMetaObject().getMetaSimpleName();
+                if (simpleName.equals("Promise")) {
+                    // var execPromise = eval("async function execPromise(promise) {await promise;}; execPromise;");
+                    // call(execPromise, result);
+                    // Consumer<Object> then = value -> System.out.println("Dealing with promise");
+                    // result.invokeMember("then", then);
+                    // Consumer<Object> then = value -> System.out.println("Dealing with promise");
+                    CompletableFuture<String> javaFuture = new CompletableFuture<>();
+                    wrapPromise(engine.getPolyglotContext(), javaFuture);
+                    javaFuture.complete("a");
+                }
+                */
+
+                // Consumer<Object> catchy = (value) -> out.write("Promise failed!" + value);
+                // jsPromise.invokeMember("then", then).invokeMember("catch", catchy);
+                // System.out.println("RESULT CLASS: " + result.getMetaObject().getMetaSimpleName());
+                // System.out.println("KEYs: " + result.getMemberKeys());
+
+                return result;
             } catch (IOException e) {
                 throw new RuntimeException("Could not load JS code as module", e);
             }
@@ -231,8 +255,10 @@ public class GraalvmJsEngine extends AJsEngine {
 
             // Value value = asValue(engine.eval(code));
             // Value value = engine.getPolyglotContext().eval("js", code);
-
+            // System.out.println("EVAL START");
             Value value = engine.getPolyglotContext().eval(code);
+            // System.out.println("EVAL END (value: " + value + ")");
+            // System.out.println("EVAL END");
 
             // if (value.hasMembers() || value.hasArrayElements()) {
             // return asBindings(value);
@@ -631,4 +657,72 @@ public class GraalvmJsEngine extends AJsEngine {
 
         return functionValue.canExecute();
     }
+
+    /**
+     * Taken from:
+     * https://github.com/oracle/graaljs/blob/master/graal-js/src/com.oracle.truffle.js.test/src/com/oracle/truffle/js/test/interop/AsyncInteropTest.java
+     * 
+     * @param context
+     * @param javaFuture
+     * @return
+     */
+    private static <T> Value wrapPromise(Context context, CompletableFuture<T> javaFuture, Value value) {
+        Value global = context.getBindings("js");
+        Value promiseConstructor = global.getMember("Promise");
+        return promiseConstructor.newInstance((ProxyExecutable) arguments -> {
+            Value resolve = arguments[0];
+            Value reject = arguments[1];
+            javaFuture.whenComplete((result, ex) -> {
+                if (result != null) {
+                    System.out.println("wrapPromise: then begin");
+                    resolve.execute(value);
+                    System.out.println("wrapPromise: then end");
+                } else {
+                    System.out.println("wrapPromise: catch (" + reject + ")");
+                    reject.execute(ex);
+                }
+            });
+            // return value of function(resolve,reject) is ignored by `new Promise()`.
+            return null;
+        });
+    }
+
+    @Override
+    public void await(Object object) {
+
+        var value = asValue(object);
+        var metaObject = value.isMetaObject() ? value : value.getMetaObject();
+
+        if (!metaObject.getMetaSimpleName().equals("Promise")) {
+            return;
+        }
+
+        // eval("await;");
+
+        /*
+        CompletableFuture<String> javaFuture = new CompletableFuture<>();
+        // var promiseInstance = wrapPromise(engine.getPolyglotContext(), javaFuture, value);
+        var atomicInt = new AtomicInteger(0);
+        // then() will be a function that receives a promise
+        var waitFunction = eval(
+                "let f = async function(promise, atomicInt) {println('awaiting started'); await promise; atomicIntincrementAndGet(); println('awaiting finished');};f;");
+        // System.out.println("WAIT: " + waitFunction);
+        // promiseInstance.invokeMember("then", waitFunction);
+        // call(waitFunction, promiseInstance);
+        // SpecsSystem.executeOnThreadAndWait(() -> call(waitFunction, value, atomicInt));
+        call(waitFunction, value, atomicInt);
+        
+        // while (atomicInt.get() == 0) {
+        // System.out.println("INT VALUE: " + atomicInt.get());
+        // }
+        
+        System.out.println("OUT: " + atomicInt.get());
+        
+        // System.out.println("Before complete: " + promiseInstance);
+        // SpecsSystem.get(javaFuture);
+        // System.out.println("After complete: " + promiseInstance);
+         
+         */
+    }
+
 }
