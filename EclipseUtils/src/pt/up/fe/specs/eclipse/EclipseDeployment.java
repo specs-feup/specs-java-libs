@@ -31,6 +31,7 @@ import pt.up.fe.specs.eclipse.Classpath.ClasspathParser;
 import pt.up.fe.specs.eclipse.Tasks.TaskExecutor;
 import pt.up.fe.specs.eclipse.Tasks.TaskUtils;
 import pt.up.fe.specs.eclipse.Utilities.DeployUtils;
+import pt.up.fe.specs.eclipse.Utilities.PostProcessUtils;
 import pt.up.fe.specs.eclipse.builder.BuildUtils;
 import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
 import pt.up.fe.specs.lang.SpecsPlatforms;
@@ -91,6 +92,10 @@ public class EclipseDeployment {
         EclipseDeployment.DEPLOY_BUILDER
                 .getOrDefault(data.jarType, EclipseDeployment::buildJarRepack)
                 .accept(data);
+
+        if (data.processJar) {
+            PostProcessUtils.processBuiltFile(data.getResultFile());
+        }
 
         // Execute tasks
         processTasks();
@@ -501,6 +506,7 @@ public class EclipseDeployment {
 
         SpecsLogs.msgInfo(
                 "Artifacts generated, to deploy them execute the script '" + scriptFile.getAbsolutePath() + "'");
+
     }
 
     /**

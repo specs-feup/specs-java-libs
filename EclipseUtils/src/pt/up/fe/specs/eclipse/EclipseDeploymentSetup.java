@@ -49,6 +49,7 @@ public enum EclipseDeploymentSetup implements SetupFieldEnum, MultipleSetup, Mul
     OutputJarType(FieldType.multipleChoice),
     PomInfoFile(FieldType.string),
     DevelopersXml(FieldType.string),
+    ProcessJar(FieldType.bool),
     Tasks(FieldType.setupList);
 
     public static EclipseDeploymentData newData(SetupData setupData) {
@@ -72,10 +73,12 @@ public enum EclipseDeploymentSetup implements SetupFieldEnum, MultipleSetup, Mul
         File developersXml = setup.getString(DevelopersXml).strip().isEmpty() ? null
                 : setup.getExistingFile(DevelopersXml);
 
+        var processJar = setup.getBoolean(ProcessJar);
+
         ListOfSetups tasks = setup.getListOfSetups(Tasks);
 
         return new EclipseDeploymentData(workspaceFolder, projetName, nameOfOutputJar, mainClass, jarType, pomInfo,
-                developersXml, version, tasks);
+                developersXml, version, processJar, tasks);
     }
 
     private static Pair<String, String> processOuputJarName(String nameOfOutputJar) {
@@ -153,6 +156,10 @@ public enum EclipseDeploymentSetup implements SetupFieldEnum, MultipleSetup, Mul
     public FieldValue getDefaultValue() {
         if (this == OutputJarType) {
             return FieldValue.create(JarType.RepackJar.name(), OutputJarType);
+        }
+
+        if (this == ProcessJar) {
+            return FieldValue.create(true, ProcessJar);
         }
 
         return null;

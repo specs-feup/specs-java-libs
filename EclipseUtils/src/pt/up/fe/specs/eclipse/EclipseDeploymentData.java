@@ -34,13 +34,15 @@ public class EclipseDeploymentData {
     public final SpecsProperties pomInfo;
     public final File developersXml;
     public final String version;
+    public final boolean processJar; // Removes \r from manifest file
     public final ListOfSetups tasks;
 
     private File resultFile;
     private final String buildNumber;
 
     public EclipseDeploymentData(File workspaceFolder, String projetName, String nameOfOutputJar, String mainClass,
-            JarType jarType, SpecsProperties pomInfo, File developersXml, String version, ListOfSetups tasks) {
+            JarType jarType, SpecsProperties pomInfo, File developersXml, String version, boolean processJar,
+            ListOfSetups tasks) {
 
         this.workspaceFolder = workspaceFolder;
         this.projetName = projetName;
@@ -50,6 +52,7 @@ public class EclipseDeploymentData {
         this.pomInfo = pomInfo;
         this.developersXml = developersXml;
         this.version = version;
+        this.processJar = processJar;
         this.tasks = tasks;
         this.resultFile = null;
         this.buildNumber = SpecsSystem.createBuildNumber();
