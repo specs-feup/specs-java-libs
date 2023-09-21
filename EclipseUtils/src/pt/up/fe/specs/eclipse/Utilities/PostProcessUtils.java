@@ -125,7 +125,7 @@ public class PostProcessUtils {
         // Find JAR file
         Path zipFilePath = Paths.get(zipFile.getAbsolutePath());
 
-        try (FileSystem fs = FileSystems.newFileSystem(zipFilePath)) {
+        try (FileSystem fs = FileSystems.newFileSystem(zipFilePath, (ClassLoader) null)) {
 
             // for (var rootPath : fs.getRootDirectories()) {
             // System.out.println("OATH: " + rootPath);
