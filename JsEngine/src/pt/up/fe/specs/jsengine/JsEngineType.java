@@ -40,6 +40,11 @@ public enum JsEngineType {
     }
 
     public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses, Path engineWorkingDirectory,
+            File nodeModulesFolder) {
+        return newEngine(type, forbiddenClasses, engineWorkingDirectory, nodeModulesFolder, System.out);
+    }
+
+    public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses, Path engineWorkingDirectory,
             File nodeModulesFolder, OutputStream laraiOutputStream) {
         // System.out.println("TEST CLASSLOADER " + Test.class.getClassLoader());
         // System.out.println("JS ENGINE CLASS LOADER: " + GraalJSScriptEngine.class.getClassLoader());
@@ -49,9 +54,11 @@ public enum JsEngineType {
         // case NASHORN:
         // return new NashornEngine(forbiddenClasses);
         case GRAALVM_COMPAT:
-            return new GraalvmJsEngine(forbiddenClasses, true, engineWorkingDirectory, nodeModulesFolder, laraiOutputStream);
+            return new GraalvmJsEngine(forbiddenClasses, true, engineWorkingDirectory, nodeModulesFolder,
+                    laraiOutputStream);
         case GRAALVM:
-            return new GraalvmJsEngine(forbiddenClasses, false, engineWorkingDirectory, nodeModulesFolder, laraiOutputStream);
+            return new GraalvmJsEngine(forbiddenClasses, false, engineWorkingDirectory, nodeModulesFolder,
+                    laraiOutputStream);
         default:
             throw new NotImplementedException(type);
         }
