@@ -184,7 +184,7 @@ public class PostProcessUtils {
 
     private static void processFile(Path zipFilePath, String manifestPath) {
 
-        try (FileSystem fs = FileSystems.newFileSystem(zipFilePath)) {
+        try (FileSystem fs = FileSystems.newFileSystem(zipFilePath, (ClassLoader) null)) {
             Path source = fs.getPath(manifestPath);
 
             SpecsCheck.checkArgument(Files.exists(source),
