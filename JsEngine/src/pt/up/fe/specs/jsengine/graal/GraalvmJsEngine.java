@@ -15,6 +15,8 @@ package pt.up.fe.specs.jsengine.graal;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 import javax.script.Bindings;
+import javax.script.ScriptException;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
@@ -43,7 +46,6 @@ import com.oracle.truffle.polyglot.SpecsPolyglot;
 
 import pt.up.fe.specs.jsengine.AJsEngine;
 import pt.up.fe.specs.jsengine.ForOfType;
-import pt.up.fe.specs.jsengine.JsEngineResource;
 import pt.up.fe.specs.jsengine.JsFileType;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
@@ -56,7 +58,7 @@ public class GraalvmJsEngine extends AJsEngine {
     private final GraalJSScriptEngine engine;
     private final Set<String> forbiddenClasses;
     private final boolean nashornCompatibility;
-
+    
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses) {
         this(blacklistedClasses, false);
     }
@@ -67,39 +69,41 @@ public class GraalvmJsEngine extends AJsEngine {
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
             Path engineWorkingDirectory) {
-        this(blacklistedClasses, nashornCompatibility, engineWorkingDirectory, null);
+        this(blacklistedClasses, nashornCompatibility, engineWorkingDirectory, null, System.out);
     }
 
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
-            Path engineWorkingDirectory, File nodeModulesFolder) {
-
-        // TODO: Might be necessary when GraalVM version is updated
-        // System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
-
+            Path engineWorkingDirectory, File nodeModulesFolder, OutputStream laraiOutputStream) {
         this.forbiddenClasses = blacklistedClasses.stream().map(Class::getName).collect(Collectors.toSet());
         this.nashornCompatibility = nashornCompatibility;
-
+        
         Context.Builder contextBuilder = createBuilder(engineWorkingDirectory, nodeModulesFolder);
-        // System.out.println("CLASS LOADER: " + GraalvmJsEngine.class.getClassLoader());
-        // Thread.currentThread().setContextClassLoader(classLoader);
-
+        
         var baseEngine = Engine.newBuilder()
                 .option("engine.WarnInterpreterOnly", "false")
                 .build();
 
         this.engine = GraalJSScriptEngine.create(baseEngine, contextBuilder);
-
-        // Load Java compatibility layer
-        eval(JsEngineResource.JAVA_COMPATIBILITY.read());
-
+        
+        this.engine.getContext().setWriter(new PrintWriter(laraiOutputStream, true));            
+        this.engine.getContext().setErrorWriter(new PrintWriter(laraiOutputStream, true));
+        
+        /**
+         * DO NOT REMOVE
+         * Code that executes a nothing burger just to force the GraalJSScriptEngine to set the output streams.
+         * This is needed because we are not using the Script Engine as recommended because we had to do some
+         * custom stuff.
+         * 
+         * @see https://github.com/oracle/graaljs/issues/720
+         */
+        try {
+            engine.eval("42");
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
+        
         // Add rule to ignore polyglot values
         addToJsRule(Value.class, this::valueToJs);
-
-        // List<ScriptEngineFactory> engines = (new ScriptEngineManager()).getEngineFactories();
-        // System.out.println("Available Engines");
-        // for (ScriptEngineFactory f : engines) {
-        // System.out.println(f.getLanguageName() + " " + f.getEngineName() + " " + f.getNames().toString());
-        // }
     }
 
     private Object valueToJs(Value value) {
@@ -125,7 +129,7 @@ public class GraalvmJsEngine extends AJsEngine {
         Context.Builder contextBuilder = Context.newBuilder("js")
                 // .allowHostAccess(hostAccess)
                 .allowAllAccess(true)
-                .allowHostAccess(HostAccess.ALL)
+                .allowHostAccess(HostAccess.ALL)    
                 // .option("js.load-from-url", "true")
                 // .allowIO(true)
                 // .allowCreateThread(true)
