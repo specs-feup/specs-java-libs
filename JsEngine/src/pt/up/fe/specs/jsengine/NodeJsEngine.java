@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
+import pt.up.fe.specs.jsengine.node.UndefinedValue;
 import pt.up.fe.specs.util.classmap.FunctionClassMap;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
@@ -126,8 +127,7 @@ public class NodeJsEngine implements JsEngine {
 
     @Override
     public Object getUndefined() {
-        // TODO: Implement
-        throw new NotImplementedException(this);
+        return new UndefinedValue();
     }
 
     @Override
