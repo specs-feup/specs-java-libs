@@ -259,7 +259,6 @@ public class NodeJsEngine implements JsEngine {
 
     @Override
     public Object toNativeArray(int[] values) {
-        System.out.println(values.getClass());
         return values;
     }
 
