@@ -33,7 +33,7 @@
 		<dependency org="org.apfloat" name="apfloat" rev="1.10.1"/>
 
 
-		<dependency org="org.hipparchus" name="hipparchus-core" rev="2.0"/>
+		<dependency org="org.hipparchus" name="hipparchus-core" rev="2.1"/>
 
 	
 		<dependency org="org.matheclipse" name="matheclipse-gpl" rev="2.0.0">
