@@ -13,13 +13,53 @@
 
 package org.suikasoft.jOptions;
 
+import java.io.File;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
+import org.suikasoft.jOptions.Interfaces.DataStore;
 
 public interface JOptionKeys {
 
     DataKey<Optional<String>> CURRENT_FOLDER_PATH = KeyFactory.optional("joptions_current_folder_path");
     DataKey<Boolean> USE_RELATIVE_PATHS = KeyFactory.bool("joptions_use_relative_paths");
+
+    /**
+     * If the path is not absolute and CURRENT_FOLDER_PATH is set, returns a path relative to that set folder.
+     * 
+     * @param currentFile
+     * @param dataStore
+     * @return
+     */
+    public static File getContextPath(File currentFile, DataStore dataStore) {
+        Optional<String> workingFolder = dataStore.get(JOptionKeys.CURRENT_FOLDER_PATH);
+
+        // No folder set, just return
+        if (!workingFolder.isPresent()) {
+            return currentFile;
+        }
+
+        // Path is absolute, respect that
+        if (currentFile.isAbsolute()) {
+            return currentFile;
+
+        }
+
+        // Path is relative, create new file with set folder as parent
+        File parentFolder = new File(workingFolder.get());
+        return new File(parentFolder, currentFile.getPath());
+
+    }
+
+    /**
+     * Overload that accepts a String instead of a File.
+     * 
+     * @param currentPath
+     * @param dataStore
+     * @return
+     */
+    public static File getContextPath(String currentPath, DataStore dataStore) {
+        return getContextPath(new File(currentPath), dataStore);
+    }
 }
