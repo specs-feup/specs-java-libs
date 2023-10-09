@@ -2226,4 +2226,20 @@ public class SpecsStrings {
 
         return string.charAt(string.length() - 1);
     }
+
+    /**
+     * Sanitizes a string representing a single name of a path. Currently replaces ' ', '(' and ')' with '_'
+     * 
+     * @param path
+     * @return
+     */
+    public static String sanitizePath(String pathName) {
+        var sanitizedString = pathName;
+
+        sanitizedString = sanitizedString.replace(' ', '_');
+        sanitizedString = sanitizedString.replace('(', '_');
+        sanitizedString = sanitizedString.replace(')', '_');
+
+        return sanitizedString;
+    }
 }
