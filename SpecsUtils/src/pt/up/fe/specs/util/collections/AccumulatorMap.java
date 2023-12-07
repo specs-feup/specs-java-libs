@@ -16,6 +16,7 @@ package pt.up.fe.specs.util.collections;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -54,6 +55,10 @@ public class AccumulatorMap<T> {
         unmodMap.unmodifiable = true;
 
         return unmodMap;
+    }
+
+    public Set<T> keys() {
+        return this.accMap.keySet();
     }
 
     /**
@@ -132,6 +137,11 @@ public class AccumulatorMap<T> {
         value -= incrementValue;
         this.accMap.put(element, value);
         this.accumulator -= incrementValue;
+
+        // Remove from map
+        if (value == 0) {
+            this.accMap.remove(element);
+        }
 
         return true;
     }
