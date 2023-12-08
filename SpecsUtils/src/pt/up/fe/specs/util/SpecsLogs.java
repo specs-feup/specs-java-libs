@@ -682,6 +682,12 @@ public class SpecsLogs {
         }
     }
 
+    /**
+     * If this is not a pure string literal, should always prefer overload that receives a lambda, to avoid doing the
+     * string computation when debug is not enabled.
+     * 
+     * @param string
+     */
     public static void debug(String string) {
         debug(() -> string);
         // if (SpecsSystem.isDebug()) {

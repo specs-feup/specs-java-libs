@@ -728,12 +728,15 @@ public class SpecsStrings {
     }
 
     public static List<String> getRegexGroups(String contents, String regex, int capturingGroupIndex) {
+        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
+        return getRegexGroups(contents, pattern, capturingGroupIndex);
+    }
+
+    public static List<String> getRegexGroups(String contents, Pattern pattern, int capturingGroupIndex) {
 
         List<String> results = SpecsFactory.newArrayList();
 
         try {
-
-            Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
 
             Matcher regexMatcher = pattern.matcher(contents);
             while (regexMatcher.find()) {
