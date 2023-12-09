@@ -888,6 +888,64 @@ public class SpecsCollections {
         return collection.stream().findFirst();
     }
 
+    /**
+     * 
+     * @param <K>
+     * @param collections
+     * @return a set with the elements common to all given collections
+     */
+    public static <K> Set<K> and(Collection<Collection<K>> collections) {
+        if (collections.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        var commonElements = (Set<K>) null;
+
+        for (var collection : collections) {
+
+            // Initialize with first collection
+            if (commonElements == null) {
+                commonElements = new HashSet<>(collection);
+                continue;
+            }
+
+            // Only keep common elements
+            commonElements.retainAll(collection);
+        }
+
+        return commonElements;
+    }
+
+    @SafeVarargs
+    public static <K> Set<K> and(Collection<K>... collections) {
+        return and(Arrays.asList(collections));
+    }
+
+    /**
+     * 
+     * @param <K>
+     * @param collections
+     * @return a set with the elements of all given collections
+     */
+    public static <K> Set<K> or(Collection<Collection<K>> collections) {
+        if (collections.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        var allElements = new HashSet<K>();
+
+        for (var collection : collections) {
+            allElements.addAll(collection);
+        }
+
+        return allElements;
+    }
+
+    @SafeVarargs
+    public static <K> Set<K> or(Collection<K>... collections) {
+        return or(Arrays.asList(collections));
+    }
+
     // @SuppressWarnings("unchecked")
     // public static <T> T[] arrayGenerator(int size, Class<T> aClass) {
     // return (T[]) Array.newInstance(aClass, size);
