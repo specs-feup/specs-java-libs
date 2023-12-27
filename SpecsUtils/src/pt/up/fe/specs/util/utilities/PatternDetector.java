@@ -256,4 +256,8 @@ public class PatternDetector {
         NO_PATTERN
     }
 
+    public PushingQueue<Integer> getQueue() {
+        return queue2;
+    }
+
 }
