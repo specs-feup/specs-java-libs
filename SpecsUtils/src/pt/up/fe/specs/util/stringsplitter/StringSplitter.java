@@ -155,6 +155,24 @@ public class StringSplitter {
         return parseIf(rule, predicate).isPresent();
     }
 
+    // boolean hasWord4 = parser.check(StringSplitterRules::string, string -> string.equals("word4"));
+
+    /**
+     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards the result and throws exception if
+     * the value is not present, consuming the corresponding string.
+     * 
+     * @param <T>
+     * @param rule
+     * @param predicate
+     */
+    public void consume(String string) {
+        var success = check(StringSplitterRules::string, s -> s.equals(string));
+
+        if (!success) {
+            throw new RuntimeException("Could not consume '" + string + "' from '" + this + "'");
+        }
+    }
+
     public void setReverse(boolean reverse) {
         currentString = currentString.setReverse(reverse);
     }
