@@ -15,6 +15,7 @@ package org.suikasoft.GsonPlus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -30,6 +31,11 @@ public class SpecsGson {
 
     public static <T> T fromJson(String json, Class<T> aClass) {
         return new Gson().fromJson(json, aClass);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<Object, Object> fromJson(String json) {
+        return new Gson().fromJson(json, Map.class);
     }
 
     public static <T> List<T> asList(JsonElement element, Function<JsonElement, T> mapper) {
