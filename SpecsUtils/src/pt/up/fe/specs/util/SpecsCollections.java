@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -944,6 +945,28 @@ public class SpecsCollections {
     @SafeVarargs
     public static <K> Set<K> or(Collection<K>... collections) {
         return or(Arrays.asList(collections));
+    }
+
+    /**
+     * If the key has a mapping different than null, just returns the value, otherwise uses the given Supplier to create
+     * the first value, associates it in the map, and returns it.
+     * 
+     * @param <K>
+     * @param <V>
+     * @param sittings
+     * @param name
+     * @param hashMap
+     * @return
+     */
+    public static <K, V> V getOrSet(Map<K, V> map, K key, Supplier<V> defaultValue) {
+
+        var value = map.get(key);
+        if (value == null) {
+            value = defaultValue.get();
+            map.put(key, value);
+        }
+
+        return value;
     }
 
     // @SuppressWarnings("unchecked")
