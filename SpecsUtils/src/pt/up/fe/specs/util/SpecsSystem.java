@@ -1731,4 +1731,19 @@ public class SpecsSystem {
         return dtf.format(now); // 20210322-16:37
     }
 
+    /**
+     * 
+     * @param e
+     * @return the fundamental cause of the exception
+     */
+    public static Throwable getLastCause(Throwable e) {
+        var cause = e.getCause();
+        while (cause != null) {
+            e = cause;
+            cause = e.getCause();
+        }
+
+        return e;
+    }
+
 }
