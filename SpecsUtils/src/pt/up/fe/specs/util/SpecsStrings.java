@@ -1779,7 +1779,14 @@ public class SpecsStrings {
         return escapeJson(string, false);
     }
 
+    /**
+     * @param string
+     * @param ignoreNewlines
+     * @return
+     */
     public static String escapeJson(String string, boolean ignoreNewlines) {
+
+        SpecsCheck.checkNotNull(string, () -> "Cannot escape a null string");
 
         StringBuilder escapedString = new StringBuilder();
 
