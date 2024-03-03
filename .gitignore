@@ -21,7 +21,8 @@ RemoteSystemsTempFiles/
 
 output/
 .idea/
-
+.gradle/
+build/
 
 ### Default folder for executing applications
 **/run/**
