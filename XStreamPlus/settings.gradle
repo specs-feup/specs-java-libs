@@ -1,0 +1,2 @@
+include ':SpecsUtils'
+project(':SpecsUtils').projectDir = new File("../../specs-java-libs/SpecsUtils")
