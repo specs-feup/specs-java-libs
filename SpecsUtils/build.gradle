@@ -1,0 +1,56 @@
+plugins {
+ 	id 'distribution'
+}
+
+// Java project
+apply plugin: 'java'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+
+// Repositories providers
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	implementation "junit:junit:4.11"     
+}
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+
+javadoc {
+    failOnError = false
+}
+
+// Project sources
+sourceSets {
+   main {
+      java {
+         srcDir 'src'
+      }
+
+	  resources {
+		srcDir 'resources'
+	  }      
+   }
+	
+   
+   test {
+      java {
+         srcDir 'test'
+      }
+	  
+	  resources {
+		srcDir 'resources'
+	  }
+   }
+   
+}
