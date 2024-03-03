@@ -22,13 +22,14 @@ dependencies {
 
 java {
 	withSourcesJar()
-	withJavadocJar()
+//	withJavadocJar()
 }
 
-
+/*
 javadoc {
     failOnError = false
 }
+*/
 
 // Project sources
 sourceSets {
