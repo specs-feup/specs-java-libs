@@ -17,21 +17,15 @@ repositories {
 }
 
 dependencies {
-	implementation "junit:junit:4.11"     
-   implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.20'
-   implementation project(':SpecsUtils')
+	testImplementation "junit:junit:4.11"     
+	implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.20'
+	implementation ':SpecsUtils'
 }
 
 java {
 	withSourcesJar()
-//	withJavadocJar()
 }
 
-/*
-javadoc {
-    failOnError = false
-}
-*/
 
 // Project sources
 sourceSets {
@@ -39,7 +33,5 @@ sourceSets {
       java {
          srcDir 'src'
       }
-   }
-	
-   
+   }   
 }

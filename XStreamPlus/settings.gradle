@@ -1,2 +1,3 @@
-include ':SpecsUtils'
-project(':SpecsUtils').projectDir = new File("../../specs-java-libs/SpecsUtils")
+rootProject.name = 'XStreamPlus'
+
+includeBuild("../../specs-java-libs/SpecsUtils")

@@ -1,0 +1,3 @@
+rootProject.name = 'tdrcLibrary'
+
+includeBuild("../../specs-java-libs/SpecsUtils")
