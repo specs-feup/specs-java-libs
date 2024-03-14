@@ -13,12 +13,16 @@
 
 package pt.up.fe.specs.gearman.specsworker;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 import org.gearman.GearmanFunctionCallback;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import pt.up.fe.specs.util.SpecsLogs;
 
 public abstract class JsonSpecsWorker<I, O> extends SpecsWorker {
 
@@ -28,31 +32,35 @@ public abstract class JsonSpecsWorker<I, O> extends SpecsWorker {
 
     // public TypedSpecsWorker(Class<I> inputClass, Class<O> outputClass, long timeout, TimeUnit timeUnit) {
     public JsonSpecsWorker(Class<I> inputClass, long timeout, TimeUnit timeUnit) {
-	super(timeout, timeUnit);
+        super(timeout, timeUnit);
 
-	this.inputClass = inputClass;
-	// this.outputClass = outputClass;
-	this.gson = new GsonBuilder().create();
+        this.inputClass = inputClass;
+        // this.outputClass = outputClass;
+        this.gson = new GsonBuilder().create();
     }
 
     @Override
     public byte[] workInternal(String function, byte[] data, GearmanFunctionCallback callback) throws Exception {
 
-	// Type typeOfT = new TypeToken<I>() {
-	// }.getType();
+        // Type typeOfT = new TypeToken<I>() {
+        // }.getType();
 
-	// I parsedData = gson.fromJson(new String(data), typeOfT);
-	I parsedData = gson.fromJson(new String(data), inputClass);
-	O result = workInternal(function, parsedData, callback);
+        // I parsedData = gson.fromJson(new String(data), typeOfT);
+        I parsedData = gson.fromJson(new String(data), inputClass);
+        O result = workInternal(function, parsedData, callback);
 
-	return gson.toJson(result).getBytes();
+        // Print time-stamp
+        var time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        SpecsLogs.info("Finished job '" + this.getClass().getName() + "' at " + time);
+
+        return gson.toJson(result).getBytes();
     }
 
     public abstract O workInternal(String function, I data, GearmanFunctionCallback callback);
 
     @Override
     protected byte[] getErrorOutput(String message) {
-	return gson.toJson(getTypedErrorOutput(message)).getBytes();
+        return gson.toJson(getTypedErrorOutput(message)).getBytes();
     }
 
     protected abstract O getTypedErrorOutput(String message);

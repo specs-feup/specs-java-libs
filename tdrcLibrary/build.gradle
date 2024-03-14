@@ -18,6 +18,13 @@ repositories {
 
 dependencies {
 	testImplementation "junit:junit:4.11"     
+	
+	implementation ':SpecsUtils'
+	
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'	
+	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b180830.0359'	
+	implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.4.0-b180830.0438'	
+	
 }
 
 java {
@@ -30,10 +37,6 @@ sourceSets {
       java {
          srcDir 'src'
       }
-
-	  resources {
-		srcDir 'resources'
-	  }      
    }
 	
    
@@ -42,9 +45,6 @@ sourceSets {
          srcDir 'test'
       }
 	  
-	  resources {
-		srcDir 'resources'
-	  }
    }
    
 }
