@@ -316,13 +316,21 @@ public class SpecsGit {
         return tag.startsWith(prefix) ? tag : prefix + tag;
     }
 
+    public static boolean hasTag(String repositoryPath, String tag) {
+        return hasTag(repositoryPath, tag, null);
+    }
+
     public static boolean hasTag(String repositoryPath, String tag, CredentialsProvider credentialsProvider) {
         LsRemoteCommand ls = Git.lsRemoteRepository();
         try {
-            var remoteRefs = ls
-                    .setRemote(repositoryPath)
-                    .setCredentialsProvider(credentialsProvider)
-                    .setHeads(false) // true by default, set to false if not interested in refs/heads/*
+            ls
+                    .setRemote(repositoryPath);
+
+            if (credentialsProvider != null) {
+                ls.setCredentialsProvider(credentialsProvider);
+            }
+
+            var remoteRefs = ls.setHeads(false) // true by default, set to false if not interested in refs/heads/*
                     .setTags(true) // include tags in result
                     .callAsMap();
 
