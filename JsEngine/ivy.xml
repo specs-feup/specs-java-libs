@@ -40,7 +40,9 @@
 		<dependency org="org.graalvm.js" name="js-scriptengine" rev="22.2.0" conf="default"/>
 		<dependency org="org.graalvm.js" name="js" rev="22.2.0"/>				
 
-      <dependency org="com.google.code.gson" name="gson" rev="2.4"/>	
+      	<dependency org="com.google.code.gson" name="gson" rev="2.4"/>	
+	  	<dependency org="org.apache.commons" name="commons-lang3" rev="3.5"/>
+      
 		<!--<dependency org="org.graalvm.sdk" name="graal-sdk" rev="19.1.1"/>-->
 
 

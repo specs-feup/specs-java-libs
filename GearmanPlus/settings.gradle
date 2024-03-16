@@ -1,0 +1,3 @@
+rootProject.name = 'GearmanPlus'
+
+includeBuild("../../specs-java-libs/SpecsUtils")

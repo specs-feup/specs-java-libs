@@ -20,26 +20,35 @@ import org.specs.generators.java.members.Method;
 import org.specs.generators.java.types.JavaType;
 import org.specs.generators.java.types.JavaTypeFactory;
 import org.specs.generators.java.types.Primitive;
-import org.specs.generators.java.utils.Utils;
+
+import pt.up.fe.specs.util.SpecsStrings;
 
 public class MethodTest {
 
-	@Test
-	public void testGenerateCode() {
-		final JavaType intType = JavaTypeFactory.getPrimitiveType(Primitive.INT);
-		final Method m = new Method(intType, "max");
-		m.addArgument(intType, "a");
-		m.addArgument(intType, "b");
+    @Test
+    public void testGenerateCode() {
+        final JavaType intType = JavaTypeFactory.getPrimitiveType(Primitive.INT);
+        final Method m = new Method(intType, "max");
+        m.addArgument(intType, "a");
+        m.addArgument(intType, "b");
 
-		final String returnStr = "/**\n" + " * \n" + " */\n" + "public int max(int a, int b) {\n" + Utils.indent(1)
-				+ "// TODO Auto-generated method stub\n" + Utils.indent(1) + "return 0;\n" + "}";
+        final String returnStr = "/**\n"
+                + " * \n"
+                + " */\n"
+                + "public int max(int a, int b) {\n"
+                + "    // TODO Auto-generated method stub\n"
+                + "    return 0;\n"
+                + "}";
 
-		assertEquals(returnStr, m.generateCode(0).toString());
-		m.add(Modifier.ABSTRACT);
+        assertEquals(SpecsStrings.normalizeFileContents(returnStr, true),
+                SpecsStrings.normalizeFileContents(m.generateCode(0).toString(), true));
+        m.add(Modifier.ABSTRACT);
 
-		assertEquals("/**\n" + " * \n" + " */\n" + "public abstract int max(int a, int b);",
-				m.generateCode(0).toString());
+        assertEquals(
+                SpecsStrings
+                        .normalizeFileContents("/**\n" + " * \n" + " */\n" + "public abstract int max(int a, int b);"),
+                SpecsStrings.normalizeFileContents(m.generateCode(0).toString()));
 
-	}
+    }
 
 }
