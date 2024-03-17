@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
+import org.eclipse.jgit.api.LsRemoteCommand;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -274,6 +275,11 @@ public class SpecsGit {
     }
 
     public static Git clone(String repositoryPath, File outputFolder, CredentialsProvider cp) {
+        return clone(repositoryPath, outputFolder, cp, null);
+    }
+
+    public static Git clone(String repositoryPath, File outputFolder, CredentialsProvider cp, String branch) {
+        // TODO: tag should be branch
         String repoName = getRepoName(repositoryPath);
 
         // Get repo folder
@@ -290,6 +296,11 @@ public class SpecsGit {
                 git.setCredentialsProvider(cp);
             }
 
+            if (branch != null) {
+                System.out.println("Setting branch to " + branch);
+                git.setBranch(normalizeTag(branch));
+            }
+
             Git repo = git.call();
 
             repo.close();
@@ -297,6 +308,40 @@ public class SpecsGit {
             return repo;
         } catch (GitAPIException e) {
             throw new RuntimeException("Could not clone repository '" + repositoryPath + "'", e);
+        }
+    }
+
+    public static String normalizeTag(String tag) {
+        var prefix = "refs/tags/";
+        return tag.startsWith(prefix) ? tag : prefix + tag;
+    }
+
+    public static boolean hasTag(String repositoryPath, String tag) {
+        return hasTag(repositoryPath, tag, null);
+    }
+
+    public static boolean hasTag(String repositoryPath, String tag, CredentialsProvider credentialsProvider) {
+        LsRemoteCommand ls = Git.lsRemoteRepository();
+        try {
+            ls
+                    .setRemote(repositoryPath);
+
+            if (credentialsProvider != null) {
+                ls.setCredentialsProvider(credentialsProvider);
+            }
+
+            var remoteRefs = ls.setHeads(false) // true by default, set to false if not interested in refs/heads/*
+                    .setTags(true) // include tags in result
+                    .callAsMap();
+
+            // System.out.println("TAGS: " + remoteRefs.keySet());
+            //
+            // var prefix = "refs/tags/";
+            // var completeTag = tag.startsWith(prefix) ? tag : prefix + tag;
+
+            return remoteRefs.keySet().contains(normalizeTag(tag));
+        } catch (Exception e) {
+            throw new RuntimeException("Could not check tags of repository '" + repositoryPath + "'", e);
         }
     }
 
@@ -419,16 +464,16 @@ public class SpecsGit {
     public static boolean isBranchName(Git repo, String commit) {
         // Check if commit value is the name of a branch
         // Taken from here: https://stackoverflow.com/a/57365145
-    
+
         try {
-    
+
             // for (var branchRef : repo.branchList().setListMode(ListMode.REMOTE).call()) {
             // System.out.println("BRANCH: " + branchRef.getName());
             // }
-    
+
             // Pattern to search for
             var commitPattern = "refs/remotes/origin/" + commit;
-    
+
             return repo.branchList()
                     // So that it returns all remotes
                     .setListMode(ListMode.REMOTE)
@@ -438,10 +483,10 @@ public class SpecsGit {
                     .filter(name -> name.equals(commitPattern))
                     .findFirst()
                     .isPresent();
-    
+
         } catch (GitAPIException e) {
             throw new RuntimeException("Could not get list of repository branches", e);
         }
-    
+
     }
 }
