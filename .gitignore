@@ -23,6 +23,9 @@ output/
 .idea/
 .gradle/
 build/
+gradle/
+gradlew
+gradlew.bat
 
 ### Default folder for executing applications
 **/run/**
