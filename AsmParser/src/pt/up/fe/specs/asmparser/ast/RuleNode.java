@@ -17,10 +17,20 @@ import java.util.Collection;
 
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
-public class RootNode extends InstructionFormatNode {
+public class RuleNode extends InstructionFormatNode {
 
-    public RootNode(DataStore data, Collection<? extends InstructionFormatNode> children) {
+    public RuleNode(DataStore data, Collection<? extends InstructionFormatNode> children) {
         super(data, children);
+    }
+
+    /**
+     * 
+     * @return the total number of bits covered by this rule
+     */
+    public int getTotalBits() {
+        return getChildren().stream()
+                .mapToInt(n -> n.get(InstructionFormatNode.NUM_BITS))
+                .sum();
     }
 
 }

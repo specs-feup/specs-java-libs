@@ -15,9 +15,13 @@ package pt.up.fe.specs.asmparser.ast;
 
 import java.util.Collection;
 
+import org.suikasoft.jOptions.Datakey.DataKey;
+import org.suikasoft.jOptions.Datakey.KeyFactory;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 public class ConstantNode extends InstructionFormatNode {
+
+    public static final DataKey<String> LITERAL = KeyFactory.string("literal");
 
     public ConstantNode(DataStore data, Collection<? extends InstructionFormatNode> children) {
         super(data, children);
