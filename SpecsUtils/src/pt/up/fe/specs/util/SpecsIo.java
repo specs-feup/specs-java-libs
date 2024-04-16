@@ -519,41 +519,6 @@ public class SpecsIo {
     }
 
     /**
-     * Given a File object, loads the contents of the file into a Java Properties object.
-     *
-     * <p>
-     * If an error occurs (ex.: the File argument does not represent a file, could not load the Properties object)
-     * returns null and logs the cause.
-     *
-     * @deprecated
-     * @param file
-     *            a File object representing a file.
-     * @return If successfull, a Properties objects with the contents of the file. Null otherwise.
-     */
-    /*
-    public static Properties loadProperties(File file) {
-    	// Check null argument. If null, it would raise and exception and stop
-    	// the program when used to create the File object.
-    	if (file == null) {
-    		Logger.getLogger(IoUtils.class.getName()).warning(
-    				"Input 'file' is null.");
-    		return null;
-    	}
-    
-    	try {
-    		Properties props = new Properties();
-    		props.load(new java.io.FileReader(file));
-    		return props;
-    	} catch (IOException ex) {
-    		Logger.getLogger(IoUtils.class.getName()).log(Level.WARNING,
-    				"IOException: " + ex.getMessage());
-    	}
-    
-    	return null;
-    }
-     */
-
-    /**
      * Given a filename, removes the extension suffix and the separator.
      *
      * <p>
