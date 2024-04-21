@@ -11,24 +11,8 @@
  * specific language governing permissions and limitations under the License. under the License.
  */
 
-package pt.up.fe.specs.asmparser.ast;
+package pt.up.fe.specs.asmparser.parser32bit;
 
-import java.util.Collection;
-
-import org.suikasoft.jOptions.Datakey.DataKey;
-import org.suikasoft.jOptions.Datakey.KeyFactory;
-import org.suikasoft.jOptions.Interfaces.DataStore;
-
-public class ConstantNode extends InstructionFormatNode {
-
-    public static final DataKey<String> LITERAL = KeyFactory.string("literal");
-
-    public ConstantNode(DataStore data, Collection<? extends InstructionFormatNode> children) {
-        super(data, children);
-    }
-
-    public int getLiteralAsInt() {
-        return Integer.parseInt(get(LITERAL), 2);
-    }
+public record Asm32bitResult(int nextIndex, int value) {
 
 }
