@@ -21,9 +21,11 @@ public class Isa32bitParser {
 
 
     private final List<Asm32bitParser> parsers;
+    private final Map<String, Integer> fieldsMap;
 
-    private Isa32bitParser(List<Asm32bitParser> parsers) {
+    private Isa32bitParser(List<Asm32bitParser> parsers, Map<String, Integer> fieldsMap) {
         this.parsers = parsers;
+        this.fieldsMap = fieldsMap;
     }
 
 
@@ -42,7 +44,7 @@ public class Isa32bitParser {
             fieldId++;
         }
 
-        System.out.println("FIELDS MAP: " + fieldsMap);
+//        System.out.println("FIELDS MAP: " + fieldsMap);
 
         int id = 0;
         var parsers = new ArrayList<Asm32bitParser>();
@@ -61,7 +63,7 @@ public class Isa32bitParser {
         }
 
 
-        return new Isa32bitParser(parsers);
+        return new Isa32bitParser(parsers, fieldsMap);
     }
 
     private static void verify(RuleNode rule, String format, Set<String> fields) {
@@ -76,6 +78,10 @@ public class Isa32bitParser {
             throw new RuntimeException("Found undeclared field '" + invalidField.getField() + "' in format rule '" + format + "'");
         }
 
+    }
+
+    public Map<String, Integer> getFieldsMap() {
+        return fieldsMap;
     }
 
     public int[] parse(long instruction) {
