@@ -19,7 +19,7 @@ public interface Asm32bitRule {
 
     Asm32bitResult parse(long asm, int startIndex);
 
-    default boolean hasValue() {
-        return false;
-    }
+//    default boolean hasValue() {
+//        return false;
+//    }
 }

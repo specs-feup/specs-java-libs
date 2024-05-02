@@ -71,4 +71,9 @@ public class MicroBlazeAsmTest {
           */
     }
 
+    @Test
+    public void testFromJson() {
+
+    }
+
 }
