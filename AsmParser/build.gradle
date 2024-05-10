@@ -20,8 +20,9 @@ dependencies {
 	testImplementation "junit:junit:4.11"     
 	
 	implementation ':SpecsUtils'
-	implementation ':jOptions'	
-	
+	implementation ':jOptions'
+
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.4'
 }
 
 java {
@@ -35,11 +36,19 @@ sourceSets {
       java {
          srcDir 'src'
       }
+
+       resources {
+           srcDir 'test'
+       }
    }   
 
    test {
       java {
          srcDir 'test'
       }
+
+       resources {
+           srcDir 'test'
+       }
    }      
 }

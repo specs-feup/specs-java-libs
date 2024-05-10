@@ -188,12 +188,12 @@ public class KeyFactory {
                 .setCustomGetter(customGetterFile(true, true, false, exists));
     }
 
-    public static CustomGetter<File> customGetterFile(boolean isFolder, boolean isFile, boolean create,
+    public static CustomGetter<File> customGetterFile(boolean canBeFolder, boolean canBeFile, boolean create,
             boolean exists) {
 
         // Normalize path before returning
         return (file, dataStore) -> new File(
-                SpecsIo.normalizePath(customGetterFile(file, dataStore, isFolder, isFile, create, exists)));
+                SpecsIo.normalizePath(customGetterFile(file, dataStore, canBeFolder, canBeFile, create, exists)));
     }
 
     public static File customGetterFile(File file, DataStore dataStore, boolean isFolder, boolean isFile,
@@ -243,25 +243,29 @@ public class KeyFactory {
         return currentFile;
     }
 
-    private static File processPath(boolean isFolder, boolean isFile, boolean create, File currentFile) {
-        if (isFolder) {
-            if (create) {
+    private static File processPath(boolean canBeFolder, boolean canBeFile, boolean create, File currentFile) {
+
+        var exists = currentFile.exists();
+
+        if(!exists) {
+
+            if(canBeFolder && create) {
                 return SpecsIo.mkdir(currentFile);
             }
 
             return currentFile;
-
         }
 
-        // Is a file
-        if (isFile) {
-
-            // Test if it is not a folder
-            if (currentFile.isDirectory()) {
-                throw new RuntimeException("File key has directory as value: '"
-                        + currentFile.getPath() + "')");
-            }
+        if(currentFile.isDirectory() && !canBeFolder) {
+            throw new RuntimeException("File key has directory as value and key does not allow it: '"
+                    + currentFile.getPath() + "')");
         }
+
+        if(currentFile.isFile() && !canBeFile) {
+            throw new RuntimeException("File key has file as value and key does not allow it: '"
+                    + currentFile.getPath() + "')");
+        }
+
 
         return currentFile;
     }
@@ -278,7 +282,6 @@ public class KeyFactory {
      * 
      * @param id
      * @param aClass
-     * @param defaultValue
      * @return
      */
     public static <T> DataKey<T> object(String id, Class<T> aClass) {
@@ -336,7 +339,7 @@ public class KeyFactory {
         return fileList(optionName);
     }
 
-    private static DataKey<FileList> fileList(String optionName) {
+    public static DataKey<FileList> fileList(String optionName) {
 
         return KeyFactory.object(optionName, FileList.class).setDefault(() -> new FileList())
                 .setStoreDefinition(FileList.getStoreDefinition())
