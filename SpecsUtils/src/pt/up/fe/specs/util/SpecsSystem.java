@@ -466,8 +466,8 @@ public class SpecsSystem {
 
         Exception outputException = null;
         try {
-            output = outputFuture.get(10, TimeUnit.SECONDS);
-            error = errorFuture.get(10, TimeUnit.SECONDS);
+            output = outputFuture.get(1, TimeUnit.MINUTES);
+            error = errorFuture.get(1, TimeUnit.MINUTES);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
