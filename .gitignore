@@ -19,6 +19,8 @@ RemoteSystemsTempFiles/
 # Custom ignores #
 ##################
 
+**/.settings/org.eclipse.buildship.core.prefs
+
 output/
 .idea/
 .gradle/
