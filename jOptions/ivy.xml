@@ -28,6 +28,6 @@
 	<dependencies>
 		<dependency org="com.google.guava" name="guava" rev="19.0"/>
 		<dependency org="com.google.code.gson" name="gson" rev="2.4"/>	
-		<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.18"/> 				
+		<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.20"/> 				
 	</dependencies>
 </ivy-module>
