@@ -27,4 +27,7 @@ public class FieldNode extends InstructionFormatNode {
         super(data, children);
     }
 
+    public String getField() {
+        return get(FIELD);
+    }
 }

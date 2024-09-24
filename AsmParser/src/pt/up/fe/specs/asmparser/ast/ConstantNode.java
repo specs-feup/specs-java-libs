@@ -27,4 +27,8 @@ public class ConstantNode extends InstructionFormatNode {
         super(data, children);
     }
 
+    public int getLiteralAsInt() {
+        return Integer.parseInt(get(LITERAL), 2);
+    }
+
 }

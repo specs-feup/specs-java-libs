@@ -1,0 +1,3 @@
+rootProject.name = 'LogbackPlus'
+
+includeBuild("../../specs-java-libs/SpecsUtils")

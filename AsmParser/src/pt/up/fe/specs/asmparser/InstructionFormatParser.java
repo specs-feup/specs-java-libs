@@ -15,6 +15,7 @@ package pt.up.fe.specs.asmparser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.suikasoft.jOptions.Interfaces.DataStore;
@@ -25,15 +26,72 @@ import pt.up.fe.specs.asmparser.ast.FieldNode;
 import pt.up.fe.specs.asmparser.ast.IgnoreNode;
 import pt.up.fe.specs.asmparser.ast.InstructionFormatNode;
 import pt.up.fe.specs.asmparser.ast.RuleNode;
+import pt.up.fe.specs.asmparser.parser32bit.Asm32bitParser;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldData;
+import pt.up.fe.specs.binarytranslation.asm.parsing.AsmFieldType;
+import pt.up.fe.specs.binarytranslation.asm.parsing.binaryasmparser.BinaryAsmInstructionParser;
 import pt.up.fe.specs.util.SpecsStrings;
+import pt.up.fe.specs.util.SpecsSystem;
 
 public class InstructionFormatParser {
 
     public static void main(String[] args) {
+        SpecsSystem.programStandardInit();
 
-        var rule = new InstructionFormatParser().parse("100101_registerd(5)_1000_opcodea(1)_0_imm(15)");
+        // var rule = new InstructionFormatParser().parse("100101_registerd(5)_1000_opcodea(1)_0_imm(15)");
 
-        System.out.println(rule.toTree());
+        var rule2 = new InstructionFormatParser().parse("0110_xx_registerd(5)_1000_opcodea(1)_0_imm(15)");
+
+        System.out.println(rule2.toTree());
+
+        var parser2 = Asm32bitParser.build(0, rule2);
+        var res = parser2.parse(Long.parseLong("01100011111100000010101010101101", 2));
+
+        System.out.println("RES: " + Arrays.toString(res));
+
+        test();
+    }
+
+    enum TestAsmField implements AsmFieldType {
+        INST1,
+        INST2;
+    }
+
+    private static void test() {
+        var addr = "0000";
+        var rule = "0110_xx_registerd(5)_1000_opcodea(1)_0_imm(15)";
+        var instruction = "01100011111100000010101010101101";
+        var instructionHex = Long.toString(Long.parseLong(instruction, 2), 16);
+        var instructionLong = Long.parseLong(instruction, 2);
+        var iterations = 1_000_000;
+
+        // String-based
+        var stringParser = new BinaryAsmInstructionParser(TestAsmField.INST1, rule, null);
+
+        var start1 = System.nanoTime();
+        var acc1 = 0l;
+        for (int i = 0; i < iterations; i++) {
+            var res = stringParser.parse(addr, instructionHex);
+            var fieldValueString = res.get().get(AsmFieldData.FIELDS).get("registerd");
+            var fieldValue = Integer.parseInt(fieldValueString, 2);
+            acc1 += fieldValue;
+        }
+        SpecsStrings.printTime("String parsing", start1);
+        System.out.println("String result: " + acc1);
+
+        // Long based
+        var astRule = new InstructionFormatParser().parse(rule);
+        var longParser = Asm32bitParser.build(0, astRule);
+
+        var start2 = System.nanoTime();
+        var acc2 = 0l;
+        for (int i = 0; i < iterations; i++) {
+            var res = longParser.parse(instructionLong);
+            var fieldValue = res[1];
+            acc2 += fieldValue;
+        }
+        SpecsStrings.printTime("Long parsing", start2);
+        System.out.println("Long result: " + acc2);
 
     }
 
@@ -108,12 +166,14 @@ public class InstructionFormatParser {
         // System.out.println("RULES: " + rules);
         // return rules;
 
-        processRule(root);
+        // Fuse rules that are next to each other
+        collapseConstantNodes(root);
+        collapseIgnoreNodes(root);
 
         return root;
     }
 
-    private void processRule(RuleNode root) {
+    private void collapseConstantNodes(RuleNode root) {
         // Collapse sequential ConstantNodes
 
         var newChildren = new ArrayList<InstructionFormatNode>();
@@ -153,6 +213,50 @@ public class InstructionFormatParser {
         if (currentConstant != null) {
             newChildren.add(currentConstant);
             currentConstant = null;
+        }
+
+        // Set children
+        root.setChildren(newChildren);
+
+    }
+
+    private void collapseIgnoreNodes(RuleNode root) {
+        // Collapse sequential IgnoreNodes
+
+        var newChildren = new ArrayList<InstructionFormatNode>();
+
+        IgnoreNode currentIgnore = null;
+        for (var child : root.getChildren()) {
+
+            if (!(child instanceof IgnoreNode)) {
+                // If current ignore not null, store it
+                if (currentIgnore != null) {
+                    newChildren.add(currentIgnore);
+                    currentIgnore = null;
+                }
+
+                // Just add node
+                newChildren.add(child);
+                continue;
+            }
+
+            // Is ignore node
+            var ignore = (IgnoreNode) child;
+            var numBits = ignore.get(InstructionFormatNode.NUM_BITS);
+
+            if (currentIgnore == null) {
+                currentIgnore = newNode(IgnoreNode.class);
+            } else {
+                numBits = currentIgnore.get(InstructionFormatNode.NUM_BITS) + numBits;
+            }
+
+            currentIgnore.set(InstructionFormatNode.NUM_BITS, numBits);
+        }
+
+        // If current ignore not null, store it
+        if (currentIgnore != null) {
+            newChildren.add(currentIgnore);
+            currentIgnore = null;
         }
 
         // Set children

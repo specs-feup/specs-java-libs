@@ -33,4 +33,8 @@ public class InstructionFormatNode extends DataNode<InstructionFormatNode> {
         return InstructionFormatNode.class;
     }
 
+    public int getNumBits() {
+        return get(NUM_BITS);
+    }
+
 }

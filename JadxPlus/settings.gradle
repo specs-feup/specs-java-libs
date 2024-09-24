@@ -1,0 +1,3 @@
+rootProject.name = 'JadxPlus'
+
+includeBuild("../../specs-java-libs/SpecsUtils")

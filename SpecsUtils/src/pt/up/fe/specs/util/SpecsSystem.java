@@ -13,6 +13,16 @@
 
 package pt.up.fe.specs.util;
 
+import pt.up.fe.specs.util.classmap.ClassSet;
+import pt.up.fe.specs.util.lazy.Lazy;
+import pt.up.fe.specs.util.properties.SpecsProperty;
+import pt.up.fe.specs.util.system.OutputType;
+import pt.up.fe.specs.util.system.ProcessOutput;
+import pt.up.fe.specs.util.system.ProcessOutputAsString;
+import pt.up.fe.specs.util.system.StreamToString;
+import pt.up.fe.specs.util.utilities.JarPath;
+import pt.up.fe.specs.util.utilities.ProgressCounter;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,42 +45,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import pt.up.fe.specs.util.classmap.ClassSet;
-import pt.up.fe.specs.util.lazy.Lazy;
-import pt.up.fe.specs.util.properties.SpecsProperty;
-import pt.up.fe.specs.util.system.OutputType;
-import pt.up.fe.specs.util.system.ProcessOutput;
-import pt.up.fe.specs.util.system.ProcessOutputAsString;
-import pt.up.fe.specs.util.system.StreamToString;
-import pt.up.fe.specs.util.utilities.JarPath;
-import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
  * Utility methods related to system tasks.
@@ -119,7 +101,7 @@ public class SpecsSystem {
      * @return
      */
     public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
-            boolean storeOutput, boolean printOutput) {
+                                                   boolean storeOutput, boolean printOutput) {
 
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
@@ -127,7 +109,7 @@ public class SpecsSystem {
     }
 
     public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
-            boolean storeOutput, boolean printOutput, Long timeoutNanos) {
+                                                   boolean storeOutput, boolean printOutput, Long timeoutNanos) {
 
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
@@ -149,7 +131,7 @@ public class SpecsSystem {
      * @return
      */
     public static ProcessOutputAsString runProcess(List<String> command,
-            boolean storeOutput, boolean printOutput) {
+                                                   boolean storeOutput, boolean printOutput) {
 
         return runProcess(command, SpecsIo.getWorkingDir(), storeOutput, printOutput);
     }
@@ -206,7 +188,7 @@ public class SpecsSystem {
      * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command,
-            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
+                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
 
         return runProcess(command, SpecsIo.getWorkingDir(), outputProcessor, errorProcessor);
     }
@@ -221,7 +203,7 @@ public class SpecsSystem {
      * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command, File workingDir,
-            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
+                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
 
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
@@ -230,7 +212,7 @@ public class SpecsSystem {
 
     /**
      * Arguments such as -I
-     * 
+     *
      * @param command
      * @return
      */
@@ -325,19 +307,19 @@ public class SpecsSystem {
      * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
-            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
+                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
         return runProcess(builder, outputProcessor, errorProcessor, null);
     }
 
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
-            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
+                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
         return runProcess(builder, outputProcessor, errorProcessor, null, timeoutNanos);
     }
 
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
-            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor,
-            Consumer<OutputStream> input, Long timeoutNanos) {
+                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor,
+                                                        Consumer<OutputStream> input, Long timeoutNanos) {
 
         // The command in the builder might need processing (e.g., Windows system commands)
         processCommand(builder);
@@ -386,7 +368,7 @@ public class SpecsSystem {
 
     /**
      * Performs several fixes on the builder command (e.g., adapts command for Windows platforms)
-     * 
+     *
      * @param builder
      */
     private static void processCommand(ProcessBuilder builder) {
@@ -436,7 +418,7 @@ public class SpecsSystem {
     }
 
     private static <O, E> ProcessOutput<O, E> executeProcess(Process process,
-            Long timeoutNanos, Future<O> outputFuture, Future<E> errorFuture) {
+                                                             Long timeoutNanos, Future<O> outputFuture, Future<E> errorFuture) {
 
         boolean timedOut = false;
 
@@ -466,8 +448,8 @@ public class SpecsSystem {
 
         Exception outputException = null;
         try {
-            output = outputFuture.get(10, TimeUnit.SECONDS);
-            error = errorFuture.get(10, TimeUnit.SECONDS);
+            output = outputFuture.get(1, TimeUnit.MINUTES);
+            error = errorFuture.get(1, TimeUnit.MINUTES);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -565,7 +547,7 @@ public class SpecsSystem {
     */
     /**
      * Normalizes a command to be executed, inserting double quotes where necessary.
-     * 
+     *
      * @param command
      * @return
      */
@@ -579,7 +561,6 @@ public class SpecsSystem {
     */
 
     /**
-     *
      * @return the StackTraceElement of the previous method of the method calling this method
      */
     public static StackTraceElement getCallerMethod() {
@@ -600,7 +581,6 @@ public class SpecsSystem {
     }
 
     /**
-     *
      * @param aClass
      * @param anInterface
      * @return true if the given class implements the given interface. False otherwise.
@@ -646,7 +626,6 @@ public class SpecsSystem {
     // }
 
     /**
-     *
      * @return the name of the class of the main thread, or null if could not find the main thread.
      */
     public static StackTraceElement[] getMainStackTrace() {
@@ -750,7 +729,6 @@ public class SpecsSystem {
     }
 
     /**
-     * 
      * @param callGc
      * @return the current amount of memory, in bytes
      */
@@ -804,7 +782,6 @@ public class SpecsSystem {
     }
 
     /**
-     * 
      * @param command
      * @param workingdir
      * @return true if the program worked, false if it could not be started
@@ -831,11 +808,9 @@ public class SpecsSystem {
     /**
      * Adds a path to the java.library.path property, and flushes the path cache so that subsequent System.load calls
      * can find it.
-     * 
+     *
+     * @param path The path to add
      * @deprecated this will not work in OpenJDK
-     * 
-     * @param path
-     *            The path to add
      */
     @Deprecated
     public static void addJavaLibraryPath(String path) {
@@ -871,7 +846,7 @@ public class SpecsSystem {
      * Taken from
      * http://stackoverflow.com/questions/4748673/how-can-i-check-the-bitness-of-my-os-using-java-j2se-not-os-
      * arch/5940770#5940770
-     * 
+     *
      * @return true if the system is 64-bit, false otherwise.
      */
     public static boolean is64Bit() {
@@ -892,8 +867,8 @@ public class SpecsSystem {
 
         String realArch = arch.endsWith("64")
                 || wow64Arch != null && wow64Arch.endsWith("64")
-                        ? "64"
-                        : "32";
+                ? "64"
+                : "32";
 
         if (realArch.equals("32")) {
             return false;
@@ -933,7 +908,7 @@ public class SpecsSystem {
 
     /**
      * Launches the callable in another thread and waits termination.
-     * 
+     *
      * @param args
      * @return
      */
@@ -987,7 +962,7 @@ public class SpecsSystem {
 
     /**
      * The contents of the Future, or null if there was a timeout.
-     * 
+     *
      * @param <T>
      * @param future
      * @param timeout
@@ -1020,10 +995,10 @@ public class SpecsSystem {
 
     /**
      * Runs the given supplier in a separate thread, encapsulating the result in a Future.
-     * 
+     *
      * <p>
      * Taken from here: https://stackoverflow.com/questions/5715235/java-set-timeout-on-a-certain-block-of-code
-     * 
+     *
      * @param <T>
      * @param supplier
      * @param timeout
@@ -1048,7 +1023,7 @@ public class SpecsSystem {
 
     /**
      * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
-     * 
+     *
      * @param aClass
      * @return
      */
@@ -1065,7 +1040,7 @@ public class SpecsSystem {
 
     /**
      * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
-     * 
+     *
      * @param aClass
      * @param javaExecutable
      * @param workingDir
@@ -1073,7 +1048,7 @@ public class SpecsSystem {
      * @return
      */
     public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
-            List<String> args) {
+                                              List<String> args) {
 
         // File jarPath = SpecsIo.getJarPath(aClass).orElseThrow(
         // () -> new RuntimeException("Could not locate the JAR file for the class '" + aClass + "'"));
@@ -1145,7 +1120,7 @@ public class SpecsSystem {
 
     /**
      * Returns a double based on the major (feature) and minor (interim) segments of the runtime version.
-     * 
+     * <p>
      * Example: if the version string is "16.3.2-internal+11-specsbuild-20220403", the return will be `16.3`.
      */
     public static double getJavaVersionNumber() {
@@ -1161,7 +1136,7 @@ public class SpecsSystem {
 
     /**
      * Returns the components of the version number of the running Java VM as an immutable list.
-     * 
+     * <p>
      * Example: if the version string is "16.3.2-internal+11-specsbuild-20220403", the return will be `[16, 3, 2]`.
      */
     public static List<Integer> getJavaVersion() {
@@ -1216,8 +1191,7 @@ public class SpecsSystem {
     /**
      * Adds a jar file or directory to the classpath. From Utils4J.
      *
-     * @param newpaths
-     *            JAR filename(s) or directory(s) to add
+     * @param newpaths JAR filename(s) or directory(s) to add
      * @return URLClassLoader after newpaths added if newpaths != null
      */
     public static ClassLoader addToClasspath(String... newpaths) {
@@ -1237,8 +1211,7 @@ public class SpecsSystem {
     /**
      * Adds to library path in ClassLoader returned by addToClassPath
      *
-     * @param newpaths
-     *            Path(s) to directory(s) holding OS library files
+     * @param newpaths Path(s) to directory(s) holding OS library files
      */
     public static void addToLibraryPath(String... newpaths) {
         for (String newpath : Objects.requireNonNull(newpaths))
@@ -1278,7 +1251,7 @@ public class SpecsSystem {
     /**
      * Uses the copy constructor to create a copy of the given object. Throws exception if the class does not have a
      * copy constructor.
-     * 
+     *
      * @param object
      * @return
      */
@@ -1364,14 +1337,14 @@ public class SpecsSystem {
     }
 
     /**
-     * 
      * @param <T>
      * @param aClass
      * @param arguments
      * @return the first constructor that is compatible with the given arguments, or null if none is found
      */
     public static <T> Constructor<T> getConstructor(Class<T> aClass, Object... arguments) {
-        constructorTest: for (var constructor : aClass.getConstructors()) {
+        constructorTest:
+        for (var constructor : aClass.getConstructors()) {
             // Verify if arguments are compatible
             var paramTypes = constructor.getParameterTypes();
 
@@ -1397,7 +1370,7 @@ public class SpecsSystem {
     /**
      * Taken from here:
      * https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689
-     * 
+     *
      * @param clazz
      * @return
      */
@@ -1425,7 +1398,7 @@ public class SpecsSystem {
     /**
      * Taken from here:
      * https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689
-     * 
+     *
      * @param classes
      * @return
      */
@@ -1434,7 +1407,6 @@ public class SpecsSystem {
     }
 
     /**
-     * 
      * @param classes
      * @return
      */
@@ -1450,7 +1422,6 @@ public class SpecsSystem {
     }
 
     /**
-     * 
      * @return true if the JVM is currently executing in a Linux system, false otherwise
      */
     public static boolean isLinux() {
@@ -1458,7 +1429,6 @@ public class SpecsSystem {
     }
 
     /**
-     * 
      * @return true if the JVM is currently executing in a Windows system, false otherwise
      */
     public static boolean isWindows() {
@@ -1467,10 +1437,10 @@ public class SpecsSystem {
 
     /**
      * Equivalent to class.isInstance.
-     * 
+     *
      * <p>
      * Used when direct access to .class is not allowed.
-     * 
+     *
      * @param classpath
      * @param value
      * @return true, if the value is an instance of the given classpath
@@ -1515,6 +1485,14 @@ public class SpecsSystem {
         // return object.class.getMethod(property, arguments).invoke(object, arguments);
     }
 
+    /**
+     * Similar to findMethod(), but caches results. Be careful, can lead to unintended errors.
+     *
+     * @param invokingClass
+     * @param methodName
+     * @param types
+     * @return
+     */
     public static Method getMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
         // Use methodId to cache results
         String methodId = getMethodId(invokingClass, methodName, types);
@@ -1536,7 +1514,8 @@ public class SpecsSystem {
 
     public static Method findMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
         Method invokingMethod = null;
-        top: for (var classMethod : invokingClass.getMethods()) {
+        top:
+        for (var classMethod : invokingClass.getMethods()) {
             // Check name
             if (!classMethod.getName().equals(methodName)) {
                 continue;
@@ -1588,7 +1567,7 @@ public class SpecsSystem {
     /**
      * Invokes the given method as a property. If the method with name 'foo()' could not be found, looks for a .getFoo()
      * method.
-     * 
+     *
      * @param object
      * @param methodName
      * @return
@@ -1699,7 +1678,7 @@ public class SpecsSystem {
 
     /**
      * Reads the implementation version that is in the manifest file. Reads property Implementation-Version.
-     * 
+     *
      * @return
      */
     public static String getBuildNumber() {
@@ -1732,7 +1711,6 @@ public class SpecsSystem {
     }
 
     /**
-     * 
      * @param e
      * @return the fundamental cause of the exception
      */

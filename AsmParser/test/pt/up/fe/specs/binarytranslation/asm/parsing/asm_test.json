@@ -1,0 +1,12 @@
+{
+  "fields": [
+    "registerd",
+    "registera",
+    "opcode",
+    "imm"
+  ],
+  "formats": [
+    "100101_0_opcode(1)_000_registerd(5)_11_registera(14)",
+    "0110_xx_registerd(5)_1000_opcode(1)_0_imm(15)"
+  ]
+}
