@@ -1,0 +1,15 @@
+{
+ "fields": [
+    "registerd",
+    "registers",
+    "opcodea",
+    "imm"
+ ],
+ 
+ "instructions": {
+    "type1":  "100101_registerd(5)_1000_opcodea(1)_0_imm(15)",
+    "type2": "100101_0_opcodea(1)_000_registera(5)_11_registers(14)"
+ }
+
+
+}
