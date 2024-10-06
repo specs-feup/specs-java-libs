@@ -19,7 +19,7 @@ RemoteSystemsTempFiles/
 # Custom ignores #
 ##################
 
-**/.settings/org.eclipse.buildship.core.prefs
+**/.settings/
 
 output/
 .idea/
