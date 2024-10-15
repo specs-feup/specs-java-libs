@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -13,19 +13,11 @@
 
 package pt.up.fe.specs.util;
 
+import pt.up.fe.specs.util.collections.SpecsList;
+import pt.up.fe.specs.util.providers.KeyProvider;
+
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -33,20 +25,16 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import pt.up.fe.specs.util.collections.SpecsList;
-import pt.up.fe.specs.util.providers.KeyProvider;
-
 /**
  * Utility methods related to Java Collections.
- * 
+ *
  * @author Joao Bispo
- * 
  */
 public class SpecsCollections {
 
     /**
      * Returns the elements from the given index, until the end of the list.
-     * 
+     *
      * @param list
      * @param startIndex
      * @return
@@ -74,7 +62,7 @@ public class SpecsCollections {
 
     /**
      * Returns the last element of the list, or null if the list is empty.
-     * 
+     *
      * @param lines
      * @return
      */
@@ -91,7 +79,7 @@ public class SpecsCollections {
 
     /**
      * Returns the last element of the list, or an empty Optional if the list is empty.
-     * 
+     *
      * @param lines
      * @return
      */
@@ -116,7 +104,7 @@ public class SpecsCollections {
 
     /**
      * Creates an Iterable from an iterator, so it can be used in for:each loops.
-     * 
+     *
      * @param iterator
      * @return
      */
@@ -137,7 +125,6 @@ public class SpecsCollections {
      */
 
     /**
-     * 
      * @param a
      * @return
      */
@@ -148,7 +135,7 @@ public class SpecsCollections {
 
     /**
      * If an element is null, ignores it.
-     * 
+     *
      * @param superClass
      * @param elements
      * @return
@@ -185,7 +172,7 @@ public class SpecsCollections {
 
     /**
      * Creates a new list sorted list from the given collection.
-     * 
+     *
      * @param keySet
      * @return
      */
@@ -201,7 +188,7 @@ public class SpecsCollections {
 
     /**
      * Removes the tokens from the list from startIndex, inclusive, to endIndex, exclusive.
-     * 
+     *
      * @param list
      * @param startIndex
      * @param endIndex
@@ -236,7 +223,7 @@ public class SpecsCollections {
 
     /**
      * Removes from the list the elements that match the predicate, returns the removed elements.
-     * 
+     *
      * @param list
      * @param filter
      * @return
@@ -280,10 +267,9 @@ public class SpecsCollections {
     /**
      * Returns the first index of object that is an instance of the given class. Returns -1 if no object is found that
      * is instance of the class.
-     * 
+     *
      * @param aClass
      * @param types
-     * 
      * @return
      */
     public static <T> int getFirstIndex(List<? super T> list, Class<T> aClass) {
@@ -299,10 +285,9 @@ public class SpecsCollections {
     /**
      * Returns the first object that is an instance of the given class. Returns null if no object is found that is
      * instance of the class.
-     * 
+     *
      * @param aClass
      * @param types
-     * 
      * @return
      */
     public static <T> T getFirst(List<? super T> list, Class<T> aClass) {
@@ -319,7 +304,7 @@ public class SpecsCollections {
 
     /**
      * Casts an element of a list to the given class.
-     * 
+     *
      * @param aClass
      * @param list
      * @param index
@@ -336,7 +321,7 @@ public class SpecsCollections {
 
     /**
      * Returns true if all the elements in the list are instances of the given class.
-     * 
+     *
      * @param inputTypes
      * @return
      */
@@ -352,7 +337,7 @@ public class SpecsCollections {
 
     /**
      * Adds the elements of the provider collection to the receiver collection. Returns the receiver collection.
-     * 
+     *
      * @param receiver
      * @param provider
      * @return
@@ -364,10 +349,9 @@ public class SpecsCollections {
 
     /**
      * Casts a list of one type to another type, and checks if all elements can be cast to the target type.
-     * 
+     *
      * @param list
      * @param aClass
-     * 
      * @return
      */
     public static <T> SpecsList<T> cast(List<?> list, Class<T> aClass) {
@@ -385,12 +369,17 @@ public class SpecsCollections {
         return SpecsList.convert(castUnchecked(list, aClass));
     }
 
+    public static <T> T[] cast(Object[] array, Class<T> targetClass) {
+        return Arrays.stream(array)
+                .map(targetClass::cast) // Cast to String
+                .toArray(i -> (T[]) Array.newInstance(targetClass, i));
+    }
+
     /**
      * Casts a list of one type to another type, without checking if the elements can be cast to the target type.
-     * 
+     *
      * @param list
      * @param aClass
-     * 
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -407,10 +396,10 @@ public class SpecsCollections {
 
     /**
      * Helper method which receives an element.
-     * 
+     *
      * <p>
      * If the element is null, list remains the same.
-     * 
+     *
      * @param list
      * @param element
      * @return
@@ -421,10 +410,10 @@ public class SpecsCollections {
 
     /**
      * Helper method which receives an element.
-     * 
+     *
      * <p>
      * If the element is null, list remains the same.
-     * 
+     *
      * @param element
      * @param list
      * @return
@@ -444,7 +433,7 @@ public class SpecsCollections {
 
     /**
      * If the list is modifiable, adds directly to it.
-     * 
+     *
      * @param list
      * @param element
      * @return
@@ -463,7 +452,7 @@ public class SpecsCollections {
 
     /**
      * If the first list is modifiable, adds directly to it.
-     * 
+     *
      * @param list1
      * @param list2
      * @return
@@ -482,7 +471,7 @@ public class SpecsCollections {
 
     /**
      * Creates a list with the elements from the given collections.
-     * 
+     *
      * @param collections
      * @return
      */
@@ -503,7 +492,7 @@ public class SpecsCollections {
 
     /**
      * Converts an array from one type to another.
-     * 
+     *
      * @param origin
      * @param destination
      * @param converter
@@ -522,7 +511,7 @@ public class SpecsCollections {
 
     /**
      * Turns an Optional<T> into a Stream<T> of length zero or one depending upon whether a value is present.
-     * 
+     *
      * <p>
      * Source: http://stackoverflow.com/questions/22725537/using-java-8s-optional-with-streamflatmap
      */
@@ -536,7 +525,7 @@ public class SpecsCollections {
 
     /**
      * Filters the elements of a Collection according to a map function over the elements of that collection.
-     * 
+     *
      * @param elements
      * @param mapFunction
      * @return
@@ -547,7 +536,7 @@ public class SpecsCollections {
 
     /**
      * Filters the elements of a Stream according to a map function over the elements of that collection.
-     * 
+     *
      * @param elements
      * @param mapFunction
      * @return
@@ -571,7 +560,7 @@ public class SpecsCollections {
     /**
      * Removes all the elements at the head that are an instance of the given class, returns a new list with those
      * elements.
-     * 
+     *
      * @param aClass
      * @param list
      * @return
@@ -609,7 +598,7 @@ public class SpecsCollections {
 
     /**
      * Removes the first element of the list, checking if it is of the given class.
-     * 
+     *
      * @param list
      * @param aClass
      * @return
@@ -625,7 +614,7 @@ public class SpecsCollections {
     /**
      * Returns all the elements at the head that are an instance of the given class, returns a new list with those
      * elements.
-     * 
+     *
      * @param list
      * @param aClass
      * @return
@@ -660,7 +649,7 @@ public class SpecsCollections {
 
     /**
      * Checks if the given object is an instance of any of the given classes.
-     * 
+     *
      * @param object
      * @param classes
      * @return
@@ -677,7 +666,7 @@ public class SpecsCollections {
 
     /**
      * Creates a list with the given element, unless it is null. In that case, returns an empty list.
-     * 
+     *
      * @param element
      * @return
      */
@@ -691,7 +680,7 @@ public class SpecsCollections {
 
     /**
      * Accepts lists that have at most one element, return the element if present, or null otherwise.
-     * 
+     *
      * @param selectCond
      * @return
      */
@@ -737,7 +726,7 @@ public class SpecsCollections {
 
     /**
      * Adds to the list if element is present, and does nothing otherwise.
-     * 
+     *
      * @param includes
      * @param element
      */
@@ -770,7 +759,6 @@ public class SpecsCollections {
     }
 
     /**
-     * 
      * @param list
      * @return a stream of the elements of the list, in reverse order
      */
@@ -783,7 +771,6 @@ public class SpecsCollections {
     }
 
     /**
-     * 
      * @param list
      * @return a stream of indexes to the list, in reverse order
      */
@@ -797,7 +784,7 @@ public class SpecsCollections {
 
     /**
      * Collects all instances of the given class from the stream.
-     * 
+     *
      * @param stream
      * @param aClass
      * @return
@@ -810,7 +797,7 @@ public class SpecsCollections {
 
     /**
      * Converts a list of String providers to a String array.
-     * 
+     *
      * @param values
      * @return
      */
@@ -823,7 +810,7 @@ public class SpecsCollections {
 
     /**
      * Converts a collection to a set, applying the given mapper to each of the elements.
-     * 
+     *
      * @param collection
      * @param mapper
      * @return
@@ -863,7 +850,6 @@ public class SpecsCollections {
     }
 
     /**
-     * 
      * @param list
      * @param targetClass
      * @return a list with the elements that are an instance of the given class
@@ -877,7 +863,7 @@ public class SpecsCollections {
 
     /**
      * Converts the definition to an optional. If the list contains more than one element, throws an exception.
-     * 
+     *
      * @param definition
      * @return
      */
@@ -890,7 +876,6 @@ public class SpecsCollections {
     }
 
     /**
-     * 
      * @param <K>
      * @param collections
      * @return a set with the elements common to all given collections
@@ -923,7 +908,6 @@ public class SpecsCollections {
     }
 
     /**
-     * 
      * @param <K>
      * @param collections
      * @return a set with the elements of all given collections
@@ -950,7 +934,7 @@ public class SpecsCollections {
     /**
      * If the key has a mapping different than null, just returns the value, otherwise uses the given Supplier to create
      * the first value, associates it in the map, and returns it.
-     * 
+     *
      * @param <K>
      * @param <V>
      * @param sittings
