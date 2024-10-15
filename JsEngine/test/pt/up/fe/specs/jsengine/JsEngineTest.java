@@ -35,7 +35,6 @@ import pt.up.fe.specs.util.SpecsLogs;
 public class JsEngineTest {
 
     // private static final Lazy<JsEngine> GRAAL_JS = Lazy.newInstance(() -> JsEngineType.GRAALVM.newEngine());
-    // private static final Lazy<JsEngine> NASHORN = Lazy.newInstance(() -> JsEngineType.NASHORN.newEngine());
 
     private static final String getResource(String resource) {
         return SpecsIo.getResource("pt/up/fe/specs/jsengine/test/" + resource);
@@ -43,7 +42,6 @@ public class JsEngineTest {
 
     private JsEngine getEngine() {
         return JsEngineType.GRAALVM.newEngine();
-        // return JsEngineType.NASHORN.newEngine();
         // return GRAAL_JS.get();
     }
 

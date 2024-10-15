@@ -440,11 +440,6 @@ public class GraalvmJsEngine extends AJsEngine {
     }
 
     @Override
-    public void nashornWarning(String message) {
-        SpecsLogs.warn(message);
-    }
-
-    @Override
     public boolean isArray(Object object) {
         return asValue(object).hasArrayElements();
     }

@@ -305,10 +305,6 @@ public interface JsEngine {
     // return getEngine().createBindings();
     // }
 
-    default void nashornWarning(String message) {
-        // Do nothing
-    }
-
     /**
      * 
      * @param object

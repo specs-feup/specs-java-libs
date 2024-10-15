@@ -177,11 +177,6 @@ public class NodeJsEngine implements JsEngine {
     }
 
     @Override
-    public void nashornWarning(String message) {
-        throw new NotImplementedException(this);
-    }
-
-    @Override
     public Object newNativeArray() {
         throw new NotImplementedException(this);
     }
