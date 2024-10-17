@@ -137,9 +137,9 @@ public class GraalvmJsEngine extends AJsEngine {
                 // .allowPolyglotAccess(PolyglotAccess.ALL)
                 .allowHostClassLookup(name -> !forbiddenClasses.contains(name));
 
-        if (engineWorkingDirectory != null) {
+        if (nodeModulesFolder != null) {
             FileSystem fs = FileSystem.newDefaultFileSystem();
-            fs.setCurrentWorkingDirectory(engineWorkingDirectory);
+            fs.setCurrentWorkingDirectory(nodeModulesFolder.toPath());
             contextBuilder.fileSystem(fs);
 
             // Path path = Paths.get(engineWorkingDirectory + "/node_modules");
