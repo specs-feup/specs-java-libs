@@ -33,13 +33,10 @@ import pt.up.fe.specs.util.properties.SpecsProperties;
  */
 public class PropertiesPersistence implements AppPersistence {
 
-    private final Collection<DataKey<?>> options;
-
     // Used to check values being loaded
     private final StoreDefinition definition;
 
     public PropertiesPersistence(StoreDefinition storeDefinition) {
-        options = storeDefinition.getKeys();
         definition = storeDefinition;
     }
 

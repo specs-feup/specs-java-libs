@@ -6,12 +6,17 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>sf.eclipse.javacc.core.javaccbuilder</name>
+			<name>org.eclipse.jdt.core.javabuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
+			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>sf.eclipse.javacc.core.javaccbuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -19,10 +24,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>sf.eclipse.javacc.core.javaccnature</nature>
+		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1689258621814</id>
+			<id>1727907273684</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
