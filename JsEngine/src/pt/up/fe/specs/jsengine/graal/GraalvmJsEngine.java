@@ -40,6 +40,7 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Source.Builder;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.io.FileSystem;
+import org.graalvm.polyglot.io.IOAccess;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import com.oracle.truffle.polyglot.SpecsPolyglot;
@@ -131,7 +132,7 @@ public class GraalvmJsEngine extends AJsEngine {
                 .allowAllAccess(true)
                 .allowHostAccess(HostAccess.ALL)    
                 // .option("js.load-from-url", "true")
-                // .allowIO(true)
+                // .allowIO(IOAccess.ALL)
                 // .allowCreateThread(true)
                 // .allowNativeAccess(true)
                 // .allowPolyglotAccess(PolyglotAccess.ALL)
@@ -140,7 +141,7 @@ public class GraalvmJsEngine extends AJsEngine {
         if (nodeModulesFolder != null) {
             FileSystem fs = FileSystem.newDefaultFileSystem();
             fs.setCurrentWorkingDirectory(nodeModulesFolder.toPath());
-            contextBuilder.fileSystem(fs);
+            contextBuilder.allowIO(IOAccess.newBuilder().fileSystem(fs).build());
 
             // Path path = Paths.get(engineWorkingDirectory + "/node_modules");
 

@@ -25,6 +25,7 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.PolyglotAccess;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.io.IOAccess;
 import org.junit.Test;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
@@ -65,7 +66,7 @@ public class JsEngineTest {
         Context.Builder contextBuilder = Context.newBuilder("js")
                 .allowAllAccess(true)
                 .allowHostAccess(HostAccess.ALL)
-                .allowIO(true)
+                .allowIO(IOAccess.ALL)
                 .allowCreateThread(true)
                 .allowNativeAccess(true)
                 .allowPolyglotAccess(PolyglotAccess.ALL);
