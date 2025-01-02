@@ -1,20 +1,17 @@
 /**
  * Copyright 2016 SPeCS.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
  */
 
 package org.specs.generators.java.classtypes;
-
-import java.util.List;
-import java.util.Optional;
 
 import org.specs.generators.java.IGenerate;
 import org.specs.generators.java.enums.Annotation;
@@ -26,8 +23,10 @@ import org.specs.generators.java.types.JavaGenericType;
 import org.specs.generators.java.types.JavaType;
 import org.specs.generators.java.utils.UniqueList;
 import org.specs.generators.java.utils.Utils;
-
 import tdrc.utils.StringUtils;
+
+import java.util.List;
+import java.util.Optional;
 
 public abstract class ClassType implements IGenerate {
 
@@ -50,11 +49,9 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Create a public class type with name and package
-     * 
-     * @param name
-     *            the name for the class
-     * @param classPackage
-     *            the class package
+     *
+     * @param name         the name for the class
+     * @param classPackage the class package
      */
     public ClassType(String name, String classPackage) {
         init(name, classPackage);
@@ -80,7 +77,7 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Return a list of all imports, including sub imports
-     * 
+     *
      * @return
      */
     // List<String> getAllImports();
@@ -88,7 +85,6 @@ public abstract class ClassType implements IGenerate {
     // Optional<ClassType> getParent();
     //
     // void setParent(ClassType type);
-
     public String getClassPackage() {
         return classPackage;
     }
@@ -157,7 +153,7 @@ public abstract class ClassType implements IGenerate {
      * Adds a class type as an inner type of the class. This is just a temporary work around
      * <p>
      * <b>Note:</b> this method sets the parent of the type given as the invoked one
-     * 
+     *
      * @param type
      * @return
      */
@@ -183,9 +179,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Add an import to the class
-     * 
-     * @param imports
-     *            the new import
+     *
+     * @param imports the new import
      * @return true if the import can be added, false if not
      */
     public void addImport(String... imports) {
@@ -199,14 +194,14 @@ public abstract class ClassType implements IGenerate {
 
             return false;
         }
+
         return getImports().add(newImport);
     }
 
     /**
      * Add an import to the class
-     * 
-     * @param imports
-     *            the new import
+     *
+     * @param imports the new import
      * @return true if the import can be added, false if not
      */
     public void addImport(Class<?>... imports) {
@@ -217,9 +212,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Add an array of imports to the class
-     * 
-     * @param imports
-     *            the new import
+     *
+     * @param imports the new import
      * @return true if the import can be added, false if not
      */
     public void addImport(JavaType... imports) {
@@ -230,9 +224,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Add an import to the interface
-     * 
-     * @param newImport
-     *            the new import
+     *
+     * @param newImport the new import
      * @return true if the import can be added, false if not
      */
     public boolean addImport(JavaType newImport) {
@@ -248,7 +241,7 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Add the imports required for each generic type used in a JavaGenericType
-     * 
+     *
      * @param genType
      */
     private void addGenericImports(JavaGenericType genType) {
@@ -258,9 +251,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Remove an import from the class
-     * 
-     * @param importRem
-     *            the import to be removed
+     *
+     * @param importRem the import to be removed
      * @return true if the import was successfully removed
      */
     public boolean removeImport(String importRem) {
@@ -269,9 +261,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Append text to the javadoc comment
-     * 
-     * @param comment
-     *            the text to append
+     *
+     * @param comment the text to append
      * @return the {@link StringBuilder} with the new comment
      */
     public StringBuilder appendComment(String comment) {
@@ -280,9 +271,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Add a new javadoc tag to the comment, with no description
-     * 
-     * @param tag
-     *            the new tag to add
+     *
+     * @param tag the new tag to add
      */
     public void add(JDocTag tag) {
         getJavaDocComment().addTag(tag);
@@ -290,11 +280,9 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Add a new javadoc tag to the comment with description
-     * 
-     * @param tag
-     *            the new tag to add
-     * @param description
-     *            the tag description
+     *
+     * @param tag         the new tag to add
+     * @param description the tag description
      */
     public void add(JDocTag tag, String description) {
         getJavaDocComment().addTag(tag, description);
@@ -302,9 +290,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Add a new modifier to the class
-     * 
-     * @param modifier
-     *            the new modifier
+     *
+     * @param modifier the new modifier
      * @return true if the modifier was successfully added
      */
     public boolean add(Modifier modifier) {
@@ -313,9 +300,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Removes a modifier from the class
-     * 
-     * @param modifier
-     *            the modifier to remove
+     *
+     * @param modifier the modifier to remove
      * @return true if the modifier was successfully removed
      */
     public boolean remove(Modifier modifier) {
@@ -324,9 +310,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Add a new annotation to the class
-     * 
-     * @param annotation
-     *            the new annotation
+     *
+     * @param annotation the new annotation
      * @return true if the annotation was successfully added
      */
     public boolean add(Annotation annotation) {
@@ -335,9 +320,8 @@ public abstract class ClassType implements IGenerate {
 
     /**
      * Removes a annotation from the class
-     * 
-     * @param annotation
-     *            the annotation to remove
+     *
+     * @param annotation the annotation to remove
      * @return true if the annotation was successfully removed
      */
     public boolean remove(Annotation annotation) {
