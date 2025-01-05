@@ -1,11 +1,11 @@
 /**
  * Copyright 2012 SPeCS Research Group.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -17,11 +17,10 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * @author Joao Bispo
- * 
  */
 public class BuilderWithIndentation {
 
-    public final static String DEFAULT_NEWLINE = System.getProperty("line.separator");
+    public final static String DEFAULT_NEWLINE = "\n";
     public final static String DEFAULT_TAB = "\t";
 
     // The builder used to create the string
@@ -70,7 +69,7 @@ public class BuilderWithIndentation {
 
     /**
      * Appends the current indentation and the string to the current buffer.
-     * 
+     *
      * @param string
      */
     public BuilderWithIndentation add(String string) {
@@ -83,7 +82,7 @@ public class BuilderWithIndentation {
 
     /**
      * Splits the given string around the newlines and a adds each line.
-     * 
+     *
      * @param lines
      */
     public BuilderWithIndentation addLines(String lines) {
@@ -107,7 +106,7 @@ public class BuilderWithIndentation {
 
     /**
      * Appends the current indentation, the string and a newline to the current buffer.
-     * 
+     *
      * @param line
      */
     public BuilderWithIndentation addLine(String line) {
