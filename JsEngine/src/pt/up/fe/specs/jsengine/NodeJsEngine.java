@@ -218,8 +218,7 @@ public class NodeJsEngine implements JsEngine {
 
     @Override
     public Object toJs(Object javaObject) {
-        // TODO: Implement
-        throw new NotImplementedException(this);
+        return javaObject;
     }
 
     @Override
