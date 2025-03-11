@@ -14,13 +14,13 @@ java {
 // Repositories providers
 repositories {
 /*
-	maven { url "https://repo1.maven.org/maven2/"}
-	maven { url "https://maven.google.com"}
-	maven { url "https://oss.sonatype.org/content/repositories/snapshots"}
-	maven { url "https://oss.sonatype.org/content/groups/public"}
-	maven { url "https://nexus.bedatadriven.com/content/groups/public/"}
-	maven { url "https://repo.clojars.org/"}
-	maven { url "https://repo.eclipse.org/content/repositories/eclipse-staging/"}
+	maven { url="https://repo1.maven.org/maven2/"}
+	maven { url="https://maven.google.com"}
+	maven { url="https://oss.sonatype.org/content/repositories/snapshots"}
+	maven { url="https://oss.sonatype.org/content/groups/public"}
+	maven { url="https://nexus.bedatadriven.com/content/groups/public/"}
+	maven { url="https://repo.clojars.org/"}
+	maven { url="https://repo.eclipse.org/content/repositories/eclipse-staging/"}
 */
     mavenCentral()
 }
