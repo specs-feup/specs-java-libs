@@ -1,5 +1,5 @@
 plugins {
- 	id 'distribution'
+     id 'distribution'
 }
 
 // Java project
@@ -13,43 +13,22 @@ java {
 
 // Repositories providers
 repositories {
-/*
-	maven { url="https://repo1.maven.org/maven2/"}
-	maven { url="https://maven.google.com"}
-	maven { url="https://oss.sonatype.org/content/repositories/snapshots"}
-	maven { url="https://oss.sonatype.org/content/groups/public"}
-	maven { url="https://nexus.bedatadriven.com/content/groups/public/"}
-	maven { url="https://repo.clojars.org/"}
-	maven { url="https://repo.eclipse.org/content/repositories/eclipse-staging/"}
-*/
     mavenCentral()
 }
 
 dependencies {
-	testImplementation "junit:junit:4.13.1"     
-	
-	implementation ':SpecsUtils'
-	implementation ':jOptions'
-	
-	implementation('org.matheclipse:matheclipse-core:2.0.0') {
-//		exclude group: 'org.apfloat', module: 'apfloat'
-	}
-	
-//	implementation group: 'org.apfloat', name: 'apfloat', version: '2.1'	
+    testImplementation "junit:junit:4.13.1"     
 
-	implementation('org.hipparchus:hipparchus-core:2.0')
+    implementation ':SpecsUtils'
+    implementation ':jOptions'
 
-	implementation('org.matheclipse:matheclipse-gpl:2.0.0') {
-		exclude group: 'org.apache.logging.log4j', module: 'log4j-1.2-api'
-	}
-	
-	implementation('org.apache.logging.log4j:log4j-1.2-api:2.11.2')
-	
-
+    implementation group: 'org.hipparchus', name: 'hipparchus-core', version: '3.1'
+    implementation group: 'org.matheclipse', name: 'matheclipse-core', version: '3.0.0'
+    implementation group: 'org.matheclipse', name: 'matheclipse-gpl', version: '3.0.0'
 }
 
 java {
-	withSourcesJar()
+    withSourcesJar()
 }
 
 // Project sources
@@ -59,13 +38,13 @@ sourceSets {
          srcDir 'src'
       }
    }
-	
+    
    
    test {
       java {
          srcDir 'test'
       }
-	  
+      
    }
    
 }

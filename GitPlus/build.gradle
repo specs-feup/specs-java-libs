@@ -21,8 +21,8 @@ dependencies {
 	
 	implementation ':SpecsUtils'
 	
-	implementation group: 'com.google.guava', name: 'guava', version: '19.0'
-	implementation group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.6.0.202305301015-r'
+	implementation group: 'com.google.guava', name: 'guava', version: '33.4.0-jre'
+	implementation group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '7.1.0.202411261347-r'
 }
 
 java {
