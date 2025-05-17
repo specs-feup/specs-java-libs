@@ -34,14 +34,18 @@ public interface JsonReaderParser {
         }
     }
 
-    default String nextName(JsonReader reader, String name) {
+    default String nextName(JsonReader reader) {
         try {
-            String actualName = reader.nextName();
-            SpecsCheck.checkArgument(actualName.equals(name), () -> "Expected name '" + name + "'");
-            return actualName;
+            return reader.nextName();
         } catch (IOException e) {
             throw new RuntimeException("Could not read string from JSON", e);
         }
+    }
+
+    default String nextName(JsonReader reader, String name) {
+        var actualName = nextName(reader);
+        SpecsCheck.checkArgument(actualName.equals(name), () -> "Expected name '" + name + "'");
+        return actualName;
     }
 
     default String nextString(JsonReader reader, String name) {
@@ -143,5 +147,13 @@ public interface JsonReaderParser {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    default public String getString(Map<String, Object> data, String key) {
+        if (!data.containsKey(key)) {
+            throw new RuntimeException("Could not find key '" + key + "': " + data);
+        }
+
+        return data.get(key).toString();
     }
 }
