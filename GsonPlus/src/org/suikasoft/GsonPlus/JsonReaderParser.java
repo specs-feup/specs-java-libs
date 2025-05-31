@@ -4,7 +4,10 @@ import com.google.gson.stream.JsonReader;
 import pt.up.fe.specs.util.SpecsCheck;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public interface JsonReaderParser {
@@ -14,17 +17,15 @@ public interface JsonReaderParser {
         return nextValue(reader);
     }
 
-    //    default Optional<Object> nextValueTry(JsonReader reader) {
     default Object nextValue(JsonReader reader) {
         try {
             var next = reader.peek();
             return switch (next) {
-                case STRING -> Optional.of(reader.nextString());
-                case BOOLEAN -> Optional.of(reader.nextBoolean());
-                case NUMBER -> Optional.of(reader.nextDouble());
-                case BEGIN_ARRAY -> Optional.of(nextList(reader));
-                case BEGIN_OBJECT -> Optional.of(nextObject(reader));
-                //case NULL -> nextNull(reader); // If lenient mode is active nulls can appear after trailing comma
+                case STRING -> reader.nextString();
+                case BOOLEAN -> reader.nextBoolean();
+                case NUMBER -> reader.nextDouble();
+                case BEGIN_ARRAY -> nextList(reader);
+                case BEGIN_OBJECT -> nextObject(reader);
                 default -> throw new RuntimeException("Case not defined at " + reader.getPath() + ": " + next);
             };
 
@@ -33,20 +34,14 @@ public interface JsonReaderParser {
         }
     }
 
-    default Optional<Object> nextNull(JsonReader reader) {
+    default void nextNull(JsonReader reader) {
         try {
             reader.nextNull();
-            return Optional.empty();
         } catch (IOException e) {
             throw new RuntimeException("Could not read value from JSON", e);
         }
     }
 
-    /*
-        default Object nextValue(JsonReader reader) {
-            return nextValueTry(reader).get();
-        }
-    */
     default String nextName(JsonReader reader) {
         try {
             return reader.nextName();
@@ -83,7 +78,6 @@ public interface JsonReaderParser {
 
             while (reader.hasNext()) {
                 list.add(nextValue(reader));
-                //nextValueTry(reader).ifPresent(list::add);
             }
 
             reader.endArray();
@@ -102,15 +96,7 @@ public interface JsonReaderParser {
             reader.beginObject();
 
             while (reader.hasNext()) {
-/*
-                // To handle malformed jsons
-                if (reader.peek() == JsonToken.NULL) {
-                    reader.nextNull();
-                    break;
-                }
-*/
                 var key = reader.nextName();
-                //var value = nextValueTry(reader).orElseThrow(() -> new RuntimeException("Expected an object after '" + key + "'"));
                 var value = nextValue(reader);
                 map.put(key, value);
             }
