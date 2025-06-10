@@ -1,5 +1,9 @@
 /*
- * Copyright 2010 SPeCS Research Group.
+ * SpecsSystem.java
+ *
+ * Utility class for system-related tasks, such as process management, reflection utilities, OS detection, and resource handling. Used throughout the SPeCS framework to provide cross-platform and advanced system operations.
+ *
+ * Copyright 2025 SPeCS Research Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -56,6 +60,9 @@ import java.util.stream.Collectors;
 
 /**
  * Utility methods related to system tasks.
+ * <p>
+ * Provides static utility methods for interacting with the operating system, managing processes, performing reflection, and handling resources. Includes cross-platform support and advanced features for the SPeCS framework.
+ * </p>
  *
  * @author Joao Bispo
  */
@@ -94,11 +101,11 @@ public class SpecsSystem {
     /**
      * Helper method which receives the command and the working directory instead of the builder.
      *
-     * @param command
-     * @param workingDir
-     * @param storeOutput
-     * @param printOutput
-     * @return
+     * @param command List of command arguments
+     * @param workingDir Working directory for the process
+     * @param storeOutput Whether to store the output
+     * @param printOutput Whether to print the output
+     * @return ProcessOutputAsString containing the result of the process execution
      */
     public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
                                                    boolean storeOutput, boolean printOutput) {
@@ -108,6 +115,16 @@ public class SpecsSystem {
         return runProcess(builder, storeOutput, printOutput);
     }
 
+    /**
+     * Runs a process with a timeout.
+     *
+     * @param command List of command arguments
+     * @param workingDir Working directory for the process
+     * @param storeOutput Whether to store the output
+     * @param printOutput Whether to print the output
+     * @param timeoutNanos Timeout in nanoseconds
+     * @return ProcessOutputAsString containing the result of the process execution
+     */
     public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
                                                    boolean storeOutput, boolean printOutput, Long timeoutNanos) {
 
@@ -125,10 +142,10 @@ public class SpecsSystem {
      * Helper method which receives the command instead of the builder, and launches the process in the current
      * directory.
      *
-     * @param command
-     * @param storeOutput
-     * @param printOutput
-     * @return
+     * @param command List of command arguments
+     * @param storeOutput Whether to store the output
+     * @param printOutput Whether to print the output
+     * @return ProcessOutputAsString containing the result of the process execution
      */
     public static ProcessOutputAsString runProcess(List<String> command,
                                                    boolean storeOutput, boolean printOutput) {
@@ -139,12 +156,12 @@ public class SpecsSystem {
     /**
      * Launches a process for the given command, that runs on 'workingDir'.
      *
-     * @param command
-     * @param workingDir
-     * @param storeOutput
-     * @param printOutput
-     * @param builder
-     * @return
+     * @param command List of command arguments
+     * @param workingDir Working directory for the process
+     * @param storeOutput Whether to store the output
+     * @param printOutput Whether to print the output
+     * @param builder ProcessBuilder instance
+     * @return ProcessOutput containing the result of the process execution
      */
     /*
     public static ProcessOutput runProcess(List<String> command, String workingDir,
@@ -164,10 +181,10 @@ public class SpecsSystem {
      * <p>
      * If there is any problem with the process, throws an exception.
      *
-     * @param builder
-     * @param storeOutput
-     * @param printOutput
-     * @return
+     * @param builder ProcessBuilder instance
+     * @param storeOutput Whether to store the output
+     * @param printOutput Whether to print the output
+     * @return ProcessOutputAsString containing the result of the process execution
      */
     public static ProcessOutputAsString runProcess(ProcessBuilder builder, boolean storeOutput, boolean printOutput) {
 
@@ -182,10 +199,10 @@ public class SpecsSystem {
      * Helper method which receives the command instead of the builder, and launches the process in the current
      * directory.
      *
-     * @param command
-     * @param storeOutput
-     * @param printOutput
-     * @return
+     * @param command List of command arguments
+     * @param outputProcessor Function to process standard output
+     * @param errorProcessor Function to process standard error
+     * @return ProcessOutput containing the result of the process execution
      */
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command,
                                                         Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
@@ -196,11 +213,11 @@ public class SpecsSystem {
     /**
      * Helper method which receives the command and the working directory instead of the builder.
      *
-     * @param command
-     * @param workingDir
-     * @param storeOutput
-     * @param printOutput
-     * @return
+     * @param command List of command arguments
+     * @param workingDir Working directory for the process
+     * @param outputProcessor Function to process standard output
+     * @param errorProcessor Function to process standard error
+     * @return ProcessOutput containing the result of the process execution
      */
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command, File workingDir,
                                                         Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
@@ -211,112 +228,46 @@ public class SpecsSystem {
     }
 
     /**
-     * Arguments such as -I
-     *
-     * @param command
-     * @return
-     */
-    /*
-    // private static List<String> normalizeProcessCommand(List<String> command) {
-    private static String normalizeProcessArgument(String arg) {
-        // Trim argument
-        String trimmedArg = arg.strip();
-        SpecsLogs.debug(() -> "Argument: '" + trimmedArg + "'");
-    
-        if (!trimmedArg.startsWith("-I")) {
-            return trimmedArg;
-        }
-    
-        if (trimmedArg.charAt(2) != '\"') {
-            return trimmedArg;
-        }
-    
-        SpecsLogs.debug(() -> "Normalizing -I argument: '" + trimmedArg + "'");
-        SpecsCheck.checkArgument(trimmedArg.endsWith("\""),
-                () -> "Expected argument to end with double quote: '" + trimmedArg + "'");
-        String normalizedArg = "-I" + trimmedArg.substring(3, trimmedArg.length() - 1);
-        SpecsLogs.debug(() -> "Normalized: '" + normalizedArg + "'");
-    
-        return normalizedArg;
-    
-        // // List<String> normalizedCommand = new ArrayList<>(command.size());
-        //
-        // // for (String arg : command) {
-        // // Trim argument
-        // String trimmedArg = arg.strip();
-        //
-        // // Check if it has white space
-        // if (!trimmedArg.contains(" ")) {
-        // // SpecsLogs.debug("Did not normalized argument, did not find spaces: '" + trimmedArg + "'");
-        // return trimmedArg;
-        // // normalizedCommand.add(trimmedArg);
-        // // continue;
-        // }
-        //
-        // // If contain white space, check if already between quotes
-        // boolean hasStartQuote = trimmedArg.startsWith("\"");
-        // boolean hasEndQuote = trimmedArg.endsWith("\"");
-        // if (hasStartQuote && hasEndQuote) {
-        // // SpecsLogs
-        // // .debug("Did not normalized argument, has spaces but also already has quotes: '" + trimmedArg + "'");
-        // return trimmedArg;
-        // // normalizedCommand.add(trimmedArg);
-        // // continue;
-        // }
-        //
-        // // Check if quotes are balanced
-        // // Leave like that, it can be on purpose
-        // // E.g., -I"<path>"
-        // boolean isUnbalanced = hasStartQuote ^ hasEndQuote;
-        // if (isUnbalanced) {
-        // // SpecsLogs.debug("Found unbalanced double quotes on argument, leaving it like that: '" + trimmedArg +
-        // // "'");
-        // return trimmedArg;
-        // }
-        // // } else {
-        // SpecsLogs.debug("Found argument that needs double quotes, correcting: '" + trimmedArg + "'");
-        // // }
-        //
-        // if (!hasStartQuote) {
-        // trimmedArg = "\"" + trimmedArg;
-        // }
-        //
-        // if (!hasEndQuote) {
-        // trimmedArg = trimmedArg + "\"";
-        // }
-        //
-        // return trimmedArg;
-        // // normalizedCommand.add(trimmedArg);
-        // // }
-        //
-        // // return normalizedCommand;
-        //
-    
-    }
-    */
-
-    /**
      * Launches the process characterized by 'builder'.
      *
      * <p>
      * If there is any problem with the process, throws an exception.
      *
-     * @param builder
-     * @param storeOutput
-     * @param printOutput
-     * @return
+     * @param builder ProcessBuilder instance
+     * @param outputProcessor Function to process standard output
+     * @param errorProcessor Function to process standard error
+     * @return ProcessOutput containing the result of the process execution
      */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
                                                         Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
         return runProcess(builder, outputProcessor, errorProcessor, null);
     }
 
+    /**
+     * Runs a process with a timeout.
+     *
+     * @param builder ProcessBuilder instance
+     * @param outputProcessor Function to process standard output
+     * @param errorProcessor Function to process standard error
+     * @param timeoutNanos Timeout in nanoseconds
+     * @return ProcessOutput containing the result of the process execution
+     */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
                                                         Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
         return runProcess(builder, outputProcessor, errorProcessor, null, timeoutNanos);
     }
 
+    /**
+     * Runs a process with input and timeout.
+     *
+     * @param builder ProcessBuilder instance
+     * @param outputProcessor Function to process standard output
+     * @param errorProcessor Function to process standard error
+     * @param input Consumer for input stream
+     * @param timeoutNanos Timeout in nanoseconds
+     * @return ProcessOutput containing the result of the process execution
+     */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
                                                         Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor,
                                                         Consumer<OutputStream> input, Long timeoutNanos) {
@@ -369,7 +320,7 @@ public class SpecsSystem {
     /**
      * Performs several fixes on the builder command (e.g., adapts command for Windows platforms)
      *
-     * @param builder
+     * @param builder ProcessBuilder instance
      */
     private static void processCommand(ProcessBuilder builder) {
 
@@ -417,6 +368,15 @@ public class SpecsSystem {
 
     }
 
+    /**
+     * Executes the process and retrieves its output.
+     *
+     * @param process Process instance
+     * @param timeoutNanos Timeout in nanoseconds
+     * @param outputFuture Future for standard output
+     * @param errorFuture Future for standard error
+     * @return ProcessOutput containing the result of the process execution
+     */
     private static <O, E> ProcessOutput<O, E> executeProcess(Process process,
                                                              Long timeoutNanos, Future<O> outputFuture, Future<E> errorFuture) {
 
@@ -478,6 +438,11 @@ public class SpecsSystem {
         return new ProcessOutput<>(returnValue, output, error, outputException);
     }
 
+    /**
+     * Destroys the process and its descendants.
+     *
+     * @param process Process instance
+     */
     private static void destroyProcess(Process process) {
 
         // TODO: a breakpoint is necessary before process destruction, or else the "insts"
@@ -490,6 +455,11 @@ public class SpecsSystem {
         destroyDescendants(processDescendants);
     }
 
+    /**
+     * Destroys descendant processes.
+     *
+     * @param processDescendants List of descendant processes
+     */
     private static void destroyDescendants(List<ProcessHandle> processDescendants) {
 
         // Destroy descendants
@@ -513,6 +483,11 @@ public class SpecsSystem {
         }
     }
 
+    /**
+     * Returns a daemon thread factory.
+     *
+     * @return ThreadFactory instance
+     */
     public static ThreadFactory getDaemonThreadFactory() {
         return r -> {
             Thread thread = new Thread(r);
@@ -522,51 +497,18 @@ public class SpecsSystem {
     }
 
     /**
-     * Transforms a String List representing a command into a single String separated by spaces.
-     *
-     * @param command
-     * @return
-     */
-    /*
-    public static String getCommandString(List<String> command) {
-        return normalizeCommand(command).stream()
-                // Normalize argument
-                // .map(SpecsSystem::normalizeProcessArgument)
-                .collect(Collectors.joining(" "));
-    
-        // StringBuilder builder = new StringBuilder();
-        //
-        // builder.append(command.get(0));
-        // for (int i = 1; i < command.size(); i++) {
-        // builder.append(" ");
-        // builder.append(command.get(i));
-        // }
-        //
-        // return builder.toString();
-    }
-    */
-    /**
-     * Normalizes a command to be executed, inserting double quotes where necessary.
-     *
-     * @param command
-     * @return
-     */
-    /*
-    public static List<String> normalizeCommand(List<String> command) {
-        return command.stream()
-                // Normalize argument
-                .map(SpecsSystem::normalizeProcessArgument)
-                .collect(Collectors.toList());
-    }
-    */
-
-    /**
      * @return the StackTraceElement of the previous method of the method calling this method
      */
     public static StackTraceElement getCallerMethod() {
         return getCallerMethod(3);
     }
 
+    /**
+     * Returns the caller method at the specified index in the stack trace.
+     *
+     * @param callerMethodIndex Index of the caller method in the stack trace
+     * @return StackTraceElement of the caller method
+     */
     public static StackTraceElement getCallerMethod(int callerMethodIndex) {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         if (stackTraceElements.length <= callerMethodIndex) {
@@ -581,9 +523,11 @@ public class SpecsSystem {
     }
 
     /**
-     * @param aClass
-     * @param anInterface
-     * @return true if the given class implements the given interface. False otherwise.
+     * Checks if the given class implements the specified interface.
+     *
+     * @param aClass Class to check
+     * @param anInterface Interface to check against
+     * @return true if the class implements the interface, false otherwise
      */
     public static boolean implementsInterface(Class<?> aClass, Class<?> anInterface) {
         // Build set with interfaces of the given class
@@ -643,6 +587,11 @@ public class SpecsSystem {
         return null;
     }
 
+    /**
+     * Returns the name of the program.
+     *
+     * @return Program name
+     */
     public static String getProgramName() {
         StackTraceElement[] stack = getMainStackTrace();
         if (stack == null) {
@@ -669,8 +618,8 @@ public class SpecsSystem {
      * Code taken from: <br>
      * http://www.rgagnon.com/javadetails/java-0422.html
      *
-     * @param className
-     * @return
+     * @param className Class name to check
+     * @return true if the class is available, false otherwise
      */
     public static boolean isAvailable(String className) {
         boolean isFound = false;
@@ -684,6 +633,11 @@ public class SpecsSystem {
         return isFound;
     }
 
+    /**
+     * Sleeps for the specified duration.
+     *
+     * @param millis Duration in milliseconds
+     */
     public static void sleep(long millis) {
         try {
             Thread.sleep(millis);
@@ -698,15 +652,20 @@ public class SpecsSystem {
      * <p>
      * Prints the output, but does not store it to a String.
      *
-     * @param command
-     * @param workingDir
-     * @return
+     * @param command List of command arguments
+     * @param workingDir Working directory for the process
+     * @return Exit code of the process
      */
     public static int run(List<String> command, File workingDir) {
         ProcessOutputAsString output = runProcess(command, workingDir, false, true);
         return output.getReturnValue();
     }
 
+    /**
+     * Measures the time taken to execute a runnable.
+     *
+     * @param runnable Runnable to execute
+     */
     public static void getNanoTime(Runnable runnable) {
         long time = System.nanoTime();
         runnable.run();
@@ -715,6 +674,13 @@ public class SpecsSystem {
 
     }
 
+    /**
+     * Measures the time taken to execute a runnable and returns its result.
+     *
+     * @param runnable Runnable to execute
+     * @param <T> Type of the result
+     * @return Result of the runnable
+     */
     public static <T> T getNanoTime(Returnable<T> runnable) {
         long time = System.nanoTime();
         T t = runnable.run();
@@ -729,7 +695,7 @@ public class SpecsSystem {
     }
 
     /**
-     * @param callGc
+     * @param callGc Whether to call garbage collector
      * @return the current amount of memory, in bytes
      */
     public static long getUsedMemory(boolean callGc) {
@@ -742,6 +708,12 @@ public class SpecsSystem {
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     }
 
+    /**
+     * Returns the used memory in megabytes.
+     *
+     * @param callGc Whether to call garbage collector
+     * @return Used memory in megabytes
+     */
     public static long getUsedMemoryMb(boolean callGc) {
         var usedMemory = getUsedMemory(callGc);
 
@@ -751,7 +723,7 @@ public class SpecsSystem {
     }
 
     /**
-     * Taken from here: http://www.inoneo.com/en/blog/9/java/get-the-jvm-peak-memory-usage
+     * Prints the peak memory usage.
      */
     public static void printPeakMemoryUsage() {
         // Place this code just before the end of the program
@@ -782,8 +754,8 @@ public class SpecsSystem {
     }
 
     /**
-     * @param command
-     * @param workingdir
+     * @param command List of command arguments
+     * @param workingdir Working directory for the process
      * @return true if the program worked, false if it could not be started
      */
     public static boolean isCommandAvailable(List<String> command, File workingdir) {
@@ -843,10 +815,6 @@ public class SpecsSystem {
     }
 
     /**
-     * Taken from
-     * http://stackoverflow.com/questions/4748673/how-can-i-check-the-bitness-of-my-os-using-java-j2se-not-os-
-     * arch/5940770#5940770
-     *
      * @return true if the system is 64-bit, false otherwise.
      */
     public static boolean is64Bit() {
@@ -878,39 +846,11 @@ public class SpecsSystem {
     }
 
     /**
-     * Cannot reliably get the return value from a JAR.
-     *
-     * This method checks if the last line of output is the error message defined in this class.
-     *
-     * @param output
-     * @return
-     */
-    /*
-    public static boolean noErrorOccurred(String output) {
-    
-    // Get last line, check if error
-    List<String> lines = LineReader.readLines(output);
-    boolean exceptionOccurred = lines.get(lines.size() - 1).equals(ProcessUtils.ERROR);
-    
-    if (!exceptionOccurred) {
-        return true;
-    } else {
-        return false;
-    }
-    }
-     */
-
-    /*
-    public static String getErrorString() {
-    return "\n" + ERROR;
-    }
-     */
-
-    /**
      * Launches the callable in another thread and waits termination.
      *
-     * @param args
-     * @return
+     * @param callable Callable to execute
+     * @param <T> Type of the result
+     * @return Result of the callable
      */
     public static <T> T executeOnThreadAndWait(Callable<T> callable) {
         // Launch weaver in another thread
@@ -919,26 +859,15 @@ public class SpecsSystem {
         executor.shutdown();
 
         return get(future);
-        /*
-        try {
-            return future.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            SpecsLogs.msgInfo("Failed to complete execution on thread, returning null");
-            return null;
-        } catch (ExecutionException e) {
-            // Rethrow cause
-            Throwable cause = e.getCause();
-            if (cause instanceof RuntimeException) {
-                throw (RuntimeException) cause;
-            }
-        
-            throw new RuntimeException(e.getCause());
-            // throw new RuntimeException("Error while executing thread", e);
-        }
-        */
     }
 
+    /**
+     * Retrieves the result of a Future.
+     *
+     * @param future Future instance
+     * @param <T> Type of the result
+     * @return Result of the Future
+     */
     public static <T> T get(Future<T> future) {
         try {
             return future.get();
@@ -954,20 +883,19 @@ public class SpecsSystem {
             }
 
             throw new RuntimeException(e.getCause());
-            // throw new RuntimeException("Error while executing thread", e);
         } finally {
             future.cancel(true);
         }
     }
 
     /**
-     * The contents of the Future, or null if there was a timeout.
+     * Retrieves the result of a Future with a timeout.
      *
-     * @param <T>
-     * @param future
-     * @param timeout
-     * @param unit
-     * @return
+     * @param future Future instance
+     * @param timeout Timeout duration
+     * @param unit Time unit for the timeout
+     * @param <T> Type of the result
+     * @return Result of the Future, or null if there was a timeout
      */
     public static <T> T get(Future<T> future, long timeout, TimeUnit unit) {
         try {
@@ -984,7 +912,6 @@ public class SpecsSystem {
             }
 
             throw new RuntimeException(e.getCause());
-            // throw new RuntimeException("Error while executing thread", e);
         } catch (TimeoutException e) {
             SpecsLogs.debug("get(): Timeout while retriving Future");
             return null;
@@ -999,11 +926,9 @@ public class SpecsSystem {
      * <p>
      * Taken from here: https://stackoverflow.com/questions/5715235/java-set-timeout-on-a-certain-block-of-code
      *
-     * @param <T>
-     * @param supplier
-     * @param timeout
-     * @param unit
-     * @return
+     * @param supplier Supplier to execute
+     * @param <T> Type of the result
+     * @return Future containing the result of the supplier
      */
     public static <T> Future<T> getFuture(Supplier<T> supplier) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -1013,110 +938,42 @@ public class SpecsSystem {
         return future;
     }
 
+    /**
+     * Executes a class in a separate process and waits for its termination.
+     *
+     * @param aClass Class to execute
+     * @param args Arguments for the class
+     * @return Exit code of the process
+     */
     public static int executeOnProcessAndWait(Class<?> aClass, String... args) {
         return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), Arrays.asList(args));
     }
 
-    // public static int executeOnProcessAndWaitWithExec(Class<?> aClass, String javaExecutable, String... args) {
-    // return executeOnProcessAndWaitWithExec(aClass, javaExecutable, Arrays.asList(args));
-    // }
-
     /**
-     * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
+     * Executes a class in a separate process and waits for its termination.
      *
-     * @param aClass
-     * @return
-     */
-    // public static int executeOnProcessAndWaitWithExec(Class<?> aClass, String javaExecutable, List<String> args) {
-    // return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), args);
-    // }
-
-    // public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
-    // List<String> args) {
-    //
-    // return executeOnProcessAndWaitWith(aClass, workingDir, args);
-    //
-    // }
-
-    /**
-     * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
-     *
-     * @param aClass
-     * @param javaExecutable
-     * @param workingDir
-     * @param args
-     * @return
+     * @param aClass Class to execute
+     * @param workingDir Working directory for the process
+     * @param args Arguments for the class
+     * @return Exit code of the process
      */
     public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
                                               List<String> args) {
 
-        // File jarPath = SpecsIo.getJarPath(aClass).orElseThrow(
-        // () -> new RuntimeException("Could not locate the JAR file for the class '" + aClass + "'"));
-        // ((URLClassLoader() Thread.currentThread().getContextClassLoader()).getURL();
-        // Process.exec("java", "-classpath", urls.join(":"), CLASS_TO_BE_EXECUTED)
-
         String classpath = System.getProperty("java.class.path");
 
-        // System.out.println("CLASSPATH:" + classpath);
-
         String className = aClass.getCanonicalName();
-        // String javaHome = "C:/Program Files/Java/jdk1.8.0_131/jre";
         List<String> command = new ArrayList<>();
         command.addAll(
                 Arrays.asList("java", "-cp", classpath, className));
-        // command.addAll(
-        // Arrays.asList("java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
-        // Arrays.asList("cmd", "/c", "java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
-        // command.addAll(Arrays.asList("java", "-cp", "\"" + jarPath.getAbsolutePath() + "\"", className));
         command.addAll(args);
 
         ProcessBuilder process = new ProcessBuilder(command);
         process.directory(workingDir);
 
-        // Set java home
-        // System.setProperty("java.home", javaHome);
-        // System.out.println("JAVA HOME:" + System.getProperty("java.home"));
-        // System.out.println("JAVA HOME BEFORE:" + System.getenv().get("JAVA_HOME"));
-        // System.getenv().put("JAVA_HOME", javaHome);
-        // System.out.println("JAVA HOME AFTER:" + System.getenv().get("JAVA_HOME"));
-        // process.environment().put("JAVA_HOME", javaHome);
-
         ProcessOutputAsString output = runProcess(process, false, true);
         return output.getReturnValue();
-        // ProcessBuilder builder = new ProcessBuilder("java", "-cp", classpath, className);
-        // Process process;
-        // try {
-        // process = builder.start();
-        // process.waitFor();
-        // return process.exitValue();
-        // } catch (IOException e) {
-        // SpecsLogs.warn("Exception which executing process:\n", e);
-        // } catch (InterruptedException e) {
-        // Thread.currentThread().interrupt();
-        // SpecsLogs.msgInfo("Failed to complete execution on process");
-        // }
-        //
-        // return -1;
     }
-
-    // public static ProcessBuilder buildJavaProcess(Class<?> aClass, String javaExecutable, List<String> args) {
-    // public static ProcessBuilder buildJavaProcess(Class<?> aClass, List<String> args) {
-    // List<String> command = new ArrayList<>();
-    // command.add("java");
-    //
-    // String classpath = System.getProperty("java.class.path");
-    // String className = aClass.getCanonicalName();
-    //
-    // command.add("-cp");
-    // command.add(classpath);
-    // command.add(className);
-    //
-    // command.addAll(args);
-    //
-    // ProcessBuilder process = new ProcessBuilder(command);
-    //
-    // return process;
-    // }
 
     /**
      * Returns a double based on the major (feature) and minor (interim) segments of the runtime version.
@@ -1146,11 +1003,24 @@ public class SpecsSystem {
         return version.version();
     }
 
+    /**
+     * Checks if the current Java version is at least the specified major version.
+     *
+     * @param major Major version to check
+     * @return true if the current Java version is at least the specified major version, false otherwise
+     */
     public static boolean hasMinimumJavaVersion(int major) {
         var version = Runtime.version();
         return major >= version.feature();
     }
 
+    /**
+     * Checks if the current Java version is at least the specified major and minor version.
+     *
+     * @param major Major version to check
+     * @param minor Minor version to check
+     * @return true if the current Java version is at least the specified major and minor version, false otherwise
+     */
     public static boolean hasMinimumJavaVersion(int major, int minor) {
         var version = Runtime.version();
         return major > version.feature() || (major == version.feature() && minor >= version.interim());
@@ -1220,40 +1090,22 @@ public class SpecsSystem {
 
     /***** ENDS methods for dynamically extending the classpath *****/
 
+    /**
+     * Checks if the current execution is in debug mode.
+     *
+     * @return true if in debug mode, false otherwise
+     */
     public static boolean isDebug() {
         return IS_DEBUG.get();
     }
-
-    /*
-    // public static <T> boolean hasCopyConstructor(T object) {
-    public static boolean hasCopyConstructor(Object object) {
-        // Class<T> aClass = (Class<T>) object.getClass();
-    
-        // Constructor<T> constructorMethod = null;
-        for (Constructor<?> constructor : object.getClass().getConstructors()) {
-            Class<?>[] constructorParams = constructor.getParameterTypes();
-    
-            if (constructorParams.length != 1) {
-                continue;
-            }
-    
-            if (object.getClass().isAssignableFrom(constructorParams[0])) {
-                return true;
-            }
-        }
-    
-        return false;
-        // Create copy constructor: new T(T data)
-        // constructorMethod = aClass.getConstructor(aClass);
-    }
-    */
 
     /**
      * Uses the copy constructor to create a copy of the given object. Throws exception if the class does not have a
      * copy constructor.
      *
-     * @param object
-     * @return
+     * @param object Object to copy
+     * @param <T> Type of the object
+     * @return Copy of the object
      */
     public static <T> T copy(T object) {
 
@@ -1291,12 +1143,28 @@ public class SpecsSystem {
 
     }
 
+    /**
+     * Creates a new instance of the specified class with the given arguments.
+     *
+     * @param classname Name of the class
+     * @param expectedClass Expected type of the class
+     * @param arguments Arguments for the constructor
+     * @param <T> Type of the class
+     * @return New instance of the class
+     */
     public static <T> T newInstance(String classname, Class<T> expectedClass, Object... arguments) {
         Object object = newInstance(classname, arguments);
 
         return expectedClass.cast(object);
     }
 
+    /**
+     * Creates a new instance of the specified class with the given arguments.
+     *
+     * @param classname Name of the class
+     * @param arguments Arguments for the constructor
+     * @return New instance of the class
+     */
     public static Object newInstance(String classname, Object... arguments) {
         Class<?> aClass;
         try {
@@ -1308,6 +1176,14 @@ public class SpecsSystem {
         return newInstance(aClass, arguments);
     }
 
+    /**
+     * Creates a new instance of the specified class with the given arguments.
+     *
+     * @param aClass Class to instantiate
+     * @param arguments Arguments for the constructor
+     * @param <T> Type of the class
+     * @return New instance of the class
+     */
     public static <T> T newInstance(Class<T> aClass, Object... arguments) {
 
         Constructor<T> constructorMethod = null;
@@ -1337,10 +1213,12 @@ public class SpecsSystem {
     }
 
     /**
-     * @param <T>
-     * @param aClass
-     * @param arguments
-     * @return the first constructor that is compatible with the given arguments, or null if none is found
+     * Retrieves the first constructor that is compatible with the given arguments.
+     *
+     * @param aClass Class to check
+     * @param arguments Arguments for the constructor
+     * @param <T> Type of the class
+     * @return Constructor instance, or null if none is found
      */
     public static <T> Constructor<T> getConstructor(Class<T> aClass, Object... arguments) {
         constructorTest:
@@ -1368,11 +1246,10 @@ public class SpecsSystem {
     }
 
     /**
-     * Taken from here:
-     * https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689
+     * Retrieves all classes in the hierarchy of the specified class.
      *
-     * @param clazz
-     * @return
+     * @param clazz Class to check
+     * @return Set of classes in the hierarchy
      */
     private static Set<Class<?>> getClassesBfs(Class<?> clazz) {
         Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
@@ -1396,19 +1273,20 @@ public class SpecsSystem {
     }
 
     /**
-     * Taken from here:
-     * https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689
+     * Retrieves the common superclasses of the specified classes.
      *
-     * @param classes
-     * @return
+     * @param classes Classes to check
+     * @return List of common superclasses
      */
     public static List<Class<?>> getCommonSuperClasses(Class<?>... classes) {
         return getCommonSuperClasses(Arrays.asList(classes));
     }
 
     /**
-     * @param classes
-     * @return
+     * Retrieves the common superclasses of the specified classes.
+     *
+     * @param classes Classes to check
+     * @return List of common superclasses
      */
     public static List<Class<?>> getCommonSuperClasses(List<Class<?>> classes) {
         // start off with set from first hierarchy
@@ -1441,9 +1319,9 @@ public class SpecsSystem {
      * <p>
      * Used when direct access to .class is not allowed.
      *
-     * @param classpath
-     * @param value
-     * @return true, if the value is an instance of the given classpath
+     * @param className Name of the class
+     * @param value Value to check
+     * @return true, if the value is an instance of the given class
      */
     public static boolean isInstance(String className, Object value) {
         try {
@@ -1454,6 +1332,14 @@ public class SpecsSystem {
         }
     }
 
+    /**
+     * Invokes the specified method on the given object.
+     *
+     * @param object Object to invoke the method on
+     * @param method Method name
+     * @param args Arguments for the method
+     * @return Result of the method invocation
+     */
     public static Object invoke(Object object, String method, Object... args) {
 
         Class<?>[] types = new Class[args.length];
@@ -1464,9 +1350,6 @@ public class SpecsSystem {
         }
 
         Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
-        // Class<?> invokingClass = object.getClass();
-        // Object invokingObject = object instanceof Class ? null : object;
-        // If method is static, object will be ignored
         Object invokingObject = object;
 
         // Choose best method
@@ -1482,16 +1365,15 @@ public class SpecsSystem {
         } catch (Exception e) {
             throw new RuntimeException("Error while invoking method '" + method + "'", e);
         }
-        // return object.class.getMethod(property, arguments).invoke(object, arguments);
     }
 
     /**
-     * Similar to findMethod(), but caches results. Be careful, can lead to unintended errors.
+     * Retrieves the specified method from the class.
      *
-     * @param invokingClass
-     * @param methodName
-     * @param types
-     * @return
+     * @param invokingClass Class to check
+     * @param methodName Method name
+     * @param types Parameter types
+     * @return Method instance, or null if none is found
      */
     public static Method getMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
         // Use methodId to cache results
@@ -1499,19 +1381,14 @@ public class SpecsSystem {
         return CACHED_METHODS.computeIfAbsent(methodId, key -> findMethod(invokingClass, methodName, types));
     }
 
-    private static String getMethodId(Class<?> invokingClass, String methodName, Class<?>... types) {
-        StringBuilder methodId = new StringBuilder();
-
-        methodId.append(invokingClass.getName());
-        methodId.append("::").append(methodName);
-        for (var type : types) {
-            methodId.append(",");
-            methodId.append(type.getName());
-        }
-
-        return methodId.toString();
-    }
-
+    /**
+     * Retrieves the specified method from the class.
+     *
+     * @param invokingClass Class to check
+     * @param methodName Method name
+     * @param types Parameter types
+     * @return Method instance, or null if none is found
+     */
     public static Method findMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
         Method invokingMethod = null;
         top:
@@ -1538,19 +1415,25 @@ public class SpecsSystem {
         return invokingMethod;
     }
 
-    private static String getFieldId(Class<?> invokingClass, String fieldName) {
-        StringBuilder fieldId = new StringBuilder();
-
-        fieldId.append(invokingClass.getName()).append("::").append(fieldName);
-
-        return fieldId.toString();
-    }
-
+    /**
+     * Retrieves the specified field from the class.
+     *
+     * @param invokingClass Class to check
+     * @param fieldName Field name
+     * @return Optional containing the field, or empty if none is found
+     */
     public static Optional<Field> getField(Class<?> invokingClass, String fieldName) {
         String fieldId = getFieldId(invokingClass, fieldName);
         return CACHED_FIELDS.computeIfAbsent(fieldId, key -> findField(invokingClass, fieldName));
     }
 
+    /**
+     * Retrieves the specified field from the class.
+     *
+     * @param invokingClass Class to check
+     * @param fieldName Field name
+     * @return Optional containing the field, or empty if none is found
+     */
     private static Optional<Field> findField(Class<?> invokingClass, String fieldName) {
 
         try {
@@ -1565,22 +1448,14 @@ public class SpecsSystem {
     }
 
     /**
-     * Invokes the given method as a property. If the method with name 'foo()' could not be found, looks for a .getFoo()
-     * method.
+     * Invokes the specified method as a property.
      *
-     * @param object
-     * @param methodName
-     * @return
+     * @param object Object to invoke the method on
+     * @param methodName Method name
+     * @return Result of the method invocation
      */
     public static Object invokeAsGetter(Object object, String methodName) {
-        // Special cases
-        // if (methodName.equals("toString")) {
-        // return object.toString();
-        // }
-
-        // System.out.println("MEthod name: '" + methodName + "'");
         Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
-        // Class<?> invokingClass = object.getClass();
         SpecsLogs.debug(() -> "invokeAsGetter: processing '" + methodName + "' for class '" + invokingClass + "'");
 
         // Check if getter is a field
@@ -1628,24 +1503,17 @@ public class SpecsSystem {
 
         throw new RuntimeException(
                 "Could not resolve property '" + methodName + "' for instance of class '" + invokingClass + "'");
-
-        // // If null, try camelCase getter
-        // if (invokingMethod == null) {
-        // String getterName = "get" + methodName.substring(0, 1).toUpperCase()
-        // + methodName.substring(1, methodName.length());
-        // return invoke(object, getterName);
-        // }
-        //
-        // SpecsCheck.checkNotNull(invokingMethod,
-        // () -> "Could not find method '" + methodName + "' for object " + object);
-        //
-        // try {
-        // return invokingMethod.invoke(object);
-        // } catch (Exception e) {
-        // throw new RuntimeException("Error while invoking method '" + methodName + "'", e);
-        // }
     }
 
+    /**
+     * Retrieves all static fields of the specified type from the class.
+     *
+     * @param aClass Class to check
+     * @param type Type of the fields
+     * @param <K> Type of the class
+     * @param <T> Type of the fields
+     * @return List of static fields
+     */
     public static <K, T> List<T> getStaticFields(Class<? extends K> aClass, Class<? extends T> type) {
 
         List<T> fields = new ArrayList<>();
@@ -1679,7 +1547,7 @@ public class SpecsSystem {
     /**
      * Reads the implementation version that is in the manifest file. Reads property Implementation-Version.
      *
-     * @return
+     * @return Build number, or null if not found
      */
     public static String getBuildNumber() {
         // Check if manifest file exists
@@ -1704,6 +1572,11 @@ public class SpecsSystem {
         return BUILD_NUMBER_ATTR;
     }
 
+    /**
+     * Creates a build number based on the current date and time.
+     *
+     * @return Build number
+     */
     public static String createBuildNumber() {
         var dtf = DateTimeFormatter.ofPattern("uuuuMMdd-HHmm");
         var now = LocalDateTime.now();
@@ -1711,8 +1584,10 @@ public class SpecsSystem {
     }
 
     /**
-     * @param e
-     * @return the fundamental cause of the exception
+     * Retrieves the fundamental cause of the exception.
+     *
+     * @param e Exception instance
+     * @return Fundamental cause of the exception
      */
     public static Throwable getLastCause(Throwable e) {
         var cause = e.getCause();

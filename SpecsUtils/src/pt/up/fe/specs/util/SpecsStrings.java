@@ -1,11 +1,15 @@
 /*
- * Copyright 2009 SPeCS Research Group.
- * 
+ * SpecsStrings.java
+ *
+ * Utility class for string-related operations, such as parsing, formatting, and manipulation. Provides static helper methods for working with strings in the SPeCS ecosystem.
+ *
+ * Copyright 2025 SPeCS Research Group.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -47,9 +51,11 @@ import pt.up.fe.specs.util.utilities.LineStream;
 import pt.up.fe.specs.util.utilities.StringLines;
 
 /**
- * Utility methods for parsing of values which, instead of throwing an exception, return a default value if a parsing
- * error occurs.
- * 
+ * Utility methods for string operations.
+ * <p>
+ * Provides static helper methods for parsing, formatting, and manipulating strings.
+ * </p>
+ *
  * @author Joao Bispo
  */
 public class SpecsStrings {
@@ -79,6 +85,12 @@ public class SpecsStrings {
     public static final Pattern INTEGER_PATTERN = Pattern.compile("^[+-]?[0-9]+$");
     public static final Pattern LINE_COUNTER_PATTERN = Pattern.compile("\r\n|\r|\n");
 
+    /**
+     * Checks if a character is printable.
+     *
+     * @param c the character to check
+     * @return true if the character is printable, false otherwise
+     */
     public static boolean isPrintableChar(char c) {
         Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
         return (!Character.isISOControl(c)) &&
@@ -89,11 +101,10 @@ public class SpecsStrings {
     private final static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     /**
-     * Tries to parse a String into a integer. If an exception happens, warns the user and returns a 0.
-     * 
-     * @param integer
-     *            a String representing an integer.
-     * @return the intenger represented by the string, or 0 if it couldn't be parsed.
+     * Tries to parse a String into an integer. If an exception happens, warns the user and returns a 0.
+     *
+     * @param integer a String representing an integer
+     * @return the integer represented by the string, or 0 if it couldn't be parsed
      */
     public static int parseInt(String integer) {
         int intResult = 0;
@@ -101,21 +112,16 @@ public class SpecsStrings {
             intResult = Integer.parseInt(integer);
         } catch (NumberFormatException e) {
             SpecsLogs.warn("Couldn''t parse '" + integer + "' into an integer. Returning " + intResult + ".");
-            // Logger.getLogger(ParseUtils.class.getName()).log(
-            // Level.WARNING,
-            // "Couldn''t parse '" + integer + "' into an integer. Returning " + intResult
-            // + ".");
         }
 
         return intResult;
     }
 
     /**
-     * Tries to parse a String into a integer. If an exception happens, returns null.
-     * 
-     * @param integer
-     *            a String representing an integer.
-     * @return the integer represented by the string, or null if it couldn't be parsed.
+     * Tries to parse a String into an integer. If an exception happens, returns null.
+     *
+     * @param integer a String representing an integer
+     * @return the integer represented by the string, or null if it couldn't be parsed
      */
     public static Integer parseInteger(String integer) {
 
@@ -131,63 +137,34 @@ public class SpecsStrings {
 
     /**
      * Tries to parse a String into a double. If an exception happens, returns null.
-     * 
-     * @param doublefloat
-     *            a String representing a double.
-     * @return the double represented by the string, or null if it couldn't be parsed.
+     *
+     * @param doublefloat a String representing a double
+     * @return the double represented by the string, or null if it couldn't be parsed
      */
     public static Optional<Double> valueOfDouble(String doublefloat) {
-        // Double doubleResult = null;
         try {
-            // doubleResult = Integer.parseInt(doublefloat);
-            // doubleResult = Double.valueOf(doublefloat);
             return Optional.of(Double.valueOf(doublefloat));
         } catch (NumberFormatException e) {
-            // LoggingUtils.msgLib(e.toString());
             return Optional.empty();
         }
-
     }
 
     /**
-     * 
-     * @param s
-     * @return
+     * Parses a String into a short value.
+     *
+     * @param s the String to parse
+     * @return the short value represented by the string
      */
     public static short parseShort(String s) {
         return Short.parseShort(s);
-        /*
-        	Short value = null;
-        	try {
-        	    value = Short.parseShort(argument);
-        	} catch (NumberFormatException ex) {
-        	    throw new RuntimeException("Expecting a short immediate: '\" + argument + \"'.", ex);
-        	    // LoggingUtils.getLogger().
-        	    // warning("Expecting an integer immediate: '" + argument + "'.");
-        	    // warning("Expecting a short immediate: '" + argument + "'.");
-        	}
-        	return value;
-         */
     }
 
     /**
-     * Overload that sets 'isStrict' to true.
-     * 
-     * @param afloat
-     *            a String representing a float.
-     * @return the float represented by the string, or null if it couldn't be parsed.
-     */
-    public static Float parseFloat(String afloat) {
-        return parseFloat(afloat, true);
-    }
-
-    /**
-     * Tries to parse a String into a float. If an exception happens or if it lowers precision, returns null.
-     * 
-     * @param afloat
-     *            a String representing a float.
-     * @param isStrict
-     * @return
+     * Parses a String into a float value. If an exception happens or if it lowers precision, returns null.
+     *
+     * @param afloat a String representing a float
+     * @param isStrict whether to enforce strict parsing
+     * @return the float represented by the string, or null if it couldn't be parsed
      */
     public static Float parseFloat(String afloat, boolean isStrict) {
         Float floatResult = null;
@@ -206,23 +183,11 @@ public class SpecsStrings {
     }
 
     /**
-     * Overload that sets 'isStrict' to true.
-     * 
-     * @param aDouble
-     *            a String representing a double.
-     * @return the double represented by the string, or null if it couldn't be parsed.
-     */
-    public static Double parseDouble(String aDouble) {
-        return parseDouble(aDouble, true);
-    }
-
-    /**
-     * Tries to parse a String into a double. If an exception happens or if it lowers precision, returns null.
-     * 
-     * @param aDouble
-     *            a String representing a float.
-     * @param strict
-     * @return the double represented by the string, or null if it couldn't be parsed.
+     * Parses a String into a double value. If an exception happens or if it lowers precision, returns null.
+     *
+     * @param aDouble a String representing a double
+     * @param isStrict whether to enforce strict parsing
+     * @return the double represented by the string, or null if it couldn't be parsed
      */
     public static Double parseDouble(String aDouble, boolean isStrict) {
         Double doubleResult = null;
@@ -240,28 +205,10 @@ public class SpecsStrings {
     }
 
     /**
-     * Tries to parse a String into a float. If an exception happens, returns null.
-     * 
-     * @param aFloat
-     *            a String representing a float.
-     * @return the float represented by the string, or null if it couldn't be parsed.
-     */
-    /*
-    public static Float parseFloat(String aFloat) {
-    Float doubleResult = null;
-    try {
-        doubleResult = Float.valueOf(aFloat);
-    } catch (NumberFormatException e) {
-        // LoggingUtils.msgLib(e.toString());
-        return null;
-    }
-    
-    return doubleResult;
-    }
-     */
-
-    /**
      * Helper method using radix 10 as default.
+     *
+     * @param longNumber a String representing a long
+     * @return the long represented by the string, or null if it couldn't be parsed
      */
     public static Long parseLong(String longNumber) {
         return parseLong(longNumber, 10);
@@ -269,11 +216,10 @@ public class SpecsStrings {
 
     /**
      * Tries to parse a String into a long. If an exception happens, returns null.
-     * 
-     * @param longNumber
-     *            a String representing an long
-     * @param radix
-     * @return the long represented by the string, or 0L if it couldn't be parsed
+     *
+     * @param longNumber a String representing a long
+     * @param radix the radix to use for parsing
+     * @return the long represented by the string, or null if it couldn't be parsed
      */
     public static Long parseLong(String longNumber, int radix) {
 
@@ -282,10 +228,6 @@ public class SpecsStrings {
             longResult = Long.valueOf(longNumber, radix);
         } catch (NumberFormatException e) {
             return null;
-            // Logger.getLogger(ParseUtils.class.getName()).log(
-            // Level.WARNING,
-            // "Couldn''t parse '" + longNumber
-            // + "' into an long. Returning " + longResult + ".");
         }
 
         return longResult;
@@ -293,30 +235,23 @@ public class SpecsStrings {
 
     /**
      * Tries to parse a String into a BigInteger. If an exception happens, returns null.
-     * 
-     * @param intNumber
-     *            a String representing an integer.
-     * @return the long represented by the string, or 0L if it couldn't be parsed.
+     *
+     * @param intNumber a String representing an integer
+     * @return the BigInteger represented by the string, or null if it couldn't be parsed
      */
     public static BigInteger parseBigInteger(String intNumber) {
-        // Long longResult = null;
         try {
-            BigInteger bigInt = new BigInteger(intNumber);
-            return bigInt;
-            // longResult = Long.valueOf(longNumber);
+            return new BigInteger(intNumber);
         } catch (NumberFormatException e) {
             return null;
         }
-
-        // return longResult;
     }
 
     /**
      * Tries to parse a String into a Boolean. If an exception happens, warns the user and returns null.
-     * 
-     * @param booleanString
-     *            a String representing a Boolean.
-     * @return the Boolean represented by the string, or null if it couldn't be parsed.
+     *
+     * @param booleanString a String representing a Boolean
+     * @return the Boolean represented by the string, or null if it couldn't be parsed
      */
     public static Boolean parseBoolean(String booleanString) {
         booleanString = booleanString.toLowerCase();
@@ -332,15 +267,9 @@ public class SpecsStrings {
 
     /**
      * Removes, from String text, the portion of text after the rightmost occurrence of the specified separator.
-     * 
-     * <p>
-     * Ex.: removeSuffix("readme.txt", ".") <br>
-     * Returns "readme".
-     * 
-     * @param text
-     *            a string
-     * @param separator
-     *            a string
+     *
+     * @param text a string
+     * @param separator a string
      * @return a string
      */
     public static String removeSuffix(String text, String separator) {
@@ -354,16 +283,10 @@ public class SpecsStrings {
     }
 
     /**
-     * Transforms the given long in an hexadecimal string with the specified size.
-     * 
-     * <p>
-     * Ex.: toHexString(10, 2) <br>
-     * Returns 0x0A.
-     * 
-     * @param decimalLong
-     *            a long
-     * @param stringSize
-     *            the final number of digits in the hexadecimal representation
+     * Transforms the given integer into a hexadecimal string with the specified size.
+     *
+     * @param decimalInt an integer
+     * @param stringSize the final number of digits in the hexadecimal representation
      * @return a string
      */
     public static String toHexString(int decimalInt, int stringSize) {
@@ -373,16 +296,10 @@ public class SpecsStrings {
     }
 
     /**
-     * Transforms the given long in an hexadecimal string with the specified size.
-     * 
-     * <p>
-     * Ex.: toHexString(10, 2) <br>
-     * Returns 0x0A.
-     * 
-     * @param decimalLong
-     *            a long
-     * @param stringSize
-     *            the final number of digits in the hexadecimal representation
+     * Transforms the given long into a hexadecimal string with the specified size.
+     *
+     * @param decimalLong a long
+     * @param stringSize the final number of digits in the hexadecimal representation
      * @return a string
      */
     public static String toHexString(long decimalLong, int stringSize) {
@@ -393,32 +310,32 @@ public class SpecsStrings {
     }
 
     /**
-     * @param string
-     *            a string
-     * @return the index of the first whitespace found in the given String, or -1 if none is found.
+     * Finds the index of the first whitespace in the given string.
+     *
+     * @param string the string to search
+     * @return the index of the first whitespace, or -1 if none is found
      */
     public static int indexOfFirstWhitespace(String string) {
         return indexOf(string, aChar -> Character.isWhitespace(aChar), false);
     }
 
+    /**
+     * Finds the index of a character in the given string based on a predicate.
+     *
+     * @param string the string to search
+     * @param target the predicate to match the character
+     * @param reverse whether to search in reverse order
+     * @return the index of the character, or -1 if none is found
+     */
     public static int indexOf(String string, Predicate<Character> target, boolean reverse) {
 
-        // if (reverse) {
-        // string = new StringBuilder(string).reverse().toString();
-        // }
-
-        // IntStream charsStream = string.chars();
-
-        // Test reverse order
         if (reverse) {
             for (int i = string.length() - 1; i >= 0; i--) {
                 if (target.test(string.charAt(i))) {
                     return i;
                 }
             }
-        }
-        // Test original order
-        else {
+        } else {
             for (int i = 0; i < string.length(); i++) {
                 if (target.test(string.charAt(i))) {
                     return i;
@@ -431,12 +348,10 @@ public class SpecsStrings {
 
     /**
      * Adds spaces to the end of the given string until it has the desired size.
-     * 
-     * @param string
-     *            a string
-     * @param length
-     *            the size we want the string to be
-     * @return the string, with the desired size
+     *
+     * @param string the string to pad
+     * @param length the desired length of the string
+     * @return the padded string
      */
     public static String padRight(String string, int length) {
         return String.format("%1$-" + length + "s", string);
@@ -444,12 +359,10 @@ public class SpecsStrings {
 
     /**
      * Adds spaces to the beginning of the given string until it has the desired size.
-     * 
-     * @param string
-     *            a string
-     * @param length
-     *            length the size we want the string to be
-     * @return the string, with the desired size
+     *
+     * @param string the string to pad
+     * @param length the desired length of the string
+     * @return the padded string
      */
     public static String padLeft(String string, int length) {
         return String.format("%1$#" + length + "s", string);
@@ -457,12 +370,11 @@ public class SpecsStrings {
 
     /**
      * Adds an arbitrary character to the beginning of the given string until it has the desired size.
-     * 
-     * @param string
-     *            a string
-     * @param length
-     *            length the size we want the string to be
-     * @return the string, with the desired size
+     *
+     * @param string the string to pad
+     * @param length the desired length of the string
+     * @param c the character to pad with
+     * @return the padded string
      */
     public static String padLeft(String string, int length, char c) {
         if (string.length() >= length) {
@@ -478,25 +390,25 @@ public class SpecsStrings {
         return returnString;
     }
 
+    /**
+     * Returns a sorted list from the given collection.
+     *
+     * @param <T> the type of elements in the collection
+     * @param collection the collection to sort
+     * @return a sorted list
+     */
     public static <T extends Comparable<? super T>> List<T> getSortedList(Collection<T> collection) {
         List<T> list = new ArrayList<>(collection);
-        // Collections.sort((List)list);
         Collections.sort(list);
         return list;
     }
 
     /**
-     * Reads a Table file and returns a table with the key-value pairs.
-     * 
-     * <p>
-     * Any line with one or more parameters, as defined by the object LineParser is put in the table. The first
-     * parameters is used as the key, and the second as the value. <br>
-     * If a line has more than two parameters, they are ignored. <br>
-     * If a line has only a single parameters, the second parameters is assumed to be an empty string.
-     * 
-     * @param tableFile
-     * @param lineParser
-     * @return a table with key-value pairs.
+     * Reads a table file and returns a map with key-value pairs.
+     *
+     * @param tableFile the file to read
+     * @param lineParser the parser to split lines
+     * @return a map with key-value pairs
      */
     public static Map<String, String> parseTableFromFile(File tableFile, LineParser lineParser) {
         try (LineStream lineReader = LineStream.newInstance(tableFile)) {
@@ -532,17 +444,23 @@ public class SpecsStrings {
     }
 
     /**
-     * Addresses are converted to hex representation.
-     * 
-     * @param firstAddress
-     * @param lastAddress
-     * @return
+     * Encodes a range of instructions into a hexadecimal string.
+     *
+     * @param firstAddress the first address
+     * @param lastAddress the last address
+     * @return the encoded range
      */
     public static String instructionRangeHexEncode(int firstAddress, int lastAddress) {
         return SpecsStrings.toHexString(firstAddress, 0) + SpecsStrings.RANGE_SEPARATOR
                 + SpecsStrings.toHexString(lastAddress, 0);
     }
 
+    /**
+     * Decodes a hexadecimal string into a range of instructions.
+     *
+     * @param encodedRange the encoded range
+     * @return a list of integers representing the range
+     */
     public static List<Integer> instructionRangeHexDecode(String encodedRange) {
         String[] nums = encodedRange.split(SpecsStrings.RANGE_SEPARATOR);
         if (nums.length != 2) {
@@ -560,12 +478,9 @@ public class SpecsStrings {
 
     /**
      * Transforms a package name into a folder name.
-     * 
-     * <p>
-     * Ex.: org.company.program -> org/company/program
-     * 
-     * @param packageName
-     * @return
+     *
+     * @param packageName the package name
+     * @return the folder name
      */
     public static String packageNameToFolderName(String packageName) {
         String newBasePackage = packageName.replace('.', '/');
@@ -575,19 +490,23 @@ public class SpecsStrings {
 
     /**
      * Transforms a package name into a folder.
-     * 
-     * <p>
-     * Ex.: E:/folder, org.company.program -> E:/folder/org/company/program/
-     * 
-     * @param baseFolder
-     * @param packageName
-     * @return
+     *
+     * @param baseFolder the base folder
+     * @param packageName the package name
+     * @return the folder
      */
     public static File packageNameToFolder(File baseFolder, String packageName) {
         String packageFoldername = SpecsStrings.packageNameToFolderName(packageName);
         return SpecsIo.mkdir(baseFolder + "/" + packageFoldername);
     }
 
+    /**
+     * Replaces macros in a template with their corresponding values.
+     *
+     * @param template the template string
+     * @param mappings the map of macros and their values
+     * @return the replaced template
+     */
     public static String replace(String template, Map<String, String> mappings) {
 
         for (String key : mappings.keySet()) {
@@ -601,12 +520,12 @@ public class SpecsStrings {
     }
 
     /**
-     * Interprets the index as a modulo of the list size.
-     * 
-     * @param <T>
-     * @param list
-     * @param index
-     * @return
+     * Gets an element from a list using modulo indexing.
+     *
+     * @param <T> the type of elements in the list
+     * @param list the list
+     * @param index the index
+     * @return the element at the index
      */
     public static <T> T moduloGet(List<T> list, int index) {
         if (list.isEmpty()) {
@@ -614,16 +533,16 @@ public class SpecsStrings {
         }
 
         index = modulo(index, list.size());
-        /*
-        index = index % list.size();
-        if(index < 0) {
-           index = index + list.size();
-        }
-         * 
-         */
         return list.get(index);
     }
 
+    /**
+     * Calculates the modulo of a number.
+     *
+     * @param overIndex the number
+     * @param size the size
+     * @return the modulo
+     */
     public static int modulo(int overIndex, int size) {
 
         overIndex = overIndex % size;
@@ -635,11 +554,11 @@ public class SpecsStrings {
     }
 
     /**
-     * Returns the first match of all capturing groups.
-     * 
-     * @param contents
-     * @param regex
-     * @return
+     * Returns the first match of all capturing groups in a regex.
+     *
+     * @param contents the contents to search
+     * @param regex the regex pattern
+     * @return a list of captured groups
      */
     public static List<String> getRegex(String contents, String regex) {
         Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
@@ -647,18 +566,22 @@ public class SpecsStrings {
         return getRegex(contents, pattern);
     }
 
+    /**
+     * Returns the first match of all capturing groups in a regex pattern.
+     *
+     * @param contents the contents to search
+     * @param pattern the regex pattern
+     * @return a list of captured groups
+     */
     public static List<String> getRegex(String contents, Pattern pattern) {
 
         try {
-
-            // Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
 
             Matcher regexMatcher = pattern.matcher(contents);
             if (regexMatcher.find()) {
                 int numGroups = regexMatcher.groupCount();
                 List<String> capturedGroups = SpecsFactory.newArrayList();
                 for (int i = 0; i < numGroups; i++) {
-                    // Index 0 is always the whole string, first capturing group is always 1.
                     int groupIndex = i + 1;
                     capturedGroups.add(regexMatcher.group(groupIndex));
                 }
@@ -672,6 +595,13 @@ public class SpecsStrings {
         return Collections.emptyList();
     }
 
+    /**
+     * Checks if a regex pattern matches the contents.
+     *
+     * @param contents the contents to search
+     * @param pattern the regex pattern
+     * @return true if the pattern matches, false otherwise
+     */
     public static boolean matches(String contents, Pattern pattern) {
 
         try {
@@ -687,51 +617,66 @@ public class SpecsStrings {
         return false;
     }
 
+    /**
+     * Returns the specified capturing group from a regex match.
+     *
+     * @param contents the contents to search
+     * @param regex the regex pattern
+     * @param capturingGroupIndex the index of the capturing group
+     * @return the captured group, or null if not found
+     */
     public static String getRegexGroup(String contents, String regex, int capturingGroupIndex) {
         Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
 
         return getRegexGroup(contents, pattern, capturingGroupIndex);
     }
 
-    // public static String getRegexGroup(String contents, Pattern regex, int capturingGroupIndex) {
+    /**
+     * Returns the specified capturing group from a regex match.
+     *
+     * @param contents the contents to search
+     * @param pattern the regex pattern
+     * @param capturingGroupIndex the index of the capturing group
+     * @return the captured group, or null if not found
+     */
     public static String getRegexGroup(String contents, Pattern pattern, int capturingGroupIndex) {
-
-        // ResultsKey[] keys = ResultsKey.values();
-        // for (int i = 0; i < strings.length; i++) {
-        // for (int j = 0; j < regexes.size(); j++) {
-        // Pattern regex = regexes.get(j);
-        // int backReferenceIndex = keyIndex.get(j);
 
         String tester = null;
 
         try {
 
-            // Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
-
             Matcher regexMatcher = pattern.matcher(contents);
             if (regexMatcher.find()) {
-                // tester = regexMatcher.group(1);
                 tester = regexMatcher.group(capturingGroupIndex);
-                // tester = tester.replaceAll(",", "");
-                // data.put(keys[capturingGroupIndex], tester);
-                // System.out.println("#" + keys[capturingGroupIndex] + ":" +
-                // tester);
             }
         } catch (PatternSyntaxException ex) {
-            // Syntax error in the regular expression
             SpecsLogs.getLogger().warning(ex.getMessage());
         }
 
         return tester;
-        // }
-        // }
     }
 
+    /**
+     * Returns all matches of the specified capturing group from a regex pattern.
+     *
+     * @param contents the contents to search
+     * @param regex the regex pattern
+     * @param capturingGroupIndex the index of the capturing group
+     * @return a list of captured groups
+     */
     public static List<String> getRegexGroups(String contents, String regex, int capturingGroupIndex) {
         Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
         return getRegexGroups(contents, pattern, capturingGroupIndex);
     }
 
+    /**
+     * Returns all matches of the specified capturing group from a regex pattern.
+     *
+     * @param contents the contents to search
+     * @param pattern the regex pattern
+     * @param capturingGroupIndex the index of the capturing group
+     * @return a list of captured groups
+     */
     public static List<String> getRegexGroups(String contents, Pattern pattern, int capturingGroupIndex) {
 
         List<String> results = SpecsFactory.newArrayList();
@@ -745,33 +690,20 @@ public class SpecsStrings {
                 results.add(result);
             }
         } catch (PatternSyntaxException ex) {
-            // Syntax error in the regular expression
             SpecsLogs.getLogger().warning(ex.getMessage());
         }
 
         return results;
-        // }
-        // }
     }
 
     /**
      * Transforms a number into a String.
-     * 
-     * <p>
-     * Example: <br>
-     * 0 -> A <br>
-     * 1 -> B <br>
-     * ... <br>
-     * 23 -> AA
-     * 
-     * @deprecated replace with toExcelColumn
-     * @param number
-     * @return
+     *
+     * @param number the number to transform
+     * @return the transformed string
      */
     @Deprecated
     public static String getAlphaId(int number) {
-
-        // Using alphabet (base 23
 
         String numberAsString = Integer.toString(number);
         StringBuilder builder = new StringBuilder();
@@ -788,21 +720,18 @@ public class SpecsStrings {
     }
 
     /**
-     * Based on this algorithm:
-     * https://stackoverflow.com/questions/181596/how-to-convert-a-column-number-eg-127-into-an-excel-column-eg-aa
-     * 
-     * @param columnNumber
-     * @return
+     * Converts a column number to an Excel column name.
+     *
+     * @param columnNumber the column number
+     * @return the Excel column name
      */
     public static String toExcelColumn(int columnNumber) {
         int dividend = columnNumber;
         List<Character> reversedColumnName = new ArrayList<>();
-        // String columnName = "";
 
         while (dividend > 0) {
             int modulo = (dividend - 1) % 26;
             reversedColumnName.add((char) (65 + modulo));
-            // columnName = ((char) (65 + modulo)) + columnName;
             dividend = (dividend - modulo) / 26;
         }
 
@@ -811,10 +740,14 @@ public class SpecsStrings {
         return reversedColumnName.stream()
                 .map(Object::toString)
                 .collect(Collectors.joining());
-
-        // return columnName;
     }
 
+    /**
+     * Converts a TimeUnit to its string representation.
+     *
+     * @param timeUnit the TimeUnit to convert
+     * @return the string representation
+     */
     public static String toString(TimeUnit timeUnit) {
         switch (timeUnit) {
         case MICROSECONDS:
@@ -831,6 +764,13 @@ public class SpecsStrings {
         }
     }
 
+    /**
+     * Converts a list to a string representation.
+     *
+     * @param <T> the type of elements in the list
+     * @param list the list to convert
+     * @return the string representation
+     */
     public static <T> String toString(List<T> list) {
         StringBuilder builder = new StringBuilder();
 
@@ -842,36 +782,29 @@ public class SpecsStrings {
     }
 
     /**
-     * Converts a value from a TimeUnit to another TimeUnit.
-     * 
-     * @param timeValue
-     * @param currentUnit
-     * @param destinationUnit
-     * @return
+     * Converts a value from one TimeUnit to another.
+     *
+     * @param timeValue the value to convert
+     * @param currentUnit the current TimeUnit
+     * @param destinationUnit the destination TimeUnit
+     * @return the converted value
      */
     public static double convert(double timeValue, TimeUnit currentUnit, TimeUnit destinationUnit) {
-        // Convert to nanos since it is the smallest TimeUnit, and will not
-        // return zero as result.
         long currentNanos = TimeUnit.NANOSECONDS.convert(1, currentUnit);
         long destinationNanos = TimeUnit.NANOSECONDS.convert(1, destinationUnit);
 
         double multiplier = (double) currentNanos / (double) destinationNanos;
 
-        // System.out.println("currentNanos:"+currentNanos);
-        // System.out.println("destNanos:"+destinationNanos);
-        // System.out.println("Multiplier:"+multiplier);
-        // System.out.println("TimeValue:"+timeValue);
-
         return timeValue * multiplier;
     }
 
     /**
-     * Inverts the table for all non-null values.
-     * 
-     * @param <K>
-     * @param <V>
-     * @param aMap
-     * @return
+     * Inverts a map for all non-null values.
+     *
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @param aMap the map to invert
+     * @return the inverted map
      */
     public static <K, V> HashMap<V, K> invertMap(Map<K, V> aMap) {
         HashMap<V, K> invertedMap = new HashMap<>();
@@ -889,12 +822,14 @@ public class SpecsStrings {
     }
 
     /**
-     * Adds all elements of elementsMap to destinationMap. If any element is replaced, the key in put in the return
+     * Adds all elements of elementsMap to destinationMap. If any element is replaced, the key is added to the return
      * list.
-     * 
-     * @param destinationMap
-     * @param elementsMap
-     * @return
+     *
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @param destinationMap the destination map
+     * @param elementsMap the elements map
+     * @return a list of replaced keys
      */
     public static <K, V> List<K> putAll(Map<K, V> destinationMap, Map<K, V> elementsMap) {
         List<K> replacedKeys = new ArrayList<>();
@@ -910,12 +845,14 @@ public class SpecsStrings {
     }
 
     /**
-     * Checks if a mapping for a key in elementsMap is also present to destinationMap. If a key is present in both maps,
+     * Checks if a mapping for a key in elementsMap is also present in destinationMap. If a key is present in both maps,
      * it is added to the return list.
-     * 
-     * @param destinationMap
-     * @param elementsMap
-     * @return
+     *
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @param destinationMap the destination map
+     * @param elementsMap the elements map
+     * @return a list of common keys
      */
     public static <K, V> List<K> check(Map<K, V> destinationMap, Map<K, V> elementsMap) {
         List<K> commonKeys = new ArrayList<>();
@@ -929,14 +866,15 @@ public class SpecsStrings {
         return commonKeys;
     }
 
+    /**
+     * Gets the extension of a filename.
+     *
+     * @param hdlFilename the filename
+     * @return the extension, or null if not found
+     */
     public static String getExtension(String hdlFilename) {
         int separatorIndex = hdlFilename.lastIndexOf('.');
         if (separatorIndex == -1) {
-            /*
-            LoggingUtils.getLogger().warning(
-            "Could not find extension in filename '" + hdlFilename
-            	    + "'.");
-             */
             return null;
         }
 
@@ -945,14 +883,10 @@ public class SpecsStrings {
 
     /**
      * Concatenates repetitions of the same element.
-     * 
-     * <p>
-     * Ex.: element "Sa" and numElements "2" returns "SaSa". <br>
-     * If numElements is zero, returns an empty string. If numElements is one, returns the string itself.
-     * 
-     * @param element
-     * @param numElements
-     * @return
+     *
+     * @param element the element to repeat
+     * @param numElements the number of repetitions
+     * @return the concatenated string
      */
     public static String buildLine(String element, int numElements) {
         if (numElements == 0) {
@@ -963,7 +897,6 @@ public class SpecsStrings {
             return element;
         }
 
-        // Build line string
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < numElements; i++) {
             builder.append(element);
@@ -973,6 +906,13 @@ public class SpecsStrings {
 
     public static final String RANGE_SEPARATOR = "-";
 
+    /**
+     * Gets the character at the specified index in the string.
+     *
+     * @param string the string
+     * @param charIndex the index
+     * @return the character, or null if the index is out of bounds
+     */
     public static Character charAt(String string, int charIndex) {
 
         try {
@@ -986,17 +926,14 @@ public class SpecsStrings {
 
     /**
      * Removes the given range of elements from the list.
-     * 
-     * 
-     * @param aList
-     * @param startIndex
-     *            (inclusive)
-     * @param endIndex
-     *            (exclusive)
+     *
+     * @param <T> the type of elements in the list
+     * @param aList the list
+     * @param startIndex the start index (inclusive)
+     * @param endIndex the end index (exclusive)
      */
     public static <T> void remove(List<T> aList, int startIndex, int endIndex) {
 
-        // for (int i = endIndex; i >= startIndex; i--) {
         for (int i = endIndex - 1; i >= startIndex; i--) {
             aList.remove(i);
         }
@@ -1004,13 +941,12 @@ public class SpecsStrings {
 
     /**
      * Removes the elements in the given indexes from the list.
-     * 
-     * @param aList
-     * @param startIndex
-     * @param endIndex
+     *
+     * @param <T> the type of elements in the list
+     * @param aList the list
+     * @param indexes the indexes to remove
      */
     public static <T> void remove(List<T> aList, List<Integer> indexes) {
-        // Sort indexes
         Collections.sort(indexes);
 
         for (int i = indexes.size() - 1; i >= 0; i--) {
@@ -1019,17 +955,11 @@ public class SpecsStrings {
     }
 
     /**
-     * Inserts a String in between CamelCase.
-     * 
-     * <p>
-     * Example <br>
-     * aString: CamelCase <br>
-     * separator: <empty space>
-     * <p>
-     * Output: Camel Case
-     * 
-     * @param aString
-     * @return
+     * Inserts a separator in between CamelCase words.
+     *
+     * @param aString the string to separate
+     * @param separator the separator to insert
+     * @return the separated string
      */
     public static String camelCaseSeparate(String aString, String separator) {
         List<Integer> upperCaseLetters = new ArrayList<>();
@@ -1042,7 +972,6 @@ public class SpecsStrings {
             upperCaseLetters.add(i);
         }
 
-        // Insert string in the found indexes
         String newString = aString;
         for (int i = upperCaseLetters.size() - 1; i >= 0; i--) {
             int index = upperCaseLetters.get(i);
@@ -1053,22 +982,20 @@ public class SpecsStrings {
     }
 
     /**
-     * Accepts tag-value pairs and replaces the tags in the given template for the specified values.
-     * 
-     * @param template
-     * @param defaultTagsAndValues
-     * @param tagsAndValues
-     * @return
+     * Parses a template with tags and values.
+     *
+     * @param template the template string
+     * @param defaultTagsAndValues the default tags and values
+     * @param tagsAndValues the tags and values
+     * @return the parsed template
      */
     public static String parseTemplate(String template, List<String> defaultTagsAndValues, String... tagsAndValues) {
         if (tagsAndValues.length % 2 != 0) {
             throw new RuntimeException("'tagsAndValues' length must be even");
         }
 
-        // Apply given tags
         template = applyTagsAndValues(template, Arrays.asList(tagsAndValues));
 
-        // Apply default values
         defaultTagsAndValues = SpecsFactory.getUnmodifiableList(defaultTagsAndValues);
         template = applyTagsAndValues(template, defaultTagsAndValues);
 
@@ -1079,7 +1006,6 @@ public class SpecsStrings {
 
         String text = template;
 
-        // Apply tags and values
         for (int i = 0; i < tagsAndValues.size(); i += 2) {
             String tag = tagsAndValues.get(i);
 
@@ -1092,12 +1018,11 @@ public class SpecsStrings {
 
     /**
      * Inverts the bits of a binary string.
-     * 
-     * @param binaryString
-     * @return
+     *
+     * @param binaryString the binary string
+     * @return the inverted binary string
      */
     public static String invertBinaryString(String binaryString) {
-        // Invert bits
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < binaryString.length(); i++) {
             if (binaryString.charAt(i) == '0') {
@@ -1116,32 +1041,32 @@ public class SpecsStrings {
         return builder.toString();
     }
 
+    /**
+     * Checks if a string is empty.
+     *
+     * @param string the string to check
+     * @return true if the string is empty, false otherwise
+     */
     public static boolean isEmpty(String string) {
         return string.length() == 0;
     }
 
     /**
-     * Helper method which sets verbose to true.
-     * 
-     * @param number
-     * @return
+     * Parses a number from a string.
+     *
+     * @param number the string to parse
+     * @return the parsed number, or null if it couldn't be parsed
      */
     public static Number parseNumber(String number) {
         return parseNumber(number, true);
     }
 
     /**
-     * Tries to parse a number according to a number of classes, in the following order:<br>
-     * - Integer<br>
-     * - Long<br>
-     * - Float<br>
-     * - Double<br>
-     * 
-     * <p>
-     * If all these fail, parses a number according to US locale using NumberFormat.
-     * 
-     * @param number
-     * @return
+     * Parses a number from a string.
+     *
+     * @param number the string to parse
+     * @param verbose whether to log warnings
+     * @return the parsed number, or null if it couldn't be parsed
      */
     public static Number parseNumber(String number, boolean verbose) {
         Number parsed = null;
@@ -1179,28 +1104,25 @@ public class SpecsStrings {
     }
 
     /**
-     * Helper method that accepts a double
-     * 
-     * @see SpecsStrings#parseTime(long)
-     * @param nanos
-     * @return
+     * Parses a duration in nanoseconds into a human-readable string.
+     *
+     * @param nanos the duration in nanoseconds
+     * @return the human-readable string
      */
     public static String parseTime(double nanos) {
         return parseTime((long) nanos);
     }
 
     /**
-     * Transforms a number of nano-seconds into a string, trying to find what should be the best time unit.
-     * 
-     * @param nanos
-     * @return
+     * Parses a duration in nanoseconds into a human-readable string.
+     *
+     * @param nanos the duration in nanoseconds
+     * @return the human-readable string
      */
     public static String parseTime(long nanos) {
         NumberFormat doubleFormat = NumberFormat.getNumberInstance(Locale.UK);
         doubleFormat.setMaximumFractionDigits(2);
 
-        // Check millis
-        // long millis = nanos / 1000000;
         double millis = (double) nanos / 1000000;
 
         if (millis < 1000) {
@@ -1214,7 +1136,6 @@ public class SpecsStrings {
 
         double mins = secs / 60.0;
 
-        // return doubleFormat.format(mins) + " minutes";
         String min = "minute";
         int intMins = (int) mins;
         if (intMins != 1) {
@@ -1233,18 +1154,15 @@ public class SpecsStrings {
                 .add(Integer.toString(intSecs))
                 .add(sec)
                 .toString();
-
-        // return intMins + " " + min + " " + (int) (secs - ((int) mins * 60)) + " seconds";
     }
 
     /**
-     * Decodes an integer, returns null if an exception happens.
-     * 
-     * @param number
-     * @return
+     * Decodes an integer from a string.
+     *
+     * @param number the string to decode
+     * @return the decoded integer, or null if it couldn't be decoded
      */
     public static Integer decodeInteger(String number) {
-        // Trim input
         number = number.trim();
 
         Integer parsedNumber = null;
@@ -1259,17 +1177,16 @@ public class SpecsStrings {
     }
 
     /**
-     * Returns the default value if there is an exception.
-     * 
-     * @param number
-     * @param defaultValue
-     * @return
+     * Decodes an integer from a string, returning a default value if an exception occurs.
+     *
+     * @param number the string to decode
+     * @param defaultValue the default value supplier
+     * @return the decoded integer, or the default value if an exception occurs
      */
     public static Integer decodeInteger(String number, Supplier<Integer> defaultValue) {
         if (number == null) {
             return defaultValue.get();
         }
-        // Trim input
         number = number.trim();
 
         try {
@@ -1281,17 +1198,16 @@ public class SpecsStrings {
     }
 
     /**
-     * Returns the default value if there is an exception.
-     * 
-     * @param number
-     * @param defaultValue
-     * @return
+     * Decodes a long from a string, returning a default value if an exception occurs.
+     *
+     * @param number the string to decode
+     * @param defaultValue the default value supplier
+     * @return the decoded long, or the default value if an exception occurs
      */
     public static Long decodeLong(String number, Supplier<Long> defaultValue) {
         if (number == null) {
             return defaultValue.get();
         }
-        // Trim input
         number = number.trim();
 
         try {
@@ -1302,8 +1218,14 @@ public class SpecsStrings {
         }
     }
 
+    /**
+     * Decodes a double from a string, returning a default value if an exception occurs.
+     *
+     * @param number the string to decode
+     * @param defaultValue the default value supplier
+     * @return the decoded double, or the default value if an exception occurs
+     */
     public static Double decodeDouble(String number, Supplier<Double> defaultValue) {
-        // Trim input
         number = number.trim();
 
         try {
@@ -1315,62 +1237,25 @@ public class SpecsStrings {
     }
 
     /**
-     * Test if two objects (that can be null) are equal.
-     * 
-     * <p>
-     * If both objects are null, returns null. Otherwise, uses the equals of the first non-null object on the other.
-     * 
-     * @param nargout
-     * @param nargouts
-     * @return
-     */
-    /*
-    public static boolean equals(Object obj1, Object obj2) {
-    boolean isObj1Null = obj1 == null;
-    boolean isObj2Null = obj2 == null;
-    
-    if (isObj1Null && isObj2Null) {
-        return true;
-    }
-    
-    Object nonNullObject = null;
-    Object objectToCompare = null;
-    if (!isObj1Null) {
-        nonNullObject = obj1;
-        objectToCompare = obj2;
-    } else {
-        nonNullObject = obj2;
-        objectToCompare = obj1;
-    }
-    
-    return nonNullObject.equals(objectToCompare);
-    }
-     */
-
-    /**
-     * Test if the given object implements the given class. If true, casts the object to the class type. Otherwise,
-     * throws an exception.
-     * 
-     * 
-     * @param object
-     * @param aClass
-     * @return
+     * Casts an object to a given type.
+     *
+     * @param <T> the type to cast to
+     * @param object the object to cast
+     * @param aClass the class to cast to
+     * @return the casted object
      */
     public static <T> T cast(Object object, Class<T> aClass) {
         return cast(object, aClass, true);
     }
 
     /**
-     * Casts an object to a given type.
-     * 
-     * <p>
-     * If the object could not be cast to the given type and throwException is false, returns null. If throwException is
-     * true, throws an exception.
-     * 
-     * @param object
-     * @param aClass
-     * @param throwException
-     * @return
+     * Casts an object to a given type, optionally throwing an exception if the cast fails.
+     *
+     * @param <T> the type to cast to
+     * @param object the object to cast
+     * @param aClass the class to cast to
+     * @param throwException whether to throw an exception if the cast fails
+     * @return the casted object, or null if the cast fails and throwException is false
      */
     public static <T> T cast(Object object, Class<T> aClass, boolean throwException) {
 
@@ -1389,16 +1274,13 @@ public class SpecsStrings {
     }
 
     /**
-     * Casts a list of objects to a List of the given type.
-     * 
-     * <p>
-     * If any of the objects in the list could not be cast to the given type and throwException is false, returns null.
-     * If throwException is true, throws an exception.
-     * 
-     * @param object
-     * @param aClass
-     * @param throwException
-     * @return
+     * Casts a list of objects to a list of the given type.
+     *
+     * @param <T> the type to cast to
+     * @param objects the list of objects to cast
+     * @param aClass the class to cast to
+     * @param throwException whether to throw an exception if the cast fails
+     * @return the casted list, or null if the cast fails and throwException is false
      */
     public static <T> List<T> castList(List<?> objects, Class<T> aClass, boolean throwException) {
         List<T> list = SpecsFactory.newArrayList();
@@ -1416,6 +1298,12 @@ public class SpecsStrings {
         return list;
     }
 
+    /**
+     * Checks if a double value is an integer.
+     *
+     * @param variable the double value to check
+     * @return true if the value is an integer, false otherwise
+     */
     public static boolean isInteger(double variable) {
         if ((variable == Math.floor(variable)) && !Double.isInfinite(variable)) {
             return true;
@@ -1425,7 +1313,10 @@ public class SpecsStrings {
     }
 
     /**
-     * Gets type from super class's type parameter.
+     * Gets the type parameter from a superclass.
+     *
+     * @param subclass the subclass
+     * @return the type parameter
      */
     public static Class<?> getSuperclassTypeParameter(Class<?> subclass) {
         Type superclass = subclass.getGenericSuperclass();
@@ -1435,6 +1326,12 @@ public class SpecsStrings {
         return (Class<?>) ((ParameterizedType) superclass).getActualTypeArguments()[0];
     }
 
+    /**
+     * Checks if a character is a letter.
+     *
+     * @param aChar the character to check
+     * @return true if the character is a letter, false otherwise
+     */
     public static boolean isLetter(char aChar) {
         if ((aChar >= 'a' && aChar <= 'z')
                 || (aChar >= 'A' && aChar <= 'Z')) {
@@ -1445,6 +1342,12 @@ public class SpecsStrings {
         return false;
     }
 
+    /**
+     * Checks if a character is a digit.
+     *
+     * @param aChar the character to check
+     * @return true if the character is a digit, false otherwise
+     */
     public static boolean isDigit(char aChar) {
         if (aChar >= '0' && aChar <= '9') {
             return true;
@@ -1453,16 +1356,21 @@ public class SpecsStrings {
         return false;
     }
 
+    /**
+     * Checks if a character is a digit or a letter.
+     *
+     * @param aChar the character to check
+     * @return true if the character is a digit or a letter, false otherwise
+     */
     public static boolean isDigitOrLetter(char aChar) {
         return isDigit(aChar) || isLetter(aChar);
     }
 
     /**
-     * Replaces '.' in the package with '/', and suffixes '/' to the String, if necessary.
-     * 
-     * 
-     * @param packageName
-     * @return
+     * Converts a package name to a resource path.
+     *
+     * @param packageName the package name
+     * @return the resource path
      */
     public static String packageNameToResource(String packageName) {
         String resourceName = packageName.replace('.', '/');
@@ -1474,17 +1382,17 @@ public class SpecsStrings {
         return resourceName;
     }
 
+    /**
+     * Parses an integer from a string, allowing relaxed parsing.
+     *
+     * @param constant the string to parse
+     * @return the parsed integer
+     */
     public static int parseIntegerRelaxed(String constant) {
         Preconditions.checkArgument(constant != null);
 
-        // Double doubleConstant = ParseUtils.parseDouble(constant);
         double doubleConstant = Double.parseDouble(constant);
-        /*
-        	if (doubleConstant == null) {
-        	    throw new RuntimeException("Could not parse '" + constant + "' into a number");
-        	}
-         */
-        // Double has enough precision to accurately represent any 32-bit number.
+
         if (!(doubleConstant >= Integer.MIN_VALUE && doubleConstant <= Integer.MAX_VALUE)) {
             throw new OverflowException("Number in size is too large");
         }
@@ -1492,26 +1400,30 @@ public class SpecsStrings {
             throw new RuntimeException("Dimension argument must be an integer.");
         }
 
-        // return doubleConstant.intValue();
         return (int) doubleConstant;
 
     }
 
+    /**
+     * Converts a string to lowercase using the UK locale.
+     *
+     * @param string the string to convert
+     * @return the lowercase string
+     */
     public static String toLowerCase(String string) {
         return string.toLowerCase(Locale.UK);
     }
 
     /**
-     * Transforms a number of bytes into a string.
-     * 
-     * @param bytesSaved
-     * @return
+     * Parses a size in bytes into a human-readable string.
+     *
+     * @param bytes the size in bytes
+     * @return the human-readable string
      */
     public static String parseSize(long bytes) {
         long currentBytes = bytes;
         int counter = 0;
 
-        // Greater or equal because table has an entry for the value 0
         while (currentBytes > 1024 && counter <= SpecsStrings.SIZE_SUFFIXES.size()) {
             currentBytes = currentBytes / 1024;
             counter++;
@@ -1521,11 +1433,11 @@ public class SpecsStrings {
     }
 
     /**
-     * Transforms a String of characters into a String of bytes.
-     * 
-     * @param inputJson
-     * @param string
-     * @return
+     * Converts a string to its byte representation.
+     *
+     * @param string the string to convert
+     * @param encoding the encoding to use
+     * @return the byte representation
      */
     public static String toBytes(String string, String enconding) {
         try {
@@ -1543,10 +1455,11 @@ public class SpecsStrings {
     }
 
     /**
-     * Converts a string representing 8-bit bytes into a String.
-     * 
-     * @param text
-     * @return
+     * Converts a byte representation to a string.
+     *
+     * @param text the byte representation
+     * @param encoding the encoding to use
+     * @return the string
      */
     public static String fromBytes(String text, String encoding) {
         byte[] bytes = new byte[(text.length() / 2)];
@@ -1563,24 +1476,23 @@ public class SpecsStrings {
     }
 
     /**
-     * Helper method which uses milliseconds as the target unit.
-     * 
-     * 
-     * @param message
-     * @param nanoDuration
-     * @return
+     * Parses a duration in nanoseconds into a human-readable string with a message.
+     *
+     * @param message the message
+     * @param nanoDuration the duration in nanoseconds
+     * @return the human-readable string
      */
     public static String parseTime(String message, long nanoDuration) {
         return parseTime(message, TimeUnit.MILLISECONDS, nanoDuration);
     }
 
     /**
-     * Shows a message and the time in the given time unit
-     * 
-     * @param message
-     * @param timeUnit
-     * @param nanoDuration
-     * @return
+     * Parses a duration in nanoseconds into a human-readable string with a message and time unit.
+     *
+     * @param message the message
+     * @param timeUnit the time unit
+     * @param nanoDuration the duration in nanoseconds
+     * @return the human-readable string
      */
     public static String parseTime(String message, TimeUnit timeUnit, long nanoDuration) {
         String unitString = timeUnit.toString();
@@ -1592,27 +1504,33 @@ public class SpecsStrings {
     }
 
     /**
-     * Helper method which uses milliseconds as the target unit.
-     * 
-     * @param message
-     * @param nanoStart
-     * @return
+     * Measures the time taken from a given start until the call of this function.
+     *
+     * @param message the message
+     * @param nanoStart the start time in nanoseconds
+     * @return the human-readable string
      */
     public static String takeTime(String message, long nanoStart) {
         return takeTime(message, TimeUnit.MILLISECONDS, nanoStart);
     }
 
+    /**
+     * Prints the time taken from a given start until the call of this function.
+     *
+     * @param message the message
+     * @param nanoStart the start time in nanoseconds
+     */
     public static void printTime(String message, long nanoStart) {
         SpecsLogs.msgInfo(takeTime(message, nanoStart));
     }
 
     /**
-     * Measures the take taken from a given start until the call of this function.
-     * 
-     * @param message
-     * @param timeUnit
-     * @param nanoStart
-     * @return
+     * Measures the time taken from a given start until the call of this function with a specific time unit.
+     *
+     * @param message the message
+     * @param timeUnit the time unit
+     * @param nanoStart the start time in nanoseconds
+     * @return the human-readable string
      */
     public static String takeTime(String message, TimeUnit timeUnit, long nanoStart) {
         long toc = System.nanoTime();
@@ -1626,10 +1544,10 @@ public class SpecsStrings {
     }
 
     /**
-     * 
-     * @param timeout
-     * @param timeunit
-     * @return
+     * Gets the symbol for a time unit.
+     *
+     * @param timeunit the time unit
+     * @return the symbol
      */
     public static String getTimeUnitSymbol(TimeUnit timeunit) {
 
@@ -1643,11 +1561,11 @@ public class SpecsStrings {
     }
 
     /**
-     * Counts the number of occurences of the given char in the given String.
-     * 
-     * @param string
-     * @param aChar
-     * @return
+     * Counts the number of occurrences of a character in a string.
+     *
+     * @param string the string
+     * @param aChar the character
+     * @return the number of occurrences
      */
     public static int count(String string, char aChar) {
         int counter = 0;
@@ -1661,13 +1579,11 @@ public class SpecsStrings {
     }
 
     /**
-     * Counts the number of lines in the given String.
-     * 
-     * <p>
-     * Taken from here: https://stackoverflow.com/questions/2850203/count-the-number-of-lines-in-a-java-string#2850259
-     * 
-     * @param string
-     * @return
+     * Counts the number of lines in a string.
+     *
+     * @param string the string
+     * @param trim whether to trim the string
+     * @return the number of lines
      */
     public static int countLines(String string, boolean trim) {
 
@@ -1689,18 +1605,17 @@ public class SpecsStrings {
     }
 
     /**
-     * Remove all occurrences of 'pattern' from 'string'.
-     * 
-     * @param string
-     * @param pattern
-     * @return
+     * Removes all occurrences of a pattern from a string.
+     *
+     * @param string the string
+     * @param pattern the pattern
+     * @return the string with the pattern removed
      */
     public static String remove(String string, String pattern) {
         String currentString = string;
 
         int classIndex = -1;
         while ((classIndex = currentString.indexOf(pattern)) != -1) {
-            // Remove pattern
             currentString = currentString.subSequence(0, classIndex)
                     + currentString.substring(classIndex + pattern.length());
         }
@@ -1709,10 +1624,10 @@ public class SpecsStrings {
     }
 
     /**
-     * Splits command line arguments, minding characters such as \"
-     * 
-     * @param string
-     * @return
+     * Splits command line arguments, minding characters such as \".
+     *
+     * @param string the string to split
+     * @return the list of arguments
      */
     public static List<String> splitArgs(String string) {
         List<String> args = new ArrayList<>();
@@ -1722,35 +1637,18 @@ public class SpecsStrings {
 
             char currentChar = string.charAt(i);
 
-            // If space is found, store current string, if not empty
             if (currentChar == ' ' && !doubleQuoteActive) {
                 String arg = currentString.toString();
                 if (!arg.isEmpty()) {
                     currentString = new StringBuilder();
                     addArgs(args, arg);
-                    // args.add(arg);
                 }
 
                 continue;
             }
 
-            /*
-            if (currentChar == '\\') {
-                // Check if it is escaping a double quote
-                if (string.length() > (i + 1) && string.charAt(i + 1) == '"') {
-                    i++;
-                }
-            
-                currentString.append("\\\"");
-                continue;
-            }
-            */
-
-            // Arguments that were quoted will loose the quotes.
-            // Otherwise, when using the resulting list to execute the program, it would add quotes again
             if (currentChar == '"') {
                 doubleQuoteActive = !doubleQuoteActive;
-                // currentString.append("\"");
                 continue;
             }
 
@@ -1759,7 +1657,6 @@ public class SpecsStrings {
 
         if (currentString.length() > 0) {
             addArgs(args, currentString.toString());
-            // args.add(currentString.toString());
         }
 
         return args;
@@ -1775,14 +1672,22 @@ public class SpecsStrings {
         arguments.add(currentArgument);
     }
 
+    /**
+     * Escapes a string for JSON.
+     *
+     * @param string the string to escape
+     * @return the escaped string
+     */
     public static String escapeJson(String string) {
         return escapeJson(string, false);
     }
 
     /**
-     * @param string
-     * @param ignoreNewlines
-     * @return
+     * Escapes a string for JSON, optionally ignoring newlines.
+     *
+     * @param string the string to escape
+     * @param ignoreNewlines whether to ignore newlines
+     * @return the escaped string
      */
     public static String escapeJson(String string, boolean ignoreNewlines) {
 
@@ -1793,7 +1698,6 @@ public class SpecsStrings {
         for (int i = 0; i < string.length(); i++) {
             char currentChar = string.charAt(i);
 
-            // \b\f\n\r\t\"\\
             if (currentChar == '\b') {
                 escapedString.append("\\b");
                 continue;
@@ -1833,42 +1737,33 @@ public class SpecsStrings {
     }
 
     /**
-     * Overload which uses '_' as separator and capitalizes the first letter.
-     * 
-     * @param string
-     * @return
+     * Converts a string to camelCase.
+     *
+     * @param string the string to convert
+     * @return the camelCase string
      */
     public static String toCamelCase(String string) {
         return toCamelCase(string, "_", true);
     }
 
     /**
-     * Transforms a string into camelCase.
-     * 
-     * <p>
-     * E.g., if separator is '_' and string is 'SOME_STRING', returns 'SomeString'-
-     * 
-     * @param string
-     * @param separator
-     * @param capitalizeFirstLetter
-     * @return
+     * Converts a string to camelCase with a specific separator and capitalization.
+     *
+     * @param string the string to convert
+     * @param separator the separator
+     * @param capitalizeFirstLetter whether to capitalize the first letter
+     * @return the camelCase string
      */
     public static String toCamelCase(String string, String separator, boolean capitalizeFirstLetter) {
 
-        // Split string using provided separator
         String[] words = string.split(separator);
 
         String camelCaseString = Arrays.stream(words)
-                // Remove empty words
                 .filter(word -> !word.isEmpty())
-                // Make word lowerCase
                 .map(word -> word.toLowerCase())
-                // Capitalize first character
                 .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1))
-                // Concatenate
                 .collect(Collectors.joining());
 
-        // If first letter should not be capitalize, make it lower case
         if (!capitalizeFirstLetter) {
             camelCaseString = Character.toLowerCase(camelCaseString.charAt(0)) + camelCaseString.substring(1);
         }
@@ -1877,20 +1772,16 @@ public class SpecsStrings {
     }
 
     /**
-     * Normalizes file contents:
-     * <p>
-     * 1) Replaces \r\n with \n <br>
-     * 2) Trims lines and removes empty lines
-     * 
-     * @param fileContents
-     * @return
+     * Normalizes file contents.
+     *
+     * @param fileContents the file contents
+     * @param ignoreEmptyLines whether to ignore empty lines
+     * @return the normalized file contents
      */
     public static String normalizeFileContents(String fileContents, boolean ignoreEmptyLines) {
 
-        // Normalize new lines
         String normalizedString = fileContents.replaceAll("\r\n", "\n");
 
-        // Remove empty lines
         if (ignoreEmptyLines) {
             normalizedString = StringLines.getLines(normalizedString).stream()
                     .map(String::trim)
@@ -1903,22 +1794,20 @@ public class SpecsStrings {
     }
 
     /**
-     * Helper method which does not ignore empty lines.
-     * 
-     * @param fileContents
-     * @return
+     * Normalizes file contents without ignoring empty lines.
+     *
+     * @param fileContents the file contents
+     * @return the normalized file contents
      */
     public static String normalizeFileContents(String fileContents) {
         return normalizeFileContents(fileContents, false);
     }
 
     /**
-     * Returns an integer from a decimal string such as "123". If the string does not contain just a decimal integer
-     * (such as " 123" or "12x") then this returns empty.
-     * 
-     * @param value
-     *            The string to convert to int. Must not be null.
-     * @return The parsed integer, or empty if the string is not an integer.
+     * Tries to parse a decimal integer from a string.
+     *
+     * @param value the string to parse
+     * @return the parsed integer, or empty if the string is not an integer
      */
     public static Optional<Integer> tryGetDecimalInteger(String value) {
         Preconditions.checkArgument(value != null, "value must not be null");
@@ -1927,7 +1816,6 @@ public class SpecsStrings {
             try {
                 return Optional.of(Integer.parseInt(value, 10));
             } catch (NumberFormatException e) {
-                // Since we check the regex, this should never happen
                 SpecsLogs.warn("Unexpected NumberFormatException for " + value);
             }
         }
@@ -1936,10 +1824,10 @@ public class SpecsStrings {
     }
 
     /**
-     * Basen on https://stackoverflow.com/questions/9655181/how-to-convert-a-byte-array-to-a-hex-string-in-java
-     * 
-     * @param bytes
-     * @return
+     * Converts a byte array to a hexadecimal string.
+     *
+     * @param bytes the byte array
+     * @return the hexadecimal string
      */
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
@@ -1951,17 +1839,22 @@ public class SpecsStrings {
         return new String(hexChars);
     }
 
+    /**
+     * Converts a fraction to a percentage string.
+     *
+     * @param fraction the fraction
+     * @return the percentage string
+     */
     public static String toPercentage(double fraction) {
         return MessageFormat.format("{0,number,#.##%}", fraction);
     }
 
     /**
-     * Taken from here:
-     * https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java#3758880
-     * 
-     * @param bytes
-     * @param si
-     * @return
+     * Converts a size in bytes to a human-readable string.
+     *
+     * @param bytes the size in bytes
+     * @param si whether to use SI units
+     * @return the human-readable string
      */
     public static String toBytes(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
@@ -1972,23 +1865,31 @@ public class SpecsStrings {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
+    /**
+     * Converts a size in bytes to a human-readable string using non-SI units.
+     *
+     * @param bytes the size in bytes
+     * @return the human-readable string
+     */
     public static String toBytes(long bytes) {
         return toBytes(bytes, false);
     }
 
+    /**
+     * Removes all whitespace from a string.
+     *
+     * @param string the string
+     * @return the string without whitespace
+     */
     public static String removeWhitespace(String string) {
         return string.replaceAll("\\s+", "");
     }
 
     /**
-     * Given a string with an open-close parenthesis, returns the closing parenthesis corresponding to the first open
-     * parenthesis it finds.
-     * 
-     * <p>
-     * If no matching closing parenthesis is found, throwns an Exception.
-     * 
-     * @param string
-     * @return
+     * Finds the index of the closing parenthesis corresponding to the first open parenthesis in a string.
+     *
+     * @param string the string
+     * @return the index of the closing parenthesis
      */
     public static int findCloseParenthesisIndex(String string) {
         int openParIndex = string.indexOf('(');
@@ -2015,20 +1916,24 @@ public class SpecsStrings {
                 + openParIndex + " in the string '" + string + "'");
     }
 
+    /**
+     * Converts a number to a decimal string with commas.
+     *
+     * @param number the number
+     * @return the decimal string
+     */
     public static String toDecimal(long number) {
         DecimalFormat decimalFormat = new DecimalFormat("#,##0");
         return decimalFormat.format(number);
     }
 
     /**
-     * Splits the given String according to a separator, and removes blank String that can be created from the
-     * splitting.
-     * 
-     * @param string
-     * @param separator
-     * @param strip
-     *            if true, strips each splitted String
-     * @return
+     * Splits a string into non-empty substrings using a separator.
+     *
+     * @param string the string to split
+     * @param separator the separator
+     * @param strip whether to strip each substring
+     * @return the list of non-empty substrings
      */
     public static List<String> splitNonEmpty(String string, String separator, boolean strip) {
         return Arrays.stream(string.split(separator))
@@ -2038,32 +1943,20 @@ public class SpecsStrings {
     }
 
     /**
-     * Parses a list of paths.
-     * 
-     * <p>
-     * A sequence of paths may be prefixed with a $PREFIX$, the paths after the second $ will be prefixed with PREFIX,
-     * until a new $PREFIX$ appears. PREFIX can be empty.
-     * 
-     * <p>
-     * Example (; as separator): path1$prefix/$path2;path3$$path4 returns a Map where "" (empty string) is mapped to
-     * path1 and path4, and "prefix" is mapped to path2 and path3
-     * 
-     * 
-     * @param pathList
-     * @param separator
-     * @return
+     * Parses a list of paths with prefixes.
+     *
+     * @param pathList the list of paths
+     * @param separator the separator
+     * @return a map of prefixes and paths
      */
     public static MultiMap<String, String> parsePathList(String pathList, String separator) {
-        // Separate into prefixes
         MultiMap<String, String> prefixPaths = new MultiMap<>();
-        // List<String> pathsWithoutPrefix = new ArrayList<>();
 
         String currentString = pathList;
 
         int dollarIndex = -1;
         while ((dollarIndex = currentString.indexOf('$')) != -1) {
 
-            // Add what is before the dollar
             if (dollarIndex > 0) {
                 String beforeDollar = currentString.substring(0, dollarIndex);
                 prefixPaths.addAll("", SpecsStrings.splitNonEmpty(beforeDollar, separator, true));
@@ -2084,11 +1977,9 @@ public class SpecsStrings {
 
             prefixPaths.addAll(prefix, SpecsStrings.splitNonEmpty(paths, separator, true));
 
-            // Update string
             currentString = dollarIndex == -1 ? "" : currentString.substring(dollarIndex, currentString.length());
         }
 
-        // Parse remaining string to the empty prefix
         if (!currentString.isEmpty()) {
             prefixPaths.addAll("", SpecsStrings.splitNonEmpty(currentString, separator, true));
         }
@@ -2098,11 +1989,11 @@ public class SpecsStrings {
     }
 
     /**
-     * All indexes where the given char appears on the String.
-     * 
-     * @param string
-     * @param ch
-     * @return
+     * Finds all indexes of a character in a string.
+     *
+     * @param string the string
+     * @param ch the character
+     * @return the list of indexes
      */
     public static List<Integer> indexesOf(String string, int ch) {
         List<Integer> indexes = new ArrayList<>();
@@ -2121,10 +2012,22 @@ public class SpecsStrings {
         return indexes;
     }
 
+    /**
+     * Converts a number to an array of digits.
+     *
+     * @param number the number
+     * @return the array of digits
+     */
     public static int[] toDigits(Number number) {
         return toDigits(number.toString());
     }
 
+    /**
+     * Converts a string to an array of digits.
+     *
+     * @param number the string
+     * @return the array of digits
+     */
     public static int[] toDigits(String number) {
         int[] digits = new int[number.length()];
 
@@ -2135,10 +2038,15 @@ public class SpecsStrings {
         return digits;
     }
 
+    /**
+     * Checks if a string is a palindrome.
+     *
+     * @param string the string to check
+     * @return true if the string is a palindrome, false otherwise
+     */
     public static boolean isPalindrome(String string) {
         int length = string.length();
 
-        // If only one character, return true
         if (length == 1) {
             return true;
         }
@@ -2152,21 +2060,24 @@ public class SpecsStrings {
     }
 
     /**
-     * If the String is blank, returns null. Returns the string otherwise.
-     * 
-     * @param code
-     * @return
+     * Returns null if the string is blank, otherwise returns the string.
+     *
+     * @param string the string
+     * @return null if the string is blank, otherwise the string
      */
     public static String nullIfEmpty(String string) {
         return string.isBlank() ? null : string;
     }
 
     /**
-     * Checks if two strings are identical, not considering empty spaces. Returns false if strings do not match.
+     * Checks if two strings are identical, ignoring empty spaces.
+     *
+     * @param expected the expected string
+     * @param actual the actual string
+     * @return true if the strings are identical, false otherwise
      */
     public static boolean check(String expected, String actual) {
 
-        // Normalize both strings
         actual = normalizeFileContents(actual, true);
         expected = normalizeFileContents(expected, true);
 
@@ -2174,30 +2085,23 @@ public class SpecsStrings {
     }
 
     /**
-     * Normalizes the given string so that it represents a JSON object.
-     * 
-     * <p>
-     * - If the input is a single string that ends in .json, interprets as an existing file whose contents will be
-     * returned;<br>
-     * - If the string does not start with { or ends with }, introduces those characters;
-     * 
-     * @param trim
-     * @return
+     * Normalizes a string to represent a JSON object.
+     *
+     * @param json the string
+     * @return the normalized JSON object
      */
     public static String normalizeJsonObject(String json) {
         return normalizeJsonObject(json, null);
     }
 
     /**
-     * 
-     * @param json
-     * @param baseFolder
-     *            if json represents a relative path to a json file and baseFolder is not null, uses baseFolder as the
-     *            parent of the relative path
-     * @return
+     * Normalizes a string to represent a JSON object with a base folder.
+     *
+     * @param json the string
+     * @param baseFolder the base folder
+     * @return the normalized JSON object
      */
     public static String normalizeJsonObject(String json, File baseFolder) {
-        // Check if string is an existing JSON file
 
         if (json.endsWith(".json")) {
             var jsonFile = new File(json);
@@ -2216,7 +2120,6 @@ public class SpecsStrings {
 
         var normalizedJson = json.trim();
 
-        // Normalize to object
         if (!normalizedJson.startsWith("{")) {
             normalizedJson = "{" + normalizedJson + "}";
         }
@@ -2225,9 +2128,10 @@ public class SpecsStrings {
     }
 
     /**
-     * 
-     * @param string
-     * @return the last char in the String or throws exception if String is empty
+     * Gets the last character in a string.
+     *
+     * @param string the string
+     * @return the last character
      */
     public static char lastChar(String string) {
         if (string.isEmpty()) {
@@ -2238,10 +2142,10 @@ public class SpecsStrings {
     }
 
     /**
-     * Sanitizes a string representing a single name of a path. Currently replaces ' ', '(' and ')' with '_'
-     * 
-     * @param path
-     * @return
+     * Sanitizes a string representing a single name of a path.
+     *
+     * @param pathName the path name
+     * @return the sanitized path name
      */
     public static String sanitizePath(String pathName) {
         var sanitizedString = pathName;

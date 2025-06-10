@@ -1,11 +1,15 @@
-/**
- * Copyright 2013 SPeCS Research Group.
- * <p>
+/*
+ * SpecsCollections.java
+ *
+ * Utility class for common operations on Java Collections, such as sublists, map inversion, filtering, and more. Provides static helper methods to simplify and extend the use of Java's collection framework in the SPeCS ecosystem.
+ *
+ * Copyright 2025 SPeCS Research Group.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -27,6 +31,9 @@ import java.util.stream.Stream;
 
 /**
  * Utility methods related to Java Collections.
+ * <p>
+ * Provides static helper methods for working with lists, maps, sets, and other collections, including sublist extraction, map inversion, filtering, and more.
+ * </p>
  *
  * @author Joao Bispo
  */
@@ -35,14 +42,20 @@ public class SpecsCollections {
     /**
      * Returns the elements from the given index, until the end of the list.
      *
-     * @param list
-     * @param startIndex
-     * @return
+     * @param list the list to extract the sublist from
+     * @param startIndex the starting index of the sublist
+     * @return a sublist starting from the given index to the end of the list
      */
     public static <E> List<E> subList(List<E> list, int startIndex) {
         return list.subList(startIndex, list.size());
     }
 
+    /**
+     * Inverts the keys and values of a given map.
+     *
+     * @param map the map to invert
+     * @return a new map with inverted keys and values, or null if duplicate values are found
+     */
     public static <K, V> Map<V, K> invertMap(Map<K, V> map) {
         Map<V, K> invertedMap = SpecsFactory.newHashMap();
 
@@ -63,8 +76,8 @@ public class SpecsCollections {
     /**
      * Returns the last element of the list, or null if the list is empty.
      *
-     * @param lines
-     * @return
+     * @param lines the list to retrieve the last element from
+     * @return the last element of the list, or null if the list is empty
      */
     public static <K> K last(List<K> lines) {
         if (lines.isEmpty()) {
@@ -80,8 +93,8 @@ public class SpecsCollections {
     /**
      * Returns the last element of the list, or an empty Optional if the list is empty.
      *
-     * @param lines
-     * @return
+     * @param lines the list to retrieve the last element from
+     * @return an Optional containing the last element, or an empty Optional if the list is empty
      */
     public static <K> Optional<K> lastTry(List<K> lines) {
         if (lines.isEmpty()) {
@@ -93,6 +106,9 @@ public class SpecsCollections {
 
     /**
      * Returns the element of the list, if it has exactly one. Empty otherwise.
+     *
+     * @param list the list to check
+     * @return an Optional containing the single element, or an empty Optional if the list does not have exactly one element
      */
     public static <T> Optional<T> singleTry(List<T> list) {
         if (list.size() != 1) {
@@ -105,28 +121,18 @@ public class SpecsCollections {
     /**
      * Creates an Iterable from an iterator, so it can be used in for:each loops.
      *
-     * @param iterator
-     * @return
+     * @param iterator the iterator to convert
+     * @return an Iterable wrapping the given iterator
      */
     public static <K> Iterable<K> iterable(final Iterator<K> iterator) {
         return () -> iterator;
     }
 
-    /*
-    public static <T, K extends T> List<T> asListSame(List<K> elements) {
-    List<T> list = FactoryUtils.newArrayList();
-    
-    for (K element : elements) {
-        list.add(element);
-    }
-    
-    return list;
-    }
-     */
-
     /**
-     * @param a
-     * @return
+     * Converts an array to a Set.
+     *
+     * @param a the array to convert
+     * @return a Set containing the elements of the array
      */
     @SafeVarargs
     public static <T> Set<T> asSet(T... a) {
@@ -134,11 +140,11 @@ public class SpecsCollections {
     }
 
     /**
-     * If an element is null, ignores it.
+     * Converts an array of objects to a list of a specific type, filtering out null elements.
      *
-     * @param superClass
-     * @param elements
-     * @return
+     * @param superClass the class of the elements to include in the list
+     * @param elements the array of objects to convert
+     * @return a list containing the elements of the array that match the given class
      */
     public static <T> List<T> asListT(Class<T> superClass, Object... elements) {
         List<T> list = SpecsFactory.newArrayList();
@@ -159,8 +165,13 @@ public class SpecsCollections {
         return list;
     }
 
+    /**
+     * Extracts the keys from a list of KeyProvider objects.
+     *
+     * @param providers the list of KeyProvider objects
+     * @return a list of keys extracted from the providers
+     */
     public static <T extends KeyProvider<K>, K> List<K> getKeyList(List<T> providers) {
-        // public static <K> List<K> asList(List<KeyProvider<K>> providers) {
         List<K> list = SpecsFactory.newArrayList();
 
         for (T provider : providers) {
@@ -171,16 +182,14 @@ public class SpecsCollections {
     }
 
     /**
-     * Creates a new list sorted list from the given collection.
+     * Creates a new sorted list from the given collection.
      *
-     * @param keySet
-     * @return
+     * @param collection the collection to sort
+     * @return a new list containing the sorted elements of the collection
      */
     public static <T extends Comparable<? super T>> List<T> newSorted(Collection<T> collection) {
-        // Create list
         List<T> list = SpecsFactory.newArrayList(collection);
 
-        // Sort list
         Collections.sort(list);
 
         return list;
@@ -189,9 +198,10 @@ public class SpecsCollections {
     /**
      * Removes the tokens from the list from startIndex, inclusive, to endIndex, exclusive.
      *
-     * @param list
-     * @param startIndex
-     * @param endIndex
+     * @param list the list to remove elements from
+     * @param startIndex the starting index of the range to remove
+     * @param endIndex the ending index of the range to remove
+     * @return a list containing the removed elements
      */
     public static <T> List<T> remove(List<T> list, int startIndex, int endIndex) {
         List<T> removedElements = SpecsFactory.newArrayList();
@@ -203,12 +213,25 @@ public class SpecsCollections {
         return removedElements;
     }
 
+    /**
+     * Removes the tokens from the list from startIndex, inclusive, to the end of the list.
+     *
+     * @param list the list to remove elements from
+     * @param startIndex the starting index of the range to remove
+     * @return a list containing the removed elements
+     */
     public static <T> List<T> remove(List<T> list, int startIndex) {
         return remove(list, startIndex, list.size());
     }
 
+    /**
+     * Removes the elements at the specified indexes from the list.
+     *
+     * @param list the list to remove elements from
+     * @param indexes the indexes of the elements to remove
+     * @return a list containing the removed elements
+     */
     public static <T> List<T> remove(List<T> list, List<Integer> indexes) {
-        // Sort indexes
         Collections.sort(indexes);
 
         List<T> removedElements = SpecsFactory.newArrayList();
@@ -224,12 +247,11 @@ public class SpecsCollections {
     /**
      * Removes from the list the elements that match the predicate, returns the removed elements.
      *
-     * @param list
-     * @param filter
-     * @return
+     * @param list the list to remove elements from
+     * @param filter the predicate to match elements
+     * @return a list containing the removed elements
      */
     public static <T> List<T> remove(List<T> list, Predicate<T> filter) {
-
         List<T> removedElements = new ArrayList<>();
 
         Iterator<T> iterator = list.iterator();
@@ -244,16 +266,36 @@ public class SpecsCollections {
         return removedElements;
     }
 
+    /**
+     * Removes from the list the elements that are instances of the given class, returns the removed elements.
+     *
+     * @param list the list to remove elements from
+     * @param targetClass the class to match elements
+     * @return a list containing the removed elements
+     */
     public static <T, U extends T> List<U> remove(List<T> list, Class<U> targetClass) {
         return castUnchecked(remove(list, element -> targetClass.isInstance(element)), targetClass);
     }
 
+    /**
+     * Removes and returns the last element of the list.
+     *
+     * @param list the list to remove the last element from
+     * @return the removed last element
+     */
     public static <T> T removeLast(List<T> list) {
         List<T> lastElement = remove(list, list.size() - 1, list.size());
         Preconditions.checkArgument(lastElement.size() == 1);
         return lastElement.get(0);
     }
 
+    /**
+     * Removes and returns the last element of the list, checking if it is of the given class.
+     *
+     * @param list the list to remove the last element from
+     * @param targetClass the class to match the last element
+     * @return the removed last element
+     */
     public static <T, U extends T> U removeLast(List<T> list, Class<U> targetClass) {
         if (list.isEmpty()) {
             throw new RuntimeException("This method should not be called with empty lists");
@@ -265,12 +307,12 @@ public class SpecsCollections {
     }
 
     /**
-     * Returns the first index of object that is an instance of the given class. Returns -1 if no object is found that
-     * is instance of the class.
+     * Returns the first index of an object that is an instance of the given class. Returns -1 if no object is found that
+     * is an instance of the class.
      *
-     * @param aClass
-     * @param types
-     * @return
+     * @param list the list to search
+     * @param aClass the class to match elements
+     * @return the index of the first matching element, or -1 if no match is found
      */
     public static <T> int getFirstIndex(List<? super T> list, Class<T> aClass) {
         for (int i = 0; i < list.size(); i++) {
@@ -284,14 +326,13 @@ public class SpecsCollections {
 
     /**
      * Returns the first object that is an instance of the given class. Returns null if no object is found that is
-     * instance of the class.
+     * an instance of the class.
      *
-     * @param aClass
-     * @param types
-     * @return
+     * @param list the list to search
+     * @param aClass the class to match elements
+     * @return the first matching element, or null if no match is found
      */
     public static <T> T getFirst(List<? super T> list, Class<T> aClass) {
-
         for (int i = 0; i < list.size(); i++) {
             Object obj = list.get(i);
             if (aClass.isInstance(obj)) {
@@ -303,27 +344,11 @@ public class SpecsCollections {
     }
 
     /**
-     * Casts an element of a list to the given class.
-     *
-     * @param aClass
-     * @param list
-     * @param index
-     * @return
-     */
-    /*
-    public static <T> T get(Class<T> aClass, List<? super T> list, int index) {
-    
-    Object element = list.get(index);
-    
-    return aClass.cast(element);
-    }
-     */
-
-    /**
      * Returns true if all the elements in the list are instances of the given class.
      *
-     * @param inputTypes
-     * @return
+     * @param list the list to check
+     * @param aClass the class to match elements
+     * @return true if all elements match the class, false otherwise
      */
     public static <T> boolean areOfType(Class<T> aClass, List<? super T> list) {
         for (Object object : list) {
@@ -338,9 +363,9 @@ public class SpecsCollections {
     /**
      * Adds the elements of the provider collection to the receiver collection. Returns the receiver collection.
      *
-     * @param receiver
-     * @param provider
-     * @return
+     * @param receiver the collection to add elements to
+     * @param provider the collection providing elements
+     * @return the receiver collection with added elements
      */
     public static <U, T extends Collection<U>> T add(T receiver, T provider) {
         receiver.addAll(provider);
@@ -350,12 +375,11 @@ public class SpecsCollections {
     /**
      * Casts a list of one type to another type, and checks if all elements can be cast to the target type.
      *
-     * @param list
-     * @param aClass
-     * @return
+     * @param list the list to cast
+     * @param aClass the class to cast elements to
+     * @return a list containing the cast elements
      */
     public static <T> SpecsList<T> cast(List<?> list, Class<T> aClass) {
-        // Verify if all elements implement the type of the class
         Optional<?> invalidElement = list.stream()
                 .filter(element -> !aClass.isInstance(element))
                 .findFirst();
@@ -369,61 +393,61 @@ public class SpecsCollections {
         return SpecsList.convert(castUnchecked(list, aClass));
     }
 
+    /**
+     * Casts an array of one type to another type.
+     *
+     * @param array the array to cast
+     * @param targetClass the class to cast elements to
+     * @return an array containing the cast elements
+     */
     public static <T> T[] cast(Object[] array, Class<T> targetClass) {
         return Arrays.stream(array)
-                .map(targetClass::cast) // Cast to String
+                .map(targetClass::cast)
                 .toArray(i -> (T[]) Array.newInstance(targetClass, i));
     }
 
     /**
      * Casts a list of one type to another type, without checking if the elements can be cast to the target type.
      *
-     * @param list
-     * @param aClass
-     * @return
+     * @param list the list to cast
+     * @param aClass the class to cast elements to
+     * @return a list containing the cast elements
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> castUnchecked(List<?> list, Class<T> aClass) {
         return (List<T>) list;
-        /*
-        List<T> newList = new ArrayList<>();
-        
-        list.forEach(element -> newList.add(aClass.cast(element)));
-        
-        return newList;
-        */
     }
 
     /**
-     * Helper method which receives an element.
+     * Concatenates a collection with an element, returning a new list.
      *
-     * <p>
-     * If the element is null, list remains the same.
-     *
-     * @param list
-     * @param element
-     * @return
+     * @param list the collection to concatenate
+     * @param element the element to add
+     * @return a new list containing the concatenated elements
      */
     public static <K> SpecsList<K> concat(Collection<? extends K> list, K element) {
         return concat(list, ofNullable(element));
     }
 
     /**
-     * Helper method which receives an element.
+     * Concatenates an element with a collection, returning a new list.
      *
-     * <p>
-     * If the element is null, list remains the same.
-     *
-     * @param element
-     * @param list
-     * @return
+     * @param element the element to add
+     * @param list the collection to concatenate
+     * @return a new list containing the concatenated elements
      */
     public static <K> SpecsList<K> concat(K element, Collection<? extends K> list) {
         return concat(ofNullable(element), list);
     }
 
+    /**
+     * Concatenates two collections, returning a new list.
+     *
+     * @param list1 the first collection
+     * @param list2 the second collection
+     * @return a new list containing the concatenated elements
+     */
     public static <K> SpecsList<K> concat(Collection<? extends K> list1, Collection<? extends K> list2) {
-
         List<K> newList = new ArrayList<>(list1.size() + list2.size());
         newList.addAll(list1);
         newList.addAll(list2);
@@ -432,11 +456,11 @@ public class SpecsCollections {
     }
 
     /**
-     * If the list is modifiable, adds directly to it.
+     * Concatenates a list with an element, modifying the list if it is modifiable.
      *
-     * @param list
-     * @param element
-     * @return
+     * @param list the list to concatenate
+     * @param element the element to add
+     * @return the modified list, or a new list if the original list is not modifiable
      */
     public static <K> List<K> concatList(List<? extends K> list, K element) {
         try {
@@ -445,17 +469,16 @@ public class SpecsCollections {
             castedList.add(element);
             return castedList;
         } catch (UnsupportedOperationException e) {
-            // Fallback to generic copy concat
             return concat(list, element);
         }
     }
 
     /**
-     * If the first list is modifiable, adds directly to it.
+     * Concatenates two lists, modifying the first list if it is modifiable.
      *
-     * @param list1
-     * @param list2
-     * @return
+     * @param list1 the first list
+     * @param list2 the second list
+     * @return the modified first list, or a new list if the original list is not modifiable
      */
     public static <K> List<K> concatList(List<? extends K> list1, List<? extends K> list2) {
         try {
@@ -464,16 +487,15 @@ public class SpecsCollections {
             castedList.addAll(list2);
             return castedList;
         } catch (UnsupportedOperationException e) {
-            // Fallback to generic copy concat
             return concat(list1, list2);
         }
     }
 
     /**
-     * Creates a list with the elements from the given collections.
+     * Concatenates multiple collections into a single list.
      *
-     * @param collections
-     * @return
+     * @param collections the collections to concatenate
+     * @return a new list containing the concatenated elements
      */
     @SafeVarargs
     public static <K> List<K> concatLists(Collection<? extends K>... collections) {
@@ -493,15 +515,12 @@ public class SpecsCollections {
     /**
      * Converts an array from one type to another.
      *
-     * @param origin
-     * @param destination
-     * @param converter
-     * @return
+     * @param origin the original array
+     * @param destination the destination array
+     * @param converter the function to convert elements
+     * @return the destination array with converted elements
      */
     public static <O, D> D[] convert(O[] origin, D[] destination, Function<O, D> converter) {
-
-        // D[] destination = (D[]) new Object[origin.length];
-
         for (int i = 0; i < origin.length; i++) {
             destination[i] = converter.apply(origin[i]);
         }
@@ -512,8 +531,8 @@ public class SpecsCollections {
     /**
      * Turns an Optional<T> into a Stream<T> of length zero or one depending upon whether a value is present.
      *
-     * <p>
-     * Source: http://stackoverflow.com/questions/22725537/using-java-8s-optional-with-streamflatmap
+     * @param opt the Optional to convert
+     * @return a Stream containing the value of the Optional, or an empty Stream if the Optional is empty
      */
     public static <T> Stream<T> toStream(Optional<T> opt) {
         if (opt.isPresent()) {
@@ -526,9 +545,9 @@ public class SpecsCollections {
     /**
      * Filters the elements of a Collection according to a map function over the elements of that collection.
      *
-     * @param elements
-     * @param mapFunction
-     * @return
+     * @param elements the collection to filter
+     * @param mapFunction the function to map elements
+     * @return a list containing the filtered elements
      */
     public static <T, F> List<T> filter(Collection<T> elements, Function<T, F> mapFunction) {
         return filter(elements.stream(), mapFunction);
@@ -537,20 +556,24 @@ public class SpecsCollections {
     /**
      * Filters the elements of a Stream according to a map function over the elements of that collection.
      *
-     * @param elements
-     * @param mapFunction
-     * @return
+     * @param elements the stream to filter
+     * @param mapFunction the function to map elements
+     * @return a list containing the filtered elements
      */
     public static <T, F> List<T> filter(Stream<T> elements, Function<T, F> mapFunction) {
-
         Set<F> seenElements = new HashSet<>();
         return elements
-                // Add to set. If already in set, will return false and filter the node
                 .filter(element -> seenElements.add(mapFunction.apply(element)))
                 .collect(Collectors.toList());
-
     }
 
+    /**
+     * Maps the elements of a collection to another type.
+     *
+     * @param list the collection to map
+     * @param mapper the function to map elements
+     * @return a list containing the mapped elements
+     */
     public static <T, M> List<M> map(Collection<T> list, Function<T, M> mapper) {
         return list.stream()
                 .map(mapper)
@@ -561,9 +584,9 @@ public class SpecsCollections {
      * Removes all the elements at the head that are an instance of the given class, returns a new list with those
      * elements.
      *
-     * @param aClass
-     * @param list
-     * @return
+     * @param list the list to remove elements from
+     * @param aClass the class to match elements
+     * @return a list containing the removed elements
      */
     public static <T, ET extends T> List<ET> pop(List<T> list, Class<ET> aClass) {
         if (list.isEmpty()) {
@@ -572,7 +595,6 @@ public class SpecsCollections {
 
         List<ET> newList = new ArrayList<>();
 
-        // While head is of the specified type, move to the new list
         while (aClass.isInstance(list.get(0))) {
             newList.add(aClass.cast(list.remove(0)));
 
@@ -584,6 +606,13 @@ public class SpecsCollections {
         return newList;
     }
 
+    /**
+     * Removes the specified number of elements from the head of the list.
+     *
+     * @param elements the list to remove elements from
+     * @param numElementsToPop the number of elements to remove
+     * @return a list containing the removed elements
+     */
     public static <T> SpecsList<T> pop(List<T> elements, int numElementsToPop) {
         Preconditions.checkArgument(elements.size() >= numElementsToPop,
                 "List has " + elements.size() + " elements, and want to pop " + numElementsToPop);
@@ -599,9 +628,9 @@ public class SpecsCollections {
     /**
      * Removes the first element of the list, checking if it is of the given class.
      *
-     * @param list
-     * @param aClass
-     * @return
+     * @param list the list to remove the first element from
+     * @param aClass the class to match the first element
+     * @return the removed first element
      */
     public static <T, ET extends T> ET popSingle(List<T> list, Class<ET> aClass) {
         if (list.isEmpty()) {
@@ -615,9 +644,9 @@ public class SpecsCollections {
      * Returns all the elements at the head that are an instance of the given class, returns a new list with those
      * elements.
      *
-     * @param list
-     * @param aClass
-     * @return
+     * @param list the list to retrieve elements from
+     * @param aClass the class to match elements
+     * @return a list containing the matching elements
      */
     public static <T, ET extends T> List<ET> peek(List<T> list, Class<ET> aClass) {
         if (list.isEmpty()) {
@@ -626,9 +655,7 @@ public class SpecsCollections {
 
         List<ET> newList = new ArrayList<>();
 
-        // Starting on the first element, add elements until it finds an element that is not of the type
         for (T element : list) {
-            // Stop if element is not of type
             if (!aClass.isInstance(element)) {
                 break;
             }
@@ -639,6 +666,12 @@ public class SpecsCollections {
         return newList;
     }
 
+    /**
+     * Converts an Optional to a list.
+     *
+     * @param optional the Optional to convert
+     * @return a list containing the value of the Optional, or an empty list if the Optional is empty
+     */
     public static <T> List<T> toList(Optional<T> optional) {
         if (!optional.isPresent()) {
             return Collections.emptyList();
@@ -650,9 +683,9 @@ public class SpecsCollections {
     /**
      * Checks if the given object is an instance of any of the given classes.
      *
-     * @param object
-     * @param classes
-     * @return
+     * @param object the object to check
+     * @param classes the classes to match
+     * @return true if the object matches any of the classes, false otherwise
      */
     public static <T> boolean instanceOf(T object, Collection<Class<? extends T>> classes) {
         for (Class<?> aClass : classes) {
@@ -667,8 +700,8 @@ public class SpecsCollections {
     /**
      * Creates a list with the given element, unless it is null. In that case, returns an empty list.
      *
-     * @param element
-     * @return
+     * @param element the element to include in the list
+     * @return a list containing the element, or an empty list if the element is null
      */
     public static <T> List<T> ofNullable(T element) {
         if (element == null) {
@@ -681,8 +714,8 @@ public class SpecsCollections {
     /**
      * Accepts lists that have at most one element, return the element if present, or null otherwise.
      *
-     * @param selectCond
-     * @return
+     * @param list the list to check
+     * @return the single element of the list, or null if the list is empty
      */
     public static <T> T orElseNull(List<T> list) {
         Preconditions.checkArgument(list.size() < 2, "Expected list size to be less than 2, it is " + list.size());
@@ -694,11 +727,25 @@ public class SpecsCollections {
         return list.get(0);
     }
 
+    /**
+     * Checks if the container collection contains any of the elements in the elementsToFind collection.
+     *
+     * @param container the collection to search
+     * @param elementsToFind the collection of elements to find
+     * @return true if any element is found, false otherwise
+     */
     public static <T> boolean containsAny(Collection<T> container, Collection<T> elementsToFind) {
         return elementsToFind.stream()
                 .anyMatch(container::contains);
     }
 
+    /**
+     * Returns the intersection of two collections.
+     *
+     * @param collection1 the first collection
+     * @param collection2 the second collection
+     * @return a set containing the elements common to both collections
+     */
     public static <T> Set<T> intersection(Collection<T> collection1, Collection<T> collection2) {
         Set<T> set = new HashSet<>(collection1);
         set.retainAll(collection2);
@@ -706,32 +753,42 @@ public class SpecsCollections {
         return set;
     }
 
+    /**
+     * Creates a new empty ArrayList.
+     *
+     * @return a new empty ArrayList
+     */
     public static <T> List<T> newArrayList() {
         return new ArrayList<>();
     }
 
+    /**
+     * Creates a new empty HashMap.
+     *
+     * @return a new empty HashMap
+     */
     public static <K, V> Map<K, V> newHashMap() {
         return new HashMap<>();
     }
 
+    /**
+     * Creates a new HashSet containing the given elements.
+     *
+     * @param elements the elements to include in the set
+     * @return a new HashSet containing the elements
+     */
     @SafeVarargs
     public static <K> Set<K> newHashSet(K... elements) {
         return new HashSet<>(Arrays.asList(elements));
     }
-    /*
-    public static <T> T[] toArray(List<T> list) {
-        return list.toArray(new T[0]);
-    }
-    */
 
     /**
      * Adds to the list if element is present, and does nothing otherwise.
      *
-     * @param includes
-     * @param element
+     * @param includes the collection to add the element to
+     * @param element the Optional containing the element to add
      */
     public static <T> void addOptional(Collection<T> includes, Optional<T> element) {
-
         if (!element.isPresent()) {
             return;
         }
@@ -741,6 +798,9 @@ public class SpecsCollections {
 
     /**
      * Returns the first non-empty element of the stream.
+     *
+     * @param stream the stream to search
+     * @return an Optional containing the first non-empty element, or an empty Optional if no non-empty element is found
      */
     public static <T> Optional<T> findFirstNonEmpty(Stream<Optional<T>> stream) {
         Preconditions.checkArgument(stream != null, "stream must not be null");
@@ -759,23 +819,22 @@ public class SpecsCollections {
     }
 
     /**
-     * @param list
-     * @return a stream of the elements of the list, in reverse order
+     * Returns a stream of the elements of the list, in reverse order.
+     *
+     * @param list the list to reverse
+     * @return a stream of the elements in reverse order
      */
     public static <T> Stream<T> reverseStream(List<T> list) {
-        // int from = 0;
-        // int to = list.size();
-        //
-        // return IntStream.range(from, to).map(i -> to - i + from - 1).mapToObj(i -> list.get(i));
         return reverseIndexStream(list).mapToObj(i -> list.get(i));
     }
 
     /**
-     * @param list
-     * @return a stream of indexes to the list, in reverse order
+     * Returns a stream of indexes to the list, in reverse order.
+     *
+     * @param list the list to reverse
+     * @return a stream of indexes in reverse order
      */
     public static <T> IntStream reverseIndexStream(List<T> list) {
-
         int from = 0;
         int to = list.size();
 
@@ -785,9 +844,9 @@ public class SpecsCollections {
     /**
      * Collects all instances of the given class from the stream.
      *
-     * @param stream
-     * @param aClass
-     * @return
+     * @param stream the stream to filter
+     * @param aClass the class to match elements
+     * @return a list containing the matching elements
      */
     public static <T> List<T> toList(Stream<? super T> stream, Class<T> aClass) {
         return stream.filter(aClass::isInstance)
@@ -796,10 +855,10 @@ public class SpecsCollections {
     }
 
     /**
-     * Converts a list of String providers to a String array.
+     * Converts a collection of String providers to a String array.
      *
-     * @param values
-     * @return
+     * @param values the collection of String providers
+     * @return a String array containing the keys of the providers
      */
     public static <T extends KeyProvider<String>> String[] toStringArray(Collection<T> values) {
         return values.stream()
@@ -811,14 +870,21 @@ public class SpecsCollections {
     /**
      * Converts a collection to a set, applying the given mapper to each of the elements.
      *
-     * @param collection
-     * @param mapper
-     * @return
+     * @param collection the collection to convert
+     * @param mapper the function to map elements
+     * @return a set containing the mapped elements
      */
     public static <T, R> Set<R> toSet(Collection<T> collection, Function<? super T, R> mapper) {
         return collection.stream().map(mapper).collect(Collectors.toSet());
     }
 
+    /**
+     * Returns a stream of the collection, either parallel or sequential.
+     *
+     * @param collection the collection to convert
+     * @param isParallel whether the stream should be parallel
+     * @return a stream of the collection
+     */
     public static <T> Stream<T> getStream(Collection<T> collection, boolean isParallel) {
         if (isParallel) {
             return collection.parallelStream();
@@ -827,6 +893,12 @@ public class SpecsCollections {
         return collection.stream();
     }
 
+    /**
+     * Creates a copy of a BitSet.
+     *
+     * @param bitSet the BitSet to copy
+     * @return a copy of the BitSet
+     */
     public static BitSet copy(BitSet bitSet) {
         var copy = new BitSet();
         copy.or(bitSet);
@@ -834,15 +906,27 @@ public class SpecsCollections {
         return copy;
     }
 
+    /**
+     * Creates a new array of the given type and size.
+     *
+     * @param targetClass the class of the array elements
+     * @param size the size of the array
+     * @return a new array of the given type and size
+     */
     public static <T> T[] newArray(Class<T> targetClass, int size) {
-
-        // newInstance returns a new array
         @SuppressWarnings("unchecked")
         var newArray = (T[]) Array.newInstance(targetClass, size);
 
         return newArray;
     }
 
+    /**
+     * Maps the elements of an array to another type.
+     *
+     * @param array the array to map
+     * @param mapper the function to map elements
+     * @return a list containing the mapped elements
+     */
     public static <T1, T2> List<T2> toList(T1[] array, Function<T1, T2> mapper) {
         return Arrays.stream(array)
                 .map(value -> mapper.apply(value))
@@ -850,9 +934,11 @@ public class SpecsCollections {
     }
 
     /**
-     * @param list
-     * @param targetClass
-     * @return a list with the elements that are an instance of the given class
+     * Returns a list with the elements that are an instance of the given class.
+     *
+     * @param list the list to filter
+     * @param targetClass the class to match elements
+     * @return a list containing the matching elements
      */
     public static <T> List<T> get(List<? super T> list, Class<T> targetClass) {
         return list.stream()
@@ -862,10 +948,10 @@ public class SpecsCollections {
     }
 
     /**
-     * Converts the definition to an optional. If the list contains more than one element, throws an exception.
+     * Converts a collection to an optional. If the collection contains more than one element, throws an exception.
      *
-     * @param definition
-     * @return
+     * @param collection the collection to convert
+     * @return an Optional containing the single element, or an empty Optional if the collection is empty
      */
     public static <K> Optional<K> toOptional(Collection<K> collection) {
         SpecsCheck.checkArgument(collection.size() < 2,
@@ -876,9 +962,10 @@ public class SpecsCollections {
     }
 
     /**
-     * @param <K>
-     * @param collections
-     * @return a set with the elements common to all given collections
+     * Returns a set with the elements common to all given collections.
+     *
+     * @param collections the collections to intersect
+     * @return a set containing the common elements
      */
     public static <K> Set<K> and(Collection<Collection<K>> collections) {
         if (collections.isEmpty()) {
@@ -888,29 +975,33 @@ public class SpecsCollections {
         var commonElements = (Set<K>) null;
 
         for (var collection : collections) {
-
-            // Initialize with first collection
             if (commonElements == null) {
                 commonElements = new HashSet<>(collection);
                 continue;
             }
 
-            // Only keep common elements
             commonElements.retainAll(collection);
         }
 
         return commonElements;
     }
 
+    /**
+     * Returns a set with the elements common to all given collections.
+     *
+     * @param collections the collections to intersect
+     * @return a set containing the common elements
+     */
     @SafeVarargs
     public static <K> Set<K> and(Collection<K>... collections) {
         return and(Arrays.asList(collections));
     }
 
     /**
-     * @param <K>
-     * @param collections
-     * @return a set with the elements of all given collections
+     * Returns a set with the elements of all given collections.
+     *
+     * @param collections the collections to union
+     * @return a set containing all elements
      */
     public static <K> Set<K> or(Collection<Collection<K>> collections) {
         if (collections.isEmpty()) {
@@ -926,6 +1017,12 @@ public class SpecsCollections {
         return allElements;
     }
 
+    /**
+     * Returns a set with the elements of all given collections.
+     *
+     * @param collections the collections to union
+     * @return a set containing all elements
+     */
     @SafeVarargs
     public static <K> Set<K> or(Collection<K>... collections) {
         return or(Arrays.asList(collections));
@@ -935,15 +1032,12 @@ public class SpecsCollections {
      * If the key has a mapping different than null, just returns the value, otherwise uses the given Supplier to create
      * the first value, associates it in the map, and returns it.
      *
-     * @param <K>
-     * @param <V>
-     * @param sittings
-     * @param name
-     * @param hashMap
-     * @return
+     * @param map the map to retrieve or set the value
+     * @param key the key to retrieve or set the value
+     * @param defaultValue the Supplier to create the default value
+     * @return the value associated with the key
      */
     public static <K, V> V getOrSet(Map<K, V> map, K key, Supplier<V> defaultValue) {
-
         var value = map.get(key);
         if (value == null) {
             value = defaultValue.get();
@@ -952,10 +1046,4 @@ public class SpecsCollections {
 
         return value;
     }
-
-    // @SuppressWarnings("unchecked")
-    // public static <T> T[] arrayGenerator(int size, Class<T> aClass) {
-    // return (T[]) Array.newInstance(aClass, size);
-    // // return aClass.arrayType(). T[size];
-    // }
 }

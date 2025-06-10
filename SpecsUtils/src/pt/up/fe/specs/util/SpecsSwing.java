@@ -1,11 +1,15 @@
 /*
- * Copyright 2011 SPeCS Research Group.
- * 
+ * SpecsSwing.java
+ *
+ * Utility class for Swing-related operations, such as dialogs, UI helpers, and event handling. Provides static helper methods for simplifying Java Swing development in the SPeCS ecosystem.
+ *
+ * Copyright 2025 SPeCS Research Group.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -39,39 +43,57 @@ import javax.swing.table.TableModel;
 import pt.up.fe.specs.util.swing.MapModel;
 
 /**
- * Utility methods related to Java GUI operation.
- * 
+ * Utility methods for Java Swing operations.
+ * <p>
+ * Provides static helper methods for dialogs, UI helpers, and event handling in Java Swing applications.
+ * </p>
+ *
  * @author Joao Bispo
  */
 public class SpecsSwing {
 
+    /**
+     * The class name used to test if Swing is available in the current environment.
+     */
     public static final String TEST_CLASSNAME = "javax.swing.JFrame";
 
+    /**
+     * Custom Look and Feel class name, if set.
+     */
     private static String CUSTOM_LOOK_AND_FEEL = null;
 
+    /**
+     * Sets a custom Look and Feel class name.
+     *
+     * @param value the class name of the custom Look and Feel
+     */
     synchronized public static void setCustomLookAndFeel(String value) {
         CUSTOM_LOOK_AND_FEEL = value;
     }
 
+    /**
+     * Gets the custom Look and Feel class name, if set.
+     *
+     * @return the class name of the custom Look and Feel, or null if not set
+     */
     synchronized public static String getCustomLookAndFeel() {
         return CUSTOM_LOOK_AND_FEEL;
     }
 
-    // public static boolean hasCustomLookAndFeel() {
-    // // Since it is a boolean, it should not have problems regarding reading concurrently, according to the Java
-    // // memory model
-    // return HAS_CUSTOM_LOOK_AND_FEEL;
-    // }
-
     /**
      * Returns true if the Java package Swing is available.
-     * 
-     * @return
+     *
+     * @return true if Swing is available, false otherwise
      */
     public static boolean isSwingAvailable() {
         return SpecsSystem.isAvailable(SpecsSwing.TEST_CLASSNAME);
     }
 
+    /**
+     * Runs the given Runnable on the Swing Event Dispatch Thread.
+     *
+     * @param r the Runnable to execute
+     */
     public static void runOnSwing(Runnable r) {
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
@@ -81,8 +103,8 @@ public class SpecsSwing {
     }
 
     /**
-     * Sets the system Look&Feel for Swing components.
-     * 
+     * Sets the system Look and Feel for Swing components.
+     *
      * @return true if no problem occurred, false otherwise
      */
     public static boolean setSystemLookAndFeel() {
@@ -100,8 +122,6 @@ public class SpecsSwing {
             // Set System L&F
             UIManager.setLookAndFeel(lookAndFeel);
 
-            // "com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-            // "com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             return true;
         } catch (Exception e) {
             SpecsLogs.warn("Could not set system Look&Feel", e);
@@ -110,12 +130,12 @@ public class SpecsSwing {
         return false;
     }
 
+    /**
+     * Gets the system Look and Feel class name, avoiding problematic defaults like Metal and GTK+.
+     *
+     * @return the class name of the system Look and Feel
+     */
     public static String getSystemLookAndFeel() {
-
-        // Temporarily disable custom system look and feel
-        // if (true) {
-        // return UIManager.getSystemLookAndFeelClassName();
-        // }
 
         // Get custom L&F
         String customLookAndFeel = getCustomLookAndFeel();
@@ -139,33 +159,8 @@ public class SpecsSwing {
             return systemLookAndFeel;
         }
 
-        // // ... unless it is the only one available
-        // if (UIManager.getInstalledLookAndFeels().length == 1) {
-        // return systemLookAndFeel;
-        // }
-
-        // SpecsLogs.debug("Default system look and feel is Metal, trying to use another one");
-        // Map<String, String> lookAndFeels = Arrays.stream(UIManager.getInstalledLookAndFeels())
-        // .collect(Collectors.toMap(info -> info.getName(), info -> info.getClassName()));
-
-        // // Build look and feels map
-        // Map<String, String> lookAndFeels = new LinkedHashMap<>();
-        //
-        // for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-        // lookAndFeels.put(info.getName(), info.getClassName());
-        // }
-        // SpecsLogs.debug("Available look and feels: " + lookAndFeels);
-
-        // Check if GTK+ is available
-        // String gtkLookAndFeel = lookAndFeels.get("GTK+");
-        // if (gtkLookAndFeel != null) {
-        // return gtkLookAndFeel;
-        // }
-
         String alternativeLookAndFeel = lookAndFeels.values().stream()
-                // Return first that is not Metal
                 .filter(lookAndFeel -> !lookAndFeel.endsWith(".MetalLookAndFeel"))
-                // Recently, GTK+ on Linux is really buggy, avoid it too
                 .filter(lookAndFeel -> !lookAndFeel.endsWith(".GTKLookAndFeel"))
                 .findFirst().orElse(systemLookAndFeel);
 
@@ -177,23 +172,18 @@ public class SpecsSwing {
     }
 
     /**
-     * Builds TableModels from Maps.
-     * 
-     * @param map
-     * @param maxElementsPerTable
-     * @param rowWise
-     * @return
+     * Builds TableModels from Maps, splitting into multiple tables if necessary.
+     *
+     * @param map the map to convert into TableModels
+     * @param maxElementsPerTable the maximum number of elements per table
+     * @param rowWise whether the table should be row-wise
+     * @param valueClass the class of the values in the map
+     * @return a list of TableModels
      */
     public static <K extends Comparable<? super K>, V> List<TableModel> getTables(Map<K, V> map,
             int maxElementsPerTable, boolean rowWise, Class<V> valueClass) {
         List<TableModel> tableModels = new ArrayList<>();
 
-        // K and V will be rows
-        // int numMaps = (int) Math.ceil((double)map.size() / (double)maxCols);
-        // int rowCount = 2;
-        // int mapCols = 0;
-
-        // int currentCols = map.size();
         List<K> keys = new ArrayList<>();
         keys.addAll(map.keySet());
         Collections.sort(keys);
@@ -229,17 +219,15 @@ public class SpecsSwing {
     }
 
     /**
-     * Builds TableModels from Maps.
-     * 
-     * @param map
-     * @param maxElementsPerTable
-     * @param rowWise
-     * @return
+     * Builds a single TableModel from a Map.
+     *
+     * @param map the map to convert into a TableModel
+     * @param rowWise whether the table should be row-wise
+     * @param valueClass the class of the values in the map
+     * @return a TableModel
      */
     public static <K extends Comparable<? super K>, V> TableModel getTable(Map<K, V> map,
             boolean rowWise, Class<V> valueClass) {
-
-        // K and V will be rows
 
         List<K> keys = new ArrayList<>();
         keys.addAll(map.keySet());
@@ -251,37 +239,39 @@ public class SpecsSwing {
         }
 
         // Build map
-        // Map<K, V> newMap = new HashMap<K, V>();
         Map<K, V> newMap = SpecsFactory.newLinkedHashMap();
         for (K key : currentKeys) {
             newMap.put(key, map.get(key));
         }
 
         return new MapModel<>(newMap, rowWise, valueClass);
-
     }
 
+    /**
+     * Displays a JPanel in a JFrame with the given title.
+     *
+     * @param panel the JPanel to display
+     * @param title the title of the JFrame
+     * @return the JFrame containing the panel
+     */
     public static JFrame showPanel(JPanel panel, String title) {
         return showPanel(panel, title, 0, 0);
     }
 
     /**
-     * Launches the given panel in a JFrame.
-     * 
-     * @param panel
-     * @param title
-     * @param x
-     * @param y
-     * @return
+     * Creates a new JFrame containing the given JPanel.
+     *
+     * @param panel the JPanel to display
+     * @param title the title of the JFrame
+     * @param x the x-coordinate of the JFrame
+     * @param y the y-coordinate of the JFrame
+     * @return the JFrame containing the panel
      */
     public static JFrame newWindow(JPanel panel, String title, int x, int y) {
         JFrame frame = new JFrame();
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         frame.setResizable(true);
-
         frame.setLocation(x, y);
 
         // Add content to the window.
@@ -291,22 +281,18 @@ public class SpecsSwing {
         return frame;
     }
 
+    /**
+     * Displays a JPanel in a JFrame with the given title and location.
+     *
+     * @param panel the JPanel to display
+     * @param title the title of the JFrame
+     * @param x the x-coordinate of the JFrame
+     * @param y the y-coordinate of the JFrame
+     * @return the JFrame containing the panel
+     */
     public static JFrame showPanel(JPanel panel, String title, int x, int y) {
         final JFrame frame = newWindow(panel, title, x, y);
-        /*
-        	JFrame frame = new JFrame();
-        
-        	// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        	frame.setResizable(true);
-        
-        	frame.setLocation(x, y);
-        
-        	// Add content to the window.
-        	frame.add(panel, BorderLayout.CENTER);
-        	frame.setTitle(title);
-         */
+
         SpecsSwing.runOnSwing(() -> {
             frame.pack();
             frame.setVisible(true);
@@ -317,9 +303,9 @@ public class SpecsSwing {
     }
 
     /**
-     * Taken from here: https://stackoverflow.com/a/16611566
-     * 
-     * @return true if no screen is available for displaying Swing components, false otherwise
+     * Checks if the current environment is headless, i.e., no screen is available for displaying Swing components.
+     *
+     * @return true if the environment is headless, false otherwise
      */
     public static boolean isHeadless() {
         if (GraphicsEnvironment.isHeadless()) {
@@ -336,6 +322,9 @@ public class SpecsSwing {
 
     /**
      * Opens a folder containing the file and selects it in a default system file manager.
+     *
+     * @param file the file to select
+     * @return true if the operation was successful, false otherwise
      */
     public static boolean browseFileDirectory(File file) {
         if (!file.exists()) {
@@ -353,7 +342,6 @@ public class SpecsSwing {
                 return false;
             }
             return true;
-            // return;
         }
 
         if (SpecsSystem.isLinux()) {
@@ -366,11 +354,9 @@ public class SpecsSwing {
                 return false;
             }
             return true;
-            // return;
         }
 
         Desktop.getDesktop().browseFileDirectory(file);
         return true;
-        // return;
     }
 }
