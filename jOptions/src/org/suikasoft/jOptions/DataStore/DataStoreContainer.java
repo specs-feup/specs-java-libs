@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 SPeCS.
+ * Copyright 2025 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -16,17 +16,14 @@ package org.suikasoft.jOptions.DataStore;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 /**
- * Contains a DataStore.
- * <p>
- * TODO: Move DefaultCleanSetup to here, make this interface package-private
- * 
- * @author JoaoBispo
+ * Interface for classes that contain a DataStore.
  *
+ * <p>This interface provides a method to retrieve the contained DataStore instance.
  */
 public interface DataStoreContainer {
-
     /**
-     * 
+     * Returns the contained DataStore instance.
+     *
      * @return a DataStore
      */
     DataStore getDataStore();
