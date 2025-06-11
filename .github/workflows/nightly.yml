@@ -16,31 +16,8 @@ env:
 
 jobs:
   build-gradle-projects:
-    name: Build & Test Gradle Projects
+    name: Build & Test Gradle Projects Sequentially
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        project:
-          - AsmParser
-          - CommonsCompressPlus
-          - CommonsLangPlus
-          - GearmanPlus
-          - GitPlus
-          - Gprofer
-          - GsonPlus
-          - GuiHelper
-          - JacksonPlus
-          - JadxPlus
-          - JavaGenerator
-          - jOptions
-          - JsEngine
-          - LogbackPlus
-          - SpecsUtils
-          - SymjaPlus
-          - tdrcLibrary
-          - XStreamPlus
-
     steps:
       - name: Checkout specs-java-libs
         uses: actions/checkout@v4
@@ -57,21 +34,47 @@ jobs:
           gradle-version: current
           dependency-graph: generate-and-submit
 
-      - name: Build and test ${{ matrix.project }}
-        working-directory: ${{ matrix.project }}
-        run: gradle build test
+      - name: Build and test all Gradle projects sequentially
+        run: |
+          set -e
+          projects=(
+            AsmParser
+            CommonsCompressPlus
+            CommonsLangPlus
+            GearmanPlus
+            GitPlus
+            Gprofer
+            GsonPlus
+            GuiHelper
+            JacksonPlus
+            JadxPlus
+            JavaGenerator
+            jOptions
+            JsEngine
+            LogbackPlus
+            SpecsUtils
+            SymjaPlus
+            tdrcLibrary
+            XStreamPlus
+          )
+          for project in "${projects[@]}"; do
+            echo "\n===== Building and testing $project ====="
+            cd "$project"
+            gradle build test
+            cd -
+          done
         env:
           GITHUB_DEPENDENCY_GRAPH_ENABLED: false
 
-      - name: Publish Test Report
+      - name: Publish Test Reports
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
-          report_paths: '${{ matrix.project }}/build/test-results/test/TEST-*.xml'
+          report_paths: '**/build/test-results/test/TEST-*.xml'
           summary: true
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.project }}-build
-          path: ${{ matrix.project }}/build/libs/
+          name: gradle-builds
+          path: '**/build/libs/'
