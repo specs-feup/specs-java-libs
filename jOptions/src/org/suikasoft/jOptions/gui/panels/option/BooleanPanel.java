@@ -8,7 +8,7 @@
  * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.gui.panels.option;
@@ -24,8 +24,9 @@ import org.suikasoft.jOptions.gui.KeyPanel;
 import pt.up.fe.specs.util.SpecsSwing;
 
 /**
+ * Panel for editing boolean values using a JCheckBox.
  *
- * @author Joao Bispo
+ * <p>This panel provides a checkbox for boolean DataKey values in the GUI.
  */
 public class BooleanPanel extends KeyPanel<Boolean> {
 
@@ -36,6 +37,13 @@ public class BooleanPanel extends KeyPanel<Boolean> {
      */
     private final JCheckBox checkBox;
 
+    /**
+     * Constructs a BooleanPanel for the given DataKey, DataStore, and label.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     * @param label the label for the checkbox
+     */
     public BooleanPanel(DataKey<Boolean> key, DataStore data, String label) {
         super(key, data);
 
@@ -45,19 +53,40 @@ public class BooleanPanel extends KeyPanel<Boolean> {
         add(checkBox, BorderLayout.CENTER);
     }
 
+    /**
+     * Constructs a BooleanPanel for the given DataKey and DataStore.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     */
     public BooleanPanel(DataKey<Boolean> key, DataStore data) {
         this(key, data, key.getName());
     }
 
+    /**
+     * Returns the JCheckBox component.
+     *
+     * @return the JCheckBox
+     */
     public JCheckBox getCheckBox() {
         return checkBox;
     }
 
+    /**
+     * Returns the current boolean value of the checkbox.
+     *
+     * @return true if selected, false otherwise
+     */
     @Override
     public Boolean getValue() {
         return checkBox.isSelected();
     }
 
+    /**
+     * Sets the value of the checkbox.
+     *
+     * @param value the boolean value to set
+     */
     @Override
     public void setValue(Boolean value) {
         SpecsSwing.runOnSwing(() -> checkBox.setSelected(value));

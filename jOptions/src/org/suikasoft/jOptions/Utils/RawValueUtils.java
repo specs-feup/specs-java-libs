@@ -13,6 +13,10 @@
 
 package org.suikasoft.jOptions.Utils;
 
+/**
+ * Utility class for handling raw values in jOptions.
+ */
+
 import org.suikasoft.jOptions.Datakey.DataKey;
 
 import pt.up.fe.specs.util.SpecsLogs;
@@ -38,8 +42,9 @@ public class RawValueUtils {
      * - Tries to find a default converter in the table.<br>
      * - Returns null.
      * 
-     * @param optionDef
-     * @param rawValue
+     * @param optionDef the DataKey definition of the option
+     * @param rawValue the raw value in String format
+     * @return the converted value, or null if no valid converter is found
      */
     public static Object getRealValue(DataKey<?> optionDef, String value) {
 

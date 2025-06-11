@@ -27,18 +27,27 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import pt.up.fe.specs.util.SpecsCheck;
 
+/**
+ * Abstract base class for DataStore implementations.
+ *
+ * <p>This class provides a base implementation for DataStore, including value storage, definition management, and persistence support.
+ */
 public abstract class ADataStore implements DataStore {
 
-    // private final SimpleSetup data;
     private final String name;
     private final Map<String, Object> values;
     private StoreDefinition definition;
     private AppPersistence persistence;
     private File configFile;
-
-    // private SetupFile setupFile;
     private boolean strict;
 
+    /**
+     * Constructs an ADataStore with the given name, values, and store definition.
+     *
+     * @param name the name of the DataStore
+     * @param values the map of values
+     * @param definition the store definition
+     */
     protected ADataStore(String name, Map<String, Object> values,
             StoreDefinition definition) {
 
@@ -47,42 +56,40 @@ public abstract class ADataStore implements DataStore {
             if (!name.equals(definition.getName())) {
                 definition = StoreDefinition.newInstance(name, definition.getKeys());
             }
-            // Preconditions.checkArgument(name == definition.getName(),
-            // "Name of the DataStore (" + name + ") and of the definition (" + definition.getName()
-            // + ") do not agree");
         }
 
-        // data = null;
         this.name = name;
         this.values = values;
         strict = false;
         this.definition = definition;
-        // setupFile = null;
     }
 
+    /**
+     * Constructs an ADataStore with the given name and another DataStore as source.
+     *
+     * @param name the name of the DataStore
+     * @param dataStore the source DataStore
+     */
     public ADataStore(String name, DataStore dataStore) {
-        // public ADataStore(String name, StoreDefinition definition) {
-        // this(new SimpleSetup(name, dataStore), dataStore.getKeyMap());
-        // this(name, new HashMap<>(dataStore.getValuesMap()), dataStore.getStoreDefinition().orElse(null));
         this(name, new HashMap<>(), dataStore.getStoreDefinitionTry().orElse(null));
-
-        // this(name, new HashMap<>(), definition);
-
         set(dataStore);
-        // data.setValues(dataStore);
-        // keys.putAll(dataStore.getKeyMap());
     }
 
+    /**
+     * Constructs an ADataStore with the given StoreDefinition.
+     *
+     * @param storeDefinition the store definition
+     */
     public ADataStore(StoreDefinition storeDefinition) {
-        // this(SimpleSetup.newInstance(storeDefinition), storeDefinition.getKeyMap());
-        // this(storeDefinition.getName(), new LinkedHashMap<>(storeDefinition.getKeyMap()), new HashMap<>());
-        // this(storeDefinition.getName(), storeDefinition.getKeyMap(), storeDefinition.getDefaultValues());
         this(storeDefinition.getName(), new HashMap<>(), storeDefinition);
     }
 
+    /**
+     * Constructs an ADataStore with the given name.
+     *
+     * @param name the name of the DataStore
+     */
     public ADataStore(String name) {
-        // this(new SimpleSetup(name), new HashMap<>());
-        // this(name, new LinkedHashMap<>(), new HashMap<>());
         this(name, new HashMap<>(), null);
     }
 
@@ -98,7 +105,7 @@ public abstract class ADataStore implements DataStore {
 
     @Override
     public boolean equals(Object obj) {
-        // Compares name, values and string flag
+        // Compares name, values and strict flag
         if (this == obj) {
             return true;
         }
@@ -144,28 +151,7 @@ public abstract class ADataStore implements DataStore {
         this.definition = definition;
     }
 
-    /*
-    private ADataStore(SimpleSetup data, Map<String, DataKey<?>> keys) {
-    this.data = data;
-    this.keys = keys;
-    
-    setupFile = null;
-    
-    throw new RuntimeException("Do not use this version");
-    }
-    */
-
-    /*
-    public ADataStore(String name, DataView setup) {
-    //	this(new SimpleSetup(name, setup), setup.getKeyMap());
-    
-    
-    	// data.setValues(setup);
-    	// keys.putAll(setup.getKeyMap());
-    }
-    */
     @Override
-    // public <T, E extends T> Optional<T> set(DataKey<T> key, E value) {
     public <T, E extends T> ADataStore set(DataKey<T> key, E value) {
         SpecsCheck.checkNotNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
 
@@ -177,60 +163,21 @@ public abstract class ADataStore implements DataStore {
             realValue = setter.get().get(value, this);
         }
 
-        // Do not replace key if it already exists
-        // if (!keys.containsKey(key.getName())) {
-        // keys.put(key.getName(), key);
-        // }
-
-        // return data.setValue(key, value);
-
         // Stop if value is not compatible with class of key
         if (key.verifyValueClass() && !key.getValueClass().isInstance(realValue)) {
             throw new RuntimeException("Tried to add a value of type '" + realValue.getClass()
                     + "', with a key that supports '" + key.getValueClass() + "'");
-
-            // // Check if there is a common type, besides Object
-            // Class<?> currentClass = key.getValueClass().getSuperclass();
-            //
-            // boolean foundCommonType = false;
-            // while (!currentClass.equals(Object.class)) {
-            // foundCommonType = currentClass.isInstance(value);
-            // if (foundCommonType) {
-            // break;
-            // }
-            // currentClass = currentClass.getSuperclass();
-            // }
-            //
-            // if (!foundCommonType) {
-            // throw new RuntimeException("Tried to add a value of type '" + value.getClass()
-            // + "', with a key that supports '" + key.getValueClass() + "'");
-            // }
-
         }
 
-        // Optional<Object> previousValue = setRaw(key.getName(), value);
         setRaw(key.getName(), realValue);
 
         return this;
-
-        // if (!previousValue.isPresent()) {
-        // return Optional.empty();
-        // }
-        //
-        // return Optional.of(key.getValueClass().cast(previousValue.get()));
     }
 
     @Override
     public Optional<Object> setRaw(String key, Object value) {
         return Optional.ofNullable(values.put(key, value));
     }
-
-    // @Override
-    // public ADataStore set(DataStore setup) {
-    // values.putAll(setup.getValuesMap());
-    //
-    // return this;
-    // }
 
     @Override
     public <T> Optional<T> remove(DataKey<T> key) {
@@ -241,11 +188,6 @@ public abstract class ADataStore implements DataStore {
             return Optional.empty();
         }
 
-        // Value is present, remove key and value from maps
-        // if (keys.remove(key.getName()) == null) {
-        // throw new RuntimeException("There was no key mapping for key '" + key + "'");
-        // }
-
         if (values.remove(key.getName()) == null) {
             throw new RuntimeException("There was no value mapping for key '" + key + "'");
         }
@@ -255,9 +197,7 @@ public abstract class ADataStore implements DataStore {
 
     @Override
     public String getName() {
-        // return data.getName();
         return getStoreDefinitionTry().map(def -> def.getName()).orElse(name);
-        // return name;
     }
 
     @Override
@@ -268,16 +208,12 @@ public abstract class ADataStore implements DataStore {
             throw new RuntimeException(
                     "No value present in DataStore '" + getName() + "' " + " for key '" + key.getName() + "'");
         }
-        // DataKey<?> storedKey = keys.get(key.getName());
-        // if (strict && storedKey == null) {
-        // throw new RuntimeException("Key '" + key.getName() + "' is not present in DataStore '" + getName() + "'");
-        // }
 
         T value = null;
         try {
             value = key.getValueClass().cast(valueRaw);
         } catch (Exception e) {
-            throw new RuntimeException("Could not retrive value from key " + key, e);
+            throw new RuntimeException("Could not retrieve value from key " + key, e);
         }
 
         // If value is null, use default value
@@ -290,8 +226,6 @@ public abstract class ADataStore implements DataStore {
             value = defaultValue.get();
             values.put(key.getName(), value);
         }
-
-        // T value = data.getValue(key);
 
         // Check if key has custom getter
         Optional<CustomGetter<T>> getter = key.getCustomGetter();
@@ -312,15 +246,6 @@ public abstract class ADataStore implements DataStore {
         return values.get(key.getName()) != null;
     }
 
-    /**
-     * 
-     */
-    // @Override
-    // public Map<String, Object> getValuesMap() {
-    // // return new HashMap<>(values);
-    // return values;
-    // }
-
     @Override
     public Collection<String> getKeysWithValues() {
         return values.keySet();
@@ -329,20 +254,7 @@ public abstract class ADataStore implements DataStore {
     @Override
     public String toString() {
         return toInlinedString();
-
-        /*
-        StringBuilder builder = new StringBuilder();
-        builder.append("DataStore (" + getName()).append(")\n");
-        for (String key : values.keySet()) {
-            builder.append(" - ").append(key).append(" : ").append(values.get(key)).append("\n");
-        }
-        return builder.toString();
-        */
     }
-
-    // Object get(String id) {
-    // return getValuesMap().get(id);
-    // }
 
     @Override
     public DataStore setPersistence(AppPersistence persistence) {

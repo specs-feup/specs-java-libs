@@ -22,33 +22,59 @@ import java.util.Collections;
 import pt.up.fe.specs.jsengine.graal.GraalvmJsEngine;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
+/**
+ * Enum representing the types of JavaScript engines supported.
+ */
 public enum JsEngineType {
 
+    /**
+     * Represents a GraalVM JavaScript engine with compatibility mode enabled.
+     */
     GRAALVM_COMPAT,
+
+    /**
+     * Represents a standard GraalVM JavaScript engine.
+     */
     GRAALVM;
 
     /**
-     * Creates a new engine, according to the type. TODO: Move to JsEngineType
-     * 
-     * @param type
-     * @param forbiddenClasses
-     * @return
+     * Creates a new JavaScript engine based on the specified type, forbidden classes, and working directory.
+     *
+     * @param type The type of JavaScript engine to create.
+     * @param forbiddenClasses A collection of classes that should be forbidden in the engine.
+     * @param engineWorkingDirectory The working directory for the engine.
+     * @return A new instance of the JavaScript engine.
      */
     public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses, Path engineWorkingDirectory) {
         return newEngine(type, forbiddenClasses, engineWorkingDirectory, null, System.out);
     }
 
+    /**
+     * Creates a new JavaScript engine based on the specified type, forbidden classes, working directory, and node modules folder.
+     *
+     * @param type The type of JavaScript engine to create.
+     * @param forbiddenClasses A collection of classes that should be forbidden in the engine.
+     * @param engineWorkingDirectory The working directory for the engine.
+     * @param nodeModulesFolder The folder containing node modules, or null if not applicable.
+     * @return A new instance of the JavaScript engine.
+     */
     public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses, Path engineWorkingDirectory,
             File nodeModulesFolder) {
         return newEngine(type, forbiddenClasses, engineWorkingDirectory, nodeModulesFolder, System.out);
     }
 
+    /**
+     * Creates a new JavaScript engine based on the specified type, forbidden classes, working directory, node modules folder, and output stream.
+     *
+     * @param type The type of JavaScript engine to create.
+     * @param forbiddenClasses A collection of classes that should be forbidden in the engine.
+     * @param engineWorkingDirectory The working directory for the engine.
+     * @param nodeModulesFolder The folder containing node modules, or null if not applicable.
+     * @param laraiOutputStream The output stream for the engine, or null if not applicable.
+     * @return A new instance of the JavaScript engine.
+     */
     public JsEngine newEngine(JsEngineType type, Collection<Class<?>> forbiddenClasses, Path engineWorkingDirectory,
             File nodeModulesFolder, OutputStream laraiOutputStream) {
-        // System.out.println("TEST CLASSLOADER " + Test.class.getClassLoader());
-        // System.out.println("JS ENGINE CLASS LOADER: " + GraalJSScriptEngine.class.getClassLoader());
-        // System.out.println("THREAD CLASS LOADER: " + Thread.currentThread().getContextClassLoader());
-        // Thread.currentThread().setContextClassLoader(GraalJSScriptEngine.class.getClassLoader());
         switch (this) {
         case GRAALVM_COMPAT:
             return new GraalvmJsEngine(forbiddenClasses, true, engineWorkingDirectory, nodeModulesFolder,
@@ -61,6 +87,11 @@ public enum JsEngineType {
         }
     }
 
+    /**
+     * Creates a new JavaScript engine with default settings.
+     *
+     * @return A new instance of the JavaScript engine.
+     */
     public JsEngine newEngine() {
         return newEngine(this, Collections.emptyList(), null);
     }

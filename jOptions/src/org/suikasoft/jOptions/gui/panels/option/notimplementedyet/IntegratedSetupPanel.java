@@ -29,8 +29,9 @@ import pt.up.fe.specs.guihelper.gui.BasePanels.BaseSetupPanel;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
+ * Panel for integrating setup options into a single panel.
  *
- * @author Joao Bispo
+ * <p>This panel displays setup options for a SingleSetup instance.
  */
 public class IntegratedSetupPanel extends FieldPanel {
 
@@ -41,75 +42,103 @@ public class IntegratedSetupPanel extends FieldPanel {
      */
     private BaseSetupPanel setupOptionsPanel;
 
+    /**
+     * Constructs an IntegratedSetupPanel for the given SingleSetup.
+     *
+     * @param setup the SingleSetup instance
+     */
     public IntegratedSetupPanel(SingleSetup setup) {
-	// Initiallize objects
-	SetupDefinition setupDefinition = setup.getSetupOptions();
-	if (setupDefinition == null) {
-	    SpecsLogs.warn("null SetupDefinition inside '" + setup.getClass() + "'");
-	} else {
-	    initChoices(setupDefinition);
-	}
+        // Initialize objects
+        SetupDefinition setupDefinition = setup.getSetupOptions();
+        if (setupDefinition == null) {
+            SpecsLogs.warn("null SetupDefinition inside '" + setup.getClass() + "'");
+        } else {
+            initChoices(setupDefinition);
+        }
 
-	// initChoices(setup);
+        LayoutManager layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(layout);
 
-	LayoutManager layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-	setLayout(layout);
-
-	add(setupOptionsPanel);
+        add(setupOptionsPanel);
     }
 
-    // private void initChoices(SingleSetup setup) {
+    /**
+     * Initializes the setup options panel with the given SetupDefinition.
+     *
+     * @param setupDefinition the SetupDefinition
+     */
     private void initChoices(SetupDefinition setupDefinition) {
+        BaseSetupPanel newPanel = new BaseSetupPanel(setupDefinition);
 
-	BaseSetupPanel newPanel = new BaseSetupPanel(setupDefinition);
-	// BaseSetupPanel newPanel = new BaseSetupPanel(setup.getSetupOptions());
+        String labelName = setupDefinition.getSetupName();
+        JLabel label = new JLabel("(" + labelName + ")");
 
-	// String labelName = setup.getSetupOptions().getSetupName();
-	String labelName = setupDefinition.getSetupName();
-	JLabel label = new JLabel("(" + labelName + ")");
-
-	newPanel.add(label, 0);
-	newPanel.add(new javax.swing.JSeparator(), 0);
-	newPanel.add(new javax.swing.JSeparator());
-	this.setupOptionsPanel = newPanel;
-
+        newPanel.add(label, 0);
+        newPanel.add(new javax.swing.JSeparator(), 0);
+        newPanel.add(new javax.swing.JSeparator());
+        this.setupOptionsPanel = newPanel;
     }
 
+    /**
+     * Returns the FieldType for this panel.
+     *
+     * @return the FieldType
+     */
     @Override
     public FieldType getType() {
-	return FieldType.setup;
+        return FieldType.setup;
     }
 
     /**
      * Loads data from the raw Object in the FieldValue.
-     * 
-     * @param choice
+     *
+     * @param value the value to load
      */
     @Override
     public void updatePanel(Object value) {
-	SetupData newSetup = (SetupData) value;
-	loadSetup(newSetup);
+        SetupData newSetup = (SetupData) value;
+        loadSetup(newSetup);
     }
 
+    /**
+     * Loads the given SetupData into the setup options panel.
+     *
+     * @param newSetup the SetupData to load
+     */
     private void loadSetup(SetupData newSetup) {
-	// Load values in the file
-	setupOptionsPanel.loadValues(newSetup);
+        // Load values in the file
+        setupOptionsPanel.loadValues(newSetup);
     }
 
+    /**
+     * Returns the current option as a FieldValue.
+     *
+     * @return the FieldValue
+     */
     @Override
     public FieldValue getOption() {
-	SetupData updatedValues = setupOptionsPanel.getMapWithValues();
-	return FieldValue.create(updatedValues, getType());
+        SetupData updatedValues = setupOptionsPanel.getMapWithValues();
+        return FieldValue.create(updatedValues, getType());
     }
 
+    /**
+     * Returns the label for this panel.
+     *
+     * @return the JLabel, or null if no label is set
+     */
     @Override
     public JLabel getLabel() {
-	return null;
+        return null;
     }
 
+    /**
+     * Returns the collection of FieldPanels contained in this panel.
+     *
+     * @return the collection of FieldPanels
+     */
     @Override
     public Collection<FieldPanel> getPanels() {
-	return setupOptionsPanel.getPanels().values();
+        return setupOptionsPanel.getPanels().values();
     }
 
 }

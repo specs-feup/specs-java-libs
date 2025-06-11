@@ -8,7 +8,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.app;
@@ -25,15 +25,23 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 /**
- * @author Joao Bispo
+ * Interface for application definitions in jOptions.
+ * Provides methods for kernel access, app name, options, and tab providers.
  *
+ * @author Joao Bispo
  */
 @FunctionalInterface
 public interface App {
 
+    /**
+     * Returns the kernel for this app.
+     *
+     * @return the app kernel
+     */
     AppKernel getKernel();
 
     /**
+     * Returns the name of the app.
      *
      * @return name of the app
      */
@@ -43,11 +51,10 @@ public interface App {
 
     /**
      * The options available for this app.
-     *
      * <p>
      * By default, creates a StoreDefinition from the DataKeys in the AppKernel class.
-     * 
-     * @return
+     *
+     * @return the store definition
      */
     default StoreDefinition getDefinition() {
         return StoreDefinition.newInstanceFromInterface(getClass());
@@ -56,20 +63,35 @@ public interface App {
     /**
      * The interface for loading and storing configurations.
      *
-     * @return
+     * @return the persistence mechanism
      */
     default AppPersistence getPersistence() {
         return new XmlPersistence(getDefinition());
     }
 
+    /**
+     * Returns a collection of tab providers for the app GUI.
+     *
+     * @return collection of tab providers
+     */
     default Collection<TabProvider> getOtherTabs() {
         return Collections.emptyList();
     }
 
+    /**
+     * Returns the class of the app node.
+     *
+     * @return the node class
+     */
     default Class<?> getNodeClass() {
         return getClass();
     }
 
+    /**
+     * Returns an optional resource provider for the app icon.
+     *
+     * @return optional resource provider for icon
+     */
     default Optional<ResourceProvider> getIcon() {
         return Optional.empty();
     }
@@ -77,11 +99,11 @@ public interface App {
     /**
      * Creates a new App.
      *
-     * @param name
-     * @param definition
-     * @param persistence
-     * @param kernel
-     * @return
+     * @param name the name of the app
+     * @param definition the store definition
+     * @param persistence the persistence mechanism
+     * @param kernel the app kernel
+     * @return a new GenericApp instance
      */
     static GenericApp newInstance(String name, StoreDefinition definition,
             AppPersistence persistence, AppKernel kernel) {
@@ -89,12 +111,26 @@ public interface App {
         return new GenericApp(name, definition, persistence, kernel);
     }
 
+    /**
+     * Creates a new App using the store definition name.
+     *
+     * @param definition the store definition
+     * @param persistence the persistence mechanism
+     * @param kernel the app kernel
+     * @return a new GenericApp instance
+     */
     static GenericApp newInstance(StoreDefinition definition,
             AppPersistence persistence, AppKernel kernel) {
 
         return newInstance(definition.getName(), definition, persistence, kernel);
     }
 
+    /**
+     * Creates a new App using the kernel.
+     *
+     * @param kernel the app kernel
+     * @return a new App instance
+     */
     static App newInstance(AppKernel kernel) {
         var storeDefinition = StoreDefinition.newInstanceFromInterface(kernel.getClass());
         return newInstance(storeDefinition, new XmlPersistence(storeDefinition), kernel);

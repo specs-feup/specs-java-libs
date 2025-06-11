@@ -22,8 +22,9 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.gui.KeyPanel;
 
 /**
+ * Panel for editing string values using a JTextField.
  *
- * @author Joao Bispo
+ * <p>This panel provides a text field for string DataKey values in the GUI.
  */
 public class StringPanel extends KeyPanel<String> {
 
@@ -34,31 +35,56 @@ public class StringPanel extends KeyPanel<String> {
      */
     private final JTextField textField;
 
+    /**
+     * Constructs a StringPanel for the given DataKey and DataStore.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     */
     public StringPanel(DataKey<String> key, DataStore data) {
-	super(key, data);
+        super(key, data);
 
-	textField = new JTextField();
+        textField = new JTextField();
 
-	setLayout(new BorderLayout());
-	add(textField, BorderLayout.CENTER);
-
+        setLayout(new BorderLayout());
+        add(textField, BorderLayout.CENTER);
     }
 
+    /**
+     * Sets the text of the text field.
+     *
+     * @param text the text to set
+     */
     public void setText(String text) {
-	textField.setText(text);
+        textField.setText(text);
     }
 
+    /**
+     * Gets the text from the text field.
+     *
+     * @return the text in the field
+     */
     public String getText() {
-	return textField.getText();
+        return textField.getText();
     }
 
+    /**
+     * Returns the current string value from the text field.
+     *
+     * @return the string value
+     */
     @Override
     public String getValue() {
-	return getText();
+        return getText();
     }
 
+    /**
+     * Sets the value of the text field.
+     *
+     * @param value the string value to set
+     */
     @Override
     public void setValue(String value) {
-	setText(value);
+        setText(value);
     }
 }

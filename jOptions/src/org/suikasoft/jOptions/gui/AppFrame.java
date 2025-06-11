@@ -27,9 +27,9 @@ import org.suikasoft.jOptions.app.App;
 import org.suikasoft.jOptions.gui.panels.app.TabbedPane;
 
 /**
- * Frame of the SimpleGui.
+ * Frame of the SimpleGui application.
  *
- * @author Joao Bispo
+ * <p>This class manages the main application window, tabbed pane, and GUI launching for the application.
  */
 public class AppFrame {
 
@@ -43,6 +43,11 @@ public class AppFrame {
     public static final int PREFERRED_HEIGHT = 360;
     public static final int PREFERRED_WIDTH = 560;
 
+    /**
+     * Constructs an AppFrame for the given application.
+     *
+     * @param application the application to display
+     */
     public AppFrame(App application) {
         frameTitle = application.getName();
         tabbedPane = new TabbedPane(application);
@@ -56,21 +61,33 @@ public class AppFrame {
         }
     }
 
+    /**
+     * Returns the TabbedPane instance.
+     *
+     * @return the TabbedPane
+     */
     public TabbedPane getTabbedPane() {
         return tabbedPane;
     }
 
+    /**
+     * Sets the frame title.
+     *
+     * @param frameTitle the title to set
+     */
     public void setFrameTitle(String frameTitle) {
         mainWindow.setTitle(frameTitle);
     }
 
+    /**
+     * Launches the GUI in the event dispatch thread.
+     */
     public void launchGui() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 // Turn off metal's use of bold fonts
                 UIManager.put("swing.boldMetal", Boolean.FALSE);
-                // createAndShowGUI();
                 showGui();
             }
         });
@@ -79,34 +96,20 @@ public class AppFrame {
     /**
      * Shows the GUI. For thread safety, this method should be invoked from the event dispatch thread.
      */
-    // private void createAndShowGUI() {
     private void showGui() {
-        /*
-        //Create and set up the window.
-        JFrame frame = new JFrame(frameTitle);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        frame.setResizable(true);
-        //Add content to the window.
-        frame.add(tabbedPane, BorderLayout.CENTER);
-        */
-        // Display the window.
-        // frame.pack();
-        // frame.setVisible(true);
         mainWindow.pack();
         mainWindow.setVisible(true);
     }
 
     /**
      * Creates the GUI.
+     *
+     * @return the JFrame representing the main application window
      */
     private JFrame createGui() {
         // Create and set up the window.
-        // JFrame frame = new JFrame(frameTitle);
-        // mainWindow = new JFrame(frameTitle);
         JFrame frame = new JFrame(frameTitle);
 
-        // JFrame frame = mainWindow;
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setResizable(true);
@@ -119,6 +122,11 @@ public class AppFrame {
         return frame;
     }
 
+    /**
+     * Returns the main application window.
+     *
+     * @return the JFrame representing the main application window
+     */
     public JFrame getMainWindow() {
         return mainWindow;
     }

@@ -32,8 +32,10 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.StringList;
 
 /**
- * 
- * @author Joao Bispo
+ * Deprecated panel for editing multiple choice lists.
+ *
+ * <p>This panel was replaced with EnumMultipleChoicePanel.
+ *
  * @deprecated replaced with EnumMultipleChoicePanel
  */
 @Deprecated
@@ -46,8 +48,6 @@ public class MultipleChoiceListPanel extends FieldPanel {
      */
     private final JLabel label;
     private final JLabel helper;
-    // private JComboBox<String> selectedValues;
-    // private JComboBox<String> possibleValues;
     private final JComboBox<String> selectedValues;
     private final JComboBox<String> possibleValues;
     private final JButton removeButton;
@@ -58,16 +58,19 @@ public class MultipleChoiceListPanel extends FieldPanel {
 
     private final Collection<String> originalChoices;
 
+    /**
+     * Constructs a MultipleChoiceListPanel for the given label and choices.
+     *
+     * @param labelName the label for the panel
+     * @param choices the available choices
+     */
     public MultipleChoiceListPanel(String labelName, Collection<String> choices) {
         label = new JLabel(labelName + ":");
         helper = new JLabel("| Options:");
-        // removeButton = new JButton("X");
         removeButton = new JButton("Remove");
         addButton = new JButton("Add");
 
         originalChoices = choices;
-        // selectedValues = new JComboBox<String>();
-        // possibleValues = new JComboBox<String>();
         selectedValues = new JComboBox<>();
         possibleValues = new JComboBox<>();
         resetChoiceLists();
@@ -97,11 +100,12 @@ public class MultipleChoiceListPanel extends FieldPanel {
         setLayout(new FlowLayout(FlowLayout.LEFT));
     }
 
+    /**
+     * Resets the choice lists to their original state.
+     */
     private void resetChoiceLists() {
         selectedValues.removeAllItems();
         possibleValues.removeAllItems();
-        // selectedValues = new JComboBox();
-        // possibleValues = new JComboBox();
 
         selectedValuesShadow = new ArrayList<>();
         possibleValuesShadow = new ArrayList<>();
@@ -116,8 +120,8 @@ public class MultipleChoiceListPanel extends FieldPanel {
     /**
      * Moves one value from possibleValues to selectedValues. This method is not thread-safe.
      * 
-     * @param valueName
-     * @return
+     * @param valueName the name of the value to add
+     * @return true if the value was successfully added, false otherwise
      */
     private boolean addValue(String valueName) {
         if (valueName == null && possibleValuesShadow.isEmpty()) {
@@ -142,8 +146,8 @@ public class MultipleChoiceListPanel extends FieldPanel {
     /**
      * Moves one value from selectedValues to possibleValues. This method is not thread-safe.
      * 
-     * @param valueName
-     * @return
+     * @param valueName the name of the value to remove
+     * @return true if the value was successfully removed, false otherwise
      */
     private boolean removeValue(String valueName) {
         if (valueName == null && selectedValuesShadow.isEmpty()) {
@@ -166,12 +170,11 @@ public class MultipleChoiceListPanel extends FieldPanel {
     }
 
     /**
-     * Adds the option from the avaliable list to selected list.
+     * Adds the option from the available list to the selected list.
      * 
-     * @param evt
+     * @param evt the action event
      */
     private void addButtonActionPerformed(ActionEvent evt) {
-        // Check if there is text in the textfield
         final String selectedValue = (String) possibleValues.getSelectedItem();
         addValue(selectedValue);
     }
@@ -179,38 +182,34 @@ public class MultipleChoiceListPanel extends FieldPanel {
     /**
      * Removes the option from the selected list to the available list.
      * 
-     * @param evt
+     * @param evt the action event
      */
     private void removeButtonActionPerformed(ActionEvent evt) {
-        // Check if there is text in the textfield
         final String selectedValue = (String) selectedValues.getSelectedItem();
         removeValue(selectedValue);
     }
 
     /**
-     * The currently selected values.
+     * Gets the currently selected values.
      * 
-     * @return currently selected values.
+     * @return an unmodifiable list of currently selected values
      */
     public List<String> getSelectedValues() {
         return Collections.unmodifiableList(selectedValuesShadow);
     }
 
     /**
-     * For each element in the value list, add it to the selected items.
+     * Updates the panel with the given value.
      * 
-     * @param value
+     * @param value the value to update the panel with
      */
-    // public void updatePanel(FieldValue value) {
     @Override
     public void updatePanel(Object value) {
-        // Reset current lists
         resetChoiceLists();
 
         StringList values = (StringList) value;
 
         for (String valueName : values.getStringList()) {
-            // Check if it is not already in the selected list.
             if (selectedValuesShadow.contains(valueName)) {
                 continue;
             }
@@ -218,18 +217,32 @@ public class MultipleChoiceListPanel extends FieldPanel {
         }
     }
 
+    /**
+     * Gets the type of the field.
+     * 
+     * @return the field type
+     */
     @Override
     public FieldType getType() {
         return FieldType.multipleChoiceStringList;
     }
 
+    /**
+     * Gets the current option as a FieldValue.
+     * 
+     * @return the current option
+     */
     @Override
     public FieldValue getOption() {
         List<String> values = getSelectedValues();
-        // return FieldValue.create(values, getType());
         return FieldValue.create(new StringList(values), getType());
     }
 
+    /**
+     * Gets the label of the panel.
+     * 
+     * @return the label
+     */
     @Override
     public JLabel getLabel() {
         return label;

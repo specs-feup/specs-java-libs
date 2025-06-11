@@ -19,11 +19,14 @@ import java.util.List;
 
 import pt.up.fe.specs.util.SpecsIo;
 
+/**
+ * Utility class for file operations in tdrcLibrary.
+ */
 public class FileUtils {
 
 	/**
 	 * Retrieve a list of files if the files match to the given extension
-	 * (accepts regular expressions)
+	 * (accepts regular expressions).
 	 * 
 	 * @param dir
 	 *            the directory to search on
@@ -32,6 +35,8 @@ public class FileUtils {
 	 * @param recursive
 	 *            should the search be recursive on inner folders?
 	 * @return a list of accepted files (directories not included!)
+	 * @throws RuntimeException
+	 *             if the given file is not a folder
 	 */
 	public static List<File> getFilesFromDir(File dir, String extension, boolean recursive) {
 		final List<File> filesList = new ArrayList<>();
@@ -44,19 +49,21 @@ public class FileUtils {
 	}
 
 	/**
-	 * Auxiliary method for
-	 * {@link FileUtils#getFilesFromDir(File, String, boolean)}
+	 * Auxiliary method for {@link FileUtils#getFilesFromDir(File, String, boolean)}.
 	 * 
 	 * @param dir
+	 *            the directory to search on
 	 * @param extension
+	 *            the regular expression of the accepted extensions
 	 * @param recursive
+	 *            should the search be recursive on inner folders?
 	 * @param files
+	 *            the list to store the accepted files
 	 */
 	private static void addFilesFromDir(File dir, String extension, boolean recursive, List<File> files) {
 		final List<File> folders = new ArrayList<>();
 		for (final File f : dir.listFiles()) {
-			if (f.isDirectory() && recursive) { // Necessary to give priority to
-												// files in current directory
+			if (f.isDirectory() && recursive) { // Necessary to give priority to files in current directory
 				folders.add(f);
 			} else if (SpecsIo.getExtension(f).matches(extension)) {
 				files.add(f);

@@ -35,6 +35,9 @@ import pt.up.fe.specs.util.SpecsSwing;
 import pt.up.fe.specs.util.utilities.StringList;
 
 /**
+ * Panel for editing lists of strings using a JList and text fields.
+ *
+ * <p>This panel provides controls for adding, removing, and managing string values for a DataKey of type StringList.
  * 
  * @author Joao Bispo
  */
@@ -46,8 +49,6 @@ public class StringListPanel extends KeyPanel<StringList> {
      * INSTANCE VARIABLES
      */
 
-    // private JComboBox<String> comboBoxValues;
-    // private final JComboBox<String> comboBoxValues;
     private final JTextField possibleValue;
     private final JButton removeButton;
     private final JButton addButton;
@@ -62,11 +63,25 @@ public class StringListPanel extends KeyPanel<StringList> {
     private List<String> predefinedValues;
     boolean isPredefinedEnabled;
 
+    /**
+     * Creates a new StringListPanel instance for the given DataKey and DataStore.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     * @return a new StringListPanel
+     */
     public static StringListPanel newInstance(DataKey<StringList> key, DataStore data) {
         return newInstance(key, data, Collections.emptyList());
-        // return new StringListPanel(key, data);
     }
 
+    /**
+     * Creates a new StringListPanel instance for the given DataKey, DataStore, and predefined values.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     * @param predefinedLabelsValues the predefined values
+     * @return a new StringListPanel
+     */
     public static StringListPanel newInstance(DataKey<StringList> key, DataStore data,
             List<String> predefinedLabelsValues) {
 
@@ -75,6 +90,12 @@ public class StringListPanel extends KeyPanel<StringList> {
         return panel;
     }
 
+    /**
+     * Constructs a StringListPanel for the given DataKey and DataStore.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     */
     public StringListPanel(DataKey<StringList> key, DataStore data) {
         super(key, data);
 
@@ -84,7 +105,6 @@ public class StringListPanel extends KeyPanel<StringList> {
 
         jListValues = new JList<>();
         jListValues.setModel(values = new DefaultListModel<>());
-        // jFistValues.setCellRenderer(new CellRenderer());
         removeButton = new JButton("Remove");
         addButton = new JButton("Add");
         possibleValue = new JTextField();
@@ -127,11 +147,6 @@ public class StringListPanel extends KeyPanel<StringList> {
 
         GridBagConstraints preLabelsConstrains = new GridBagConstraints();
 
-        // Predefined list
-        // TODO: Are these necessary?
-        // c.gridwidth = 2;
-        // c.gridheight = 2;
-
         preLabelsConstrains.weightx = 1;
         preLabelsConstrains.weighty = 0;
         preLabelsConstrains.gridx = 0;
@@ -140,7 +155,6 @@ public class StringListPanel extends KeyPanel<StringList> {
         predefinedList.setVisible(false);
         add(predefinedList, preLabelsConstrains);
 
-        // Add button
         GridBagConstraints addConstrains = new GridBagConstraints();
 
         addConstrains.fill = GridBagConstraints.HORIZONTAL;
@@ -151,57 +165,27 @@ public class StringListPanel extends KeyPanel<StringList> {
         addConstrains.gridy = 3;
         addPredefinedButton.setVisible(false);
         add(addPredefinedButton, addConstrains);
-
-        // c.gridy = 3;
-        // add(addPredefinedButton, c);
-
-        /*
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridheight = 1;
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridx = 1;
-        c.gridy = 0;
-        add(predefinedList, c);
-        c.gridy = 1;
-        add(removeButton, c);
-        */
-        // comboBoxValues = new JComboBox<>();
-        // removeButton = new JButton("X");
-        // // removeButton = new JButton("Remove");
-        // possibleValue = new JTextField(10);
-        // addButton = new JButton("Add");
-
-        // addButton.addActionListener(evt -> addButtonActionPerformed(evt));
-        //
-        // removeButton.addActionListener(evt -> removeButtonActionPerformed(evt));
-
-        // add(comboBoxValues);
-        // add(removeButton);
-        // add(possibleValue);
-        // add(addButton);
-
     }
 
+    /**
+     * Initializes predefined values for the panel.
+     *
+     * @param labels the predefined labels
+     * @param values the predefined values
+     */
     private void initPredefinedValues(List<String> labels, List<String> values) {
         if (!isPredefinedEnabled) {
             isPredefinedEnabled = true;
 
-            // System.out.println("SET VISIBLE");
-
             predefinedList.setVisible(true);
             addPredefinedButton.setVisible(true);
-            // System.out.println("SWING THREAD");
 
             repaint();
             revalidate();
-
         }
 
-        // Remove previous values, if present
         predefinedList.removeAllItems();
 
-        // Update values
         this.predefinedLabels = new ArrayList<>(labels);
         this.predefinedValues = new ArrayList<>(values);
 
@@ -212,14 +196,15 @@ public class StringListPanel extends KeyPanel<StringList> {
             predefinedList.revalidate();
             predefinedList.repaint();
         });
-        //
-        // revalidate();
-        // repaint();
     }
 
+    /**
+     * Sets predefined values for the panel.
+     *
+     * @param labelValuePairs the predefined label-value pairs
+     */
     public void setPredefinedValues(List<String> labelValuePairs) {
 
-        // If empty and not initialized, just return
         if (labelValuePairs.isEmpty() && !isPredefinedEnabled) {
             return;
         }
@@ -240,13 +225,11 @@ public class StringListPanel extends KeyPanel<StringList> {
     }
 
     /**
-     * Adds the text in the textfield to the combo box
-     * 
-     * @param evt
+     * Adds the text in the textfield to the list.
+     *
+     * @param evt the action event
      */
     private void addButtonActionPerformed(ActionEvent evt) {
-        // System.out.println("Current item number:"+values.getSelectedIndex());
-        // Check if there is text in the textfield
         String newValueTrimmed = possibleValue.getText().trim();
         if (newValueTrimmed.isEmpty()) {
             return;
@@ -256,27 +239,28 @@ public class StringListPanel extends KeyPanel<StringList> {
     }
 
     /**
-     * Adds the predefined value to the list if not present yet
-     * 
-     * @param evt
+     * Adds the predefined value to the list if not present yet.
+     *
+     * @param evt the action event
      */
     private void addPredefinedButtonActionPerformed(ActionEvent evt) {
 
-        // Check selected predefined value
         var selectedItemIndex = predefinedList.getSelectedIndex();
 
         var value = predefinedValues.get(selectedItemIndex);
 
-        // If already contains value, do nothing
         if (values.contains(value)) {
             return;
         }
 
-        // Add value
         addValue(value);
-
     }
 
+    /**
+     * Adds a new value to the list.
+     *
+     * @param newValue the new value
+     */
     private void addValue(String newValue) {
         values.addElement(newValue);
         jListValues.setSelectedIndex(values.size() - 1);
@@ -284,8 +268,8 @@ public class StringListPanel extends KeyPanel<StringList> {
 
     /**
      * Removes the currently selected element of the list.
-     * 
-     * @param evt
+     *
+     * @param evt the action event
      */
     private void removeButtonActionPerformed(ActionEvent evt) {
         int valueIndex = jListValues.getSelectedIndex();
@@ -303,20 +287,11 @@ public class StringListPanel extends KeyPanel<StringList> {
         }
     }
 
-    // public JComboBox<String> getValues() {
-    /*
-    public JComboBox<String> getValues() {
-    return comboBoxValues;
-    }
-    */
-
-    // public void setValues(JComboBox<String> values) {
-    /*
-    public void setValues(JComboBox<String> values) {
-    this.comboBoxValues = values;
-    }
-    */
-
+    /**
+     * Gets the current value of the panel.
+     *
+     * @return the current value
+     */
     @Override
     public StringList getValue() {
         List<String> newValues = new ArrayList<>();
@@ -328,6 +303,11 @@ public class StringListPanel extends KeyPanel<StringList> {
         return StringList.newInstance(newValues.toArray(new String[0]));
     }
 
+    /**
+     * Sets the value of the panel.
+     *
+     * @param stringList the new value
+     */
     @Override
     public <ET extends StringList> void setValue(ET stringList) {
 

@@ -34,6 +34,11 @@ import org.suikasoft.jOptions.values.SetupList;
 
 import pt.up.fe.specs.util.SpecsLogs;
 
+/**
+ * Panel for editing and managing lists of SetupList values.
+ *
+ * <p>This panel provides controls for adding, removing, and selecting setup elements for a DataKey of type SetupList.
+ */
 public class SetupListPanel extends KeyPanel<SetupList> {
 
     private static final long serialVersionUID = 1L;
@@ -55,9 +60,15 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     private JPanel currentOptionsPanel;
 
     private List<Integer> elementsBoxShadow;
-    // private List<DataStore> elementsFiles;
     private List<SetupPanel> elementsOptionPanels;
 
+    /**
+     * Constructs a SetupListPanel for the given DataKey, DataStore, and collection of StoreDefinitions.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     * @param definitions the collection of StoreDefinitions
+     */
     public SetupListPanel(DataKey<SetupList> key, DataStore data, Collection<StoreDefinition> definitions) {
         super(key, data);
 
@@ -72,7 +83,6 @@ public class SetupListPanel extends KeyPanel<SetupList> {
         // Init elements
         elementsBoxShadow = new ArrayList<>();
         elementsBox = new JComboBox<>();
-        // elementsFiles = new ArrayList<>();
         elementsOptionPanels = new ArrayList<>();
 
         initChoices();
@@ -95,6 +105,9 @@ public class SetupListPanel extends KeyPanel<SetupList> {
 
     }
 
+    /**
+     * Initializes the choices available in the choicesBox.
+     */
     private void initChoices() {
 
         for (var definition : definitions) {
@@ -105,6 +118,11 @@ public class SetupListPanel extends KeyPanel<SetupList> {
 
     }
 
+    /**
+     * Builds the panel containing the choice controls.
+     *
+     * @return the constructed JPanel
+     */
     private JPanel buildChoicePanel() {
         JPanel panel = new JPanel();
 
@@ -119,9 +137,9 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     }
 
     /**
-     * Adds the option from the avaliable list to selected list.
+     * Adds the option from the available list to the selected list.
      * 
-     * @param evt
+     * @param evt the ActionEvent triggered by the add button
      */
     private void addButtonActionPerformed(ActionEvent evt) {
         // Determine what element is selected
@@ -136,6 +154,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     /**
      * Adds an element to the elements list, from the choices list.
      * 
+     * @param choice the index of the choice to add
      * @return the index of the added element
      */
     public int addElement(int choice) {
@@ -146,13 +165,10 @@ public class SetupListPanel extends KeyPanel<SetupList> {
         var definition = definitions.get(choice);
         var dataStore = DataStore.newInstance(definition);
 
-        // elementsFiles.add(dataStore);
-
         // Not sure if unique data keys are required here
         var dataKey = KeyFactory.dataStore(buildDataStoreLabel(definition.getName(), choice + 1), definition);
 
         var newPanel = new SetupPanel(dataKey, dataStore, definition);
-        // BaseSetupPanel newPanel = new BaseSetupPanel(setupKeys, identationLevel + 1);
 
         elementsOptionPanels.add(newPanel);
 
@@ -164,12 +180,12 @@ public class SetupListPanel extends KeyPanel<SetupList> {
         // Select last item
         elementsBox.setSelectedIndex(elementIndex);
 
-        // Update vision of setup options - not needed, when we select, automatically updates
-        // updateSetupOptions();
-
         return elementIndex;
     }
 
+    /**
+     * Updates the elements combo box with the current elements.
+     */
     private void updateElementsComboBox() {
 
         // Build list of strings to present
@@ -186,6 +202,13 @@ public class SetupListPanel extends KeyPanel<SetupList> {
         }
     }
 
+    /**
+     * Builds a label for a DataStore based on its definition name and number.
+     *
+     * @param definitionName the name of the definition
+     * @param number the number of the DataStore
+     * @return the constructed label
+     */
     private String buildDataStoreLabel(String definitionName, int number) {
         return number + " - " + definitionName;
     }
@@ -193,7 +216,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     /**
      * Removes the option from the selected list to the available list.
      *
-     * @param evt
+     * @param evt the ActionEvent triggered by the remove button
      */
     private void removeButtonActionPerformed(ActionEvent evt) {
         // Determine index of selected element to remove
@@ -208,7 +231,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     /**
      * Removes an element from the elements list.
      * 
-     * @return
+     * @param index the index of the element to remove
      */
     private void removeElement(int index) {
 
@@ -219,9 +242,8 @@ public class SetupListPanel extends KeyPanel<SetupList> {
             return;
         }
 
-        // Remove shadow index, AppOptionFile and panel
+        // Remove shadow index and panel
         elementsBoxShadow.remove(index);
-        // elementsFiles.remove(index);
         elementsOptionPanels.remove(index);
 
         // Refresh
@@ -234,6 +256,12 @@ public class SetupListPanel extends KeyPanel<SetupList> {
         }
     }
 
+    /**
+     * Calculates the new index after an element is removed.
+     *
+     * @param index the index of the removed element
+     * @return the new index
+     */
     private int calculateIndexAfterRemoval(int index) {
         int numElements = elementsBox.getItemCount();
 
@@ -260,12 +288,15 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     /**
      * Updates the options panel.
      *
-     * @param e
+     * @param e the ActionEvent triggered by the elements combo box
      */
     private void elementComboBoxActionPerformed(ActionEvent e) {
         updateSetupOptions();
     }
 
+    /**
+     * Updates the setup options panel based on the selected element.
+     */
     private void updateSetupOptions() {
         if (currentOptionsPanel != null) {
             remove(currentOptionsPanel);
@@ -281,9 +312,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
             currentOptionsPanel.revalidate();
         }
 
-        // TODO: Is it repaint necessary here, or revalidate on panel solves it?
         repaint();
-        // System.out.println("SetupPanel Repainted");
     }
 
     @Override
@@ -292,7 +321,6 @@ public class SetupListPanel extends KeyPanel<SetupList> {
 
         // Go to each panel collect the DataStores
         for (int i = 0; i < elementsOptionPanels.size(); i++) {
-            // for (var setupPanel : elementsOptionPanels) {
             var setupPanel = elementsOptionPanels.get(i);
             var data = setupPanel.getValue();
             // Adapt name
@@ -300,17 +328,14 @@ public class SetupListPanel extends KeyPanel<SetupList> {
             var adaptedDataStore = DataStore.newInstance(newName, data);
 
             dataStores.add(adaptedDataStore);
-            // System.out.println("DATA: " + data);
         }
 
         var value = new SetupList(getKey().getName(), dataStores);
-        // System.out.println("GET VALUE:" + value);
         return value;
     }
 
     @Override
     public <ET extends SetupList> void setValue(ET value) {
-        // System.out.println("SET VALUE:" + value);
 
         // Clear previous values
         clearElements();
@@ -322,14 +347,13 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     }
 
     /**
-     * TODO: This kind of logic should be part of SetupList
+     * Converts a setup name to its original enum representation.
      * 
-     * @param setupName
-     * @return
+     * @param setupName the setup name
+     * @return the original enum name
      */
     public static String toOriginalEnum(String setupName) {
 
-        // Remove
         var dashIndex = setupName.indexOf("-");
         if (dashIndex == -1) {
             return setupName;
@@ -341,19 +365,12 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     /**
      * Loads a single DataStore.
      * 
-     * @param aClass
-     * @param aFile
+     * @param table the DataStore to load
      */
     private void loadElement(DataStore table) {
 
         // Build name
         var enumName = toOriginalEnum(table.getName());
-
-        // // Remove
-        // var dashIndex = enumName.indexOf("-");
-        // if (dashIndex != -1) {
-        // enumName = enumName.substring(dashIndex + 1).strip();
-        // }
 
         int setupIndex = choicesBoxShadow.indexOf(enumName);
 
@@ -366,18 +383,17 @@ public class SetupListPanel extends KeyPanel<SetupList> {
         // Create element
         int elementsIndex = addElement(setupIndex);
 
-        // Set option file
-        // elementsFiles.set(elementsIndex, table);
-
         // Load values in the file
         elementsOptionPanels.get(elementsIndex).setValue(table);
     }
 
+    /**
+     * Clears all elements from the panel.
+     */
     private void clearElements() {
         elementsBox.removeAllItems();
 
         elementsBoxShadow = new ArrayList<>();
-        // elementsFiles = new ArrayList<>();
         elementsOptionPanels = new ArrayList<>();
     }
 

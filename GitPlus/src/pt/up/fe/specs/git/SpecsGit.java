@@ -40,9 +40,10 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
+ * Utility class for Git operations using JGit.
+ * Provides methods for cloning, checking out, and managing Git repositories.
  *
  * @author JoaoBispo
- *
  */
 public class SpecsGit {
 
@@ -50,6 +51,13 @@ public class SpecsGit {
 
     private static final String URL_PARAM_BRANCH = "branch";
 
+    /**
+     * Parses a repository URL and returns the folder where the repository is located.
+     * If the repository does not exist locally, it will be cloned.
+     *
+     * @param repositoryPath the URL of the repository
+     * @return the folder where the repository is located
+     */
     public static File parseRepositoryUrl(String repositoryPath) {
         var repoFolder = parseRepositoryUrl(repositoryPath, true);
 
@@ -75,13 +83,15 @@ public class SpecsGit {
         return repoFolder;
     }
 
+    /**
+     * Checks out the specified branch in the given Git repository.
+     *
+     * @param git the Git repository
+     * @param branchName the name of the branch to check out
+     */
     public static void checkout(Git git, String branchName) {
         try {
-            // System.out.println("SETTING TO BRANCH " + branch);
-
             var currentBranch = git.getRepository().getBranch();
-
-            // System.out.println("CURRENT BRANCH: " + currentBranch);
 
             // Checkout branch
             if (!branchName.equals(currentBranch)) {
@@ -98,18 +108,6 @@ public class SpecsGit {
                 git.checkout().setCreateBranch(createBranch)
                         .setName(branchName)
                         .call();
-
-                // var currentFullBranch = git.getRepository().getFullBranch();
-                // var startPoint = currentFullBranch.substring(0, currentFullBranch.length() -
-                // currentBranch.length())
-                // + branch;
-                //
-                // git.checkout().setCreateBranch(true)
-                // .setName(branch)
-                // .setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
-                // // .setStartPoint(startPoint)
-                // .call();
-
             }
         } catch (Exception e) {
             throw new RuntimeException(
@@ -117,17 +115,14 @@ public class SpecsGit {
         }
     }
 
-    // public static String getBranchName(Git git) {
-    // try {
-    // var fullBranch = git.getRepository().getFullBranch();
-    // var lastSlash = fullBranch.lastIndexOf('/');
-    // return lastSlash != -1 ? fullBranch.substring(lastSlash + 1, fullBranch.length()) : fullBranch;
-    // } catch (IOException e) {
-    // throw new RuntimeException("Could not get the name of the branch of the git repository " + git, e);
-    // }
-    //
-    // }
-
+    /**
+     * Parses a repository URL and returns the folder where the repository is located.
+     * If the repository does not exist locally, it will be cloned.
+     *
+     * @param repositoryPath the URL of the repository
+     * @param firstTime whether this is the first attempt to parse the repository URL
+     * @return the folder where the repository is located
+     */
     private static File parseRepositoryUrl(String repositoryPath, boolean firstTime) {
         String repoName = getRepoName(repositoryPath);
 
@@ -145,11 +140,6 @@ public class SpecsGit {
                         .setDirectory(repoFolder)
                         .setCredentialsProvider(getCredentials(repositoryPath))
                         .call();
-                // Check if there is a login/pass in the url
-                // CredentialsProvider cp = getCredentials(repositoryPath);
-                // System.out.println("SETTING NULL");
-                // clone.setCredentialsProvider(null);
-                // clone.call();
 
                 return repoFolder;
             } catch (GitAPIException e) {
@@ -158,7 +148,6 @@ public class SpecsGit {
         }
 
         // Repository already exists, pull
-
         try {
             SpecsLogs.msgInfo("Pulling repo '" + repositoryPath + "' in folder '" + repoFolder + "'");
             Git gitRepo = Git.open(repoFolder);
@@ -183,6 +172,12 @@ public class SpecsGit {
         return repoFolder;
     }
 
+    /**
+     * Retrieves the credentials provider for the given repository URL.
+     *
+     * @param repositoryPath the URL of the repository
+     * @return the credentials provider, or null if no credentials are required
+     */
     public static CredentialsProvider getCredentials(String repositoryPath) {
 
         var currentString = repositoryPath;
@@ -201,10 +196,7 @@ public class SpecsGit {
             currentString = currentString.substring(0, firstSlashIndex);
         }
 
-        // System.out.println("CURRENT INDEX: " + currentString);
-
         // Check if there is a login/pass in the url
-        // Look for last index, in case the login has an '@'
         var atIndex = currentString.lastIndexOf('@');
 
         // No login
@@ -213,7 +205,6 @@ public class SpecsGit {
         }
 
         var loginPass = currentString.substring(0, atIndex);
-        // System.out.println("LOGIN PASS: " + loginPass);
 
         // Split login pass
         var colonIndex = loginPass.indexOf(':');
@@ -237,15 +228,26 @@ public class SpecsGit {
 
         var login = loginPass.substring(0, colonIndex);
         var pass = loginPass.substring(colonIndex + 1, loginPass.length());
-        // System.out.println("LOGIN: " + login);
-        // System.out.println("PASS: " + pass);
         return new UsernamePasswordCredentialsProvider(login, pass);
     }
 
+    /**
+     * Pulls the latest changes from the remote repository into the local repository.
+     *
+     * @param repoFolder the folder of the local repository
+     * @return the result of the pull operation
+     */
     public static PullResult pull(File repoFolder) {
         return pull(repoFolder, null);
     }
 
+    /**
+     * Pulls the latest changes from the remote repository into the local repository.
+     *
+     * @param repoFolder the folder of the local repository
+     * @param cp the credentials provider
+     * @return the result of the pull operation
+     */
     public static PullResult pull(File repoFolder, CredentialsProvider cp) {
         try {
             SpecsLogs.msgInfo("Pulling repo in folder '" + repoFolder + "'");
@@ -263,6 +265,12 @@ public class SpecsGit {
         }
     }
 
+    /**
+     * Computes the differences between the working directory and the index of the repository.
+     *
+     * @param repoFolder the folder of the local repository
+     * @return a list of differences
+     */
     public static List<DiffEntry> diff(File repoFolder) {
         try {
             SpecsLogs.msgInfo("Diff repo in folder '" + repoFolder + "'");
@@ -274,12 +282,28 @@ public class SpecsGit {
         }
     }
 
+    /**
+     * Clones a repository into the specified folder.
+     *
+     * @param repositoryPath the URL of the repository
+     * @param outputFolder the folder where the repository will be cloned
+     * @param cp the credentials provider
+     * @return the Git object representing the cloned repository
+     */
     public static Git clone(String repositoryPath, File outputFolder, CredentialsProvider cp) {
         return clone(repositoryPath, outputFolder, cp, null);
     }
 
+    /**
+     * Clones a repository into the specified folder and checks out the specified branch.
+     *
+     * @param repositoryPath the URL of the repository
+     * @param outputFolder the folder where the repository will be cloned
+     * @param cp the credentials provider
+     * @param branch the branch to check out
+     * @return the Git object representing the cloned repository
+     */
     public static Git clone(String repositoryPath, File outputFolder, CredentialsProvider cp, String branch) {
-        // TODO: tag should be branch
         String repoName = getRepoName(repositoryPath);
 
         // Get repo folder
@@ -311,15 +335,36 @@ public class SpecsGit {
         }
     }
 
+    /**
+     * Normalizes a tag name by adding the "refs/tags/" prefix if it is not already present.
+     *
+     * @param tag the tag name
+     * @return the normalized tag name
+     */
     public static String normalizeTag(String tag) {
         var prefix = "refs/tags/";
         return tag.startsWith(prefix) ? tag : prefix + tag;
     }
 
+    /**
+     * Checks if the specified tag exists in the remote repository.
+     *
+     * @param repositoryPath the URL of the repository
+     * @param tag the tag name
+     * @return true if the tag exists, false otherwise
+     */
     public static boolean hasTag(String repositoryPath, String tag) {
         return hasTag(repositoryPath, tag, null);
     }
 
+    /**
+     * Checks if the specified tag exists in the remote repository.
+     *
+     * @param repositoryPath the URL of the repository
+     * @param tag the tag name
+     * @param credentialsProvider the credentials provider
+     * @return true if the tag exists, false otherwise
+     */
     public static boolean hasTag(String repositoryPath, String tag, CredentialsProvider credentialsProvider) {
         LsRemoteCommand ls = Git.lsRemoteRepository();
         try {
@@ -334,17 +379,18 @@ public class SpecsGit {
                     .setTags(true) // include tags in result
                     .callAsMap();
 
-            // System.out.println("TAGS: " + remoteRefs.keySet());
-            //
-            // var prefix = "refs/tags/";
-            // var completeTag = tag.startsWith(prefix) ? tag : prefix + tag;
-
             return remoteRefs.keySet().contains(normalizeTag(tag));
         } catch (Exception e) {
             throw new RuntimeException("Could not check tags of repository '" + repositoryPath + "'", e);
         }
     }
 
+    /**
+     * Extracts the name of the repository from its URL.
+     *
+     * @param repositoryPath the URL of the repository
+     * @return the name of the repository
+     */
     public static String getRepoName(String repositoryPath) {
         try {
             String repoPath = new URI(repositoryPath).getPath();
@@ -369,10 +415,24 @@ public class SpecsGit {
 
     }
 
+    /**
+     * Returns the folder where repositories are stored.
+     *
+     * @return the folder where repositories are stored
+     */
     public static File getRepositoriesFolder() {
         return new File(SpecsIo.getTempFolder(), SPECS_GIT_REPOS_FOLDER);
     }
 
+    /**
+     * Clones or pulls a repository into the specified folder.
+     *
+     * @param repositoryPath the URL of the repository
+     * @param outputFolder the folder where the repository will be cloned or pulled
+     * @param user the username for authentication
+     * @param password the password for authentication
+     * @return the folder where the repository is located
+     */
     public static File cloneOrPull(String repositoryPath, File outputFolder, String user, String password) {
         String repoName = getRepoName(repositoryPath);
 
@@ -384,25 +444,18 @@ public class SpecsGit {
             try {
                 SpecsLogs.msgInfo("Cloning repo '" + repositoryPath + "' to folder '" + repoFolder + "'");
 
-                // Delete folder to avoid errors
-                // if (SpecsIo.isEmptyFolder(repoFolder)) {
-                // SpecsIo.deleteFolder(repoFolder);
-                // }
                 var git = Git.cloneRepository()
                         .setURI(repositoryPath)
                         .setDirectory(repoFolder);
 
                 if (user != null & password != null) {
                     CredentialsProvider cp = new UsernamePasswordCredentialsProvider(user, password);
-                    git.setCredentialsProvider(cp);// .call();
+                    git.setCredentialsProvider(cp);
                 }
 
-                // System.out.println("OUTPUT FOLDER:" + outputFolder);
                 Git repo = git.call();
 
-                // File workTree = git.getRepository().getWorkTree();
                 repo.close();
-                // System.out.println("REPO: " + workTree);
                 return repoFolder;
             } catch (GitAPIException e) {
                 throw new RuntimeException("Could not clone repository '" + repositoryPath + "'", e);
@@ -428,6 +481,13 @@ public class SpecsGit {
         return repoFolder;
     }
 
+    /**
+     * Adds the specified files to the index of the repository.
+     *
+     * @param repoFolder the folder of the local repository
+     * @param filesToAdd the files to add
+     * @return the result of the add operation
+     */
     public static DirCache add(File repoFolder, List<File> filesToAdd) {
         System.out.println("Git add to " + repoFolder);
         try {
@@ -449,6 +509,12 @@ public class SpecsGit {
         }
     }
 
+    /**
+     * Commits and pushes the changes in the repository.
+     *
+     * @param repoFolder the folder of the local repository
+     * @param cp the credentials provider
+     */
     public static void commitAndPush(File repoFolder, CredentialsProvider cp) {
         System.out.println("Commiting and pushing " + repoFolder);
 
@@ -461,21 +527,18 @@ public class SpecsGit {
 
     }
 
+    /**
+     * Checks if the specified commit value is the name of a branch in the repository.
+     *
+     * @param repo the Git repository
+     * @param commit the commit value
+     * @return true if the commit value is the name of a branch, false otherwise
+     */
     public static boolean isBranchName(Git repo, String commit) {
-        // Check if commit value is the name of a branch
-        // Taken from here: https://stackoverflow.com/a/57365145
-
         try {
-
-            // for (var branchRef : repo.branchList().setListMode(ListMode.REMOTE).call()) {
-            // System.out.println("BRANCH: " + branchRef.getName());
-            // }
-
-            // Pattern to search for
             var commitPattern = "refs/remotes/origin/" + commit;
 
             return repo.branchList()
-                    // So that it returns all remotes
                     .setListMode(ListMode.REMOTE)
                     .call()
                     .stream()

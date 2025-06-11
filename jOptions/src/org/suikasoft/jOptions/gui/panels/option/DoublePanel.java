@@ -24,8 +24,9 @@ import org.suikasoft.jOptions.gui.KeyPanel;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
+ * Panel for editing double values using a JTextField.
  *
- * @author Joao Bispo
+ * <p>This panel provides a text field for double DataKey values in the GUI.
  */
 public class DoublePanel extends KeyPanel<Double> {
 
@@ -36,6 +37,12 @@ public class DoublePanel extends KeyPanel<Double> {
      */
     private final JTextField value;
 
+    /**
+     * Constructs a DoublePanel for the given DataKey and DataStore.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     */
     public DoublePanel(DataKey<Double> key, DataStore data) {
         super(key, data);
 
@@ -45,14 +52,29 @@ public class DoublePanel extends KeyPanel<Double> {
         setLayout(new FlowLayout(FlowLayout.LEFT));
     }
 
+    /**
+     * Sets the text of the text field.
+     *
+     * @param text the text to set
+     */
     private void setText(String text) {
         value.setText(text);
     }
 
+    /**
+     * Gets the text from the text field.
+     *
+     * @return the text in the field
+     */
     private String getText() {
         return value.getText();
     }
 
+    /**
+     * Returns the current double value from the text field.
+     *
+     * @return the double value
+     */
     @Override
     public Double getValue() {
         String stringValue = getText();
@@ -65,6 +87,11 @@ public class DoublePanel extends KeyPanel<Double> {
         return SpecsStrings.decodeDouble(stringValue, () -> getKey().getDefault().orElse(0.0));
     }
 
+    /**
+     * Sets the value of the text field.
+     *
+     * @param value the double value to set
+     */
     @Override
     public void setValue(Double value) {
         setText(value.toString());

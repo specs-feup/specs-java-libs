@@ -15,19 +15,25 @@ package tdrc.utils;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a list of Pair objects.
+ * 
+ * @param <K> the type of the key in the pair
+ * @param <V> the type of the value in the pair
+ */
 public class PairList<K, V> extends ArrayList<Pair<K, V>> {
 
 	/**
-	 * 
+	 * Serial version UID for serialization.
 	 */
 	private static final long serialVersionUID = 327775886389736L;
 
 	/**
-	 * Create and add a new Pair to the list
+	 * Creates and adds a new Pair to the list.
 	 * 
-	 * @param left
-	 * @param right
-	 * @return the new pair
+	 * @param left the key of the pair
+	 * @param right the value of the pair
+	 * @return the newly created pair, or null if the pair could not be added
 	 */
 	public Pair<K, V> add(K left, V right) {
 		final Pair<K, V> pair = new Pair<>(left, right);
@@ -38,11 +44,10 @@ public class PairList<K, V> extends ArrayList<Pair<K, V>> {
 	}
 
 	/**
-	 * Get the last Pair in the list
+	 * Retrieves the last Pair in the list.
 	 * 
-	 * @return
-	 * @throws IndexOutOfBoundsException
-	 *             if the list is empty
+	 * @return the last pair in the list
+	 * @throws IndexOutOfBoundsException if the list is empty
 	 */
 	public Pair<K, V> last() {
 		if (isEmpty()) {
@@ -53,11 +58,10 @@ public class PairList<K, V> extends ArrayList<Pair<K, V>> {
 	}
 
 	/**
-	 * Get the first Pair in the list
+	 * Retrieves the first Pair in the list.
 	 * 
-	 * @return
-	 * @throws IndexOutOfBoundsException
-	 *             if the list is empty
+	 * @return the first pair in the list
+	 * @throws IndexOutOfBoundsException if the list is empty
 	 */
 	public Pair<K, V> first() {
 		if (isEmpty()) {

@@ -26,7 +26,9 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSwing;
 
 /**
- * Launches an App object from the ProgramPanel.
+ * Launches an App object from the ProgramPanel, managing execution in a separate thread.
+ *
+ * <p>This class provides methods to execute an application asynchronously and handle its lifecycle in the GUI.
  *
  * TODO: Extract Runnable ApplicationRunner from this class.
  *
@@ -34,6 +36,11 @@ import pt.up.fe.specs.util.SpecsSwing;
  */
 public class ApplicationWorker {
 
+    /**
+     * Constructs an ApplicationWorker for the given ProgramPanel.
+     *
+     * @param programPanel the ProgramPanel to use
+     */
     public ApplicationWorker(ProgramPanel programPanel) {
         mainWindow = programPanel;
         workerExecutor = null;
@@ -41,8 +48,8 @@ public class ApplicationWorker {
 
     /**
      * Executes the application in another thread.
-     * 
-     * @param options
+     *
+     * @param options the DataStore with options for execution
      */
     public void execute(DataStore options) {
 
@@ -53,18 +60,13 @@ public class ApplicationWorker {
     }
 
     /**
-     * To be run on Monitor thread, so the Gui is not waiting for the result of task.
+     * To be run on Monitor thread, so the GUI is not waiting for the result of task.
      *
-     * @param options
+     * @param setup the DataStore setup
      */
     private void runner(DataStore setup) {
         // Disable buttons
         setButtons(false);
-
-        // Save SecurityManager
-        // SecurityManager previousManager = System.getSecurityManager();
-        // Set SecurityManager that catches System.exit() calls
-        // System.setSecurityManager(new SecurityManagerNoExit());
 
         // Create task
         Callable<Integer> task = getTask(setup);
@@ -85,19 +87,11 @@ public class ApplicationWorker {
             }
         }
 
-        // Restore SecurityManager
-        // System.setSecurityManager(previousManager);
-
         if (result == null) {
             SpecsLogs.msgInfo("Application execution could not proceed.");
-            // LoggingUtils.getLogger().
-            // info("Cancelled application.");
-            // info("Application was cancelled.");
         } else if (result.compareTo(0) != 0) {
             SpecsLogs.msgInfo("*Application Stopped*");
             SpecsLogs.msgLib("Worker return value: " + result);
-            // LoggingUtils.getLogger().
-            // info("Application returned non-zero value:" + result);
         }
 
         // Enable buttons again
@@ -105,6 +99,11 @@ public class ApplicationWorker {
 
     }
 
+    /**
+     * Enables or disables buttons in the GUI.
+     *
+     * @param enable true to enable buttons, false to disable
+     */
     private void setButtons(final boolean enable) {
         SpecsSwing.runOnSwing(new Runnable() {
 
@@ -117,14 +116,18 @@ public class ApplicationWorker {
     }
 
     /**
-     * Builds a task out of the application
-     * 
-     * @return
+     * Builds a task out of the application.
+     *
+     * @param setup the DataStore setup
+     * @return a Callable task for execution
      */
     private Callable<Integer> getTask(DataStore setup) {
         return () -> mainWindow.getApplication().getKernel().execute(setup);
     }
 
+    /**
+     * Shuts down the worker executor, stopping any running tasks.
+     */
     public void shutdown() {
         if (workerExecutor == null) {
             SpecsLogs.getLogger().warning("Application is not running.");
@@ -134,32 +137,21 @@ public class ApplicationWorker {
         workerExecutor.shutdownNow();
     }
 
+    /**
+     * Displays an exception message in the logs.
+     *
+     * @param ex the ExecutionException to log
+     */
     private static void showExceptionMessage(ExecutionException ex) {
-        String prefix = " happend while executing the application";
+        String prefix = " happened while executing the application";
 
         Throwable ourCause = ex.getCause();
-        // String prefix = ourCause.toString() +
 
         if (ourCause == null) {
-            // LoggingUtils.getLogger().
-            // info("\nAn Exception" + prefix + ", but could not get cause.");
             SpecsLogs.warn("\nAn Exception" + prefix + ", but could not get cause.");
         } else {
-            // LoggingUtils.msgInfo("\n"+ourCause.toString());
             SpecsLogs.msgInfo("");
-            // LoggingUtils.msgInfo(ourCause.getMessage());
             SpecsLogs.warn(ourCause.toString(), ourCause);
-            /*
-            LoggingUtils.msgInfo("\nPrinting the stack trace:");
-             //info("\n"+ourCause.toString() + prefix + ". Printing the stack trace:\n");
-            StackTraceElement[] trace = ourCause.getStackTrace();
-            //LoggingUtils.getLogger().
-            //        info(ourCause.toString());
-            for (int i = 0; i < trace.length; i++) {
-            LoggingUtils.getLogger().
-                info("\tat " + trace[i]);
-            }
-            */
         }
     }
 

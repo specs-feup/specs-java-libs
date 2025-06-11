@@ -15,16 +15,31 @@ package pt.up.fe.specs.jsengine;
 
 import pt.up.fe.specs.util.providers.WebResourceProvider;
 
+/**
+ * Utility class for managing web resources for JavaScript engines.
+ */
 public interface JsEngineWebResources {
 
+    /**
+     * Creates a new web resource provider for the given resource URL and version.
+     * 
+     * @param resourceUrl the URL of the resource
+     * @param version the version of the resource
+     * @return a new instance of WebResourceProvider
+     */
     static WebResourceProvider create(String resourceUrl, String version) {
         return WebResourceProvider.newInstance("http://specs.fe.up.pt/resources/jsengine/", resourceUrl, version);
     }
 
-    // Taken from https://unpkg.com/browse/@babel/standalone@7.15.6/
+    /**
+     * Web resource provider for Babel JavaScript compiler.
+     * Taken from https://unpkg.com/browse/@babel/standalone@7.15.6/
+     */
     WebResourceProvider BABEL = create("babel.min.js", "v7.15.6");
-    // WebResourceProvider BABEL_LATEST = WebResourceProvider.newInstance("https://unpkg.com/@babel/standalone/",
-    // "babel.js");
+
+    /**
+     * Web resource provider for Esprima JavaScript parser.
+     */
     WebResourceProvider ESPRIMA = create("esprima.js", "v4.0.1");
 
 }

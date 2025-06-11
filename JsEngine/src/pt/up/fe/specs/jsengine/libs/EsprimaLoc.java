@@ -15,6 +15,9 @@ package pt.up.fe.specs.jsengine.libs;
 
 import java.util.Map;
 
+/**
+ * Represents the location information for an Esprima AST node.
+ */
 public class EsprimaLoc {
 
     private static final EsprimaLoc UNDEFINED = new EsprimaLoc(-1, -1, -1, -1);
@@ -24,6 +27,14 @@ public class EsprimaLoc {
     private final int endLine;
     private final int endCol;
 
+    /**
+     * Constructs an EsprimaLoc object with the given start and end line/column information.
+     * 
+     * @param startLine the starting line number
+     * @param startCol the starting column number
+     * @param endLine the ending line number
+     * @param endCol the ending column number
+     */
     public EsprimaLoc(int startLine, int startCol, int endLine, int endCol) {
         this.startLine = startLine;
         this.startCol = startCol;
@@ -31,6 +42,12 @@ public class EsprimaLoc {
         this.endCol = endCol;
     }
 
+    /**
+     * Creates a new instance of EsprimaLoc from a map containing location information.
+     * 
+     * @param loc a map with "start" and "end" keys containing line and column information
+     * @return a new EsprimaLoc object
+     */
     public static EsprimaLoc newInstance(Map<String, Object> loc) {
         @SuppressWarnings("unchecked")
         var start = (Map<String, Double>) loc.get("start");
@@ -42,35 +59,37 @@ public class EsprimaLoc {
     }
 
     /**
-     * @return the startLine
+     * @return the starting line number
      */
     public int getStartLine() {
         return startLine;
     }
 
     /**
-     * @return the startCol
+     * @return the starting column number
      */
     public int getStartCol() {
         return startCol;
     }
 
     /**
-     * @return the endLine
+     * @return the ending line number
      */
     public int getEndLine() {
         return endLine;
     }
 
     /**
-     * @return the endCol
+     * @return the ending column number
      */
     public int getEndCol() {
         return endCol;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * Returns a string representation of the EsprimaLoc object.
+     * 
+     * @return a string describing the location information
      */
     @Override
     public String toString() {
@@ -78,6 +97,11 @@ public class EsprimaLoc {
                 + endCol + "]";
     }
 
+    /**
+     * Returns an undefined EsprimaLoc object.
+     * 
+     * @return an EsprimaLoc object representing undefined location
+     */
     public static EsprimaLoc undefined() {
         return UNDEFINED;
     }

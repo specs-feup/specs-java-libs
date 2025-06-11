@@ -27,60 +27,96 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinitions;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.providers.StringProvider;
 
+/**
+ * Abstract base class for DataClass implementations.
+ *
+ * <p>This class provides a base implementation for data classes backed by a DataStore, supporting locking and common get/set operations.
+ *
+ * @param <T> the type of the DataClass
+ */
 public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>, StringProvider {
 
     private final DataStore data;
     private boolean isLocked;
 
+    /**
+     * Constructs an ADataClass backed by the given DataStore.
+     *
+     * @param data the DataStore backing this DataClass
+     */
     public ADataClass(DataStore data) {
         this.data = data;
         this.isLocked = false;
     }
 
+    /**
+     * Constructs an ADataClass with a new DataStore based on the class interface.
+     */
     public ADataClass() {
-        // this(DataStore.newInstance(getClass()));
-        // this.data = DataStore.newInstance(getClass());
-
-        // Cannot use previous Constructor because we cannot call 'getClass()' from whitin 'this(...)'
         this.data = DataStore.newInstance(StoreDefinitions.fromInterface(getClass()), false);
     }
 
+    /**
+     * Returns the backing DataStore.
+     *
+     * @return the DataStore backing this DataClass
+     */
     protected DataStore getDataStore() {
         return data;
     }
 
+    /**
+     * Locks this DataClass, preventing further modifications.
+     *
+     * @return this instance, locked
+     */
     @SuppressWarnings("unchecked")
     public T lock() {
         this.isLocked = true;
         return (T) this;
     }
 
+    /**
+     * Returns the name of this DataClass.
+     *
+     * @return the name of this DataClass
+     */
     @Override
     public String getDataClassName() {
         return data.getName();
     }
 
+    /**
+     * Returns an Optional containing the StoreDefinition, if present.
+     *
+     * @return an Optional with the StoreDefinition, or empty if not present
+     */
     @Override
     public Optional<StoreDefinition> getStoreDefinitionTry() {
         return data.getStoreDefinitionTry()
                 .map(def -> new StoreDefinitionBuilder(getDataClassName()).addDefinition(def).build());
     }
 
-    // public DataClass(T instance) {
-    // this.data = DataStore.newInstance(getClass());
-    // this.data.addAll(((DataClass<?>) instance).data);
-    // }
-
-    /* (non-Javadoc)
-     * @see org.suikasoft.jOptions.DataStore.DataClass#get(org.suikasoft.jOptions.Datakey.DataKey)
+    /**
+     * Gets the value for the given DataKey.
+     *
+     * @param key the DataKey
+     * @param <K> the value type
+     * @return the value for the key
      */
     @Override
     public <K> K get(DataKey<K> key) {
         return data.get(key);
     }
 
-    /* (non-Javadoc)
-     * @see org.suikasoft.jOptions.DataStore.DataClass#set(org.suikasoft.jOptions.Datakey.DataKey, E)
+    /**
+     * Sets the value for the given DataKey.
+     *
+     * @param key the DataKey
+     * @param value the value to set
+     * @param <K> the value type
+     * @param <E> the value type (extends K)
+     * @return this instance
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -93,8 +129,11 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         return (T) this;
     }
 
-    /* (non-Javadoc)
-     * @see org.suikasoft.jOptions.DataStore.DataClass#set(T)
+    /**
+     * Sets all values from another DataClass instance.
+     *
+     * @param instance the instance to copy from
+     * @return this instance
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -107,11 +146,23 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         return (T) this;
     }
 
+    /**
+     * Checks if the given DataKey has a value.
+     *
+     * @param key the DataKey
+     * @param <VT> the value type
+     * @return true if the key has a value, false otherwise
+     */
     @Override
     public <VT> boolean hasValue(DataKey<VT> key) {
         return data.hasValue(key);
     }
 
+    /**
+     * Returns a collection of DataKeys that have values.
+     *
+     * @return a collection of DataKeys with values
+     */
     @Override
     public Collection<DataKey<?>> getDataKeysWithValues() {
         StoreDefinition storeDefinition = data.getStoreDefinitionTry().get();
@@ -130,6 +181,11 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         return keysWithValues;
     }
 
+    /**
+     * Computes the hash code for this DataClass.
+     *
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -142,6 +198,12 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         return result;
     }
 
+    /**
+     * Checks if this DataClass is equal to another object.
+     *
+     * @param obj the object to compare
+     * @return true if equal, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -169,24 +231,23 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
         return true;
     }
 
+    /**
+     * Returns the string representation of this DataClass.
+     *
+     * @return the string representation
+     */
     @Override
     public String getString() {
         return toString();
     }
 
+    /**
+     * Returns the string representation of this DataClass.
+     *
+     * @return the string representation
+     */
     @Override
     public String toString() {
         return toInlinedString();
     }
-
-    // @Override
-    // public DataStore getData() {
-    // return data;
-    // }
-
-    /*
-    public DataStore getData() {
-        return data;
-    }
-    */
 }

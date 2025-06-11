@@ -20,27 +20,33 @@ import java.util.stream.Collectors;
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
+ * Codec for handling multiple choice lists in jOptions.
+ *
  * @author JoaoBispo
  *
- * @param <T>
+ * @param <T> the type of elements in the list
  */
 public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
 
     private static final String SEPARATOR = "$$$";
 
-    // private final Class<T> anEnum;
-    // private final Map<String, T> decodeMap;
     private final StringCodec<T> elementCodec;
 
+    /**
+     * Constructs a MultipleChoiceListCodec with the given element codec.
+     *
+     * @param elementCodec the codec for individual elements
+     */
     public MultipleChoiceListCodec(StringCodec<T> elementCodec) {
-        // this.anEnum = anEnum;
-        // this.decodeMap = new HashMap<>();
         this.elementCodec = elementCodec;
-        // for (T enumValue : anEnum.getEnumConstants()) {
-        // decodeMap.put(enumValue.name(), enumValue);
-        // }
     }
 
+    /**
+     * Decodes a string into a list of elements.
+     *
+     * @param value the string to decode
+     * @return a list of decoded elements
+     */
     @Override
     public List<T> decode(String value) {
         List<T> decodedValues = new ArrayList<>();
@@ -58,16 +64,14 @@ public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
 
     private T decodeSingle(String value) {
         return elementCodec.decode(value);
-        // T enumValue = decodeMap.get(value);
-        //
-        // if (enumValue == null) {
-        // throw new RuntimeException("Could not find enum '" + value + "' in class '" + anEnum
-        // + "'. Available values: " + decodeMap.keySet());
-        // }
-        //
-        // return enumValue;
     }
 
+    /**
+     * Encodes a list of elements into a string.
+     *
+     * @param value the list of elements to encode
+     * @return the encoded string
+     */
     @Override
     public String encode(List<T> value) {
         return value.stream()

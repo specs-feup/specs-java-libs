@@ -17,49 +17,62 @@ import pt.up.fe.specs.util.enums.EnumHelperWithValue;
 import pt.up.fe.specs.util.lazy.Lazy;
 import pt.up.fe.specs.util.providers.StringProvider;
 
+/**
+ * Enum representing JavaScript file types (e.g., JS, MJS).
+ */
 public enum JsFileType implements StringProvider {
 
+    /**
+     * Represents a standard JavaScript file with the ".js" extension.
+     */
     NORMAL("js"),
-    MODULE("mjs");
 
     /**
-     * CommonJS, supports features not available in strict mode (e.g. with)
+     * Represents a JavaScript module file with the ".mjs" extension.
      */
-    // COMMON("cjs");
+    MODULE("mjs");
 
     private static final Lazy<EnumHelperWithValue<JsFileType>> HELPER = EnumHelperWithValue
             .newLazyHelperWithValue(JsFileType.class);
 
     private final String extension;
 
+    /**
+     * Constructor for JsFileType.
+     * 
+     * @param extension the file extension associated with the JavaScript file type
+     */
     private JsFileType(String extension) {
         this.extension = extension;
     }
 
+    /**
+     * Gets the file extension associated with the JavaScript file type.
+     * 
+     * @return the file extension as a string
+     */
     public String getExtension() {
         return extension;
     }
 
+    /**
+     * Gets the string representation of the file extension.
+     * 
+     * @return the file extension as a string
+     */
     @Override
     public String getString() {
         return extension;
     }
 
+    /**
+     * Retrieves the JsFileType based on the given file extension.
+     * 
+     * @param extension the file extension to match
+     * @return the corresponding JsFileType
+     */
     public static JsFileType getType(String extension) {
         return HELPER.get().fromValue(extension);
-        /*
-        switch (extension.toLowerCase()) {
-        case "js":
-            return NORMAL;
-        case "mjs":
-            return MODULE;
-        case "cjs":
-            return COMMON;
-        default:
-            throw new NotImplementedException(extension);
-        }
-        */
-
     }
 
 }

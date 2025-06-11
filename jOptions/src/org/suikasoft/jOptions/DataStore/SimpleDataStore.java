@@ -16,37 +16,37 @@ package org.suikasoft.jOptions.DataStore;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
+/**
+ * Simple implementation of a DataStore.
+ *
+ * <p>This class provides a basic DataStore backed by a map, supporting construction from a name, another DataStore, or a StoreDefinition.
+ */
 public class SimpleDataStore extends ADataStore {
 
+    /**
+     * Constructs a SimpleDataStore with the given name.
+     *
+     * @param name the name of the DataStore
+     */
     public SimpleDataStore(String name) {
         super(name);
     }
 
+    /**
+     * Constructs a SimpleDataStore with the given name and another DataStore as source.
+     *
+     * @param name the name of the DataStore
+     * @param dataStore the source DataStore
+     */
     public SimpleDataStore(String name, DataStore dataStore) {
         super(name, dataStore);
-        // super(name, dataStore.getStoreDefinition().orElse(null));
-        /*
-        	// Add values
-        	Optional<StoreDefinition> storeDefinition = dataStore.getStoreDefinition();
-        	if (!storeDefinition.isPresent()) {
-        	    LoggingUtils.msgInfo("StoreDefinition is not present, doing raw copy without key information");
-        	    setValuesMap(getValues());
-        	    return;
-        	}
-        
-        for (DataKey<?> key : storeDefinition.get().getKeys()) {
-            Object value = dataStore.get(key);
-            setRaw(key, value);
-        }
-        */
     }
 
-    /*
-    public SimpleDataStore(String name, DataView setup) {
-    super(name, setup);
-    }
-    */
-
+    /**
+     * Constructs a SimpleDataStore with the given StoreDefinition.
+     *
+     * @param storeDefinition the store definition
+     */
     public SimpleDataStore(StoreDefinition storeDefinition) {
         super(storeDefinition);
     }

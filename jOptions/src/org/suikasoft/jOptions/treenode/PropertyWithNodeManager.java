@@ -1,11 +1,11 @@
-/**
- * Copyright 2021 SPeCS.
- * 
+/*
+ * Copyright 2021 SPeCS Research Group.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -25,9 +25,10 @@ import pt.up.fe.specs.util.exceptions.CaseNotDefinedException;
 
 /**
  * Manages DataKey properties that return an instance of DataNode.
- * 
- * @author JBispo
  *
+ * Provides methods to retrieve DataKeys associated with DataNode properties for a given node.
+ *
+ * @author JBispo
  */
 public class PropertyWithNodeManager {
 
@@ -39,9 +40,10 @@ public class PropertyWithNodeManager {
     private static final Map<Class<? extends DataNode>, List<DataKey<?>>> POSSIBLE_KEYS_WITH_NODES = new ConcurrentHashMap<>();
 
     /**
-     * All keys that can potentially have DataNodes.
-     * 
-     * @return
+     * Retrieves all keys that can potentially have DataNodes for a given node.
+     *
+     * @param node the DataNode instance
+     * @return a list of DataKeys that can potentially have DataNodes
      */
     private <K extends DataNode<?>> List<DataKey<?>> getPossibleKeysWithNodes(K node) {
         List<DataKey<?>> keys = POSSIBLE_KEYS_WITH_NODES.get(node.getClass());
@@ -55,6 +57,12 @@ public class PropertyWithNodeManager {
         return keys;
     }
 
+    /**
+     * Finds keys that map to DataNode instances for a given node.
+     *
+     * @param node the DataNode instance
+     * @return a list of DataKeys that map to DataNode instances
+     */
     private static <K extends DataNode<?>> List<DataKey<?>> findKeysWithNodes(K node) {
         List<DataKey<?>> keysWithNodes = new ArrayList<>();
 
@@ -72,9 +80,10 @@ public class PropertyWithNodeManager {
     }
 
     /**
-     * Keys that currently have nodes assigned.
+     * Retrieves keys that currently have nodes assigned for a given node.
      *
-     * @return
+     * @param node the DataNode instance
+     * @return a list of DataKeys that currently have nodes assigned
      */
     @SuppressWarnings("unchecked")
     public <K extends DataNode<?>> List<DataKey<?>> getKeysWithNodes(K node) {
@@ -136,8 +145,6 @@ public class PropertyWithNodeManager {
         }
 
         return keys;
-        // ClavaLog.info("Case not supported yet:" + keyWithNode);
-
     }
 
 }

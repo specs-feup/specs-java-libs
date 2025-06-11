@@ -30,6 +30,12 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 
+/**
+ * Utility class for string operations in tdrcLibrary.
+ * <p>
+ * This class provides various utility methods for string manipulation, including sanitization, case conversion,
+ * joining strings, package comparison, and XML conversion.
+ */
 public class StringUtils {
 
     static final String keywordPrefix = "_";
@@ -41,20 +47,20 @@ public class StringUtils {
 	    "volatile", "while" };
 
     /**
-     * Verifies if a given String is a reserved keyword of Java
+     * Verifies if a given String is a reserved keyword of Java.
      * 
-     * @param keyword
-     * @return
+     * @param keyword the string to check
+     * @return true if the string is a reserved keyword, false otherwise
      */
     public static boolean isJavaKeyword(String keyword) {
 	return (Arrays.binarySearch(StringUtils.keywords, keyword) >= 0);
     }
 
     /**
-     * Returns a sanitized string for the given name, i.e., insures that the name is not a reserved keyword
+     * Returns a sanitized string for the given name, i.e., ensures that the name is not a reserved keyword.
      * 
-     * @param name
-     * @return
+     * @param name the string to sanitize
+     * @return the sanitized string
      */
     public static String getSanitizedName(String name) {
 	if (isJavaKeyword(name)) {
@@ -63,22 +69,33 @@ public class StringUtils {
 	return name;
     }
 
+    /**
+     * Converts the first character of the given string to uppercase.
+     * 
+     * @param string the input string
+     * @return the string with the first character converted to uppercase
+     */
     public static String firstCharToUpper(String string) {
 	return charToUpperOrLower(string, 0, true);
     }
 
+    /**
+     * Converts the first character of the given string to lowercase.
+     * 
+     * @param string the input string
+     * @return the string with the first character converted to lowercase
+     */
     public static String firstCharToLower(String string) {
 	return charToUpperOrLower(string, 0, false);
     }
 
     /**
-     * Puts the given char to upper (true) or lower (false) case
+     * Converts the character at the specified position in the given string to upper or lower case.
      * 
-     * @param string
-     * @param pos
-     * @param upper
-     *            if set to true, the char is set to upper case; if set to false, the char is set to lower case
-     * @return
+     * @param string the input string
+     * @param pos the position of the character to convert
+     * @param upper if true, converts the character to uppercase; if false, converts to lowercase
+     * @return the string with the character at the specified position converted
      */
     public static String charToUpperOrLower(String string, int pos, boolean upper) {
 	if (pos < 0 || pos >= string.length()) {
@@ -94,18 +111,25 @@ public class StringUtils {
 	return ret;
     }
 
+    /**
+     * Joins the elements of a collection into a single string, separated by the given separator.
+     * 
+     * @param collection the collection of strings to join
+     * @param separator the separator to use between elements
+     * @return the joined string
+     */
     public static String joinStrings(Collection<String> collection, String separator) {
 	return String.join(separator, collection);
     }
 
     /**
-     * Joins the elements of a collection with a given separator. This method requires a mapping function to convert the
-     * elements into strings
+     * Joins the elements of a collection into a single string, separated by the given separator. This method requires a
+     * mapping function to convert the elements into strings.
      * 
-     * @param collection
-     * @param mapper
-     * @param separator
-     * @return
+     * @param collection the collection of elements to join
+     * @param mapper the function to map elements to strings
+     * @param separator the separator to use between elements
+     * @return the joined string
      */
     public static <T> String join(Collection<T> collection, Function<T, String> mapper, String separator) {
 
@@ -114,14 +138,12 @@ public class StringUtils {
     }
 
     /**
+     * Joins the elements of a collection into a single string, separated by the given separator. This method uses the
+     * toString method for each element.
      * 
-     * Joins the elements of a collection with a given separator. This method uses the toString method for each element.
-     * 
-     * @param collection
-     * @param mapper
-     * @param separator
-     * @return
-     * @return
+     * @param collection the collection of elements to join
+     * @param separator the separator to use between elements
+     * @return the joined string
      */
     public static <T> String join(Collection<T> collection, String separator) {
 
@@ -130,11 +152,11 @@ public class StringUtils {
     }
 
     /**
-     * Compares the package of two classes
+     * Compares the package of two classes.
      * 
-     * @param firstClassName
-     * @param secondClassName
-     * @return true if in the same package, false otherwise
+     * @param firstClassName the name of the first class
+     * @param secondClassName the name of the second class
+     * @return true if both classes are in the same package, false otherwise
      */
     public static boolean inSamePackage(String firstClassName, String secondClassName) {
 	final String firstPackage = getPackage(firstClassName);
@@ -143,11 +165,10 @@ public class StringUtils {
     }
 
     /**
-     * Get the package from a given class name
+     * Gets the package from a given class name.
      * 
-     * @param className
-     *            the name of the class
-     * @return the package if is present in the class name (name contains '.'), empty string otherwise
+     * @param className the name of the class
+     * @return the package if present in the class name (name contains '.'), empty string otherwise
      */
     public static String getPackage(String className) {
 	final int lastDot = className.lastIndexOf('.');
@@ -158,7 +179,7 @@ public class StringUtils {
     }
 
     /**
-     * Repeat a given string 'repeat' times. if the string to repeat.
+     * Repeats a given string a specified number of times.
      * <p>
      * Conditions:<br>
      * - toRepeat == <b>null</b> || repeat < 0 -> <b>null</b><br>
@@ -166,9 +187,9 @@ public class StringUtils {
      * - toRepeat.isEmpty || repeat == 1 -> toRepeat<br>
      * - else -> toRepeat * repeat
      * 
-     * @param toRepeat
-     * @param repeat
-     * @return
+     * @param toRepeat the string to repeat
+     * @param repeat the number of times to repeat the string
+     * @return the repeated string
      */
     public static String repeat(String toRepeat, int repeat) {
 	if (toRepeat == null || repeat < 0) {
@@ -183,6 +204,16 @@ public class StringUtils {
 	return new String(new char[repeat]).replace("\0", toRepeat);
     }
 
+    /**
+     * Converts an XML Document to a StringBuffer with the specified indentation amount.
+     * 
+     * @param doc the XML Document to convert
+     * @param identAmount the amount of indentation
+     * @return the StringBuffer representation of the XML Document
+     * @throws TransformerFactoryConfigurationError if there is a configuration error in the TransformerFactory
+     * @throws TransformerConfigurationException if there is a configuration error in the Transformer
+     * @throws TransformerException if there is an error during the transformation
+     */
     public static StringBuffer xmlToStringBuffer(Document doc, int identAmount)
 	    throws TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
 	final TransformerFactory transfac = TransformerFactory.newInstance();

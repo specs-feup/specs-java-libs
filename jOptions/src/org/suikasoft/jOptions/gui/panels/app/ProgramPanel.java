@@ -46,6 +46,8 @@ import pt.up.fe.specs.util.utilities.LastUsedItems;
  * Panel used to indicate the setup file and which can start and cancel the execution of the program. Also shows the
  * output of the program.
  *
+ * <p>This panel provides controls for selecting setup files, starting/cancelling execution, and displaying output.
+ *
  * @author Ancora Group <ancora.codigo@gmail.com>
  */
 public class ProgramPanel extends GuiTab {
@@ -68,16 +70,19 @@ public class ProgramPanel extends GuiTab {
     private ApplicationWorker worker;
     private final LastUsedItems<String> lastUsedItems;
 
-    // private static final String OPTION_LAST_USED_FILE = "lastUsedFile";
     private static final String OPTION_LAST_USED_ITEMS = "lastUsedItems";
     private static final int LAST_USED_ITEMS_CAPACITY = 10;
-    // Items will be filenames, and they should not have the character '?'
     private static final String ITEMS_SEPARATOR_REGEX = "\\?";
     private static final String ITEMS_SEPARATOR = "?";
 
     private static final String BLANK_OPTION_FILE = "";
 
-    /** Creates new form ProgramPanel */
+    /**
+     * Creates a new ProgramPanel for the given application and DataStore.
+     *
+     * @param application the application instance
+     * @param data the DataStore
+     */
     public ProgramPanel(App application, DataStore data) {
         super(data);
 
@@ -104,37 +109,23 @@ public class ProgramPanel extends GuiTab {
         // Set head of lastUsedItems as the item that appears in box
         Optional<String> head = lastUsedItems.getHead();
         if (head.isPresent()) {
-            // filenameTextField.setSelectedItem(head.get());
             filenameTextField.getEditor().setItem(head.get());
-            // filenameTextField.getEditor().setItem(firstItem);
-            // filenameTextField.setSelectedItem(firstItem);
-            // System.out.println("NOT SETTING? -> " + head.get());
-            // System.out.println("NOT SETTING 2? -> " + firstItem);
-            // System.out.println("EQUAL? " + (firstItem == head.get()));
         } else {
             filenameTextField.getEditor().setItem(buildDefaultOptionFilename());
         }
 
-        // String firstItem = items.isEmpty() ? null : items.get(0);
-        // System.out.println("FIRST ITEM:" + firstItem);
-        // filenameTextField.setSelectedItem(null);
-        // filenameTextField.setSelectedItem(firstItem);
-
         repaint();
         revalidate();
 
-        // Dimension d = filenameTextField.getPreferredSize();
-        // Dimension newD = new Dimension(100, (int) d.getHeight());
-        // filenameTextField.setPreferredSize(newD);
-
-        // String defaultOptionFile = buildDefaultOptionFilename();
-        // filenameTextField.getEditor().setItem(defaultOptionFile);
-
-        // showStackTrace = true;
         customInit();
-
     }
 
+    /**
+     * Parses the last used files string into a list of file paths.
+     *
+     * @param lastFilesString the string containing file paths separated by the separator
+     * @return a list of file paths
+     */
     private static List<String> parseLastFiles(String lastFilesString) {
         if (lastFilesString.isEmpty()) {
             return Collections.emptyList();
@@ -145,23 +136,8 @@ public class ProgramPanel extends GuiTab {
     }
 
     /**
-     * @return the showStackTrace
+     * Performs custom initialization for the ProgramPanel.
      */
-    /*
-    public boolean isShowStackTrace() {
-    return showStackTrace;
-    }
-     */
-    /**
-     * @param showStackTrace
-     *            the showStackTrace to set
-     */
-    /*
-    public void setShowStackTrace(boolean showStackTrace) {
-    this.showStackTrace = showStackTrace;
-    }
-     */
-
     private void customInit() {
 
         // Init file chooser
@@ -209,7 +185,6 @@ public class ProgramPanel extends GuiTab {
         startButton.setText("Start");
         startButton.addActionListener(evt -> startButtonActionPerformed(evt));
 
-        // outputArea.setColumns(20);
         outputArea.setEditable(false);
         outputArea.setRows(15);
         outputArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
@@ -251,8 +226,12 @@ public class ProgramPanel extends GuiTab {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_browseButtonActionPerformed
-        // File optionsFile = new File(filenameTextField.getText());
+    /**
+     * Handles the action performed when the browse button is clicked.
+     *
+     * @param evt the action event
+     */
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {
         File optionsFile = new File(filenameTextField.getEditor().getItem().toString());
         if (!optionsFile.exists()) {
             optionsFile = new File("./");
@@ -264,29 +243,34 @@ public class ProgramPanel extends GuiTab {
             File file = fc.getSelectedFile();
             filenameTextField.getEditor().setItem(file.getAbsolutePath());
         }
-    }// GEN-LAST:event_browseButtonActionPerformed
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cancelButtonActionPerformed
-
-        worker.shutdown();
-
-    }// GEN-LAST:event_cancelButtonActionPerformed
-
-    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startButtonActionPerformed
-        execute();
-
-    }// GEN-LAST:event_startButtonActionPerformed
+    }
 
     /**
+     * Handles the action performed when the cancel button is clicked.
      *
+     * @param evt the action event
+     */
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        worker.shutdown();
+    }
+
+    /**
+     * Handles the action performed when the start button is clicked.
+     *
+     * @param evt the action event
+     */
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        execute();
+    }
+
+    /**
+     * Executes the application with the selected setup file.
      */
     public void execute() {
         // Clear text area
         outputArea.setText("");
 
         // Check if file is valid
-        // String filename = filenameTextField.getText();
-        // String filename = filenameTextField.getSelectedItem().toString();
         String filename = filenameTextField.getEditor().getItem().toString();
 
         File file = new File(filename);
@@ -310,7 +294,6 @@ public class ProgramPanel extends GuiTab {
             prefs.put(ProgramPanel.OPTION_LAST_USED_ITEMS, lastUsedFilesString);
 
             // Update JComboBox
-            // OPT - It might be enough to remove just the last one, if the jcombobox is already full
             filenameTextField.removeAllItems();
             for (String item : lastUsedItems.getItems()) {
                 filenameTextField.addItem(item);
@@ -321,24 +304,50 @@ public class ProgramPanel extends GuiTab {
         worker.execute(setup);
     }
 
+    /**
+     * Encodes a list of file paths into a single string separated by the separator.
+     *
+     * @param lastUsedItems the list of file paths
+     * @return the encoded string
+     */
     private static String encodeList(List<String> lastUsedItems) {
         return lastUsedItems.stream().collect(Collectors.joining(ProgramPanel.ITEMS_SEPARATOR));
     }
 
+    /**
+     * Enables or disables the buttons in the panel.
+     *
+     * @param enable true to enable the buttons, false to disable
+     */
     public final void setButtonsEnable(boolean enable) {
         browseButton.setEnabled(enable);
         startButton.setEnabled(enable);
         cancelButton.setEnabled(!enable);
     }
 
+    /**
+     * Gets the application instance associated with this panel.
+     *
+     * @return the application instance
+     */
     public App getApplication() {
         return application;
     }
 
+    /**
+     * Gets the filename text field component.
+     *
+     * @return the filename text field
+     */
     public JComboBox<String> getFilenameTextField() {
         return filenameTextField;
     }
 
+    /**
+     * Builds the default option filename for the application.
+     *
+     * @return the default option filename
+     */
     private String buildDefaultOptionFilename() {
         // Check if App implements AppDefaultConfig
         if (!AppDefaultConfig.class.isInstance(application)) {
@@ -348,8 +357,8 @@ public class ProgramPanel extends GuiTab {
         return ((AppDefaultConfig) application).defaultConfigFile();
     }
 
-    /* (non-Javadoc)
-     * @see pt.up.fe.specs.guihelper.gui.BasePanels.GuiTab#enterTab(pt.up.fe.specs.guihelper.Gui.BasePanels.TabData)
+    /**
+     * Called when entering the tab. Updates the filename text field with the current configuration file path.
      */
     @Override
     public void enterTab() {
@@ -361,12 +370,11 @@ public class ProgramPanel extends GuiTab {
         getFilenameTextField().getEditor().setItem(file.getPath());
     }
 
-    /* (non-Javadoc)
-     * @see pt.up.fe.specs.guihelper.gui.BasePanels.GuiTab#exitTab(pt.up.fe.specs.guihelper.Gui.BasePanels.TabData)
+    /**
+     * Called when exiting the tab. Updates the configuration file and current folder path in the DataStore.
      */
     @Override
     public void exitTab() {
-        // Config file
         String path = getFilenameTextField().getEditor().getItem().toString();
         if (path.trim().isEmpty()) {
             getData().remove(AppKeys.CONFIG_FILE);
@@ -377,20 +385,19 @@ public class ProgramPanel extends GuiTab {
         File configFile = new File(path);
         configFile = configFile.getAbsoluteFile();
 
-        // For the case when there is no config file defined
         File workingFolder = configFile;
         if (!configFile.isDirectory()) {
             workingFolder = configFile.getParentFile();
         }
-        // String workingFolderPath = configFile.getAbsoluteFile().getParent();
 
         getData().set(AppKeys.CONFIG_FILE, new File(getFilenameTextField().getEditor().getItem().toString()));
         getData().set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(workingFolder.getPath()));
-        // getData().set(JOptionKeys.CURRENT_FOLDER_PATH, workingFolder.getPath());
     }
 
-    /* (non-Javadoc)
-     * @see pt.up.fe.specs.guihelper.gui.BasePanels.GuiTab#getTabName()
+    /**
+     * Gets the name of the tab.
+     *
+     * @return the tab name
      */
     @Override
     public String getTabName() {

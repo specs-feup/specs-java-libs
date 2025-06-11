@@ -16,7 +16,18 @@ package org.suikasoft.jOptions.gui;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
+/**
+ * Provider interface for creating KeyPanel instances for a given DataKey and DataStore.
+ *
+ * @param <T> the type of value handled by the panel
+ */
 public interface KeyPanelProvider<T> {
-
+    /**
+     * Returns a KeyPanel for the given DataKey and DataStore.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     * @return a KeyPanel for the key and data
+     */
     KeyPanel<T> getPanel(DataKey<T> key, DataStore data);
 }

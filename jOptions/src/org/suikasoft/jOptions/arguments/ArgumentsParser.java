@@ -1,14 +1,14 @@
 /**
  * Copyright 2018 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.arguments;
@@ -34,6 +34,9 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.collections.MultiMap;
 import pt.up.fe.specs.util.parsing.ListParser;
 
+/**
+ * Parses and manages command-line arguments for jOptions-based applications.
+ */
 public class ArgumentsParser {
 
     /**
@@ -42,17 +45,26 @@ public class ArgumentsParser {
     private static final DataKey<Boolean> SHOW_HELP = KeyFactory.bool("arguments_parser_show_help")
             .setLabel("Shows this help message");
 
+    /**
+     * Executes the program using the given file representing a serialized DataStore instance.
+     */
     private static final DataKey<File> DATASTORE_FILE = KeyFactory.file("arguments_parser_datastore_file")
             .setLabel("Executes the program using the given file representing a serialized DataStore instance");
 
+    /**
+     * Executes the program using the given text file containing command-line options.
+     */
     private static final DataKey<File> CONFIG_FILE = KeyFactory.file("arguments_parser_config_file")
-            .setLabel("Executes the program using the given text file containig command-line options");
+            .setLabel("Executes the program using the given text file containing command-line options");
 
     private final Map<String, BiConsumer<ListParser<String>, DataStore>> parsers;
     private final MultiMap<DataKey<?>, String> datakeys;
     private final Map<DataKey<?>, Integer> consumedArgs;
     private final Set<String> ignoreFlags;
 
+    /**
+     * Constructs an ArgumentsParser instance and initializes default parsers and flags.
+     */
     public ArgumentsParser() {
         parsers = new LinkedHashMap<>();
         datakeys = new MultiMap<>(() -> new LinkedHashMap<>());
@@ -64,6 +76,13 @@ public class ArgumentsParser {
         ignoreFlags.add("//");
     }
 
+    /**
+     * Executes the application kernel with the parsed arguments.
+     *
+     * @param kernel the application kernel to execute
+     * @param args   the list of command-line arguments
+     * @return the exit code of the application
+     */
     public int execute(AppKernel kernel, List<String> args) {
         DataStore config = parse(args);
 
@@ -76,20 +95,12 @@ public class ArgumentsParser {
         return kernel.execute(config);
     }
 
+    /**
+     * Prints the help message for the command-line arguments, listing all supported flags and their descriptions.
+     */
     private void printHelpMessage() {
         StringBuilder message = new StringBuilder();
-        // message.append("EclipseBuild - Generates and runs ANT scripts for Eclipse Java projects\n\n");
-        // message.append("Usage: <folder> [-i <ivySetting>] [-u <userLibraries>] <folder> [-i...\n\n");
-        // message.append(
-        // "Default files that will be searched for in the root of the repository folders if no flag is specified:\n");
-        // message.append(" ").append(getDefaultUserLibraries()).append(" - Eclipse user libraries\n");
-        // message.append(" ").append(getDefaultIvySettingsFile()).append(" - Ivy settings file\n");
-        // message.append(" ").append(getDefaultIgnoreProjectsFile())
-        // .append(" - Text file with list of projects to ignore (one project name per line)\n");
-        //
-        // message.append("\nAdditional options:\n");
         for (DataKey<?> key : datakeys.keySet()) {
-            // for (String key : parsers.keySet()) {
             String flags = datakeys.get(key).stream().collect(Collectors.joining(", "));
             message.append(" ").append(flags);
 
@@ -109,6 +120,12 @@ public class ArgumentsParser {
         SpecsLogs.msgInfo(message.toString());
     }
 
+    /**
+     * Parses the given list of command-line arguments into a DataStore instance.
+     *
+     * @param args the list of command-line arguments
+     * @return a DataStore instance containing the parsed arguments
+     */
     public DataStore parse(List<String> args) {
         DataStore parsedData = DataStore.newInstance("ArgumentsParser Data");
 
@@ -139,81 +156,76 @@ public class ArgumentsParser {
     }
 
     /**
-     * Adds a boolean key.
-     * 
-     * @param key
-     * @param flags
-     * @return
+     * Adds a boolean key to the parser, associating it with the given flags.
+     *
+     * @param key   the DataKey representing the boolean value
+     * @param flags the flags associated with the key
+     * @return the updated ArgumentsParser instance
      */
     public ArgumentsParser addBool(DataKey<Boolean> key, String... flags) {
         return addPrivate(key, list -> true, 0, flags);
-        // for (String flag : flags) {
-        // parsers.put(flag, addValue(key, true));
-        // }
-        //
-        // return this;
     }
 
     /**
-     * Adds a key that uses the next argument as value.
-     * 
-     * @param key
-     * @param flags
-     * @return
+     * Adds a key that uses the next argument as a value, associating it with the given flags.
+     *
+     * @param key   the DataKey representing the string value
+     * @param flags the flags associated with the key
+     * @return the updated ArgumentsParser instance
      */
     public ArgumentsParser addString(DataKey<String> key, String... flags) {
         return addPrivate(key, list -> list.popSingle(), 1, flags);
-        // for (String flag : flags) {
-        // parsers.put(flag, addValueFromList(key, ListParser::popSingle));
-        // }
-        //
-        // return this;
     }
 
     /**
-     * Uses the key's decoder to parse the next argument.
-     * 
-     * @param key
-     * @param flags
-     * @return
+     * Uses the key's decoder to parse the next argument, associating it with the given flags.
+     *
+     * @param key   the DataKey representing the value
+     * @param flags the flags associated with the key
+     * @param <V>   the value type
+     * @return the updated ArgumentsParser instance
      */
     public <V> ArgumentsParser add(DataKey<V> key, String... flags) {
         return add(key, list -> key.getDecoder().get().decode(list.popSingle()), 1, flags);
-
-        // for (String flag : flags) {
-        // parsers.put(flag, (list, dataStore) -> dataStore.add(key, key.getDecoder().get().decode(list.popSingle())));
-        // }
-        //
-        // return this;
     }
 
     /**
-     * Accepts a custom parser for the next argument.
-     * 
-     * @param key
-     * @param parser
-     * @param flags
-     * @return
+     * Accepts a custom parser for the next argument, associating it with the given flags.
+     *
+     * @param key          the DataKey representing the value
+     * @param parser       the custom parser function
+     * @param consumedArgs the number of arguments consumed by the parser
+     * @param flags        the flags associated with the key
+     * @param <V>          the value type
+     * @return the updated ArgumentsParser instance
      */
-    @SuppressWarnings("unchecked") // Unchecked cases are verified
+    @SuppressWarnings("unchecked")
     public <V> ArgumentsParser add(DataKey<V> key, Function<ListParser<String>, V> parser, Integer consumedArgs,
             String... flags) {
 
         // Check if value of the key is of type Boolean
         if (key.getValueClass().equals(Boolean.class)) {
             return addBool((DataKey<Boolean>) key, flags);
-            // return addPrivate((DataKey<Boolean>) key, list -> true, 0, flags);
         }
 
         // Check if value of the key is of type String
         if (key.getValueClass().equals(String.class)) {
             return addString((DataKey<String>) key, flags);
-            // return addPrivate((DataKey<Boolean>) key, list -> true, 0, flags);
         }
 
         return addPrivate(key, parser, consumedArgs, flags);
     }
 
+    /**
+     * Adds a key with a custom parser and flags (internal helper).
+     *
+     * @param key          the DataKey representing the value
+     * @param parser       the custom parser function
+     * @param consumedArgs the number of arguments consumed by the parser
+     * @param flags        the flags associated with the key
+     * @param <V>          the value type
+     * @return the updated ArgumentsParser instance
+     */
     private <V> ArgumentsParser addPrivate(DataKey<V> key, Function<ListParser<String>, V> parser, Integer consumedArgs,
             String... flags) {
 
@@ -223,8 +235,6 @@ public class ArgumentsParser {
             }
 
             parsers.put(flag, (list, dataStore) -> dataStore.add(key, parser.apply(list)));
-            // datakeys.put(flag, key);
-            // this.consumedArgs.put(flag, consumedArgs);
         }
 
         datakeys.put(key, Arrays.asList(flags));
@@ -233,6 +243,12 @@ public class ArgumentsParser {
         return this;
     }
 
+    /**
+     * Adds flags to be ignored during parsing.
+     *
+     * @param ignoreFlags the flags to ignore
+     * @return the updated ArgumentsParser instance
+     */
     public ArgumentsParser addIgnore(String... ignoreFlags) {
         for (String ignoreFlag : ignoreFlags) {
             this.ignoreFlags.add(ignoreFlag);
@@ -240,33 +256,4 @@ public class ArgumentsParser {
 
         return this;
     }
-
-    /**
-     * Helper method for options that do not consume parameters and just return a value for a given key.
-     * 
-     * @param key
-     * @param value
-     * @return
-     */
-    // private static <V> BiConsumer<ListParser<String>, DataStore> addValue(DataKey<V> key, V value) {
-    // return (list, dataStore) -> dataStore.add(key, value);
-    // }
-
-    /**
-     * Helper method for options that consume parameters.
-     * 
-     * @param key
-     * @param processArgs
-     * @return
-     */
-    // private static <V> BiConsumer<ListParser<String>, DataStore> addValueFromList(DataKey<V> key,
-    // Function<ListParser<String>, V> processArgs) {
-    //
-    // return (list, dataStore) -> {
-    // V value = processArgs.apply(list);
-    // dataStore.add(key, value);
-    // };
-    //
-    // }
-
 }

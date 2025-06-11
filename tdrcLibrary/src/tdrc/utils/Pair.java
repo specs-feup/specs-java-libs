@@ -14,64 +14,99 @@
 package tdrc.utils;
 
 /**
- * @author Tiago
+ * Represents a pair of values.
  *
+ * @param <K> the type of the first value
+ * @param <V> the type of the second value
  */
 public class Pair<K, V> {
 
 	private K left;
 	private V right;
 
+	/**
+	 * Creates a new instance of Pair with the specified values.
+	 *
+	 * @param <K> the type of the first value
+	 * @param <V> the type of the second value
+	 * @param left the first value
+	 * @param right the second value
+	 * @return a new Pair instance
+	 */
 	public static <K, V> Pair<K, V> newInstance(K left, V right) {
-
 		return new Pair<>(left, right);
 	}
 
+	/**
+	 * Default constructor. Initializes the pair with null values.
+	 */
 	public Pair() {
 		this.left = null;
 		this.right = null;
 	}
 
+	/**
+	 * Constructor that initializes the pair with the specified values.
+	 *
+	 * @param left the first value
+	 * @param right the second value
+	 */
 	public Pair(K left, V right) {
 		setLeft(left);
 		setRight(right);
 	}
 
+	/**
+	 * Returns a string representation of the pair.
+	 *
+	 * @return a string in the format "(left, right)"
+	 */
 	@Override
 	public String toString() {
 		return "(" + this.left + ", " + this.right + ")";
 	}
 
 	/**
-	 * @return the left
+	 * Gets the first value of the pair.
+	 *
+	 * @return the first value
 	 */
 	public K getLeft() {
 		return this.left;
 	}
 
 	/**
-	 * @param left
-	 *            the left to set
+	 * Sets the first value of the pair.
+	 *
+	 * @param left the value to set
 	 */
 	public void setLeft(K left) {
 		this.left = left;
 	}
 
 	/**
-	 * @return the right
+	 * Gets the second value of the pair.
+	 *
+	 * @return the second value
 	 */
 	public V getRight() {
 		return this.right;
 	}
 
 	/**
-	 * @param right
-	 *            the right to set
+	 * Sets the second value of the pair.
+	 *
+	 * @param right the value to set
 	 */
 	public void setRight(V right) {
 		this.right = right;
 	}
 
+	/**
+	 * Computes the hash code for the pair.
+	 *
+	 * @return the hash code
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -81,6 +116,12 @@ public class Pair<K, V> {
 		return result;
 	}
 
+	/**
+	 * Checks if this pair is equal to another object.
+	 *
+	 * @param obj the object to compare
+	 * @return true if the object is a pair with equal values, false otherwise
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -109,12 +150,4 @@ public class Pair<K, V> {
 		}
 		return true;
 	}
-
-	/*
-	 * @Override public boolean equals(Object obj) { if (!(obj instanceof Pair))
-	 * return false; Pair<?, ?> otherPair = (Pair<?, ?>) obj; return
-	 * this.getLeft().equals(otherPair.getLeft()) &&
-	 * this.getRight().equals(otherPair.getRight()); }
-	 */
-
 }

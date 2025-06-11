@@ -1,14 +1,14 @@
 /**
  * Copyright 2016 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions;
@@ -30,19 +30,18 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Class with utility methods.
- * 
- * @author JoaoBispo
+ * Utility class with static methods for jOptions operations.
  *
+ * @author JoaoBispo
  */
 public class JOptionsUtils {
 
     /**
      * Helper method which uses this class as the class for the jar path.
      * 
-     * @param optionsFilename
-     * @param storeDefinition
-     * @return
+     * @param optionsFilename the name of the options file
+     * @param storeDefinition the definition of the data store
+     * @return the loaded DataStore instance
      */
     public static DataStore loadDataStore(String optionsFilename, StoreDefinition storeDefinition) {
         return loadDataStore(optionsFilename, JOptionsUtils.class, storeDefinition);
@@ -51,11 +50,11 @@ public class JOptionsUtils {
     /**
      * Helper method which uses standard XmlPersistence as the default AppPersistence.
      * 
-     * @param optionsFilename
-     * @param storeDefinition
-     * @return
+     * @param optionsFilename the name of the options file
+     * @param classForJarPath the class used to determine the jar path
+     * @param storeDefinition the definition of the data store
+     * @return the loaded DataStore instance
      */
-
     public static DataStore loadDataStore(String optionsFilename, Class<?> classForJarPath,
             StoreDefinition storeDefinition) {
         XmlPersistence persistence = new XmlPersistence(storeDefinition);
@@ -64,7 +63,7 @@ public class JOptionsUtils {
     }
 
     /**
-     * * Loads a DataStore file, from predefined places.
+     * Loads a DataStore file from predefined locations.
      *
      * <p>
      * The method will look for the file in the following places:<br>
@@ -72,20 +71,17 @@ public class JOptionsUtils {
      * 2) In the current working folder<br>
      * 
      * <p>
-     * If finds the file in multiple locations, cumulatively adds the options to the final DataStore. If the file in the
-     * jar path is not found, it is created.
+     * If the file is found in multiple locations, options are cumulatively added to the final DataStore. If the file in
+     * the jar path is not found, it is created.
      * 
-     * 
-     * @param optionsFilename
-     * @param classForJarPath
-     * @param storeDefinition
-     * @param persistence
-     * @return
+     * @param optionsFilename the name of the options file
+     * @param classForJarPath the class used to determine the jar path
+     * @param storeDefinition the definition of the data store
+     * @param persistence the persistence mechanism to use
+     * @return the loaded DataStore instance
      */
     public static DataStore loadDataStore(String optionsFilename, Class<?> classForJarPath,
             StoreDefinition storeDefinition, AppPersistence persistence) {
-
-        // DataStore localData = DataStore.newInstance(storeDefinition);
 
         // Look for options in two places, JAR folder and current folder
         DataStore localData = loadOptionsNearJar(classForJarPath, optionsFilename, storeDefinition,
@@ -105,15 +101,13 @@ public class JOptionsUtils {
     }
 
     /**
-     * Tries to load a
+     * Tries to load options near the JAR file.
      * 
-     * @param optionsFilename
-     * @param jarFolder
-     * @param localData
-     * @param storeDefinition
-     * @param persistence
-     * 
-     * @return the options file that was used, if found
+     * @param classForJarpath the class used to determine the jar path
+     * @param optionsFilename the name of the options file
+     * @param storeDefinition the definition of the data store
+     * @param persistence the persistence mechanism to use
+     * @return the loaded DataStore instance
      */
     private static DataStore loadOptionsNearJar(Class<?> classForJarpath, String optionsFilename,
             StoreDefinition storeDefinition, AppPersistence persistence) {
@@ -150,17 +144,23 @@ public class JOptionsUtils {
         return localData;
     }
 
+    /**
+     * Saves the given DataStore to a file.
+     * 
+     * @param file the file to save the DataStore to
+     * @param data the DataStore instance to save
+     */
     public static void saveDataStore(File file, DataStore data) {
         XmlPersistence persistence = data.getStoreDefinitionTry().map(XmlPersistence::new).orElse(new XmlPersistence());
         persistence.saveData(file, data);
     }
 
     /**
-     * Executes the application. If not args are passed, launches the GUI mode, otherwise executes the CLI mode.
+     * Executes the application. If no arguments are passed, launches the GUI mode; otherwise, executes the CLI mode.
      * 
-     * @param app
-     * @param args
-     * @return
+     * @param app the application instance
+     * @param args the list of arguments
+     * @return the exit code (0 for success, -1 for failure)
      */
     public static int executeApp(App app, List<String> args) {
 
@@ -175,6 +175,14 @@ public class JOptionsUtils {
         return success ? 0 : -1;
     }
 
+    /**
+     * Executes the application kernel. If no arguments are passed, launches the GUI mode; otherwise, executes the CLI
+     * mode.
+     * 
+     * @param app the application kernel instance
+     * @param args the list of arguments
+     * @return the exit code (0 for success, -1 for failure)
+     */
     public static int executeApp(AppKernel app, List<String> args) {
         // Instantiate App from AppKernel
         return executeApp(App.newInstance(app), args);

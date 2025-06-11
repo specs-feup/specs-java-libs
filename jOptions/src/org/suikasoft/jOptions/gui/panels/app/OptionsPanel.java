@@ -39,6 +39,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * Panel which loads and can edit the options file.
+ *
+ * <p>This panel provides controls for loading, editing, and saving application options.
  * 
  * @author Joao Bispo
  */
@@ -49,7 +51,6 @@ public class OptionsPanel extends GuiTab {
     private final App app;
 
     private final BaseSetupPanel setupPanel;
-    // private DataStore optionsData;
     private final JButton saveButton;
     private final JButton saveAsButton;
     private final JLabel fileInfo;
@@ -57,6 +58,12 @@ public class OptionsPanel extends GuiTab {
 
     private File outputFile;
 
+    /**
+     * Constructs an OptionsPanel for the given application and DataStore.
+     *
+     * @param app the application instance
+     * @param data the DataStore
+     */
     public OptionsPanel(App app, DataStore data) {
         super(data);
         this.app = app;
@@ -72,15 +79,10 @@ public class OptionsPanel extends GuiTab {
         optionsPanel.setPreferredSize(new Dimension(AppFrame.PREFERRED_WIDTH + 10, AppFrame.PREFERRED_HEIGHT + 10));
         optionsPanel.setViewportView(setupPanel);
 
-        // JComponent optionsPanel = initEnumOptions(definition);
-
-        // optionsData = DataStore.newInstance(app.getDefinition());
         fileInfo = new JLabel();
         updateFileInfoString();
 
         saveButton = new JButton("Save");
-        // By default, the save button is disable, until there is a valid
-        // file to save to.
         saveButton.setEnabled(false);
         saveAsButton = new JButton("Save as...");
 
@@ -93,9 +95,6 @@ public class OptionsPanel extends GuiTab {
         savePanel.add(saveAsButton);
         savePanel.add(fileInfo);
 
-        // If optionFile no file, save button is null;
-        // Only "unnulls" after "Save As..." and after successful update.
-
         setLayout(new BorderLayout(5, 5));
         add(savePanel, BorderLayout.PAGE_START);
 
@@ -103,17 +102,21 @@ public class OptionsPanel extends GuiTab {
 
     }
 
+    /**
+     * Retrieves the panels associated with the setup.
+     *
+     * @return a map of panel names to KeyPanel objects
+     */
     public Map<String, KeyPanel<? extends Object>> getPanels() {
         return setupPanel.getPanels();
     }
 
-    // public DataStore getOptionFile() {
-    // return optionsData;
-    // }
-
+    /**
+     * Handles the action performed when the save button is clicked.
+     *
+     * @param evt the action event
+     */
     private void saveButtonActionPerformed(ActionEvent evt) {
-        // updateInternalMap();
-        // optionsData = setupPanel.getData();
         if (outputFile == null) {
             saveAsButtonActionPerformed(evt);
             return;
@@ -122,60 +125,48 @@ public class OptionsPanel extends GuiTab {
         app.getPersistence().saveData(outputFile, setupPanel.getData());
     }
 
+    /**
+     * Handles the action performed when the save-as button is clicked.
+     *
+     * @param evt the action event
+     */
     private void saveAsButtonActionPerformed(ActionEvent evt) {
-        // JFileChooser fc;
-
-        // If no output file, choose current folder
         if (outputFile == null) {
             fileChooser.setCurrentDirectory(new File("./"));
-        }
-        // If output file exists, choose as folder
-        else if (outputFile.exists()) {
+        } else if (outputFile.exists()) {
             fileChooser.setCurrentDirectory(outputFile);
-        }
-        // Otherwise, use current folder as default
-        else {
+        } else {
             fileChooser.setCurrentDirectory(new File("./"));
         }
-
-        // app.getPersistence().saveData(outputFile, setupPanel.getData());
 
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
 
-            // Files returned from this chooser cannot be folders
             outputFile = file;
             saveButton.setEnabled(true);
             updateFileInfoString();
 
-            // Update current folder path
             getData().set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(SpecsIo.getCanonicalFile(file).getParent()));
-            // getData().set(JOptionKeys.CURRENT_FOLDER_PATH, SpecsIo.getCanonicalFile(file).getParent());
-            // updateFile(file);
 
-            // Automatically save data
             app.getPersistence().saveData(outputFile, setupPanel.getData());
         }
     }
 
-    // public void updateValues(String optionsFilename) {
+    /**
+     * Updates the values in the setup panel with the given DataStore.
+     *
+     * @param map the DataStore containing the new values
+     */
     public void updateValues(DataStore map) {
-
-        // Load file
-        // optionsData = map;
-
         setupPanel.loadValues(map);
         saveButton.setEnabled(true);
         updateFileInfoString();
-
-        // Update receivers
-        // for (FileReceiver fileReceiver : fileReceivers) {
-        // fileReceiver.updateFile(file);
-        // }
-
     }
 
+    /**
+     * Updates the file information label with the current output file.
+     */
     private void updateFileInfoString() {
         File file = outputFile;
         String filename;
@@ -189,45 +180,26 @@ public class OptionsPanel extends GuiTab {
         fileInfo.setText(text);
     }
 
-    /*
-     * Sets the current option file to the given file.
-     */
-    // private void updateFile(File file) {
-    // // updateInternalMap();
-    // // optionsData = setupPanel.getData();
-    // outputFile = file;
-    // saveButton.setEnabled(true);
-    // updateFileInfoString();
-    //
-    // }
-
-    // private void updateInternalMap() {
-    // // Get info from panels
-    // optionsData = appFilePanel.getData();
-    //
-    // // Update internal optionfile
-    // // optionsData = updatedMap;
-    // }
-
     /**
-     * Can only be called after setup panels are initallized.
-     * 
-     * @param newOptionFile
+     * Retrieves the current output file.
+     *
+     * @return the output file
      */
-    // private void assignNewOptionFile(DataStore newOptionFile) {
-    // optionFile = newOptionFile;
-    // }
-
     public File getOutputFile() {
         return outputFile;
     }
 
+    /**
+     * Sets the current output file.
+     *
+     * @param outputFile the output file to set
+     */
     public void setOutputFile(File outputFile) {
         this.outputFile = outputFile;
     }
 
-    /* (non-Javadoc)
-     * @see pt.up.fe.specs.guihelper.gui.BasePanels.GuiTab#enterTab(pt.up.fe.specs.guihelper.Gui.BasePanels.TabData)
+    /**
+     * Called when entering the tab. Updates the setup panel with the current configuration.
      */
     @Override
     public void enterTab() {
@@ -241,20 +213,13 @@ public class OptionsPanel extends GuiTab {
         }
 
         updateValues(map);
-        // File outputFile = getData().get(AppKeys.CONFIG_FILE);
-        // if (outputFile == null) {
-        // return;
-        // }
-        //
-        // if (outputFile.exists()) {
-        // setOutputFile(outputFile);
-        // }
-        //
-        // if (outputFile.isFile()) {
-        // updateValues(outputFile.getPath());
-        // }
     }
 
+    /**
+     * Retrieves the DataStore based on the current configuration file.
+     *
+     * @return the DataStore
+     */
     private DataStore getDataStore() {
         File outputFile = getData().get(AppKeys.CONFIG_FILE);
         if (outputFile == null) {
@@ -271,7 +236,6 @@ public class OptionsPanel extends GuiTab {
 
         String optionsFilename = outputFile.getPath();
 
-        // Check if filename is a valid optionsfile
         File file = new File(optionsFilename);
         if (!file.isFile()) {
             SpecsLogs.getLogger().warning("Could not open file '" + optionsFilename + "'");
@@ -290,7 +254,6 @@ public class OptionsPanel extends GuiTab {
             newMap = null;
         }
 
-        // SetupData newMap = GuiHelperUtils.loadData(file);
         if (newMap == null) {
             SpecsLogs.info("Given file '" + optionsFilename + "' is not a compatible options file.");
             outputFile = null;
@@ -302,8 +265,8 @@ public class OptionsPanel extends GuiTab {
         return newMap;
     }
 
-    /* (non-Javadoc)
-     * @see pt.up.fe.specs.guihelper.gui.BasePanels.GuiTab#exitTab(pt.up.fe.specs.guihelper.Gui.BasePanels.TabData)
+    /**
+     * Called when exiting the tab. Updates the configuration file in the DataStore.
      */
     @Override
     public void exitTab() {
@@ -313,14 +276,22 @@ public class OptionsPanel extends GuiTab {
         }
     }
 
-    /* (non-Javadoc)
-     * @see pt.up.fe.specs.guihelper.gui.BasePanels.GuiTab#getTabName()
+    /**
+     * Retrieves the name of the tab.
+     *
+     * @return the tab name
      */
     @Override
     public String getTabName() {
         return "Options";
     }
 
+    /**
+     * Retrieves the panel associated with the given DataKey.
+     *
+     * @param key the DataKey
+     * @return the KeyPanel associated with the key
+     */
     public KeyPanel<? extends Object> getPanel(DataKey<?> key) {
         var panel = getPanels().get(key.getName());
 
