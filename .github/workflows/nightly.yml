@@ -36,7 +36,6 @@ jobs:
 
       - name: Build and test all Gradle projects sequentially
         run: |
-          set -e
           projects=(
             AsmParser
             CommonsCompressPlus
@@ -57,12 +56,20 @@ jobs:
             tdrcLibrary
             XStreamPlus
           )
+          failed=()
           for project in "${projects[@]}"; do
             echo "\n===== Building and testing $project ====="
             cd "$project"
-            gradle build test
+            if ! gradle build test; then
+              echo "[ERROR] $project failed to build or test"
+              failed+=("$project")
+            fi
             cd -
           done
+          if [ ${#failed[@]} -ne 0 ]; then
+            echo "\nThe following projects failed: ${failed[*]}"
+            exit 1
+          fi
         env:
           GITHUB_DEPENDENCY_GRAPH_ENABLED: false
 
@@ -72,9 +79,3 @@ jobs:
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
           summary: true
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-builds
-          path: '**/build/libs/'
