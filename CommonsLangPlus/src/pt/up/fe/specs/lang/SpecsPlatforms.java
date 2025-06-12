@@ -89,30 +89,5 @@ public class SpecsPlatforms {
         return SystemUtils.IS_OS_MAC;
     }
 
-    /*
-    public static Process getShell() {
-        String cmd = getShellCommand();
-
-        ProcessBuilder builder = new ProcessBuilder(cmd);
-
-        try {
-            return builder.start();
-        } catch (IOException e) {
-            throw new RuntimeException("Could not start process " + cmd);
-        }
-    }
-
-    public static String getShellCommand() {
-        if (isWindows()) {
-            return "cmd.exe /start";
-        }
-
-        if (isUnix()) {
-            return "/bin/bash";
-        }
-
-        throw new RuntimeException("No shell defined for platform " + getPlatformName());
-    }
-    */
-
+    // TODO: Implement shell-related utilities if needed in the future.
 }
