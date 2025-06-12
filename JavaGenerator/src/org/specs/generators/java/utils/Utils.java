@@ -8,7 +8,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 package org.specs.generators.java.utils;
 
@@ -18,14 +18,15 @@ import pt.up.fe.specs.util.SpecsIo;
 
 import java.io.File;
 
+/**
+ * Utility class for Java code generation tasks, such as indentation, file output, and string manipulation.
+ */
 public class Utils {
 
     private static final String INDENTER = "    ";
 
-    // private static final String INDENTER = "\t";
-
     /**
-     * Returns a {@link StringBuilder} containing the desired indentation
+     * Returns a {@link StringBuilder} containing the desired indentation.
      *
      * @param indentation the level of indentation
      * @return {@link StringBuilder} with indentation
@@ -39,13 +40,13 @@ public class Utils {
     }
 
     /**
-     * Generates the java class/enum/interface into the requested folder, according to the class' package
+     * Generates the Java class/enum/interface into the requested folder, according to the class' package.
      *
-     * @param outputDir
-     * @param java      the class to generate and write in the output folder
-     * @param replace   replace existing file?
+     * @param outputDir the output directory
+     * @param java the class to generate and write in the output folder
+     * @param replace whether to replace existing file
+     * @return true if the file was written or replaced, false otherwise
      */
-
     public static boolean generateToFile(File outputDir, ClassType java, boolean replace) {
         final String pack = java.getClassPackage();
         final String name = java.getName();
@@ -54,11 +55,11 @@ public class Utils {
     }
 
     /**
-     * Create the file path according to the package of the class/interface
+     * Creates the file path according to the package of the class/interface.
      *
      * @param outputDir the output directory
-     * @param pack      the class/interface package
-     * @param name      the class/interface name
+     * @param pack the class/interface package
+     * @param name the class/interface name
      * @return {@link File} containing the new file path
      */
     private static File getFilePath(File outputDir, String pack, String name) {
@@ -75,11 +76,12 @@ public class Utils {
     }
 
     /**
-     * Write the java code in an output file
+     * Writes the Java code to an output file.
      *
-     * @param outputFile the file destiny of the code
-     * @param java       the code to generate and write;
-     * @param replace    replace existing file?
+     * @param outputFile the file destination of the code
+     * @param java the code to generate and write
+     * @param replace whether to replace existing file
+     * @return true if the file was written or replaced, false otherwise
      */
     private static boolean writeToFile(File outputFile, IGenerate java, boolean replace) {
         final StringBuilder generatedJava = java.generateCode(0);
@@ -90,19 +92,33 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Creates the directory if it does not exist.
+     *
+     * @param dir the directory to create
+     */
     public static void makeDirs(File dir) {
         if (!dir.exists()) {
             dir.mkdirs();
         }
     }
 
+    /**
+     * Capitalizes the first character of the given string.
+     *
+     * @param string the input string
+     * @return the string with the first character in uppercase
+     */
     public static String firstCharToUpper(String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
+    /**
+     * Returns the newline character.
+     *
+     * @return the newline character
+     */
     public static String ln() {
         return "\n";
-        //return SpecsIo.getNewline();
     }
-
 }
