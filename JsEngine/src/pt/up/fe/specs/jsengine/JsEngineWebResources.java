@@ -28,7 +28,7 @@ public interface JsEngineWebResources {
      * @return a new instance of WebResourceProvider
      */
     static WebResourceProvider create(String resourceUrl, String version) {
-        return WebResourceProvider.newInstance("http://specs.fe.up.pt/resources/jsengine/", resourceUrl, version);
+        return WebResourceProvider.newInstance("https://specs.fe.up.pt/resources/jsengine/", resourceUrl, version);
     }
 
     /**
