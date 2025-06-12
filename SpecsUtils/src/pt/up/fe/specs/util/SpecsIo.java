@@ -73,7 +73,10 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
- * Methods for quick and simple manipulation of files, folders and other input/output related operations.
+ * Utility methods for input/output operations.
+ * <p>
+ * Provides static helper methods for reading, writing, and managing files and resources.
+ * </p>
  *
  * @author Joao Bispo
  */

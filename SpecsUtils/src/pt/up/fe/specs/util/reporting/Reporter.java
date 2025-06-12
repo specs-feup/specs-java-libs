@@ -1,11 +1,11 @@
-/**
- * Copyright 2015 SPeCS.
- * 
+/*
+ * Copyright 2015 SPeCS Research Group.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -18,10 +18,12 @@ import java.io.PrintStream;
 import pt.up.fe.specs.util.Preconditions;
 
 /**
- * An interface to unify the error/warning reporting system.
- * 
- * @author Luís Reis
+ * Interface for reporting messages and events.
+ * <p>
+ * Used for logging, error reporting, and user feedback.
+ * </p>
  *
+ * @author Luís Reis
  */
 public interface Reporter {
     /**
@@ -43,8 +45,19 @@ public interface Reporter {
      */
     public void emitMessage(MessageType type, String message);
 
+    /**
+     * Prints the stack trace to the provided PrintStream.
+     * 
+     * @param reportStream
+     *            The stream where the stack trace will be printed.
+     */
     public void printStackTrace(PrintStream reportStream);
 
+    /**
+     * Retrieves the PrintStream used for reporting.
+     * 
+     * @return The PrintStream used for reporting.
+     */
     public PrintStream getReportStream();
 
     /**
@@ -73,6 +86,7 @@ public interface Reporter {
      * Emits a default warning message.
      * 
      * @param message
+     *            The warning message to be emitted.
      */
     public default void warn(String message) {
 	emitMessage(MessageType.WARNING_TYPE, message);
@@ -82,6 +96,7 @@ public interface Reporter {
      * Emits a default info message.
      * 
      * @param message
+     *            The info message to be emitted.
      */
     public default void info(String message) {
 	emitMessage(MessageType.INFO_TYPE, message);
@@ -91,6 +106,8 @@ public interface Reporter {
      * Emits a default error message.
      * 
      * @param message
+     *            The error message to be emitted.
+     * @return A RuntimeException containing the error message.
      */
     public default RuntimeException error(String message) {
 	return emitError(MessageType.ERROR_TYPE, message);
