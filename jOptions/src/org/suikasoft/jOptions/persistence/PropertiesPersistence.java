@@ -14,7 +14,6 @@
 package org.suikasoft.jOptions.persistence;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.JOptionKeys;

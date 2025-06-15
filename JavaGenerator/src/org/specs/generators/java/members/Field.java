@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.specs.generators.java.IGenerate;
-import org.specs.generators.java.classtypes.JavaClass;
 import org.specs.generators.java.enums.Annotation;
 import org.specs.generators.java.enums.Modifier;
 import org.specs.generators.java.enums.Privacy;
