@@ -148,7 +148,7 @@ public class ListUtils {
         List<Pair<T, V>> pairs = new ArrayList<>(left.length * right.length);
         for (T t : left) {
             for (V v : right) {
-                pairs.add(Pair.newInstance(t, v));
+                pairs.add(new Pair<>(t, v));
             }
         }
         return pairs;
@@ -166,7 +166,7 @@ public class ListUtils {
     public static <T, V> List<Pair<T, V>> createPairs(List<T> left, List<V> right) {
 
         List<Pair<T, V>> pairs = new ArrayList<>(left.size() * right.size());
-        left.forEach(l -> right.forEach(r -> pairs.add(Pair.newInstance(l, r))));
+        left.forEach(l -> right.forEach(r -> pairs.add(new Pair<>(l, r))));
         return pairs;
     }
 

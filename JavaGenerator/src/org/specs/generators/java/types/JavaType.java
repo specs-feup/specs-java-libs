@@ -143,8 +143,8 @@ public class JavaType {
             }
 
             final Pair<String, Integer> splittedType = JavaTypeFactory.splitTypeFromArrayDimension(name);
-            name = splittedType.getLeft();
-            arrayDimension = splittedType.getRight();
+            name = splittedType.left();
+            arrayDimension = splittedType.right();
         }
         setEnum(false);
         setName(name);
@@ -267,7 +267,7 @@ public class JavaType {
     public String toString() {
         String toString = (hasPackage() ? _package + "." : "") + name;
         if (isArray()) {
-            toString += StringUtils.repeat("[]", arrayDimension);
+            toString += "[]".repeat(arrayDimension);
         }
         return toString;
     }
@@ -280,7 +280,7 @@ public class JavaType {
     public String getSimpleType() {
         String toString = name + genericsToString();
         if (isArray()) {
-            toString += StringUtils.repeat("[]", arrayDimension);
+            toString += "[]".repeat(arrayDimension);
         }
         return toString;
     }
@@ -293,7 +293,7 @@ public class JavaType {
     public String getCanonicalType() {
         String toString = getCanonicalName() + genericsToCanonicalString();
         if (isArray()) {
-            toString += StringUtils.repeat("[]", arrayDimension);
+            toString += "[]".repeat(arrayDimension);
         }
         return toString;
     }

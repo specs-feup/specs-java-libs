@@ -143,9 +143,9 @@ public class TupleUtils {
                 for (int i = 0; i < tuple.size(); i++) {
                     sum += Math.pow(tuple.get(i) - tuple2.get(i), 2);
                 }
-                distances.add(Pair.newInstance(tuple2, (float) Math.sqrt(sum)));
+                distances.add(new Pair<>(tuple2, (float) Math.sqrt(sum)));
             }
-            Collections.sort(distances, (t1, t2) -> t1.getRight().compareTo(t2.getRight()));
+            Collections.sort(distances, (t1, t2) -> t1.right().compareTo(t2.right()));
             eucledianMap.put(tuple, distances);
         }
         return eucledianMap;
