@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 SPeCS.
+ * Copyright 2025 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -20,17 +20,20 @@ import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.providers.StringProvider;
 
+/**
+ * Utility class for DataClass-related operations.
+ *
+ * <p>This class provides static methods for safely converting DataClass values to strings, handling cycles and common types.
+ */
 public class DataClassUtils {
 
     /**
      * Properly converts to string the value of a DataClass.
-     * 
-     * <p>
-     * Simply calling toString() on a DataClass value might cause infinite cycles, in case there are circular
-     * dependences.
-     * 
-     * @param dataClassValue
-     * @return
+     *
+     * <p>Simply calling toString() on a DataClass value might cause infinite cycles, in case there are circular dependencies.
+     *
+     * @param dataClassValue the value to convert
+     * @return a string representation of the value
      */
     public static String toString(Object dataClassValue) {
         if (dataClassValue instanceof StringProvider) {

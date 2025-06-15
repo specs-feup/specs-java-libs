@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 SPeCS Research Group.
+ * Copyright 2025 SPeCS Research Group.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -16,6 +16,8 @@ package org.suikasoft.jOptions.app;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 /**
+ * Kernel class for jOptions applications.
+ * 
  * @author Joao Bispo
  *
  */
@@ -23,8 +25,10 @@ public interface AppKernel {
 
     /**
      * The main method of the app.
+     * Executes the application with the given options.
      * 
-     * @return
+     * @param options the configuration options for the application
+     * @return an integer representing the result of the execution
      */
     int execute(DataStore options);
 }

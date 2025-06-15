@@ -284,7 +284,6 @@ public class InstructionFormatParser {
         return DataStore.newInstance(StoreDefinitions.fromInterface(nodeClass), true);
     }
 
-    @SuppressWarnings("unchecked")
     private <T extends InstructionFormatNode> T newNode(Class<T> nodeClass) {
         var data = newDataStore(nodeClass);
 

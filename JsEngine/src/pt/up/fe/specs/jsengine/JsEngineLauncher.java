@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 SPeCS.
+ * Copyright 2025 SPeCS.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,8 +13,16 @@
 
 package pt.up.fe.specs.jsengine;
 
+/**
+ * Utility class for launching JavaScript engines and managing their lifecycle.
+ */
 public class JsEngineLauncher {
 
+    /**
+     * Main method for launching JavaScript engines and evaluating sample scripts.
+     * 
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         var engine = JsEngineType.GRAALVM_COMPAT.newEngine();
 

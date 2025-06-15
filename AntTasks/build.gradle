@@ -1,0 +1,51 @@
+plugins {
+    id 'distribution'
+    id 'java'
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Repositories providers
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation "junit:junit:4.13.1"
+
+    implementation ':jOptions'
+    implementation ':SpecsUtils'
+
+    // Ivy dependencies
+    implementation group: 'org.apache.ant', name: 'ant', version: '1.9.1'
+    implementation group: 'org.apache.ivy', name: 'ivy', version: '2.5.0-rc1'
+    implementation group: 'org.apache.ant', name: 'ant-jsch', version: '1.10.5'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+    implementation group: 'com.io7m.xom', name: 'xom', version: '1.2.10'
+}
+
+// Project sources
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+
+    test {
+        java {
+            srcDir 'test'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
