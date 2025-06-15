@@ -33,76 +33,17 @@ public class DataStoreXml extends ObjectXml<DataStore> {
 
         LIBRARY_CLASSES.put("StringList", StringList.class);
         LIBRARY_CLASSES.put("SimpleDataStore", SimpleDataStore.class);
-
     }
 
-    private final StoreDefinition storeDefinition;
 
     public DataStoreXml(StoreDefinition storeDefinition) {
-        this.storeDefinition = storeDefinition;
         addMappings(LIBRARY_CLASSES);
-        // configureXstream(keys);
         configureXstream(storeDefinition);
     }
-
-    /*
-    private <T> void configureXstream(Collection<DataKey<?>> keys) {
-        // TODO: This breaks compatibility with previous configuration files
-    
-        // Collect classes and codecs
-        Map<Class<?>, StringCodec<?>> codecs = new HashMap<>();
-    
-        for (var key : keys) {
-            var decoder = key.getDecoder().orElse(null);
-            if (decoder == null) {
-                SpecsLogs.warn("String encoder/decoder not set for data key of class '" + key.getValueClass() + "'");
-            }
-    
-            codecs.put(key.getValueClass(), decoder);
-        }
-    
-        // Register converters
-        for (var entry : codecs.entrySet()) {
-            if (entry.getValue() == null) {
-                continue;
-            }
-            // System.out.println("Registering " + entry.getKey());
-            registerConverter((Class<Object>) entry.getKey(), (StringCodec<Object>) entry.getValue());
-        }
-    
-        System.out.println("codecs:" + codecs.keySet());
-        // var xstream = registerConverter(new StringConverter(supportedClass, codec));
-        // registerConverter(JsonStringList.class, JsonStringList.getCodec());
-    }
-    */
 
     private void configureXstream(StoreDefinition storeDefinition) {
         // For compatibility with old Clava config files
         getXStreamFile().getXstream().registerConverter(new JsonStringListXstreamConverter());
-        /*
-        // Collect XStream converters
-        Set<Converter> converters = new HashSet<>();
-        
-        for (var key : storeDefinition.getKeys()) {
-            var converter = key.getXstreamConverter();
-            if (converter == null) {
-                // SpecsLogs.warn("XStream converter not set for data key of class '" + key.getValueClass() + "'");
-                continue;
-            }
-        
-            if (!(converter instanceof Converter)) {
-                SpecsLogs.warn("Specified a XStream converter that is not of type Converter: " + converter.getClass());
-                continue;
-            }
-        
-            converters.add((Converter) converter);
-        }
-        
-        // Register converters
-        for (var converter : converters) {
-            getXStreamFile().getXstream().registerConverter(converter);
-        }
-        */
     }
 
     @Override

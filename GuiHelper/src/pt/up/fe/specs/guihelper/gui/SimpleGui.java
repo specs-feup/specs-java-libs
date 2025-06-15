@@ -20,7 +20,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import pt.up.fe.specs.guihelper.App;
-import pt.up.fe.specs.guihelper.gui.AppFrame;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 /**

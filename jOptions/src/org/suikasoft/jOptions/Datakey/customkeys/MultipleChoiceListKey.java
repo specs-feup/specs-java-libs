@@ -40,7 +40,6 @@ public class MultipleChoiceListKey<T> extends GenericKey<List<T>> {
      * @param id the key id
      * @param availableChoices the list of available choices
      */
-    @SuppressWarnings("unchecked")
     public MultipleChoiceListKey(String id, List<T> availableChoices) {
         super(id, new ArrayList<>(availableChoices), null, null, null, null, null, null, null, null,
                 new DataKeyExtraData());
