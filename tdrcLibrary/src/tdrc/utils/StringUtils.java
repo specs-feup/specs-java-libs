@@ -190,7 +190,10 @@ public class StringUtils {
      * @param toRepeat the string to repeat
      * @param repeat the number of times to repeat the string
      * @return the repeated string
+     * 
+     * @deprecated Use {@link String#repeat(int)} instead, which is available in Java 11 and later.
      */
+    @Deprecated
     public static String repeat(String toRepeat, int repeat) {
 	if (toRepeat == null || repeat < 0) {
 	    return null;
