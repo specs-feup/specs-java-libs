@@ -1,0 +1,4 @@
+rootProject.name = 'GitlabPlus'
+
+includeBuild("../../specs-java-libs/GsonPlus")
+includeBuild("../../specs-java-libs/SpecsUtils")

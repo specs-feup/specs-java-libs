@@ -1,0 +1,55 @@
+plugins {
+    id 'distribution'
+    id 'java'
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Repositories providers
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation "junit:junit:4.13.1"
+
+    implementation ':CommonsLangPlus'
+    implementation ':GuiHelper'
+    implementation ':SpecsUtils'
+    implementation ':XStreamPlus'
+    implementation ':jOptions'
+
+    implementation group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.6.0.202305301015-r'
+    implementation group: 'com.google.guava', name: 'guava', version: '19.0'
+    implementation group: 'org.apache.ant', name: 'ant-jsch', version: '1.10.13'
+    implementation group: 'org.apache.ivy', name: 'ivy', version: '2.5.1'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+}
+
+// Project sources
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+            srcDir 'src-psfbuilder'
+            srcDir 'builds'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+
+    test {
+        java {
+            srcDir 'test'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
