@@ -54,7 +54,6 @@ public class TestTilingDistances {
                 .findFirst();
         List<Tuple<Integer>> rows = first.get().getValue().keySet().stream().map(invertedNormMap::get)
                 .collect(Collectors.toList());
-        // IoUtils.append(out, StringUtils.join(rows, ";"));
         Function<Tuple<Integer>, String> tuple2String = tuple -> "("
                 + StringUtils.join(tuple, val -> String.format("%1$04d", val), ";") + ")";
         String separator = " ,";
@@ -93,10 +92,9 @@ public class TestTilingDistances {
             String firstTuple = "\n" + tuple2String.apply(invertedNormMap.get(entry.getKey())) + separator;
             for (Pair<Tuple<Float>, Float> tuple2 : entry.getValue()) {
                 builder.append(firstTuple);
-                builder.append(tuple2String.apply(invertedNormMap.get(tuple2.getLeft())));
+                builder.append(tuple2String.apply(invertedNormMap.get(tuple2.left())));
                 builder.append(separator);
-                builder.append(tuple2.getRight());
-                // + StringUtils.join(entry.getValue().values(), separator)
+                builder.append(tuple2.right());
             }
         }
         SpecsIo.append(out, builder.toString());
@@ -106,10 +104,8 @@ public class TestTilingDistances {
         for (Entry<Tuple<Float>, List<Pair<Tuple<Float>, Float>>> entry : eucledianDistances.entrySet()) {
             String firstTuple = "\n" + tuple2String.apply(invertedNormMap.get(entry.getKey())) + separator;
             builder.append(firstTuple);
-            builder.append(StringUtils.join(entry.getValue(), p -> tuple2String.apply(invertedNormMap.get(p.getLeft())),
+            builder.append(StringUtils.join(entry.getValue(), p -> tuple2String.apply(invertedNormMap.get(p.left())),
                     separator));
-            // + StringUtils.join(entry.getValue().values(), separator)
-
         }
         SpecsIo.append(out, builder.toString());
     }
