@@ -37,10 +37,13 @@ jobs:
       - name: Build and test all Gradle projects sequentially
         run: |
           projects=(
+            AntTasks
             AsmParser
             CommonsCompressPlus
             CommonsLangPlus
+            EclipseUtils
             GearmanPlus
+            GitlabPlus
             GitPlus
             Gprofer
             GsonPlus
@@ -51,10 +54,13 @@ jobs:
             jOptions
             JsEngine
             LogbackPlus
+            MvelPlus
+            SlackPlus
             SpecsUtils
             SymjaPlus
             tdrcLibrary
             XStreamPlus
+            Z3Helper
           )
           failed=()
           for project in "${projects[@]}"; do
