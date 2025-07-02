@@ -6,8 +6,8 @@ This repository contains 29+ Java utility libraries developed by the SPeCS Resea
 
 ## 2. Development Environment & Setup
 
-- **Java Version:** 17 (required for all projects)
-- **Build System:** Gradle (with VSCode integration)
+- **Java Version:** 17+ (required for all projects)
+- **Build System:** Gradle (with VSCode integration) 
 - **IDE:** VSCode is recommended for development and project management.
 
 ## 3. Architecture & Dependencies
@@ -16,6 +16,11 @@ This repository contains 29+ Java utility libraries developed by the SPeCS Resea
 - **Layered Dependencies:** Libraries may depend on each other (e.g., JsEngine depends on CommonsLangPlus, jOptions, SpecsUtils).
 - **External Dependencies:** Managed via Maven Central and Gradle.
 - **Namespace:** All code is under the `pt.up.fe.specs.*` package structure.
+
+### Related Projects
+- **lara-framework**: Core framework providing weaver infrastructure and JavaScript APIs; uses SpecsUtils, jOptions, and other core libraries.
+- **clava**: C/C++ source-to-source compiler built on LARA framework; depends on multiple libraries from this repository.
+- **kadabra**: Java source-to-source compiler built on LARA framework; also built on top of utilities provided by this repository.
 
 ## 4. Library Categories & Descriptions
 
@@ -62,6 +67,13 @@ This repository contains 29+ Java utility libraries developed by the SPeCS Resea
 - **Configuration:** Use `jOptions` for managing application settings.
 - **JavaScript Integration:** Use `JsEngine` to run JS code from Java.
 - **Git Operations:** Use `GitPlus` for cloning and managing repositories.
+
+
+## References
+
+- **Main Repository**: https://github.com/specs-feup/specs-java-libs
+- **Build System**: Gradle-based multi-project build
+
 
 ---
 
