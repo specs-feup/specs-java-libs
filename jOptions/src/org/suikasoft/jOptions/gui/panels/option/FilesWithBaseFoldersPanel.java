@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 SPeCS Research Group.
+ * Copyright 2025 SPeCS Research Group.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -24,8 +24,9 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.gui.KeyPanel;
 
 /**
+ * Panel for editing mappings of files to base folders using a text field.
  *
- * @author Joao Bispo
+ * <p>This panel provides a text field for DataKey values of type Map<File, File> in the GUI.
  */
 public class FilesWithBaseFoldersPanel extends KeyPanel<Map<File, File>> {
 
@@ -36,6 +37,12 @@ public class FilesWithBaseFoldersPanel extends KeyPanel<Map<File, File>> {
      */
     private final JTextField textField;
 
+    /**
+     * Constructs a FilesWithBaseFoldersPanel for the given DataKey and DataStore.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     */
     public FilesWithBaseFoldersPanel(DataKey<Map<File, File>> key, DataStore data) {
         super(key, data);
 
@@ -46,26 +53,43 @@ public class FilesWithBaseFoldersPanel extends KeyPanel<Map<File, File>> {
 
     }
 
+    /**
+     * Sets the text of the text field.
+     *
+     * @param text the text to set
+     */
     public void setText(String text) {
         textField.setText(text);
     }
 
+    /**
+     * Gets the text from the text field.
+     *
+     * @return the text in the field
+     */
     public String getText() {
         return textField.getText();
     }
 
+    /**
+     * Returns the current value as a map of files to base folders.
+     *
+     * @return the map value
+     */
     @Override
     public Map<File, File> getValue() {
         return getKey().decode(getText());
     }
 
+    /**
+     * Sets the value of the text field from a map.
+     *
+     * @param value the map value to set
+     * @param <ET> the type of value (extends Map<File, File>)
+     */
     @Override
     public <ET extends Map<File, File>> void setValue(ET value) {
-        // System.out.println("DATA: " + getData());
-        // Simplify value before setting
-        // System.out.println("ORIGINAL VALUE: " + value);
         var simplifiedValue = getKey().getCustomSetter().get().get(value, getData());
-        // System.out.println("SIMPLIFIED VALUE:\n" + simplifiedValue);
         setText(getKey().encode(simplifiedValue));
     }
 

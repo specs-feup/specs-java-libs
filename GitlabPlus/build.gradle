@@ -1,0 +1,32 @@
+plugins {
+    id 'distribution'
+    id 'java'
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Repositories providers
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation ':GsonPlus'
+    implementation ':SpecsUtils'
+
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.4'
+}
+
+// Project sources
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}

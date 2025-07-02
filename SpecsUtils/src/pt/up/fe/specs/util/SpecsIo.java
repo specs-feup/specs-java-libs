@@ -1,5 +1,9 @@
 /*
- * Copyright 2009 SPeCS Research Group.
+ * SpecsIo.java
+ *
+ * Utility class for input/output operations, including file reading, writing, and resource management. Provides static helper methods for common I/O tasks in the SPeCS ecosystem.
+ *
+ * Copyright 2025 SPeCS Research Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -73,7 +77,10 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
- * Methods for quick and simple manipulation of files, folders and other input/output related operations.
+ * Utility methods for input/output operations.
+ * <p>
+ * Provides static helper methods for reading, writing, and managing files and resources.
+ * </p>
  *
  * @author Joao Bispo
  */
@@ -2092,38 +2099,6 @@ public class SpecsIo {
     public static File getWorkingDir() {
         return new File(".");
     }
-
-    /**
-     * Returns the name of each parent folder in an array.
-     * <p>
-     * The File ./parent1/parent2/file.f will return the value {., parent1, parent2, file.f}
-     *
-     * @param file
-     *            The file to check.
-     *
-     * @return the name of each parent folder in an array.
-     */
-    /*
-    public static String[] getParentNames(File file) {
-    
-    final String WINDOWS = "\\";
-    final String LINUX = "/";
-    
-    String[] parents;
-    String path = file.getAbsolutePath();
-    
-    if (path.contains(WINDOWS)) {
-    
-        parents = path.split(Pattern.quote(WINDOWS));
-        // parents = StringUtils.split(path, WINDOWS);
-    } else { // if (path.contains(LINUX))
-    	 // parents = StringUtils.split(LINUX);
-        parents = path.split(Pattern.quote(LINUX));
-    }
-    
-    return parents;
-    }
-     */
 
     public static List<String> getParentNames(File file) {
         List<String> names = new ArrayList<>();

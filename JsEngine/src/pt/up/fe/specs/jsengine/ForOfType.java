@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 SPeCS.
+ * Copyright 2025 SPeCS.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,10 +13,18 @@
 
 package pt.up.fe.specs.jsengine;
 
+/**
+ * Enum representing the types of iteration supported by JavaScript 'for...of' loops.
+ */
 public enum ForOfType {
 
-    // Natively supports 'for(var a of...)
+    /**
+     * Represents native support for 'for(var a of...)' loops.
+     */
     NATIVE,
-    // Support the code 'for each (...' as for-each implementation
+
+    /**
+     * Represents support for 'for each (...' as a for-each implementation.
+     */
     FOR_EACH;
 }
