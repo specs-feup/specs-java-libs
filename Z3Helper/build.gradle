@@ -10,11 +10,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
+    implementation files('/SupportJavaLibs/libs/z3/com.microsoft.z3.jar')
+
     implementation ':CommonsLangPlus'
     implementation ':SpecsUtils'
 }
