@@ -19,7 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -299,16 +299,13 @@ public class SpecsStrings {
      * @return the long represented by the string, or 0L if it couldn't be parsed.
      */
     public static BigInteger parseBigInteger(String intNumber) {
-        // Long longResult = null;
         try {
-            BigInteger bigInt = new BigInteger(intNumber);
-            return bigInt;
-            // longResult = Long.valueOf(longNumber);
+            return new BigInteger(intNumber);
         } catch (NumberFormatException e) {
             return null;
+        } catch (NullPointerException e) {
+            return null;
         }
-
-        // return longResult;
     }
 
     /**
@@ -452,7 +449,7 @@ public class SpecsStrings {
      * @return the string, with the desired size
      */
     public static String padLeft(String string, int length) {
-        return String.format("%1$#" + length + "s", string);
+        return padLeft(string, length, ' ');
     }
 
     /**
@@ -462,6 +459,8 @@ public class SpecsStrings {
      *            a string
      * @param length
      *            length the size we want the string to be
+     * @param c
+     *            the character to pad with
      * @return the string, with the desired size
      */
     public static String padLeft(String string, int length, char c) {
@@ -590,11 +589,14 @@ public class SpecsStrings {
 
     public static String replace(String template, Map<String, String> mappings) {
 
-        for (String key : mappings.keySet()) {
-            String macro = key;
-            String replacement = mappings.get(key);
+        // iterate over the map
+        for (var entry : mappings.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
 
-            template = template.replace(macro, replacement);
+            // replace all occurrences of the key in the template with the value
+            template = template.replace(key, value);
+
         }
 
         return template;
@@ -648,28 +650,16 @@ public class SpecsStrings {
     }
 
     public static List<String> getRegex(String contents, Pattern pattern) {
-
+        List<String> matches = new ArrayList<>();
         try {
-
-            // Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
-
             Matcher regexMatcher = pattern.matcher(contents);
-            if (regexMatcher.find()) {
-                int numGroups = regexMatcher.groupCount();
-                List<String> capturedGroups = SpecsFactory.newArrayList();
-                for (int i = 0; i < numGroups; i++) {
-                    // Index 0 is always the whole string, first capturing group is always 1.
-                    int groupIndex = i + 1;
-                    capturedGroups.add(regexMatcher.group(groupIndex));
-                }
-
-                return capturedGroups;
+            while (regexMatcher.find()) {
+                matches.add(regexMatcher.group()); // group() returns the full match
             }
         } catch (PatternSyntaxException ex) {
             SpecsLogs.warn(ex.getMessage());
         }
-
-        return Collections.emptyList();
+        return matches;
     }
 
     public static boolean matches(String contents, Pattern pattern) {
@@ -771,20 +761,23 @@ public class SpecsStrings {
     @Deprecated
     public static String getAlphaId(int number) {
 
-        // Using alphabet (base 23
-
-        String numberAsString = Integer.toString(number);
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < numberAsString.length(); i++) {
-            char originalChar = numberAsString.charAt(i);
-            int singleNumber = Character.getNumericValue(originalChar);
-            char newChar = (char) (singleNumber + 65);
-            builder.append(newChar);
-
+        // Portuguese alphabet (23 letters, skipping K, W, Y)
+        final char[] PT_ALPHABET = {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Z'
+        };
+        final int ALPHABET_SIZE = PT_ALPHABET.length;
+        if (number < 0) {
+            throw new IllegalArgumentException("Number must be non-negative");
         }
-
-        return builder.toString();
+        StringBuilder sb = new StringBuilder();
+        int n = number;
+        do {
+            int rem = n % ALPHABET_SIZE;
+            sb.append(PT_ALPHABET[rem]);
+            n = n / ALPHABET_SIZE - 1;
+        } while (n >= 0);
+        return sb.reverse().toString();
     }
 
     /**
@@ -817,14 +810,20 @@ public class SpecsStrings {
 
     public static String toString(TimeUnit timeUnit) {
         switch (timeUnit) {
+        case NANOSECONDS:
+            return "ns";
         case MICROSECONDS:
             return "us";
         case MILLISECONDS:
             return "ms";
-        case NANOSECONDS:
-            return "ns";
         case SECONDS:
             return "s";
+        case MINUTES:
+            return "m";
+        case HOURS:
+            return "h";
+        case DAYS:
+            return "d";
         default:
             SpecsLogs.getLogger().warning("Case not defined:" + timeUnit);
             return "";
@@ -975,6 +974,10 @@ public class SpecsStrings {
 
     public static Character charAt(String string, int charIndex) {
 
+        if (string == null || string.length() == 0) {
+            return null;
+        }
+
         try {
             char c = string.charAt(charIndex);
             return c;
@@ -1117,7 +1120,7 @@ public class SpecsStrings {
     }
 
     public static boolean isEmpty(String string) {
-        return string.length() == 0;
+        return string == null || string.length() == 0;
     }
 
     /**
@@ -1199,10 +1202,16 @@ public class SpecsStrings {
         NumberFormat doubleFormat = NumberFormat.getNumberInstance(Locale.UK);
         doubleFormat.setMaximumFractionDigits(2);
 
-        // Check millis
-        // long millis = nanos / 1000000;
-        double millis = (double) nanos / 1000000;
+        if (nanos < 1000) {
+            return doubleFormat.format(nanos) + "ns";
+        }
 
+        double micros = (double) nanos / 1000;
+        if (micros < 1000) {
+            return doubleFormat.format(micros) + "us";
+        }
+
+        double millis = (double) micros / 1000;
         if (millis < 1000) {
             return doubleFormat.format(millis) + "ms";
         }
@@ -1512,7 +1521,7 @@ public class SpecsStrings {
         int counter = 0;
 
         // Greater or equal because table has an entry for the value 0
-        while (currentBytes > 1024 && counter <= SpecsStrings.SIZE_SUFFIXES.size()) {
+        while (currentBytes >= 1024 && counter <= SpecsStrings.SIZE_SUFFIXES.size()) {
             currentBytes = currentBytes / 1024;
             counter++;
         }
@@ -1552,7 +1561,7 @@ public class SpecsStrings {
         byte[] bytes = new byte[(text.length() / 2)];
 
         for (int i = 0; i < text.length(); i += 2) {
-            bytes[i / 2] = Byte.parseByte(text.substring(i, i + 2), 16);
+            bytes[i / 2] = (byte) Integer.parseInt(text.substring(i, i + 2), 16);
         }
 
         try {
@@ -1689,20 +1698,20 @@ public class SpecsStrings {
     }
 
     /**
-     * Remove all occurrences of 'pattern' from 'string'.
+     * Remove all occurrences of 'match' from 'string'.
      * 
      * @param string
-     * @param pattern
+     * @param match
      * @return
      */
-    public static String remove(String string, String pattern) {
+    public static String remove(String string, String match) {
         String currentString = string;
 
         int classIndex = -1;
-        while ((classIndex = currentString.indexOf(pattern)) != -1) {
-            // Remove pattern
+        while ((classIndex = currentString.indexOf(match)) != -1) {
+            // Remove match
             currentString = currentString.subSequence(0, classIndex)
-                    + currentString.substring(classIndex + pattern.length());
+                    + currentString.substring(classIndex + match.length());
         }
 
         return currentString;
@@ -1843,6 +1852,16 @@ public class SpecsStrings {
     }
 
     /**
+     * Overload which lets select the used separator and capitalizes the first letter.
+     * 
+     * @param string
+     * @return
+     */
+    public static String toCamelCase(String string, String separator) {
+        return toCamelCase(string, separator, true);
+    }
+
+    /**
      * Transforms a string into camelCase.
      * 
      * <p>
@@ -1855,9 +1874,12 @@ public class SpecsStrings {
      */
     public static String toCamelCase(String string, String separator, boolean capitalizeFirstLetter) {
 
-        // Split string using provided separator
-        String[] words = string.split(separator);
+        // Escape the separator to be used in regex
+        String escapedSeparator = Pattern.quote(separator);
 
+        // Split string using provided separator
+        String[] words = string.split(escapedSeparator);
+    
         String camelCaseString = Arrays.stream(words)
                 // Remove empty words
                 .filter(word -> !word.isEmpty())
@@ -1952,7 +1974,10 @@ public class SpecsStrings {
     }
 
     public static String toPercentage(double fraction) {
-        return MessageFormat.format("{0,number,#.##%}", fraction);
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setDecimalSeparator(',');
+        DecimalFormat df = new DecimalFormat("##0.00", symbols);
+        return df.format(fraction * 100) + "%";
     }
 
     /**
@@ -2054,6 +2079,11 @@ public class SpecsStrings {
      * @return
      */
     public static MultiMap<String, String> parsePathList(String pathList, String separator) {
+
+        if (pathList == null || pathList.isBlank()) {
+            return new MultiMap<>();
+        }
+
         // Separate into prefixes
         MultiMap<String, String> prefixPaths = new MultiMap<>();
         // List<String> pathsWithoutPrefix = new ArrayList<>();

@@ -181,7 +181,7 @@ public class SpecsLogging {
         parsedMessage += getLogSuffix(logSuffix, stackTrace);
 
         // New line
-        if (!msg.isEmpty()) {
+        if (msg != null && !msg.isEmpty()) {
             parsedMessage += NEWLINE;
         }
 

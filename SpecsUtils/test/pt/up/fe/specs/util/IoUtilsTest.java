@@ -13,158 +13,172 @@
 
 package pt.up.fe.specs.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
+/**
+ * Test suite for SpecsIo utility class.
+ * 
+ * This test class covers I/O functionality including:
+ * - Relative path calculation
+ * - URL parsing and query parsing
+ * - Path list parsing
+ * - File operations
+ */
+@DisplayName("SpecsIo Tests")
 public class IoUtilsTest {
 
-    /**
-     * Tests for getRelativePath
-     */
-    /*
-    public void testGetRelativePathsUnix() {
-        assertEquals("stuff/xyz.dat", ResourceUtils.getRelativePath("/var/data/stuff/xyz.dat", "/var/data/", "/"));
-        assertEquals("../../b/c", ResourceUtils.getRelativePath("/a/b/c", "/a/x/y/", "/"));
-        assertEquals("../../b/c", ResourceUtils.getRelativePath("/m/n/o/a/b/c", "/m/n/o/a/x/y/", "/"));
-    }
-    
-    
-    public void testGetRelativePathDirectoryToFile() {
-        String target = "C:\\Windows\\Boot\\Fonts\\chs_boot.ttf";
-        String base = "C:\\Windows\\Speech\\Common\\";
-    
-        String relPath = ResourceUtils.getRelativePath(target, base, "\\");
-        assertEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", relPath);
-    }
-    
-    public void testGetRelativePathFileToDirectory() {
-        String target = "C:\\Windows\\Boot\\Fonts";
-        String base = "C:\\Windows\\Speech\\Common\\foo.txt";
-    
-        String relPath = ResourceUtils.getRelativePath(target, base, "\\");
-        assertEquals("..\\..\\Boot\\Fonts", relPath);
-    }
-    
-    public void testGetRelativePathDirectoryToDirectory() {
-        String target = "C:\\Windows\\Boot\\";
-        String base = "C:\\Windows\\Speech\\Common\\";
-        String expected = "..\\..\\Boot";
-    
-        String relPath = ResourceUtils.getRelativePath(target, base, "\\");
-        assertEquals(expected, relPath);
-    }
-    
-    public void testGetRelativePathDifferentDriveLetters() {
-        String target = "D:\\sources\\recovery\\RecEnv.exe";
-        String base = "C:\\Java\\workspace\\AcceptanceTests\\Standard test data\\geo\\";
-    
-        try {
-            ResourceUtils.getRelativePath(target, base, "\\");
-            fail();
-    
-        } catch (PathResolutionException ex) {
-            // expected exception
+    @Nested
+    @DisplayName("Relative Path Operations")
+    class RelativePathOperations {
+
+        @Test
+        @DisplayName("getRelativePath should calculate correct relative path from file to file")
+        void testGetRelativePath_FileToFile_ReturnsCorrectPath() {
+            File target = new File("Windows/Boot/Fonts/chs_boot.ttf");
+            File base = new File("Windows/Speech/Common/sapisvr.exe");
+
+            String relPath = SpecsIo.getRelativePath(target, base);
+            assertThat(relPath).isEqualTo("../../Boot/Fonts/chs_boot.ttf");
+        }
+
+        @Test
+        @DisplayName("getRelativePath should handle relative files correctly")
+        void testGetRelativePath_RelativeFile_ReturnsCorrectPath() {
+            File target = new File("SharedLibrary/../a/b/test.dat");
+            File base = new File("./");
+
+            String relPath = SpecsIo.getRelativePath(target, base);
+            assertThat(relPath).isEqualTo("a/b/test.dat");
+        }
+
+        @Test
+        @DisplayName("getRelativePath should handle files in same folder")
+        void testGetRelativePath_SameFolder_ReturnsCorrectPath() {
+            File target = new File("lib/b.h");
+            File base = new File("lib/a.h");
+
+            String relPath = SpecsIo.getRelativePath(target, base);
+            assertThat(relPath).isEqualTo("b.h");
+        }
+
+        @Test
+        @DisplayName("getRelativePath should handle files in different folders")
+        void testGetRelativePath_DifferentFolders_ReturnsCorrectPath() {
+            File target = new File("lib/b.h");
+            File base = new File("lib2/a.h");
+
+            String relPath = SpecsIo.getRelativePath(target, base);
+            assertThat(relPath).isEqualTo("../lib/b.h");
+        }
+
+        @Test
+        @DisplayName("getRelativePath should handle null inputs gracefully")
+        void testGetRelativePath_NullInputs_ShouldHandleGracefully() {
+            assertThatCode(() -> {
+                SpecsIo.getRelativePath(null, new File("test"));
+            }).doesNotThrowAnyException();
+
+            assertThatCode(() -> {
+                SpecsIo.getRelativePath(new File("test"), null);
+            }).doesNotThrowAnyException();
         }
     }
-     */
-    /*
-    @Test
-    public void getRelativePathTest() {
-    File file = new File("D:/temp/result.txt");
-    String relativePath = IoUtils.getRelativePath(file);
-    System.out.println(relativePath);
-    //fail("Not yet implemented");
-    }
-     */
 
-    @Test
-    public void testGetRelativePathFileToFile() {
-        File target = new File("Windows/Boot/Fonts/chs_boot.ttf");
-        File base = new File("Windows/Speech/Common/sapisvr.exe");
+    @Nested
+    @DisplayName("Path Parsing Operations")
+    class PathParsingOperations {
 
-        String relPath = SpecsIo.getRelativePath(target, base);
-        assertEquals("../../Boot/Fonts/chs_boot.ttf", relPath);
-    }
+        @Test
+        @DisplayName("parsePathList should parse simple path list correctly")
+        void testParsePathList_SimplePaths_ReturnsCorrectMap() {
+            var result = SpecsStrings.parsePathList("path1; path2  ; path3", ";");
+            assertThat(result.toString()).isEqualTo("{=[path1, path2, path3]}");
+        }
 
-    @Test
-    public void testGetRelativePathRelativeFile() {
-        File target = new File("SharedLibrary/../a/b/test.dat");
-        File base = new File("./");
+        @Test
+        @DisplayName("parsePathList should parse path list with prefixes correctly")
+        void testParsePathList_WithPrefixes_ReturnsCorrectMap() {
+            var result = SpecsStrings.parsePathList("path1$prefix/$path2;path3$$path4", ";");
+            assertThat(result.toString()).isEqualTo("{=[path1, path4], prefix/=[path2, path3]}");
+        }
 
-        String relPath = SpecsIo.getRelativePath(target, base);
-        assertEquals("a/b/test.dat", relPath);
-    }
+        @Test
+        @DisplayName("parsePathList should handle empty paths gracefully")
+        void testParsePathList_EmptyPaths_ShouldHandleGracefully() {
+            assertThatCode(() -> {
+                SpecsStrings.parsePathList("", ";");
+            }).doesNotThrowAnyException();
+        }
 
-    @Test
-    public void testGetRelativePathRelativeSameFolder() {
-        File target = new File("lib/b.h");
-        File base = new File("lib/a.h");
-
-        String relPath = SpecsIo.getRelativePath(target, base);
-        assertEquals("b.h", relPath);
-    }
-
-    @Test
-    public void testGetRelativePathRelativeDiffFolder() {
-        File target = new File("lib/b.h");
-        File base = new File("lib2/a.h");
-
-        String relPath = SpecsIo.getRelativePath(target, base);
-        assertEquals("../lib/b.h", relPath);
-    }
-
-    public void testMd5() {
-        System.out.println(
-                "MD5:" + SpecsIo
-                        .getMd5(new File("C:\\Users\\JoaoBispo\\Desktop\\jstest\\auto-doc\\assets\\anchor.js")));
-        // assertEquals("../lib/b.h", relPath);
-    }
-
-    /*
-    @Test
-    public void getParentNamesTest() {
-    File file = new File("D:/temp/result.txt");
-    List<String> names = IoUtils.getParentNames(file);
-    System.out.println("Names:" + names);
-    }
-     */
-
-    /*
-    @Test
-    public void resourceTest() {
-    LineReader lineReader = LineReader.createLineReader(IoUtils.getResourceString(""));
-    for (String line : lineReader) {
-        if (line.endsWith(".properties")) {
-    	System.out.println("RESOURCE " + lineReader.getLastLineIndex() + ":");
-    	System.out.println(IoUtils.getResourceString(line));
+        @Test
+        @DisplayName("parsePathList should handle null inputs gracefully")
+        void testParsePathList_NullInputs_ShouldHandleGracefully() {
+            assertThatCode(() -> {
+                SpecsStrings.parsePathList(null, ";");
+            }).doesNotThrowAnyException();
         }
     }
-    
-    assertTrue(true);
+
+    @Nested
+    @DisplayName("URL Parsing Operations")
+    class UrlParsingOperations {
+
+        @Test
+        @DisplayName("parseUrl and parseUrlQuery should parse URL with query parameters correctly")
+        void testParseUrl_WithQueryParameters_ReturnsCorrectComponents() {
+            var urlString = "https://github.com/specs-feup/clava.git?folder=benchmarks/NAS&another=stuff";
+
+            var urlOptional = SpecsIo.parseUrl(urlString);
+            assertThat(urlOptional).isPresent();
+            
+            var url = urlOptional.get();
+            var query = SpecsIo.parseUrlQuery(url);
+
+            assertThat(url.getProtocol()).isEqualTo("https");
+            assertThat(url.getHost()).isEqualTo("github.com");
+            assertThat(url.getPath()).isEqualTo("/specs-feup/clava.git");
+            assertThat(query.get("folder")).isEqualTo("benchmarks/NAS");
+            assertThat(query.get("another")).isEqualTo("stuff");
+        }
+
+        @Test
+        @DisplayName("parseUrl should handle invalid URLs gracefully")
+        void testParseUrl_InvalidUrl_ReturnsEmpty() {
+            var result = SpecsIo.parseUrl("not-a-valid-url");
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("parseUrl should handle null input gracefully")
+        void testParseUrl_NullInput_ShouldHandleGracefully() {
+            assertThatCode(() -> {
+                SpecsIo.parseUrl(null);
+            }).doesNotThrowAnyException();
+        }
     }
-     */
-    @Test
-    public void testParsePathList() {
-        assertEquals("{=[path1, path2, path3]}", SpecsStrings.parsePathList("path1; path2  ; path3", ";").toString());
-        assertEquals("{=[path1, path4], prefix/=[path2, path3]}",
-                SpecsStrings.parsePathList("path1$prefix/$path2;path3$$path4", ";").toString());
 
+    @Nested
+    @DisplayName("File Operations")
+    class FileOperations {
+
+        @Test
+        @DisplayName("MD5 calculation should work without throwing exceptions")
+        void testMd5_ShouldNotThrowException() {
+            // This is more of a smoke test since we can't rely on specific files existing
+            assertThatCode(() -> {
+                // Create a temporary file or use a known file that exists
+                File tempFile = new File(System.getProperty("java.io.tmpdir"), "test.txt");
+                if (tempFile.exists()) {
+                    SpecsIo.getMd5(tempFile);
+                }
+            }).doesNotThrowAnyException();
+        }
     }
 
-    @Test
-    public void testParseUrl() {
-        var urlString = "https://github.com/specs-feup/clava.git?folder=benchmarks/NAS&another=stuff";
-
-        var url = SpecsIo.parseUrl(urlString).get();
-        var query = SpecsIo.parseUrlQuery(url);
-
-        assertEquals("https", url.getProtocol());
-        assertEquals("github.com", url.getHost());
-        assertEquals("/specs-feup/clava.git", url.getPath());
-        assertEquals("benchmarks/NAS", query.get("folder"));
-        assertEquals("stuff", query.get("another"));
-    }
 }

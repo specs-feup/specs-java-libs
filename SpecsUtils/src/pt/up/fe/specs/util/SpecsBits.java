@@ -494,6 +494,14 @@ public class SpecsBits {
      *         signalBit value.
      */
     public static String signExtend(String binaryValue, int signalBit) {
+        if (binaryValue == null || binaryValue.isEmpty()) {
+            throw new IllegalArgumentException("Binary value cannot be null or empty.");
+        }
+
+        if (signalBit < 0) {
+            throw new IllegalArgumentException("Signal bit must be a non-negative integer.");
+        }
+        
         // If bit is not represented in the binary value, value does not need sign extension
         if (signalBit >= binaryValue.length()) {
             return binaryValue;

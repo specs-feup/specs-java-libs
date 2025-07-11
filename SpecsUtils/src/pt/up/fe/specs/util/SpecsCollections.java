@@ -273,8 +273,16 @@ public class SpecsCollections {
      * @return
      */
     public static <T> int getFirstIndex(List<? super T> list, Class<T> aClass) {
+        if (list == null || list.isEmpty()) {
+            return -1;
+        }
+
+        var comparator = (aClass == null) ? (Predicate<Object>) (o -> o == null)
+                : (Predicate<Object>) aClass::isInstance;
+                
+        // Find first index that matches the class
         for (int i = 0; i < list.size(); i++) {
-            if (aClass.isInstance(list.get(i))) {
+            if (comparator.test(list.get(i))) {
                 return i;
             }
         }

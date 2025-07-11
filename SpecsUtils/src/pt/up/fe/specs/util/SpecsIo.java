@@ -1988,7 +1988,7 @@ public class SpecsIo {
      * @return the relative path of the file given in parameter.
      */
     public static String getRelativePath(File file, File baseFile) {
-        return getRelativePath(file, baseFile, false).get();
+        return getRelativePath(file, baseFile, false).orElse(null);
     }
 
     /**
@@ -2001,6 +2001,10 @@ public class SpecsIo {
      */
     public static Optional<String> getRelativePath(File file, File baseFile, boolean isStrict) {
 
+        if ((file == null) || (baseFile == null)) {
+            SpecsLogs.warn("File or baseFile is null. File: " + file + "; BaseFile: " + baseFile);
+            return Optional.empty();
+        }
         File originalFile = file;
         File originalBaseFile = baseFile;
         if (!baseFile.isDirectory()) {
@@ -2024,7 +2028,7 @@ public class SpecsIo {
                     "Could not convert given files to canonical paths. File: " + originalFile + "; Base file: "
                             + originalBaseFile,
                     e);
-            return null;
+            return Optional.empty();
         }
 
         // If paths are equal, return empty string

@@ -3,10 +3,12 @@ package pt.up.fe.specs.util.threadstream;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
+@DisplayName("MultiConsumer Tests")
 public class MultiConsumerTest {
 
     /*
@@ -79,6 +81,7 @@ public class MultiConsumerTest {
     }
 
     @Test
+    @DisplayName("Should handle multiple consumer threads correctly")
     public void test() {
 
         // host for threads

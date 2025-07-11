@@ -13,25 +13,30 @@
 
 package pt.up.fe.specs.util.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
+@DisplayName("SpecsArray Tests")
 public class SpecsArrayTest {
 
     @Test
+    @DisplayName("Should return -1 for non-array objects")
     public void notArray() {
-        assertEquals(-1, SpecsArray.getLength("hello"));
+        assertThat(SpecsArray.getLength("hello")).isEqualTo(-1);
     }
 
     @Test
+    @DisplayName("Should return correct length for int arrays")
     public void intArray() {
-        assertEquals(10, SpecsArray.getLength(new int[10]));
+        assertThat(SpecsArray.getLength(new int[10])).isEqualTo(10);
     }
 
     @Test
+    @DisplayName("Should return correct length for object arrays")
     public void objectArray() {
-        assertEquals(9, SpecsArray.getLength(new String[9]));
+        assertThat(SpecsArray.getLength(new String[9])).isEqualTo(9);
     }
 
 }

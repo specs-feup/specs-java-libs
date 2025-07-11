@@ -13,26 +13,60 @@
 
 package pt.up.fe.specs.util;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+/**
+ * Test suite for SpecsLogs utility class.
+ * 
+ * This test class covers logging functionality including:
+ * - Warning level logging
+ * - Exception logging
+ * - Basic logging operations
+ */
+@DisplayName("SpecsLogs Tests")
 public class SpecsLogsTest {
 
-    @BeforeClass
-    public static void init() {
+    @BeforeAll
+    static void init() {
         SpecsSystem.programStandardInit();
     }
 
     @Test
-    public void test() {
+    @DisplayName("Should log warning message without throwing exception")
+    void testWarnLogging_BasicMessage_ShouldNotThrowException() {
+        // This test verifies that logging doesn't throw exceptions
+        assertThatCode(() -> SpecsLogs.warn("Warning level"))
+                .doesNotThrowAnyException();
+    }
 
-        SpecsLogs.warn("Warning level");
+    @Test
+    @DisplayName("Should log warning with exception without throwing exception")
+    void testWarnLogging_WithException_ShouldNotThrowException() {
+        assertThatCode(() -> {
+            try {
+                throwException();
+            } catch (Exception e) {
+                SpecsLogs.warn("Catching an exception", e);
+            }
+        }).doesNotThrowAnyException();
+    }
 
-        try {
-            throwException();
-        } catch (Exception e) {
-            SpecsLogs.warn("Catching an exception", e);
-        }
+    @Test
+    @DisplayName("Should handle null message gracefully")
+    void testWarnLogging_NullMessage_ShouldNotThrowException() {
+        assertThatCode(() -> SpecsLogs.warn(null))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Should handle empty message gracefully")
+    void testWarnLogging_EmptyMessage_ShouldNotThrowException() {
+        assertThatCode(() -> SpecsLogs.warn(""))
+                .doesNotThrowAnyException();
     }
 
     private static void throwException() {

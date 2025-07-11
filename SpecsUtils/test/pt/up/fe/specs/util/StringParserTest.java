@@ -13,107 +13,190 @@
 
 package pt.up.fe.specs.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import pt.up.fe.specs.util.stringparser.StringParser;
 import pt.up.fe.specs.util.stringparser.StringParsers;
 import pt.up.fe.specs.util.stringsplitter.StringSplitter;
 import pt.up.fe.specs.util.stringsplitter.StringSplitterRules;
 
+/**
+ * Test suite for StringParser and StringSplitter utility classes.
+ * 
+ * This test class covers string parsing functionality including:
+ * - Double quoted string parsing
+ * - Word parsing and splitting
+ * - Number parsing (integers, doubles, floats)
+ * - Custom separators and reverse parsing
+ */
+@DisplayName("StringParser Tests")
 public class StringParserTest {
 
-    @Test
-    public void doubleQuotedString() {
+    @Nested
+    @DisplayName("Double Quoted String Parsing")
+    class DoubleQuotedStringParsing {
 
-        assertEquals("hello", new StringParser("\"hello\"").apply(StringParsers::parseDoubleQuotedString));
-        assertEquals("hel\\\"lo", new StringParser("\"hel\\\"lo\"").apply(StringParsers::parseDoubleQuotedString));
+        @Test
+        @DisplayName("parseDoubleQuotedString should parse simple quoted strings correctly")
+        void testDoubleQuotedString_SimpleQuotes_ReturnsCorrectString() {
+            String result = new StringParser("\"hello\"").apply(StringParsers::parseDoubleQuotedString);
+            assertThat(result).isEqualTo("hello");
+        }
+
+        @Test
+        @DisplayName("parseDoubleQuotedString should handle escaped quotes correctly")
+        void testDoubleQuotedString_EscapedQuotes_ReturnsCorrectString() {
+            String result = new StringParser("\"hel\\\"lo\"").apply(StringParsers::parseDoubleQuotedString);
+            assertThat(result).isEqualTo("hel\\\"lo");
+        }
+
+        @Test
+        @DisplayName("parseDoubleQuotedString should handle empty quotes")
+        void testDoubleQuotedString_EmptyQuotes_ReturnsEmptyString() {
+            String result = new StringParser("\"\"").apply(StringParsers::parseDoubleQuotedString);
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("parseDoubleQuotedString should throw exception for malformed quotes")
+        void testDoubleQuotedString_MalformedQuotes_ShouldThrowException() {
+            assertThatThrownBy(() -> {
+                new StringParser("\"unclosed").apply(StringParsers::parseDoubleQuotedString);
+            }).isInstanceOf(RuntimeException.class)
+              .hasMessageContaining("Could not find a valid end delimiter");
+        }
     }
 
-    @Test
-    public void testWord() {
+    @Nested
+    @DisplayName("Word Parsing")
+    class WordParsing {
 
-        String testString = "word1 word2\tword3  word4";
+        @Test
+        @DisplayName("StringSplitter should parse words correctly with various whitespace")
+        void testWord_VariousWhitespace_ParsesCorrectly() {
+            String testString = "word1 word2\tword3  word4";
+            StringSplitter parser = new StringSplitter(testString);
 
-        // By default, trim after parsing is true
-        StringSplitter parser = new StringSplitter(testString);
+            String word1 = parser.parse(StringSplitterRules::string);
+            assertThat(word1).isEqualTo("word1");
+            assertThat(parser.toString()).isEqualTo("word2\tword3  word4");
 
-        String word1 = parser.parse(StringSplitterRules::string);
-        assertEquals("word1", word1);
-        assertEquals("word2\tword3  word4", parser.toString());
+            Optional<String> word2 = parser.parseTry(StringSplitterRules::string);
+            assertThat(word2).hasValue("word2");
+            assertThat(parser.toString()).isEqualTo("word3  word4");
 
-        Optional<String> word2 = parser.parseTry(StringSplitterRules::string);
-        assertEquals("word2", word2.get());
-        assertEquals("word3  word4", parser.toString());
+            Optional<String> failedCheck = parser.parseIf(StringSplitterRules::string,
+                    string -> string.equals("non-existing word"));
+            assertThat(failedCheck).isEmpty();
+            assertThat(parser.toString()).isEqualTo("word3  word4");
 
-        Optional<String> failedCheck = parser.parseIf(StringSplitterRules::string,
-                string -> string.equals("non-existing word"));
-        assertFalse(failedCheck.isPresent());
-        assertEquals("word3  word4", parser.toString());
+            Optional<String> word3 = parser.parseIf(StringSplitterRules::string,
+                    string -> string.equals("word3"));
+            assertThat(word3).hasValue("word3");
+            assertThat(parser.toString()).isEqualTo("word4");
 
-        Optional<String> word3 = parser.parseIf(StringSplitterRules::string,
-                string -> string.equals("word3"));
-        assertEquals("word3", word3.get());
-        assertEquals("word4", parser.toString());
+            Optional<String> word4 = parser.peekIf(StringSplitterRules::string,
+                    string -> string.equals("word4"));
+            assertThat(word4).hasValue("word4");
+            assertThat(parser.toString()).isEqualTo("word4");
 
-        Optional<String> word4 = parser.peekIf(StringSplitterRules::string,
-                string -> string.equals("word4"));
-        assertEquals("word4", word4.get());
-        assertEquals("word4", parser.toString());
-
-        boolean hasWord4 = parser.check(StringSplitterRules::string, string -> string.equals("word4"));
-        assertTrue(hasWord4);
-        assertTrue(parser.isEmpty());
+            boolean hasWord4 = parser.check(StringSplitterRules::string, string -> string.equals("word4"));
+            assertThat(hasWord4).isTrue();
+            assertThat(parser.isEmpty()).isTrue();
+        }
     }
 
-    @Test
-    public void testNumbers() {
-        String testString = "1 2.0 3.0f";
-        StringSplitter parser = new StringSplitter(testString);
+    @Nested
+    @DisplayName("Number Parsing")
+    class NumberParsing {
 
-        Integer integer = parser.parse(StringSplitterRules::integer);
-        assertEquals(Integer.valueOf(1), integer);
-        assertEquals("2.0 3.0f", parser.toString());
+        @Test
+        @DisplayName("StringSplitter should parse different number types correctly")
+        void testNumbers_DifferentTypes_ParsesCorrectly() {
+            String testString = "1 2.0 3.0f";
+            StringSplitter parser = new StringSplitter(testString);
 
-        Double aDouble = parser.parse(StringSplitterRules::doubleNumber);
-        assertEquals(Double.valueOf(2.0), aDouble);
-        assertEquals("3.0f", parser.toString());
+            Integer integer = parser.parse(StringSplitterRules::integer);
+            assertThat(integer).isEqualTo(1);
+            assertThat(parser.toString()).isEqualTo("2.0 3.0f");
 
-        Float aFloat = parser.parse(StringSplitterRules::floatNumber);
-        assertEquals(Float.valueOf(3.0f), aFloat);
-        assertTrue(parser.isEmpty());
+            Double aDouble = parser.parse(StringSplitterRules::doubleNumber);
+            assertThat(aDouble).isEqualTo(2.0);
+            assertThat(parser.toString()).isEqualTo("3.0f");
 
+            Float aFloat = parser.parse(StringSplitterRules::floatNumber);
+            assertThat(aFloat).isEqualTo(3.0f);
+            assertThat(parser.isEmpty()).isTrue();
+        }
+
+        @Test
+        @DisplayName("StringSplitter should handle invalid numbers gracefully")
+        void testNumbers_InvalidNumbers_ShouldHandleGracefully() {
+            StringSplitter parser = new StringSplitter("not-a-number");
+
+            assertThatCode(() -> {
+                parser.parseTry(StringSplitterRules::integer);
+            }).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("StringSplitter should handle empty input for numbers")
+        void testNumbers_EmptyInput_ShouldHandleGracefully() {
+            StringSplitter parser = new StringSplitter("");
+
+            assertThatCode(() -> {
+                parser.parseTry(StringSplitterRules::integer);
+            }).doesNotThrowAnyException();
+        }
     }
 
-    @Test
-    public void testReverseAndSeparator() {
-        String testString = "word1 word2,word3, word4";
-        StringSplitter parser = new StringSplitter(testString);
+    @Nested
+    @DisplayName("Custom Separators and Reverse Parsing")
+    class CustomSeparatorsAndReverseParsing {
 
-        String word1 = parser.parse(StringSplitterRules::string);
-        assertEquals("word1", word1);
-        assertEquals("word2,word3, word4", parser.toString());
+        @Test
+        @DisplayName("StringSplitter should handle custom separators and reverse parsing")
+        void testReverseAndSeparator_CustomConfiguration_ParsesCorrectly() {
+            String testString = "word1 word2,word3, word4";
+            StringSplitter parser = new StringSplitter(testString);
 
-        parser.setSeparator(aChar -> aChar == ',');
+            String word1 = parser.parse(StringSplitterRules::string);
+            assertThat(word1).isEqualTo("word1");
+            assertThat(parser.toString()).isEqualTo("word2,word3, word4");
 
-        String word2 = parser.parse(StringSplitterRules::string);
-        assertEquals("word2", word2);
-        assertEquals("word3, word4", parser.toString());
+            parser.setSeparator(aChar -> aChar == ',');
 
-        parser.setReverse(true);
+            String word2 = parser.parse(StringSplitterRules::string);
+            assertThat(word2).isEqualTo("word2");
+            assertThat(parser.toString()).isEqualTo("word3, word4");
 
-        String word4 = parser.parse(StringSplitterRules::string);
-        assertEquals("word4", word4);
-        assertEquals("word3", parser.toString());
+            parser.setReverse(true);
 
-        String word3 = parser.parse(StringSplitterRules::string);
-        assertEquals("word3", word3);
-        assertTrue(parser.isEmpty());
+            String word4 = parser.parse(StringSplitterRules::string);
+            assertThat(word4).isEqualTo("word4");
+            assertThat(parser.toString()).isEqualTo("word3");
+
+            String word3 = parser.parse(StringSplitterRules::string);
+            assertThat(word3).isEqualTo("word3");
+            assertThat(parser.isEmpty()).isTrue();
+        }
+
+        @Test
+        @DisplayName("StringSplitter should handle empty strings with custom separators")
+        void testCustomSeparator_EmptyString_ShouldHandleGracefully() {
+            StringSplitter parser = new StringSplitter("");
+            parser.setSeparator(aChar -> aChar == ',');
+
+            assertThatCode(() -> {
+                parser.parseTry(StringSplitterRules::string);
+            }).doesNotThrowAnyException();
+        }
     }
 
 }
