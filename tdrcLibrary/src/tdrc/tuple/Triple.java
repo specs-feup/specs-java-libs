@@ -117,4 +117,34 @@ public class Triple<X, Y, Z> {
         return "(" + x + "," + y + "," + z + ")";
     }
 
+    /**
+     * Checks if this Triple is equal to another object.
+     *
+     * @param obj the object to compare with
+     * @return true if the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Triple<?, ?, ?> triple = (Triple<?, ?, ?>) obj;
+        return java.util.Objects.equals(x, triple.x) &&
+               java.util.Objects.equals(y, triple.y) &&
+               java.util.Objects.equals(z, triple.z);
+    }
+
+    /**
+     * Returns the hash code for this Triple.
+     *
+     * @return the hash code
+     */
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(x, y, z);
+    }
+
 }

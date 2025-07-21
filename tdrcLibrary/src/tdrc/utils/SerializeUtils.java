@@ -56,7 +56,7 @@ public class SerializeUtils {
 		try (ObjectInputStream obj_in = new ObjectInputStream(inputStream)) {
 			// Read object from stream
 			return targetClass.cast(obj_in.readObject());
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException | ClassNotFoundException | ClassCastException e) {
 			throw new RuntimeException("Problem during deserialization.", e);
 		}
 	}

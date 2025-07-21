@@ -53,6 +53,9 @@ public class StringUtils {
      * @return true if the string is a reserved keyword, false otherwise
      */
     public static boolean isJavaKeyword(String keyword) {
+        if (keyword == null) {
+            return false;
+        }
 	return (Arrays.binarySearch(StringUtils.keywords, keyword) >= 0);
     }
 
@@ -147,7 +150,9 @@ public class StringUtils {
      */
     public static <T> String join(Collection<T> collection, String separator) {
 
-	final String joinedArguments = collection.stream().map(Object::toString).collect(Collectors.joining(separator));
+	final String joinedArguments = collection.stream()
+	        .map(obj -> obj == null ? "null" : obj.toString())
+	        .collect(Collectors.joining(separator));
 	return joinedArguments;
     }
 
@@ -213,12 +218,16 @@ public class StringUtils {
      * @param doc the XML Document to convert
      * @param identAmount the amount of indentation
      * @return the StringBuffer representation of the XML Document
+     * @throws IllegalArgumentException if doc is null
      * @throws TransformerFactoryConfigurationError if there is a configuration error in the TransformerFactory
      * @throws TransformerConfigurationException if there is a configuration error in the Transformer
      * @throws TransformerException if there is an error during the transformation
      */
     public static StringBuffer xmlToStringBuffer(Document doc, int identAmount)
-	    throws TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
+	    throws IllegalArgumentException, TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
+        if (doc == null) {
+            throw new IllegalArgumentException("Document cannot be null");
+        }
 	final TransformerFactory transfac = TransformerFactory.newInstance();
 	final Transformer trans = transfac.newTransformer();
 

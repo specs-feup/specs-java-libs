@@ -81,6 +81,8 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
      */
     private Tuple() {
         tuple = new ArrayList<>();
+        this.comparator = Tuple::defaultComparator;
+        this.distanceCalculator = Tuple::defaultDistanceCalculator;
     }
 
     /**
@@ -155,7 +157,7 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
             return false;
         }
         for (int i = 0; i < size; i++) {
-            if (!tuple.get(i).equals(this.tuple.get(i))) {
+            if (!java.util.Objects.equals(tuple.get(i), this.tuple.get(i))) {
                 return false;
             }
         }

@@ -65,7 +65,7 @@ public class FileUtils {
 		for (final File f : dir.listFiles()) {
 			if (f.isDirectory() && recursive) { // Necessary to give priority to files in current directory
 				folders.add(f);
-			} else if (SpecsIo.getExtension(f).matches(extension)) {
+			} else if (!f.isDirectory() && SpecsIo.getExtension(f).matches(extension)) {
 				files.add(f);
 			}
 		}
