@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.persistence;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.suikasoft.GsonPlus.JsonStringListXstreamConverter;
@@ -21,7 +22,6 @@ import org.suikasoft.jOptions.DataStore.SimpleDataStore;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.utilities.StringList;
 
 public class DataStoreXml extends ObjectXml<DataStore> {
@@ -29,7 +29,7 @@ public class DataStoreXml extends ObjectXml<DataStore> {
     private static final Map<String, Class<?>> LIBRARY_CLASSES;
 
     static {
-        LIBRARY_CLASSES = SpecsFactory.newHashMap();
+        LIBRARY_CLASSES = new HashMap<>();
 
         LIBRARY_CLASSES.put("StringList", StringList.class);
         LIBRARY_CLASSES.put("SimpleDataStore", SimpleDataStore.class);

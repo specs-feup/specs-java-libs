@@ -15,6 +15,7 @@ package pt.up.fe.specs.eclipse;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,6 @@ import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
 import pt.up.fe.specs.guihelper.SetupFieldOptions.DefaultValue;
 import pt.up.fe.specs.guihelper.SetupFieldOptions.MultipleChoice;
 import pt.up.fe.specs.guihelper.SetupFieldOptions.MultipleSetup;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.properties.SpecsProperties;
 import pt.up.fe.specs.util.utilities.StringList;
 
@@ -134,7 +134,7 @@ public enum EclipseDeploymentSetup implements SetupFieldEnum, MultipleSetup, Mul
     }
 
     public static ListOfSetupDefinitions getTasksDefinitions() {
-        List<Class<? extends SetupFieldEnum>> setups = SpecsFactory.newArrayList();
+        List<Class<? extends SetupFieldEnum>> setups = new ArrayList<>();
 
         setups.addAll(TaskUtils.getTasks().keySet());
         // setups.add(FtpSetup.class);

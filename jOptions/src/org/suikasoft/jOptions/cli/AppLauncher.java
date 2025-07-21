@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.cli;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +23,6 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.App;
 
 import pt.up.fe.specs.util.SpecsCollections;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -42,7 +42,7 @@ public class AppLauncher {
      */
     public AppLauncher(App app) {
         this.app = app;
-        resources = SpecsFactory.newArrayList();
+        resources = new ArrayList<>();
         baseFolder = null;
     }
 
@@ -118,7 +118,7 @@ public class AppLauncher {
         if (firstArg.startsWith("base_folder=")) {
             firstArg = firstArg.substring("base_folder=".length());
             baseFolder = SpecsIo.existingFolder(null, firstArg);
-            args = SpecsFactory.newArrayList(args);
+            args = new ArrayList<>(args);
             args.remove(0);
         }
 
