@@ -42,6 +42,12 @@ public class RemoveMinusMultTransform implements VisitAllTransform {
         if (!(node instanceof SymjaFunction)) {
             return;
         }
+        
+        // Check if node has sufficient children
+        if (node.getNumChildren() < 3) {
+            return;
+        }
+        
         var operator = node.getChild(SymjaOperator.class, 0);
         var symbol = operator.get(SymjaOperator.OPERATOR);
         if (symbol != Operator.Times) {
