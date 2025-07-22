@@ -15,6 +15,7 @@ package org.specs.generators.java.types;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import tdrc.utils.Pair;
 import tdrc.utils.StringUtils;
@@ -49,8 +50,25 @@ public class JavaType {
      * @param thisClass the {@link Class} to base the type on
      */
     public JavaType(Class<?> thisClass) {
-        this(thisClass.getSimpleName(), thisClass.getPackage().getName(), thisClass.isArray());
-        setEnum(thisClass.isEnum());
+        // For array classes, we need to handle the component type and dimension separately
+        if (thisClass.isArray()) {
+            // Get the base component type and count array dimensions
+            Class<?> componentType = thisClass;
+            int dimensions = 0;
+            while (componentType.isArray()) {
+                componentType = componentType.getComponentType();
+                dimensions++;
+            }
+            init(componentType.getSimpleName(), 
+                 componentType.getPackage() != null ? componentType.getPackage().getName() : null, 
+                 dimensions);
+            setEnum(componentType.isEnum());
+        } else {
+            init(thisClass.getSimpleName(), 
+                 thisClass.getPackage() != null ? thisClass.getPackage().getName() : null, 
+                 0);
+            setEnum(thisClass.isEnum());
+        }
     }
 
     /**
@@ -399,6 +417,21 @@ public class JavaType {
      */
     public void setEnum(boolean isEnum) {
         this.isEnum = isEnum;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        
+        JavaType javaType = (JavaType) obj;
+
+        return this.hashCode() == javaType.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, _package, array, arrayDimension, primitive, isEnum, generics);
     }
 
 }

@@ -79,7 +79,7 @@ public abstract class ClassType implements IGenerate {
      * @return the qualified name
      */
     public String getQualifiedName() {
-        String thePackage = classPackage != null && !classPackage.isEmpty() ? classPackage + "." : "";
+        String thePackage = !classPackage.isEmpty() ? classPackage + "." : "";
 
         return thePackage + getName();
     }
@@ -99,7 +99,7 @@ public abstract class ClassType implements IGenerate {
      * @param classPackage the class package
      */
     public void setClassPackage(String classPackage) {
-        this.classPackage = classPackage;
+        this.classPackage = classPackage == null ? "" : classPackage;
     }
 
     public List<String> getImports() {
@@ -246,6 +246,9 @@ public abstract class ClassType implements IGenerate {
      * @return true if the import can be added, false if not
      */
     public boolean addImport(JavaType newImport) {
+        if (newImport == null) {
+            return false;
+        }
         boolean isAdded;
         if (!newImport.requiresImport()) {
             isAdded = false;

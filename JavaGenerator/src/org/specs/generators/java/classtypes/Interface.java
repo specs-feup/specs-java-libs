@@ -116,7 +116,7 @@ public class Interface extends ClassType {
      * @return true if the interface was successfully removed
      */
     public boolean removeInterface(String interfaceinterface) {
-        return interfaces.remove(interfaceinterface);
+        return interfaces.removeIf(type -> type.getSimpleType().equals(interfaceinterface));
     }
 
     /**

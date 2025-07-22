@@ -54,7 +54,7 @@ public class JavaDoc implements IGenerate {
      */
     public JavaDoc(String comment) {
         tags = new ArrayList<>();
-        setComment(new StringBuilder(comment));
+        setComment(new StringBuilder(comment != null ? comment : ""));
     }
 
     /**

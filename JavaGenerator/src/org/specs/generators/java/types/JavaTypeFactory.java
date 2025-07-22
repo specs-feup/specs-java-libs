@@ -198,10 +198,12 @@ public class JavaTypeFactory {
     }
 
     public static boolean isPrimitiveWrapper(String name) {
-        if (name.equals(Integer.class.getSimpleName())) {
-            return true;
+        for (Primitive primitive : Primitive.values()) {
+            if (primitive.getPrimitiveWrapper().equals(name)) {
+                return true;
+            }
         }
-        return isPrimitive(StringUtils.firstCharToLower(name));
+        return false;
     }
 
     /**
@@ -239,6 +241,10 @@ public class JavaTypeFactory {
         if (simpleType.equals("Integer")) {
             return "int";
         }
+        if (simpleType.equals("Character")) {
+            return "char";
+        }
+        // For other wrapper types, lowercase the first character
         simpleType = StringUtils.firstCharToLower(simpleType);
         return simpleType;
     }
@@ -257,6 +263,10 @@ public class JavaTypeFactory {
         if (simpleType.equals("Integer")) {
             return getIntType();
         }
+        if (simpleType.equals("Character")) {
+            return getPrimitiveType(Primitive.CHAR);
+        }
+        // For other wrapper types, lowercase and get primitive
         simpleType = StringUtils.firstCharToLower(simpleType);
         return getPrimitiveType(Primitive.getPrimitive(simpleType));
     }

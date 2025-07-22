@@ -141,7 +141,7 @@ public class JavaGenericType {
     @Override
     public JavaGenericType clone() {
         final JavaGenericType genericType = new JavaGenericType(theType.clone());
-        genericType.extendingTypes.forEach(ext -> genericType.addType(ext.clone()));
+        this.extendingTypes.forEach(ext -> genericType.addType(ext.clone()));
         return genericType;
     }
 }

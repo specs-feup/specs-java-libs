@@ -62,7 +62,7 @@ public class Field implements IGenerate {
     private void init(JavaType classType, String name, Privacy privacy) {
         this.privacy = privacy;
         this.name = name;
-        this.classType = classType;
+        setType(classType);
         annotations = new ArrayList<>();
         modifiers = new ArrayList<>();
         initializer = null;
@@ -189,7 +189,10 @@ public class Field implements IGenerate {
      *
      * @param classType the type to set
      */
-    public void setType(JavaType classType) {
+    public void setType(JavaType classType) throws IllegalArgumentException {
+        if (classType == null) {
+            throw new IllegalArgumentException("Field type cannot be null");
+        }
         this.classType = classType;
     }
 

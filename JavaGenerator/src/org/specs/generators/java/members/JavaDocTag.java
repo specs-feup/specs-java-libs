@@ -45,7 +45,7 @@ public class JavaDocTag implements IGenerate {
      */
     public JavaDocTag(JDocTag tag, String descriptionStr) {
         setTag(tag);
-        setDescription(new StringBuilder(descriptionStr));
+        setDescription(new StringBuilder(descriptionStr != null ? descriptionStr : ""));
     }
 
     /**

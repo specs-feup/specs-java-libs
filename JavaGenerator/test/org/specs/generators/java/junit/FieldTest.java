@@ -12,9 +12,9 @@
  */
 package org.specs.generators.java.junit;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.specs.generators.java.members.Field;
 import org.specs.generators.java.types.JavaType;
 import org.specs.generators.java.types.JavaTypeFactory;
@@ -28,7 +28,7 @@ public class FieldTest {
 		final JavaType intType = JavaTypeFactory.getPrimitiveType(Primitive.INT);
 		final Field tester = new Field(intType, fieldName);
 		final StringBuilder result = new StringBuilder("private int " + fieldName + ";");
-		assertEquals("Generated", result.toString(), tester.generateCode(0).toString());
+		assertEquals(result.toString(), tester.generateCode(0).toString());
 
 	}
 
