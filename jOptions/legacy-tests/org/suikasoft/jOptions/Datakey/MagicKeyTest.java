@@ -13,9 +13,9 @@
 
 package org.suikasoft.jOptions.Datakey;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 public class MagicKeyTest {

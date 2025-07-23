@@ -36,7 +36,7 @@ public interface TestKeys {
     DataKey<StringList> A_STRINGLIST = KeyFactory.stringList("A_string_list")
             .setDefault(() -> StringList.newInstance("default_string1", "default_string2"));
 
-    DataKey<FileList> A_FILELIST = KeyFactory.fileList("Text_files", "txt");
+    DataKey<FileList> A_FILELIST = KeyFactory.fileList("Text_files");
 
     DataKey<DataStore> A_SETUP = KeyFactory.dataStore("A_setup", new InnerOptions().getStoreDefinition());
 

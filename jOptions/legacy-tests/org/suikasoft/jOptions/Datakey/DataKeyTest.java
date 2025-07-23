@@ -13,7 +13,7 @@
 
 package org.suikasoft.jOptions.Datakey;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.persistence.XmlPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
