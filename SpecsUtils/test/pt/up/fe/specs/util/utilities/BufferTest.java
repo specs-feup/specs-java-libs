@@ -13,39 +13,80 @@
 
 package pt.up.fe.specs.util.utilities;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
+/**
+ * Test suite for Buffer utility class.
+ * 
+ * This test class covers buffer functionality including:
+ * - Buffer creation with different sizes
+ * - Progress counter integration
+ * - Exception handling for invalid buffer sizes
+ * - Multiple buffer usage cycles
+ */
+@DisplayName("Buffer Tests")
 public class BufferTest {
 
-    @Test
-    public void test() {
-        try {
-            testBuffer(0);
-            fail();
-        } catch (Exception e) {
-            // Expects exception
+    @Nested
+    @DisplayName("Buffer Creation and Usage")
+    class BufferCreationAndUsage {
+
+        @Test
+        @DisplayName("Buffer creation should throw exception for zero buffers")
+        void testBuffer_ZeroBuffers_ShouldThrowException() {
+            assertThatThrownBy(() -> testBuffer(0))
+                    .isInstanceOf(Exception.class);
         }
 
-        testBuffer(1);
-        testBuffer(2);
-        testBuffer(3);
-        testBuffer(4);
+        @Test
+        @DisplayName("Buffer should work correctly with single buffer")
+        void testBuffer_SingleBuffer_WorksCorrectly() {
+            assertThatCode(() -> testBuffer(1))
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("Buffer should work correctly with multiple buffers")
+        void testBuffer_MultipleBuffers_WorksCorrectly() {
+            assertThatCode(() -> testBuffer(2))
+                    .doesNotThrowAnyException();
+            assertThatCode(() -> testBuffer(3))
+                    .doesNotThrowAnyException();
+            assertThatCode(() -> testBuffer(4))
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("Buffer should handle large number of buffers")
+        void testBuffer_LargeNumberOfBuffers_WorksCorrectly() {
+            assertThatCode(() -> testBuffer(10))
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("Buffer should handle negative number gracefully")
+        void testBuffer_NegativeNumber_ShouldThrowException() {
+            assertThatThrownBy(() -> testBuffer(-1))
+                    .isInstanceOf(Exception.class);
+        }
     }
 
-    public void testBuffer(int numBuffers) {
+    private void testBuffer(int numBuffers) {
         ProgressCounter counter = new ProgressCounter(numBuffers);
         var doubleBuffer = new Buffer<>(numBuffers, () -> counter.next());
 
+        // First run
         for (int i = 0; i < numBuffers; i++) {
-            assertEquals("(" + (i + 1) + "/" + numBuffers + ")", doubleBuffer.next());
+            assertThat(doubleBuffer.next()).isEqualTo("(" + (i + 1) + "/" + numBuffers + ")");
         }
 
-        // Second run
+        // Second run - verify buffer can be reused
         for (int i = 0; i < numBuffers; i++) {
-            assertEquals("(" + (i + 1) + "/" + numBuffers + ")", doubleBuffer.next());
+            assertThat(doubleBuffer.next()).isEqualTo("(" + (i + 1) + "/" + numBuffers + ")");
         }
     }
 

@@ -34,15 +34,28 @@ import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
+ * Utility class for converting GUI helper objects in jOptions.
  * Converts enums that implement {@link SetupFieldEnum} to StoreDefinition.
  */
 public class GuiHelperConverter {
 
+    /**
+     * Converts a list of setup classes to a list of StoreDefinitions.
+     * 
+     * @param setups the setup classes to convert
+     * @return a list of StoreDefinitions
+     */
     public static <T extends Enum<?> & SetupFieldEnum> List<StoreDefinition> toStoreDefinition(
             @SuppressWarnings("unchecked") Class<T>... setups) {
         return toStoreDefinition(Arrays.asList(setups));
     }
 
+    /**
+     * Converts a list of setup classes to a list of StoreDefinitions.
+     * 
+     * @param setups the setup classes to convert
+     * @return a list of StoreDefinitions
+     */
     public static <T extends Enum<?> & SetupFieldEnum> List<StoreDefinition> toStoreDefinition(List<Class<T>> setups) {
         var converter = new GuiHelperConverter();
 
@@ -55,6 +68,12 @@ public class GuiHelperConverter {
         return definitions;
     }
 
+    /**
+     * Converts a single setup class to a StoreDefinition.
+     * 
+     * @param setup the setup class to convert
+     * @return the StoreDefinition
+     */
     public <T extends Enum<?> & SetupFieldEnum> StoreDefinition convert(Class<T> setup) {
         var name = setup.getSimpleName();
         var keys = getDataKeys(setup.getEnumConstants());
@@ -62,6 +81,12 @@ public class GuiHelperConverter {
         return StoreDefinition.newInstance(name, keys);
     }
 
+    /**
+     * Converts an array of setup keys to a list of DataKeys.
+     * 
+     * @param setupKeys the setup keys to convert
+     * @return a list of DataKeys
+     */
     public <T extends Enum<?> & SetupFieldEnum> List<DataKey<?>> getDataKeys(
             @SuppressWarnings("unchecked") T... setupKeys) {
         var keys = new ArrayList<DataKey<?>>();
@@ -72,6 +97,12 @@ public class GuiHelperConverter {
         return keys;
     }
 
+    /**
+     * Converts a single setup key to a DataKey.
+     * 
+     * @param setupKey the setup key to convert
+     * @return the DataKey
+     */
     public <T extends Enum<?> & SetupFieldEnum> DataKey<?> getDataKey(T setupKey) {
         var key = getBaseDataKey(setupKey);
 
@@ -89,6 +120,12 @@ public class GuiHelperConverter {
         return key;
     }
 
+    /**
+     * Gets the base DataKey for a setup key.
+     * 
+     * @param setupKey the setup key
+     * @return the base DataKey
+     */
     private <T extends Enum<?> & SetupFieldEnum> DataKey<? extends Object> getBaseDataKey(T setupKey) {
         switch (setupKey.getType()) {
         case string:
@@ -99,6 +136,13 @@ public class GuiHelperConverter {
 
     }
 
+    /**
+     * Converts a SetupList to a ListOfSetups.
+     * 
+     * @param setupList the SetupList to convert
+     * @param tasksList the list of task classes
+     * @return the ListOfSetups
+     */
     public static <T extends Enum<?> & SetupFieldEnum> ListOfSetups toListOfSetups(SetupList setupList,
             List<Class<T>> tasksList) {
 
@@ -141,6 +185,12 @@ public class GuiHelperConverter {
         return new ListOfSetups(listOfSetups);
     }
 
+    /**
+     * Gets the setup fields for a task class.
+     * 
+     * @param taskList the task class
+     * @return a map of setup field names to SetupFieldEnum objects
+     */
     private static <T extends Enum<?> & SetupFieldEnum> Map<String, SetupFieldEnum> getSetupFields(Class<T> taskList) {
 
         var taskKeys = new HashMap<String, SetupFieldEnum>();

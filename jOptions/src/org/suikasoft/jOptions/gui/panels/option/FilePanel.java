@@ -36,8 +36,9 @@ import org.suikasoft.jOptions.gui.panels.app.AppKeys;
 import pt.up.fe.specs.util.SpecsIo;
 
 /**
+ * Panel for selecting and displaying file or directory paths using a text field and browse button.
  *
- * @author Joao Bispo
+ * <p>This panel provides a file chooser dialog and text field for DataKey values of type File.
  */
 public class FilePanel extends KeyPanel<File> {
 
@@ -54,20 +55,21 @@ public class FilePanel extends KeyPanel<File> {
 
     /**
      * Helper constructor for a FilePanel that has a browse button for files and folders.
-     * 
-     * @param key
-     * @param data
+     *
+     * @param key the DataKey
+     * @param data the DataStore
      */
     public FilePanel(DataKey<File> key, DataStore data) {
         this(key, data, JFileChooser.FILES_AND_DIRECTORIES, Collections.emptyList());
     }
 
     /**
-     * 
-     * @param key
-     * @param data
-     * @param fileChooserMode
-     *            JFileChooser option
+     * Constructs a FilePanel with a specific file chooser mode and file extensions.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     * @param fileChooserMode JFileChooser option
+     * @param extensions the allowed file extensions
      */
     public FilePanel(DataKey<File> key, DataStore data, int fileChooserMode, Collection<String> extensions) {
         super(key, data);
@@ -99,14 +101,21 @@ public class FilePanel extends KeyPanel<File> {
 
     }
 
+    /**
+     * Sets the text in the text field.
+     *
+     * @param text the text to set
+     */
     public void setText(String text) {
-        // Normalize text
-        // text = SpecsIo.normalizePath(text);
         textField.setText(text);
     }
 
+    /**
+     * Gets the text from the text field.
+     *
+     * @return the text in the text field
+     */
     public String getText() {
-        // return SpecsIo.normalizePath(textField.getText());
         return textField.getText();
     }
 
@@ -148,7 +157,6 @@ public class FilePanel extends KeyPanel<File> {
 
         Optional<String> currentFolderPath = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
         if (!currentFolderPath.isPresent()) {
-            // LoggingUtils.msgWarn("CHECK THIS CASE, WHEN CONFIG IS NOT DEFINED");
             return new File(fieldValue);
         }
 
@@ -167,6 +175,11 @@ public class FilePanel extends KeyPanel<File> {
 
     }
 
+    /**
+     * Gets the value of the file from the text field.
+     *
+     * @return the file value
+     */
     @Override
     public File getValue() {
         return getFile(textField.getText(), getKey(), getData());
@@ -183,14 +196,11 @@ public class FilePanel extends KeyPanel<File> {
         // When showing the path in the GUI, make it relative to the current setup file
 
         Optional<String> currentFolder = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
-        // System.out.println("GUI SET ENTRY VALUE:" + currentValue);
-        // System.out.println("GUI SET CURRENT FOLDER:" + currentFolder);
         if (currentFolder.isPresent()) {
             String relativePath = SpecsIo.getRelativePath(currentValue, new File(currentFolder.get()));
             currentValue = new File(relativePath);
         }
 
-        // System.out.println("CURRENT FOLDER:" + currentFolder);
         // If path is absolute, make it canonical
         if (currentValue.isAbsolute()) {
             return SpecsIo.getCanonicalFile(currentValue).getPath();
@@ -199,53 +209,42 @@ public class FilePanel extends KeyPanel<File> {
         return currentValue.getPath();
     }
 
+    /**
+     * Sets the value of the file in the text field.
+     *
+     * @param value the file value to set
+     */
     @Override
     public <ET extends File> void setValue(ET value) {
         setText(processFile(getData(), value));
-        /*
-        // If empty path, set empty text field
-        if (value.getPath().isEmpty()) {
-        setText("");
-        return;
-        }
-        
-        File currentValue = value;
-        
-        // When showing the path in the GUI, make it relative to the current setup file
-        
-        Optional<String> currentFolder = getData().getTry(JOptionKeys.CURRENT_FOLDER_PATH);
-        // System.out.println("GUI SET ENTRY VALUE:" + currentValue);
-        // System.out.println("GUI SET CURRENT FOLDER:" + currentFolder);
-        if (currentFolder.isPresent()) {
-        String relativePath = IoUtils.getRelativePath(currentValue, new File(currentFolder.get()));
-        currentValue = new File(relativePath);
-        }
-        
-        // System.out.println("CURRENT FOLDER:" + currentFolder);
-        // If path is absolute, make it canonical
-        if (currentValue.isAbsolute()) {
-        setText(IoUtils.getCanonicalFile(currentValue).getPath());
-        } else {
-        setText(currentValue.getPath());
-        }
-        
-        // System.out.println("GUI SET VALUE:" + currentValue);
-        */
     }
 
     /**
-     * Event when opening a file
-     * 
-     * @param f
+     * Event when opening a file.
+     *
+     * @param f the file being opened
      */
     public void openFile(File f) {
     }
 
+    /**
+     * Sets the action to be performed when a file is opened.
+     *
+     * @param opener the FileOpener instance
+     */
     public void setOnFileOpened(FileOpener opener) {
         fileOpener = opener;
     }
 
+    /**
+     * Interface for handling file opening events.
+     */
     public interface FileOpener {
+        /**
+         * Called when a file is opened.
+         *
+         * @param f the file that was opened
+         */
         public void onOpenFile(File f);
     }
 }

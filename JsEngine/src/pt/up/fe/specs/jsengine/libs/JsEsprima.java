@@ -23,11 +23,19 @@ import pt.up.fe.specs.jsengine.JsEngineWebResources;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
+/**
+ * Utility class for working with the Esprima JavaScript parser.
+ */
 public class JsEsprima {
 
     private static final ThreadLocal<JsEngine> ESPRIMA_ENGINE = ThreadLocal
             .withInitial(JsEsprima::newEsprimaEngine);
 
+    /**
+     * Creates a new instance of the Esprima JavaScript engine.
+     * 
+     * @return a new JsEngine instance configured with Esprima
+     */
     private static JsEngine newEsprimaEngine() {
         // Create JsEngine
         var engine = JsEngineType.GRAALVM.newEngine();
@@ -46,14 +54,32 @@ public class JsEsprima {
         return engine;
     }
 
+    /**
+     * Retrieves the current thread-local instance of the Esprima engine.
+     * 
+     * @return the current JsEngine instance
+     */
     private static JsEngine getEngine() {
         return ESPRIMA_ENGINE.get();
     }
 
+    /**
+     * Parses the given JavaScript code and returns the corresponding AST.
+     * 
+     * @param jsCode the JavaScript code to parse
+     * @return the root node of the parsed AST
+     */
     public static EsprimaNode parse(String jsCode) {
         return parse(jsCode, "<unknown source>");
     }
 
+    /**
+     * Parses the given JavaScript code and returns the corresponding AST, associating it with the provided source path.
+     * 
+     * @param jsCode the JavaScript code to parse
+     * @param path the source path associated with the code
+     * @return the root node of the parsed AST
+     */
     @SuppressWarnings("unchecked")
     public static EsprimaNode parse(String jsCode, String path) {
         var engine = getEngine();
@@ -80,6 +106,11 @@ public class JsEsprima {
         return program;
     }
 
+    /**
+     * Associates comments with the corresponding nodes in the AST.
+     * 
+     * @param program the root node of the AST
+     */
     private static void associateComments(EsprimaNode program) {
         var comments = program.getComments();
 
@@ -92,15 +123,12 @@ public class JsEsprima {
         var commentsIterator = comments.iterator();
 
         var currentComment = commentsIterator.next();
-        // System.out.println("COMMENT LOC: " + currentComment.getLoc());
 
         NODES: for (var node : nodes) {
             var nodeLoc = node.getLoc();
-            // System.out.println("NODE LOC: " + nodeLoc);
 
             // If node start line is the same or greater than the comment, associate node with comment
             while (nodeLoc.getStartLine() >= currentComment.getLoc().getStartLine()) {
-                // System.out.println("FOUND ASSOCIATION: " + node.getType() + " @ " + node.getLoc());
                 node.setComment(currentComment);
 
                 if (!commentsIterator.hasNext()) {
@@ -108,7 +136,6 @@ public class JsEsprima {
                 }
 
                 currentComment = commentsIterator.next();
-                // System.out.println("COMMENT LOC: " + currentComment.getLoc());
             }
         }
     }

@@ -73,7 +73,10 @@ import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
- * Methods for quick and simple manipulation of files, folders and other input/output related operations.
+ * Utility methods for input/output operations.
+ * <p>
+ * Provides static helper methods for reading, writing, and managing files and resources.
+ * </p>
  *
  * @author Joao Bispo
  */
@@ -1985,7 +1988,7 @@ public class SpecsIo {
      * @return the relative path of the file given in parameter.
      */
     public static String getRelativePath(File file, File baseFile) {
-        return getRelativePath(file, baseFile, false).get();
+        return getRelativePath(file, baseFile, false).orElse(null);
     }
 
     /**
@@ -1998,6 +2001,10 @@ public class SpecsIo {
      */
     public static Optional<String> getRelativePath(File file, File baseFile, boolean isStrict) {
 
+        if ((file == null) || (baseFile == null)) {
+            SpecsLogs.warn("File or baseFile is null. File: " + file + "; BaseFile: " + baseFile);
+            return Optional.empty();
+        }
         File originalFile = file;
         File originalBaseFile = baseFile;
         if (!baseFile.isDirectory()) {
@@ -2021,7 +2028,7 @@ public class SpecsIo {
                     "Could not convert given files to canonical paths. File: " + originalFile + "; Base file: "
                             + originalBaseFile,
                     e);
-            return null;
+            return Optional.empty();
         }
 
         // If paths are equal, return empty string
@@ -2092,38 +2099,6 @@ public class SpecsIo {
     public static File getWorkingDir() {
         return new File(".");
     }
-
-    /**
-     * Returns the name of each parent folder in an array.
-     * <p>
-     * The File ./parent1/parent2/file.f will return the value {., parent1, parent2, file.f}
-     *
-     * @param file
-     *            The file to check.
-     *
-     * @return the name of each parent folder in an array.
-     */
-    /*
-    public static String[] getParentNames(File file) {
-    
-    final String WINDOWS = "\\";
-    final String LINUX = "/";
-    
-    String[] parents;
-    String path = file.getAbsolutePath();
-    
-    if (path.contains(WINDOWS)) {
-    
-        parents = path.split(Pattern.quote(WINDOWS));
-        // parents = StringUtils.split(path, WINDOWS);
-    } else { // if (path.contains(LINUX))
-    	 // parents = StringUtils.split(LINUX);
-        parents = path.split(Pattern.quote(LINUX));
-    }
-    
-    return parents;
-    }
-     */
 
     public static List<String> getParentNames(File file) {
         List<String> names = new ArrayList<>();

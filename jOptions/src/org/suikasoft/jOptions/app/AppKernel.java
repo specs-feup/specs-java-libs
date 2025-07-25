@@ -16,6 +16,8 @@ package org.suikasoft.jOptions.app;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 /**
+ * Kernel class for jOptions applications.
+ * 
  * @author Joao Bispo
  *
  */
@@ -23,8 +25,10 @@ public interface AppKernel {
 
     /**
      * The main method of the app.
+     * Executes the application with the given options.
      * 
-     * @return
+     * @param options the configuration options for the application
+     * @return an integer representing the result of the execution
      */
     int execute(DataStore options);
 }

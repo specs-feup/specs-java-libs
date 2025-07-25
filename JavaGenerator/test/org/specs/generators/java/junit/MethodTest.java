@@ -12,9 +12,9 @@
  */
 package org.specs.generators.java.junit;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.specs.generators.java.enums.Modifier;
 import org.specs.generators.java.members.Method;
 import org.specs.generators.java.types.JavaType;

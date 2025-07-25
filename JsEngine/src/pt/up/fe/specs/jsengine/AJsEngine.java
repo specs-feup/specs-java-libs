@@ -8,7 +8,7 @@
  * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package pt.up.fe.specs.jsengine;
@@ -22,10 +22,18 @@ import com.google.gson.JsonArray;
 
 import pt.up.fe.specs.util.classmap.FunctionClassMap;
 
+/**
+ * Abstract base class for JavaScript engine implementations.
+ * Defines the contract for engine execution and resource management.
+ */
 public abstract class AJsEngine implements JsEngine {
 
     private final FunctionClassMap<Object, Object> toJsRules;
 
+    /**
+     * Constructor for AJsEngine.
+     * Initializes the rules for converting Java objects to JavaScript objects.
+     */
     public AJsEngine() {
         this.toJsRules = new FunctionClassMap<>();
 
@@ -36,30 +44,33 @@ public abstract class AJsEngine implements JsEngine {
     }
 
     /**
-     * If a List, apply adapt over all elements of the list and convert to array.
+     * Converts a List to a JavaScript array.
+     * Applies the conversion rule to each element of the list.
      * 
-     * @param list
-     * @return
+     * @param list the List to be converted
+     * @return the JavaScript array representation of the List
      */
     private Object listToJs(List<?> list) {
         return toNativeArray(list.stream().map(this::toJs).toArray());
     }
 
     /**
-     * If a Set, apply adapt over all elements of the Set and convert to array.
+     * Converts a Set to a JavaScript array.
+     * Applies the conversion rule to each element of the Set.
      * 
-     * @param set
-     * @return
+     * @param set the Set to be converted
+     * @return the JavaScript array representation of the Set
      */
     private Object setToJs(Set<?> set) {
         return toNativeArray(set.stream().map(this::toJs).toArray());
     }
 
     /**
-     * If a JsonArray, convert to List and call toJs() again.
+     * Converts a JsonArray to a JavaScript object.
+     * Converts the JsonArray to a List and applies the conversion rule.
      * 
-     * @param jsonArray
-     * @return
+     * @param jsonArray the JsonArray to be converted
+     * @return the JavaScript object representation of the JsonArray
      */
     private Object jsonArrayToJs(JsonArray jsonArray) {
         var list = new ArrayList<Object>();
@@ -69,11 +80,24 @@ public abstract class AJsEngine implements JsEngine {
         return toJs(list);
     }
 
+    /**
+     * Adds a custom rule for converting Java objects to JavaScript objects.
+     * 
+     * @param key the class type of the Java object
+     * @param rule the conversion function
+     * @param <VS> the type of the Java object
+     * @param <KS> the type of the key, which extends VS
+     */
     @Override
     public <VS, KS extends VS> void addToJsRule(Class<KS> key, Function<VS, Object> rule) {
         toJsRules.put(key, rule);
     }
 
+    /**
+     * Retrieves the rules for converting Java objects to JavaScript objects.
+     * 
+     * @return the map of conversion rules
+     */
     @Override
     public FunctionClassMap<Object, Object> getToJsRules() {
         return toJsRules;

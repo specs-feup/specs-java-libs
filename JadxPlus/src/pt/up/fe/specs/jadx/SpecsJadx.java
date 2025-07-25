@@ -1,14 +1,14 @@
 /**
  * Copyright 2022 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package pt.up.fe.specs.jadx;
@@ -31,6 +31,9 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsXml;
 
+/**
+ * Utility class for decompiling APK files using Jadx and managing decompilation cache.
+ */
 public class SpecsJadx {
 
     private static final Map<File, File> CACHED_DECOMPILATIONS = new HashMap<>();
@@ -41,19 +44,38 @@ public class SpecsJadx {
 
     static {
         var baseCacheFolder = getCacheFolder();
-
         SpecsIo.deleteFolderContents(baseCacheFolder);
         baseCacheFolder.deleteOnExit();
     }
 
+    /**
+     * Returns the folder used for caching decompilations.
+     *
+     * @return the cache folder
+     */
     public static File getCacheFolder() {
         return SpecsIo.getTempFolder(CACHE_FOLDERNAME);
     }
 
+    /**
+     * Decompiles the given APK file and returns the output folder.
+     *
+     * @param apk the APK file to decompile
+     * @return the folder containing the decompiled files
+     * @throws DecompilationFailedException if decompilation fails
+     */
     public File decompileAPK(File apk) throws DecompilationFailedException {
         return decompileAPK(apk, null);
     }
 
+    /**
+     * Decompiles the given APK file with an optional package filter and returns the output folder.
+     *
+     * @param apk the APK file to decompile
+     * @param packageFilter a list of package patterns to filter classes (can be null)
+     * @return the folder containing the decompiled files
+     * @throws DecompilationFailedException if decompilation fails
+     */
     public File decompileAPK(File apk, List<String> packageFilter) throws DecompilationFailedException {
 
         // Delete cache if filter changed
@@ -145,6 +167,12 @@ public class SpecsJadx {
         }
     }
 
+    /**
+     * Strips the given pattern into components for filtering.
+     *
+     * @param pattern the pattern to strip
+     * @return an array containing the stripped components
+     */
     private String[] stripPattern(String pattern) {
 
         String[] filter = new String[2];
@@ -169,6 +197,13 @@ public class SpecsJadx {
         return filter;
     }
 
+    /**
+     * Builds a filter predicate based on the given pattern and package name.
+     *
+     * @param pattern the filter pattern
+     * @param packageName the package name to filter
+     * @return a predicate for filtering class names
+     */
     private Predicate<String> buildFilter(String pattern, String packageName) {
 
         if (pattern.isEmpty())

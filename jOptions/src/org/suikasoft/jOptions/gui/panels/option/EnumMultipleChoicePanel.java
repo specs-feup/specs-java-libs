@@ -29,8 +29,11 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSwing;
 
 /**
- * 
- * @author Joao Bispo
+ * Panel for selecting enum values from a combo box.
+ *
+ * <p>This panel provides a combo box for selecting enum DataKey values in the GUI.
+ *
+ * @param <T> the enum type
  */
 public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
 
@@ -39,14 +42,18 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
     /**
      * INSTANCE VARIABLES
      */
-    // private final JComboBox<T> comboBoxValues;
     private final JComboBox<String> comboBoxValues;
     private final Collection<T> availableChoices;
 
+    /**
+     * Constructs an EnumMultipleChoicePanel for the given DataKey and DataStore.
+     *
+     * @param key the DataKey
+     * @param data the DataStore
+     */
     public EnumMultipleChoicePanel(DataKey<T> key, DataStore data) {
         super(key, data);
 
-        // comboBoxValues = new JComboBox<String>();
         comboBoxValues = new JComboBox<>();
 
         T[] enumConstants = key.getValueClass().getEnumConstants();
@@ -54,11 +61,7 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
         availableChoices = new HashSet<>(Arrays.asList(enumConstants));
 
         for (T choice : enumConstants) {
-            // comboBoxValues.addItem(choice);
             comboBoxValues.addItem(valueToString(choice));
-            // key.getDecoder()
-            // .map(codec -> codec.encode(choice))
-            // .orElse(choice.name()));
         }
 
         // Check if there is a default value
@@ -66,29 +69,36 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
                 .map(defaultValue -> valueToString(defaultValue))
                 .ifPresent(comboBoxValues::setSelectedItem);
 
-        // if (getKey().getDefault().isPresent()) {
-        // comboBoxValues.setSelectedItem(getKey().getDefault().get());
-        // }
-
         setLayout(new BorderLayout());
         add(comboBoxValues, BorderLayout.CENTER);
     }
 
+    /**
+     * Converts an enum value to its string representation using the key's decoder if present.
+     *
+     * @param value the enum value
+     * @return the string representation
+     */
     private String valueToString(T value) {
         return getKey().getDecoder()
                 .map(codec -> codec.encode(value))
                 .orElse(value.name());
     }
 
-    /*
-    private JComboBox<T> getValues() {
-        return comboBoxValues;
-    }
-    */
+    /**
+     * Returns the combo box component for selecting values.
+     *
+     * @return the combo box
+     */
     private JComboBox<String> getValues() {
         return comboBoxValues;
     }
 
+    /**
+     * Returns the currently selected enum value.
+     *
+     * @return the selected enum value
+     */
     @Override
     public T getValue() {
         var stringValue = getValues().getItemAt(getValues().getSelectedIndex());
@@ -96,9 +106,14 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
         return getKey().getDecoder()
                 .map(codec -> codec.decode(stringValue))
                 .orElseGet(() -> SpecsEnums.valueOf(getKey().getValueClass(), stringValue));
-
     }
 
+    /**
+     * Sets the selected value in the combo box.
+     *
+     * @param value the value to set
+     * @param <ET> the enum type
+     */
     @Override
     public <ET extends T> void setValue(ET value) {
         // Choose first if value is null

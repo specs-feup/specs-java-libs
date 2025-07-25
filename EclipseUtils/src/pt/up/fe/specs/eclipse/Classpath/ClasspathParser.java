@@ -42,7 +42,6 @@ import pt.up.fe.specs.eclipse.Utilities.License;
 import pt.up.fe.specs.eclipse.Utilities.UserLibraries;
 import pt.up.fe.specs.eclipse.builder.BuildResource;
 import pt.up.fe.specs.eclipse.builder.BuildUtils;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsXml;
@@ -66,7 +65,7 @@ public class ClasspathParser {
     // This is the default behavior in Eclipse, we are replicating it here
     private static final boolean FUSE_USER_LIBRARIES = true;
 
-    private static final Set<String> CONTAINERS_TO_IGNORE = SpecsFactory.newHashSet(Arrays.asList(
+    private static final Set<String> CONTAINERS_TO_IGNORE = new HashSet<>(Arrays.asList(
             // "org.eclipse.jdt.launching.JRE_CONTAINER", "org.eclipse.jdt.junit.JUNIT_CONTAINER"));
             "org.eclipse.jdt.launching.JRE_CONTAINER"));
 
@@ -179,18 +178,18 @@ public class ClasspathParser {
 
     /*
     private void parseClasspaths() {
-    
+
     // Map<String, ClasspathFiles> classpathFiles = new HashMap<>();
     for (String projectName : eclipseProjects.getProjectNames()) {
         FilesetBuilder builder = new FilesetBuilder();
-    
+
         parseClasspath(projectName, builder);
-    
+
         ClasspathFiles classpath = builder.newClasspath(projectName, projectFolder, sourceFolders);
-    
+
         classpathFiles.put(projectName, classpath);
     }
-    
+
     // return classpathFiles;
     }
     */
@@ -199,7 +198,7 @@ public class ClasspathParser {
         /*
         FilesetBuilder builder = new FilesetBuilder();
         parseClasspath(projectName, builder);
-        
+
         return builder.newClasspath(projectName, currentProjectFolder, currentSourceFolders);
         */
         ClasspathFiles files = classpathCache.get(projectName);
@@ -332,7 +331,7 @@ public class ClasspathParser {
                     // if (!userLibraries.isPresent()) {
                     if (projectUserLibraries == null) {
                         SpecsLogs
-                                .msgWarn("In project '"
+                                .warn("In project '"
                                         + projectName
                                         + "', found a Eclipse user library reference ('"
                                         + pathValue

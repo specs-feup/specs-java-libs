@@ -1,14 +1,14 @@
 /**
  * Copyright 2014 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.Datakey;
@@ -58,13 +58,18 @@ import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.parsing.StringCodec;
 import pt.up.fe.specs.util.utilities.StringList;
 
+/**
+ * Factory for creating common {@link DataKey} types and utility methods for key construction.
+ *
+ * <p>This class provides static methods to create DataKey instances for common types such as Boolean, String, Integer, and more.
+ */
 public class KeyFactory {
 
     /**
-     * A Boolean DataKey, with default value 'false'.
-     * 
-     * @param id
-     * @return
+     * Creates a Boolean {@link DataKey} with a default value of 'false'.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for Boolean values
      */
     public static DataKey<Boolean> bool(String id) {
         return new NormalKey<>(id, Boolean.class)
@@ -74,90 +79,140 @@ public class KeyFactory {
     }
 
     /**
-     * A String DataKey, without default value.
-     * 
-     * @param id
-     * @return
+     * Creates a String {@link DataKey} without a default value.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for String values
      */
     public static DataKey<String> string(String id) {
         return new NormalKey<>(id, String.class)
                 .setKeyPanelProvider((key, data) -> new StringPanel(key, data))
                 .setDecoder(s -> s)
                 .setDefault(() -> "");
-
     }
 
+    /**
+     * Creates a String {@link DataKey} with a specified default value.
+     *
+     * @param id the identifier for the key
+     * @param defaultValue the default value for the key
+     * @return a {@link DataKey} for String values
+     */
     public static DataKey<String> string(String id, String defaultValue) {
         return string(id).setDefault(() -> defaultValue);
     }
 
+    /**
+     * Creates an Integer {@link DataKey} with a specified default value.
+     *
+     * @param id the identifier for the key
+     * @param defaultValue the default value for the key
+     * @return a {@link DataKey} for Integer values
+     */
     public static DataKey<Integer> integer(String id, int defaultValue) {
         return integer(id).setDefault(() -> defaultValue);
     }
 
+    /**
+     * Creates an Integer {@link DataKey} without a default value.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for Integer values
+     */
     public static DataKey<Integer> integer(String id) {
         return new NormalKey<>(id, Integer.class)
                 .setKeyPanelProvider((key, data) -> new IntegerPanel(key, data))
                 .setDecoder(s -> SpecsStrings.decodeInteger(s, () -> 0))
                 .setDefault(() -> 0);
-
     }
 
+    /**
+     * Creates a Long {@link DataKey} with a specified default value.
+     *
+     * @param id the identifier for the key
+     * @param defaultValue the default value for the key
+     * @return a {@link DataKey} for Long values
+     */
     public static DataKey<Long> longInt(String id, long defaultValue) {
         return longInt(id)
                 .setDefault(() -> defaultValue);
     }
 
+    /**
+     * Creates a Long {@link DataKey} without a default value.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for Long values
+     */
     public static DataKey<Long> longInt(String id) {
         return new NormalKey<>(id, Long.class)
-                // .setDefault(() -> defaultValue)
-                // .setKeyPanelProvider((key, data) -> new IntegerPanel(key, data))
-                .setDecoder(s -> SpecsStrings.decodeLong(s, () -> 0l));
-
+                .setDecoder(s -> SpecsStrings.decodeLong(s, () -> 0L));
     }
 
+    /**
+     * Creates a Double {@link DataKey} with a specified default value.
+     *
+     * @param id the identifier for the key
+     * @param defaultValue the default value for the key
+     * @return a {@link DataKey} for Double values
+     */
     public static DataKey<Double> double64(String id, double defaultValue) {
         return double64(id).setDefault(() -> defaultValue);
     }
 
+    /**
+     * Creates a Double {@link DataKey} without a default value.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for Double values
+     */
     public static DataKey<Double> double64(String id) {
         return new NormalKey<>(id, Double.class)
-                // .setDefault(() -> defaultValue)
                 .setKeyPanelProvider((key, data) -> new DoublePanel(key, data))
                 .setDecoder(s -> Double.valueOf(s));
-
     }
 
+    /**
+     * Creates a BigInteger {@link DataKey}.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for BigInteger values
+     */
     public static DataKey<BigInteger> bigInteger(String id) {
         return new NormalKey<>(id, BigInteger.class)
                 .setDecoder(s -> new BigInteger(s));
     }
 
     /**
-     * Helper method which returns a key for a file that does not have to exist.
-     * 
-     * @param id
-     * @return
+     * Creates a {@link DataKey} for a file that does not have to exist.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for File values
      */
     public static DataKey<File> file(String id) {
         return file(id, false, false, false, Collections.emptyList());
     }
 
+    /**
+     * Creates a {@link DataKey} for a file with specific extensions.
+     *
+     * @param id the identifier for the key
+     * @param extensions the allowed extensions for the file
+     * @return a {@link DataKey} for File values
+     */
     public static DataKey<File> file(String id, String... extensions) {
         return file(id, false, false, false, Arrays.asList(extensions));
     }
 
     /**
-     * A File DataKey, with default value file with current path (.).
-     * 
-     * <p>
-     * If 'isFolder' is true, it will try to create the folder when returning the File instance, even if it does not
-     * exist.
-     * 
-     * @param id
-     * @param isFolder
-     * @param create
-     * @return
+     * Creates a {@link DataKey} for a file with various options.
+     *
+     * @param id the identifier for the key
+     * @param isFolder whether the file is a folder
+     * @param create whether to create the file if it does not exist
+     * @param exists whether the file must exist
+     * @param extensions the allowed extensions for the file
+     * @return a {@link DataKey} for File values
      */
     private static DataKey<File> file(String id, boolean isFolder, boolean create, boolean exists,
             Collection<String> extensions) {
@@ -174,12 +229,24 @@ public class KeyFactory {
                 .setCustomGetter(customGetterFile(isFolder, !isFolder, create, exists));
     }
 
+    /**
+     * Creates a {@link DataKey} for a path that can be either a file or a folder.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for File values
+     */
     public static DataKey<File> path(String id) {
         return path(id, false);
     }
 
+    /**
+     * Creates a {@link DataKey} for a path that can be either a file or a folder, with an option to check existence.
+     *
+     * @param id the identifier for the key
+     * @param exists whether the path must exist
+     * @return a {@link DataKey} for File values
+     */
     public static DataKey<File> path(String id, boolean exists) {
-
         int fileChooser = JFileChooser.FILES_AND_DIRECTORIES;
 
         return new NormalKey<>(id, File.class, () -> new File(""))
@@ -188,54 +255,58 @@ public class KeyFactory {
                 .setCustomGetter(customGetterFile(true, true, false, exists));
     }
 
+    /**
+     * Custom getter for file paths, with options for folders, files, creation, and existence checks.
+     *
+     * @param canBeFolder whether the path can be a folder
+     * @param canBeFile whether the path can be a file
+     * @param create whether to create the path if it does not exist
+     * @param exists whether the path must exist
+     * @return a custom getter for file paths
+     */
     public static CustomGetter<File> customGetterFile(boolean canBeFolder, boolean canBeFile, boolean create,
             boolean exists) {
-
-        // Normalize path before returning
         return (file, dataStore) -> new File(
                 SpecsIo.normalizePath(customGetterFile(file, dataStore, canBeFolder, canBeFile, create, exists)));
     }
 
+    /**
+     * Processes file paths with options for folders, files, creation, and existence checks.
+     *
+     * @param file the file to process
+     * @param dataStore the data store containing additional information
+     * @param isFolder whether the path is a folder
+     * @param isFile whether the path is a file
+     * @param create whether to create the path if it does not exist
+     * @param exists whether the path must exist
+     * @return the processed file
+     */
     public static File customGetterFile(File file, DataStore dataStore, boolean isFolder, boolean isFile,
             boolean create, boolean exists) {
-
-        // If an empty path, return an empty path
         if (file.getPath().isEmpty() && !isFolder && isFile && !create) {
             return file;
         }
 
         File currentFile = file;
 
-        // If it has a working folder set
         var workingFolder = dataStore.get(JOptionKeys.CURRENT_FOLDER_PATH);
-        // if (!workingFolder.isEmpty()) {
         if (workingFolder.isPresent()) {
-
-            // If path is not absolute, create new file with working folder as parent
             if (!currentFile.isAbsolute()) {
-                // File parentFolder = new File(workingFolder);
                 File parentFolder = new File(workingFolder.get());
                 currentFile = new File(parentFolder, currentFile.getPath());
             }
-
         }
 
         currentFile = processPath(isFolder, isFile, create, currentFile);
 
-        // Check if it exists
-        if (exists) {
-            if (!currentFile.exists()) {
-                throw new RuntimeException("Path '" + currentFile + "' does not exist");
-            }
+        if (exists && !currentFile.exists()) {
+            throw new RuntimeException("Path '" + currentFile + "' does not exist");
         }
 
-        // If relative paths is enabled, make relative path with working folder.
-        // if (!workingFolder.isEmpty() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
         if (workingFolder.isPresent() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
             currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder.get())));
         }
 
-        // if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && !workingFolder.isEmpty()) {
         if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && workingFolder.isPresent()) {
             currentFile = SpecsIo.getCanonicalFile(currentFile);
         }
@@ -243,125 +314,123 @@ public class KeyFactory {
         return currentFile;
     }
 
+    /**
+     * Processes the path with options for folders, files, and creation.
+     *
+     * @param canBeFolder whether the path can be a folder
+     * @param canBeFile whether the path can be a file
+     * @param create whether to create the path if it does not exist
+     * @param currentFile the current file to process
+     * @return the processed file
+     */
     private static File processPath(boolean canBeFolder, boolean canBeFile, boolean create, File currentFile) {
-
         var exists = currentFile.exists();
 
-        if(!exists) {
-
-            if(canBeFolder && create) {
+        if (!exists) {
+            if (canBeFolder && create) {
                 return SpecsIo.mkdir(currentFile);
             }
-
             return currentFile;
         }
 
-        if(currentFile.isDirectory() && !canBeFolder) {
+        if (currentFile.isDirectory() && !canBeFolder) {
             throw new RuntimeException("File key has directory as value and key does not allow it: '"
                     + currentFile.getPath() + "')");
         }
 
-        if(currentFile.isFile() && !canBeFile) {
+        if (currentFile.isFile() && !canBeFile) {
             throw new RuntimeException("File key has file as value and key does not allow it: '"
                     + currentFile.getPath() + "')");
         }
-
 
         return currentFile;
     }
 
     /**
-     * Creates a key of type StringList, with default value being an empty list.
+     * Creates a {@link DataKey} for a {@link StringList} with an empty list as the default value.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for StringList values
      */
     public static DataKey<StringList> stringList(String id) {
         return stringList(id, Collections.emptyList());
     }
 
     /**
-     * A generic DataKey without default value.
-     * 
-     * @param id
-     * @param aClass
-     * @return
+     * Creates a generic {@link DataKey} without a default value.
+     *
+     * @param id the identifier for the key
+     * @param aClass the class of the key's value
+     * @return a {@link DataKey} for the specified type
      */
     public static <T> DataKey<T> object(String id, Class<T> aClass) {
         return new NormalKey<>(id, aClass);
     }
 
-    @SuppressWarnings("unchecked") // It is optional T, because of type erasure
+    /**
+     * Creates an optional {@link DataKey} with an empty optional as the default value.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for Optional values
+     */
+    @SuppressWarnings("unchecked")
     public static <T> DataKey<Optional<T>> optional(String id) {
         return generic(id, (Optional<T>) Optional.empty())
                 .setDefault(() -> Optional.empty());
     }
 
     /**
-     * A StringList DataKey which has predefined values for the GUI element.
-     * 
-     * @param string
-     * @return
-     */
-    // public static DataKey<StringList> stringListWithPredefinedValues(String id, List<String> predefinedLabelValues) {
-    //
-    // return new NormalKey<>(id, StringList.class)
-    // .setDefault(() -> new StringList(Collections.emptyList()))
-    // .setDecoder(StringList.getCodec())
-    // .setKeyPanelProvider((key, data) -> StringListPanel.newInstance(key, data, predefinedLabelValues));
-    // }
-
-    /**
-     * A new OptionDefinition, using a converter with the default separator (;)
-     * 
-     * @param string
-     * @return
+     * Creates a {@link DataKey} for a {@link StringList} with predefined values.
+     *
+     * @param id the identifier for the key
+     * @param defaultValue the default value for the key
+     * @return a {@link DataKey} for StringList values
      */
     public static DataKey<StringList> stringList(String id, List<String> defaultValue) {
-
         return new NormalKey<>(id, StringList.class)
                 .setDefault(() -> new StringList(defaultValue))
-                // .setDecoder(value -> new StringList(value))
                 .setDecoder(StringList.getCodec())
                 .setKeyPanelProvider(StringListPanel::newInstance);
     }
 
+    /**
+     * Creates a {@link DataKey} for a {@link StringList} with predefined values.
+     *
+     * @param optionName the identifier for the key
+     * @param defaultValues the default values for the key
+     * @return a {@link DataKey} for StringList values
+     */
     public static DataKey<StringList> stringList(String optionName, String... defaultValues) {
         return stringList(optionName, Arrays.asList(defaultValues));
     }
 
     /**
-     * TODO: Can be an interesting exercise to see if it pays off to use a class such as FileList that inside uses other
-     * keys.
-     * 
-     * @param optionName
-     * @param extension
-     * @return
+     * Creates a {@link DataKey} for a {@link FileList}.
+     *
+     * @param optionName the identifier for the key
+     * @return a {@link DataKey} for FileList values
      */
-    public static DataKey<FileList> fileList(String optionName, String extension) {
-        return fileList(optionName);
-    }
-
     public static DataKey<FileList> fileList(String optionName) {
-
         return KeyFactory.object(optionName, FileList.class).setDefault(() -> new FileList())
                 .setStoreDefinition(FileList.getStoreDefinition())
                 .setDecoder(FileList::decode);
     }
 
     /**
-     * 
-     * 
-     * @param id
-     * @return
+     * Creates a {@link DataKey} for a folder.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for File values
      */
     public static DataKey<File> folder(String id) {
         return file(id, true, false, false, Collections.emptyList());
     }
 
     /**
-     * Creates a key for a folder that must exist. If the given folder does not exist when returning the value, throws
-     * an exception.
-     * 
-     * @param id
-     * @return
+     * Creates a {@link DataKey} for an existing folder.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for File values
      */
     public static DataKey<File> existingFolder(String id) {
         return file(id, true, false, true, Collections.emptyList())
@@ -369,31 +438,36 @@ public class KeyFactory {
     }
 
     /**
-     * Creates a key for a folder, sets './' as default value.
-     * 
-     * @param id
-     * @param create
-     *            if true, creates the path if it does not exist
-     * @return
+     * Creates a {@link DataKey} for a folder, with an option to create the folder if it does not exist.
+     *
+     * @param id the identifier for the key
+     * @param create whether to create the folder if it does not exist
+     * @return a {@link DataKey} for File values
      */
     public static DataKey<File> folder(String id, boolean create) {
         return KeyFactory.file(id, true, create, false, Collections.emptyList())
                 .setDefault(() -> new File("./"));
-
     }
 
-    // public static DataKey<File> folder(String id, boolean create, String defaultValue) {
-    //
-    // return file(id, true, create, Collections.emptyList())
-    // .setDefault(new File(defaultValue));
-    //
-    // }
-
+    /**
+     * Creates a {@link DataKey} for a {@link SetupList}.
+     *
+     * @param id the identifier for the key
+     * @param definitions the store definitions for the setup list
+     * @return a {@link DataKey} for SetupList values
+     */
     public static DataKey<SetupList> setupList(String id, List<StoreDefinition> definitions) {
         return object(id, SetupList.class).setDefault(() -> SetupList.newInstance(id, new ArrayList<>(definitions)))
                 .setKeyPanelProvider((key, data) -> new SetupListPanel(key, data, definitions));
     }
 
+    /**
+     * Creates a {@link DataKey} for a {@link SetupList} using store definition providers.
+     *
+     * @param id the identifier for the key
+     * @param providers the store definition providers for the setup list
+     * @return a {@link DataKey} for SetupList values
+     */
     public static DataKey<SetupList> setupList(String id, StoreDefinitionProvider... providers) {
         List<StoreDefinition> definitions = new ArrayList<>();
 
@@ -404,48 +478,49 @@ public class KeyFactory {
         return setupList(id, definitions);
     }
 
+    /**
+     * Creates a {@link DataKey} for a {@link DataStore}.
+     *
+     * @param id the identifier for the key
+     * @param definition the store definition for the data store
+     * @return a {@link DataKey} for DataStore values
+     */
     public static DataKey<DataStore> dataStore(String id, StoreDefinition definition) {
-
         return object(id, DataStore.class)
                 .setStoreDefinition(definition)
-                // .setDecoder(s -> {
-                // throw new RuntimeException("No decoder for DataStore");
-                // });
                 .setDecoder(string -> KeyFactory.dataStoreDecoder(string, definition));
     }
 
+    /**
+     * Decodes a {@link DataStore} from a string representation.
+     *
+     * @param string the string representation of the data store
+     * @param definition the store definition for the data store
+     * @return the decoded {@link DataStore}
+     */
     private static DataStore dataStoreDecoder(String string, StoreDefinition definition) {
         Gson gson = new Gson();
         Map<String, String> map = gson.fromJson(string, new TypeToken<Map<String, String>>() {
-
-            /**
-             * 
-             */
             private static final long serialVersionUID = 1L;
         }.getType());
 
         DataStore dataStore = DataStore.newInstance(definition);
         for (Entry<String, String> entry : map.entrySet()) {
-
-            // Determine key
             DataKey<?> key = definition.getKey(entry.getKey());
-
-            // Decode value
             Object value = key.decode(entry.getValue());
-
             dataStore.setRaw(key, value);
         }
 
         return dataStore;
     }
 
-    // public static <T extends DataStoreProvider> DataKey<T> dataStoreProvider(String id, Class<T> aClass,
-    // StoreDefinition definition) {
-    //
-    // return object(id, aClass)
-    // .setStoreDefinition(definition);
-    // }
-
+    /**
+     * Creates a {@link DataKey} for an enumeration.
+     *
+     * @param id the identifier for the key
+     * @param anEnum the enumeration class
+     * @return a {@link DataKey} for enumeration values
+     */
     public static <T extends Enum<T>> DataKey<T> enumeration(String id, Class<T> anEnum) {
         return object(id, anEnum)
                 .setDefault(() -> anEnum.getEnumConstants()[0])
@@ -453,31 +528,49 @@ public class KeyFactory {
                 .setKeyPanelProvider((key, data) -> new EnumMultipleChoicePanel<>(key, data));
     }
 
+    /**
+     * Creates a {@link DataKey} for a list of enumeration values.
+     *
+     * @param id the identifier for the key
+     * @param anEnum the enumeration class
+     * @return a {@link DataKey} for a list of enumeration values
+     */
     public static <T extends Enum<T>> DataKey<List<T>> enumerationMulti(String id, Class<T> anEnum) {
         return enumerationMulti(id, anEnum.getEnumConstants());
     }
 
+    /**
+     * Creates a {@link DataKey} for a list of enumeration values.
+     *
+     * @param id the identifier for the key
+     * @param enums the enumeration values
+     * @return a {@link DataKey} for a list of enumeration values
+     */
     @SuppressWarnings("unchecked")
     public static <T extends Enum<T>> DataKey<List<T>> enumerationMulti(String id, T... enums) {
-
         SpecsCheck.checkArgument(enums.length > 0, () -> "Must give at least one enum");
 
         return multiplechoiceList(id, new EnumCodec<>((Class<T>) enums[0].getClass()), Arrays.asList(enums));
     }
 
     /**
-     * A DataKey that supports types with generics.
-     * 
-     * 
-     * @param id
-     * @param aClass
-     * @param defaultValue
-     * @return
+     * Creates a generic {@link DataKey} with a specified default value.
+     *
+     * @param id the identifier for the key
+     * @param exampleInstance an example instance of the key's value
+     * @return a {@link DataKey} for the specified type
      */
     public static <T, E extends T> DataKey<T> generic(String id, E exampleInstance) {
         return new GenericKey<>(id, exampleInstance);
     }
 
+    /**
+     * Creates a generic {@link DataKey} with a default value supplier.
+     *
+     * @param id the identifier for the key
+     * @param defaultSupplier the supplier for the default value
+     * @return a {@link DataKey} for the specified type
+     */
     public static <T, E extends T> DataKey<T> generic(String id, Supplier<E> defaultSupplier) {
         DataKey<T> datakey = new GenericKey<>(id, defaultSupplier.get());
         datakey.setDefault(defaultSupplier);
@@ -485,43 +578,28 @@ public class KeyFactory {
     }
 
     /**
-     * *
-     * <p>
-     * Can only store instances that have the same concrete type as the given example instance. You should only creating
-     * generic keys of concrete base types (e.g., ArrayList<String>) and avoid interfaces or abstract classes (e.g.,
-     * List<String>).
-     * 
-     * @param id
-     * @param aClass
-     * @return
+     * Creates a {@link DataKey} for a list of values.
+     *
+     * @param id the identifier for the key
+     * @param elementClass the class of the list's elements
+     * @return a {@link DataKey} for a list of values
      */
-    // public static <T> DataKey<T> generic(String id, Class<T> aClass) {
-    // return new NormalKey<>(id, aClass);
-    // }
-
-    //
-    // public static <E extends Enum<E>> DataKey<EnumList<E>> enumList(String id, Class<E> enumClass) {
-    // EnumList<E> enumList = new EnumList<>(enumClass);
-    // return new NormalKey<EnumList<E>>(id, enumList.getClass());
-    // }
-
-    // public static DataKey<List<String>> stringList2() {
-    // List<String> list = Arrays.asList("asd", "asdas");
-    // GenericKey<List<String>> key = new GenericKey<>("", list);
-    //
-    // return key;
-    // }
-
     @SuppressWarnings("unchecked")
     public static <T> DataKey<List<T>> list(String id, Class<T> elementClass) {
         return generic(id, () -> (List<T>) new ArrayList<>())
                 .setCustomSetter((value, data) -> KeyFactory.listCustomSetter(value, data, elementClass))
                 .setCopyFunction(ArrayList::new)
                 .setValueClass(List.class);
-        // .setDefault(() -> new ArrayList<>());
-
     }
 
+    /**
+     * Custom setter for lists, ensuring the correct element type.
+     *
+     * @param value the list to set
+     * @param data the data store containing additional information
+     * @param elementClass the class of the list's elements
+     * @return the processed list
+     */
     private static <T> List<T> listCustomSetter(List<?> value, DataStore data, Class<T> elementClass) {
         if (value instanceof ArrayList) {
             return SpecsCollections.cast(value, elementClass).toArrayList();
@@ -536,10 +614,10 @@ public class KeyFactory {
     }
 
     /**
-     * Represents a set of files, with a corresponding base folder.
-     * 
-     * @param id
-     * @return
+     * Creates a {@link DataKey} for a map of files with corresponding base folders.
+     *
+     * @param id the identifier for the key
+     * @return a {@link DataKey} for a map of files with base folders
      */
     public static DataKey<Map<File, File>> filesWithBaseFolders(String id) {
         return generic(id, (Map<File, File>) new HashMap<File, File>())
@@ -548,14 +626,15 @@ public class KeyFactory {
                 .setCustomGetter(KeyFactory::customGetterFilesWithBaseFolders)
                 .setCustomSetter(KeyFactory::customSetterFilesWithBaseFolders)
                 .setDefault(() -> new HashMap<File, File>());
-
-        // return new NormalKey<>(id, String.class)
-        // .setKeyPanelProvider((key, data) -> new StringPanel(key, data))
-        // .setDecoder(s -> s)
-        // .setDefault(() -> "");
-
     }
 
+    /**
+     * Custom getter for files with base folders, processing paths and base folders.
+     *
+     * @param value the map of files with base folders
+     * @param data the data store containing additional information
+     * @return the processed map
+     */
     public static Map<File, File> customGetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
         Map<File, File> processedMap = new HashMap<>();
 
@@ -565,44 +644,35 @@ public class KeyFactory {
             File newBase = noBaseFolder ? null
                     : customGetterFile(entry.getValue(), data, true, false, false, true);
 
-            // File oldBase = entry.getValue() == null ? new File(".") : entry.getValue();
-            // File newBase = customGetterFile(oldBase, data, true, false, false, true);
-
             processedMap.put(newPath, newBase);
-
-            // System.out.println("PATH BEFORE:" + entry.getKey());
-            // System.out.println("PATH AFTER:" + newPath);
-            // System.out.println("BASE BEFORE:" + entry.getValue());
-            // System.out.println("BASE AFTER:" + newBase);
         }
 
         return processedMap;
     }
 
+    /**
+     * Custom setter for files with base folders, ensuring relative paths.
+     *
+     * @param value the map of files with base folders
+     * @param data the data store containing additional information
+     * @return the processed map
+     */
     public static Map<File, File> customSetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
-
-        // If it has no working folder set, just return value
-        // Optional<String> workingFolderTry = data.getTry(JOptionKeys.CURRENT_FOLDER_PATH);
         Optional<String> workingFolderTry = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
         if (!workingFolderTry.isPresent()) {
-            // System.out.println("NO CURRENT FOLDER PATH");
             return value;
         }
 
         File workingFolder = new File(workingFolderTry.get());
-
         Map<File, File> processedMap = new HashMap<>();
 
-        // Replace values with relative paths to the working folder, if there is a common base
         for (var entry : value.entrySet()) {
-
             File previousPath = entry.getKey();
             File previousBase = entry.getValue();
 
             String newBase = entry.getValue() == null ? ""
                     : SpecsIo.getRelativePath(previousBase, workingFolder, true).orElse(previousBase.toString());
 
-            // New path must take into account base
             String newPath = SpecsIo.getRelativePath(previousPath, workingFolder, true)
                     .orElse(previousPath.toString());
 
@@ -612,16 +682,14 @@ public class KeyFactory {
         return processedMap;
     }
 
-    // @SuppressWarnings("unchecked")
-    // public static <T extends Enum<T>> DataKey<List<T>> multiplechoiceList(String id, T... enums) {
-    //
-    // }
-
-    // public static <T> DataKey<List<T>> multiplechoiceList(String id,
-    // @SuppressWarnings("unchecked") T... availableChoices) {
-    // return multiplechoiceList(id, Arrays.asList(availableChoices));
-    // }
-
+    /**
+     * Creates a {@link DataKey} for a list of multiple-choice values.
+     *
+     * @param id the identifier for the key
+     * @param codec the codec for encoding and decoding values
+     * @param availableChoices the available choices for the key
+     * @return a {@link DataKey} for a list of multiple-choice values
+     */
     public static <T> DataKey<List<T>> multiplechoiceList(String id, StringCodec<T> codec,
             List<T> availableChoices) {
         SpecsCheck.checkArgument(availableChoices.size() > 0, () -> "Must give at least one element");
@@ -632,12 +700,25 @@ public class KeyFactory {
                         (key, data) -> new MultipleChoiceListPanel<>(key, data));
     }
 
+    /**
+     * Creates a {@link DataKey} for a list of multiple-choice string values.
+     *
+     * @param id the identifier for the key
+     * @param availableChoices the available choices for the key
+     * @return a {@link DataKey} for a list of multiple-choice string values
+     */
     public static DataKey<List<String>> multipleStringList(String id, String... availableChoices) {
         return multipleStringList(id, Arrays.asList(availableChoices));
     }
 
+    /**
+     * Creates a {@link DataKey} for a list of multiple-choice string values.
+     *
+     * @param id the identifier for the key
+     * @param availableChoices the available choices for the key
+     * @return a {@link DataKey} for a list of multiple-choice string values
+     */
     public static DataKey<List<String>> multipleStringList(String id, List<String> availableChoices) {
         return multiplechoiceList(id, s -> s, availableChoices);
     }
-
 }

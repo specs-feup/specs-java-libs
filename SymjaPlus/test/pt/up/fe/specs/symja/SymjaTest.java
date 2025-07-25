@@ -13,12 +13,12 @@
 
 package pt.up.fe.specs.symja;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import pt.up.fe.specs.symja.ast.SymjaAst;
 import pt.up.fe.specs.symja.ast.SymjaToC;

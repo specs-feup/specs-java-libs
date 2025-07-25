@@ -13,8 +13,16 @@
 
 package pt.up.fe.specs.jsengine;
 
+/**
+ * Utility class for launching JavaScript engines and managing their lifecycle.
+ */
 public class JsEngineLauncher {
 
+    /**
+     * Main method for launching JavaScript engines and evaluating sample scripts.
+     * 
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         var engine = JsEngineType.GRAALVM_COMPAT.newEngine();
 

@@ -94,7 +94,7 @@ public class LineParser {
 	while (command.length() > 0) {
 	    // Get indexes
 	    int spaceIndex = command.indexOf(this.commandSeparator);
-	    int quoteIndex = command.indexOf(this.commandGatherer);
+	    int quoteIndex = this.commandGatherer.isEmpty() ? -1 : command.indexOf(this.commandGatherer);
 
 	    // Check which comes first
 	    if (spaceIndex == -1 && quoteIndex == -1) {
@@ -103,7 +103,7 @@ public class LineParser {
 		continue;
 	    }
 
-	    if (spaceIndex < quoteIndex) {
+	    if (spaceIndex != -1 && (quoteIndex == -1 || spaceIndex < quoteIndex)) {
 		String argument = command.substring(0, spaceIndex);
 		commands.add(argument);
 		command = command.substring(spaceIndex + 1).trim();

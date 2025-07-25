@@ -1,11 +1,11 @@
-/**
- * Copyright 2020 SPeCS.
- * 
+/*
+ * Copyright 2020 SPeCS Research Group.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -25,9 +25,10 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * Applies methods that generate DataStores, based on arbitrary inputs defined by a signature Method.
- * 
- * @author JoaoBispo
  *
+ * Provides a registry of compatible static methods for parsing node data.
+ *
+ * @author JoaoBispo
  */
 public class NodeDataParser {
 
@@ -35,6 +36,12 @@ public class NodeDataParser {
     private final Map<String, Method> dataParsers;
     private final Set<String> warnedNodes;
 
+    /**
+     * Constructs a NodeDataParser instance.
+     *
+     * @param defaultMethod the default method to use when no specific parser is found
+     * @param classesWithParsers a collection of classes containing parser methods
+     */
     public NodeDataParser(Method defaultMethod, Collection<Class<?>> classesWithParsers) {
         this.defaultMethod = defaultMethod;
         this.dataParsers = new HashMap<>();
@@ -48,9 +55,14 @@ public class NodeDataParser {
         for (var classWithParsers : classesWithParsers) {
             addParsers(defaultMethod, classWithParsers);
         }
-
     }
 
+    /**
+     * Adds parser methods from the given class to the registry.
+     *
+     * @param parserMethodSignature the signature method to validate compatibility
+     * @param classWithParsers the class containing parser methods
+     */
     private void addParsers(Method parserMethodSignature, Class<?> classWithParsers) {
         for (Method method : classWithParsers.getMethods()) {
 
@@ -64,13 +76,13 @@ public class NodeDataParser {
             // Map name of the method to the method class
             dataParsers.put(methodName, method);
         }
-
     }
 
     /**
-     * 
-     * @param method
-     * @param signature
+     * Validates if the given method is compatible with the signature method.
+     *
+     * @param method the method to validate
+     * @param signature the signature method to compare against
      * @return true if both methods are considered equivalent
      */
     private boolean isValidMethod(Method method, Method signature) {
@@ -84,7 +96,7 @@ public class NodeDataParser {
             return false;
         }
 
-        // For each paramters, check if they are assignable
+        // For each parameter, check if they are assignable
         var methodParams = method.getParameterTypes();
         var signatureParams = signature.getParameterTypes();
         for (int i = 0; i < methodParams.length; i++) {
@@ -98,15 +110,24 @@ public class NodeDataParser {
     }
 
     /**
+     * Generates the parser method name for the given key.
+     *
      * By default, prepends "parse" and appends "Data" to the key.
-     * 
-     * @param key
-     * @return
+     *
+     * @param key the key to generate the parser name
+     * @return the generated parser method name
      */
     public String getParserName(String key) {
         return "parse" + key + "Data";
     }
 
+    /**
+     * Parses data using the method associated with the given key.
+     *
+     * @param key the key identifying the parser method
+     * @param args the arguments to pass to the parser method
+     * @return the result of the parser method
+     */
     public Object parse(String key, Object... args) {
         var methodName = getParserName(key);
         var method = dataParsers.get(methodName);

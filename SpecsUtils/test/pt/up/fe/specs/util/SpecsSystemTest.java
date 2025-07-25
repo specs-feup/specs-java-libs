@@ -13,10 +13,22 @@
 
 package pt.up.fe.specs.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
+/**
+ * Test suite for SpecsSystem utility class.
+ * 
+ * This test class covers system functionality including:
+ * - Java version detection
+ * - Reflection utilities (invokeAsGetter)
+ * - System property access
+ * - Field and method invocation
+ */
+@DisplayName("SpecsSystem Tests")
 public class SpecsSystemTest {
 
     public static final String STATIC_FIELD = "a_static_field";
@@ -30,22 +42,72 @@ public class SpecsSystemTest {
         return 20;
     }
 
-    @Test
-    public void testJavaVersion() {
-        // Just ensure there is no exception thrown
-        System.out.println(SpecsSystem.getJavaVersionNumber());
+    @Nested
+    @DisplayName("Java Version Detection")
+    class JavaVersionDetection {
+
+        @Test
+        @DisplayName("getJavaVersionNumber should return valid version without throwing exception")
+        void testJavaVersion_ShouldReturnValidVersion() {
+            assertThatCode(() -> {
+                double version = SpecsSystem.getJavaVersionNumber();
+                System.out.println("Java version: " + version);
+            }).doesNotThrowAnyException();
+            
+            // Java version should be positive and reasonable (at least 8.0)
+            assertThat(SpecsSystem.getJavaVersionNumber()).isGreaterThanOrEqualTo(8.0);
+        }
     }
 
-    @Test
-    public void testInvokeAsGetter() {
-        // Field
-        assertEquals("a_static_field", SpecsSystem.invokeAsGetter(SpecsSystemTest.class, "STATIC_FIELD"));
+    @Nested
+    @DisplayName("Reflection Utilities")
+    class ReflectionUtilities {
 
-        // Static Method
-        assertEquals(10, SpecsSystem.invokeAsGetter(SpecsSystemTest.class, "staticNumber"));
+        @Test
+        @DisplayName("invokeAsGetter should access static fields correctly")
+        void testInvokeAsGetter_StaticField_ReturnsCorrectValue() {
+            Object result = SpecsSystem.invokeAsGetter(SpecsSystemTest.class, "STATIC_FIELD");
+            assertThat(result).isEqualTo("a_static_field");
+        }
 
-        // Instance Method
-        assertEquals(20, SpecsSystem.invokeAsGetter(new SpecsSystemTest(), "number"));
+        @Test
+        @DisplayName("invokeAsGetter should invoke static methods correctly")
+        void testInvokeAsGetter_StaticMethod_ReturnsCorrectValue() {
+            Object result = SpecsSystem.invokeAsGetter(SpecsSystemTest.class, "staticNumber");
+            assertThat(result).isEqualTo(10);
+        }
+
+        @Test
+        @DisplayName("invokeAsGetter should invoke instance methods correctly")
+        void testInvokeAsGetter_InstanceMethod_ReturnsCorrectValue() {
+            Object result = SpecsSystem.invokeAsGetter(new SpecsSystemTest(), "number");
+            assertThat(result).isEqualTo(20);
+        }
+
+        @Test
+        @DisplayName("invokeAsGetter should throw exception for non-existent field")
+        void testInvokeAsGetter_NonExistentField_ShouldThrowException() {
+            assertThatThrownBy(() -> {
+                SpecsSystem.invokeAsGetter(SpecsSystemTest.class, "nonExistentField");
+            }).isInstanceOf(RuntimeException.class)
+              .hasMessageContaining("Could not resolve property 'nonExistentField'");
+        }
+
+        @Test
+        @DisplayName("invokeAsGetter should throw exception for null class")
+        void testInvokeAsGetter_NullClass_ShouldThrowException() {
+            assertThatThrownBy(() -> {
+                SpecsSystem.invokeAsGetter(null, "someField");
+            }).isInstanceOf(NullPointerException.class);
+        }
+
+        @Test
+        @DisplayName("invokeAsGetter should throw exception for null field name")
+        void testInvokeAsGetter_NullFieldName_ShouldThrowException() {
+            assertThatThrownBy(() -> {
+                SpecsSystem.invokeAsGetter(SpecsSystemTest.class, null);
+            }).isInstanceOf(RuntimeException.class);
+        }
     }
 
 }
