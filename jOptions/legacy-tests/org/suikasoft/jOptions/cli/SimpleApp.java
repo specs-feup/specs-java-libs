@@ -37,8 +37,6 @@ public class SimpleApp {
 
         SpecsProperty.ShowStackTrace.applyProperty("true");
 
-        // TODO: Use SetupDefinition
-        // Setup defaultSetup = SimpleSetup.newInstance(TestOption.class);
         StoreDefinition setupDef = new TestConfig().getStoreDefinition();
         AppPersistence persistence = new XmlPersistence(setupDef);
 

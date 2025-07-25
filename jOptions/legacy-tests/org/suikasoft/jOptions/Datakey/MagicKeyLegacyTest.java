@@ -18,14 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
-public class MagicKeyTest {
+public class MagicKeyLegacyTest {
 
     // private static final DataKey<String> p = new MagicKey<String>("test_key");
     // private static final DataKey<String> p = MagicKey.create("qq");
 
     @Test
     public void test() {
-        // TODO: Make MagicKey extend ADataKey
         DataKey<String> s = new MagicKey<String>("test_key") {
         };
         // DataKey<String> s = Keys.object("test_key", String.class);

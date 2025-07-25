@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.utilities.StringList;
 
-public class DataKeyTest {
+public class DataKeyLegacyTest {
 
     @Test
     public void test() {
@@ -165,7 +165,7 @@ public class DataKeyTest {
 
     private static String listStringEncode(String... strings) {
 
-        StringJoiner joiner = new StringJoiner(DataKeyTest.DEFAULT_SEPARATOR);
+        StringJoiner joiner = new StringJoiner(DataKeyLegacyTest.DEFAULT_SEPARATOR);
         for (String string : strings) {
             joiner.add(string);
         }
@@ -173,7 +173,7 @@ public class DataKeyTest {
     }
 
     private static ArrayList<String> listStringDecode(String string) {
-        return Arrays.stream(string.split(DataKeyTest.DEFAULT_SEPARATOR))
+        return Arrays.stream(string.split(DataKeyLegacyTest.DEFAULT_SEPARATOR))
                 .collect(() -> new ArrayList<>(), (list, element) -> list.add(element),
                         (list1, list2) -> list1.addAll(list2));
 
