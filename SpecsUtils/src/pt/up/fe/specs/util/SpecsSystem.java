@@ -74,7 +74,7 @@ public class SpecsSystem {
 
     private static final String BUILD_NUMBER_ATTR = "Build-Number";
 
-    private static final Lazy<String> WINDOWS_POWERSHEL = Lazy.newInstance(SpecsSystem::findPwsh);
+    private static final Lazy<String> WINDOWS_POWERSHELL = Lazy.newInstance(SpecsSystem::findPwsh);
 
     private static boolean testIsDebug() {
 
@@ -1726,10 +1726,17 @@ public class SpecsSystem {
         return e;
     }
 
+    
     /**
-     * Suggested by GPT5.
+     * Attempts to locate a PowerShell executable available in the system's PATH.
+     * <p>
+     * Tries to find "pwsh" (PowerShell Core) first, and if not found, falls back to "powershell" (Windows PowerShell).
+     * It does so by attempting to execute each candidate with a command that queries the PowerShell version.
+     * If a suitable executable is found, its name is returned.
+     * </p>
      *
-     * @return
+     * @return the name of the PowerShell executable found ("pwsh" or "powershell")
+     * @throws IllegalStateException if no PowerShell executable is available on the system PATH
      */
     private static String findPwsh() {
         // GitHub Windows runners have pwsh in PATH; if not, fall back to powershell.exe
@@ -1744,7 +1751,13 @@ public class SpecsSystem {
         throw new IllegalStateException("No PowerShell available on PATH");
     }
 
+    /**
+     * Returns the path to the Windows PowerShell executable.
+     *
+     * @return the path to the Windows PowerShell executable as a String
+     * @throws IllegalStateException if the PowerShell executable cannot be found
+     */
     public static String getWindowsPowershell() {
-        return WINDOWS_POWERSHEL.get();
+        return WINDOWS_POWERSHELL.get();
     }
 }
