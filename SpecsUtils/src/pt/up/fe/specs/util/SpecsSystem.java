@@ -74,6 +74,8 @@ public class SpecsSystem {
 
     private static final String BUILD_NUMBER_ATTR = "Build-Number";
 
+    private static final Lazy<String> WINDOWS_POWERSHEL = Lazy.newInstance(SpecsSystem::findPwsh);
+
     private static boolean testIsDebug() {
 
         // Test if file debug exists in working directory
@@ -1724,4 +1726,25 @@ public class SpecsSystem {
         return e;
     }
 
+    /**
+     * Suggested by GPT5.
+     *
+     * @return
+     */
+    private static String findPwsh() {
+        // GitHub Windows runners have pwsh in PATH; if not, fall back to powershell.exe
+        for (String exe : List.of("pwsh", "powershell")) {
+            try {
+                Process p = new ProcessBuilder(exe, "-NoLogo", "-NoProfile", "-Command", "$PSVersionTable.PSVersion")
+                        .redirectErrorStream(true).start();
+                if (p.waitFor() == 0) return exe;
+            } catch (Exception ignored) {
+            }
+        }
+        throw new IllegalStateException("No PowerShell available on PATH");
+    }
+
+    public static String getWindowsPowershell() {
+        return WINDOWS_POWERSHEL.get();
+    }
 }
