@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import pt.up.fe.specs.util.Preconditions;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.providers.impl.GenericResource;
@@ -34,7 +33,7 @@ import pt.up.fe.specs.util.providers.impl.GenericResource;
  * </p>
  *
  * Represents a class which provides a string to a Java resource.
- * 
+ *
  * <p>
  * The resource must exist, the ResourceProvider is responsible for guaranteeing that the resource is valid.
  *
@@ -98,7 +97,7 @@ public interface ResourceProvider extends FileResourceProvider {
             return Collections.emptyList();
         }
 
-        List<ResourceProvider> resources = SpecsFactory.newArrayList(resourcesArray.length);
+        List<ResourceProvider> resources = new ArrayList<>(resourcesArray.length);
 
         for (ResourceProvider provider : resourcesArray) {
             resources.add(provider);
@@ -147,7 +146,7 @@ public interface ResourceProvider extends FileResourceProvider {
 
         K[] enums = enumClass.getEnumConstants();
 
-        List<ResourceProvider> resources = SpecsFactory.newArrayList(enums.length);
+        List<ResourceProvider> resources = new ArrayList<>(enums.length);
 
         for (K anEnum : enums) {
             resources.add(anEnum);
@@ -191,7 +190,7 @@ public interface ResourceProvider extends FileResourceProvider {
 
     /**
      * Returns the path that should be used when copying this resource. By default returns the same as getResource().
-     * 
+     *
      * @return the file location path
      */
     default String getFileLocation() {

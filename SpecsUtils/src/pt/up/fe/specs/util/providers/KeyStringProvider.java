@@ -13,10 +13,9 @@
 
 package pt.up.fe.specs.util.providers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import pt.up.fe.specs.util.SpecsFactory;
 
 /**
  * Functional interface for providing string keys.
@@ -45,7 +44,7 @@ public interface KeyStringProvider extends KeyProvider<String> {
      * @return a list of string keys provided by the instances
      */
     public static List<String> toList(List<KeyStringProvider> providers) {
-	List<String> strings = SpecsFactory.newArrayList();
+	List<String> strings = new ArrayList<>();
 
 	providers.forEach(stringProvider -> strings.add(stringProvider.getKey()));
 

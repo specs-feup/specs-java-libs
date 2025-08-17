@@ -695,42 +695,42 @@ public class SpecsIo {
         this.separator = SpecsIo.DEFAULT_EXTENSION_SEPARATOR;
         this.followSymlinks = followSymlinks;
         }
-        
+
         @Override
         public boolean accept(File dir, String name) {
-        
+
         String suffix = separator + extension.toLowerCase();
-        
+
         if (!followSymlinks) {
-        
+
             File f = new File(dir, name);
-        
+
             // Fail if this is a symlink.
             if (Files.isSymbolicLink(f.toPath())) {
                 return false;
             }
         }
-        
+
         return name.toLowerCase().endsWith(suffix);
         */
         /*
         // Process files inside folder
         for (File file : path.listFiles()) {
-        
-        
-        
+
+
+
             // Process folder
             if (file.isDirectory()) {
                 // If it should be cut-off, stop processing of this folder
                 if (cutoffFolders.test(file)) {
                     continue;
                 }
-        
+
                 // Recursively add files of folder
                 getFilesRecursivePrivate(file, extensions, followSymlinks, cutoffFolders, foundFiles);
                 continue;
             }
-        
+
             //
             // if (!followSymlinks) {
             //
@@ -743,37 +743,37 @@ public class SpecsIo {
             // }
             //
             // return name.toLowerCase().endsWith(suffix);
-        
+
             String extension = SpecsIo.getExtension(file).toLowerCase();
-        
+
             if(extensions.contains(o))
-        
+
             // Add files that pass the extension and symlink rules
             // String suffix = SpecsIo.DEFAULT_EXTENSION_SEPARATOR + extension.toLowerCase();
         }
         */
         /*
         List<File> fileList = new ArrayList<>();
-        
+
         ExtensionFilter filter = new ExtensionFilter(extension, followSymlinks);
         File[] files = path.listFiles(filter);
-        
+
         fileList.addAll(Arrays.asList(files));
-        
+
         // directories
         files = path.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-        
+
                 // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-        
+
                 fileList.addAll(getFilesRecursive(file, extension));
             }
         }
-        
+
         return fileList;
         */
     }
@@ -806,45 +806,45 @@ public class SpecsIo {
      */
     /*
     public static List<File> getFilesRecursive(File path, String extension, boolean followSymlinks) {
-    
+
         // if (!path.isDirectory()) {
         if (!path.exists()) {
             SpecsLogs.warn("Path '" + path + "' does not exist.");
             return null;
         }
-    
+
         if (path.isFile()) {
             if (SpecsIo.getExtension(path).equals(extension)) {
                 return Arrays.asList(path);
             }
-    
+
             return Collections.emptyList();
         }
-    
+
         List<File> fileList = new ArrayList<>();
-    
+
         ExtensionFilter filter = new ExtensionFilter(extension, followSymlinks);
         File[] files = path.listFiles(filter);
-    
+
         fileList.addAll(Arrays.asList(files));
-    
+
         // directories
         files = path.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-    
+
                 // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-    
+
                 fileList.addAll(getFilesRecursive(file, extension));
             }
         }
-    
+
         return fileList;
     }
-    
+
     */
 
     /**
@@ -876,45 +876,45 @@ public class SpecsIo {
     }
     /*
     public static List<File> getFilesRecursive(File path, boolean followSymlinks) {
-    
+
         // Special case: path is a single file
         if (path.isFile()) {
             return Arrays.asList(path);
         }
-    
+
         List<File> fileList = new ArrayList<>();
         File[] files = path.listFiles();
-    
+
         if (files == null) {
             // Not a folder
             return fileList;
         }
-    
+
         for (File file : files) {
-    
+
             // Ignore file if is symlink
             if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                 continue;
             }
-    
+
             if (file.isFile()) {
                 fileList.add(file);
             }
         }
-    
+
         for (File file : files) {
-    
+
             if (file.isDirectory()) {
-    
+
                 // Ignore directory if is symlink
                 if (!followSymlinks && Files.isSymbolicLink(file.toPath())) {
                     continue;
                 }
-    
+
                 fileList.addAll(getFilesRecursive(file, followSymlinks));
             }
         }
-    
+
         return fileList;
     }
     */
@@ -1008,7 +1008,7 @@ public class SpecsIo {
     }
 
     public static List<File> getFilesWithExtension(List<File> files, String extension) {
-        Set<String> extensions = SpecsFactory.newHashSet();
+        Set<String> extensions = new HashSet<>();
         extensions.add(extension);
 
         return getFilesWithExtension(files, extensions);
@@ -1174,16 +1174,16 @@ public class SpecsIo {
         /*
         // Using 'finally' style 2 as described in http://www.javapractices.com/topic/TopicAction.do?Id=25
         try (OutputStream out = new FileOutputStream(f2); InputStream in = source) {
-        
+
             // For Overwrite the file.
-        
+
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
             SpecsLogs.debug(() -> "Copied stream to file '" + destination.getAbsolutePath() + "'.");
-        
+
         } catch (IOException e) {
             SpecsLogs.warn("IoException while copying stream to file '" + destination + "'", e);
             success = false;
@@ -1531,7 +1531,7 @@ public class SpecsIo {
      */
     public static byte[] readAsBytes(InputStream inStream) {
 
-        List<Byte> bytes = SpecsFactory.newArrayList();
+        List<Byte> bytes = new ArrayList<>();
 
         // Using 'finally' style 2 as described in http://www.javapractices.com/topic/TopicAction.do?Id=25
         try {
@@ -1849,13 +1849,13 @@ public class SpecsIo {
         if (files == null) {
             return Collections.emptyList();
         }
-        
+
         ArrayList<File> returnValue = new ArrayList<>();
-        
+
         for (File file : files) {
             returnValue.add(file);
         }
-        
+
         return returnValue;
         */
     }
@@ -1919,18 +1919,18 @@ public class SpecsIo {
                 if (filter.isAllowed(currentPatternPath)) {
                     files.add(currentPatternPath);
                 }
-            
+
                 continue;
             }
-            
+
             if (currentPatternPath.isFile()) {
                 if (filter.isAllowed(currentPatternPath)) {
                     files.add(currentPatternPath);
                 }
-            
+
                 continue;
             }
-            
+
             SpecsLogs.warn("Could not hand path, is neither a file or a folder: " + currentPatternPath);
             */
         }
@@ -1953,9 +1953,9 @@ public class SpecsIo {
         if (!folder.isDirectory()) {
             throw new IllegalArgumentException("The file given in parameter is not a folder");
         }
-    
+
         File[] files = folder.listFiles(new ExtensionFilter(extension));
-    
+
         if (files == null || files.length == 0) {
             return false;
         }
@@ -2149,7 +2149,7 @@ public class SpecsIo {
         	if (extIndex < 0) {
         	    return "";
         	}
-        
+
         	return filename.substring(extIndex + 1, filename.length());
          */
     }
@@ -2187,11 +2187,11 @@ public class SpecsIo {
         return existingFolder(null, folderpath);
         /*
         File folder = existingFolder(null, folderpath);
-        
+
         if (folder == null) {
         throw new RuntimeException("Folder '" + folderpath + "' not found");
         }
-        
+
         return folder;
          */
     }
@@ -2413,8 +2413,8 @@ public class SpecsIo {
 
     /**
      * Helper method which creates a temporary file in the system temporary folder with extension 'txt'.
-     * 
-     * 
+     *
+     *
      * @return
      */
     public static File getTempFile() {
@@ -2423,7 +2423,7 @@ public class SpecsIo {
 
     /**
      * Creates a file with a random name in a temporary folder. This file will be deleted when the JVM exits.
-     * 
+     *
      * @param folderName
      * @return
      */
@@ -2441,7 +2441,7 @@ public class SpecsIo {
 
     /**
      * A randomly named folder in the OS temporary folder that is deleted when the virtual machine exits.
-     * 
+     *
      * @return
      */
     public static File newRandomFolder() {
@@ -2684,7 +2684,7 @@ public class SpecsIo {
 
             /*
             file = file.getAbsoluteFile().getCanonicalFile();
-            
+
             // return new File(file.getAbsolutePath().replace('\\', '/'));
             return new File(normalizePath(file.getAbsolutePath()));
             */
@@ -3139,7 +3139,7 @@ public class SpecsIo {
     // }
 
     /**
-     * 
+     *
      * @param file
      * @param base
      * @return
@@ -3185,10 +3185,10 @@ public class SpecsIo {
 
     /**
      * Splits the given String into several paths, according to the path separator.
-     * 
+     *
      * <p>
      * Always uses the same character as path separator, the semicolon (;).
-     * 
+     *
      * @param fileList
      * @return
      */
@@ -3238,7 +3238,7 @@ public class SpecsIo {
 
     /**
      * The depth of a given File. If file has the path foo/bar/a.cpp, depth is 3.
-     * 
+     *
      * @param file
      * @return
      */
@@ -3261,7 +3261,7 @@ public class SpecsIo {
     }
 
     /**
-     * 
+     *
      * @return the first folder in java.library.path that is writable. Throws exception if no folder that can be written
      *         is found
      */
@@ -3304,7 +3304,7 @@ public class SpecsIo {
     }
 
     /**
-     * 
+     *
      * @return the list of folders in java.library.path
      */
     public static List<File> getLibraryFolders() {
@@ -3318,7 +3318,7 @@ public class SpecsIo {
 
     /**
      * Removes query information of an URL string.
-     * 
+     *
      * @param urlString
      * @return
      */

@@ -13,10 +13,10 @@
 
 package pt.up.fe.specs.util.providers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.up.fe.specs.util.Preconditions;
-import pt.up.fe.specs.util.SpecsFactory;
 
 /**
  * Utility class for supporting provider interfaces.
@@ -39,7 +39,7 @@ public class ProvidersSupport {
 
         Preconditions.checkNotNull(enums, "Class must be an enum");
 
-        List<ResourceProvider> resources = SpecsFactory.newArrayList(enums.length);
+        List<ResourceProvider> resources = new ArrayList<>(enums.length);
 
         for (ResourceProvider anEnum : enums) {
             resources.add(anEnum);

@@ -235,7 +235,7 @@ public class SpecsSwing {
         }
 
         // Build map
-        Map<K, V> newMap = SpecsFactory.newLinkedHashMap();
+        Map<K, V> newMap = new LinkedHashMap<>();
         for (K key : currentKeys) {
             newMap.put(key, map.get(key));
         }

@@ -1,11 +1,11 @@
 /**
  * Copyright 2012 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.swing;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,18 +25,16 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import pt.up.fe.specs.util.SpecsFactory;
-
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class MapModelV2 extends AbstractTableModel {
 
-    public static final Color COLOR_DEFAULT = new Color(0, 0, 0, 0);
+    private static final Color COLOR_DEFAULT = new Color(0, 0, 0, 0);
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     // private final Map<K, V> map;
@@ -52,9 +51,9 @@ public class MapModelV2 extends AbstractTableModel {
      */
     // public MapModelV2(Map<?, ?> map, List<String> columnNames) {
     public MapModelV2(Map<?, ?> map) {
-	this.keys = SpecsFactory.newArrayList();
-	this.values = SpecsFactory.newArrayList();
-	this.rowColors = SpecsFactory.newArrayList();
+	this.keys = new ArrayList<>();
+	this.values = new ArrayList<>();
+	this.rowColors = new ArrayList<>();
 
 	this.columnNames = null;
 	// this.columnNames = FactoryUtils.newArrayList(columnNames);
@@ -77,7 +76,7 @@ public class MapModelV2 extends AbstractTableModel {
 	return new DefaultTableCellRenderer() {
 
 	    /**
-	     * 
+	     *
 	     */
 	    private static final long serialVersionUID = -2074238717877716002L;
 
@@ -168,7 +167,7 @@ public class MapModelV2 extends AbstractTableModel {
 
     /**
      * Helper method with variadic inputs.
-     * 
+     *
      * @param columnNames
      */
     public void setColumnNames(String... columnNames) {
@@ -216,7 +215,7 @@ public class MapModelV2 extends AbstractTableModel {
 
     /*
     public void insertValue(Integer key, Object aValue) {
-    
+
     }
      */
 

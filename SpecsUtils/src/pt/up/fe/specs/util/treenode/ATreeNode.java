@@ -20,7 +20,6 @@ import java.util.List;
 
 import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsCheck;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -33,7 +32,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     protected K parent;
 
     public ATreeNode(Collection<? extends K> children) {
-        // this.children = SpecsFactory.newLinkedList();
         this.children = initChildren(children);
 
         // In case given list is null
@@ -80,8 +78,8 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @return a mutable view of the children
      */
     // @Override
@@ -209,7 +207,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         // adding the list to itself
         if (!children.isEmpty() && children == this.children) {
             SpecsLogs.warn("Adding the list to itself");
-            children = SpecsFactory.newArrayList(children);
+            children = new ArrayList<>(children);
         }
 
         for (K child : children) {
@@ -276,7 +274,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      * <p>
      * This method is needed because of Java generics not having information about K.
      *
-     * 
+     *
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -285,7 +283,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * 
+     *
      * @return a String with a tree-representation of this node
      */
     public String toTree() {

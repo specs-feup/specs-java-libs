@@ -55,13 +55,13 @@ public class SpecsFactory {
 
     /**
      * Creates a list of the given class type, containing 'elements'.
-     * 
+     *
      * @param listClass the class type of the list elements
      * @param elements the elements to be added to the list
      * @return a list containing the given elements
      */
     public static <T> List<T> asList(Class<T> listClass, Object... elements) {
-        List<T> list = SpecsFactory.newArrayList();
+        List<T> list = new ArrayList<>();
 
         for (Object element : elements) {
             if (listClass.isInstance(element)) {
@@ -77,7 +77,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new ArrayList.
-     * 
+     *
      * @param <T> the type of elements in the list
      * @return a new ArrayList
      */
@@ -87,7 +87,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new ArrayList with the specified initial capacity.
-     * 
+     *
      * @param initialCapacity the initial capacity of the list
      * @param <T> the type of elements in the list
      * @return a new ArrayList
@@ -98,7 +98,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new ArrayList containing the elements of the specified collection.
-     * 
+     *
      * @param elements the collection whose elements are to be placed into the list
      * @param <T> the type of elements in the list
      * @return a new ArrayList
@@ -109,7 +109,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new LinkedList.
-     * 
+     *
      * @param <T> the type of elements in the list
      * @return a new LinkedList
      */
@@ -119,7 +119,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new LinkedList containing the elements of the specified collection.
-     * 
+     *
      * @param elements the collection whose elements are to be placed into the list
      * @param <T> the type of elements in the list
      * @return a new LinkedList
@@ -130,7 +130,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new HashMap.
-     * 
+     *
      * @param <K> the type of keys in the map
      * @param <V> the type of values in the map
      * @return a new HashMap
@@ -141,7 +141,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new HashMap containing the mappings of the specified map.
-     * 
+     *
      * @param map the map whose mappings are to be placed into the new map
      * @param <K> the type of keys in the map
      * @param <V> the type of values in the map
@@ -157,7 +157,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new LinkedHashMap.
-     * 
+     *
      * @param <K> the type of keys in the map
      * @param <V> the type of values in the map
      * @return a new LinkedHashMap
@@ -168,7 +168,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new EnumMap for the specified key class.
-     * 
+     *
      * @param keyClass the class of the keys in the map
      * @param <K> the type of keys in the map
      * @param <V> the type of values in the map
@@ -180,7 +180,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new HashSet containing the elements of the specified collection.
-     * 
+     *
      * @param elements the collection whose elements are to be placed into the set
      * @param <T> the type of elements in the set
      * @return a new HashSet
@@ -191,7 +191,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new HashSet.
-     * 
+     *
      * @param <T> the type of elements in the set
      * @return a new HashSet
      */
@@ -201,7 +201,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new LinkedHashMap containing the mappings of the specified map.
-     * 
+     *
      * @param elements the map whose mappings are to be placed into the new map
      * @param <K> the type of keys in the map
      * @param <V> the type of values in the map
@@ -213,7 +213,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new LinkedHashSet.
-     * 
+     *
      * @param <T> the type of elements in the set
      * @return a new LinkedHashSet
      */
@@ -223,7 +223,7 @@ public class SpecsFactory {
 
     /**
      * Creates a new LinkedHashSet containing the elements of the specified collection.
-     * 
+     *
      * @param elements the collection whose elements are to be placed into the set
      * @param <T> the type of elements in the set
      * @return a new LinkedHashSet
@@ -234,7 +234,7 @@ public class SpecsFactory {
 
     /**
      * Returns an InputStream for the specified file.
-     * 
+     *
      * @param file the file to be read
      * @return an InputStream for the file, or null if the file is not found
      */
@@ -250,7 +250,7 @@ public class SpecsFactory {
 
     /**
      * Returns an empty map if the given map is null.
-     * 
+     *
      * @param map the map to be checked
      * @param <K> the type of keys in the map
      * @param <V> the type of values in the map
@@ -267,13 +267,13 @@ public class SpecsFactory {
 
     /**
      * Builds a set with a sequence of integers starting at 'startIndex' and with 'size' integers.
-     * 
+     *
      * @param startIndex the starting index of the sequence
      * @param size the number of integers in the sequence
      * @return a set containing the sequence of integers
      */
     public static Set<Integer> newSetSequence(int startIndex, int size) {
-        Set<Integer> set = SpecsFactory.newHashSet();
+        Set<Integer> set = new HashSet<>();
 
         for (int i = startIndex; i < startIndex + size; i++) {
             set.add(i);
@@ -284,13 +284,13 @@ public class SpecsFactory {
 
     /**
      * Converts an array of int to a List of Integer.
-     * 
+     *
      * @param array the original int array
      * @return a List of Integer
      */
     public static List<Integer> fromIntArray(int[] array) {
 
-        List<Integer> intList = SpecsFactory.newArrayList();
+        List<Integer> intList = new ArrayList<>();
 
         for (int index = 0; index < array.length; index++) {
             intList.add(array[index]);
@@ -301,10 +301,10 @@ public class SpecsFactory {
 
     /**
      * If the given value is null, returns an empty collection. Otherwise, returns an unmodifiable view of the list.
-     * 
+     *
      * <p>
      * This method is useful for final fields whose contents do not need to be changed.
-     * 
+     *
      * @param aList the list to be checked
      * @param <T> the type of elements in the list
      * @return an unmodifiable view of the list, or an empty list if the original list is null or empty
@@ -322,10 +322,10 @@ public class SpecsFactory {
 
     /**
      * Method similar to Collections.addAll, but that accepts 'null' as the source argument.
-     * 
+     *
      * <p>
      * If the source argument is null, the collection sink remains unmodified.
-     * 
+     *
      * @param sink the collection to which elements are to be added
      * @param source the collection whose elements are to be added to the sink
      * @param <T> the type of elements in the collections

@@ -15,6 +15,7 @@ package pt.up.fe.specs.util;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -205,7 +206,7 @@ public class SpecsLogs {
         final Handler[] handlersTemp = logger.getHandlers();
 
         // Add handlers to a list, except for the given handler
-        final List<Handler> handlerList = SpecsFactory.newArrayList();
+        final List<Handler> handlerList = new ArrayList<>();
         for (Handler element : handlersTemp) {
 
             if (element == handler) {
@@ -258,27 +259,27 @@ public class SpecsLogs {
      */
     /*
     public static Handler buildConsoleHandler() {
-    
+
     StreamHandler cHandler = CustomConsoleHandler.newStderr();
     //ConsoleHandler cHandler = new ConsoleHandler();
     cHandler.setFormatter(new ConsoleFormatter());
-    
+
     /*
     cHandler.setFilter(new Filter() {
-    
+
         @Override
         public boolean isLoggable(LogRecord record) {
     	if(record.getLevel().intValue() > 700) {
     	    return false;
     	}
-    
+
     	return true;
         }
     });
      */
     /*
     cHandler.setLevel(Level.ALL);
-    
+
     return cHandler;
     }
      */
@@ -432,10 +433,10 @@ public class SpecsLogs {
 
     /*
     public static void msgWarn(Logger logger, String msg) {
-    
+
         final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
         final int startIndex = 2;
-    
+
         msgWarn(msg, elements, startIndex, true, logger);
     }
     */
@@ -443,11 +444,11 @@ public class SpecsLogs {
     /*
     private static void msgWarn(String msg, List<StackTraceElement> elements, int startIndex,
             boolean appendCallingClass, Logger logger) {
-    
+
         msg = "[WARNING]: " + msg;
         msg = parseMessage(msg);
         msg = buildErrorMessage(msg, elements.subList(startIndex, elements.size()));
-    
+
         if (appendCallingClass) {
             logger = logger == null ? getLoggerDebug() : logger;
             logger.warning(msg);
@@ -510,7 +511,7 @@ public class SpecsLogs {
 
     /*
     public static void msgWarn(Throwable cause) {
-    
+
         msgWarn("Exception", cause);
         // final List<StackTraceElement> elements = Arrays.asList(cause.getStackTrace());
         // final int startIndex = 0;
@@ -518,31 +519,31 @@ public class SpecsLogs {
         // final String msg = cause.getClass().getName() + ": " + cause.getMessage();
         //
         // msgWarn(msg, elements, startIndex, false, null);
-    
+
     }
     */
 
     /*
     public static String buildErrorMessage(String originalMsg, Collection<StackTraceElement> elements) {
-    
+
         final StringBuilder builder = new StringBuilder();
         builder.append(originalMsg);
-    
+
         // Append the stack trace to the msg
         if (SpecsLogs.printStackTrace) {
             builder.append("\n\nStack Trace:");
             builder.append("\n--------------");
-    
+
             for (final StackTraceElement element : elements) {
                 builder.append("\n");
                 builder.append(element);
             }
-    
+
             builder.append("\n--------------");
             builder.append("\n");
-    
+
         }
-    
+
         return builder.toString();
     }
     */
@@ -566,11 +567,11 @@ public class SpecsLogs {
 
     /**
      * Info-level message.
-     * 
+     *
      * <p>
      * Accepting a Logger, since that should be the common case, keeping a reference to a Logger so that it does not get
      * garbage collected.
-     * 
+     *
      * @param logger
      * @param msg
      */
@@ -634,10 +635,10 @@ public class SpecsLogs {
 
     /**
      * Enables/disables printing of the stack trace for Warning level.
-     * 
+     *
      * <p>
      * This method is for compatibility with previous code. Please use LogSourceInfo.setLogSourceInfo instead.
-     * 
+     *
      * @param bool
      */
     public static void setPrintStackTrace(boolean bool) {
@@ -685,7 +686,7 @@ public class SpecsLogs {
     /**
      * If this is not a pure string literal, should always prefer overload that receives a lambda, to avoid doing the
      * string computation when debug is not enabled.
-     * 
+     *
      * @param string
      */
     public static void debug(String string) {
@@ -699,7 +700,7 @@ public class SpecsLogs {
 
     /**
      * When a certain case has not been yet tested and it can appear on the field.
-     * 
+     *
      * @param untestedAction
      */
     public static void untested(String untestedAction) {

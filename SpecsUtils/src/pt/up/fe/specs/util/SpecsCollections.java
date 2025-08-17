@@ -44,7 +44,7 @@ public class SpecsCollections {
     }
 
     public static <K, V> Map<V, K> invertMap(Map<K, V> map) {
-        Map<V, K> invertedMap = SpecsFactory.newHashMap();
+        Map<V, K> invertedMap = new HashMap<>();
 
         for (K key : map.keySet()) {
             V value = map.get(key);
@@ -115,11 +115,11 @@ public class SpecsCollections {
     /*
     public static <T, K extends T> List<T> asListSame(List<K> elements) {
     List<T> list = FactoryUtils.newArrayList();
-    
+
     for (K element : elements) {
         list.add(element);
     }
-    
+
     return list;
     }
      */
@@ -141,7 +141,7 @@ public class SpecsCollections {
      * @return
      */
     public static <T> List<T> asListT(Class<T> superClass, Object... elements) {
-        List<T> list = SpecsFactory.newArrayList();
+        List<T> list = new ArrayList<>();
 
         for (Object element : elements) {
             if (element == null) {
@@ -161,7 +161,7 @@ public class SpecsCollections {
 
     public static <T extends KeyProvider<K>, K> List<K> getKeyList(List<T> providers) {
         // public static <K> List<K> asList(List<KeyProvider<K>> providers) {
-        List<K> list = SpecsFactory.newArrayList();
+        List<K> list = new ArrayList<>();
 
         for (T provider : providers) {
             list.add(provider.getKey());
@@ -178,7 +178,7 @@ public class SpecsCollections {
      */
     public static <T extends Comparable<? super T>> List<T> newSorted(Collection<T> collection) {
         // Create list
-        List<T> list = SpecsFactory.newArrayList(collection);
+        List<T> list = new ArrayList<>(collection);
 
         // Sort list
         Collections.sort(list);
@@ -194,7 +194,7 @@ public class SpecsCollections {
      * @param endIndex
      */
     public static <T> List<T> remove(List<T> list, int startIndex, int endIndex) {
-        List<T> removedElements = SpecsFactory.newArrayList();
+        List<T> removedElements = new ArrayList<>();
 
         for (int i = endIndex - 1; i >= startIndex; i--) {
             removedElements.add(list.remove(i));
@@ -211,7 +211,7 @@ public class SpecsCollections {
         // Sort indexes
         Collections.sort(indexes);
 
-        List<T> removedElements = SpecsFactory.newArrayList();
+        List<T> removedElements = new ArrayList<>();
 
         for (int i = indexes.size() - 1; i >= 0; i--) {
             int index = indexes.get(i);
@@ -279,7 +279,7 @@ public class SpecsCollections {
 
         var comparator = (aClass == null) ? (Predicate<Object>) (o -> o == null)
                 : (Predicate<Object>) aClass::isInstance;
-                
+
         // Find first index that matches the class
         for (int i = 0; i < list.size(); i++) {
             if (comparator.test(list.get(i))) {
@@ -320,9 +320,9 @@ public class SpecsCollections {
      */
     /*
     public static <T> T get(Class<T> aClass, List<? super T> list, int index) {
-    
+
     Object element = list.get(index);
-    
+
     return aClass.cast(element);
     }
      */
@@ -395,9 +395,9 @@ public class SpecsCollections {
         return (List<T>) list;
         /*
         List<T> newList = new ArrayList<>();
-        
+
         list.forEach(element -> newList.add(aClass.cast(element)));
-        
+
         return newList;
         */
     }
