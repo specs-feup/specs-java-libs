@@ -1,11 +1,11 @@
 /**
  * Copyright 2014 SPeCS Research Group.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -13,21 +13,16 @@
 
 package pt.up.fe.specs.util.treenode;
 
-import static pt.up.fe.specs.util.SpecsCollections.cast;
-import static pt.up.fe.specs.util.SpecsCollections.subList;
+import pt.up.fe.specs.util.SpecsCheck;
+import pt.up.fe.specs.util.SpecsCollections;
+import pt.up.fe.specs.util.SpecsLogs;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import pt.up.fe.specs.util.SpecsCheck;
-import pt.up.fe.specs.util.SpecsLogs;
+import static pt.up.fe.specs.util.SpecsCollections.cast;
+import static pt.up.fe.specs.util.SpecsCollections.subList;
 
 public interface TreeNode<K extends TreeNode<K>> {
 
@@ -38,7 +33,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     // List<K> getChildrenMutable();
 
     /**
-     * 
      * @return
      */
     default Iterator<K> iterator() {
@@ -101,7 +95,7 @@ public interface TreeNode<K extends TreeNode<K>> {
         return getAscendantsAndSelfStream().skip(1);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     default Stream<K> getAscendantsAndSelfStream() {
         List ascendantsAndSelf = new ArrayList<>();
 
@@ -116,7 +110,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     *
      * @param targetType
      * @return all descendants that are an instance of the given class
      */
@@ -127,7 +120,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     *
      * @param targetType
      * @return list with all descendants
      */
@@ -166,7 +158,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     *
      * @param index1
      * @param index2
      * @param indexes
@@ -221,7 +212,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Searches for a child of the given class. If more than one child is found, throws exception.
-     * 
+     *
      * @param <T>
      * @param aClass
      * @return
@@ -247,7 +238,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     // Object getContent();
 
     /**
-     *
      * @return a string representing the contents of the node
      */
     String toContentString();
@@ -267,13 +257,11 @@ public interface TreeNode<K extends TreeNode<K>> {
     // }
 
     /**
-     * @param children
-     *            the children to set
+     * @param children the children to set
      */
     void setChildren(Collection<? extends K> children);
 
     /**
-     *
      * @return the number of children in the node
      */
     default int getNumChildren() {
@@ -289,7 +277,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      *
      * <p>
      * Puts the parent of the child as null.
-     *
+     * <p>
      * TODO: should remove all it's children recursively?
      *
      * @param index
@@ -330,17 +318,14 @@ public interface TreeNode<K extends TreeNode<K>> {
     K setChild(int index, K token);
 
     /**
-     *
      * @param child
      * @return the object that was really inserted in the tree (e.g., if child already had a parent, usually a copy is
-     *         inserted)
+     * inserted)
      */
     // boolean addChild(K child);
     K addChild(K child);
 
     /**
-     *
-     *
      * @param index
      * @param child
      * @return
@@ -360,7 +345,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns a deep copy of the current token.
-     *
+     * <p>
      * TODO: This should be abstract; Remove return empty instance
      *
      * @return
@@ -387,8 +372,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      * Tests whether the given node is an ancestor of this node.
      *
-     * @param node
-     *            the node to test
+     * @param node the node to test
      * @return true if it is ancestor, false otherwise
      */
     default boolean isAncestor(K node) {
@@ -424,7 +408,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     *
      * @return the uppermost parent of this node
      */
     public K getRoot();
@@ -445,7 +428,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     *
      * @param nodeClass
      * @return the index of the first child that is an instance of the given class, or -1 if none is found
      */
@@ -464,6 +446,29 @@ public interface TreeNode<K extends TreeNode<K>> {
                 .orElseThrow(
                         () -> new RuntimeException("Wanted a '" + nodeClass.getSimpleName() + "' at index '" + index
                                 + "', but is was a '" + getChild(index).getClass().getSimpleName() + "':\n" + this));
+    }
+
+
+    /**
+     * Return the single child of the given class. If node has more than one child which the given class, an exception is thrown.
+     *
+     * @param nodeClass
+     * @param <T>
+     * @return
+     */
+    default <T extends K> Optional<T> getChildTry(Class<T> nodeClass) {
+        return SpecsCollections.toOptional(getChildrenOf(nodeClass));
+    }
+
+    /**
+     * Returns the single child of the given class. If node does not have a child of the given class, or has more than one child of the given class, throws exception.
+     *
+     * @param nodeClass
+     * @param <T>
+     * @return
+     */
+    default <T extends K> T getChild(Class<T> nodeClass) {
+        return getChildTry(nodeClass).orElseThrow(() -> new RuntimeException("Expected one child of type '" + nodeClass + "', found none"));
     }
 
     default <T extends K> Optional<T> getChildTry(Class<T> nodeClass, int index) {
@@ -497,12 +502,9 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      * Removes the children in the given index range.
      *
-     *
      * @param token
-     * @param startIndex
-     *            (inclusive)
-     * @param endIndex
-     *            (exclusive)
+     * @param startIndex (inclusive)
+     * @param endIndex   (exclusive)
      */
     default void removeChildren(int startIndex, int endIndex) {
 
@@ -547,7 +549,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     *
      * @param child
      * @return the index of the given child, or -1 if no child was found
      */
@@ -574,7 +575,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      * Returns an Iterator of the children of the node.
      *
      * @return a ListIterator over the children of the node. The iterator supports methods that modify the node (set,
-     *         remove, insert...)
+     * remove, insert...)
      */
     default ChildrenIterator<K> getChildrenIterator() {
         return new ChildrenIterator<>(this);
@@ -630,7 +631,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * 
      * @return the depth of this node (e.g., 0 if it has no parent, 1 if it is a child of the root node)
      */
     default int getDepth() {
@@ -642,11 +642,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * 
-     * @param child
-     *            the child left of which the sibling will be inserted
-     * @param sibling
-     *            the node to be inserted
+     * @param child   the child left of which the sibling will be inserted
+     * @param sibling the node to be inserted
      */
     default public void addChildLeftOf(K child, K sibling) {
         var idx = indexOfChild(child);
