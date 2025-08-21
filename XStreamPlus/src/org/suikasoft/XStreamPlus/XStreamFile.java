@@ -90,6 +90,9 @@ public class XStreamFile<T> {
      * @return the XML string, or null if the object is not compatible
      */
     public String toXml(Object object) {
+        if (object == null) {
+            return getXstream().toXML(null);
+        }
         if (!(config.getTargetClass().isInstance(object))) {
             SpecsLogs.getLogger().warning(
                     "Given object of class '" + object.getClass() + "' is not "

@@ -34,7 +34,7 @@ public class OptionalConverter implements Converter {
      */
     @Override
     public boolean canConvert(@SuppressWarnings("rawtypes") Class type) {
-        return type.equals(Optional.class);
+        return type != null && type.equals(Optional.class);
     }
 
     /**
