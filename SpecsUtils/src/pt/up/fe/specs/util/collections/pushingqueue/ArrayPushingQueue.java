@@ -21,8 +21,9 @@ import java.util.stream.Stream;
  * "Pushing Queue" of fixed size.
  *
  * <p>
- * Elements can only be added at the head of the queue. Every time an element is added, every other elements gets
- * "pushed" (its index increments by one). If an element is added when the queue is full, the last element in the queue
+ * Elements can only be added at the head of the queue. Every time an element is
+ * added, every other elements gets "pushed" (its index increments by one). If
+ * an element is added when the queue is full, the last element in the queue
  * gets dropped.
  *
  * TODO: remove capacity, replace with size
@@ -43,7 +44,7 @@ public class ArrayPushingQueue<T> implements PushingQueue<T> {
      * Creates a PushingQueue with the specified size.
      *
      * @param capacity
-     *            the size of the queue
+     *                 the size of the queue
      */
     public ArrayPushingQueue(int capacity) {
         this.maxSize = capacity;
@@ -52,11 +53,11 @@ public class ArrayPushingQueue<T> implements PushingQueue<T> {
     }
 
     /**
-     * Inserts an element at the head of the queue, pushing all other elements one position forward. If the queue is
-     * full, the last element is dropped.
+     * Inserts an element at the head of the queue, pushing all other elements one
+     * position forward. If the queue is full, the last element is dropped.
      *
      * @param element
-     *            an element to insert in the queue
+     *                an element to insert in the queue
      */
     @Override
     public void insertElement(T element) {
@@ -75,7 +76,7 @@ public class ArrayPushingQueue<T> implements PushingQueue<T> {
      * Returns the element at the specified position in this queue.
      *
      * @param index
-     *            index of the element to return
+     *              index of the element to return
      * @return the element at the specified position in this queue
      */
     @Override

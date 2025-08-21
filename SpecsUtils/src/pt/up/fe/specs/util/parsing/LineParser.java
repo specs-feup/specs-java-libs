@@ -18,13 +18,15 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Given a string, splits the string into a list of arguments, following some rules.
+ * Given a string, splits the string into a list of arguments, following some
+ * rules.
  *
  * <p>
  * The rules for the default LineParser: <br>
  * - Spliting by a custom string (e.g. space ' '); <br>
  * - One line comments (e.g. //); <br>
- * - 'Joiner', to include characters left out by spliting character (e.g. " -> "something written with spaces")
+ * - 'Joiner', to include characters left out by spliting character (e.g. " ->
+ * "something written with spaces")
  *
  * @author Joao Bispo
  */
@@ -35,38 +37,38 @@ public class LineParser {
      * <p>
      * The rules for the default LineParser: <br>
      * - Spliting -> space ' ' <br>
-     * - 'Joiner', -> "  (e.g. " -> "something written with spaces") <br>
+     * - 'Joiner', -> " (e.g. " -> "something written with spaces") <br>
      * - One line comments -> //
      * 
      * @return a LineParser
      */
     public static LineParser getDefaultLineParser() {
-	return new LineParser(" ", "\"", "//");
+        return new LineParser(" ", "\"", "//");
     }
 
     public LineParser(String splittingString, String joinerString, String oneLineComment) {
-	this.commandSeparator = splittingString;
-	this.commandGatherer = joinerString;
-	this.commentPrefix = oneLineComment;
+        this.commandSeparator = splittingString;
+        this.commandGatherer = joinerString;
+        this.commentPrefix = oneLineComment;
 
-	// Make some checks
-	if (oneLineComment.length() == 0) {
-	    Logger.getLogger(LineParser.class.getName()).
-		    warning("OneLineComment is an empty string. This will make all " +
-			    "lines in the file appear as comments.");
-	}
+        // Make some checks
+        if (oneLineComment.length() == 0) {
+            Logger.getLogger(LineParser.class.getName())
+                    .warning("OneLineComment is an empty string. This will make all " +
+                            "lines in the file appear as comments.");
+        }
     }
 
     public String getOneLineComment() {
-	return this.commentPrefix;
+        return this.commentPrefix;
     }
 
     public String getSplittingString() {
-	return this.commandSeparator;
+        return this.commandSeparator;
     }
 
     public String getJoinerString() {
-	return this.commandGatherer;
+        return this.commandGatherer;
     }
 
     /**
@@ -79,58 +81,54 @@ public class LineParser {
      * @return
      */
     public List<String> splitCommand(String command) {
-	// Trim string
-	command = command.trim();
+        // Trim string
+        command = command.trim();
 
-	// Check if it starts with comment
-	// if(commentPrefix.length() > 0) {
-	if (command.startsWith(this.commentPrefix)) {
-	    return new ArrayList<>();
-	}
-	// }
+        // Check if it starts with comment
+        if (command.startsWith(this.commentPrefix)) {
+            return new ArrayList<>();
+        }
 
-	List<String> commands = new ArrayList<>();
+        List<String> commands = new ArrayList<>();
 
-	while (command.length() > 0) {
-	    // Get indexes
-	    int spaceIndex = command.indexOf(this.commandSeparator);
-	    int quoteIndex = this.commandGatherer.isEmpty() ? -1 : command.indexOf(this.commandGatherer);
+        while (command.length() > 0) {
+            // Get indexes
+            int spaceIndex = command.indexOf(this.commandSeparator);
+            int quoteIndex = this.commandGatherer.isEmpty() ? -1 : command.indexOf(this.commandGatherer);
 
-	    // Check which comes first
-	    if (spaceIndex == -1 && quoteIndex == -1) {
-		commands.add(command);
-		command = "";
-		continue;
-	    }
+            // Check which comes first
+            if (spaceIndex == -1 && quoteIndex == -1) {
+                commands.add(command);
+                command = "";
+                continue;
+            }
 
-	    if (spaceIndex != -1 && (quoteIndex == -1 || spaceIndex < quoteIndex)) {
-		String argument = command.substring(0, spaceIndex);
-		commands.add(argument);
-		command = command.substring(spaceIndex + 1).trim();
-	    } else {
-		// Find second quote
-		int quoteIndex2Increment = command.substring(quoteIndex + 1).indexOf(this.commandGatherer);
-		if (quoteIndex2Increment == -1 && spaceIndex == -1) {
-		    // Capture last argument
-		    commands.add(command.trim());
-		    command = "";
-		} else if (quoteIndex2Increment == -1 && spaceIndex != -1) {
-		    String argument = command.substring(quoteIndex + 1, spaceIndex);
-		    commands.add(argument);
-		    command = command.substring(spaceIndex + 1);
-		} else {
-		    // System.out.println("Quote:"+quoteIndex);
-		    // System.out.println("Quote2:"+quoteIndex2Increment);
-		    // System.out.println("Quote2 Real:"+(quoteIndex+quoteIndex2Increment+1));
-		    int quote2 = (quoteIndex + quoteIndex2Increment + 1);
-		    String argument = command.substring(quoteIndex + 1, quote2);
-		    commands.add(argument);
-		    command = command.substring(quote2 + 1);
-		}
-	    }
-	}
+            if (spaceIndex != -1 && (quoteIndex == -1 || spaceIndex < quoteIndex)) {
+                String argument = command.substring(0, spaceIndex);
+                commands.add(argument);
+                command = command.substring(spaceIndex + 1).trim();
+            } else {
+                // Find second quote
+                int quoteIndex2Increment = command.substring(quoteIndex + 1).indexOf(this.commandGatherer);
+                if (quoteIndex2Increment == -1 && spaceIndex == -1) {
+                    // Capture last argument
+                    commands.add(command.trim());
+                    command = "";
+                } else if (quoteIndex2Increment == -1 && spaceIndex != -1) {
+                    String argument = command.substring(quoteIndex + 1, spaceIndex);
+                    commands.add(argument);
+                    command = command.substring(spaceIndex + 1);
+                } else {
+                    // Found closing quote
+                    int quote2 = (quoteIndex + quoteIndex2Increment + 1);
+                    String argument = command.substring(quoteIndex + 1, quote2);
+                    commands.add(argument);
+                    command = command.substring(quote2 + 1);
+                }
+            }
+        }
 
-	return commands;
+        return commands;
     }
 
     /**

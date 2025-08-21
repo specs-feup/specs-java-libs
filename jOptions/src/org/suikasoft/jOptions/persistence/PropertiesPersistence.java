@@ -100,7 +100,6 @@ public class PropertiesPersistence implements AppPersistence {
 
     private boolean write(File file, DataStore data) {
         var properties = toProperties(data);
-        // TODO Auto-generated method stub
         return SpecsIo.write(file, properties);
     }
 

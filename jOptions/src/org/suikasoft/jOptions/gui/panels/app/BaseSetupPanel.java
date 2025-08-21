@@ -46,8 +46,6 @@ public class BaseSetupPanel extends JPanel {
     private final Map<String, KeyPanel<? extends Object>> panels;
     private final StoreDefinition storeDefinition;
 
-    public static final int IDENTATION_SIZE = 6;
-
     /**
      * Constructs a BaseSetupPanel for the given StoreDefinition and DataStore.
      *

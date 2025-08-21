@@ -1,11 +1,11 @@
 /**
  * Copyright 2012 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -14,24 +14,24 @@
 package pt.up.fe.specs.util.treenode;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import pt.up.fe.specs.util.SpecsCollections;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * Utility methods for TokenWithParent.
- * 
+ *
  * @author Tiago
- * 
+ *
  */
 public class NodeInsertUtils {
 
     /**
      * Helper method which sets 'move' to false.
-     * 
+     *
      * @param baseToken
      * @param newToken
      */
@@ -41,8 +41,8 @@ public class NodeInsertUtils {
 
     /**
      * Inserts 'newNode' before the 'baseToken'.
-     * 
-     * 
+     *
+     *
      * @param baseToken
      * @param newToken
      * @param move
@@ -74,7 +74,7 @@ public class NodeInsertUtils {
 
     /**
      * Ensures the node has a null parent.
-     * 
+     *
      * @param newToken
      */
     private static <K extends TreeNode<K>> void processNewToken(K newToken) {
@@ -87,7 +87,7 @@ public class NodeInsertUtils {
 
     /**
      * Inserts 'newNode' after the 'baseToken'.
-     * 
+     *
      * @param baseToken
      * @param newToken
      */
@@ -118,7 +118,7 @@ public class NodeInsertUtils {
 
     /**
      * Replaces 'baseToken' with 'newToken'.
-     * 
+     *
      * @param baseToken
      * @param newToken
      * @return The new inserted token (same as newToken if newToken.getParent() was null, and a copy of newToken
@@ -130,7 +130,7 @@ public class NodeInsertUtils {
 
     /**
      * If move is true, detaches newToken before setting.
-     * 
+     *
      * @param baseToken
      * @param newToken
      * @param move
@@ -168,7 +168,7 @@ public class NodeInsertUtils {
 
     /**
      * Removes 'baseToken'.
-     * 
+     *
      * @param baseToken
      * @param newToken
      */
@@ -188,7 +188,7 @@ public class NodeInsertUtils {
 
     /**
      * Replaces 'baseToken' with 'newNode'. Uses the children of 'baseToken' instead of 'newNode'.
-     * 
+     *
      * @param baseToken
      * @param newToken
      */
@@ -231,7 +231,7 @@ public class NodeInsertUtils {
 
     /**
      * Calculates the rank of a given token, according to the provided test.
-     * 
+     *
      * @param token
      * @param test
      * @return
@@ -241,7 +241,7 @@ public class NodeInsertUtils {
         K currentToken = token;
         K parent = null;
 
-        List<Integer> rank = SpecsFactory.newLinkedList();
+        List<Integer> rank = new LinkedList<>();
 
         while ((parent = getParent(currentToken, test)) != null) {
             Integer selfRank = getSelfRank(parent, currentToken, test);
@@ -263,7 +263,7 @@ public class NodeInsertUtils {
 
     /**
      * Goes to the parent, and checks in which position is the current node.
-     * 
+     *
      * @param token
      * @param test
      * @return
@@ -294,7 +294,7 @@ public class NodeInsertUtils {
     }
 
     /**
-     * 
+     *
      * @param token
      * @param test
      * @return the first parent that passes the test, or null if no parent passes it
@@ -315,11 +315,11 @@ public class NodeInsertUtils {
 
     /**
      * Swaps the positions of node1 and node2.
-     * 
+     *
      * <p>
      * If 'swapSubtrees' is enabled, this transformation is not allowed if any of the nodes is a part of the subtree of
      * the other.
-     * 
+     *
      * @param node1
      * @param node2
      * @param swapSubtrees

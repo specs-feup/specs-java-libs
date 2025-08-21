@@ -31,7 +31,7 @@ import javax.swing.table.TableCellRenderer;
  */
 public class MapModelV2 extends AbstractTableModel {
 
-    private static final Color COLOR_DEFAULT = new Color(0, 0, 0, 0);
+    public static final Color COLOR_DEFAULT = new Color(0, 0, 0, 0);
 
     /**
      *
