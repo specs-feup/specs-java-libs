@@ -20,7 +20,7 @@ dependencies {
 	testImplementation "junit:junit:4.13.1"     
 		
 	implementation ':SpecsUtils'
-	implementation group: 'com.google.code.gson', name: 'gson', version: '2.4'
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.12.1'
 }
 
 java {

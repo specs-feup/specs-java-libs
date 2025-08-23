@@ -24,7 +24,6 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 public enum JsEngineType {
 
-    // NASHORN,
     GRAALVM_COMPAT,
     GRAALVM;
 
@@ -51,8 +50,6 @@ public enum JsEngineType {
         // System.out.println("THREAD CLASS LOADER: " + Thread.currentThread().getContextClassLoader());
         // Thread.currentThread().setContextClassLoader(GraalJSScriptEngine.class.getClassLoader());
         switch (this) {
-        // case NASHORN:
-        // return new NashornEngine(forbiddenClasses);
         case GRAALVM_COMPAT:
             return new GraalvmJsEngine(forbiddenClasses, true, engineWorkingDirectory, nodeModulesFolder,
                     laraiOutputStream);
