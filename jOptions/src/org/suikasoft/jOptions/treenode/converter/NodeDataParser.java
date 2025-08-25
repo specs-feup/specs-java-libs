@@ -144,7 +144,39 @@ public class NodeDataParser {
         }
 
         try {
-            return method.invoke(null, args);
+            // Sanitize arguments: replace nulls for common types to avoid NPEs inside parser methods
+            var paramTypes = method.getParameterTypes();
+            Object[] sanitizedArgs = new Object[paramTypes.length];
+
+            // If args is null, treat as empty array
+            Object[] originalArgs = args == null ? new Object[0] : args;
+            int limit = Math.min(originalArgs.length, paramTypes.length);
+
+            for (int i = 0; i < paramTypes.length; i++) {
+                Object value = i < limit ? originalArgs[i] : null;
+
+                if (value == null) {
+                    Class<?> p = paramTypes[i];
+                    if (p == String.class) {
+                        value = ""; // replace null strings with empty string
+                    } else if (p.isPrimitive()) {
+                        // provide safe defaults for primitives
+                        if (p == boolean.class) value = false;
+                        else if (p == byte.class) value = (byte) 0;
+                        else if (p == short.class) value = (short) 0;
+                        else if (p == int.class) value = 0;
+                        else if (p == long.class) value = 0L;
+                        else if (p == float.class) value = 0f;
+                        else if (p == double.class) value = 0d;
+                        else if (p == char.class) value = '\0';
+                    }
+                    // for other reference types, keep null
+                }
+
+                sanitizedArgs[i] = value;
+            }
+
+            return method.invoke(null, sanitizedArgs);
         } catch (Exception e) {
             throw new RuntimeException("Problems while invoking method '" + methodName + "'", e);
         }

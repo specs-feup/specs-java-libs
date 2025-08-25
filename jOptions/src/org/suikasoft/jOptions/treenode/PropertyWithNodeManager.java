@@ -106,7 +106,7 @@ public class PropertyWithNodeManager {
             case OPTIONAL:
                 DataKey<Optional<?>> optionalKey = (DataKey<Optional<?>>) key;
                 Optional<?> value = node.get(optionalKey);
-                if (!value.isPresent()) {
+                if (value == null || !value.isPresent()) {
                     break;
                 }
 
@@ -121,7 +121,7 @@ public class PropertyWithNodeManager {
             case LIST:
                 DataKey<List<?>> listKey = (DataKey<List<?>>) key;
                 List<?> list = node.get(listKey);
-                if (list.isEmpty()) {
+                if (list == null || list.isEmpty()) {
                     break;
                 }
 

@@ -43,8 +43,12 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
      * Constructs an ADataClass backed by the given DataStore.
      *
      * @param data the DataStore backing this DataClass
+     * @throws IllegalArgumentException if data is null
      */
     public ADataClass(DataStore data) {
+        if (data == null) {
+            throw new IllegalArgumentException("DataStore cannot be null");
+        }
         this.data = data;
         this.isLocked = false;
     }
@@ -165,7 +169,13 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
      */
     @Override
     public Collection<DataKey<?>> getDataKeysWithValues() {
-        StoreDefinition storeDefinition = data.getStoreDefinitionTry().get();
+        Optional<StoreDefinition> storeDefinitionOpt = data.getStoreDefinitionTry();
+        if (!storeDefinitionOpt.isPresent()) {
+            SpecsLogs.warn("getDataKeysWithValues(): No StoreDefinition available");
+            return new ArrayList<>();
+        }
+        
+        StoreDefinition storeDefinition = storeDefinitionOpt.get();
 
         List<DataKey<?>> keysWithValues = new ArrayList<>();
         for (String keyId : data.getKeysWithValues()) {
@@ -210,7 +220,7 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
             return true;
         if (obj == null)
             return false;
-        if (getClass().isInstance(obj.getClass()))
+        if (!getClass().isInstance(obj))
             return false;
         ADataClass<?> other = getClass().cast(obj);
 

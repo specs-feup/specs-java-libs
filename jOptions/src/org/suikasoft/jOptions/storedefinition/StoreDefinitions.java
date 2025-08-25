@@ -58,6 +58,9 @@ public class StoreDefinitions {
      * @return a StoreDefinition with the DataKeys from the class
      */
     private static StoreDefinition fromInterfacePrivate(Class<?> aClass) {
+        if (aClass == null) {
+            throw new RuntimeException("Class cannot be null");
+        }
         StoreDefinitionBuilder builder = new StoreDefinitionBuilder(aClass.getSimpleName());
         for (Field field : aClass.getFields()) {
             if (!DataKey.class.isAssignableFrom(field.getType())) {

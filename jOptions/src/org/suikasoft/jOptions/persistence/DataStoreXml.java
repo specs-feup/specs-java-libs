@@ -37,6 +37,9 @@ public class DataStoreXml extends ObjectXml<DataStore> {
 
 
     public DataStoreXml(StoreDefinition storeDefinition) {
+        if (storeDefinition == null) {
+            throw new NullPointerException("StoreDefinition cannot be null");
+        }
         addMappings(LIBRARY_CLASSES);
         configureXstream(storeDefinition);
     }
@@ -49,6 +52,13 @@ public class DataStoreXml extends ObjectXml<DataStore> {
     @Override
     public Class<DataStore> getTargetClass() {
         return DataStore.class;
+    }
+
+    public String toXml(DataStore dataStore) {
+        if (dataStore == null) {
+            throw new NullPointerException("DataStore cannot be null");
+        }
+        return super.toXml(dataStore);
     }
 
 }

@@ -133,14 +133,29 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
     @SuppressWarnings("unchecked") // getClass() will always return a Class<K>
     @Override
     protected K copyPrivate() {
-        var newNode = newInstance((Class<K>) getClass(), Collections.emptyList());
+        // Create a new DataStore that can hold the same types of keys as the original
+        String dataStoreName = data.getName() != null ? data.getName() : "CopiedDataStore";
+        DataStore newDataStore = DataStore.newInstance(dataStoreName, data);
+        
+        return newInstanceWithDataStore((Class<K>) getClass(), newDataStore, Collections.emptyList());
 
-        // Copy all data
-        for (var key : getDataKeysWithValues()) {
-            newNode.setValue(key.getName(), key.copyRaw(get(key)));
+    }
+
+    /**
+     * Creates a new node instance with the given DataStore.
+     */
+    private static <K extends DataNode<K>, T extends K> K newInstanceWithDataStore(Class<T> nodeClass, DataStore dataStore, List<K> children) {
+        try {
+            Constructor<T> constructorMethod = nodeClass.getConstructor(DataStore.class, Collection.class);
+            try {
+                return nodeClass.cast(constructorMethod.newInstance(dataStore, children));
+            } catch (Exception e) {
+                throw new RuntimeException("Could not call constructor for DataNode", e);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not create constructor for DataNode", e);
         }
-
-        return newNode;
     }
 
     /*** STATIC HELPER METHODS ***/

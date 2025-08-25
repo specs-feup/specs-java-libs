@@ -39,7 +39,7 @@ public class JsonStringListXstreamConverter implements Converter {
     @SuppressWarnings("rawtypes")
     @Override
     public boolean canConvert(Class type) {
-        return type.equals(JsonStringList.class);
+        return type != null && type.equals(JsonStringList.class);
     }
 
     /**

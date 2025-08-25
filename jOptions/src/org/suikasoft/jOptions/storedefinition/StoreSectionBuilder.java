@@ -69,7 +69,8 @@ public class StoreSectionBuilder {
      * @return the built StoreSection
      */
     public StoreSection build() {
-        return StoreSection.newInstance(name, keys);
+        // Create a defensive copy to prevent state mutation affecting previously built sections
+        return StoreSection.newInstance(name, new ArrayList<>(keys));
     }
 
 }

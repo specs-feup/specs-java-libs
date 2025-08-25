@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.storedefinition;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +32,14 @@ class GenericStoreSection implements StoreSection {
      *
      * @param name the section name
      * @param keys the keys in the section
+     * @throws NullPointerException if keys is null
      */
     public GenericStoreSection(String name, List<DataKey<?>> keys) {
+        if (keys == null) {
+            throw new NullPointerException("Keys list cannot be null");
+        }
         this.name = name;
-        this.keys = keys;
+        this.keys = new ArrayList<>(keys); // Create defensive copy
     }
 
     /**
@@ -54,7 +59,7 @@ class GenericStoreSection implements StoreSection {
      */
     @Override
     public List<DataKey<?>> getKeys() {
-        return keys;
+        return new ArrayList<>(keys);
     }
 
 }

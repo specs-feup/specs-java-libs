@@ -169,7 +169,27 @@ public class KeyFactory {
     public static DataKey<Double> double64(String id) {
         return new NormalKey<>(id, Double.class)
                 .setKeyPanelProvider((key, data) -> new DoublePanel(key, data))
-                .setDecoder(s -> Double.valueOf(s));
+                .setDecoder(s -> {
+                    if (s == null) return 0d;
+                    String v = s.trim();
+                    if (v.isEmpty()) return 0d;
+                    String lower = v.toLowerCase();
+                    if ("infinity".equals(lower) || "+infinity".equals(lower) || "+inf".equals(lower) || "inf".equals(lower)) {
+                        return Double.POSITIVE_INFINITY;
+                    }
+                    if ("-infinity".equals(lower) || "-inf".equals(lower)) {
+                        return Double.NEGATIVE_INFINITY;
+                    }
+                    if ("nan".equals(lower)) {
+                        return Double.NaN;
+                    }
+                    try {
+                        return Double.valueOf(v);
+                    } catch (NumberFormatException e) {
+                        // Fallback to 0.0 on malformed numbers
+                        return 0d;
+                    }
+                });
     }
 
     /**

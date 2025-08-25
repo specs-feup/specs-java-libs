@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 import pt.up.fe.specs.util.parsing.StringCodec;
 
@@ -55,7 +56,9 @@ public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
             return decodedValues;
         }
 
-        for (var singleValue : value.split(SEPARATOR)) {
+        // Use Pattern.quote to escape regex metacharacters and preserve trailing empty elements with limit -1
+        String escapedSeparator = Pattern.quote(SEPARATOR);
+        for (var singleValue : value.split(escapedSeparator, -1)) {
             decodedValues.add(decodeSingle(singleValue));
         }
 

@@ -29,8 +29,12 @@ public class DefaultCleanSetup implements DataView, DataStoreContainer {
      * Creates a new DefaultCleanSetup backed by the given DataStore.
      *
      * @param data the DataStore to back this view
+     * @throws NullPointerException if data is null
      */
     public DefaultCleanSetup(DataStore data) {
+        if (data == null) {
+            throw new NullPointerException("DataStore cannot be null");
+        }
         this.data = data;
     }
 

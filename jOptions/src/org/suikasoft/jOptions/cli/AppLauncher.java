@@ -39,8 +39,12 @@ public class AppLauncher {
      * Constructs an AppLauncher instance for the given application.
      *
      * @param app the application to be launched
+     * @throws IllegalArgumentException if app is null
      */
     public AppLauncher(App app) {
+        if (app == null) {
+            throw new IllegalArgumentException("App cannot be null");
+        }
         this.app = app;
         resources = new ArrayList<>();
         baseFolder = null;
@@ -50,8 +54,12 @@ public class AppLauncher {
      * Adds resources to the launcher.
      *
      * @param resources a collection of resource paths
+     * @throws IllegalArgumentException if resources is null
      */
     public void addResources(Collection<String> resources) {
+        if (resources == null) {
+            throw new IllegalArgumentException("Resources collection cannot be null");
+        }
         this.resources.addAll(resources);
     }
 
@@ -69,8 +77,12 @@ public class AppLauncher {
      *
      * @param args an array of command-line arguments
      * @return true if the application launched successfully, false otherwise
+     * @throws IllegalArgumentException if args is null
      */
     public boolean launch(String[] args) {
+        if (args == null) {
+            throw new IllegalArgumentException("Arguments array cannot be null");
+        }
         return launch(Arrays.asList(args));
     }
 
@@ -79,8 +91,13 @@ public class AppLauncher {
      *
      * @param args a list of command-line arguments
      * @return true if the application launched successfully, false otherwise
+     * @throws IllegalArgumentException if args is null
      */
     public boolean launch(List<String> args) {
+        if (args == null) {
+            throw new IllegalArgumentException("Arguments list cannot be null");
+        }
+        
         if (args.isEmpty()) {
             SpecsLogs.msgInfo("No arguments found. Please enter a configuration file, or key/value pairs.");
             return false;
@@ -167,8 +184,13 @@ public class AppLauncher {
      *
      * @param setupFile the setup file containing configuration data
      * @return the result of the application execution
+     * @throws IllegalArgumentException if setupFile is null
      */
     public int execute(File setupFile) {
+        if (setupFile == null) {
+            throw new IllegalArgumentException("Setup file cannot be null");
+        }
+        
         DataStore setupData = app.getPersistence().loadData(setupFile);
 
         if (setupData == null) {

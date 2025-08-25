@@ -36,6 +36,10 @@ public class DataClassUtils {
      * @return a string representation of the value
      */
     public static String toString(Object dataClassValue) {
+        if (dataClassValue == null) {
+            return "null";
+        }
+
         if (dataClassValue instanceof StringProvider) {
             return ((StringProvider) dataClassValue).getString();
         }
@@ -52,8 +56,8 @@ public class DataClassUtils {
         }
 
         if (dataClassValue instanceof List) {
-            ((Collection<?>) dataClassValue).stream()
-                    .map(value -> toString(value))
+            return ((Collection<?>) dataClassValue).stream()
+                    .map(value -> value != null ? toString(value) : "null")
                     .collect(Collectors.joining(", ", "[", "]"));
         }
 

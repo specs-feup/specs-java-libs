@@ -129,8 +129,10 @@ public class ArgumentsParser {
 
             // Check if ignore flag
             if (ignoreFlags.contains(currentArg)) {
-                // Discard next element and continue
-                currentArgs.popSingle();
+                // Discard next element and continue (if available)
+                if (!currentArgs.isEmpty()) {
+                    currentArgs.popSingle();
+                }
                 continue;
             }
 
@@ -150,7 +152,7 @@ public class ArgumentsParser {
      * @return the updated ArgumentsParser instance
      */
     public ArgumentsParser addBool(DataKey<Boolean> key, String... flags) {
-        return addPrivate(key, list -> true, 0, flags);
+        return add(key, list -> true, 0, flags);
     }
 
     /**
@@ -161,7 +163,7 @@ public class ArgumentsParser {
      * @return the updated ArgumentsParser instance
      */
     public ArgumentsParser addString(DataKey<String> key, String... flags) {
-        return addPrivate(key, list -> list.popSingle(), 1, flags);
+        return add(key, list -> list.popSingle(), 1, flags);
     }
 
     /**
@@ -172,7 +174,18 @@ public class ArgumentsParser {
      * @param <V>   the value type
      * @return the updated ArgumentsParser instance
      */
+    @SuppressWarnings("unchecked")
     public <V> ArgumentsParser add(DataKey<V> key, String... flags) {
+        // Check if value of the key is of type Boolean
+        if (key.getValueClass().equals(Boolean.class)) {
+            return addBool((DataKey<Boolean>) key, flags);
+        }
+
+        // Check if value of the key is of type String
+        if (key.getValueClass().equals(String.class)) {
+            return addString((DataKey<String>) key, flags);
+        }
+
         return add(key, list -> key.getDecoder().get().decode(list.popSingle()), 1, flags);
     }
 
@@ -186,34 +199,7 @@ public class ArgumentsParser {
      * @param <V>          the value type
      * @return the updated ArgumentsParser instance
      */
-    @SuppressWarnings("unchecked")
     public <V> ArgumentsParser add(DataKey<V> key, Function<ListParser<String>, V> parser, Integer consumedArgs,
-            String... flags) {
-
-        // Check if value of the key is of type Boolean
-        if (key.getValueClass().equals(Boolean.class)) {
-            return addBool((DataKey<Boolean>) key, flags);
-        }
-
-        // Check if value of the key is of type String
-        if (key.getValueClass().equals(String.class)) {
-            return addString((DataKey<String>) key, flags);
-        }
-
-        return addPrivate(key, parser, consumedArgs, flags);
-    }
-
-    /**
-     * Adds a key with a custom parser and flags (internal helper).
-     *
-     * @param key          the DataKey representing the value
-     * @param parser       the custom parser function
-     * @param consumedArgs the number of arguments consumed by the parser
-     * @param flags        the flags associated with the key
-     * @param <V>          the value type
-     * @return the updated ArgumentsParser instance
-     */
-    private <V> ArgumentsParser addPrivate(DataKey<V> key, Function<ListParser<String>, V> parser, Integer consumedArgs,
             String... flags) {
 
         for (String flag : flags) {
