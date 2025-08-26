@@ -1072,7 +1072,7 @@ public class SpecsStrings {
         template = applyTagsAndValues(template, Arrays.asList(tagsAndValues));
 
         // Apply default values
-        defaultTagsAndValues = SpecsFactory.getUnmodifiableList(defaultTagsAndValues);
+        defaultTagsAndValues = List.copyOf(defaultTagsAndValues);
         template = applyTagsAndValues(template, defaultTagsAndValues);
 
         return template;
