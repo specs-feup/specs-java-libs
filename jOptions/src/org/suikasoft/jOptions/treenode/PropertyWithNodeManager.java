@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.treenode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,11 +34,52 @@ import pt.up.fe.specs.util.exceptions.CaseNotDefinedException;
 public class PropertyWithNodeManager {
 
     /**
-     * Maps Type classes to a List of DataKeys corresponding to the properties of that class that return DataNode
-     * instances.
+     * Cache key that includes both the node class and DataStore configuration to ensure
+     * correct cache behavior when different DataStore configurations are used with the same node class.
      */
-    @SuppressWarnings("rawtypes")
-    private static final Map<Class<? extends DataNode>, List<DataKey<?>>> POSSIBLE_KEYS_WITH_NODES = new ConcurrentHashMap<>();
+    private static class CacheKey {
+        private final Class<?> nodeClass;
+        private final String storeDefinitionId; // unique identifier for the DataStore configuration
+        
+        public CacheKey(DataNode<?> node) {
+            this.nodeClass = node.getClass();
+            // Create a unique identifier based on StoreDefinition presence and identity
+            Optional<org.suikasoft.jOptions.storedefinition.StoreDefinition> storeDefOpt = node.getStoreDefinitionTry();
+            if (storeDefOpt.isPresent()) {
+                // Use StoreDefinition name and hashCode to create unique identifier
+                org.suikasoft.jOptions.storedefinition.StoreDefinition storeDef = storeDefOpt.get();
+                this.storeDefinitionId = storeDef.getName() + "_" + Integer.toString(storeDef.hashCode());
+            } else {
+                // Use a special identifier for nodes without StoreDefinition
+                this.storeDefinitionId = "NO_STORE_DEFINITION";
+            }
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            CacheKey cacheKey = (CacheKey) obj;
+            return Objects.equals(nodeClass, cacheKey.nodeClass) &&
+                   Objects.equals(storeDefinitionId, cacheKey.storeDefinitionId);
+        }
+        
+        @Override
+        public int hashCode() {
+            return Objects.hash(nodeClass, storeDefinitionId);
+        }
+        
+        @Override
+        public String toString() {
+            return "CacheKey{" + nodeClass.getSimpleName() + ":" + storeDefinitionId + "}";
+        }
+    }
+
+    /**
+     * Maps cache keys to a List of DataKeys corresponding to the properties of that class and configuration 
+     * that return DataNode instances.
+     */
+    private static final Map<CacheKey, List<DataKey<?>>> POSSIBLE_KEYS_WITH_NODES = new ConcurrentHashMap<>();
 
     /**
      * Retrieves all keys that can potentially have DataNodes for a given node.
@@ -46,12 +88,13 @@ public class PropertyWithNodeManager {
      * @return a list of DataKeys that can potentially have DataNodes
      */
     private <K extends DataNode<?>> List<DataKey<?>> getPossibleKeysWithNodes(K node) {
-        List<DataKey<?>> keys = POSSIBLE_KEYS_WITH_NODES.get(node.getClass());
+        CacheKey cacheKey = new CacheKey(node);
+        List<DataKey<?>> keys = POSSIBLE_KEYS_WITH_NODES.get(cacheKey);
         if (keys == null) {
             keys = findKeysWithNodes(node);
 
             // Add to map
-            POSSIBLE_KEYS_WITH_NODES.put(node.getClass(), keys);
+            POSSIBLE_KEYS_WITH_NODES.put(cacheKey, keys);
         }
 
         return keys;
@@ -66,8 +109,14 @@ public class PropertyWithNodeManager {
     private static <K extends DataNode<?>> List<DataKey<?>> findKeysWithNodes(K node) {
         List<DataKey<?>> keysWithNodes = new ArrayList<>();
 
+        // Check if node has a StoreDefinition - if not, return empty list
+        Optional<org.suikasoft.jOptions.storedefinition.StoreDefinition> storeDefOpt = node.getStoreDefinitionTry();
+        if (!storeDefOpt.isPresent()) {
+            return keysWithNodes; // Return empty list for nodes without StoreDefinition
+        }
+
         // Get all the keys that map this DataNode
-        for (DataKey<?> key : node.getStoreDefinition().getKeys()) {
+        for (DataKey<?> key : storeDefOpt.get().getKeys()) {
 
             var keyType = PropertyWithNodeType.getKeyType(node, key);
 

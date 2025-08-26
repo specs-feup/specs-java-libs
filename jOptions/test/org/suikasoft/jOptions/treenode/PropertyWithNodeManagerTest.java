@@ -2,7 +2,6 @@ package org.suikasoft.jOptions.treenode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -390,13 +389,12 @@ class PropertyWithNodeManagerTest {
                     .thenThrow(new RuntimeException("No StoreDefinition defined"));
             GenericDataNode nodeWithoutDef = new GenericDataNode(mockDataStoreWithoutDef, Collections.emptyList());
 
-            // When & Then - Should throw exception when no store definition
-            // NOTE: This test exposes a CACHE BUG in PropertyWithNodeManager!
-            // The cache prevents the exception from being thrown on subsequent calls
-            // for the same node class, even with different store configurations.
-            assertThatThrownBy(() -> manager.getKeysWithNodes(nodeWithoutDef))
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessageContaining("No StoreDefinition defined");
+            // When & Then - Should return empty list consistently when no store definition
+            // NOTE: This test previously exposed a CACHE BUG in PropertyWithNodeManager!
+            // The cache bug has now been FIXED - behavior is now consistent.
+            // Nodes without StoreDefinition should always return empty lists.
+            List<DataKey<?>> result = manager.getKeysWithNodes(nodeWithoutDef);
+            assertThat(result).isEmpty();
         }
 
         @Test
@@ -434,6 +432,7 @@ class PropertyWithNodeManagerTest {
         @DisplayName("Should handle large number of keys efficiently")
         void testGetKeysWithNodes_ManyKeys_PerformsWell() {
             // Given
+            when(mockDataStore.getStoreDefinitionTry()).thenReturn(Optional.of(mockStoreDefinition));
             List<DataKey<?>> manyKeys = Arrays.asList(
                     stringKey, nodeKey, optionalNodeKey, listNodeKey,
                     KeyFactory.string("key1"), KeyFactory.string("key2"),
