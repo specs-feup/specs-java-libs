@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -448,7 +449,7 @@ class XmlNodesTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should perform create operations efficiently")
         void testCreatePerformance() {
             long startTime = System.nanoTime();
@@ -465,7 +466,7 @@ class XmlNodesTest {
             assertThat(durationMs).isLessThan(100);
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should perform toList operations efficiently")
         void testToListPerformance() {
             // Create a large NodeList

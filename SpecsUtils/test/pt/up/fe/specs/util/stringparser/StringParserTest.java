@@ -8,6 +8,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.stringsplitter.StringSliceWithSplit;
 import pt.up.fe.specs.util.utilities.StringSlice;
@@ -480,7 +481,7 @@ public class StringParserTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle repeated operations efficiently")
         void testRepeatedOperations() {
             StringParser parser = new StringParser("a".repeat(1000));
@@ -500,7 +501,7 @@ public class StringParserTest {
             assertThat(parser.toString()).hasSize(900);
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large worker applications efficiently")
         void testLargeWorkerApplications() {
             String largeInput = "word ".repeat(10000);

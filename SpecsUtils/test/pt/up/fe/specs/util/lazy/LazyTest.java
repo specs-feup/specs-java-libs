@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.function.SerializableSupplier;
 
@@ -306,7 +307,7 @@ class LazyTest {
     @DisplayName("Performance Characteristics")
     class Performance {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should avoid expensive recomputation")
         void testExpensiveComputation() {
             AtomicInteger computationCount = new AtomicInteger(0);

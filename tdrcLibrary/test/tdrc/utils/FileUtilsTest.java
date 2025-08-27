@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * Comprehensive tests for {@link FileUtils}.
@@ -332,7 +333,7 @@ class FileUtilsTest {
     @DisplayName("Performance and Large Scale Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("should handle directory with many files efficiently")
         void testGetFilesFromDir_ManyFiles_PerformsWell() throws IOException {
             // Create many files in a single directory

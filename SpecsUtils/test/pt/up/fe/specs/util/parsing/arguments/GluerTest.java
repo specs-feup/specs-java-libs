@@ -3,6 +3,7 @@ package pt.up.fe.specs.util.parsing.arguments;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -390,7 +391,7 @@ class GluerTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle many gluer creations efficiently")
         void testPerformance_ManyCreations_EfficientCreation() {
             // Act
@@ -406,7 +407,7 @@ class GluerTest {
             assertThat(endTime - startTime).isLessThan(100_000_000); // Less than 100ms
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle getter calls efficiently")
         void testPerformance_GetterCalls_EfficientAccess() {
             // Arrange

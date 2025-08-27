@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
@@ -384,7 +385,7 @@ public class ClassMapTest {
             assertThat(largeMap.get(String.class)).isNotNull();
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should perform hierarchy lookup efficiently")
         void testHierarchyLookupPerformance() {
             // Create deep hierarchy

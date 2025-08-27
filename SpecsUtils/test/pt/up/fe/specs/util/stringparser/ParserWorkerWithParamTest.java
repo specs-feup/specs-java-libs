@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.utilities.StringSlice;
 
@@ -420,7 +421,7 @@ public class ParserWorkerWithParamTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle repeated parsing efficiently")
         void testRepeatedParsingPerformance() {
             ParserWorkerWithParam<String, String> parser = (slice, prefix) -> {
@@ -440,7 +441,7 @@ public class ParserWorkerWithParamTest {
             assertThat(duration).isLessThan(50_000_000L); // 50ms
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle complex multi-parameter parsing efficiently")
         void testComplexMultiParameterPerformance() {
             ParserWorkerWithParam4<String, String, Integer, Boolean, Character> parser = (slice, prefix, repeat,

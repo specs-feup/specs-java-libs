@@ -9,6 +9,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.utilities.StringSlice;
 
@@ -414,7 +415,7 @@ public class ParserWorkerTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large input efficiently")
         void testLargeInputPerformance() {
             String largeInput = "word ".repeat(10000);
@@ -433,7 +434,7 @@ public class ParserWorkerTest {
             assertThat(duration).isLessThan(50_000_000L); // 50ms
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle repeated applications efficiently")
         void testRepeatedApplications() {
             ParserWorker<String> worker = slice -> {

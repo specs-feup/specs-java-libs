@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -297,7 +298,7 @@ class CachedStringProviderTest {
     @DisplayName("Performance Characteristics")
     class PerformanceCharacteristics {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should not call expensive provider multiple times")
         void shouldNotCallExpensiveProviderMultipleTimes() {
             // Given

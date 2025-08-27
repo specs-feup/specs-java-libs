@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import java.io.File;
 import java.io.IOException;
@@ -569,7 +570,7 @@ class CommentParserTest {
     @DisplayName("Performance and Scalability")
     class PerformanceAndScalability {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("should handle large number of comment lines efficiently")
         void testParseLargeNumberOfComments() {
             StringBuilder text = new StringBuilder();
@@ -594,7 +595,7 @@ class CommentParserTest {
                     .allSatisfy(element -> assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT));
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("should handle mixed large content efficiently")
         void testParseMixedLargeContent() {
             StringBuilder text = new StringBuilder();

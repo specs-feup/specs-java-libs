@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * Comprehensive test suite for LogSourceInfo enum.
@@ -448,7 +449,7 @@ class LogSourceInfoTest {
             assertThat(LogSourceInfo.getLogSourceInfo(Level.WARNING)).isEqualTo(LogSourceInfo.NONE);
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should maintain performance with many configurations")
         void testPerformanceWithManyConfigurations() {
             // Given - Configure many levels

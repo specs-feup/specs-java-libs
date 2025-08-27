@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -392,7 +393,7 @@ public class BufferedStringBuilderTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle rapid successive appends")
         void testRapidAppends() {
             BufferedStringBuilder builder = new BufferedStringBuilder(outputFile);

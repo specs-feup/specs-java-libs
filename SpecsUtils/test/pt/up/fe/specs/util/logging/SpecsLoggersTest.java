@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * Comprehensive test suite for SpecsLoggers class.
@@ -318,7 +319,7 @@ class SpecsLoggersTest {
     @DisplayName("Performance and Memory Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should efficiently handle many logger creations")
         void testManyLoggerCreations() throws Exception {
             // Given

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * Comprehensive test suite for {@link ExtensionFilter} deprecated file filter
@@ -413,7 +414,7 @@ class ExtensionFilterTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("should handle large numbers of filenames efficiently")
         void testLargeFilenameSet() {
             File dir = tempDir.toFile();

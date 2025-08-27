@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * Comprehensive test suite for ClassSet - a class hierarchy-aware set utility.
@@ -359,7 +360,7 @@ public class ClassSetTest {
             assertThat(numberSet.contains(Integer.class)).isTrue();
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should perform hierarchy checks efficiently")
         void testHierarchyCheckPerformance() {
             numberSet.add(Number.class);

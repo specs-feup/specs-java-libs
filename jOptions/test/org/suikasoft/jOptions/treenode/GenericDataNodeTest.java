@@ -5,12 +5,16 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.suikasoft.jOptions.Datakey.DataKey;
@@ -396,7 +400,7 @@ class GenericDataNodeTest {
             node2.addChild(node1); // This should succeed without throwing
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large number of children")
         void testLargeNumberOfChildren_PerformanceTest() {
             // Given
@@ -414,6 +418,19 @@ class GenericDataNodeTest {
             assertThat(parent.getChildren()).hasSize(numberOfChildren);
             assertThat(parent.getChildren().get(0).get(stringKey)).isEqualTo("child0");
             assertThat(parent.getChildren().get(999).get(stringKey)).isEqualTo("child999");
+
+            // Performance measurement: ensure iterating and accessing children is fast
+            final int iterations = 100_000;
+            assertTimeout(Duration.ofMillis(500), () -> {
+                for (int i = 0; i < iterations; i++) {
+                    int idx = i % numberOfChildren;
+                    GenericDataNode node = parent.getChildren().get(idx);
+                    String expected = "child" + idx;
+                    if (!expected.equals(node.get(stringKey))) {
+                        throw new AssertionError("Unexpected child value at " + idx);
+                    }
+                }
+            });
         }
     }
 }

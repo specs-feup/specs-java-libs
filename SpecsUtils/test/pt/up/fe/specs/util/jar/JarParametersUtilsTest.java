@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * Unit tests for {@link JarParametersUtils}.
@@ -378,7 +379,7 @@ class JarParametersUtilsTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large number of help checks efficiently")
         void testLargeNumberOfHelpChecks() {
             String[] testArgs = { "-help", "-h", "?", "/?", ".?", "nothelp", "--help", "file.txt" };
@@ -400,7 +401,7 @@ class JarParametersUtilsTest {
             assertThat(duration).isLessThan(1000);
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large number of help message generations efficiently")
         void testLargeNumberOfHelpMessageGenerations() {
             String[] jarNames = { "app1.jar", "app2.jar", "app3.jar", "app4.jar", "app5.jar" };

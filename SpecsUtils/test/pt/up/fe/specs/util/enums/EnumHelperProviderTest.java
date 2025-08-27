@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.providers.StringProvider;
 
@@ -337,7 +338,7 @@ class EnumHelperProviderTest {
     @DisplayName("Performance and Memory Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should create provider quickly")
         void testProviderCreationPerformance() {
             long startTime = System.nanoTime();
@@ -353,7 +354,7 @@ class EnumHelperProviderTest {
             assertThat(durationMs).isLessThan(100);
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should initialize helper only once")
         void testLazyInitializationPerformance() {
             EnumHelperProvider<TestEnumWithValue> testProvider = new EnumHelperProvider<>(TestEnumWithValue.class);

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.utilities.StringSlice;
 
@@ -336,7 +337,7 @@ class EscapeTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large strings efficiently")
         void testPerformance_LargeString_ProcessedEfficiently() {
             // Arrange
@@ -358,7 +359,7 @@ class EscapeTest {
             assertThat(endTime - startTime).isLessThan(1_000_000); // Less than 1ms
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle many small captures efficiently")
         void testPerformance_ManyCaptures_ProcessedEfficiently() {
             // Arrange

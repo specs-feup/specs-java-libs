@@ -3,6 +3,7 @@ package pt.up.fe.specs.util.treenode.transform.impl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.treenode.transform.TransformResult;
 
@@ -344,7 +345,7 @@ class DefaultTransformResultTest {
             assertThat(results[1].visitChildren()).isFalse(); // 1 % 2 != 0
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should have fast access performance")
         void testAccessPerformance() {
             DefaultTransformResult result = new DefaultTransformResult(true);

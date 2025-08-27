@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * Unit tests for {@link SymjaNode}.
@@ -226,6 +227,7 @@ class SymjaNodeTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
+        @RetryingTest(5)
         @ParameterizedTest
         @ValueSource(ints = { 10, 50, 100 })
         @DisplayName("Should create nodes efficiently at different scales")

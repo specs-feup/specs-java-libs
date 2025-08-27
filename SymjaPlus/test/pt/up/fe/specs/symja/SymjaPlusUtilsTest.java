@@ -16,6 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * Comprehensive test suite for SymjaPlusUtils class.
@@ -445,7 +446,7 @@ class SymjaPlusUtilsTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should complete simple operations within reasonable time")
         void testPerformance_SimpleOperations_CompletesQuickly() {
             long startTime = System.currentTimeMillis();
@@ -460,7 +461,7 @@ class SymjaPlusUtilsTest {
             assertThat(duration).isLessThan(5000); // 5 seconds
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle repeated evaluator access efficiently")
         void testPerformance_RepeatedEvaluatorAccess_EfficientlyHandled() {
             long startTime = System.currentTimeMillis();

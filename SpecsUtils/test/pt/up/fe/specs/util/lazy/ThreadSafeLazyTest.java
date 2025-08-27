@@ -18,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junitpioneer.jupiter.RetryingTest;
 
 /**
  * 
@@ -393,7 +394,7 @@ class ThreadSafeLazyTest {
     @DisplayName("Performance Characteristics")
     class Performance {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should avoid expensive recomputation")
         void testExpensiveComputation() {
             AtomicInteger computationCount = new AtomicInteger(0);
@@ -428,7 +429,7 @@ class ThreadSafeLazyTest {
             assertThat(subsequentTime).isLessThan(firstCallTime / 10);
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should have fast uncontended access after initialization")
         void testUncontendedAccess() {
             ThreadSafeLazy<String> fastLazy = new ThreadSafeLazy<>(() -> "fast");

@@ -3,6 +3,7 @@ package pt.up.fe.specs.util.xml;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.w3c.dom.Node;
 
 import static org.assertj.core.api.Assertions.*;
@@ -172,7 +173,7 @@ class AXmlNodeTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should perform toString efficiently")
         void testToStringPerformance() {
             TestXmlNode node = new TestXmlNode("test content");

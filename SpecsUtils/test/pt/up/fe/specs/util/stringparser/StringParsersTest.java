@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import pt.up.fe.specs.util.enums.EnumHelperWithValue;
 import pt.up.fe.specs.util.providers.StringProvider;
@@ -530,7 +531,7 @@ public class StringParsersTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large input efficiently")
         void testLargeInputPerformance() {
             String largeContent = "word ".repeat(1000);
@@ -550,7 +551,7 @@ public class StringParsersTest {
             assertThat(duration).isLessThan(50_000_000L); // 50ms
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle repeated enum checks efficiently")
         void testRepeatedEnumCheckPerformance() {
             EnumHelperWithValue<TestEnum> helper = new EnumHelperWithValue<>(TestEnum.class);

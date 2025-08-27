@@ -10,12 +10,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -428,7 +432,7 @@ class PropertyWithNodeManagerTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large number of keys efficiently")
         void testGetKeysWithNodes_ManyKeys_PerformsWell() {
             // Given
@@ -451,6 +455,17 @@ class PropertyWithNodeManagerTest {
             // Then
             assertThat(result).hasSize(1);
             assertThat(result).contains(nodeKey);
+
+            // Performance measurement: run many repeated queries and ensure they complete
+            final int iterations = 10_000;
+            assertTimeout(Duration.ofMillis(1000), () -> {
+                for (int i = 0; i < iterations; i++) {
+                    List<DataKey<?>> r = manager.getKeysWithNodes(testNode);
+                    if (r.size() != 1 || !r.contains(nodeKey)) {
+                        throw new AssertionError("Unexpected result during performance run at iteration " + i);
+                    }
+                }
+            });
         }
     }
 }

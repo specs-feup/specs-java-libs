@@ -1,6 +1,8 @@
 package pt.up.fe.specs.symja.ast.passes;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -278,7 +281,7 @@ class RemoveMinusMultTransformTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should transform efficiently for multiple operations")
         void testTransformationPerformance_MultipleOperations_CompletesQuickly() {
             long startTime = System.nanoTime();

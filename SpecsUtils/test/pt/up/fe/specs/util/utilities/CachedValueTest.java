@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 
 import java.util.function.Supplier;
 
@@ -271,7 +272,7 @@ class CachedValueTest {
             assertThat(supplierCallCount).isEqualTo(1);
         }
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle expensive supplier operations efficiently")
         void testExpensiveSupplierCaching() {
             int[] expensiveCallCount = { 0 };

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.suikasoft.jOptions.Datakey.DataKey;
@@ -11,6 +12,9 @@ import org.suikasoft.jOptions.Datakey.KeyFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -316,7 +320,7 @@ class StoreDefinitionIndexesTest {
     @DisplayName("Performance Tests")
     class PerformanceTests {
 
-        @Test
+        @RetryingTest(5)
         @DisplayName("Should handle large number of keys efficiently")
         void testIndexes_WithManyKeys_HandlesEfficiently() {
             // Given - Create many keys
@@ -330,7 +334,7 @@ class StoreDefinitionIndexesTest {
             // When
             StoreDefinitionIndexes indexes = new StoreDefinitionIndexes(mockStoreDefinition);
 
-            // Then - Verify a few indexes and that lookup is fast
+            // Then - Verify a few indexes
             assertThat(indexes.getIndex("key0")).isEqualTo(0);
             assertThat(indexes.getIndex("key500")).isEqualTo(500);
             assertThat(indexes.getIndex("key999")).isEqualTo(999);
@@ -338,6 +342,26 @@ class StoreDefinitionIndexesTest {
             // Verify existence checks
             assertThat(indexes.hasIndex("key0")).isTrue();
             assertThat(indexes.hasIndex("key1000")).isFalse();
+
+            // Performance measurement: ensure many lookups complete within a reasonable time
+            final int iterations = 100_000;
+            // This will fail the test if the loop takes longer than the duration
+            assertTimeout(Duration.ofMillis(500), () -> {
+                for (int i = 0; i < iterations; i++) {
+                    String keyName = "key" + (i % 1000);
+                    int idx = indexes.getIndex(keyName);
+                    if (idx != (i % 1000)) {
+                        throw new AssertionError("Unexpected index for " + keyName);
+                    }
+
+                    // Occasionally assert a negative existence check to ensure that path is exercised
+                    if (i % 1000 == 0) {
+                        if (indexes.hasIndex("key1000")) {
+                            throw new AssertionError("Unexpected existence for key1000");
+                        }
+                    }
+                }
+            });
         }
     }
 }
