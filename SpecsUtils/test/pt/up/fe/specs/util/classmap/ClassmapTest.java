@@ -115,7 +115,8 @@ public class ClassmapTest {
                 var bufferedInputStream = new BufferedInputStream(fileInputStream);
 
                 assertThat(streamMap.apply(fileInputStream, 1)).isEqualTo("File:1:class java.io.FileInputStream");
-                assertThat(streamMap.apply(bufferedInputStream, 2)).isEqualTo("Base:2:class java.io.BufferedInputStream");
+                assertThat(streamMap.apply(bufferedInputStream, 2))
+                        .isEqualTo("Base:2:class java.io.BufferedInputStream");
             }).doesNotThrowAnyException();
         }
     }
@@ -141,7 +142,8 @@ public class ClassmapTest {
                 streamMap.accept(fileInputStream, buffer);
                 assertThat(buffer.toString()).isEqualTo("File:class java.io.FileInputStream\n");
                 streamMap.accept(bufferedInputStream, buffer);
-                assertThat(buffer.toString()).isEqualTo("File:class java.io.FileInputStream\nBase:class java.io.BufferedInputStream");
+                assertThat(buffer.toString())
+                        .isEqualTo("File:class java.io.FileInputStream\nBase:class java.io.BufferedInputStream");
             }).doesNotThrowAnyException();
         }
     }
@@ -163,7 +165,8 @@ public class ClassmapTest {
                 var bufferedInputStream = new BufferedInputStream(fileInputStream);
 
                 assertThat(streamMap.apply(fileInputStream)).isEqualTo("File:class java.io.FileInputStream");
-                assertThat(streamMap.apply(bufferedInputStream)).isEqualTo("Base:class pt.up.fe.specs.util.classmap.MultiFunction:class java.io.BufferedInputStream");
+                assertThat(streamMap.apply(bufferedInputStream)).isEqualTo(
+                        "Base:class pt.up.fe.specs.util.classmap.MultiFunction:class java.io.BufferedInputStream");
             }).doesNotThrowAnyException();
         }
     }

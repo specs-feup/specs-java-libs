@@ -2,7 +2,7 @@ package pt.up.fe.specs.util.threadstream;
 
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
-public class GenericObjectStream<T> extends AObjectStream<T> implements ObjectStream<T> {
+public class GenericObjectStream<T> extends AObjectStream<T> {
 
     private final ChannelConsumer<T> consumer;
 

@@ -78,11 +78,10 @@ public class CollectionUtilsTest {
         @DisplayName("getFirstIndex should find first occurrence in complex hierarchy")
         void testGetFirstIndex_ComplexHierarchy_ReturnsFirstOccurrence() {
             List<Number> numbers = Arrays.asList(
-                Integer.valueOf(1), 
-                Float.valueOf(2.5f), 
-                Integer.valueOf(3), 
-                Double.valueOf(4.5)
-            );
+                    Integer.valueOf(1),
+                    Float.valueOf(2.5f),
+                    Integer.valueOf(3),
+                    Double.valueOf(4.5));
 
             // Should find first Integer at index 0
             assertThat(SpecsCollections.getFirstIndex(numbers, Integer.class)).isEqualTo(0);

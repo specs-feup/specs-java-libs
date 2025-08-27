@@ -15,6 +15,8 @@ package pt.up.fe.specs.util.providers;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import pt.up.fe.specs.util.SpecsCheck;
@@ -97,8 +99,8 @@ public interface WebResourceProvider extends FileResourceProvider {
      */
     default URL getUrl() {
         try {
-            return new URL(getUrlString());
-        } catch (MalformedURLException e) {
+            return new URI(getUrlString()).toURL();
+        } catch (URISyntaxException | MalformedURLException e) {
             throw new RuntimeException("Could not transform url String into URL", e);
         }
     }

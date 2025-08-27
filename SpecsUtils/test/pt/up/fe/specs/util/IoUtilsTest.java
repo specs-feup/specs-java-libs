@@ -136,7 +136,7 @@ public class IoUtilsTest {
 
             var urlOptional = SpecsIo.parseUrl(urlString);
             assertThat(urlOptional).isPresent();
-            
+
             var url = urlOptional.get();
             var query = SpecsIo.parseUrlQuery(url);
 

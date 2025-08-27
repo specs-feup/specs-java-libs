@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -2311,8 +2312,8 @@ public class SpecsIo {
         URL url = null;
 
         try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
+            url = new URI(urlString).toURL();
+        } catch (MalformedURLException | URISyntaxException e) {
             SpecsLogs.msgInfo("Could not create URL from '" + urlString + "'.");
             return null;
         }
@@ -2476,10 +2477,14 @@ public class SpecsIo {
         // If we are on Linux, usually the temporary folder is shared by all users.
         // This can be problematic in regard to read/write permissions
         // Suffix the name of the user to make the temporary folder unique to the user
+        /**
+         * FIXME: this is not a good idea, as it can lead to problems when running multiple instances of the same program.
+         * at the same time, as the temporary folder will be shared by all instances.
+         * A better solution would be to append a UUID to the folder name. 
+         */
         if (SpecsSystem.isLinux()) {
             String userName = System.getProperty("user.name");
             folderName = folderName == null ? "tmp_" + userName : folderName + "_" + userName;
-            // tempDir = tempDir + "_" + System.getProperty("user.name");
         }
 
         File systemTemp = SpecsIo.existingFolder(null, tempDir);
@@ -2628,9 +2633,13 @@ public class SpecsIo {
     }
 
     public static Optional<URL> parseUrl(String urlString) {
+        if (urlString == null) {
+            return Optional.empty();
+        }
+        
         try {
-            return Optional.of(new URL(urlString));
-        } catch (MalformedURLException e) {
+            return Optional.of(new URI(urlString).toURL());
+        } catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
             return Optional.empty();
         }
     }
@@ -2638,7 +2647,7 @@ public class SpecsIo {
     public static String getUrl(String urlString) {
 
         try {
-            URL url = new URL(urlString);
+            URL url = new URI(urlString).toURL();
             URLConnection con = url.openConnection();
             con.setConnectTimeout(10000);
             con.setReadTimeout(10000);

@@ -60,6 +60,11 @@ public class RegisterTable {
     }
 
     private Integer getFlagValue(String registerName) {
+	if (registerName == null) {
+		SpecsLogs.getLogger().
+				warning("Register name '" + registerName + "' does not represent a valid flag.");
+		return null;
+	}
 	Integer bitPosition = RegisterUtils.decodeFlagBit(registerName);
 	if (bitPosition == null) {
 	    SpecsLogs.getLogger().

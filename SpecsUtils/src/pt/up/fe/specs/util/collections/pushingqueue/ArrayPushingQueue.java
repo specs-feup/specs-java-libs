@@ -81,7 +81,7 @@ public class ArrayPushingQueue<T> implements PushingQueue<T> {
      */
     @Override
     public T getElement(int index) {
-        if (index >= this.queue.size()) {
+        if (index < 0 || index >= this.queue.size()) {
             return null;
         }
 

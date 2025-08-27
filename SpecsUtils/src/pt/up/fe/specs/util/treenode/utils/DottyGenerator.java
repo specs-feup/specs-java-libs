@@ -28,7 +28,7 @@ public class DottyGenerator<K extends TreeNode<K>> extends TreeNodeWalker<K> {
 
         // this node name
         var me = node.toContentString();
-        if (me.isBlank()) {
+        if (me == null || me.isBlank()) {
             me = node.getNodeName();
         }
 
@@ -39,7 +39,7 @@ public class DottyGenerator<K extends TreeNode<K>> extends TreeNodeWalker<K> {
 
         // my children
         for (var kid : node.getChildren())
-            dotty.append(tagname + " -> " + kid.hashCode() + "\n");
+            dotty.append(tagname + " -> " + kid.hashCode() + ";\n");
 
         // visit children
         super.visit(node);

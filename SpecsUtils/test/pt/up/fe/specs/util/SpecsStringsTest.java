@@ -48,6 +48,8 @@ import pt.up.fe.specs.util.parsing.LineParser;
  * - Utility methods (palindrome check, character validation)
  * - Time and size formatting
  * - Collection utilities
+ * 
+ * @author Generated Tests
  */
 @DisplayName("SpecsStrings Tests")
 public class SpecsStringsTest {
@@ -103,7 +105,7 @@ public class SpecsStringsTest {
             }
 
             @ParameterizedTest
-            @ValueSource(strings = {"123", "-456", "0", "+789", "2147483647", "-2147483648"})
+            @ValueSource(strings = { "123", "-456", "0", "+789", "2147483647", "-2147483648" })
             @DisplayName("Integer parsing edge cases")
             void testIntegerParsing_EdgeCases(String input) {
                 int expected = Integer.parseInt(input);
@@ -431,13 +433,13 @@ public class SpecsStringsTest {
         @Test
         @DisplayName("bytesToHex should convert byte arrays correctly")
         void testBytesToHex_VariousInputs_ReturnsCorrectHexString() {
-            byte[] bytes1 = {0x00, 0x01, 0x02, (byte) 0xFF};
+            byte[] bytes1 = { 0x00, 0x01, 0x02, (byte) 0xFF };
             assertThat(SpecsStrings.bytesToHex(bytes1)).isEqualTo("000102FF");
-            
+
             byte[] bytes2 = {};
             assertThat(SpecsStrings.bytesToHex(bytes2)).isEqualTo("");
-            
-            byte[] bytes3 = {0x10, 0x20};
+
+            byte[] bytes3 = { 0x10, 0x20 };
             assertThat(SpecsStrings.bytesToHex(bytes3)).isEqualTo("1020");
         }
     }
@@ -452,7 +454,7 @@ public class SpecsStringsTest {
             String text = "The year 2023 and 2024 are important.";
             List<String> years = SpecsStrings.getRegex(text, "\\d{4}");
             assertThat(years).containsExactly("2023", "2024");
-            
+
             String emails = "Contact us at test@example.com or admin@test.org";
             List<String> emailMatches = SpecsStrings.getRegex(emails, "\\w+@\\w+\\.\\w+");
             assertThat(emailMatches).containsExactly("test@example.com", "admin@test.org");
@@ -482,10 +484,10 @@ public class SpecsStringsTest {
             String text = "Date: 2023-12-25";
             String year = SpecsStrings.getRegexGroup(text, "(\\d{4})-(\\d{2})-(\\d{2})", 1);
             assertThat(year).isEqualTo("2023");
-            
+
             String month = SpecsStrings.getRegexGroup(text, "(\\d{4})-(\\d{2})-(\\d{2})", 2);
             assertThat(month).isEqualTo("12");
-            
+
             String day = SpecsStrings.getRegexGroup(text, "(\\d{4})-(\\d{2})-(\\d{2})", 3);
             assertThat(day).isEqualTo("25");
         }
@@ -497,7 +499,7 @@ public class SpecsStringsTest {
             Pattern pattern = Pattern.compile("(\\d{4})-(\\d{2})-(\\d{2})");
             List<String> years = SpecsStrings.getRegexGroups(text, pattern, 1);
             assertThat(years).containsExactly("2023", "2024");
-            
+
             List<String> months = SpecsStrings.getRegexGroups(text, pattern, 2);
             assertThat(months).containsExactly("12", "01");
         }
@@ -565,11 +567,11 @@ public class SpecsStringsTest {
         void testToString_List_ReturnsCorrectFormat() {
             List<String> strings = Arrays.asList("a", "b", "c");
             assertThat(SpecsStrings.toString(strings)).contains("a").contains("b").contains("c");
-            
+
             List<Integer> numbers = Arrays.asList(1, 2, 3);
             String result = SpecsStrings.toString(numbers);
             assertThat(result).contains("1").contains("2").contains("3");
-            
+
             List<String> empty = Collections.emptyList();
             assertThat(SpecsStrings.toString(empty)).isNotNull();
         }
@@ -580,7 +582,7 @@ public class SpecsStringsTest {
             Collection<String> strings = Arrays.asList("c", "a", "b");
             List<String> sorted = SpecsStrings.getSortedList(strings);
             assertThat(sorted).containsExactly("a", "b", "c");
-            
+
             Collection<Integer> numbers = Arrays.asList(3, 1, 2);
             List<Integer> sortedNumbers = SpecsStrings.getSortedList(numbers);
             assertThat(sortedNumbers).containsExactly(1, 2, 3);
@@ -623,7 +625,7 @@ public class SpecsStringsTest {
             assertThat(SpecsStrings.isPalindrome("585")).isTrue();
             assertThat(SpecsStrings.isPalindrome("1001001001")).isTrue();
             assertThat(SpecsStrings.isPalindrome("10010010010")).isFalse();
-            
+
             // Additional test cases
             assertThat(SpecsStrings.isPalindrome("")).isTrue(); // Empty string is palindrome
             assertThat(SpecsStrings.isPalindrome("racecar")).isTrue();
@@ -718,7 +720,7 @@ public class SpecsStringsTest {
         void testPackageNameToFolder_VariousInputs_ReturnsCorrectFolders(@TempDir File tempDir) {
             File result = SpecsStrings.packageNameToFolder(tempDir, "com.example.test");
             assertThat(result.getAbsolutePath()).endsWith("com" + File.separator + "example" + File.separator + "test");
-            
+
             File simple = SpecsStrings.packageNameToFolder(tempDir, "simple");
             assertThat(simple.getAbsolutePath()).endsWith("simple");
         }
@@ -734,7 +736,7 @@ public class SpecsStringsTest {
             Map<String, String> mappings = new HashMap<>();
             mappings.put("name", "John");
             mappings.put("<age>", "25");
-            
+
             String template = "Hello name, you are <age> years old.";
             String result = SpecsStrings.replace(template, mappings);
             assertThat(result).isEqualTo("Hello John, you are 25 years old.");
@@ -793,7 +795,7 @@ public class SpecsStringsTest {
     class EdgeCasesAndErrorHandling {
 
         @ParameterizedTest
-        @ValueSource(strings = {"", "   ", "\t", "\n"})
+        @ValueSource(strings = { "", "   ", "\t", "\n" })
         @DisplayName("Empty and whitespace strings should be handled correctly")
         void testEmptyAndWhitespaceHandling(String input) {
             // Most parsing methods should handle empty/whitespace gracefully
@@ -826,14 +828,14 @@ public class SpecsStringsTest {
             String maxInt = String.valueOf(Integer.MAX_VALUE);
             String minInt = String.valueOf(Integer.MIN_VALUE);
             String tooLarge = "999999999999999999999";
-            
+
             assertThat(SpecsStrings.parseInt(maxInt)).isEqualTo(Integer.MAX_VALUE);
             assertThat(SpecsStrings.parseInt(minInt)).isEqualTo(Integer.MIN_VALUE);
             assertThat(SpecsStrings.parseInt(tooLarge)).isEqualTo(0); // Should fail gracefully
-            
+
             // Long should handle larger numbers
             assertThat(SpecsStrings.parseLong(tooLarge)).isNull();
-            
+
             // BigInteger should handle very large numbers
             assertThat(SpecsStrings.parseBigInteger(tooLarge)).isNotNull();
         }
@@ -849,11 +851,11 @@ public class SpecsStringsTest {
             // Create a test file
             File testFile = new File(tempDir, "test-table.txt");
             Files.write(testFile.toPath(), Arrays.asList("key1=value1", "key2=value2", "key3=value3"));
-            
+
             // Create a LineParser that splits on '='
             LineParser lineParser = new LineParser("=", "", "//");
             Map<String, String> result = SpecsStrings.parseTableFromFile(testFile, lineParser);
-            
+
             assertThat(result).hasSize(3);
             assertThat(result.get("key1")).isEqualTo("value1");
             assertThat(result.get("key2")).isEqualTo("value2");
@@ -861,26 +863,291 @@ public class SpecsStringsTest {
         }
     }
 
+    @Nested
+    @DisplayName("Additional String Utilities")
+    class AdditionalStringUtilities {
+
+        @Test
+        @DisplayName("isPrintableChar should identify printable characters correctly")
+        void testIsPrintableChar() {
+            // Printable characters
+            assertThat(SpecsStrings.isPrintableChar('a')).isTrue();
+            assertThat(SpecsStrings.isPrintableChar('Z')).isTrue();
+            assertThat(SpecsStrings.isPrintableChar('0')).isTrue();
+            assertThat(SpecsStrings.isPrintableChar('!')).isTrue();
+            assertThat(SpecsStrings.isPrintableChar(' ')).isTrue();
+            assertThat(SpecsStrings.isPrintableChar('~')).isTrue();
+
+            // Non-printable characters
+            assertThat(SpecsStrings.isPrintableChar('\t')).isFalse();
+            assertThat(SpecsStrings.isPrintableChar('\n')).isFalse();
+            assertThat(SpecsStrings.isPrintableChar('\r')).isFalse();
+            assertThat(SpecsStrings.isPrintableChar('\u0000')).isFalse(); // Null character
+            assertThat(SpecsStrings.isPrintableChar('\u007F')).isFalse(); // DEL character
+        }
+
+        @Test
+        @DisplayName("toHexString with int should format correctly")
+        void testToHexStringInt() {
+            assertThat(SpecsStrings.toHexString(255, 2)).isEqualTo("0xFF");
+            assertThat(SpecsStrings.toHexString(255, 4)).isEqualTo("0x00FF");
+            assertThat(SpecsStrings.toHexString(0, 2)).isEqualTo("0x00");
+            assertThat(SpecsStrings.toHexString(16, 2)).isEqualTo("0x10");
+            assertThat(SpecsStrings.toHexString(-1, 8)).isEqualTo("0xFFFFFFFF");
+        }
+
+        @Test
+        @DisplayName("toHexString with long should format correctly")
+        void testToHexStringLong() {
+            assertThat(SpecsStrings.toHexString(255L, 2)).isEqualTo("0xFF");
+            assertThat(SpecsStrings.toHexString(255L, 4)).isEqualTo("0x00FF");
+            assertThat(SpecsStrings.toHexString(0L, 2)).isEqualTo("0x00");
+            assertThat(SpecsStrings.toHexString(16L, 2)).isEqualTo("0x10");
+            assertThat(SpecsStrings.toHexString(-1L, 16)).isEqualTo("0xFFFFFFFFFFFFFFFF");
+        }
+
+        @Test
+        @DisplayName("indexOfFirstWhitespace should find first whitespace correctly")
+        void testIndexOfFirstWhitespace() {
+            assertThat(SpecsStrings.indexOfFirstWhitespace("hello world")).isEqualTo(5);
+            assertThat(SpecsStrings.indexOfFirstWhitespace("hello\tworld")).isEqualTo(5);
+            assertThat(SpecsStrings.indexOfFirstWhitespace("hello\nworld")).isEqualTo(5);
+            assertThat(SpecsStrings.indexOfFirstWhitespace("helloworld")).isEqualTo(-1);
+            assertThat(SpecsStrings.indexOfFirstWhitespace(" hello")).isEqualTo(0);
+            assertThat(SpecsStrings.indexOfFirstWhitespace("")).isEqualTo(-1);
+        }
+
+        @Test
+        @DisplayName("indexOf with predicate should find character correctly")
+        void testIndexOfWithPredicate() {
+            // Find digits (not reverse)
+            assertThat(SpecsStrings.indexOf("abc123def", Character::isDigit, false)).isEqualTo(3);
+            assertThat(SpecsStrings.indexOf("abc123def", Character::isDigit, true)).isEqualTo(5); // Last digit
+            
+            // Find uppercase letters
+            assertThat(SpecsStrings.indexOf("helloWorld", Character::isUpperCase, false)).isEqualTo(5);
+            assertThat(SpecsStrings.indexOf("HelloWorld", Character::isUpperCase, true)).isEqualTo(5); // Last uppercase
+            
+            // Character not found
+            assertThat(SpecsStrings.indexOf("hello", Character::isDigit, false)).isEqualTo(-1);
+        }
+
+        @Test
+        @DisplayName("getSortedList should sort collections correctly")
+        void testGetSortedList() {
+            List<String> unsorted = Arrays.asList("zebra", "apple", "banana");
+            List<String> sorted = SpecsStrings.getSortedList(unsorted);
+            
+            assertThat(sorted).containsExactly("apple", "banana", "zebra");
+            assertThat(unsorted).containsExactly("zebra", "apple", "banana"); // Original unchanged
+            
+            // Test with integers
+            List<Integer> unsortedInts = Arrays.asList(3, 1, 4, 1, 5);
+            List<Integer> sortedInts = SpecsStrings.getSortedList(unsortedInts);
+            assertThat(sortedInts).containsExactly(1, 1, 3, 4, 5);
+        }
+
+        @Test
+        @DisplayName("instructionRangeHexEncode should create encoded string")
+        void testInstructionRangeHexEncode() {
+            String encoded = SpecsStrings.instructionRangeHexEncode(100, 200);
+            assertThat(encoded).isNotBlank();
+            // Just verify it creates some encoded format, actual format is implementation detail
+        }
+
+        @Test
+        @DisplayName("packageNameToFolderName should convert correctly")
+        void testPackageNameToFolderName() {
+            assertThat(SpecsStrings.packageNameToFolderName("com.example.package"))
+                    .isEqualTo("com/example/package");
+            assertThat(SpecsStrings.packageNameToFolderName("simple"))
+                    .isEqualTo("simple");
+            assertThat(SpecsStrings.packageNameToFolderName(""))
+                    .isEqualTo("");
+        }
+
+        @Test
+        @DisplayName("packageNameToFolder should create correct folder structure")
+        void testPackageNameToFolder(@TempDir File tempDir) {
+            File result = SpecsStrings.packageNameToFolder(tempDir, "com.example.package");
+            assertThat(result.getPath()).endsWith("com" + File.separator + "example" + File.separator + "package");
+        }
+
+        @Test
+        @DisplayName("replace with mappings should work correctly")
+        void testReplaceWithMappings() {
+            Map<String, String> mappings = new HashMap<>();
+            mappings.put("${name}", "John");
+            mappings.put("${age}", "30");
+            
+            String template = "Hello ${name}, you are ${age} years old!";
+            String result = SpecsStrings.replace(template, mappings);
+            
+            assertThat(result).isEqualTo("Hello John, you are 30 years old!");
+        }
+
+        @Test
+        @DisplayName("moduloGet should access list elements with modulo")
+        void testModuloGet() {
+            List<String> list = Arrays.asList("a", "b", "c");
+            
+            assertThat(SpecsStrings.moduloGet(list, 0)).isEqualTo("a");
+            assertThat(SpecsStrings.moduloGet(list, 1)).isEqualTo("b");
+            assertThat(SpecsStrings.moduloGet(list, 2)).isEqualTo("c");
+            assertThat(SpecsStrings.moduloGet(list, 3)).isEqualTo("a"); // Wraps around
+            assertThat(SpecsStrings.moduloGet(list, 4)).isEqualTo("b");
+            assertThat(SpecsStrings.moduloGet(list, -1)).isEqualTo("c"); // Negative index
+        }
+
+        @Test
+        @DisplayName("modulo should calculate modulo correctly")
+        void testModulo() {
+            assertThat(SpecsStrings.modulo(5, 3)).isEqualTo(2);
+            assertThat(SpecsStrings.modulo(3, 3)).isEqualTo(0);
+            assertThat(SpecsStrings.modulo(0, 3)).isEqualTo(0);
+            assertThat(SpecsStrings.modulo(-1, 3)).isEqualTo(2);
+            assertThat(SpecsStrings.modulo(-4, 3)).isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("getRegex with string pattern should extract matches")
+        void testGetRegexString() {
+            String content = "The numbers are 123 and 456";
+            List<String> matches = SpecsStrings.getRegex(content, "\\d+");
+            
+            assertThat(matches).hasSize(2);
+            assertThat(matches).containsExactly("123", "456");
+        }
+
+        @Test
+        @DisplayName("getRegex with Pattern should extract matches")
+        void testGetRegexPattern() {
+            String content = "Email: john@example.com and jane@test.org";
+            Pattern emailPattern = Pattern.compile("\\S+@\\S+\\.\\S+");
+            List<String> matches = SpecsStrings.getRegex(content, emailPattern);
+            
+            assertThat(matches).hasSize(2);
+            assertThat(matches).containsExactly("john@example.com", "jane@test.org");
+        }
+
+        @Test
+        @DisplayName("matches with Pattern should check pattern matching")
+        void testMatches() {
+            Pattern digitPattern = Pattern.compile("\\d+");
+            
+            assertThat(SpecsStrings.matches("123", digitPattern)).isTrue();
+            assertThat(SpecsStrings.matches("abc", digitPattern)).isFalse();
+            assertThat(SpecsStrings.matches("123abc", digitPattern)).isTrue(); // Contains digits
+        }
+
+        @Test
+        @DisplayName("getRegexGroup should extract capturing groups")
+        void testGetRegexGroup() {
+            String content = "Date: 2023-12-25";
+            String result = SpecsStrings.getRegexGroup(content, "(\\d{4})-(\\d{2})-(\\d{2})", 1);
+            
+            assertThat(result).isEqualTo("2023");
+            
+            result = SpecsStrings.getRegexGroup(content, "(\\d{4})-(\\d{2})-(\\d{2})", 2);
+            assertThat(result).isEqualTo("12");
+            
+            result = SpecsStrings.getRegexGroup(content, "(\\d{4})-(\\d{2})-(\\d{2})", 3);
+            assertThat(result).isEqualTo("25");
+        }
+
+        @Test
+        @DisplayName("getRegexGroups should extract all capturing groups")
+        void testGetRegexGroups() {
+            String content = "Dates: 2023-12-25 and 2024-01-15";
+            List<String> groups = SpecsStrings.getRegexGroups(content, "(\\d{4})-(\\d{2})-(\\d{2})", 1);
+            
+            assertThat(groups).hasSize(2);
+            assertThat(groups).containsExactly("2023", "2024");
+        }
+
+        @Test
+        @DisplayName("parseShort should parse short values correctly")
+        void testParseShort() {
+            assertThat(SpecsStrings.parseShort("123")).isEqualTo((short) 123);
+            assertThat(SpecsStrings.parseShort("-456")).isEqualTo((short) -456);
+            assertThat(SpecsStrings.parseShort("0")).isEqualTo((short) 0);
+            
+            // Invalid input should throw exception (unlike other parse methods)
+            assertThatThrownBy(() -> SpecsStrings.parseShort("invalid"))
+                    .isInstanceOf(NumberFormatException.class);
+            assertThatThrownBy(() -> SpecsStrings.parseShort(null))
+                    .isInstanceOf(NumberFormatException.class);
+        }
+
+        @Test
+        @DisplayName("parseBigInteger should parse big integer values")
+        void testParseBigInteger() {
+            BigInteger large = new BigInteger("123456789012345678901234567890");
+            assertThat(SpecsStrings.parseBigInteger(large.toString())).isEqualTo(large);
+            assertThat(SpecsStrings.parseBigInteger("0")).isEqualTo(BigInteger.ZERO);
+            assertThat(SpecsStrings.parseBigInteger("-123")).isEqualTo(BigInteger.valueOf(-123));
+            
+            // Invalid input should return null
+            assertThat(SpecsStrings.parseBigInteger("invalid")).isNull();
+            assertThat(SpecsStrings.parseBigInteger(null)).isNull();
+        }
+
+        @Test
+        @DisplayName("parseLong with radix should parse correctly")
+        void testParseLongWithRadix() {
+            assertThat(SpecsStrings.parseLong("1010", 2)).isEqualTo(10L); // Binary
+            assertThat(SpecsStrings.parseLong("FF", 16)).isEqualTo(255L); // Hex
+            assertThat(SpecsStrings.parseLong("77", 8)).isEqualTo(63L); // Octal
+            assertThat(SpecsStrings.parseLong("123", 10)).isEqualTo(123L); // Decimal
+            
+            // Invalid input should return null
+            assertThat(SpecsStrings.parseLong("invalid", 10)).isNull();
+            assertThat(SpecsStrings.parseLong("GG", 16)).isNull(); // Invalid hex
+        }
+
+        @Test
+        @DisplayName("parseFloat with strict mode should work correctly")
+        void testParseFloatStrict() {
+            // Valid inputs should work in both modes
+            assertThat(SpecsStrings.parseFloat("123.45", true)).isEqualTo(123.45f);
+            assertThat(SpecsStrings.parseFloat("0.0", true)).isEqualTo(0.0f);
+            
+            // Invalid input should return null in both modes
+            assertThat(SpecsStrings.parseFloat("invalid", true)).isNull();
+            assertThat(SpecsStrings.parseFloat("invalid", false)).isNull();
+        }
+
+        @Test
+        @DisplayName("parseDouble with strict mode should work correctly")
+        void testParseDoubleStrict() {
+            // Valid inputs should work
+            assertThat(SpecsStrings.parseDouble("123.45", true)).isEqualTo(123.45);
+            assertThat(SpecsStrings.parseDouble("0.0", true)).isEqualTo(0.0);
+            
+            // Invalid input should return null in both modes
+            assertThat(SpecsStrings.parseDouble("invalid", true)).isNull();
+            assertThat(SpecsStrings.parseDouble("invalid", false)).isNull();
+        }
+    }
+
     // Static data providers for parameterized tests
     static List<Arguments> validIntegerInputs() {
         return Arrays.asList(
-            Arguments.of("0", 0),
-            Arguments.of("123", 123),
-            Arguments.of("-456", -456),
-            Arguments.of("+789", 789),
-            Arguments.of(String.valueOf(Integer.MAX_VALUE), Integer.MAX_VALUE),
-            Arguments.of(String.valueOf(Integer.MIN_VALUE), Integer.MIN_VALUE)
-        );
+                Arguments.of("0", 0),
+                Arguments.of("123", 123),
+                Arguments.of("-456", -456),
+                Arguments.of("+789", 789),
+                Arguments.of(String.valueOf(Integer.MAX_VALUE), Integer.MAX_VALUE),
+                Arguments.of(String.valueOf(Integer.MIN_VALUE), Integer.MIN_VALUE));
     }
 
     static List<Arguments> invalidIntegerInputs() {
         return Arrays.asList(
-            Arguments.of("abc"),
-            Arguments.of("12.34"),
-            Arguments.of(""),
-            Arguments.of("   "),
-            Arguments.of("999999999999999999999"), // Too large for int
-            Arguments.of((Object) null)
-        );
+                Arguments.of("abc"),
+                Arguments.of("12.34"),
+                Arguments.of(""),
+                Arguments.of("   "),
+                Arguments.of("999999999999999999999"), // Too large for int
+                Arguments.of((Object) null));
     }
 }

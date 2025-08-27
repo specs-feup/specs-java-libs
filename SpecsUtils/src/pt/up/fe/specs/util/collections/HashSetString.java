@@ -37,8 +37,9 @@ public class HashSetString extends HashSet<String> {
      * @param anEnum
      * @return
      */
+    @SuppressWarnings("unlikely-arg-type")
     public boolean contains(Enum<?> anEnum) {
-        return contains(anEnum.name());
+        return anEnum != null ? contains(anEnum.name()) : super.contains(anEnum);
     }
 
 }
