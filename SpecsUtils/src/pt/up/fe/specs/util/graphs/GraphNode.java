@@ -41,165 +41,126 @@ public abstract class GraphNode<T extends GraphNode<T, N, C>, N, C> {
      * @param parentConnections
      */
     private GraphNode(String id, N nodeInfo, List<T> children,
-	    List<T> parents, List<C> childrenConnections,
-	    List<C> parentConnections) {
+            List<T> parents, List<C> childrenConnections,
+            List<C> parentConnections) {
 
-	this.id = id;
-	this.nodeInfo = nodeInfo;
-	this.children = parseList(children);
-	this.parents = parseList(parents);
-	this.childrenConnections = parseList(childrenConnections);
-	this.parentConnections = parseList(parentConnections);
+        this.id = id;
+        this.nodeInfo = nodeInfo;
+        this.children = parseList(children);
+        this.parents = parseList(parents);
+        this.childrenConnections = parseList(childrenConnections);
+        this.parentConnections = parseList(parentConnections);
     }
 
     public GraphNode(String id, N nodeInfo) {
-	this(id, nodeInfo, null, null, null, null);
-	/*
-	this.id = id;
-	this.nodeInfo = nodeInfo;
-	this.children = new ArrayList<GraphNodeV2<N, C>>();
-	this.parents = new ArrayList<GraphNodeV2<N, C>>();
-	this.childrenConnections = new ArrayList<C>();
-	this.parentConnections = new ArrayList<C>();
-	 */
+        this(id, nodeInfo, null, null, null, null);
     }
 
-    /*
-        public GraphNodeV2(GraphNodeV2<N, C> aNode) {
-    	this(aNode.id, aNode.nodeInfo, aNode.children, aNode.parents, aNode.childrenConnections, aNode.parentConnections);
-
-    /*
-    	this.id = aNode.id;
-    	this.nodeInfo = aNode.nodeInfo;
-    	this.children = new ArrayList<GraphNodeV2<N, C>>(aNode.children);
-    	this.parents = new ArrayList<GraphNodeV2<N, C>>(aNode.parents);
-    	this.childrenConnections = new ArrayList<C>(aNode.childrenConnections);
-    	this.parentConnections = new ArrayList<C>(aNode.parentConnections);
-     */
-    // }
-
     private static <K> List<K> parseList(List<K> list) {
-	if (list == null) {
-	    return new ArrayList<>();
-	}
+        if (list == null) {
+            return new ArrayList<>();
+        }
 
-	return new ArrayList<K>(list);
+        return new ArrayList<K>(list);
     }
 
     public String getId() {
-	return this.id;
+        return this.id;
     }
 
     public N getNodeInfo() {
-	return this.nodeInfo;
+        return this.nodeInfo;
     }
 
     public void replaceNodeInfo(N nodeInfo) {
-	this.nodeInfo = nodeInfo;
+        this.nodeInfo = nodeInfo;
     }
 
     public List<T> getChildren() {
-	return this.children;
+        return this.children;
     }
 
     public List<T> getParents() {
-	return this.parents;
+        return this.parents;
     }
 
     public T getParent(int index) {
-	return this.parents.get(index);
+        return this.parents.get(index);
     }
 
     public T getChild(int index) {
-	return this.children.get(index);
+        return this.children.get(index);
     }
 
     public List<C> getChildrenConnections() {
-	return this.childrenConnections;
+        return this.childrenConnections;
     }
 
     public C getChildrenConnection(int index) {
-	return this.childrenConnections.get(index);
+        return this.childrenConnections.get(index);
     }
 
     public List<C> getParentConnections() {
-	return this.parentConnections;
+        return this.parentConnections;
     }
 
     public C getParentConnection(int index) {
-	return this.parentConnections.get(index);
+        return this.parentConnections.get(index);
     }
 
-    public void addChild(T childNode, C connectionInfo) {
-	this.children.add(childNode);
-	this.childrenConnections.add(connectionInfo);
+    public synchronized void addChild(T childNode, C connectionInfo) {
+        this.children.add(childNode);
+        this.childrenConnections.add(connectionInfo);
 
-	// Add parent to child
-	childNode.parents.add(getThis());
-	childNode.parentConnections.add(connectionInfo);
+        // Add parent to child
+        childNode.parents.add(getThis());
+        childNode.parentConnections.add(connectionInfo);
     }
 
     protected abstract T getThis();
 
     @Override
     public String toString() {
-	return this.id + "->" + this.nodeInfo;
+        return this.id + "->" + this.nodeInfo;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	GraphNode<?, ?, ?> other = (GraphNode<?, ?, ?>) obj;
-	if (this.id == null) {
-	    if (other.id != null) {
-		return false;
-	    }
-	} else if (!this.id.equals(other.id)) {
-	    return false;
-	}
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        GraphNode<?, ?, ?> other = (GraphNode<?, ?, ?>) obj;
+        if (this.id == null) {
+            if (other.id != null) {
+                return false;
+            }
+        } else if (!this.id.equals(other.id)) {
+            return false;
+        }
+        return true;
     }
-
-    /**
-     * Equality is tested through nodeId.
-     */
-    /*
-    public boolean equals(Object obj) {
-    if (!(obj instanceof GraphNodeV2))
-        return false;
-
-    return ((GraphNodeV2<?, ?>) obj).id.equals(this.id);
-    }
-     */
-
-    /*
-    public int hashCode() {
-    int hash = 7;
-    hash = 41 * hash + (this.id != null ? this.id.hashCode() : 0);
-    return hash;
-    }
-     */
-
 }

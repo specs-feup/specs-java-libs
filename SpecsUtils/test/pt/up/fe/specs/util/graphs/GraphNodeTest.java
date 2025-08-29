@@ -496,5 +496,60 @@ class GraphNodeTest {
                 assertThat(node.getChildrenConnection(i)).isEqualTo("conn" + i);
             }
         }
+
+        @Test
+        @DisplayName("Should handle concurrent child additions without data corruption")
+        void testConcurrentChildAddition() throws InterruptedException {
+            TestGraphNode parent = new TestGraphNode("parent", "parentInfo");
+            int numThreads = 5;
+            int childrenPerThread = 20;
+            ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+            CountDownLatch latch = new CountDownLatch(numThreads);
+
+            // Submit tasks to add children concurrently
+            for (int i = 0; i < numThreads; i++) {
+                final int threadId = i;
+                executor.submit(() -> {
+                    try {
+                        for (int j = 0; j < childrenPerThread; j++) {
+                            String childId = "thread" + threadId + "_child" + j;
+                            TestGraphNode child = new TestGraphNode(childId, "childInfo" + j);
+                            parent.addChild(child, "conn" + threadId + "_" + j);
+                        }
+                    } finally {
+                        latch.countDown();
+                    }
+                });
+            }
+
+            // Wait for all threads to complete
+            latch.await();
+            executor.shutdown();
+
+            // Verify all children were added
+            assertThat(parent.getChildren()).hasSize(numThreads * childrenPerThread);
+            assertThat(parent.getChildrenConnections()).hasSize(numThreads * childrenPerThread);
+
+            // Verify parent relationships are correct for all children
+            for (TestGraphNode child : parent.getChildren()) {
+                assertThat(child.getParents()).containsExactly(parent);
+                assertThat(child.getParentConnections()).hasSize(1);
+            }
+
+            // Verify no child is missing and connections are consistent
+            for (int i = 0; i < numThreads; i++) {
+                for (int j = 0; j < childrenPerThread; j++) {
+                    String expectedChildId = "thread" + i + "_child" + j;
+                    boolean found = false;
+                    for (TestGraphNode child : parent.getChildren()) {
+                        if (expectedChildId.equals(child.getId())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    assertThat(found).isTrue();
+                }
+            }
+        }
     }
 }

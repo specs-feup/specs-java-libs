@@ -543,6 +543,47 @@ class GraphTest {
 
             assertThat(graph.getNodeList()).hasSize(10);
         }
+
+        @Test
+        @DisplayName("Should handle concurrent node additions without data loss")
+        void testConcurrentNodeAddition() throws InterruptedException {
+            TestGraph concurrentGraph = new TestGraph();
+            int numThreads = 10;
+            int nodesPerThread = 10;
+            ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+            CountDownLatch latch = new CountDownLatch(numThreads);
+
+            // Submit tasks to add nodes concurrently
+            for (int i = 0; i < numThreads; i++) {
+                final int threadId = i;
+                executor.submit(() -> {
+                    try {
+                        for (int j = 0; j < nodesPerThread; j++) {
+                            String nodeId = "thread" + threadId + "_node" + j;
+                            concurrentGraph.addNode(nodeId, "info" + j);
+                        }
+                    } finally {
+                        latch.countDown();
+                    }
+                });
+            }
+
+            // Wait for all threads to complete
+            latch.await();
+            executor.shutdown();
+
+            // Verify all nodes were added
+            assertThat(concurrentGraph.getNodeList()).hasSize(numThreads * nodesPerThread);
+            assertThat(concurrentGraph.getGraphNodes()).hasSize(numThreads * nodesPerThread);
+
+            // Verify no node is missing
+            for (int i = 0; i < numThreads; i++) {
+                for (int j = 0; j < nodesPerThread; j++) {
+                    String nodeId = "thread" + i + "_node" + j;
+                    assertThat(concurrentGraph.getNode(nodeId)).isNotNull();
+                }
+            }
+        }
     }
 
     @Nested

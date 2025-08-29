@@ -156,15 +156,19 @@ class GraphUtilsTest {
         }
 
         @Test
-        @DisplayName("Should throw NullPointerException for null node IDs")
+        @DisplayName("Should handle null node IDs gracefully")
         void testNullNodeIds() {
             graph.addNode(null, "nullParentInfo");
             graph.addNode("nullChild", "nullChildInfo");
             graph.addConnection(null, "nullChild", "nullConnection");
 
-            // The current implementation has a bug - it throws NPE for null IDs
-            assertThatThrownBy(() -> GraphUtils.isParent(graph, null, "nullChild"))
-                    .isInstanceOf(NullPointerException.class);
+            // Should return false when checking for null parent ID
+            boolean isParent = GraphUtils.isParent(graph, null, "nullChild");
+            assertThat(isParent).isFalse();
+
+            // Should return false when checking for non-null parent ID against null parent
+            boolean isParent2 = GraphUtils.isParent(graph, "someParent", "nullChild");
+            assertThat(isParent2).isFalse();
         }
 
         @Test

@@ -27,16 +27,16 @@ public class GraphUtils {
      * @return true if parentId is a parent of childId. False otherwise
      */
     public static <T extends GraphNode<T, N, C>, N, C> boolean isParent(Graph<T, N, C> graph,
-	    String parentId, String childId) {
+            String parentId, String childId) {
 
-	T childNode = graph.getNode(childId);
-	for (T parentNode : childNode.getParents()) {
-	    if (parentNode.getId().equals(parentId)) {
-		return true;
-	    }
-	}
+        T childNode = graph.getNode(childId);
+        for (T parentNode : childNode.getParents()) {
+            String nodeId = parentNode.getId();
+            if (nodeId != null && nodeId.equals(parentId)) {
+                return true;
+            }
+        }
 
-	return false;
+        return false;
     }
-
 }
