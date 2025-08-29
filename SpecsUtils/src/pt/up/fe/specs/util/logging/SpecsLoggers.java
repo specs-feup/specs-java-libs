@@ -27,30 +27,12 @@ public class SpecsLoggers {
 
     private static final Map<String, Logger> LOGGERS = new ConcurrentHashMap<>();
 
-    // static Logger getLogger(String loggerName) {
-    // Logger logger = LOGGERS.get(loggerName);
-    //
-    // if (logger == null) {
-    // logger = new LoggerWrapper(loggerName);
-    // // System.out.println("CREATED " + loggerName);
-    // LOGGERS.put(loggerName, logger);
-    // } else {
-    // // System.out.println("RETURNING " + loggerName);
-    // }
-    //
-    // return logger;
-    // }
-
-    // static Logger getLogger(String baseName, String tag) {
-    //
-    // }
-
     static Logger getLogger(String loggerName) {
-
-        // String loggerName = baseName + "." + tag;
-        // }
-
-        // static SpecsLoggerV2 getLogger(SpecsLogger baseLogger, String loggerName) {
+        // Handle null logger names
+        if (loggerName == null) {
+            throw new NullPointerException("Logger name cannot be null");
+        }
+        
         Logger logger = LOGGERS.get(loggerName);
 
         if (logger == null) {
@@ -60,5 +42,4 @@ public class SpecsLoggers {
 
         return logger;
     }
-
 }

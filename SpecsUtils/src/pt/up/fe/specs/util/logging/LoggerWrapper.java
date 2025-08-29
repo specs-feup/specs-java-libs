@@ -29,6 +29,11 @@ public class LoggerWrapper {
     private final Logger logger;
 
     public LoggerWrapper(String name) {
+        // Handle null logger names
+        if (name == null) {
+            throw new NullPointerException("Logger name cannot be null");
+        }
+        
         this.logger = Logger.getLogger(name);
     }
 
@@ -39,14 +44,6 @@ public class LoggerWrapper {
     public Logger getJavaLogger() {
         return logger;
     }
-
-    // public SpecsLoggerV2(Class<?> aClass, String tag) {
-    // this(getLoggerName(aClass, tag));
-    // }
-    //
-    // public SpecsLoggerV2(Class<?> aClass) {
-    // this(aClass, null);
-    // }
 
     /**
      * Info-level message.
@@ -71,6 +68,11 @@ public class LoggerWrapper {
      * @return
      */
     private String parseMessage(String msg) {
+        // Handle null messages
+        if (msg == null) {
+            return null;
+        }
+        
         if (msg.isEmpty()) {
             return msg;
         }

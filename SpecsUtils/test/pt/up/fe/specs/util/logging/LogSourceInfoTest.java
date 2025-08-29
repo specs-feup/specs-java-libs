@@ -225,13 +225,13 @@ class LogSourceInfoTest {
         @Test
         @DisplayName("Should handle null level gracefully")
         void testNullLevel() {
-            // When/Then - Getting info for null level throws NPE due to ConcurrentHashMap
-            assertThatThrownBy(() -> LogSourceInfo.getLogSourceInfo(null))
-                    .isInstanceOf(NullPointerException.class);
+            // When/Then - Getting info for null level should return NONE
+            assertThat(LogSourceInfo.getLogSourceInfo(null)).isEqualTo(LogSourceInfo.NONE);
 
-            // Setting info for null level should also throw NPE
+            // Setting info for null level should throw NPE with clear message
             assertThatThrownBy(() -> LogSourceInfo.setLogSourceInfo(null, LogSourceInfo.SOURCE))
-                    .isInstanceOf(NullPointerException.class);
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Level cannot be null");
         }
 
         @Test

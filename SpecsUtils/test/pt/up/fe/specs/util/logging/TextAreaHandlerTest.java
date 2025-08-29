@@ -215,19 +215,18 @@ class TextAreaHandlerTest {
         }
 
         @Test
-        @DisplayName("Should throw NPE for null record - Bug discovered")
+        @DisplayName("Should handle null record gracefully")
         void testPublishNullRecord() throws Exception {
             // Given
-            String initialContent = getTextAreaContent();
+            handler.publish(new LogRecord(Level.INFO, "Before null"));
 
-            // When/Then - Should throw NPE for null record (bug behavior)
-            assertThatThrownBy(() -> {
-                handler.publish(null);
-            }).isInstanceOf(NullPointerException.class);
+            // When - Publishing null record
+            handler.publish(null);
 
+            // Then - Should handle gracefully without throwing exception
             // Content should remain unchanged
-            String finalContent = getTextAreaContent();
-            assertThat(finalContent).isEqualTo(initialContent);
+            String content = getTextAreaContent();
+            assertThat(content).isEqualTo("Before null\n");
         }
 
         @Test
@@ -537,7 +536,7 @@ class TextAreaHandlerTest {
         }
 
         @Test
-        @DisplayName("Should bypass filters - Bug discovered")
+        @DisplayName("Should respect filters")
         void testWithFilters() throws Exception {
             // Given
             handler.setFilter(record -> record.getMessage().contains("PASS"));
@@ -547,10 +546,10 @@ class TextAreaHandlerTest {
             handler.publish(new LogRecord(Level.INFO, "FAIL: This should not appear"));
             handler.publish(new LogRecord(Level.WARNING, "PASS: Warning that appears"));
 
-            // Then - Bug: Filter is bypassed, all messages appear
+            // Then - Filter should be respected
             String content = getTextAreaContent();
             assertThat(content).contains("PASS: This should appear");
-            assertThat(content).contains("FAIL: This should not appear"); // Bug: should be filtered out but isn't
+            assertThat(content).doesNotContain("FAIL: This should not appear"); // Should be filtered out
             assertThat(content).contains("PASS: Warning that appears");
         }
 

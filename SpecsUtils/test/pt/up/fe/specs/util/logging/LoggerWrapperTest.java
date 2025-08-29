@@ -213,11 +213,10 @@ class LoggerWrapperTest {
             // Given
             LoggerWrapper wrapper = new LoggerWrapper("null.info.test");
 
-            // When/Then - Should throw NPE in parseMessage when checking msg.isEmpty()
-            assertThatThrownBy(() -> {
+            // When/Then - Should handle null messages gracefully
+            assertThatCode(() -> {
                 wrapper.info(null);
-            }).isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Cannot invoke \"String.isEmpty()\" because \"msg\" is null");
+            }).doesNotThrowAnyException();
         }
 
         @Test
@@ -368,11 +367,9 @@ class LoggerWrapperTest {
             Method parseMessage = LoggerWrapper.class.getDeclaredMethod("parseMessage", String.class);
             parseMessage.setAccessible(true);
 
-            // When/Then - Should throw NPE when checking msg.isEmpty()
-            assertThatThrownBy(() -> {
-                parseMessage.invoke(wrapper, (String) null);
-            }).hasCauseInstanceOf(NullPointerException.class)
-                    .cause().hasMessageContaining("Cannot invoke \"String.isEmpty()\" because \"msg\" is null");
+            // When/Then - Should handle null messages gracefully and return null
+            String result = (String) parseMessage.invoke(wrapper, (String) null);
+            assertThat(result).isNull();
         }
     }
 

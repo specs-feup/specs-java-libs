@@ -109,16 +109,16 @@ class StringLoggerTest {
         @Test
         @DisplayName("Should handle null tags")
         void testConstructorWithNullTags() {
-            // When/Then - Should not throw exception but tags will be null
+            // When/Then - Should not throw exception and create empty set for null tags
             assertThatCode(() -> {
                 StringLogger logger = new StringLogger("null.tags", null);
                 assertThat(logger.getBaseName()).isEqualTo("null.tags");
-                assertThat(logger.getTags()).isNull();
+                assertThat(logger.getTags()).isEmpty();
             }).doesNotThrowAnyException();
         }
 
         @Test
-        @DisplayName("Should preserve tag set reference (current behavior)")
+        @DisplayName("Should create defensive copy of tags set")
         void testTagSetReference() {
             // Given
             Set<String> originalTags = new HashSet<>(Arrays.asList("tag1", "tag2"));
@@ -127,10 +127,9 @@ class StringLoggerTest {
             // When - Modify original set
             originalTags.add("tag3");
 
-            // Then - Logger is affected because it stores the reference directly
-            // NOTE: This shows a potential immutability issue
-            assertThat(logger.getTags()).containsExactlyInAnyOrder("tag1", "tag2", "tag3");
-            assertThat(logger.getTags()).isSameAs(originalTags); // Same reference
+            // Then - Logger should not be affected because it creates a defensive copy
+            assertThat(logger.getTags()).containsExactlyInAnyOrder("tag1", "tag2");
+            assertThat(logger.getTags()).isNotSameAs(originalTags); // Different reference
         }
     }
 
@@ -150,7 +149,7 @@ class StringLoggerTest {
 
             // Then
             assertThat(result).containsExactlyInAnyOrder("feature", "debug", "performance");
-            assertThat(result).isSameAs(tags); // Should return the same reference
+            assertThat(result).isNotSameAs(tags); // Should return a defensive copy, not the same reference
         }
 
         @Test

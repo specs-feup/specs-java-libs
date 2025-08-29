@@ -201,16 +201,15 @@ class StringHandlerTest {
         }
 
         @Test
-        @DisplayName("Should throw NPE for null record - Bug discovered")
+        @DisplayName("Should handle null record gracefully")
         void testPublishNullRecord() {
             // Given
             handler.publish(new LogRecord(Level.INFO, "Before null"));
 
-            // When/Then - Should throw NPE for null record (bug behavior)
-            assertThatThrownBy(() -> {
-                handler.publish(null);
-            }).isInstanceOf(NullPointerException.class);
+            // When - Publishing null record
+            handler.publish(null);
 
+            // Then - Should handle gracefully without throwing exception
             // Content should remain unchanged
             assertThat(handler.getString()).isEqualTo("Before null");
         }
@@ -565,7 +564,7 @@ class StringHandlerTest {
         }
 
         @Test
-        @DisplayName("Should bypass level filtering - Bug discovered")
+        @DisplayName("Should respect level filtering")
         void testLevelFiltering() {
             // Given
             handler.setLevel(Level.WARNING); // Only WARNING and above
@@ -575,15 +574,15 @@ class StringHandlerTest {
             handler.publish(new LogRecord(Level.WARNING, "Warning message")); // At threshold
             handler.publish(new LogRecord(Level.SEVERE, "Severe message")); // Above threshold
 
-            // Then - Bug: All messages appear because level filtering is bypassed
+            // Then - Level filtering should be respected
             String result = handler.getString();
-            assertThat(result).contains("Info message"); // Bug: should be filtered out but isn't
+            assertThat(result).doesNotContain("Info message"); // Should be filtered out
             assertThat(result).contains("Warning message");
             assertThat(result).contains("Severe message");
         }
 
         @Test
-        @DisplayName("Should bypass filters - Bug discovered")
+        @DisplayName("Should respect filters")
         void testWithFilters() {
             // Given
             handler.setFilter(record -> record.getLevel().intValue() >= Level.WARNING.intValue());
@@ -592,9 +591,9 @@ class StringHandlerTest {
             handler.publish(new LogRecord(Level.INFO, "Filtered info"));
             handler.publish(new LogRecord(Level.WARNING, "Passed warning"));
 
-            // Then - Bug: Filter is bypassed, all messages appear
+            // Then - Filter should be respected
             String result = handler.getString();
-            assertThat(result).contains("Filtered info"); // Bug: should be filtered out but isn't
+            assertThat(result).doesNotContain("Filtered info"); // Should be filtered out
             assertThat(result).contains("Passed warning");
         }
     }

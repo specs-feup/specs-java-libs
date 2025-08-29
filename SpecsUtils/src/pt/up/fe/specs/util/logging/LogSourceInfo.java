@@ -41,12 +41,25 @@ public enum LogSourceInfo {
     }
 
     public static LogSourceInfo getLogSourceInfo(Level level) {
+        // Handle null level
+        if (level == null) {
+            return NONE;
+        }
+        
         LogSourceInfo info = LOGGER_SOURCE_INFO.get(level);
 
         return info != null ? info : NONE;
     }
 
     public static void setLogSourceInfo(Level level, LogSourceInfo info) {
+        // Handle null parameters
+        if (level == null) {
+            throw new NullPointerException("Level cannot be null");
+        }
+        if (info == null) {
+            throw new NullPointerException("LogSourceInfo cannot be null");
+        }
+        
         LOGGER_SOURCE_INFO.put(level, info);
     }
 
