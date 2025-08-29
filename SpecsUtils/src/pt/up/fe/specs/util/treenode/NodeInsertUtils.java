@@ -167,6 +167,26 @@ public class NodeInsertUtils {
     }
 
     /**
+     * Replaces 'baseToken' with 'newToken' while preserving the children from 'baseToken'.
+     * This is a convenience method that combines set() and replace() operations.
+     *
+     * @param baseToken the token to be replaced
+     * @param newToken the replacement token
+     * @param move if true, detaches newToken from its current parent if it has one
+     * @return the new inserted token (same as newToken if newToken.getParent() was null, and a copy of newToken otherwise)
+     */
+    public static <K extends TreeNode<K>> K replacePreservingChildren(K baseToken, K newToken, boolean move) {
+        // If move is enabled, detach newToken from its current parent first
+        if (move && newToken.hasParent()) {
+            newToken.detach();
+        }
+
+        // Use the set method which preserves children from baseToken to newToken and replaces
+        set(baseToken, newToken);
+        return newToken;
+    }
+
+    /**
      * Removes 'baseToken'.
      *
      * @param baseToken

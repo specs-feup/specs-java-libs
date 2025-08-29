@@ -110,12 +110,14 @@ class ATreeNodeTest {
         }
 
         @Test
-        @DisplayName("setChildren() with null should throw NullPointerException (Bug #1)")
-        void testSetChildren_WithNull_ThrowsNPE() {
-            // This is a known bug - setChildren() doesn't handle null gracefully
-            assertThatThrownBy(() -> root.setChildren(null))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Cannot invoke \"java.util.Collection.iterator()\"");
+        @DisplayName("setChildren() with null should handle gracefully")
+        void testSetChildren_WithNull_HandlesGracefully() {
+            // Bug #1 is now fixed - setChildren() handles null gracefully by treating it as empty collection
+            root.setChildren(null);
+            
+            // Should clear all children
+            assertThat(root.getNumChildren()).isEqualTo(0);
+            assertThat(root.getChildren()).isEmpty();
         }
 
         @Test
@@ -319,14 +321,13 @@ class ATreeNodeTest {
         }
 
         @Test
-        @DisplayName("detach() on node without parent throws exception")
+        @DisplayName("detach() on node without parent is safe")
         void testDetach_OnNodeWithoutParent_IsSafe() {
             TestTreeNode orphan = new TestTreeNode("orphan");
 
-            // ATreeNode.detach() throws exception if node has no parent
-            assertThatThrownBy(() -> orphan.detach())
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessage("Does not have a parent");
+            // detach() is idempotent and doesn't throw exception if node has no parent
+            orphan.detach(); // Should do nothing safely
+            
             assertThat(orphan.getParent()).isNull();
         }
     }

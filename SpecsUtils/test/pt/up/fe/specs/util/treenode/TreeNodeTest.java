@@ -121,18 +121,18 @@ class TreeNodeTest {
         }
 
         @Test
-        @DisplayName("getChild() behavior with invalid indices")
-        void testGetChild_InvalidIndex_MixedBehavior() {
-            // When node has children but invalid index, throws IndexOutOfBoundsException
-            assertThatThrownBy(() -> root.getChild(-1))
-                    .isInstanceOf(IndexOutOfBoundsException.class);
+        @DisplayName("getChild() returns null for invalid indices")
+        void testGetChild_InvalidIndex_ConsistentBehavior() {
+            // getChild() has consistent behavior for invalid indices
 
-            assertThatThrownBy(() -> root.getChild(2))
-                    .isInstanceOf(IndexOutOfBoundsException.class);
-
-            // When node has no children, returns null instead of throwing
-            TestTreeNode result = child2.getChild(0);
-            assertThat(result).isNull();
+            // All invalid indices should return null with warning
+            assertThat(root.getChild(-1)).isNull();
+            assertThat(root.getChild(2)).isNull();
+            assertThat(child2.getChild(0)).isNull();
+            
+            // Valid indices should still work
+            assertThat(root.getChild(0)).isSameAs(child1);
+            assertThat(root.getChild(1)).isSameAs(child2);
         }
 
         @Test
@@ -144,24 +144,18 @@ class TreeNodeTest {
         }
 
         @Test
-        @DisplayName("getChildTry() behavior with invalid indices (BUG #2)")
-        void testGetChildTry_InvalidIndex_ThrowsException() {
-            // BUG: getChildTry() should return Optional.empty() for invalid indices
-            // but has mixed behavior based on underlying getChild() implementation
+        @DisplayName("getChildTry() returns Optional.empty() for invalid indices")
+        void testGetChildTry_InvalidIndex_ReturnsEmpty() {
+            // getChildTry() returns Optional.empty() for invalid indices
 
-            // When node has children but invalid index, getChild() throws
-            // IndexOutOfBoundsException
-            assertThatThrownBy(() -> root.getChildTry(TestTreeNode.class, -1))
-                    .isInstanceOf(IndexOutOfBoundsException.class);
-
-            assertThatThrownBy(() -> root.getChildTry(TestTreeNode.class, 2))
-                    .isInstanceOf(IndexOutOfBoundsException.class);
-
-            // When node has no children, getChild() returns null, then SpecsCheck throws
-            // RuntimeException
-            assertThatThrownBy(() -> child2.getChildTry(TestTreeNode.class, 0))
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessageContaining("No child at index 0");
+            // Invalid indices should return Optional.empty()
+            assertThat(root.getChildTry(TestTreeNode.class, -1)).isEmpty();
+            assertThat(root.getChildTry(TestTreeNode.class, 2)).isEmpty();
+            assertThat(child2.getChildTry(TestTreeNode.class, 0)).isEmpty();
+            
+            // Valid indices should still work
+            assertThat(root.getChildTry(TestTreeNode.class, 0)).contains(child1);
+            assertThat(root.getChildTry(TestTreeNode.class, 1)).contains(child2);
         }
     }
 
@@ -326,12 +320,14 @@ class TreeNodeTest {
         }
 
         @Test
-        @DisplayName("setChildren() with null should throw NullPointerException (BUG #1)")
-        void testSetChildren_WithNull_ThrowsException() {
-            // BUG: setChildren(null) should handle null gracefully but throws NPE
-            assertThatThrownBy(() -> root.setChildren(null))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Cannot invoke \"java.util.Collection.iterator()\"");
+        @DisplayName("setChildren() with null should handle gracefully")
+        void testSetChildren_WithNull_HandlesGracefully() {
+            // setChildren(null) handles null gracefully
+            root.setChildren(null);
+            
+            // Should clear all children
+            assertThat(root.getNumChildren()).isEqualTo(0);
+            assertThat(root.getChildren()).isEmpty();
         }
 
         @Test
