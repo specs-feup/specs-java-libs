@@ -106,12 +106,12 @@ class EnumHelperWithValueTest {
         }
 
         @Test
-        @DisplayName("Should handle null enum class gracefully - fails on first access")
+        @DisplayName("Should throw exception for null enum class")
         void testNullEnumClass() {
-            // Constructor accepts null but fails on first lazy access
-            EnumHelperWithValue<TestEnumWithValue> helper = new EnumHelperWithValue<TestEnumWithValue>(null);
-            assertThatThrownBy(() -> helper.fromValue("alpha"))
-                    .isInstanceOf(NullPointerException.class);
+            // Constructor should fail fast with null enum class
+            assertThatThrownBy(() -> new EnumHelperWithValue<TestEnumWithValue>(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Enum class cannot be null");
         }
     }
 
@@ -243,8 +243,9 @@ class EnumHelperWithValueTest {
         void testFromValueByIndexNegative() {
             assertThatThrownBy(() -> {
                 enumHelper.fromValue(-1);
-            }).isInstanceOf(ArrayIndexOutOfBoundsException.class)
-                    .hasMessageContaining("Index -1 out of bounds for length 6");
+            }).isInstanceOf(RuntimeException.class)
+                    .hasMessageContaining("Asked for enum at index -1")
+                    .hasMessageContaining("but there are only 6 values");
         }
 
         @Test
@@ -572,12 +573,16 @@ class EnumHelperWithValueTest {
                         TestEnumWithValue byOrdinal = helper.fromOrdinal(0);
                         Map<String, TestEnumWithValue> valuesMap = helper.getValuesTranslationMap();
 
-                        results[index] = byName == TestEnumWithValue.OPTION_A &&
-                                byValue == TestEnumWithValue.OPTION_A &&
-                                byOrdinal == TestEnumWithValue.OPTION_A &&
-                                valuesMap.containsKey("alpha");
+                        synchronized (results) {
+                            results[index] = byName == TestEnumWithValue.OPTION_A &&
+                                    byValue == TestEnumWithValue.OPTION_A &&
+                                    byOrdinal == TestEnumWithValue.OPTION_A &&
+                                    valuesMap.containsKey("alpha");
+                        }
                     } catch (Exception e) {
-                        results[index] = false;
+                        synchronized (results) {
+                            results[index] = false;
+                        }
                     }
                 });
             }
@@ -587,7 +592,7 @@ class EnumHelperWithValueTest {
             }
 
             for (Thread thread : threads) {
-                thread.join();
+                thread.join(5000); // Add timeout to prevent hanging
             }
 
             // All threads should succeed

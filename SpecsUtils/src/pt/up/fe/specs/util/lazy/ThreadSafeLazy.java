@@ -24,9 +24,9 @@ import java.util.function.Supplier;
  * @param <T>
  */
 public final class ThreadSafeLazy<T> implements Lazy<T> {
-    private T value;
+    private volatile T value;
     private final Supplier<T> provider;
-    private boolean isInitialized;
+    private volatile boolean isInitialized;
 
     public ThreadSafeLazy(Supplier<T> provider) {
         this.provider = provider;

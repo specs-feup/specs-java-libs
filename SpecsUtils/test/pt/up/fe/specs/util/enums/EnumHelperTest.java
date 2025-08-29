@@ -95,12 +95,12 @@ class EnumHelperTest {
         }
 
         @Test
-        @DisplayName("Should handle null enum class gracefully - fails on first access")
+        @DisplayName("Should throw exception for null enum class")
         void testNullEnumClass() {
-            // Constructor accepts null but fails on first lazy access
-            EnumHelper<TestEnum> helper = new EnumHelper<TestEnum>(null);
-            assertThatThrownBy(() -> helper.fromName("FIRST"))
-                    .isInstanceOf(NullPointerException.class);
+            // Constructor should fail fast with null enum class
+            assertThatThrownBy(() -> new EnumHelper<TestEnum>(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Enum class cannot be null");
         }
     }
 
@@ -554,11 +554,15 @@ class EnumHelperTest {
                         TestEnum second = helper.fromOrdinal(1);
                         Collection<String> names = helper.names();
 
-                        results[index] = first == TestEnum.FIRST &&
-                                second == TestEnum.SECOND &&
-                                names.contains("FIRST");
+                        synchronized (results) {
+                            results[index] = first == TestEnum.FIRST &&
+                                    second == TestEnum.SECOND &&
+                                    names.contains("FIRST");
+                        }
                     } catch (Exception e) {
-                        results[index] = false;
+                        synchronized (results) {
+                            results[index] = false;
+                        }
                     }
                 });
             }
@@ -568,7 +572,7 @@ class EnumHelperTest {
             }
 
             for (Thread thread : threads) {
-                thread.join();
+                thread.join(5000); // Add timeout to prevent hanging
             }
 
             // All threads should succeed

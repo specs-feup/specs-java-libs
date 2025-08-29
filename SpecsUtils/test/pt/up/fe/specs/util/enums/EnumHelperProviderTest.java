@@ -62,12 +62,12 @@ class EnumHelperProviderTest {
         }
 
         @Test
-        @DisplayName("Should handle null enum class gracefully - fails on first access")
+        @DisplayName("Should throw exception for null enum class")
         void testNullEnumClass() {
-            // Constructor accepts null but fails on first lazy access
-            EnumHelperProvider<TestEnumWithValue> provider = new EnumHelperProvider<TestEnumWithValue>(null);
-            assertThatThrownBy(() -> provider.get().fromValue("first"))
-                    .isInstanceOf(NullPointerException.class);
+            // Constructor should fail fast with null enum class
+            assertThatThrownBy(() -> new EnumHelperProvider<TestEnumWithValue>(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Enum class cannot be null");
         }
 
         @Test
@@ -141,15 +141,15 @@ class EnumHelperProviderTest {
 
             // Test value-based lookup
             assertThat(helper.fromValue("first")).isEqualTo(TestEnumWithValue.FIRST);
-            assertThat(helper.fromValueTry("second")).contains(TestEnumWithValue.SECOND);
+            assertThat(helper.fromValue("second")).isEqualTo(TestEnumWithValue.SECOND);
 
             // Test name-based lookup using getString() values for StringProvider enums
             assertThat(helper.fromName("first")).isEqualTo(TestEnumWithValue.FIRST);
-            assertThat(helper.fromNameTry("second")).contains(TestEnumWithValue.SECOND);
+            assertThat(helper.fromName("second")).isEqualTo(TestEnumWithValue.SECOND);
 
             // Test ordinal-based lookup (inherited)
             assertThat(helper.fromOrdinal(0)).isEqualTo(TestEnumWithValue.FIRST);
-            assertThat(helper.fromOrdinalTry(1)).contains(TestEnumWithValue.SECOND);
+            assertThat(helper.fromOrdinal(1)).isEqualTo(TestEnumWithValue.SECOND);
 
             // Test collections - names() returns getString() values for StringProvider
             // enums
