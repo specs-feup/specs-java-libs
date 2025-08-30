@@ -23,46 +23,46 @@ public class MixedPushingQueue<T> implements PushingQueue<T> {
     private final PushingQueue<T> queue;
 
     public MixedPushingQueue(int capacity) {
-	if (capacity < MixedPushingQueue.LINKED_THRESHOLD) {
-	    this.queue = new ArrayPushingQueue<>(capacity);
-	} else {
-	    this.queue = new LinkedPushingQueue<>(capacity);
-	}
+        if (capacity < MixedPushingQueue.LINKED_THRESHOLD) {
+            this.queue = new ArrayPushingQueue<>(capacity);
+        } else {
+            this.queue = new LinkedPushingQueue<>(capacity);
+        }
     }
 
     @Override
     public void insertElement(T element) {
-	this.queue.insertElement(element);
+        this.queue.insertElement(element);
     }
 
     @Override
     public T getElement(int index) {
-	return this.queue.getElement(index);
+        return this.queue.getElement(index);
     }
 
     @Override
     public int size() {
-	return this.queue.size();
+        return this.queue.size();
     }
 
     @Override
     public int currentSize() {
-	return this.queue.currentSize();
+        return this.queue.currentSize();
     }
 
     @Override
     public Iterator<T> iterator() {
-	return this.queue.iterator();
+        return this.queue.iterator();
     }
 
     @Override
     public Stream<T> stream() {
-	return this.queue.stream();
+        return this.queue.stream();
     }
 
     @Override
     public String toString() {
-	return toString(element -> element.toString());
+        return toString(element -> element.toString());
     }
 
 }

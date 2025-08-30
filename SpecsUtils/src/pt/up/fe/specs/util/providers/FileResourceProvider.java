@@ -44,9 +44,10 @@ public interface FileResourceProvider {
     }
 
     /**
-     * Creates a new instance of FileResourceProvider for an existing file with a version suffix.
+     * Creates a new instance of FileResourceProvider for an existing file with a
+     * version suffix.
      *
-     * @param existingFile the file to be wrapped by the provider
+     * @param existingFile  the file to be wrapped by the provider
      * @param versionSuffix the version suffix to be appended
      * @return a new instance of FileResourceProvider
      */
@@ -70,7 +71,7 @@ public interface FileResourceProvider {
          * Constructs a ResourceWriteData object.
          *
          * @param writtenFile the file that was written
-         * @param newFile whether the file is new
+         * @param newFile     whether the file is new
          */
         public ResourceWriteData(File writtenFile, boolean newFile) {
             Preconditions.checkNotNull(writtenFile, "writtenFile should not be null");
@@ -139,18 +140,21 @@ public interface FileResourceProvider {
     String getFilename();
 
     /**
-     * Copies this resource to the destination folder. If the file already exists, uses method getVersion() to determine
-     * if the file should be overwritten or not.
+     * Copies this resource to the destination folder. If the file already exists,
+     * uses method getVersion() to determine if the file should be overwritten or
+     * not.
      * <p>
-     * If the file already exists but no versioning information is available in the system, the file is overwritten.
+     * If the file already exists but no versioning information is available in the
+     * system, the file is overwritten.
      * <p>
-     * The method will use the package of the class indicated in 'context' as the location to store the information
-     * about versioning. Keep in mind that calls using the same context will refer to the same local copy of the
-     * resource.
+     * The method will use the package of the class indicated in 'context' as the
+     * location to store the information about versioning. Keep in mind that calls
+     * using the same context will refer to the same local copy of the resource.
      *
-     * @param folder the destination folder
+     * @param folder  the destination folder
      * @param context the class used to store versioning information
-     * @return a ResourceWriteData object containing information about the written file
+     * @return a ResourceWriteData object containing information about the written
+     *         file
      */
     default ResourceWriteData writeVersioned(File folder, Class<?> context) {
         return writeVersioned(folder, context, true);
@@ -159,14 +163,15 @@ public interface FileResourceProvider {
     /**
      * Copies this resource to the destination folder with versioning information.
      *
-     * @param folder the destination folder
-     * @param context the class used to store versioning information
-     * @param writeIfNoVersionInfo whether to write the file if no versioning information is available
-     * @return a ResourceWriteData object containing information about the written file
+     * @param folder               the destination folder
+     * @param context              the class used to store versioning information
+     * @param writeIfNoVersionInfo whether to write the file if no versioning
+     *                             information is available
+     * @return a ResourceWriteData object containing information about the written
+     *         file
      */
     default ResourceWriteData writeVersioned(File folder, Class<?> context, boolean writeIfNoVersionInfo) {
         // Create file
-        // String resourceOutput = usePath ? getFilepath() : getFilename();
         String resourceOutput = getFilename();
 
         File destination = new File(folder, resourceOutput);
@@ -186,7 +191,8 @@ public interface FileResourceProvider {
         String NOT_FOUND = "<NOT FOUND>";
         String version = prefs.get(key, NOT_FOUND);
 
-        // If current version is the same as the version of the resource just return the existing file
+        // If current version is the same as the version of the resource just return the
+        // existing file
         if (version.equals(getVersion())) {
             return new ResourceWriteData(destination, false);
         }
@@ -221,9 +227,10 @@ public interface FileResourceProvider {
     /**
      * Creates a resource for the given version.
      * <p>
-     * It changes the resource path by appending an underscore and the given version as a suffix, before any
-     * extension.<br>
-     * E.g., if the original resource is "path/executable.exe", returns a resource to "path/executable<version>.exe".
+     * It changes the resource path by appending an underscore and the given version
+     * as a suffix, before any extension.<br>
+     * E.g., if the original resource is "path/executable.exe", returns a resource
+     * to "path/executable<version>.exe".
      * </p>
      *
      * @param version the version suffix to be appended

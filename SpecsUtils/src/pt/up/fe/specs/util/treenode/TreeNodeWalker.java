@@ -1,7 +1,8 @@
 package pt.up.fe.specs.util.treenode;
 
 /**
- * Base class for any walker of anything that extends @{pt.up.fe.specs.util.treenode.ATreeNode}
+ * Base class for any walker of anything that
+ * extends @{pt.up.fe.specs.util.treenode.ATreeNode}
  * 
  * @author Nuno
  *

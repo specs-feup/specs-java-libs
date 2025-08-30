@@ -31,35 +31,34 @@ public enum AverageType {
     HARMONIC_MEAN(false);
 
     private AverageType(boolean ignoresZeros) {
-	this.ignoresZeros = ignoresZeros;
+        this.ignoresZeros = ignoresZeros;
     }
 
     public boolean ignoresZeros() {
-	return this.ignoresZeros;
+        return this.ignoresZeros;
     }
 
     public double calcAverage(Collection<Number> values) {
-	if (values == null) {
-	    return 0;
-	}
+        if (values == null) {
+            return 0;
+        }
 
-	switch (this) {
-	case ARITHMETIC_MEAN:
-	    return SpecsMath.arithmeticMean(values);
-	case ARITHMETIC_MEAN_WITHOUT_ZEROS:
-	    return SpecsMath.arithmeticMeanWithoutZeros(values);
-	case GEOMETRIC_MEAN:
-	    return SpecsMath.geometricMean(values, false);
-	case GEOMETRIC_MEAN_WITHOUT_ZEROS:
-	    return SpecsMath.geometricMean(values, true);
-	case HARMONIC_MEAN:
-	    // return CalcUtils.harmonicMean(values);
-	    return SpecsMath.harmonicMean(values, true);
-	default:
-	    SpecsLogs.getLogger().
-		    warning("Case not implemented: '" + this + "'");
-	    return 0.0;
-	}
+        switch (this) {
+            case ARITHMETIC_MEAN:
+                return SpecsMath.arithmeticMean(values);
+            case ARITHMETIC_MEAN_WITHOUT_ZEROS:
+                return SpecsMath.arithmeticMeanWithoutZeros(values);
+            case GEOMETRIC_MEAN:
+                return SpecsMath.geometricMean(values, false);
+            case GEOMETRIC_MEAN_WITHOUT_ZEROS:
+                return SpecsMath.geometricMean(values, true);
+            case HARMONIC_MEAN:
+                // return CalcUtils.harmonicMean(values);
+                return SpecsMath.harmonicMean(values, true);
+            default:
+                SpecsLogs.getLogger().warning("Case not implemented: '" + this + "'");
+                return 0.0;
+        }
     }
 
     private final boolean ignoresZeros;

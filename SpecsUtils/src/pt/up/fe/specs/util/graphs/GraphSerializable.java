@@ -32,54 +32,54 @@ public class GraphSerializable<N, C> {
     public final List<C> connInfos;
 
     public GraphSerializable(List<String> operationIds, List<N> nodeInfos, List<String> inputIds,
-	    List<String> outputIds, List<C> connInfos) {
-	this.operationIds = operationIds;
-	this.nodeInfos = nodeInfos;
-	this.inputIds = inputIds;
-	this.outputIds = outputIds;
-	this.connInfos = connInfos;
+            List<String> outputIds, List<C> connInfos) {
+        this.operationIds = operationIds;
+        this.nodeInfos = nodeInfos;
+        this.inputIds = inputIds;
+        this.outputIds = outputIds;
+        this.connInfos = connInfos;
     }
 
     public static <T extends GraphNode<T, N, C>, N, C> GraphSerializable<N, C> toSerializable(
-	    Graph<T, N, C> graph) {
-	List<String> operationIds = new ArrayList<>();
-	List<N> nodeInfos = new ArrayList<>();
+            Graph<T, N, C> graph) {
+        List<String> operationIds = new ArrayList<>();
+        List<N> nodeInfos = new ArrayList<>();
 
-	for (T node : graph.getNodeList()) {
-	    operationIds.add(node.getId());
-	    nodeInfos.add(node.getNodeInfo());
-	}
+        for (T node : graph.getNodeList()) {
+            operationIds.add(node.getId());
+            nodeInfos.add(node.getNodeInfo());
+        }
 
-	List<String> inputIds = new ArrayList<>();
-	List<String> outputIds = new ArrayList<>();
-	List<C> connInfos = new ArrayList<>();
+        List<String> inputIds = new ArrayList<>();
+        List<String> outputIds = new ArrayList<>();
+        List<C> connInfos = new ArrayList<>();
 
-	for (T node : graph.getNodeList()) {
+        for (T node : graph.getNodeList()) {
 
-	    // Add children connections
-	    for (int i = 0; i < node.getChildren().size(); i++) {
-		inputIds.add(node.getId());
-		outputIds.add(node.getChildren().get(i).getId());
-		connInfos.add(node.getChildrenConnections().get(i));
-	    }
+            // Add children connections
+            for (int i = 0; i < node.getChildren().size(); i++) {
+                inputIds.add(node.getId());
+                outputIds.add(node.getChildren().get(i).getId());
+                connInfos.add(node.getChildrenConnections().get(i));
+            }
 
-	}
+        }
 
-	return new GraphSerializable<>(operationIds, nodeInfos, inputIds, outputIds,
-		connInfos);
+        return new GraphSerializable<>(operationIds, nodeInfos, inputIds, outputIds,
+                connInfos);
     }
 
     public static <T extends GraphNode<T, N, C>, N, C> void fromSerializable(
-	    GraphSerializable<N, C> graph, Graph<T, N, C> newGraph) {
+            GraphSerializable<N, C> graph, Graph<T, N, C> newGraph) {
 
-	for (int i = 0; i < graph.operationIds.size(); i++) {
-	    newGraph.addNode(graph.operationIds.get(i), graph.nodeInfos.get(i));
-	}
+        for (int i = 0; i < graph.operationIds.size(); i++) {
+            newGraph.addNode(graph.operationIds.get(i), graph.nodeInfos.get(i));
+        }
 
-	for (int i = 0; i < graph.connInfos.size(); i++) {
-	    newGraph.addConnection(graph.inputIds.get(i), graph.outputIds.get(i),
-		    graph.connInfos.get(i));
-	}
+        for (int i = 0; i < graph.connInfos.size(); i++) {
+            newGraph.addConnection(graph.inputIds.get(i), graph.outputIds.get(i),
+                    graph.connInfos.get(i));
+        }
     }
 
 }

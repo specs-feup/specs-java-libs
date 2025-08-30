@@ -18,7 +18,8 @@ import java.util.function.Function;
 public interface StringDecoder<T> extends Function<String, T> {
 
     /**
-     * Attempts to decode the given String into an Object T. If the decoding fails, returns null.
+     * Attempts to decode the given String into an Object T. If the decoding fails,
+     * returns null.
      */
     @Override
     T apply(String t);

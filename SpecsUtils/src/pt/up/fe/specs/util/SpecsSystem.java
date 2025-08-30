@@ -94,7 +94,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Helper method which receives the command and the working directory instead of the builder.
+     * Helper method which receives the command and the working directory instead of
+     * the builder.
      *
      * @param command
      * @param workingDir
@@ -103,7 +104,7 @@ public class SpecsSystem {
      * @return
      */
     public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
-                                                   boolean storeOutput, boolean printOutput) {
+            boolean storeOutput, boolean printOutput) {
 
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
@@ -111,7 +112,7 @@ public class SpecsSystem {
     }
 
     public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
-                                                   boolean storeOutput, boolean printOutput, Long timeoutNanos) {
+            boolean storeOutput, boolean printOutput, Long timeoutNanos) {
 
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
@@ -124,7 +125,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Helper method which receives the command instead of the builder, and launches the process in the current
+     * Helper method which receives the command instead of the builder, and launches
+     * the process in the current
      * directory.
      *
      * @param command
@@ -133,32 +135,10 @@ public class SpecsSystem {
      * @return
      */
     public static ProcessOutputAsString runProcess(List<String> command,
-                                                   boolean storeOutput, boolean printOutput) {
+            boolean storeOutput, boolean printOutput) {
 
         return runProcess(command, SpecsIo.getWorkingDir(), storeOutput, printOutput);
     }
-
-    /**
-     * Launches a process for the given command, that runs on 'workingDir'.
-     *
-     * @param command
-     * @param workingDir
-     * @param storeOutput
-     * @param printOutput
-     * @param builder
-     * @return
-     */
-    /*
-    public static ProcessOutput runProcess(List<String> command, String workingDir,
-        boolean storeOutput, boolean printOutput, ProcessBuilder builder) {
-    
-    builder.command(command);
-    builder.directory(new File(workingDir));
-    
-    // return runProcess(builder, storeOutput, printOutput).get();
-    return runProcess(builder, storeOutput, printOutput);
-    }
-     */
 
     /**
      * Launches the process characterized by 'builder'.
@@ -181,7 +161,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Helper method which receives the command instead of the builder, and launches the process in the current
+     * Helper method which receives the command instead of the builder, and launches
+     * the process in the current
      * directory.
      *
      * @param command
@@ -190,13 +171,14 @@ public class SpecsSystem {
      * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command,
-                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
 
         return runProcess(command, SpecsIo.getWorkingDir(), outputProcessor, errorProcessor);
     }
 
     /**
-     * Helper method which receives the command and the working directory instead of the builder.
+     * Helper method which receives the command and the working directory instead of
+     * the builder.
      *
      * @param command
      * @param workingDir
@@ -205,97 +187,12 @@ public class SpecsSystem {
      * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command, File workingDir,
-                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
 
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.directory(workingDir);
         return runProcess(builder, outputProcessor, errorProcessor);
     }
-
-    /**
-     * Arguments such as -I
-     *
-     * @param command
-     * @return
-     */
-    /*
-    // private static List<String> normalizeProcessCommand(List<String> command) {
-    private static String normalizeProcessArgument(String arg) {
-        // Trim argument
-        String trimmedArg = arg.strip();
-        SpecsLogs.debug(() -> "Argument: '" + trimmedArg + "'");
-    
-        if (!trimmedArg.startsWith("-I")) {
-            return trimmedArg;
-        }
-    
-        if (trimmedArg.charAt(2) != '\"') {
-            return trimmedArg;
-        }
-    
-        SpecsLogs.debug(() -> "Normalizing -I argument: '" + trimmedArg + "'");
-        SpecsCheck.checkArgument(trimmedArg.endsWith("\""),
-                () -> "Expected argument to end with double quote: '" + trimmedArg + "'");
-        String normalizedArg = "-I" + trimmedArg.substring(3, trimmedArg.length() - 1);
-        SpecsLogs.debug(() -> "Normalized: '" + normalizedArg + "'");
-    
-        return normalizedArg;
-    
-        // // List<String> normalizedCommand = new ArrayList<>(command.size());
-        //
-        // // for (String arg : command) {
-        // // Trim argument
-        // String trimmedArg = arg.strip();
-        //
-        // // Check if it has white space
-        // if (!trimmedArg.contains(" ")) {
-        // // SpecsLogs.debug("Did not normalized argument, did not find spaces: '" + trimmedArg + "'");
-        // return trimmedArg;
-        // // normalizedCommand.add(trimmedArg);
-        // // continue;
-        // }
-        //
-        // // If contain white space, check if already between quotes
-        // boolean hasStartQuote = trimmedArg.startsWith("\"");
-        // boolean hasEndQuote = trimmedArg.endsWith("\"");
-        // if (hasStartQuote && hasEndQuote) {
-        // // SpecsLogs
-        // // .debug("Did not normalized argument, has spaces but also already has quotes: '" + trimmedArg + "'");
-        // return trimmedArg;
-        // // normalizedCommand.add(trimmedArg);
-        // // continue;
-        // }
-        //
-        // // Check if quotes are balanced
-        // // Leave like that, it can be on purpose
-        // // E.g., -I"<path>"
-        // boolean isUnbalanced = hasStartQuote ^ hasEndQuote;
-        // if (isUnbalanced) {
-        // // SpecsLogs.debug("Found unbalanced double quotes on argument, leaving it like that: '" + trimmedArg +
-        // // "'");
-        // return trimmedArg;
-        // }
-        // // } else {
-        // SpecsLogs.debug("Found argument that needs double quotes, correcting: '" + trimmedArg + "'");
-        // // }
-        //
-        // if (!hasStartQuote) {
-        // trimmedArg = "\"" + trimmedArg;
-        // }
-        //
-        // if (!hasEndQuote) {
-        // trimmedArg = trimmedArg + "\"";
-        // }
-        //
-        // return trimmedArg;
-        // // normalizedCommand.add(trimmedArg);
-        // // }
-        //
-        // // return normalizedCommand;
-        //
-    
-    }
-    */
 
     /**
      * Launches the process characterized by 'builder'.
@@ -309,28 +206,29 @@ public class SpecsSystem {
      * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
-                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
         return runProcess(builder, outputProcessor, errorProcessor, null);
     }
 
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
-                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor, Long timeoutNanos) {
 
         return runProcess(builder, outputProcessor, errorProcessor, null, timeoutNanos);
     }
 
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
-                                                        Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor,
-                                                        Consumer<OutputStream> input, Long timeoutNanos) {
+            Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor,
+            Consumer<OutputStream> input, Long timeoutNanos) {
 
-        // The command in the builder might need processing (e.g., Windows system commands)
+        // The command in the builder might need processing (e.g., Windows system
+        // commands)
         processCommand(builder);
         SpecsLogs.debug(() -> "Launching Process: " + builder.command().stream().collect(Collectors.joining(" ")));
 
         Process process = null;
         try {
-            // Experiment: Calling Garbage Collector before starting process in order to reduce memory required to fork
-            // VM
+            // Experiment: Calling Garbage Collector before starting process in order to
+            // reduce memory required to fork VM
             // http://www.bryanmarty.com/2012/01/14/forking-jvm/
             long totalMemBefore = Runtime.getRuntime().totalMemory();
             System.gc();
@@ -358,8 +256,6 @@ public class SpecsSystem {
             stdinThread.shutdown();
         }
 
-        // outputStream.
-
         // The ExecutorService objects are shutdown, as they will not
         // receive more tasks.
         stdoutThread.shutdown();
@@ -369,17 +265,12 @@ public class SpecsSystem {
     }
 
     /**
-     * Performs several fixes on the builder command (e.g., adapts command for Windows platforms)
+     * Performs several fixes on the builder command (e.g., adapts command for
+     * Windows platforms)
      *
      * @param builder
      */
     private static void processCommand(ProcessBuilder builder) {
-
-        // For now, do nothing if it is not Windows
-        // if (!isWindows()) {
-        // return;
-        // }
-
         // Do nothing if no command
         if (builder.command().isEmpty()) {
             return;
@@ -420,7 +311,7 @@ public class SpecsSystem {
     }
 
     private static <O, E> ProcessOutput<O, E> executeProcess(Process process,
-                                                             Long timeoutNanos, Future<O> outputFuture, Future<E> errorFuture) {
+            Long timeoutNanos, Future<O> outputFuture, Future<E> errorFuture) {
 
         boolean timedOut = false;
 
@@ -463,14 +354,6 @@ public class SpecsSystem {
             outputException = e;
         }
 
-        // wait for notify (?)
-        /*       try {
-            process.getInputStream().wait();
-        
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }*/
-
         int returnValue = timedOut ? -1 : process.exitValue();
         if (timedOut) {
             SpecsLogs.info("Process timed out after " + SpecsStrings.parseTime(timeoutNanos));
@@ -482,7 +365,8 @@ public class SpecsSystem {
 
     private static void destroyProcess(Process process) {
 
-        // TODO: a breakpoint is necessary before process destruction, or else the "insts"
+        // TODO: a breakpoint is necessary before process destruction, or else the
+        // "insts"
         // linestream is closed
 
         // Get descendants of the process
@@ -524,46 +408,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Transforms a String List representing a command into a single String separated by spaces.
-     *
-     * @param command
-     * @return
-     */
-    /*
-    public static String getCommandString(List<String> command) {
-        return normalizeCommand(command).stream()
-                // Normalize argument
-                // .map(SpecsSystem::normalizeProcessArgument)
-                .collect(Collectors.joining(" "));
-    
-        // StringBuilder builder = new StringBuilder();
-        //
-        // builder.append(command.get(0));
-        // for (int i = 1; i < command.size(); i++) {
-        // builder.append(" ");
-        // builder.append(command.get(i));
-        // }
-        //
-        // return builder.toString();
-    }
-    */
-    /**
-     * Normalizes a command to be executed, inserting double quotes where necessary.
-     *
-     * @param command
-     * @return
-     */
-    /*
-    public static List<String> normalizeCommand(List<String> command) {
-        return command.stream()
-                // Normalize argument
-                .map(SpecsSystem::normalizeProcessArgument)
-                .collect(Collectors.toList());
-    }
-    */
-
-    /**
-     * @return the StackTraceElement of the previous method of the method calling this method
+     * @return the StackTraceElement of the previous method of the method calling
+     *         this method
      */
     public static StackTraceElement getCallerMethod() {
         return getCallerMethod(3);
@@ -585,7 +431,8 @@ public class SpecsSystem {
     /**
      * @param aClass
      * @param anInterface
-     * @return true if the given class implements the given interface. False otherwise.
+     * @return true if the given class implements the given interface. False
+     *         otherwise.
      */
     public static boolean implementsInterface(Class<?> aClass, Class<?> anInterface) {
         // Build set with interfaces of the given class
@@ -598,12 +445,11 @@ public class SpecsSystem {
      * Method with standard initialization procedures for a Java SE program.
      *
      * <p>
-     * Setups the logger and the Look&Feel for Swing. Additionally, looks for the file 'suika.properties' on the working
+     * Setups the logger and the Look&Feel for Swing. Additionally, looks for the
+     * file 'suika.properties' on the working
      * folder and applies its options.
      */
     public static void programStandardInit() {
-        // fixes();
-
         // Disable security manager for Web Start
         // System.setSecurityManager(null);
         // Redirect output to the logger
@@ -621,14 +467,9 @@ public class SpecsSystem {
 
     }
 
-    // private static void fixes() {
-    // // To avoid illegal reflective accesses in Java 10 while library is not upgraded
-    // // https://stackoverflow.com/questions/33255578/old-jaxb-and-jdk8-metaspace-outofmemory-issue
-    // System.getProperties().setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
-    // }
-
     /**
-     * @return the name of the class of the main thread, or null if could not find the main thread.
+     * @return the name of the class of the main thread, or null if could not find
+     *         the main thread.
      */
     public static StackTraceElement[] getMainStackTrace() {
         String mainThread = "main";
@@ -695,7 +536,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Similar to 'runProcess', but returns an int with the exit code, instead of the ProcessOutput.
+     * Similar to 'runProcess', but returns an int with the exit code, instead of
+     * the ProcessOutput.
      *
      * <p>
      * Prints the output, but does not store it to a String.
@@ -753,7 +595,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Taken from here: http://www.inoneo.com/en/blog/9/java/get-the-jvm-peak-memory-usage
+     * Taken from here:
+     * http://www.inoneo.com/en/blog/9/java/get-the-jvm-peak-memory-usage
      */
     public static void printPeakMemoryUsage() {
         // Place this code just before the end of the program
@@ -765,7 +608,6 @@ public class SpecsSystem {
 
                 memoryUsage += String.format("Peak %s memory used: %s\n", pool.getName(),
                         SpecsStrings.parseSize(peak.getUsed()));
-                // memoryUsage += String.format("Peak %s memory reserved: %,d%n", pool.getName(), peak.getCommitted());
             }
 
             // we print the result in the console
@@ -777,7 +619,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Do-nothing function, for cases that accept Runnable and we do not want to do anything.
+     * Do-nothing function, for cases that accept Runnable and we do not want to do
+     * anything.
      */
     public static void emptyRunnable() {
 
@@ -808,7 +651,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Adds a path to the java.library.path property, and flushes the path cache so that subsequent System.load calls
+     * Adds a path to the java.library.path property, and flushes the path cache so
+     * that subsequent System.load calls
      * can find it.
      *
      * @param path The path to add
@@ -819,7 +663,6 @@ public class SpecsSystem {
 
         System.setProperty("java.library.path",
                 System.getProperty("java.library.path") + File.pathSeparatorChar + path);
-        // Field sysPathsField;
 
         try {
             Lookup cl = MethodHandles.privateLookupIn(ClassLoader.class, MethodHandles.lookup());
@@ -869,8 +712,8 @@ public class SpecsSystem {
 
         String realArch = arch.endsWith("64")
                 || wow64Arch != null && wow64Arch.endsWith("64")
-                ? "64"
-                : "32";
+                        ? "64"
+                        : "32";
 
         if (realArch.equals("32")) {
             return false;
@@ -878,35 +721,6 @@ public class SpecsSystem {
 
         return true;
     }
-
-    /**
-     * Cannot reliably get the return value from a JAR.
-     *
-     * This method checks if the last line of output is the error message defined in this class.
-     *
-     * @param output
-     * @return
-     */
-    /*
-    public static boolean noErrorOccurred(String output) {
-    
-    // Get last line, check if error
-    List<String> lines = LineReader.readLines(output);
-    boolean exceptionOccurred = lines.get(lines.size() - 1).equals(ProcessUtils.ERROR);
-    
-    if (!exceptionOccurred) {
-        return true;
-    } else {
-        return false;
-    }
-    }
-     */
-
-    /*
-    public static String getErrorString() {
-    return "\n" + ERROR;
-    }
-     */
 
     /**
      * Launches the callable in another thread and waits termination.
@@ -921,24 +735,6 @@ public class SpecsSystem {
         executor.shutdown();
 
         return get(future);
-        /*
-        try {
-            return future.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            SpecsLogs.msgInfo("Failed to complete execution on thread, returning null");
-            return null;
-        } catch (ExecutionException e) {
-            // Rethrow cause
-            Throwable cause = e.getCause();
-            if (cause instanceof RuntimeException) {
-                throw (RuntimeException) cause;
-            }
-        
-            throw new RuntimeException(e.getCause());
-            // throw new RuntimeException("Error while executing thread", e);
-        }
-        */
     }
 
     public static <T> T get(Future<T> future) {
@@ -996,10 +792,12 @@ public class SpecsSystem {
     }
 
     /**
-     * Runs the given supplier in a separate thread, encapsulating the result in a Future.
+     * Runs the given supplier in a separate thread, encapsulating the result in a
+     * Future.
      *
      * <p>
-     * Taken from here: https://stackoverflow.com/questions/5715235/java-set-timeout-on-a-certain-block-of-code
+     * Taken from here:
+     * https://stackoverflow.com/questions/5715235/java-set-timeout-on-a-certain-block-of-code
      *
      * @param <T>
      * @param supplier
@@ -1019,29 +817,9 @@ public class SpecsSystem {
         return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), Arrays.asList(args));
     }
 
-    // public static int executeOnProcessAndWaitWithExec(Class<?> aClass, String javaExecutable, String... args) {
-    // return executeOnProcessAndWaitWithExec(aClass, javaExecutable, Arrays.asList(args));
-    // }
-
     /**
-     * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
-     *
-     * @param aClass
-     * @return
-     */
-    // public static int executeOnProcessAndWaitWithExec(Class<?> aClass, String javaExecutable, List<String> args) {
-    // return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), args);
-    // }
-
-    // public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
-    // List<String> args) {
-    //
-    // return executeOnProcessAndWaitWith(aClass, workingDir, args);
-    //
-    // }
-
-    /**
-     * Taken from here: https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
+     * Taken from here:
+     * https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
      *
      * @param aClass
      * @param javaExecutable
@@ -1050,80 +828,31 @@ public class SpecsSystem {
      * @return
      */
     public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
-                                              List<String> args) {
-
-        // File jarPath = SpecsIo.getJarPath(aClass).orElseThrow(
-        // () -> new RuntimeException("Could not locate the JAR file for the class '" + aClass + "'"));
-        // ((URLClassLoader() Thread.currentThread().getContextClassLoader()).getURL();
-        // Process.exec("java", "-classpath", urls.join(":"), CLASS_TO_BE_EXECUTED)
+            List<String> args) {
 
         String classpath = System.getProperty("java.class.path");
 
-        // System.out.println("CLASSPATH:" + classpath);
-
         String className = aClass.getCanonicalName();
-        // String javaHome = "C:/Program Files/Java/jdk1.8.0_131/jre";
+
         List<String> command = new ArrayList<>();
         command.addAll(
                 Arrays.asList("java", "-cp", classpath, className));
-        // command.addAll(
-        // Arrays.asList("java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
-        // Arrays.asList("cmd", "/c", "java", "\"-Djava.home=" + javaHome + "\"", "-cp", classpath, className));
-        // command.addAll(Arrays.asList("java", "-cp", "\"" + jarPath.getAbsolutePath() + "\"", className));
+
         command.addAll(args);
 
         ProcessBuilder process = new ProcessBuilder(command);
         process.directory(workingDir);
 
-        // Set java home
-        // System.setProperty("java.home", javaHome);
-        // System.out.println("JAVA HOME:" + System.getProperty("java.home"));
-        // System.out.println("JAVA HOME BEFORE:" + System.getenv().get("JAVA_HOME"));
-        // System.getenv().put("JAVA_HOME", javaHome);
-        // System.out.println("JAVA HOME AFTER:" + System.getenv().get("JAVA_HOME"));
-        // process.environment().put("JAVA_HOME", javaHome);
-
         ProcessOutputAsString output = runProcess(process, false, true);
         return output.getReturnValue();
-        // ProcessBuilder builder = new ProcessBuilder("java", "-cp", classpath, className);
-        // Process process;
-        // try {
-        // process = builder.start();
-        // process.waitFor();
-        // return process.exitValue();
-        // } catch (IOException e) {
-        // SpecsLogs.warn("Exception which executing process:\n", e);
-        // } catch (InterruptedException e) {
-        // Thread.currentThread().interrupt();
-        // SpecsLogs.msgInfo("Failed to complete execution on process");
-        // }
-        //
-        // return -1;
     }
 
-    // public static ProcessBuilder buildJavaProcess(Class<?> aClass, String javaExecutable, List<String> args) {
-    // public static ProcessBuilder buildJavaProcess(Class<?> aClass, List<String> args) {
-    // List<String> command = new ArrayList<>();
-    // command.add("java");
-    //
-    // String classpath = System.getProperty("java.class.path");
-    // String className = aClass.getCanonicalName();
-    //
-    // command.add("-cp");
-    // command.add(classpath);
-    // command.add(className);
-    //
-    // command.addAll(args);
-    //
-    // ProcessBuilder process = new ProcessBuilder(command);
-    //
-    // return process;
-    // }
-
     /**
-     * Returns a double based on the major (feature) and minor (interim) segments of the runtime version.
+     * Returns a double based on the major (feature) and minor (interim) segments of
+     * the runtime version.
      * <p>
-     * Example: if the version string is "16.3.2-internal+11-specsbuild-20220403", the return will be `16.3`.
+     * Example: if the version string is "16.3.2-internal+11-specsbuild-20220403",
+     * the return will be `16.3`.
      */
     public static double getJavaVersionNumber() {
         var version = Runtime.version();
@@ -1137,9 +866,11 @@ public class SpecsSystem {
     }
 
     /**
-     * Returns the components of the version number of the running Java VM as an immutable list.
+     * Returns the components of the version number of the running Java VM as an
+     * immutable list.
      * <p>
-     * Example: if the version string is "16.3.2-internal+11-specsbuild-20220403", the return will be `[16, 3, 2]`.
+     * Example: if the version string is "16.3.2-internal+11-specsbuild-20220403",
+     * the return will be `[16, 3, 2]`.
      */
     public static List<Integer> getJavaVersion() {
         // Get property
@@ -1226,32 +957,9 @@ public class SpecsSystem {
         return IS_DEBUG.get();
     }
 
-    /*
-    // public static <T> boolean hasCopyConstructor(T object) {
-    public static boolean hasCopyConstructor(Object object) {
-        // Class<T> aClass = (Class<T>) object.getClass();
-    
-        // Constructor<T> constructorMethod = null;
-        for (Constructor<?> constructor : object.getClass().getConstructors()) {
-            Class<?>[] constructorParams = constructor.getParameterTypes();
-    
-            if (constructorParams.length != 1) {
-                continue;
-            }
-    
-            if (object.getClass().isAssignableFrom(constructorParams[0])) {
-                return true;
-            }
-        }
-    
-        return false;
-        // Create copy constructor: new T(T data)
-        // constructorMethod = aClass.getConstructor(aClass);
-    }
-    */
-
     /**
-     * Uses the copy constructor to create a copy of the given object. Throws exception if the class does not have a
+     * Uses the copy constructor to create a copy of the given object. Throws
+     * exception if the class does not have a
      * copy constructor.
      *
      * @param object
@@ -1342,11 +1050,11 @@ public class SpecsSystem {
      * @param <T>
      * @param aClass
      * @param arguments
-     * @return the first constructor that is compatible with the given arguments, or null if none is found
+     * @return the first constructor that is compatible with the given arguments, or
+     *         null if none is found
      */
     public static <T> Constructor<T> getConstructor(Class<T> aClass, Object... arguments) {
-        constructorTest:
-        for (var constructor : aClass.getConstructors()) {
+        constructorTest: for (var constructor : aClass.getConstructors()) {
             // Verify if arguments are compatible
             var paramTypes = constructor.getParameterTypes();
 
@@ -1424,14 +1132,16 @@ public class SpecsSystem {
     }
 
     /**
-     * @return true if the JVM is currently executing in a Linux system, false otherwise
+     * @return true if the JVM is currently executing in a Linux system, false
+     *         otherwise
      */
     public static boolean isLinux() {
         return IS_LINUX;
     }
 
     /**
-     * @return true if the JVM is currently executing in a Windows system, false otherwise
+     * @return true if the JVM is currently executing in a Windows system, false
+     *         otherwise
      */
     public static boolean isWindows() {
         return IS_WINDOWS;
@@ -1466,8 +1176,7 @@ public class SpecsSystem {
         }
 
         Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
-        // Class<?> invokingClass = object.getClass();
-        // Object invokingObject = object instanceof Class ? null : object;
+
         // If method is static, object will be ignored
         Object invokingObject = object;
 
@@ -1484,11 +1193,11 @@ public class SpecsSystem {
         } catch (Exception e) {
             throw new RuntimeException("Error while invoking method '" + method + "'", e);
         }
-        // return object.class.getMethod(property, arguments).invoke(object, arguments);
     }
 
     /**
-     * Similar to findMethod(), but caches results. Be careful, can lead to unintended errors.
+     * Similar to findMethod(), but caches results. Be careful, can lead to
+     * unintended errors.
      *
      * @param invokingClass
      * @param methodName
@@ -1516,8 +1225,7 @@ public class SpecsSystem {
 
     public static Method findMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
         Method invokingMethod = null;
-        top:
-        for (var classMethod : invokingClass.getMethods()) {
+        top: for (var classMethod : invokingClass.getMethods()) {
             // Check name
             if (!classMethod.getName().equals(methodName)) {
                 continue;
@@ -1567,7 +1275,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Invokes the given method as a property. If the method with name 'foo()' could not be found, looks for a .getFoo()
+     * Invokes the given method as a property. If the method with name 'foo()' could
+     * not be found, looks for a .getFoo()
      * method.
      *
      * @param object
@@ -1575,14 +1284,8 @@ public class SpecsSystem {
      * @return
      */
     public static Object invokeAsGetter(Object object, String methodName) {
-        // Special cases
-        // if (methodName.equals("toString")) {
-        // return object.toString();
-        // }
-
-        // System.out.println("MEthod name: '" + methodName + "'");
         Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
-        // Class<?> invokingClass = object.getClass();
+
         SpecsLogs.debug(() -> "invokeAsGetter: processing '" + methodName + "' for class '" + invokingClass + "'");
 
         // Check if getter is a field
@@ -1630,22 +1333,6 @@ public class SpecsSystem {
 
         throw new RuntimeException(
                 "Could not resolve property '" + methodName + "' for instance of class '" + invokingClass + "'");
-
-        // // If null, try camelCase getter
-        // if (invokingMethod == null) {
-        // String getterName = "get" + methodName.substring(0, 1).toUpperCase()
-        // + methodName.substring(1, methodName.length());
-        // return invoke(object, getterName);
-        // }
-        //
-        // SpecsCheck.checkNotNull(invokingMethod,
-        // () -> "Could not find method '" + methodName + "' for object " + object);
-        //
-        // try {
-        // return invokingMethod.invoke(object);
-        // } catch (Exception e) {
-        // throw new RuntimeException("Error while invoking method '" + methodName + "'", e);
-        // }
     }
 
     public static <K, T> List<T> getStaticFields(Class<? extends K> aClass, Class<? extends T> type) {
@@ -1679,7 +1366,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Reads the implementation version that is in the manifest file. Reads property Implementation-Version.
+     * Reads the implementation version that is in the manifest file. Reads property
+     * Implementation-Version.
      *
      * @return
      */
@@ -1726,17 +1414,19 @@ public class SpecsSystem {
         return e;
     }
 
-    
     /**
      * Attempts to locate a PowerShell executable available in the system's PATH.
      * <p>
-     * Tries to find "pwsh" (PowerShell Core) first, and if not found, falls back to "powershell" (Windows PowerShell).
-     * It does so by attempting to execute each candidate with a command that queries the PowerShell version.
+     * Tries to find "pwsh" (PowerShell Core) first, and if not found, falls back to
+     * "powershell" (Windows PowerShell).
+     * It does so by attempting to execute each candidate with a command that
+     * queries the PowerShell version.
      * If a suitable executable is found, its name is returned.
      * </p>
      *
      * @return the name of the PowerShell executable found ("pwsh" or "powershell")
-     * @throws IllegalStateException if no PowerShell executable is available on the system PATH
+     * @throws IllegalStateException if no PowerShell executable is available on the
+     *                               system PATH
      */
     private static String findPwsh() {
         // GitHub Windows runners have pwsh in PATH; if not, fall back to powershell.exe
@@ -1744,7 +1434,8 @@ public class SpecsSystem {
             try {
                 Process p = new ProcessBuilder(exe, "-NoLogo", "-NoProfile", "-Command", "$PSVersionTable.PSVersion")
                         .redirectErrorStream(true).start();
-                if (p.waitFor() == 0) return exe;
+                if (p.waitFor() == 0)
+                    return exe;
             } catch (Exception ignored) {
             }
         }

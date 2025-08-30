@@ -19,7 +19,8 @@ import java.util.function.Function;
  * Encodes/decodes values to/from Strings.
  * 
  * <p>
- * It is recommended that the decoder supports null strings as inputs, to be able to decode 'empty values'.
+ * It is recommended that the decoder supports null strings as inputs, to be
+ * able to decode 'empty values'.
  * 
  * @author JoaoBispo
  *

@@ -28,7 +28,8 @@ public interface Lazy<T> extends Supplier<T> {
 
     /**
      * 
-     * @return true if the value encapsulated by the Lazy object has been initialized
+     * @return true if the value encapsulated by the Lazy object has been
+     *         initialized
      */
     boolean isInitialized();
 

@@ -40,6 +40,6 @@ public interface KeyEnumNameProvider extends KeyStringProvider {
      */
     @Override
     default String getKey() {
-	return name();
+        return name();
     }
 }

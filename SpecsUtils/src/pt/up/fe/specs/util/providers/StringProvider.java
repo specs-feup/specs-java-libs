@@ -36,7 +36,8 @@ public interface StringProvider extends KeyProvider<String> {
     String getString();
 
     /**
-     * Returns the key associated with this StringProvider, which is the string itself.
+     * Returns the key associated with this StringProvider, which is the string
+     * itself.
      * 
      * @return the key
      */
@@ -66,7 +67,8 @@ public interface StringProvider extends KeyProvider<String> {
     }
 
     /**
-     * Creates a new StringProvider backed by the contents of the given ResourceProvider.
+     * Creates a new StringProvider backed by the contents of the given
+     * ResourceProvider.
      * 
      * @param resource the resource whose contents will be provided
      * @return a new StringProvider instance

@@ -18,7 +18,8 @@ import pt.up.fe.specs.util.asm.ArithmeticResult32;
 /**
  * Utility methods for assembly code operations.
  * <p>
- * Provides static helper methods for parsing, formatting, and manipulating assembly code.
+ * Provides static helper methods for parsing, formatting, and manipulating
+ * assembly code.
  * </p>
  *
  * @author Joao Bispo
@@ -30,7 +31,7 @@ public class SpecsAsm {
      *
      * @param input1 the first operand
      * @param input2 the second operand
-     * @param carry the carry value (0 or 1)
+     * @param carry  the carry value (0 or 1)
      * @return the result of the addition
      */
     public static long add64(long input1, long input2, long carry) {
@@ -42,7 +43,7 @@ public class SpecsAsm {
      *
      * @param input1 the first operand
      * @param input2 the second operand
-     * @param carry the carry value (0 or 1)
+     * @param carry  the carry value (0 or 1)
      * @return the result of the reverse subtraction
      */
     public static long rsub64(long input1, long input2, long carry) {
@@ -50,11 +51,12 @@ public class SpecsAsm {
     }
 
     /**
-     * Calculates the carryOut of the sum of rA with rB and carry. Operation is rA + rB + carry.
+     * Calculates the carryOut of the sum of rA with rB and carry. Operation is rA +
+     * rB + carry.
      *
      * @param input1 the first operand
      * @param input2 the second operand
-     * @param carry the carry from the previous operation. Should be 0 or 1.
+     * @param carry  the carry from the previous operation. Should be 0 or 1.
      * @return an ArithmeticResult32 containing the result and carry out
      */
     public static ArithmeticResult32 add32(int input1, int input2, int carry) {
@@ -79,11 +81,12 @@ public class SpecsAsm {
     }
 
     /**
-     * Calculates the carryOut of the reverse subtraction of rA with rB and carry. Operation is rB + ~rA + carry.
+     * Calculates the carryOut of the reverse subtraction of rA with rB and carry.
+     * Operation is rB + ~rA + carry.
      *
      * @param input1 the first operand
      * @param input2 the second operand
-     * @param carry the carry from the previous operation. Should be 0 or 1.
+     * @param carry  the carry from the previous operation. Should be 0 or 1.
      * @return an ArithmeticResult32 containing the result and carry out
      */
     public static ArithmeticResult32 rsub32(int input1, int input2, int carry) {
@@ -162,7 +165,8 @@ public class SpecsAsm {
     }
 
     /**
-     * Compares two signed 32-bit integers and modifies the MSB to reflect the relation.
+     * Compares two signed 32-bit integers and modifies the MSB to reflect the
+     * relation.
      *
      * @param input1 the first operand
      * @param input2 the second operand
@@ -180,7 +184,8 @@ public class SpecsAsm {
     }
 
     /**
-     * Compares two unsigned 32-bit integers and modifies the MSB to reflect the relation.
+     * Compares two unsigned 32-bit integers and modifies the MSB to reflect the
+     * relation.
      *
      * @param input1 the first operand
      * @param input2 the second operand
@@ -232,7 +237,8 @@ public class SpecsAsm {
     }
 
     /**
-     * Performs a logical left shift on a 32-bit integer, taking into account a mask.
+     * Performs a logical left shift on a 32-bit integer, taking into account a
+     * mask.
      *
      * @param input1 the operand to shift
      * @param input2 the number of positions to shift
@@ -245,7 +251,8 @@ public class SpecsAsm {
     }
 
     /**
-     * Performs an arithmetic right shift on a 32-bit integer, taking into account a mask.
+     * Performs an arithmetic right shift on a 32-bit integer, taking into account a
+     * mask.
      *
      * @param input1 the operand to shift
      * @param input2 the number of positions to shift
@@ -258,7 +265,8 @@ public class SpecsAsm {
     }
 
     /**
-     * Performs a logical right shift on a 32-bit integer, taking into account a mask.
+     * Performs a logical right shift on a 32-bit integer, taking into account a
+     * mask.
      *
      * @param input1 the operand to shift
      * @param input2 the number of positions to shift

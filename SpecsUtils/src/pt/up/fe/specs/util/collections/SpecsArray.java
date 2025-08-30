@@ -18,7 +18,8 @@ public class SpecsArray {
     /**
      * 
      * @param object
-     * @return the length of the object if it is an array, or -1 if the object is not an array
+     * @return the length of the object if it is an array, or -1 if the object is
+     *         not an array
      */
     public static int getLength(Object object) {
         var objectClass = object.getClass();
@@ -81,20 +82,4 @@ public class SpecsArray {
         return array[array.length - 1];
     }
 
-    /*
-    public static <T, ET extends T> T[] concant(T[] array, ET newValue) {
-        @SuppressWarnings("unchecked")
-        var newArray = (T[]) new Object[array.length + 1];
-    
-        // Copy values from array
-        for (int i = 0; i < array.length; i++) {
-            newArray[i] = array[i];
-        }
-    
-        // New element
-        newArray[array.length] = newValue;
-    
-        return newArray;
-    }
-    */
 }

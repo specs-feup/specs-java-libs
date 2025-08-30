@@ -19,7 +19,8 @@ import pt.up.fe.specs.util.classmap.ClassMap;
 /**
  * Utility methods for number operations.
  * <p>
- * Provides static helper methods for parsing, formatting, and converting numbers.
+ * Provides static helper methods for parsing, formatting, and converting
+ * numbers.
  * </p>
  *
  * @author Joao Bispo
@@ -63,7 +64,7 @@ public class SpecsNumbers {
     /**
      * Adds two numbers of the same type.
      *
-     * @param <N> the type of the numbers
+     * @param <N>     the type of the numbers
      * @param number1 the first number
      * @param number2 the second number
      * @return the result of adding the two numbers

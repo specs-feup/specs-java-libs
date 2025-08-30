@@ -24,25 +24,24 @@ import pt.up.fe.specs.util.collections.AccumulatorMap;
 
 public class EventController implements EventNotifier, EventRegister {
 
-    // Map<Enum<?>, Collection<EventReceiver>> registeredListeners;
     private final Map<EventId, Collection<EventReceiver>> registeredListeners;
     // To count and keep track of listeners
     private final AccumulatorMap<EventReceiver> listenersCount;
 
     public EventController() {
-	this.registeredListeners = new HashMap<>();
-	this.listenersCount = new AccumulatorMap<>();
+        this.registeredListeners = new HashMap<>();
+        this.listenersCount = new AccumulatorMap<>();
     }
 
     /**
      * Registers receiver to all its supported events.
      *
-     * @param reciver
+     * @param receiver
      * @param eventIds
      */
     @Override
-    public void registerReceiver(EventReceiver reciver) {
-	registerListener(reciver, reciver.getSupportedEvents());
+    public void registerReceiver(EventReceiver receiver) {
+        registerListener(receiver, receiver.getSupportedEvents());
     }
 
     /**
@@ -53,33 +52,33 @@ public class EventController implements EventNotifier, EventRegister {
      */
     @Override
     public void unregisterReceiver(EventReceiver receiver) {
-	unregisterReceiver(receiver, receiver.getSupportedEvents());
+        unregisterReceiver(receiver, receiver.getSupportedEvents());
     }
 
     private void unregisterReceiver(EventReceiver receiver, Collection<EventId> supportedEvents) {
-	for (EventId event : supportedEvents) {
-	    unregisterListener(receiver, event);
-	}
+        for (EventId event : supportedEvents) {
+            unregisterListener(receiver, event);
+        }
     }
 
     private void unregisterListener(EventReceiver receiver, EventId eventId) {
-	// Check if event is already on table
-	Collection<EventReceiver> receivers = this.registeredListeners.get(eventId);
-	if (receivers == null) {
-	    SpecsLogs.warn("No receivers mapped to EventId '" + eventId + "'");
-	    return;
-	}
+        // Check if event is already on table
+        Collection<EventReceiver> receivers = this.registeredListeners.get(eventId);
+        if (receivers == null) {
+            SpecsLogs.warn("No receivers mapped to EventId '" + eventId + "'");
+            return;
+        }
 
-	// Check if receiver is not present
-	if (!receivers.contains(receiver)) {
-	    SpecsLogs.msgInfo("Event '" + eventId + "' was not registered for receiver '" + receiver + "'");
-	    return;
-	}
+        // Check if receiver is not present
+        if (!receivers.contains(receiver)) {
+            SpecsLogs.msgInfo("Event '" + eventId + "' was not registered for receiver '" + receiver + "'");
+            return;
+        }
 
-	// Remove receiver
-	receivers.remove(receiver);
-	// Decrease count
-	this.listenersCount.remove(receiver);
+        // Remove receiver
+        receivers.remove(receiver);
+        // Decrease count
+        this.listenersCount.remove(receiver);
 
     }
 
@@ -89,9 +88,8 @@ public class EventController implements EventNotifier, EventRegister {
      * @param listener
      * @param eventIds
      */
-    // public void registerListener(EventReceiver listener, Enum<?>... eventIds) {
     public void registerListener(EventReceiver listener, EventId... eventIds) {
-	registerListener(listener, Arrays.asList(eventIds));
+        registerListener(listener, Arrays.asList(eventIds));
     }
 
     /**
@@ -101,13 +99,13 @@ public class EventController implements EventNotifier, EventRegister {
      * @param event
      */
     public void registerListener(EventReceiver listener, Collection<EventId> eventIds) {
-	if (eventIds == null) {
-	    return;
-	}
+        if (eventIds == null) {
+            return;
+        }
 
-	for (EventId event : eventIds) {
-	    registerListener(listener, event);
-	}
+        for (EventId event : eventIds) {
+            registerListener(listener, event);
+        }
     }
 
     /**
@@ -116,40 +114,38 @@ public class EventController implements EventNotifier, EventRegister {
      * @param listener
      * @param eventId
      */
-    // public void registerListener(EventReceiver listener, Enum<?> eventId) {
     public void registerListener(EventReceiver listener, EventId eventId) {
-	// Check if event is already on table
-	Collection<EventReceiver> listeners = this.registeredListeners.get(eventId);
-	if (listeners == null) {
-	    listeners = new LinkedHashSet<>();
-	    this.registeredListeners.put(eventId, listeners);
-	}
+        // Check if event is already on table
+        Collection<EventReceiver> listeners = this.registeredListeners.get(eventId);
+        if (listeners == null) {
+            listeners = new LinkedHashSet<>();
+            this.registeredListeners.put(eventId, listeners);
+        }
 
-	// Check if listener is already registered
-	if (listeners.contains(listener)) {
-	    SpecsLogs.msgInfo("Event '" + eventId + "' already registers for listener '" + listener + "'");
-	    return;
-	}
+        // Check if listener is already registered
+        if (listeners.contains(listener)) {
+            SpecsLogs.msgInfo("Event '" + eventId + "' already registers for listener '" + listener + "'");
+            return;
+        }
 
-	// Register listener
-	listeners.add(listener);
-	// Add count
-	this.listenersCount.add(listener);
+        // Register listener
+        listeners.add(listener);
+        // Add count
+        this.listenersCount.add(listener);
     }
 
     @Override
     public void notifyEvent(Event event) {
 
-	Collection<EventReceiver> listeners = this.registeredListeners.get(event.getId());
+        Collection<EventReceiver> listeners = this.registeredListeners.get(event.getId());
 
-	if (listeners == null) {
-	    // LoggingUtils.msgInfo("No listeners registered to event " + event.getId());
-	    return;
-	}
+        if (listeners == null) {
+            return;
+        }
 
-	for (EventReceiver listener : listeners) {
-	    listener.acceptEvent(event);
-	}
+        for (EventReceiver listener : listeners) {
+            listener.acceptEvent(event);
+        }
 
     }
 
@@ -157,7 +153,7 @@ public class EventController implements EventNotifier, EventRegister {
      * @return true if there is at least one listeners registered
      */
     public boolean hasListeners() {
-	return !this.listenersCount.getAccMap().keySet().isEmpty();
+        return !this.listenersCount.getAccMap().keySet().isEmpty();
     }
 
     /**
@@ -165,7 +161,7 @@ public class EventController implements EventNotifier, EventRegister {
      * @return the listeners currently registered to the controller
      */
     public Collection<EventReceiver> getListeners() {
-	return this.listenersCount.getAccMap().keySet();
+        return this.listenersCount.getAccMap().keySet();
     }
 
 }

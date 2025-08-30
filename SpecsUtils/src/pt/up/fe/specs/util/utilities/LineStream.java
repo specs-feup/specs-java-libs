@@ -102,7 +102,8 @@ public class LineStream implements AutoCloseable {
     }
 
     /**
-     * Helper method which uses the name of the resource as the name of the stream by default.
+     * Helper method which uses the name of the resource as the name of the stream
+     * by default.
      * 
      * @param resource
      * @return
@@ -115,8 +116,8 @@ public class LineStream implements AutoCloseable {
      * Creates a new LineStream from a resource.
      * 
      * @param resource
-     * @param useResourceName
-     *            if true, uses the resource name as the name of the line reader. Otherwise, uses no name
+     * @param useResourceName if true, uses the resource name as the name of the
+     *                        line reader. Otherwise, uses no name
      * @return
      */
     public static LineStream newInstance(ResourceProvider resource, boolean useResourceName) {
@@ -137,11 +138,14 @@ public class LineStream implements AutoCloseable {
     /**
      * 
      * @param file
-     * @return a new LineStream backed by the given file. If the object could not be created, throws a RuntimeException.
+     * @return a new LineStream backed by the given file. If the object could not be
+     *         created, throws a RuntimeException.
      */
-    // Cannot close resource, since the stream must remain open after LineStream is created.
-    // However, LineStream is a decorator of the FileInputStream, that will close it when the LineStream is closed
     public static LineStream newInstance(File file) {
+        // Cannot close resource, since the stream must remain open after LineStream is
+        // created.
+        // However, LineStream is a decorator of the FileInputStream, that will close it
+        // when the LineStream is closed
 
         try {
             final FileInputStream fileStream = new FileInputStream(file);
@@ -160,18 +164,6 @@ public class LineStream implements AutoCloseable {
         } catch (final IOException e) {
             throw new RuntimeException("Problem while using LineStream backed by a String", e);
         }
-
-        /*        
-        try {
-            final InputStreamReader streamReader = new InputStreamReader(
-                    new ByteArrayInputStream(string.getBytes("UTF-8")));
-        
-            return newInstance(streamReader, Optional.empty());
-        
-        } catch (final IOException e) {
-            throw new RuntimeException("Problem while using LineStream backed by a String", e);
-        }
-        */
     }
 
     public static LineStream newInstance(InputStream inputStream, String name) {
@@ -183,8 +175,8 @@ public class LineStream implements AutoCloseable {
      * 
      * @param reader
      * @param name
-     * @return a new LineStream backed by the given Reader. If the object could not be created, throws a
-     *         RuntimeException.
+     * @return a new LineStream backed by the given Reader. If the object could not
+     *         be created, throws a RuntimeException.
      */
     public static LineStream newInstance(Reader reader, Optional<String> name) {
         final BufferedReader newReader = new BufferedReader(reader);
@@ -207,7 +199,8 @@ public class LineStream implements AutoCloseable {
     /**
      * TODO: Rename 'next'
      * 
-     * @return the next line in the file, or null if the end of the stream has been reached.
+     * @return the next line in the file, or null if the end of the stream has been
+     *         reached.
      */
     public String nextLine() {
         if (nextLine != null) {
@@ -263,17 +256,13 @@ public class LineStream implements AutoCloseable {
 
             return line;
         } catch (final IOException ex) {
-            // SpecsLogs.warn("Could not read line.", ex);
-            // fileEnded = true;
-            // reader.close();
             throw new RuntimeException("Could not read line.", ex);
-            // LoggingUtils.msgWarn("Could not read line.", ex);
-            // return null;
         }
     }
 
     /**
-     * @return the next line which is not empty, or null if the end of the stream has been reached.
+     * @return the next line which is not empty, or null if the end of the stream
+     *         has been reached.
      */
     public String nextNonEmptyLine() {
         for (;;) {
@@ -308,7 +297,8 @@ public class LineStream implements AutoCloseable {
     }
 
     /**
-     * Creates an Iterable over the LineReader. LineReader has to be disposed after use.
+     * Creates an Iterable over the LineReader. LineReader has to be disposed after
+     * use.
      * 
      * @return
      */
@@ -349,7 +339,8 @@ public class LineStream implements AutoCloseable {
     }
 
     /**
-     * Creates a stream over the LineReader. LineReader has to be disposed after use.
+     * Creates a stream over the LineReader. LineReader has to be disposed after
+     * use.
      * 
      * @return
      */

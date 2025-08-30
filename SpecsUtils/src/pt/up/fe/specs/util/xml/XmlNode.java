@@ -82,15 +82,14 @@ public interface XmlNode {
     /**
      * 
      * @param name
-     * @return the element that has the given name, null if no element is found, and exception if more than one element
-     *         with that name is found
+     * @return the element that has the given name, null if no element is found, and
+     *         exception if more than one element with that name is found
      */
     default public XmlElement getElementByName(String name) {
         var elements = getElementsByName(name);
 
         if (elements.isEmpty()) {
             return null;
-            // throw new RuntimeException("No element with name '" + name + "'");
         }
 
         if (elements.size() > 1) {
@@ -126,7 +125,6 @@ public interface XmlNode {
             Transformer transformer = transformerFactory.newTransformer();
 
             DOMSource source = new DOMSource(getNode());
-            // System.out.println("CHILD NODE : " + document.getChildNodes().item(0).getChildNodes().getLength());
             transformer.transform(source, result);
 
         } catch (Exception e) {
@@ -147,12 +145,7 @@ public interface XmlNode {
 
         StreamResult result = new StreamResult(stringWriter);
         write(result);
-        // stringWriter.flush();
-        // try {
-        // stringWriter.close();
-        // } catch (IOException e) {
-        // throw new RuntimeException("Could not ", e);
-        // }
+
         return stringWriter.toString();
     }
 }

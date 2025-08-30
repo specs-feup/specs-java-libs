@@ -48,11 +48,13 @@ public enum SpecsProperty {
      */
     WriteErroLog,
     /**
-     * Shows the stack trace when warning messages are called. Receives a boolean value.
+     * Shows the stack trace when warning messages are called. Receives a boolean
+     * value.
      */
     ShowStackTrace,
     /**
-     * Opens a Swing window (if available) showing information about memory usage of the application. Receives a boolean
+     * Opens a Swing window (if available) showing information about memory usage of
+     * the application. Receives a boolean
      * value.
      */
     ShowMemoryHeap,
@@ -84,7 +86,8 @@ public enum SpecsProperty {
     }
 
     /**
-     * Looks for the file 'suika.properties' on the running folder and applies its options.
+     * Looks for the file 'suika.properties' on the running folder and applies its
+     * options.
      */
     public static void applyProperties() {
         // Look for compatible files representing specs properties, return the first
@@ -107,22 +110,13 @@ public enum SpecsProperty {
         SpecsLogs.debug("Applying the SPeCS properties file '" + specsPropertiesFile.getAbsolutePath() + "'");
         Properties specsProperties = SpecsProperties.newInstance(specsPropertiesFile).getProperties();
         SpecsProperty.applyProperties(specsProperties);
-
-        // File suikaPropsFile = new File("suika.properties");
-        // if (!suikaPropsFile.isFile()) {
-        // // System.out.println("did not find file "+suikaPropsFile);
-        // return;
-        // }
-
-        // Properties suikaProps = IoUtils.loadProperties(suikaPropsFile);
-        // Properties suikaProps = SpecsProperties.newInstance(suikaPropsFile).getProperties();
-        // SpecsProperty.applyProperties(suikaProps);
     }
 
     /**
      * A default suika.properties file.
      * 
-     * @return a Collection for Strings representing resources needed for this package to run.
+     * @return a Collection for Strings representing resources needed for this
+     *         package to run.
      */
     public static Collection<String> getResources() {
         List<String> resources = new ArrayList<>();
@@ -217,15 +211,6 @@ public enum SpecsProperty {
 
             // Set Custom L&F
             SpecsSwing.setCustomLookAndFeel(lookAndFeel);
-            // try {
-            // System.out.println("CUSTOM LOOK: " + lookAndFeel);
-            // System.out.println("SYSTEM BEFORE: " + UIManager.getSystemLookAndFeelClassName());
-            // UIManager.setLookAndFeel(lookAndFeel);
-            // System.out.println("SYSTEM AFTER: " + UIManager.getSystemLookAndFeelClassName());
-            // } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-            // | UnsupportedLookAndFeelException e) {
-            // throw new RuntimeException("Could not set custom Look&Feel", e);
-            // }
 
             return;
         }

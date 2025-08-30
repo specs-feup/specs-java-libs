@@ -20,8 +20,8 @@ import pt.up.fe.specs.util.utilities.StringSlice;
 public class StringSplitterRules {
 
     /**
-     * Looks for a string defined by the {@link StringSliceWithSplit} separator, or the complete string if no separator
-     * was found.
+     * Looks for a string defined by the {@link StringSliceWithSplit} separator, or
+     * the complete string if no separator was found.
      * 
      * <p>
      * The default separator is a whitespace, as determined by the function
@@ -37,8 +37,9 @@ public class StringSplitterRules {
     }
 
     /**
-     * Looks for a word (as defined by {@link StringSplitterRules#string(StringSlice)}) and tries to transform into an
-     * object using the provided decoder.
+     * Looks for a word (as defined by
+     * {@link StringSplitterRules#string(StringSlice)}) and tries to transform into
+     * an object using the provided decoder.
      * 
      * @param string
      * @param decoder

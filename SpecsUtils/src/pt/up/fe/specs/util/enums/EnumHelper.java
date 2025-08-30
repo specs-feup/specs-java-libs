@@ -100,8 +100,8 @@ public class EnumHelper<T extends Enum<T>> {
     }
 
     /**
-     * The names used to map Strings to Enums. Might not be the same as the Enum name, if the Enum implements
-     * StringProvider.
+     * The names used to map Strings to Enums. Might not be the same as the Enum
+     * name, if the Enum implements StringProvider.
      * 
      * @return
      */

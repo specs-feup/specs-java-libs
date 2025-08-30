@@ -32,7 +32,7 @@ public class SpecsLoggers {
         if (loggerName == null) {
             throw new NullPointerException("Logger name cannot be null");
         }
-        
+
         Logger logger = LOGGERS.get(loggerName);
 
         if (logger == null) {

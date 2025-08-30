@@ -16,7 +16,8 @@ package pt.up.fe.specs.util.logging;
 import java.util.logging.Logger;
 
 /**
- * Wrapper around java.util.logging.Logger, which extends class with some logging methods.
+ * Wrapper around java.util.logging.Logger, which extends class with some
+ * logging methods.
  * 
  * @author JoaoBispo
  *
@@ -33,7 +34,7 @@ public class LoggerWrapper {
         if (name == null) {
             throw new NullPointerException("Logger name cannot be null");
         }
-        
+
         this.logger = Logger.getLogger(name);
     }
 
@@ -50,7 +51,6 @@ public class LoggerWrapper {
      * 
      * <p>
      * Use this level to show messages to the user of a program.
-     * 
      * 
      * @param logger
      * @param msg
@@ -72,7 +72,7 @@ public class LoggerWrapper {
         if (msg == null) {
             return null;
         }
-        
+
         if (msg.isEmpty()) {
             return msg;
         }

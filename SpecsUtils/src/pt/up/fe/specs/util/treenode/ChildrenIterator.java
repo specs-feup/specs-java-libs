@@ -27,19 +27,9 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
         this.parent = parent;
         // Currently cannot enforce immutable children view due to MATISSE passes
         this.iterator = parent.getChildren().listIterator();
-        // this.iterator = parent.getChildrenMutable().listIterator();
-        // Create a mutable iterator
-        // this.iterator = new ArrayList<>(parent.getChildren()).listIterator();
-        // this.iterator = parent.getChildrenMutable().listIterator();
 
         this.lastReturned = null;
     }
-
-    /*
-    protected ListIterator<N> getIterator() {
-    return iterator;
-    }
-     */
 
     @Override
     public boolean hasNext() {
@@ -122,7 +112,8 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * Moves the cursor back the given amount of places.
      * 
      * <p>
-     * If the given amount is bigger than the number of positions, stops when the cursor is at the beginning.
+     * If the given amount is bigger than the number of positions, stops when the
+     * cursor is at the beginning.
      * 
      * @param amount
      */
@@ -145,7 +136,6 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * @return the next node that is an instance of the given class
      */
     public <K extends N> Optional<K> next(Class<K> nodeClass) {
-        // while (iterator.hasNext()) {
         while (hasNext()) {
             N node = next();
             if (nodeClass.isInstance(node)) {
@@ -173,12 +163,15 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
     }
 
     /**
-     * Returns the next element that is in the position specified by the given amount.
+     * Returns the next element that is in the position specified by the given
+     * amount.
      * 
      * <p>
      * If amount is zero, returns the last returned node;<br>
-     * If the amount is greater than one, returns the nth node of the amount. next(1) is equivalent to next();<br>
-     * If the amount is less than one, returns the -nth node of the amount. next(-1) is equivalent to previous();<br>
+     * If the amount is greater than one, returns the nth node of the amount.
+     * next(1) is equivalent to next();<br>
+     * If the amount is less than one, returns the -nth node of the amount. next(-1)
+     * is equivalent to previous();<br>
      * 
      * @param i
      * @return
@@ -205,13 +198,12 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
     }
 
     /**
-     * Removes a number of previous nodes, and replaces them with the given node. This call can only be made once per
-     * call to next or previous.
+     * Removes a number of previous nodes, and replaces them with the given node.
+     * This call can only be made once per call to next or previous.
      * 
      * <p>
-     * At the end of the method, the cursor of the iterator is before the inserted node.
-     * 
-     * 
+     * At the end of the method, the cursor of the iterator is before the inserted
+     * node.
      * 
      * @param node
      * @param numberOfPreviousNodes
@@ -227,14 +219,11 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
 
         // Set new node
         set(node);
-
-        // Move iterator forward
-        // iterator.next();
     }
 
     /**
-     * Advances the cursor, and if it finds a statement of the given class, returns it. The cursor advances event if it
-     * returns an empty optional.
+     * Advances the cursor, and if it finds a statement of the given class, returns
+     * it. The cursor advances event if it returns an empty optional.
      * 
      * @param nodeClass
      * 

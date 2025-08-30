@@ -25,13 +25,13 @@ public class EventUtils {
      * @return
      */
     public static Collection<EventId> getEventIds(EventId... eventIds) {
-	Collection<EventId> eventList = new ArrayList<>();
+        Collection<EventId> eventList = new ArrayList<>();
 
-	for (EventId eventId : eventIds) {
-	    eventList.add(eventId);
-	}
+        for (EventId eventId : eventIds) {
+            eventList.add(eventId);
+        }
 
-	return eventList;
+        return eventList;
     }
 
 }

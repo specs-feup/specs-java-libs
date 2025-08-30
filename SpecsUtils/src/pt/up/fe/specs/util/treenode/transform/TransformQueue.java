@@ -44,11 +44,6 @@ public class TransformQueue<K extends TreeNode<K>> {
      * Applies the transformations in the queue, empties the queue.
      */
     public void apply() {
-        // for (NodeTransform<K> transform : getTransforms()) {
-        // transform.execute();
-        // }
-        //
-        // instructions.clear();
         applyPrivate(getTransforms());
     }
 
@@ -77,10 +72,6 @@ public class TransformQueue<K extends TreeNode<K>> {
     public String toString() {
         return instructions.toString();
     }
-
-    // public void replace(K originalNode, K newNode) {
-    // replace(originalNode, newNode, getClass());
-    // }
 
     /**
      *

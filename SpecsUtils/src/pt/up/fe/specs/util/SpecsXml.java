@@ -76,12 +76,9 @@ public class SpecsXml {
             // If schema present, validate document
             if (schemaDocument != null) {
                 var schemaFactory = SchemaFactory.newDefaultInstance();
-                // schemaFactory.setErrorHandler(errorHandler);
                 var schema = schemaFactory.newSchema(new StreamSource(schemaDocument));
                 var validator = schema.newValidator();
                 validator.validate(new DOMSource(doc));
-                // dbFactory.setSchema(schema);
-                // dbFactory.setValidating(true);
             }
 
             // optional, but recommended
@@ -151,13 +148,6 @@ public class SpecsXml {
     }
 
     private static String getAttribute(NodeList nList, String tag, String attribute) {
-        // NodeList nList = doc.getElementsByTagName(section);
-        /*
-        	if (nList == null) {
-        	    LoggingUtils.msgInfo("Could not find section '" + section + "'");
-        	    return null;
-        	}
-         */
         if (nList.getLength() == 0) {
             SpecsLogs.msgInfo("Could not find section '" + tag + "'");
             return null;
@@ -235,18 +225,6 @@ public class SpecsXml {
         return Optional.empty();
     }
 
-    /*
-    public static List<Node> getNodes(NodeList nodeList, String nodeTag) {
-    
-    List<Node> nodes = new ArrayList<>();
-    for (int i = 0; i < nodeList.getLength(); i++) {
-        nodes.add(nodeList.item(i));
-    }
-    
-    return nodes;
-    }
-     */
-
     public static Optional<String> getAttribute(Node node, String attrName) {
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             return Optional.of(((Element) node).getAttribute(attrName));
@@ -257,7 +235,8 @@ public class SpecsXml {
         Node attribute = node.getAttributes().getNamedItem(attrName);
         if (attribute == null) {
             return Optional.empty();
-            // throw new RuntimeException("No attribute with name '"+attrName+"' in node '"+node+"');
+            // throw new RuntimeException("No attribute with name '"+attrName+"' in node
+            // '"+node+"');
         }
 
         return Optional.of((attribute.getNodeValue()));
@@ -277,20 +256,6 @@ public class SpecsXml {
 
         return children;
     }
-
-    /*
-    public static String getValue(Document doc, String... tagChain) {
-    return getValue(doc.getChildNodes(), tagChain);
-    }
-     */
-
-    /**
-     * The value of the node found by walking the given tag-chain.
-     *
-     * @param doc
-     * @param tagChain
-     * @return
-     */
 
     public static String getText(NodeList nodes, String... tagChain) {
         NodeList currentNodes = nodes;
@@ -331,12 +296,6 @@ public class SpecsXml {
             if (tag.equals("*") || tag.equals(childElement.getTagName())) {
                 children.add(childElement);
             }
-
-            // if (!currentNode.getNodeName().equals(tag)) {
-            // continue;
-            // }
-            //
-            // children.add(((Element) currentNode).);
         }
 
         return children;

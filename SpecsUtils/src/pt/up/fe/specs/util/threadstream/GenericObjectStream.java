@@ -17,7 +17,6 @@ public class GenericObjectStream<T> extends AObjectStream<T> {
         try {
             ret = this.consumer.take();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return ret;
@@ -25,7 +24,6 @@ public class GenericObjectStream<T> extends AObjectStream<T> {
 
     @Override
     public void close() throws Exception {
-        // TODO Auto-generated method stub
         // TODO: how to implement here??
     }
 }

@@ -89,10 +89,10 @@ public class StringList implements Iterable<String> {
     }
 
     /**
-     * Creates a StringList with the file names from the files on the list passed as parameter.
+     * Creates a StringList with the file names from the files on the list passed as
+     * parameter.
      *
-     * @param files
-     *            - the list of files
+     * @param files the list of files
      * @return a new StringList instance
      */
     public static StringList newInstanceFromListOfFiles(List<File> files) {
@@ -106,7 +106,9 @@ public class StringList implements Iterable<String> {
         return new StringList(strings);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -117,7 +119,9 @@ public class StringList implements Iterable<String> {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

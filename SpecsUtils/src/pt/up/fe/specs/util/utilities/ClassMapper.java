@@ -21,8 +21,9 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Maps classes to other assignable classes that have been added to this instance, respecting the hierarchy and the
- * order by which classes where added.
+ * Maps classes to other assignable classes that have been added to this
+ * instance, respecting the hierarchy and the order by which classes where
+ * added.
  * 
  * @author jbispo
  *

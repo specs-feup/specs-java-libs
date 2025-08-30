@@ -60,7 +60,6 @@ public class CsvWriter {
 
     public CsvWriter(List<String> header) {
         this.delimiter = CsvWriter.DEFAULT_DELIMITER;
-        // newline = System.lineSeparator();
         this.newline = System.getProperty("line.separator");
         this.header = header;
         this.lines = new ArrayList<>();
@@ -180,17 +179,6 @@ public class CsvWriter {
         csv.append(newline);
 
         return csv.toString();
-        /*
-        StringBuilder csvLine = new StringBuilder();
-
-        csvLine.append(line.get(0));
-        for (int i = 1; i < line.size(); i++) {
-            csvLine.append(this.delimiter).append(line.get(i));
-        }
-        csvLine.append(this.newline);
-
-        return csvLine.toString();
-        */
     }
 
     public String buildCsv() {
@@ -202,18 +190,6 @@ public class CsvWriter {
         StringBuilder builder = new StringBuilder();
 
         builder.append(buildHeader());
-        /*
-        // Separator
-        builder.append("sep=").append(this.delimiter).append("\n");
-
-        // Header
-        builder.append(this.header.get(0));
-        for (int i = 1; i < this.header.size(); i++) {
-            builder.append(this.delimiter).append(this.header.get(i));
-        }
-
-        builder.append(this.newline);
-        */
 
         // First line is the header
         int lineCounter = 2;
@@ -222,13 +198,6 @@ public class CsvWriter {
         for (List<String> line : this.lines) {
             builder.append(buildLine(line, lineCounter));
             lineCounter++;
-            /*
-            builder.append(line.get(0));
-            for (int i = 1; i < line.size(); i++) {
-                builder.append(this.delimiter).append(line.get(i));
-            }
-            builder.append(this.newline);
-            */
         }
 
         return builder.toString();

@@ -39,8 +39,4 @@ public class ParserResult<T> {
         return new ParserResult<>(parserResult.getModifiedString(), Optional.of(parserResult.getResult()));
     }
 
-    // public void trim() {
-    // modifiedString = modifiedString.trim();
-    // }
-
 }

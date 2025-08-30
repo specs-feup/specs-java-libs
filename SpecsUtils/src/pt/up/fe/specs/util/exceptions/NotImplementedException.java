@@ -34,12 +34,12 @@ public class NotImplementedException extends UnsupportedOperationException {
     }
 
     /**
-     * @deprecated Replaced with {@link NotImplementedException#NotImplementedException(Class)}
+     * @deprecated Replaced with
+     *             {@link NotImplementedException#NotImplementedException(Class)}
      */
     @Deprecated
     public NotImplementedException() {
         super(getDefaultMessage(new Exception().getStackTrace()[1].getClassName()));
-        // super(getMessagePrivate(2));
     }
 
     private static String getDefaultMessage(String originClass) {
@@ -50,8 +50,4 @@ public class NotImplementedException extends UnsupportedOperationException {
         return "Not yet implemented for enum '" + anEnum.name() + "'";
     }
 
-    // private static String getMessagePrivate(int level) {
-    // // TODO: Check if getting the correct stack trace position
-    // return "Not yet implemented in class '" + new Exception().getStackTrace()[level].getClassName() + "'";
-    // }
 }

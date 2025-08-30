@@ -27,7 +27,6 @@ public class StringSlice implements CharSequence {
     protected final int startIndex;
     protected final int endIndex;
 
-
     /**
      * Builds a new StringSlice, with 'whitespace' as the default separator.
      * 
@@ -270,7 +269,6 @@ public class StringSlice implements CharSequence {
         // Could not find character
         return -1;
     }
-
 
     /**
      * 

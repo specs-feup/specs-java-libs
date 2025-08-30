@@ -72,7 +72,8 @@ public class StringSplitter {
     }
 
     /**
-     * Similar to {@link StringSplitter#parseTry(SplitRule)}, but throws exception if the rule does not match.
+     * Similar to {@link StringSplitter#parseTry(SplitRule)}, but throws exception
+     * if the rule does not match.
      * 
      * @param rule
      * @return
@@ -99,8 +100,9 @@ public class StringSplitter {
     }
 
     /**
-     * Applies the rule over the current string. If the rule matches, returns the match and consumes the corresponding
-     * string. Otherwise, returns an empty Optional and leaves the current string unchanged.
+     * Applies the rule over the current string. If the rule matches, returns the
+     * match and consumes the corresponding string. Otherwise, returns an empty
+     * Optional and leaves the current string unchanged.
      * 
      * @param rule
      * @return
@@ -111,8 +113,9 @@ public class StringSplitter {
     }
 
     /**
-     * Applies the given rule, and if it matches, checks if the results passes the predicate. The current string is only
-     * consumed if both the rule and the predicate match.
+     * Applies the given rule, and if it matches, checks if the results passes the
+     * predicate. The current string is only consumed if both the rule and the
+     * predicate match.
      * 
      * @param rule
      * @param checker
@@ -123,7 +126,8 @@ public class StringSplitter {
     }
 
     /**
-     * Applies the rule over the current string, but does not consume the string even if the rule matches.
+     * Applies the rule over the current string, but does not consume the string
+     * even if the rule matches.
      * 
      * @param rule
      * @return
@@ -144,8 +148,9 @@ public class StringSplitter {
     }
 
     /**
-     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards the result and returns if the value
-     * is present or not, consuming the corresponding string.
+     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards
+     * the result and returns if the value is present or not, consuming the
+     * corresponding string.
      * 
      * @param rule
      * @param predicate
@@ -155,11 +160,10 @@ public class StringSplitter {
         return parseIf(rule, predicate).isPresent();
     }
 
-    // boolean hasWord4 = parser.check(StringSplitterRules::string, string -> string.equals("word4"));
-
     /**
-     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards the result and throws exception if
-     * the value is not present, consuming the corresponding string.
+     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards
+     * the result and throws exception if the value is not present, consuming the
+     * corresponding string.
      * 
      * @param <T>
      * @param rule

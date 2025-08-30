@@ -10,10 +10,8 @@ import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
  * 
  * @author nuno
  *
- * @param <T>
- *            Type of produced object
- * @param <K>
- *            Type of producer object
+ * @param <T> Type of produced object
+ * @param <K> Type of producer object
  */
 public class ProducerEngine<T, K extends ObjectProducer<T>> {
 
@@ -41,33 +39,21 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
         this.consumers = new ArrayList<ConsumerThread<T, ?>>();
     }
 
-    /*
-     * 
-     */
     public ConsumerThread<T, ?> subscribe(Function<ObjectStream<T>, ?> consumeFunction) {
         var thread = new ConsumerThread<>(consumeFunction);
         this.subscribe(thread);
         return thread;
     }
 
-    /*
-     * 
-     */
     private void subscribe(ConsumerThread<T, ?> consumer) {
         this.consumers.add(consumer);
         consumer.provide(this.producer.newChannel());
     }
 
-    /*
-     * 
-     */
     public ConsumerThread<T, ?> getConsumer(int idx) {
         return this.consumers.get(idx);
     }
 
-    /*
-     * 
-     */
     public List<ConsumerThread<T, ?>> getConsumers() {
         return consumers;
     }
@@ -106,7 +92,6 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
                 thread.join();
 
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
     }

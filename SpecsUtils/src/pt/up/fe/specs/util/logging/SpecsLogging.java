@@ -39,12 +39,9 @@ public class SpecsLogging {
         addClassToIgnore(TagLogger.class);
     }
 
-    // private final static Set<String> METHOD_NAME_IGNORE = new HashSet<>(
-    // Arrays.asList("log", "info", "warn", "debug", "deprecated", "warning"));
-
     /**
-     * Adds a class to the ignore list for determining what should appear when a stack trace or source code location is
-     * printed.
+     * Adds a class to the ignore list for determining what should appear when a
+     * stack trace or source code location is printed.
      * 
      * @param aClass
      */
@@ -62,14 +59,14 @@ public class SpecsLogging {
 
     public static String getLogSuffix(LogSourceInfo logSuffix, StackTraceElement[] stackTrace) {
         switch (logSuffix) {
-        case NONE:
-            return "";
-        case SOURCE:
-            return getSourceCodeLocation(stackTrace);
-        case STACK_TRACE:
-            return getStackTrace(stackTrace);
-        default:
-            throw new NotImplementedException(logSuffix);
+            case NONE:
+                return "";
+            case SOURCE:
+                return getSourceCodeLocation(stackTrace);
+            case STACK_TRACE:
+                return getStackTrace(stackTrace);
+            default:
+                throw new NotImplementedException(logSuffix);
         }
     }
 
@@ -130,15 +127,6 @@ public class SpecsLogging {
             return true;
         }
 
-        // Check if in method name ignore list
-        // if (METHOD_NAME_IGNORE.contains(stackTraceElement.getMethodName())) {
-        // return true;
-        // }
-
-        // System.out.println("File name:" + stackTraceElement.getFileName());
-        // System.out.println("Class name:" + stackTraceElement.getClassName());
-        // System.out.println("Method name:" + stackTraceElement.getMethodName());
-
         return false;
     }
 
@@ -146,7 +134,6 @@ public class SpecsLogging {
 
         StringBuilder builder = new StringBuilder();
         builder.append(" -> ");
-        // builder.append("[ ");
         builder.append(s.getClassName());
         builder.append(".");
         builder.append(s.getMethodName());
@@ -155,7 +142,6 @@ public class SpecsLogging {
         builder.append(":");
         builder.append(s.getLineNumber());
         builder.append(")");
-        // builder.append(" ]");
 
         return builder.toString();
     }
@@ -188,7 +174,4 @@ public class SpecsLogging {
         return parsedMessage;
     }
 
-    // public static String parseMessage(Object tag, String msg) {
-    // return parseMessage(tag, msg, Collections.emptyList());
-    // }
 }

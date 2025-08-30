@@ -26,15 +26,8 @@ public class ProgressCounter {
     }
 
     public String next() {
-        // if (this.currentCount <= this.max_count) {
-        // this.currentCount += 1;
-        // } else {
-        // LoggingUtils.msgWarn("Already reached the maximum count (" + this.max_count + ")");
-        // }
-
         int currentCount = nextInt();
 
-        // String message = "(" + this.currentCount + "/" + this.max_count + ")";
         String message = "(" + currentCount + "/" + this.max_count + ")";
 
         return message;

@@ -34,7 +34,7 @@ public interface KeyStringProvider extends KeyProvider<String> {
      * @return a list of string keys provided by the instances
      */
     public static List<String> toList(KeyStringProvider... providers) {
-	return toList(Arrays.asList(providers));
+        return toList(Arrays.asList(providers));
     }
 
     /**
@@ -44,11 +44,11 @@ public interface KeyStringProvider extends KeyProvider<String> {
      * @return a list of string keys provided by the instances
      */
     public static List<String> toList(List<KeyStringProvider> providers) {
-	List<String> strings = new ArrayList<>();
+        List<String> strings = new ArrayList<>();
 
-	providers.forEach(stringProvider -> strings.add(stringProvider.getKey()));
+        providers.forEach(stringProvider -> strings.add(stringProvider.getKey()));
 
-	return strings;
+        return strings;
     }
 
 }

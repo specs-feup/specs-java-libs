@@ -20,20 +20,20 @@ import java.util.List;
 public class IteratorUtils {
 
     public static <K extends TreeNode<K>> List<K> getTokens(Iterator<K> depthIterator,
-	    TokenTester loopTest) {
+            TokenTester loopTest) {
 
-	List<K> tokens = new ArrayList<>();
+        List<K> tokens = new ArrayList<>();
 
-	while (depthIterator.hasNext()) {
-	    K token = depthIterator.next();
-	    if (!loopTest.test(token)) {
-		continue;
-	    }
+        while (depthIterator.hasNext()) {
+            K token = depthIterator.next();
+            if (!loopTest.test(token)) {
+                continue;
+            }
 
-	    tokens.add(token);
-	}
+            tokens.add(token);
+        }
 
-	return tokens;
+        return tokens;
     }
 
     /**
@@ -44,46 +44,47 @@ public class IteratorUtils {
      * @return
      */
     public static <K extends TreeNode<K>> Iterator<K> getDepthIterator(K token, TokenTester loopTest) {
-	return getDepthIterator(token, loopTest, false);
+        return getDepthIterator(token, loopTest, false);
     }
 
     /**
-     * Returns a depth-first iterator for the children of the given token that passes the given test.
+     * Returns a depth-first iterator for the children of the given token that
+     * passes the given test.
      *
      * @param token
      * @return
      */
     public static <K extends TreeNode<K>> Iterator<K> getDepthIterator(K token, TokenTester loopTest,
-	    boolean prune) {
-	// Build list with nodes in depth-first order
-	List<K> depthFirstTokens = new ArrayList<>();
+            boolean prune) {
+        // Build list with nodes in depth-first order
+        List<K> depthFirstTokens = new ArrayList<>();
 
-	for (K child : token.getChildren()) {
-	    getDepthFirstTokens(child, depthFirstTokens, loopTest, prune);
-	}
+        for (K child : token.getChildren()) {
+            getDepthFirstTokens(child, depthFirstTokens, loopTest, prune);
+        }
 
-	return depthFirstTokens.iterator();
+        return depthFirstTokens.iterator();
     }
 
     private static <K extends TreeNode<K>> void getDepthFirstTokens(K token, List<K> currentTokens,
-	    TokenTester loopTest, boolean prune) {
+            TokenTester loopTest, boolean prune) {
 
-	boolean tokenPasses = loopTest.test(token);
+        boolean tokenPasses = loopTest.test(token);
 
-	// Add self token if it passes the test
-	if (tokenPasses) {
-	    currentTokens.add(token);
-	}
+        // Add self token if it passes the test
+        if (tokenPasses) {
+            currentTokens.add(token);
+        }
 
-	// If pruning active and token passed the test, do not process children
-	if (tokenPasses && prune) {
-	    return;
-	}
+        // If pruning active and token passed the test, do not process children
+        if (tokenPasses && prune) {
+            return;
+        }
 
-	// Add children
-	for (K child : token.getChildren()) {
-	    getDepthFirstTokens(child, currentTokens, loopTest, prune);
-	}
+        // Add children
+        for (K child : token.getChildren()) {
+            getDepthFirstTokens(child, currentTokens, loopTest, prune);
+        }
     }
 
     /**
@@ -92,20 +93,8 @@ public class IteratorUtils {
      * @return
      */
     public static <E extends TreeNode<?>> TokenTester newTypeTest(Class<E> type) {
-	return token -> {
-	    return type.isInstance(token);
-	};
+        return token -> {
+            return type.isInstance(token);
+        };
     }
-    /*
-    public static <E extends Enum<E>> TokenTester newTypeTest(final E type) {
-    return token -> {
-        if (!token.getType().equals(type)) {
-    	return false;
-        }
-
-        return true;
-    };
-    }
-    */
-
 }

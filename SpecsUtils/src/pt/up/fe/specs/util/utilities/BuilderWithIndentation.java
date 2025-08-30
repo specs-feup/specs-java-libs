@@ -90,13 +90,6 @@ public class BuilderWithIndentation {
                 .forEach(line -> addLine(line));
 
         return this;
-        /*
-        try (LineStream reader = LineStream.createLineReader(lines)) {
-        for (String line : reader.getIterable()) {
-        	addLineHelper(line);
-        }
-        }
-         */
     }
 
     @Override
@@ -105,7 +98,8 @@ public class BuilderWithIndentation {
     }
 
     /**
-     * Appends the current indentation, the string and a newline to the current buffer.
+     * Appends the current indentation, the string and a newline to the current
+     * buffer.
      *
      * @param line
      */

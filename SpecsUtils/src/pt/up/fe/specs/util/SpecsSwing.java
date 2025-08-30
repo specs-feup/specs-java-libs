@@ -41,7 +41,8 @@ import pt.up.fe.specs.util.swing.MapModel;
 /**
  * Utility methods for Java Swing operations.
  * <p>
- * Provides static helper methods for dialogs, UI helpers, and event handling in Java Swing applications.
+ * Provides static helper methods for dialogs, UI helpers, and event handling in
+ * Java Swing applications.
  * </p>
  *
  * @author Joao Bispo
@@ -127,7 +128,8 @@ public class SpecsSwing {
     }
 
     /**
-     * Gets the system Look and Feel class name, avoiding problematic defaults like Metal and GTK+.
+     * Gets the system Look and Feel class name, avoiding problematic defaults like
+     * Metal and GTK+.
      *
      * @return the class name of the system Look and Feel
      */
@@ -170,10 +172,10 @@ public class SpecsSwing {
     /**
      * Builds TableModels from Maps, splitting into multiple tables if necessary.
      *
-     * @param map the map to convert into TableModels
+     * @param map                 the map to convert into TableModels
      * @param maxElementsPerTable the maximum number of elements per table
-     * @param rowWise whether the table should be row-wise
-     * @param valueClass the class of the values in the map
+     * @param rowWise             whether the table should be row-wise
+     * @param valueClass          the class of the values in the map
      * @return a list of TableModels
      */
     public static <K extends Comparable<? super K>, V> List<TableModel> getTables(Map<K, V> map,
@@ -217,8 +219,8 @@ public class SpecsSwing {
     /**
      * Builds a single TableModel from a Map.
      *
-     * @param map the map to convert into a TableModel
-     * @param rowWise whether the table should be row-wise
+     * @param map        the map to convert into a TableModel
+     * @param rowWise    whether the table should be row-wise
      * @param valueClass the class of the values in the map
      * @return a TableModel
      */
@@ -259,8 +261,8 @@ public class SpecsSwing {
      *
      * @param panel the JPanel to display
      * @param title the title of the JFrame
-     * @param x the x-coordinate of the JFrame
-     * @param y the y-coordinate of the JFrame
+     * @param x     the x-coordinate of the JFrame
+     * @param y     the y-coordinate of the JFrame
      * @return the JFrame containing the panel
      */
     public static JFrame newWindow(JPanel panel, String title, int x, int y) {
@@ -282,8 +284,8 @@ public class SpecsSwing {
      *
      * @param panel the JPanel to display
      * @param title the title of the JFrame
-     * @param x the x-coordinate of the JFrame
-     * @param y the y-coordinate of the JFrame
+     * @param x     the x-coordinate of the JFrame
+     * @param y     the y-coordinate of the JFrame
      * @return the JFrame containing the panel
      */
     public static JFrame showPanel(JPanel panel, String title, int x, int y) {
@@ -299,7 +301,8 @@ public class SpecsSwing {
     }
 
     /**
-     * Checks if the current environment is headless, i.e., no screen is available for displaying Swing components.
+     * Checks if the current environment is headless, i.e., no screen is available
+     * for displaying Swing components.
      *
      * @return true if the environment is headless, false otherwise
      */
@@ -317,7 +320,8 @@ public class SpecsSwing {
     }
 
     /**
-     * Opens a folder containing the file and selects it in a default system file manager.
+     * Opens a folder containing the file and selects it in a default system file
+     * manager.
      *
      * @param file the file to select
      * @return true if the operation was successful, false otherwise
@@ -329,7 +333,7 @@ public class SpecsSwing {
 
         if (SpecsSystem.isWindows()) {
 
-            String[] command = {"explorer.exe", "/select,", file.getAbsoluteFile().getAbsolutePath()};
+            String[] command = { "explorer.exe", "/select,", file.getAbsoluteFile().getAbsolutePath() };
             try {
                 Runtime.getRuntime().exec(command);
             } catch (IOException e) {

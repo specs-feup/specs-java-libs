@@ -42,12 +42,4 @@ public interface EnumLogger<T extends Enum<T>> extends TagLogger<T> {
         return () -> enumClass;
     }
 
-    // default void warn(T tag, String message) {
-    // LogsHelper.logMessage(getClass().getName(), tag, message, (logger, msg) -> logger.warn(msg));
-    // }
-    //
-    // default void warn(String message) {
-    // warn(null, message);
-    // }
-
 }

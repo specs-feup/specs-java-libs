@@ -58,10 +58,6 @@ public class MultiLineCommentRule implements TextParserRule {
             currentLine = iterator.next();
         }
 
-        // If no endIndex found, comment is malformed
-        // Preconditions.checkArgument(endIndex != -1,
-        // "Could not find end of multi-line comment start at '" + filepath + "':" + lineNumber);
-
         return Optional.of(TextElement.newInstance(TextElementType.MULTILINE_COMMENT,
                 lines.stream().collect(Collectors.joining("\n"))));
     }

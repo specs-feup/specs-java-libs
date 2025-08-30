@@ -46,7 +46,7 @@ public class FileResourceManager {
     /**
      * Creates a FileResourceManager instance from an enum class.
      *
-     * @param <E> the type of the enum
+     * @param <E>       the type of the enum
      * @param enumClass the class of the enum
      * @return a new FileResourceManager instance
      */

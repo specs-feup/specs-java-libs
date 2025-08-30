@@ -18,7 +18,6 @@ import java.util.function.Supplier;
 /**
  * Encapsulates an object which has an expensive initialization.
  * 
- * 
  * @author Luis Cubal
  *
  * @param <T>
@@ -48,7 +47,9 @@ public final class ThreadSafeLazy<T> implements Lazy<T> {
         return get();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pt.up.fe.specs.util.Utilities.Lazy#get()
      */
     @Override

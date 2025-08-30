@@ -19,18 +19,18 @@ public class SimpleEvent implements Event {
     private final Object data;
 
     public SimpleEvent(EventId eventId, Object data) {
-	this.eventId = eventId;
-	this.data = data;
+        this.eventId = eventId;
+        this.data = data;
     }
 
     @Override
     public EventId getId() {
-	return this.eventId;
+        return this.eventId;
     }
 
     @Override
     public Object getData() {
-	return this.data;
+        return this.data;
     }
 
 }

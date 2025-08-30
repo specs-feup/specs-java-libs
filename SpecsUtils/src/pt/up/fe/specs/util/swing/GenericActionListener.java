@@ -43,7 +43,7 @@ public class GenericActionListener extends AbstractAction {
      * @return a new instance of GenericActionListener
      */
     public static GenericActionListener newInstance(Consumer<ActionEvent> consumer) {
-	return new GenericActionListener(consumer);
+        return new GenericActionListener(consumer);
     }
 
     /**
@@ -52,7 +52,7 @@ public class GenericActionListener extends AbstractAction {
      * @param consumer the consumer to handle the action event
      */
     public GenericActionListener(Consumer<ActionEvent> consumer) {
-	this.consumer = consumer;
+        this.consumer = consumer;
     }
 
     /**
@@ -62,7 +62,7 @@ public class GenericActionListener extends AbstractAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-	consumer.accept(e);
+        consumer.accept(e);
     }
 
 }

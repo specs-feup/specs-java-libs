@@ -56,7 +56,8 @@ public class AccumulatorMapL<T> {
      * Adds 1 to the count of this element.
      *
      * @param element
-     * @return the current number of added elements. If it is the first time we are adding an element, returns 1
+     * @return the current number of added elements. If it is the first time we are
+     *         adding an element, returns 1
      */
     public Long add(T element) {
         return add(element, 1);
@@ -79,8 +80,6 @@ public class AccumulatorMapL<T> {
         if (value == null) {
             value = 0l;
         }
-
-        // int incrementValue = 1;
 
         value += incrementValue;
         this.accMap.put(element, value);
@@ -105,8 +104,6 @@ public class AccumulatorMapL<T> {
             return false;
         }
 
-        // int incrementValue = 1;
-
         value -= incrementValue;
         this.accMap.put(element, value);
         this.accumulator -= incrementValue;
@@ -125,14 +122,14 @@ public class AccumulatorMapL<T> {
             return 0l;
         }
 
-        // return accMap.get(element);
         return count;
     }
 
     /**
      *
      * @param element
-     * @return the ratio of the given element in relation to the other elements of the table.
+     * @return the ratio of the given element in relation to the other elements of
+     *         the table.
      */
     public double getRatio(T element) {
         Long count = getCount(element);
@@ -146,17 +143,7 @@ public class AccumulatorMapL<T> {
      * @param histogram
      * @return
      */
-    // public int getSum() {
     public long getSum() {
-        /*
-        int accumulator = 0;
-        for(T key : accMap.keySet()) {
-           accumulator += accMap.get(key);
-        }
-        
-        return accumulator;
-         *
-         */
         return this.accumulator;
     }
 

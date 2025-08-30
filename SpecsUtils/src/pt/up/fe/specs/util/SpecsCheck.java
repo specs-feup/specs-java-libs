@@ -20,7 +20,8 @@ import java.util.function.Supplier;
 /**
  * Utility methods for runtime checks and assertions.
  * <p>
- * Provides static helper methods for validating arguments, states, and error conditions at runtime.
+ * Provides static helper methods for validating arguments, states, and error
+ * conditions at runtime.
  * </p>
  *
  * @author Joao Bispo
@@ -31,7 +32,8 @@ public class SpecsCheck {
     }
 
     /**
-     * Validates that a given expression is true. Throws an IllegalArgumentException if the expression is false.
+     * Validates that a given expression is true. Throws an IllegalArgumentException
+     * if the expression is false.
      *
      * @param expression the condition to validate
      * @param supplier   a supplier providing the error message
@@ -43,7 +45,8 @@ public class SpecsCheck {
     }
 
     /**
-     * Ensures that the given reference is not null. Throws a NullPointerException if the reference is null.
+     * Ensures that the given reference is not null. Throws a NullPointerException
+     * if the reference is null.
      *
      * @param reference the object to check for nullity
      * @param supplier  a supplier providing the error message
@@ -59,8 +62,8 @@ public class SpecsCheck {
     }
 
     /**
-     * Validates that the size of the given collection matches the expected size. Throws an IllegalArgumentException if
-     * the sizes do not match.
+     * Validates that the size of the given collection matches the expected size.
+     * Throws an IllegalArgumentException if the sizes do not match.
      *
      * @param collection   the collection to check
      * @param expectedSize the expected size of the collection
@@ -70,8 +73,8 @@ public class SpecsCheck {
     }
 
     /**
-     * Validates that the size of the given array matches the expected size. Throws an IllegalArgumentException if the
-     * sizes do not match.
+     * Validates that the size of the given array matches the expected size. Throws
+     * an IllegalArgumentException if the sizes do not match.
      *
      * @param objects      the array to check
      * @param expectedSize the expected size of the array
@@ -81,12 +84,13 @@ public class SpecsCheck {
     }
 
     /**
-     * Validates that the size of a collection or array matches the expected size. Throws an IllegalArgumentException if
-     * the sizes do not match.
+     * Validates that the size of a collection or array matches the expected size.
+     * Throws an IllegalArgumentException if the sizes do not match.
      *
-     * @param expectedSize      the expected size
-     * @param actualSize        the actual size
-     * @param collectionContents a supplier providing the contents of the collection or array
+     * @param expectedSize       the expected size
+     * @param actualSize         the actual size
+     * @param collectionContents a supplier providing the contents of the collection
+     *                           or array
      */
     private static void checkSize(int expectedSize, int actualSize, Supplier<String> collectionContents) {
         if (actualSize != expectedSize) {
@@ -96,8 +100,8 @@ public class SpecsCheck {
     }
 
     /**
-     * Validates that the size of the given collection is within the specified range. Throws an IllegalArgumentException
-     * if the size is outside the range.
+     * Validates that the size of the given collection is within the specified
+     * range. Throws an IllegalArgumentException if the size is outside the range.
      *
      * @param collection the collection to check
      * @param minSize    the minimum size
@@ -108,25 +112,26 @@ public class SpecsCheck {
     }
 
     /**
-     * Validates that the size of the given array is within the specified range. Throws an IllegalArgumentException if
-     * the size is outside the range.
+     * Validates that the size of the given array is within the specified range.
+     * Throws an IllegalArgumentException if the size is outside the range.
      *
-     * @param objects  the array to check
-     * @param minSize  the minimum size
-     * @param maxSize  the maximum size
+     * @param objects the array to check
+     * @param minSize the minimum size
+     * @param maxSize the maximum size
      */
     public static void checkSizeRange(Object[] objects, int minSize, int maxSize) {
         checkSizeRange(minSize, maxSize, objects.length, () -> Arrays.toString(objects));
     }
 
     /**
-     * Validates that the size of a collection or array is within the specified range. Throws an IllegalArgumentException
-     * if the size is outside the range.
+     * Validates that the size of a collection or array is within the specified
+     * range. Throws an IllegalArgumentException if the size is outside the range.
      *
-     * @param minSize           the minimum size
-     * @param maxSize           the maximum size
-     * @param actualSize        the actual size
-     * @param collectionContents a supplier providing the contents of the collection or array
+     * @param minSize            the minimum size
+     * @param maxSize            the maximum size
+     * @param actualSize         the actual size
+     * @param collectionContents a supplier providing the contents of the collection
+     *                           or array
      */
     private static void checkSizeRange(int minSize, int maxSize, int actualSize, Supplier<String> collectionContents) {
         if (actualSize < minSize || actualSize > maxSize) {
@@ -137,8 +142,8 @@ public class SpecsCheck {
     }
 
     /**
-     * Validates that the given value is an instance of the specified class. Throws an IllegalArgumentException if the
-     * value is not an instance of the class.
+     * Validates that the given value is an instance of the specified class. Throws
+     * an IllegalArgumentException if the value is not an instance of the class.
      *
      * @param value  the object to check
      * @param aClass the class to check against

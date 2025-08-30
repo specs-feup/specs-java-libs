@@ -51,17 +51,17 @@ public class StringHandler extends StreamHandler {
         if (record == null) {
             return;
         }
-        
+
         // Check level filtering
         if (record.getLevel().intValue() < this.getLevel().intValue()) {
             return;
         }
-        
+
         // Check filter if set
         if (this.getFilter() != null && !this.getFilter().isLoggable(record)) {
             return;
         }
-        
+
         this.buffer.append(record.getMessage());
         flush();
     }

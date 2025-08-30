@@ -44,31 +44,22 @@ public class SpecsEnums {
     private static final ThreadLocal<Map<Class<Enum<?>>, EnumHelper<?>>> ENUM_HELPERS = ThreadLocal
             .withInitial(() -> new HashMap<>());
 
-    // private static final ThreadLocal<CachedItems<Class<? extends Enum<?>>, EnumHelper<?>>> ENUM_HELPERS_CACHE =
-    // ThreadLocal
-    // .withInitial(() -> new CachedItems<>(enumClass -> new EnumHelper<?>(enumClass)));
-
     /**
-     * Transforms a String into a constant of the same name in a specific Enum. Returns null instead of throwing
+     * Transforms a String into a constant of the same name in a specific Enum.
+     * Returns null instead of throwing
      * exceptions.
      *
      *
-     * @param <T>
-     *            The Enum where the constant is
-     * @param enumType
-     *            the Class object of the enum type from which to return a constant
-     * @param name
-     *            the name of the constant to return
-     * @return the constant of enum with the same name, or the first element (ordinal order) if not found, with a
+     * @param <T>      The Enum where the constant is
+     * @param enumType the Class object of the enum type from which to return a
+     *                 constant
+     * @param name     the name of the constant to return
+     * @return the constant of enum with the same name, or the first element
+     *         (ordinal order) if not found, with a
      *         warning
      */
     public static <T extends Enum<T>> T valueOf(Class<T> enumType, String name) {
         try {
-            // If enum implements StringProvider, use EnumHelper
-            // if (StringProvider.class.isAssignableFrom(enumType)) {
-            // return getHelper(enumType).fromName(name);
-            // }
-
             return Enum.valueOf(enumType, name);
         } catch (Exception e) {
 
@@ -101,13 +92,12 @@ public class SpecsEnums {
     /**
      * Checks if a specific enum contains a constant with the given name.
      *
-     * @param <T>
-     *            The Enum where the constant is
-     * @param enumType
-     *            the Class object of the enum type from which to return a constant
-     * @param name
-     *            the name of the constant to return
-     * @return true if the Enum contains a constant with the same name, false otherwise
+     * @param <T>      The Enum where the constant is
+     * @param enumType the Class object of the enum type from which to return a
+     *                 constant
+     * @param name     the name of the constant to return
+     * @return true if the Enum contains a constant with the same name, false
+     *         otherwise
      */
     public static <T extends Enum<T>> boolean containsEnum(Class<T> enumType, String name) {
         T enumeration = valueOf(enumType, name);
@@ -120,11 +110,12 @@ public class SpecsEnums {
     }
 
     /**
-     * Builds an unmmodifiable table which maps the string representation of the enum to the enum itself.
+     * Builds an unmmodifiable table which maps the string representation of the
+     * enum to the enum itself.
      *
      * <p>
-     * This table can be useful to get the enum correspondent to a particular option in String format which was
-     * collected from, for example, a config file.
+     * This table can be useful to get the enum correspondent to a particular option
+     * in String format which was collected from, for example, a config file.
      *
      * @param <K>
      * @param values
@@ -141,13 +132,12 @@ public class SpecsEnums {
     }
 
     /**
-     * Builds a n unmodifiable of the enum to the enum itself. If the enum implements StringProvider, .getString() is
-     * used instead of .name().
-     *
+     * Builds a n unmodifiable of the enum to the enum itself. If the enum
+     * implements StringProvider, .getString() is used instead of .name().
      *
      * <p>
-     * This table can be useful to get the enum correspondent to a particular option in String format which was
-     * collected from, for example, a config file.
+     * This table can be useful to get the enum correspondent to a particular option
+     * in String format which was collected from, for example, a config file.
      *
      * @param <K>
      * @param values
@@ -224,18 +214,15 @@ public class SpecsEnums {
     }
 
     public static <T> List<T> extractValues(List<Class<? extends T>> enumClasses) {
-        // List<T> values = new ArrayList<>();
-
         return enumClasses.stream()
                 .map(anEnumClass -> extractValues(anEnumClass))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
-
-        // return values;
     }
 
     /**
-     * If the class represents an enum, returns a list with the values of that enum. Otherwise, returns null.
+     * If the class represents an enum, returns a list with the values of that enum.
+     * Otherwise, returns null.
      *
      * @param anEnumClass
      * @return
@@ -259,8 +246,8 @@ public class SpecsEnums {
     }
 
     /**
-     * If the class represents an enum, returns a list of Strings with the names of the values of that enum. Otherwise,
-     * returns null.
+     * If the class represents an enum, returns a list of Strings with the names of
+     * the values of that enum. Otherwise, returns null.
      *
      * @param anEnumClass
      * @return
@@ -278,24 +265,13 @@ public class SpecsEnums {
     }
 
     /**
-     * Extracts an instance of an interface from a class which represents an Enum which implements such interface.
+     * Extracts an instance of an interface from a class which represents an Enum
+     * which implements such interface.
      *
      * @param enumSetupDefiner
      */
-    // public static <E extends Enum<E>> Object getInterfaceFromEnum(Class<?> enumImplementingInterface,
     public static <E extends Enum<E>> Object getInterfaceFromEnum(Class<E> enumImplementingInterface,
             Class<?> interfaceClass) {
-
-        /*
-        // Check class
-        if (!enumImplementingInterface.isEnum()) {
-        LoggingUtils.getLogger().warning(
-        	    "Class '" + enumImplementingInterface.getName()
-        		    + "' does not represent an enum.");
-        return null;
-        }
-         */
-
         // Build set with interfaces of the given class
         Class<?>[] interfacesArray = enumImplementingInterface.getInterfaces();
         List<Class<?>> interfacesList = Arrays.asList(interfacesArray);
@@ -315,22 +291,20 @@ public class SpecsEnums {
     /**
      *
      * <p>
-     * The following code can be used to dump the complement collection into a newly allocated array:
+     * The following code can be used to dump the complement collection into a newly
+     * allocated array:
      * <p>
      * AnEnum[] y = EnumUtils.getComplement(new AnEnum[0], anEnum1, anEnum2);
      *
      * @param <K>
-     * @param a
-     *            a - the array into which the elements of this set are to be stored, if it is big enough; otherwise, a
-     *            new array of the same runtime type is allocated for this purpose.
+     * @param a      a - the array into which the elements of this set are to be
+     *               stored, if it is big enough; otherwise, a
+     *               new array of the same runtime type is allocated for this
+     *               purpose.
      * @param values
      * @return
      */
-    // public static <K extends Enum<K>> K[] getComplement(K[] a, K... values) {
     public static <K extends Enum<K>> K[] getComplement(K[] a, List<K> values) {
-        // EnumSet<K> originalSet = EnumSet.copyOf(Arrays.asList(values));
-        // Set<K> complementSet = EnumSet.complementOf(originalSet);
-
         EnumSet<K> complementSet = SpecsEnums.getComplement(values);
         return complementSet.toArray(a);
     }
@@ -349,8 +323,6 @@ public class SpecsEnums {
      * @return
      */
     public static <K extends Enum<K> & KeyProvider<T>, T> Map<T, K> buildMap(Class<K> enumClass) {
-
-        // Map<T, K> enumMap = FactoryUtils.newHashMap();
         Map<T, K> enumMap = new LinkedHashMap<>();
         for (K enumConstant : enumClass.getEnumConstants()) {
             enumMap.put(enumConstant.getKey(), enumConstant);
@@ -379,28 +351,6 @@ public class SpecsEnums {
         return enums[0];
     }
 
-    /**
-     * @param class1
-     * @return
-     */
-    /*
-    public static <K extends Enum<K> & ResourceProvider> List<String> getResources(Class<K> enumClass) {
-    K[] enums = enumClass.getEnumConstants();
-
-    List<String> resources = FactoryUtils.newArrayList(enums.length);
-
-    for (K anEnum : enums) {
-        resources.add(anEnum.getResource());
-    }
-
-    return resources;
-    }
-     */
-
-    /**
-     * @param class1
-     * @return
-     */
     public static <T, K extends Enum<K> & KeyProvider<T>> List<T> getKeys(Class<K> enumClass) {
         K[] enums = enumClass.getEnumConstants();
 
@@ -414,8 +364,8 @@ public class SpecsEnums {
     }
 
     /**
-     * Returns a string representing the enum options using ',' as delimiter and '[' and ']' and prefix and suffix,
-     * respectively.
+     * Returns a string representing the enum options using ',' as delimiter and '['
+     * and ']' and prefix and suffix, respectively.
      *
      * @param anEnumClass
      * @return
@@ -432,9 +382,6 @@ public class SpecsEnums {
 
     public static <T extends Enum<T>> T fromName(Class<T> enumType, String name) {
         return SpecsEnums.valueOf(enumType, name);
-        // EnumHelper<?> helper = getHelper(enumType);
-        // return enumType.cast(helper.fromName(name));
-
     }
 
     public static <T extends Enum<T>> T fromOrdinal(Class<T> enumClass, int ordinal) {
@@ -448,9 +395,6 @@ public class SpecsEnums {
         if (helper == null) {
             helper = new EnumHelper<>(enumClass);
             ENUM_HELPERS.get().put((Class<Enum<?>>) enumClass, helper);
-            // System.out.println("CREATED ENUM HELPER FOR " + enumClass);
-        } else {
-            // System.out.println("REUSED ENUM HELPER FOR " + enumClass);
         }
 
         return (EnumHelper<T>) helper;
@@ -464,7 +408,8 @@ public class SpecsEnums {
      *
      * @param <T>
      * @param anEnum
-     * @return the next enum, according to the ordinal order, or the first enum if this one is the last
+     * @return the next enum, according to the ordinal order, or the first enum if
+     *         this one is the last
      */
     public static <T extends Enum<T>> T nextEnum(T anEnum) {
         @SuppressWarnings("unchecked")

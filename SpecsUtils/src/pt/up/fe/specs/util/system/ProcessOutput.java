@@ -51,7 +51,8 @@ public class ProcessOutput<O, E> {
      * @return true if there was an error, false otherwise
      */
     public boolean isError() {
-        // If the return value was anything other than 0, we can assume there was an execution error
+        // If the return value was anything other than 0, we can assume there was an
+        // execution error
         return this.returnValue != 0;
     }
 

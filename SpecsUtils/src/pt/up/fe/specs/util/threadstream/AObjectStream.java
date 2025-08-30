@@ -14,7 +14,8 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
     }
 
     /*
-     * MUST be implemented by children (e.g., may come from a ConcurrentChannel, or Linestream, etc
+     * MUST be implemented by children (e.g., may come from a ConcurrentChannel, or
+     * Linestream, etc
      */
     protected abstract T consumeFromProvider();
 
@@ -38,8 +39,8 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
     public T next() {
 
         /*
-         * First call of getNext is done here instead of the constructor, since 
-         * the channel may block if this ObjectStream is used (as it should) 
+         * First call of getNext is done here instead of the constructor, since
+         * the channel may block if this ObjectStream is used (as it should)
          * to read from a ChannelProducer<T> which executes in another thread
          * which may not have yet been launched
          */

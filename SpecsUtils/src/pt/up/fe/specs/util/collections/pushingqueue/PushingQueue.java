@@ -22,8 +22,9 @@ import java.util.stream.Stream;
  * "Pushing Queue" of fixed size.
  *
  * <p>
- * Elements can only be added at the head of the queue. Every time an element is added, every other elements gets
- * "pushed" (its index increments by one). If an element is added when the queue is full, the last element in the queue
+ * Elements can only be added at the head of the queue. Every time an element is
+ * added, every other elements gets "pushed" (its index increments by one). If
+ * an element is added when the queue is full, the last element in the queue
  * gets dropped.
  *
  * TODO: remove capacity, replace with size
@@ -33,19 +34,17 @@ import java.util.stream.Stream;
 public interface PushingQueue<T> {
 
     /**
-     * Inserts an element at the head of the queue, pushing all other elements one position forward. If the queue is
-     * full, the last element is dropped.
+     * Inserts an element at the head of the queue, pushing all other elements one
+     * position forward. If the queue is full, the last element is dropped.
      *
-     * @param element
-     *            an element to insert in the queue
+     * @param element an element to insert in the queue
      */
     void insertElement(T element);
 
     /**
      * Returns the element at the specified position in this queue.
      *
-     * @param index
-     *            index of the element to return
+     * @param index index of the element to return
      * @return the element at the specified position in this queue
      */
     T getElement(int index);
@@ -68,8 +67,8 @@ public interface PushingQueue<T> {
     Stream<T> stream();
 
     default String toString(Function<T, String> mapper) {
-	return stream()
-		.map(element -> mapper.apply(element))
-		.collect(Collectors.joining(", ", "[", "]"));
+        return stream()
+                .map(element -> mapper.apply(element))
+                .collect(Collectors.joining(", ", "[", "]"));
     }
 }

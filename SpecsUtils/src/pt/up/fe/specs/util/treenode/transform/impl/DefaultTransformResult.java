@@ -20,12 +20,12 @@ public class DefaultTransformResult implements TransformResult {
     private final boolean visitChildren;
 
     public DefaultTransformResult(boolean visitChildren) {
-	this.visitChildren = visitChildren;
+        this.visitChildren = visitChildren;
     }
 
     @Override
     public boolean visitChildren() {
-	return visitChildren;
+        return visitChildren;
     }
 
 }

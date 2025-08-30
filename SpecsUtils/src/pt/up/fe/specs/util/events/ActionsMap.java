@@ -27,24 +27,22 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class ActionsMap {
 
-    // private final Map<Enum<?>, EventAction> actionsMap;
     private final Map<EventId, EventAction> actionsMap;
 
     public ActionsMap() {
-	this.actionsMap = new HashMap<>();
+        this.actionsMap = new HashMap<>();
     }
 
-    // public EventAction putAction(Enum<?> eventId, EventAction action) {
     public EventAction putAction(EventId eventId, EventAction action) {
 
-	EventAction previousAction = this.actionsMap.put(eventId, action);
+        EventAction previousAction = this.actionsMap.put(eventId, action);
 
-	if (previousAction != null) {
-	    SpecsLogs.warn("Event '" + eventId + "' already in table. Replacing action '"
-		    + previousAction + "' with action '" + action + "'");
-	}
+        if (previousAction != null) {
+            SpecsLogs.warn("Event '" + eventId + "' already in table. Replacing action '"
+                    + previousAction + "' with action '" + action + "'");
+        }
 
-	return previousAction;
+        return previousAction;
     }
 
     /**
@@ -53,20 +51,20 @@ public class ActionsMap {
      * @param event
      */
     public void performAction(Event event) {
-	// Get action
-	EventAction action = this.actionsMap.get(event.getId());
+        // Get action
+        EventAction action = this.actionsMap.get(event.getId());
 
-	if (action == null) {
-	    SpecsLogs.warn("Could not find an action for event '" + event.getId() + "'");
-	    return;
-	}
+        if (action == null) {
+            SpecsLogs.warn("Could not find an action for event '" + event.getId() + "'");
+            return;
+        }
 
-	// Execute action
-	action.performAction(event);
+        // Execute action
+        action.performAction(event);
     }
 
     public Set<EventId> getSupportedEvents() {
-	return this.actionsMap.keySet();
+        return this.actionsMap.keySet();
     }
 
 }

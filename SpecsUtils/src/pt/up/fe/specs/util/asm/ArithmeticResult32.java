@@ -20,8 +20,8 @@ package pt.up.fe.specs.util.asm;
 public class ArithmeticResult32 {
 
     public ArithmeticResult32(int result, int carryOut) {
-	this.result = result;
-	this.carryOut = carryOut;
+        this.result = result;
+        this.carryOut = carryOut;
     }
 
     public final int result;

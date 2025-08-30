@@ -38,8 +38,8 @@ class DefaultMessageType implements MessageType {
      * @param category the category of the message type
      */
     public DefaultMessageType(String name, ReportCategory category) {
-	this.name = name;
-	this.category = category;
+        this.name = name;
+        this.category = category;
     }
 
     /**
@@ -49,7 +49,7 @@ class DefaultMessageType implements MessageType {
      */
     @Override
     public String getName() {
-	return this.name;
+        return this.name;
     }
 
     /**
@@ -59,7 +59,7 @@ class DefaultMessageType implements MessageType {
      */
     @Override
     public ReportCategory getMessageCategory() {
-	return this.category;
+        return this.category;
     }
 
 }
