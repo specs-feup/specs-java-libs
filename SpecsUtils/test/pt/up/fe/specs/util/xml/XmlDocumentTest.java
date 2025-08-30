@@ -59,12 +59,11 @@ class XmlDocumentTest {
         }
 
         @Test
-        @DisplayName("Should handle null Document in constructor - BUG: Constructor doesn't validate null")
+        @DisplayName("Should handle null Document in constructor")
         void testNullConstructor() {
-            // BUG: Constructor accepts null without throwing exception
-            XmlDocument xmlDoc = new XmlDocument(null);
-            assertThat(xmlDoc).isNotNull();
-            assertThat(xmlDoc.getNode()).isNull();
+            assertThatThrownBy(() -> new XmlDocument(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessageContaining("non-null Document");
         }
     }
 

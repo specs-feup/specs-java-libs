@@ -104,8 +104,7 @@ class XmlNodesTest {
         @Test
         @DisplayName("Should handle null nodes gracefully")
         void testCreateNullNode() {
-            assertThatThrownBy(() -> XmlNodes.create(null))
-                    .isInstanceOf(NullPointerException.class);
+            assertThat(XmlNodes.create(null)).isNull();
         }
 
         @Test
@@ -180,8 +179,7 @@ class XmlNodesTest {
         @Test
         @DisplayName("Should handle null NodeList")
         void testToListNull() {
-            assertThatThrownBy(() -> XmlNodes.toList(null))
-                    .isInstanceOf(NullPointerException.class);
+            assertThat(XmlNodes.toList(null)).isEmpty();
         }
 
         @Test
@@ -287,8 +285,7 @@ class XmlNodesTest {
         @Test
         @DisplayName("Should handle null node gracefully")
         void testGetDescendantsNull() {
-            assertThatThrownBy(() -> XmlNodes.getDescendants(null))
-                    .isInstanceOf(NullPointerException.class);
+            assertThat(XmlNodes.getDescendants(null)).isEmpty();
         }
 
         @Test

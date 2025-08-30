@@ -76,12 +76,9 @@ class XmlNodeTest {
         }
 
         @Test
-        @DisplayName("Should return null for root parent - BUG: NullPointerException thrown")
+        @DisplayName("Should return null for root parent")
         void testRootParent() {
-            // BUG: XmlNodes.create() doesn't handle null nodes properly
-            assertThatThrownBy(() -> document.getParent())
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Used a null key in FunctionClassMap");
+            assertThat(document.getParent()).isNull();
         }
     }
 
@@ -233,7 +230,7 @@ class XmlNodeTest {
         }
 
         @Test
-        @DisplayName("Should handle null and empty text - BUG: setText(null) results in empty string")
+        @DisplayName("Should handle null and empty text")
         void testNullEmptyText() {
             List<XmlElement> children = rootNode.getElementsByName("child");
             XmlElement child = children.get(0); // Get the first child
@@ -242,8 +239,7 @@ class XmlNodeTest {
             assertThat(child.getText()).isEqualTo("");
 
             child.setText(null);
-            // BUG: Setting null text results in empty string instead of null
-            assertThat(child.getText()).isEqualTo("");
+            assertThat(child.getText()).isNull();
         }
 
         @Test
@@ -326,7 +322,7 @@ class XmlNodeTest {
     class ErrorHandling {
 
         @Test
-        @DisplayName("Should handle write errors gracefully - BUG: Throws RuntimeException")
+        @DisplayName("Should handle write errors gracefully")
         void testWriteError() {
             File readOnlyDir = new File(tempDir, "readonly");
             readOnlyDir.mkdir();
@@ -334,10 +330,8 @@ class XmlNodeTest {
 
             File outputFile = new File(readOnlyDir, "output.xml");
 
-            // BUG: Write errors throw RuntimeException instead of being handled gracefully
-            assertThatThrownBy(() -> rootNode.write(outputFile))
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessageContaining("Could not write XML");
+            // Should not throw after fix; errors are logged
+            rootNode.write(outputFile);
         }
 
         @Test

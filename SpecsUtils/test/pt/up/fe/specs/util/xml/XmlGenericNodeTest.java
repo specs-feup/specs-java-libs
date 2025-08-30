@@ -96,12 +96,11 @@ class XmlGenericNodeTest {
         }
 
         @Test
-        @DisplayName("Should handle null Node in constructor - BUG: Constructor doesn't validate null")
+        @DisplayName("Should handle null Node in constructor")
         void testNullConstructor() {
-            // BUG: Constructor accepts null without throwing exception
-            XmlGenericNode genericNode = new XmlGenericNode(null);
-            assertThat(genericNode).isNotNull();
-            assertThat(genericNode.getNode()).isNull();
+            assertThatThrownBy(() -> new XmlGenericNode(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessageContaining("non-null Node");
         }
     }
 

@@ -51,12 +51,11 @@ class XmlElementTest {
         }
 
         @Test
-        @DisplayName("Should handle null Element in constructor - BUG: Constructor doesn't validate null")
+        @DisplayName("Should handle null Element in constructor")
         void testNullConstructor() {
-            // BUG: Constructor accepts null without throwing exception
-            XmlElement xmlElement = new XmlElement(null);
-            assertThat(xmlElement).isNotNull();
-            assertThat(xmlElement.getNode()).isNull();
+            assertThatThrownBy(() -> new XmlElement(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessageContaining("non-null Element");
         }
     }
 
@@ -123,12 +122,9 @@ class XmlElementTest {
         }
 
         @Test
-        @DisplayName("Should handle null attribute name - BUG: NPE on null name")
+        @DisplayName("Should handle null attribute name")
         void testGetAttributeNullName() {
-            // BUG: getAttribute(null) throws NPE instead of returning empty string
-            assertThatThrownBy(() -> xmlElement.getAttribute(null))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Cannot invoke \"String.compareTo(String)\"");
+            assertThat(xmlElement.getAttribute(null)).isEmpty();
         }
     }
 
