@@ -70,6 +70,9 @@ public class ClassSet<E> {
     }
 
     public boolean add(Class<? extends E> e) {
+        if (e == null) {
+            throw new NullPointerException("Class cannot be null");
+        }
         return classMap.put(e, ClassSet.PRESENT) == null;
     }
 
@@ -83,6 +86,9 @@ public class ClassSet<E> {
      * @return <tt>true</tt> if this set contains the specified element
      */
     public boolean contains(Class<? extends E> aClass) {
+        if (aClass == null) {
+            throw new NullPointerException("Class cannot be null");
+        }
         return classMap.tryGet(aClass).isPresent();
     }
 

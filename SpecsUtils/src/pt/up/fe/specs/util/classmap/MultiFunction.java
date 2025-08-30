@@ -47,11 +47,11 @@ public class MultiFunction<T, R> {
     private final Map<Class<? extends T>, BiFunction<? extends MultiFunction<T, R>, ? extends T, ? extends R>> map;
 
     // Can be null
-    private final R defaultValue;
+    private R defaultValue;
     private final ClassMapper classMapper;
 
     // Can be null
-    private final BiFunction<MultiFunction<T, R>, T, R> defaultFunction;
+    private BiFunction<MultiFunction<T, R>, T, R> defaultFunction;
 
     public MultiFunction() {
         this(new HashMap<>(), null, null, new ClassMapper());
@@ -161,7 +161,7 @@ public class MultiFunction<T, R> {
         }
 
         if (this.defaultFunction != null) {
-            return Optional.of(this.defaultFunction.apply(this, t));
+            return Optional.ofNullable(this.defaultFunction.apply(this, t));
         }
 
         return Optional.empty();
@@ -174,17 +174,21 @@ public class MultiFunction<T, R> {
      * @return
      */
     public MultiFunction<T, R> setDefaultValue(R defaultValue) {
-        return new MultiFunction<>(this.map, defaultValue, null, this.classMapper);
+        this.defaultValue = defaultValue;
+        this.defaultFunction = null;
+        return this;
     }
 
     public <ER extends R> MultiFunction<T, R> setDefaultFunction(Function<T, ER> defaultFunction) {
         return setDefaultFunction((bi, in) -> defaultFunction.apply(in));
     }
 
+    @SuppressWarnings("unchecked")
     public <EM extends MultiFunction<T, R>> MultiFunction<T, R> setDefaultFunction(
             BiFunction<EM, T, R> defaultFunction) {
-
-        return new MultiFunction<>(this.map, null, defaultFunction, this.classMapper);
+        this.defaultValue = null;
+        this.defaultFunction = (BiFunction<MultiFunction<T, R>, T, R>) defaultFunction;
+        return this;
     }
 
 }

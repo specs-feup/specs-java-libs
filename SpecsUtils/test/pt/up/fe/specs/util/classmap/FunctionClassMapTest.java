@@ -220,15 +220,12 @@ public class FunctionClassMapTest {
         }
 
         @Test
-        @DisplayName("Should handle null default function return - BUG: Throws NPE")
+        @DisplayName("Should handle null default function return")
         void testNullDefaultFunctionReturn() {
             numberMap.setDefaultFunction(n -> null);
 
-            // BUG: This throws NPE instead of returning Optional.empty()
-            assertThatThrownBy(() -> numberMap.applyTry(42))
-                    .isInstanceOf(NullPointerException.class);
-            assertThatThrownBy(() -> numberMap.apply(42))
-                    .isInstanceOf(NullPointerException.class);
+            assertThat(numberMap.applyTry(42)).isEmpty();
+            assertThat(numberMap.apply(42)).isNull();
         }
     }
 

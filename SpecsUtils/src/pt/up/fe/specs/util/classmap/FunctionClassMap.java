@@ -147,7 +147,15 @@ public class FunctionClassMap<T, R> {
         }
 
         // Try getting a default value
-        return defaultValue(t);
+        if (this.defaultValue != null) {
+            return Optional.of(this.defaultValue);
+        }
+
+        if (this.defaultFunction != null) {
+            return Optional.ofNullable(this.defaultFunction.apply(t));
+        }
+
+        return Optional.empty();
     }
 
     /**
@@ -165,27 +173,16 @@ public class FunctionClassMap<T, R> {
         }
 
         // Try getting a default value
-        Optional<R> result = defaultValue(t);
-        if (result.isPresent()) {
-            return result.get();
+        if (this.defaultValue != null) {
+            return this.defaultValue;
+        }
+
+        if (this.defaultFunction != null) {
+            return this.defaultFunction.apply(t);
         }
 
         throw new NotImplementedException("Function not defined for class '"
                 + t.getClass() + "'");
-    }
-
-    private Optional<R> defaultValue(T t) {
-        // Both defaults cannot be set at the same time, order does not matter
-
-        if (this.defaultValue != null) {
-            return Optional.of(this.defaultValue);
-        }
-
-        if (this.defaultFunction != null) {
-            return Optional.of(this.defaultFunction.apply(t));
-        }
-
-        return Optional.empty();
     }
 
     /**
