@@ -33,9 +33,16 @@ public class RegisterUtils {
      * Example: if given the string MSR[29], returns 29.
      * 
      * @param registerFlagName
-     * @return
+     * @return the bit position as an Integer, or null if the input is invalid or
+     *         null
      */
     public static Integer decodeFlagBit(String registerFlagName) {
+        // Bug 1 fix: Handle null input gracefully
+        if (registerFlagName == null) {
+            SpecsLogs.getLogger().warning("Cannot decode flag bit from null input");
+            return null;
+        }
+
         int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
 
         if (beginIndex == -1) {
@@ -49,16 +56,36 @@ public class RegisterUtils {
     }
 
     /**
-     * Example: if given the string MSR[29], returns MSR.
+     * Example: if given the string MSR_29, returns MSR.
      * 
-     * @param registerFlagName
-     * @return
+     * Note: For register names containing underscores (e.g.,
+     * "COMPLEX_REG_NAME_15"), this method returns everything before the LAST
+     * underscore ("COMPLEX_REG_NAME"), which is consistent with decodeFlagBit()
+     * that extracts from the last underscore.
+     * This allows round-trip operations to work correctly.
+     * 
+     * @param registerFlagName the flag notation string (e.g., "MSR_29")
+     * @return the register name portion, or null if the input is invalid or null
      */
     public static String decodeFlagName(String registerFlagName) {
+        if (registerFlagName == null) {
+            SpecsLogs.getLogger().warning("Cannot decode flag name from null input");
+            return null;
+        }
+
         int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
         if (beginIndex == -1) {
             SpecsLogs.getLogger().warning("Flag '" + registerFlagName + "' does not represent "
                     + "a valid flag.");
+            return null;
+        }
+
+        // Validate that the bit portion is numeric
+        String bitPortion = registerFlagName.substring(beginIndex + 1);
+        Integer bitValue = SpecsStrings.parseInteger(bitPortion);
+        if (bitValue == null) {
+            SpecsLogs.getLogger().warning("Flag '" + registerFlagName + "' has invalid bit portion: '"
+                    + bitPortion + "' is not a valid integer.");
             return null;
         }
 
