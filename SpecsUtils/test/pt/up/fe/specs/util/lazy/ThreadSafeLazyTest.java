@@ -51,11 +51,11 @@ class ThreadSafeLazyTest {
         }
 
         @Test
-        @DisplayName("Should throw exception for null supplier - BUG: No validation implemented")
+        @DisplayName("Should throw exception for null supplier")
         void testConstructorWithNullSupplier() {
-            // BUG: Constructor doesn't validate null supplier
-            assertThatCode(() -> new ThreadSafeLazy<>(null))
-                    .doesNotThrowAnyException();
+            assertThatThrownBy(() -> new ThreadSafeLazy<>(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Supplier cannot be null");
         }
     }
 

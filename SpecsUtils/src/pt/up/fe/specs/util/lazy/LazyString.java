@@ -15,17 +15,20 @@ package pt.up.fe.specs.util.lazy;
 
 import java.util.function.Supplier;
 
+import pt.up.fe.specs.util.Preconditions;
+
 public class LazyString {
 
     private final Lazy<String> lazyString;
 
     public LazyString(Supplier<String> lazyString) {
-        this.lazyString = Lazy.newInstance(lazyString);
+        this.lazyString = Lazy.newInstance(Preconditions.checkNotNull(lazyString, "Supplier cannot be null"));
     }
 
     @Override
     public String toString() {
-        return lazyString.get();
+        String result = lazyString.get();
+        return result != null ? result : "null";
     }
 
 }

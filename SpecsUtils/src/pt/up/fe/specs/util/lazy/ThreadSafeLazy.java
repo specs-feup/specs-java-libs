@@ -15,6 +15,8 @@ package pt.up.fe.specs.util.lazy;
 
 import java.util.function.Supplier;
 
+import pt.up.fe.specs.util.Preconditions;
+
 /**
  * Encapsulates an object which has an expensive initialization.
  * 
@@ -28,7 +30,7 @@ public final class ThreadSafeLazy<T> implements Lazy<T> {
     private volatile boolean isInitialized;
 
     public ThreadSafeLazy(Supplier<T> provider) {
-        this.provider = provider;
+        this.provider = Preconditions.checkNotNull(provider, "Supplier cannot be null");
         this.value = null;
         this.isInitialized = false;
     }

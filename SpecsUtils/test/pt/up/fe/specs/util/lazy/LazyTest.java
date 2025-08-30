@@ -63,19 +63,19 @@ class LazyTest {
         }
 
         @Test
-        @DisplayName("Should throw exception for null supplier - BUG: No validation implemented")
+        @DisplayName("Should throw exception for null supplier")
         void testNullSupplier() {
-            // BUG: Factory method doesn't validate null supplier
-            assertThatCode(() -> Lazy.newInstance(null))
-                    .doesNotThrowAnyException();
+            assertThatThrownBy(() -> Lazy.newInstance(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Supplier cannot be null");
         }
 
         @Test
-        @DisplayName("Should throw exception for null serializable supplier - BUG: No validation implemented")
+        @DisplayName("Should throw exception for null serializable supplier")
         void testNullSerializableSupplier() {
-            // BUG: Factory method doesn't validate null serializable supplier
-            assertThatCode(() -> Lazy.newInstanceSerializable(null))
-                    .doesNotThrowAnyException();
+            assertThatThrownBy(() -> Lazy.newInstanceSerializable(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("SerializableSupplier cannot be null");
         }
     }
 
