@@ -183,7 +183,8 @@ public interface FileResourceProvider {
 
         // If file does not exist, just write file, store version information and return
         if (!destination.exists()) {
-            prefs.put(key, getVersion());
+            String versionToStore = getVersion() != null ? getVersion() : "1.0";
+            prefs.put(key, versionToStore);
             File outputfile = write(folder);
             return new ResourceWriteData(outputfile, true);
         }
@@ -193,7 +194,8 @@ public interface FileResourceProvider {
 
         // If current version is the same as the version of the resource just return the
         // existing file
-        if (version.equals(getVersion())) {
+        String currentVersion = getVersion() != null ? getVersion() : "1.0";
+        if (version.equals(currentVersion)) {
             return new ResourceWriteData(destination, false);
         }
 
@@ -217,7 +219,8 @@ public interface FileResourceProvider {
 
         // Copy resource and store version information
         File writtenFile = write(folder);
-        prefs.put(key, getVersion());
+        String versionToStore = getVersion() != null ? getVersion() : "1.0";
+        prefs.put(key, versionToStore);
 
         assert writtenFile.equals(destination);
 

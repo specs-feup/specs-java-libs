@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.providers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +57,9 @@ public class Resources {
      * @param resources  a list of resource names
      */
     public Resources(String baseFolder, List<String> resources) {
+        Objects.requireNonNull(baseFolder, "Base folder cannot be null");
+        Objects.requireNonNull(resources, "Resources list cannot be null");
+
         this.baseFolder = baseFolder.endsWith("/") ? baseFolder : baseFolder + "/";
         this.resources = resources;
     }

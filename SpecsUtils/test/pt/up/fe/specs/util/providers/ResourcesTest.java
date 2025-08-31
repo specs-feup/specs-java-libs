@@ -130,14 +130,12 @@ class ResourcesTest {
         }
 
         @Test
-        @DisplayName("should handle null resource list")
-        void shouldHandleNullResourceList() {
-            // Given/When - Constructor accepts null but NPE occurs on getResources()
-            Resources resources = new Resources("base", (List<String>) null);
-
-            // Then - NPE should occur when trying to use the resources
-            assertThatThrownBy(() -> resources.getResources())
-                    .isInstanceOf(NullPointerException.class);
+        @DisplayName("should reject null resource list")
+        void shouldRejectNullResourceList() {
+            // Given/When/Then - Constructor should reject null resource list
+            assertThatThrownBy(() -> new Resources("base", (List<String>) null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessageContaining("Resources list cannot be null");
         }
 
         @Test

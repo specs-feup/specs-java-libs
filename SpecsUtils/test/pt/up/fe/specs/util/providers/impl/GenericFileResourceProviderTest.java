@@ -255,16 +255,14 @@ class GenericFileResourceProviderTest {
         }
 
         @Test
-        @DisplayName("createResourceVersion should work even for already versioned provider due to implementation bug")
-        void createResourceVersionShouldWorkEvenForAlreadyVersionedProviderDueToImplementationBug() {
-            // Given - creating a provider with version, but implementation bug sets
-            // isVersioned to false
+        @DisplayName("createResourceVersion should throw NotImplementedException for versioned provider")
+        void createResourceVersionShouldThrowNotImplementedExceptionForVersionedProvider() {
+            // Given - creating a provider with version, sets isVersioned to true
             GenericFileResourceProvider versionedProvider = GenericFileResourceProvider.newInstance(testFile, "1.0");
 
-            // When/Then - Should succeed due to bug where isVersioned is always false
-            FileResourceProvider result = versionedProvider.createResourceVersion("2.0");
-            assertThat(result).isNotNull();
-            assertThat(result.getVersion()).isEqualTo("2.0");
+            // When/Then - Should throw NotImplementedException for versioned providers
+            assertThatThrownBy(() -> versionedProvider.createResourceVersion("2.0"))
+                    .isInstanceOf(pt.up.fe.specs.util.exceptions.NotImplementedException.class);
         }
 
         @Test
@@ -377,20 +375,15 @@ class GenericFileResourceProviderTest {
         }
 
         @Test
-        @DisplayName("write should handle null target folder")
-        void writeShouldHandleNullTargetFolder() {
+        @DisplayName("write should reject null target folder")
+        void writeShouldRejectNullTargetFolder() {
             // Given
             GenericFileResourceProvider provider = GenericFileResourceProvider.newInstance(testFile);
 
-            // When - Implementation actually allows null folder
-            // new File(null, name) doesn't throw NPE immediately but creates File with null
-            // parent
-            File result = provider.write(null);
-
-            // Then - File is created with null parent directory
-            assertThat(result).isNotNull();
-            assertThat(result.getParent()).isNull();
-            assertThat(result.getName()).isEqualTo(testFile.getName());
+            // When/Then - Should throw IllegalArgumentException for null folder
+            assertThatThrownBy(() -> provider.write(null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Target folder cannot be null");
         }
 
         @Test

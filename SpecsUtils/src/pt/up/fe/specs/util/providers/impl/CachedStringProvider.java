@@ -44,10 +44,10 @@ public class CachedStringProvider implements StringProvider {
                 SpecsLogs.warn("Could not get contents from provider");
             }
 
-            this.contents = Optional.of(string);
+            this.contents = Optional.ofNullable(string);
         }
 
-        return this.contents.get();
+        return this.contents.orElse(null);
     }
 
 }

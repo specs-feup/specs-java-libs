@@ -44,7 +44,7 @@ public class GenericFileResourceProvider implements FileResourceProvider {
             throw new RuntimeException("File '" + existingFile + "' does not exist");
         }
 
-        return new GenericFileResourceProvider(existingFile, version, false);
+        return new GenericFileResourceProvider(existingFile, version, version != null);
     }
 
     private GenericFileResourceProvider(File existingFile, String version, boolean isVersioned) {
@@ -55,6 +55,9 @@ public class GenericFileResourceProvider implements FileResourceProvider {
 
     @Override
     public File write(File folder) {
+        if (folder == null) {
+            throw new IllegalArgumentException("Target folder cannot be null");
+        }
 
         // Check if folder is the same where the file
         if (SpecsIo.getParent(existingFile).equals(folder)) {
