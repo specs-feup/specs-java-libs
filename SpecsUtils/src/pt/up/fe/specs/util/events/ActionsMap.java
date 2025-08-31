@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.events;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import pt.up.fe.specs.util.SpecsLogs;
@@ -34,6 +35,7 @@ public class ActionsMap {
     }
 
     public EventAction putAction(EventId eventId, EventAction action) {
+        Objects.requireNonNull(action, "EventAction cannot be null");
 
         EventAction previousAction = this.actionsMap.put(eventId, action);
 
