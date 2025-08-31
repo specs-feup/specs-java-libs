@@ -32,6 +32,9 @@ public abstract class PersistenceFormat {
      * @return
      */
     public boolean write(File outputFile, Object anObject) {
+        if (outputFile == null) {
+            throw new IllegalArgumentException("Output file cannot be null");
+        }
         String contents = to(anObject);
         return SpecsIo.write(outputFile, contents);
     }
@@ -45,6 +48,12 @@ public abstract class PersistenceFormat {
      * @return
      */
     public <T> T read(File inputFile, Class<T> classOfObject) {
+        if (inputFile == null) {
+            throw new IllegalArgumentException("Input file cannot be null");
+        }
+        if (classOfObject == null) {
+            throw new IllegalArgumentException("Class cannot be null");
+        }
         String contents = SpecsIo.read(inputFile);
         return from(contents, classOfObject);
     }

@@ -366,37 +366,33 @@ class PersistenceFormatTest {
     class ErrorHandlingTests {
 
         @Test
-        @DisplayName("Should handle null file parameter in write with logging")
+        @DisplayName("Should reject null file parameter in write")
         void testWriteNullFile() {
-            // SpecsIo logs warning but doesn't throw exception for null file
-            boolean result = persistenceFormat.write(null, "test");
-
-            assertThat(result).isFalse();
-            // Note: This might be a bug - null file should be validated
+            // PersistenceFormat should validate null file
+            assertThatThrownBy(() -> persistenceFormat.write(null, "test"))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Output file cannot be null");
         }
 
         @Test
-        @DisplayName("Should handle null file parameter in read with logging")
+        @DisplayName("Should reject null file parameter in read")
         void testReadNullFile() {
-            // SpecsIo logs info but doesn't throw exception for null file
-            String result = persistenceFormat.read(null, String.class);
-
-            // Test implementation returns null for null content
-            assertThat(result).isNull();
-            // Note: This might be a bug - null file should be validated
+            // PersistenceFormat should validate null file
+            assertThatThrownBy(() -> persistenceFormat.read(null, String.class))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Input file cannot be null");
         }
 
         @Test
-        @DisplayName("Should handle null class parameter in read gracefully")
+        @DisplayName("Should reject null class parameter in read")
         void testReadNullClass() throws IOException {
             File testFile = new File(tempDir, "test.txt");
             Files.writeString(testFile.toPath(), "test content");
 
-            // Test implementation handles null class parameter without throwing
-            Object result = persistenceFormat.read(testFile, null);
-
-            assertThat(result).isNull();
-            // Note: This might be a bug - null class should be validated
+            // PersistenceFormat should validate null class
+            assertThatThrownBy(() -> persistenceFormat.read(testFile, null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Class cannot be null");
         }
 
         @Test

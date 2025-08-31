@@ -57,6 +57,10 @@ public class ClassMapper {
     }
 
     public boolean add(Class<?> aClass) {
+        if (aClass == null) {
+            throw new IllegalArgumentException("Class cannot be null");
+        }
+
         // Everytime a class is added, invalidate cache
         emptyCache();
 
@@ -64,6 +68,10 @@ public class ClassMapper {
     }
 
     public Optional<Class<?>> map(Class<?> aClass) {
+        if (aClass == null) {
+            throw new IllegalArgumentException("Class cannot be null");
+        }
+
         // Check if correct class has been calculated
         var mapping = cacheFound.get(aClass);
         if (mapping != null) {

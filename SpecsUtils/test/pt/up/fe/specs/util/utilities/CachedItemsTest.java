@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
@@ -75,12 +77,10 @@ class CachedItemsTest {
         @Test
         @DisplayName("Should handle null mapper gracefully")
         void testNullMapper() {
-            // Note: CachedItems accepts null mapper in constructor (Bug 1)
-            // but will fail when get() is called
-            CachedItems<String, String> nullMapperCache = new CachedItems<>(null);
-
-            assertThatThrownBy(() -> nullMapperCache.get("test"))
-                    .isInstanceOf(NullPointerException.class);
+            // CachedItems should validate mapper in constructor
+            assertThatThrownBy(() -> new CachedItems<String, String>(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Mapper function cannot be null");
         }
     }
 
@@ -302,20 +302,42 @@ class CachedItemsTest {
         @Test
         @DisplayName("Should handle concurrent access with thread-safe cache")
         void testThreadSafeConcurrentAccess() throws InterruptedException {
-            CachedItems<Integer, String> threadSafeCache = new CachedItems<>(
-                    key -> "value_" + key, true);
+            final int NUM_THREADS = 5;
+            final int SHARED_KEYS = 3; // Keys: 1, 2, 3
+            final int ACCESSES_PER_KEY = 10; // Each thread accesses each key 10 times
 
-            final int NUM_THREADS = 10;
-            final int OPERATIONS_PER_THREAD = 100;
+            // Use CountDownLatch for perfect synchronization
+            CountDownLatch startLatch = new CountDownLatch(1);
+            CountDownLatch doneLatch = new CountDownLatch(NUM_THREADS);
+
+            // Track mapper calls with thread-safe counter
+            AtomicInteger mapperCalls = new AtomicInteger(0);
+
+            CachedItems<Integer, String> testCache = new CachedItems<>(
+                    key -> {
+                        mapperCalls.incrementAndGet();
+                        return "value_" + key;
+                    }, true);
+
             Thread[] threads = new Thread[NUM_THREADS];
 
             for (int i = 0; i < NUM_THREADS; i++) {
-                final int threadId = i;
                 threads[i] = new Thread(() -> {
-                    for (int j = 0; j < OPERATIONS_PER_THREAD; j++) {
-                        // Each thread accesses a mix of shared and unique keys
-                        threadSafeCache.get(j % 10); // Shared keys 0-9
-                        threadSafeCache.get(threadId * 1000 + j); // Unique keys
+                    try {
+                        // Wait for all threads to be ready
+                        startLatch.await();
+
+                        // Each thread accesses the same keys in the same order
+                        // This creates maximum contention and tests thread safety
+                        for (int accessCount = 0; accessCount < ACCESSES_PER_KEY; accessCount++) {
+                            for (int keyId = 1; keyId <= SHARED_KEYS; keyId++) {
+                                testCache.get(keyId);
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    } finally {
+                        doneLatch.countDown();
                     }
                 });
             }
@@ -325,16 +347,101 @@ class CachedItemsTest {
                 thread.start();
             }
 
+            // Release all threads simultaneously
+            startLatch.countDown();
+
             // Wait for all threads to complete
-            for (Thread thread : threads) {
-                thread.join();
+            doneLatch.await();
+
+            // DETERMINISTIC ASSERTIONS - if thread-safe, these values must be exact
+            int expectedTotalCalls = NUM_THREADS * SHARED_KEYS * ACCESSES_PER_KEY; // 5 * 3 * 10 = 150
+            int expectedCacheMisses = SHARED_KEYS; // 3 (first access to each key)
+            int expectedCacheHits = expectedTotalCalls - expectedCacheMisses; // 150 - 3 = 147
+            int expectedCacheSize = SHARED_KEYS; // 3 keys total
+            int expectedMapperCalls = SHARED_KEYS; // 3 (one per unique key)
+
+            assertThat(testCache.getCacheTotalCalls()).isEqualTo(expectedTotalCalls);
+            assertThat(testCache.getCacheMisses()).isEqualTo(expectedCacheMisses);
+            assertThat(testCache.getCacheHits()).isEqualTo(expectedCacheHits);
+            assertThat(testCache.getCacheSize()).isEqualTo(expectedCacheSize);
+            assertThat(mapperCalls.get()).isEqualTo(expectedMapperCalls);
+
+            // Verify all expected keys are present
+            assertThat(testCache.get(1)).isEqualTo("value_1");
+            assertThat(testCache.get(2)).isEqualTo("value_2");
+            assertThat(testCache.get(3)).isEqualTo("value_3");
+        }
+
+        @Test
+        @DisplayName("Should handle race condition on single key access - most critical thread safety test")
+        void testSingleKeyRaceCondition() throws InterruptedException {
+            final int NUM_THREADS = 20;
+            final int ACCESSES_PER_THREAD = 100;
+            final Integer SHARED_KEY = 42;
+
+            CountDownLatch startLatch = new CountDownLatch(1);
+            CountDownLatch doneLatch = new CountDownLatch(NUM_THREADS);
+
+            AtomicInteger mapperCalls = new AtomicInteger(0);
+
+            CachedItems<Integer, String> testCache = new CachedItems<>(
+                    key -> {
+                        mapperCalls.incrementAndGet();
+                        // Add small delay to increase chance of race condition if not properly
+                        // synchronized
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        return "computed_" + key;
+                    }, true);
+
+            Thread[] threads = new Thread[NUM_THREADS];
+
+            for (int i = 0; i < NUM_THREADS; i++) {
+                threads[i] = new Thread(() -> {
+                    try {
+                        startLatch.await();
+
+                        // All threads hammer the exact same key
+                        for (int j = 0; j < ACCESSES_PER_THREAD; j++) {
+                            String result = testCache.get(SHARED_KEY);
+                            // Verify we always get the same result
+                            assertThat(result).isEqualTo("computed_42");
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    } finally {
+                        doneLatch.countDown();
+                    }
+                });
             }
 
-            // Verify cache consistency - Bug 4: race conditions may cause slight variations
-            assertThat(threadSafeCache.getCacheSize()).isGreaterThan(0);
-            // Allow for some variation due to race conditions
-            long expectedCalls = NUM_THREADS * OPERATIONS_PER_THREAD * 2L;
-            assertThat(threadSafeCache.getCacheTotalCalls()).isBetween(expectedCalls - 50, expectedCalls);
+            // Start all threads
+            for (Thread thread : threads) {
+                thread.start();
+            }
+
+            // Release all threads simultaneously to maximize contention
+            startLatch.countDown();
+
+            // Wait for completion
+            doneLatch.await();
+
+            // CRITICAL DETERMINISTIC ASSERTIONS
+            // If thread-safe, mapper should be called exactly once despite high contention
+            int expectedTotalCalls = NUM_THREADS * ACCESSES_PER_THREAD; // 20 * 100 = 2000
+            int expectedMapperCalls = 1; // Only first access should trigger mapper
+            int expectedCacheMisses = 1; // Only first access is a miss
+            int expectedCacheHits = expectedTotalCalls - 1; // All other accesses are hits
+            int expectedCacheSize = 1; // Only one key in cache
+
+            assertThat(testCache.getCacheTotalCalls()).isEqualTo(expectedTotalCalls);
+            assertThat(mapperCalls.get()).isEqualTo(expectedMapperCalls);
+            assertThat(testCache.getCacheMisses()).isEqualTo(expectedCacheMisses);
+            assertThat(testCache.getCacheHits()).isEqualTo(expectedCacheHits);
+            assertThat(testCache.getCacheSize()).isEqualTo(expectedCacheSize);
         }
 
         @Test

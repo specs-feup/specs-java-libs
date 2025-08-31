@@ -340,8 +340,8 @@ class StringListTest {
         void shouldHandleSingleSemicolon() {
             StringList list = new StringList(";");
 
-            // Due to split() behavior: ";" becomes [] not ["", ""]
-            assertThat(list.getStringList()).isEmpty();
+            // split(-1) preserves empty strings: ";" becomes ["", ""]
+            assertThat(list.getStringList()).containsExactly("", "");
         }
 
         @Test
@@ -361,9 +361,9 @@ class StringListTest {
             String encoded = codec.encode(original);
             StringList decoded = codec.decode(encoded);
 
-            // Due to split() bug: trailing empty string is lost
-            assertThat(decoded.getStringList()).containsExactly("", "a", "", "b");
-            assertThat(decoded).isNotEqualTo(original); // Round-trip fails
+            // split(-1) preserves trailing empty strings, making round-trip symmetric
+            assertThat(decoded.getStringList()).containsExactly("", "a", "", "b", "");
+            assertThat(decoded).isEqualTo(original);
         }
 
         @Test

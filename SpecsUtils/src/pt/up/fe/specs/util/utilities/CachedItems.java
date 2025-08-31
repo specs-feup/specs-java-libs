@@ -15,7 +15,10 @@ package pt.up.fe.specs.util.utilities;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 import pt.up.fe.specs.util.SpecsStrings;
@@ -33,46 +36,64 @@ public class CachedItems<K, V> {
     private final Map<K, V> cache;
     private final Function<K, V> mapper;
 
-    private long cacheHits;
-    private long cacheMisses;
+    private final AtomicLong cacheHits;
+    private final AtomicLong cacheMisses;
 
     public CachedItems(Function<K, V> mapper) {
         this(mapper, false);
     }
 
     public CachedItems(Function<K, V> mapper, boolean isThreadSafe) {
+        this.mapper = Objects.requireNonNull(mapper, "Mapper function cannot be null");
         this.cache = isThreadSafe ? new ConcurrentHashMap<>() : new HashMap<>();
-        this.mapper = mapper;
-        cacheHits = 0;
-        cacheMisses = 0;
+        this.cacheHits = new AtomicLong(0);
+        this.cacheMisses = new AtomicLong(0);
     }
 
     public V get(K key) {
-        // Check if map contains item
-        V object = cache.get(key);
+        // For thread-safe caches, use computeIfAbsent to eliminate race conditions
+        if (cache instanceof ConcurrentHashMap) {
+            // Use AtomicBoolean to track if this was a cache miss
+            AtomicBoolean wasCacheMiss = new AtomicBoolean(false);
 
-        // If object is not in map, create and store it
-        if (object == null) {
-            cacheMisses++;
-            object = mapper.apply(key);
-            cache.put(key, object);
+            V result = ((ConcurrentHashMap<K, V>) cache).computeIfAbsent(key, k -> {
+                wasCacheMiss.set(true);
+                cacheMisses.incrementAndGet();
+                return mapper.apply(k);
+            });
+
+            // If computeIfAbsent didn't call the function, it was a cache hit
+            if (!wasCacheMiss.get()) {
+                cacheHits.incrementAndGet();
+            }
+
+            return result;
         } else {
-            cacheHits++;
-        }
+            // For non-thread-safe caches, use the original logic
+            V object = cache.get(key);
 
-        return object;
+            if (object == null) {
+                cacheMisses.incrementAndGet();
+                object = mapper.apply(key);
+                cache.put(key, object);
+            } else {
+                cacheHits.incrementAndGet();
+            }
+
+            return object;
+        }
     }
 
     public long getCacheHits() {
-        return cacheHits;
+        return cacheHits.get();
     }
 
     public long getCacheMisses() {
-        return cacheMisses;
+        return cacheMisses.get();
     }
 
     public long getCacheTotalCalls() {
-        return cacheMisses + cacheHits;
+        return cacheMisses.get() + cacheHits.get();
     }
 
     public long getCacheSize() {
@@ -80,7 +101,9 @@ public class CachedItems<K, V> {
     }
 
     public double getHitRatio() {
-        return (double) cacheHits / (double) (cacheHits + cacheMisses);
+        long hits = cacheHits.get();
+        long misses = cacheMisses.get();
+        return (double) hits / (double) (hits + misses);
     }
 
     public String getAnalytics() {

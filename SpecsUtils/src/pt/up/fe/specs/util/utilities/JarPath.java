@@ -95,13 +95,20 @@ public class JarPath {
         jarPath = System.getProperty(this.jarPathProperty);
 
         if (jarPath != null) {
-            File jarFolder = SpecsIo.existingFolder(null, jarPath);
+            try {
+                File jarFolder = SpecsIo.existingFolder(null, jarPath);
 
-            if (jarFolder != null) {
-                try {
-                    return Optional.of(jarFolder.getCanonicalPath());
-                } catch (IOException e) {
-                    return Optional.of(jarFolder.getAbsolutePath());
+                if (jarFolder != null) {
+                    try {
+                        return Optional.of(jarFolder.getCanonicalPath());
+                    } catch (IOException e) {
+                        return Optional.of(jarFolder.getAbsolutePath());
+                    }
+                }
+            } catch (RuntimeException e) {
+                if (verbose) {
+                    SpecsLogs.msgInfo("Invalid path '" + jarPath + "' given by system property '" + this.jarPathProperty
+                            + "': " + e.getMessage());
                 }
             }
 

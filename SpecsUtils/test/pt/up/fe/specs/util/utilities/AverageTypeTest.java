@@ -143,9 +143,9 @@ class AverageTypeTest {
 
             double result = AverageType.GEOMETRIC_MEAN.calcAverage(values);
 
-            // Bug 7: Geometric mean implementation is incorrect
-            // For [1, 2, 8], expected cube root of 16 ≈ 2.52, but getting different result
-            // Accepting the actual buggy result for now
+            // Geometric mean of [1, 2, 8] = cube root of (1 × 2 × 8) = cube root of 16 ≈
+            // 2.52
+            // The implementation is actually correct
             assertThat(result).isCloseTo(2.5198420997897464, within(0.001));
         }
 
@@ -156,9 +156,8 @@ class AverageTypeTest {
 
             double result = AverageType.GEOMETRIC_MEAN.calcAverage(values);
 
-            // Bug 7: Geometric mean with zeros produces unexpected results
-            // Expected 0 or very small value, but getting ~2.83
-            assertThat(result).isCloseTo(2.8284271247461903, within(0.001));
+            // Geometric mean with zeros should be 0.0
+            assertThat(result).isEqualTo(0.0);
         }
 
         @Test
@@ -258,14 +257,12 @@ class AverageTypeTest {
         void testEmptyCollections() {
             Collection<Number> emptyCollection = Collections.emptyList();
 
-            // Bug 5 & 13: Empty collections have inconsistent/unexpected behavior
+            // Empty collections should consistently return 0.0 for all types
             assertThat(AverageType.ARITHMETIC_MEAN.calcAverage(emptyCollection)).isEqualTo(0.0);
-            assertThat(AverageType.GEOMETRIC_MEAN.calcAverage(emptyCollection)).isNaN(); // Bug: returns NaN instead of
-                                                                                         // 0.0
+            assertThat(AverageType.ARITHMETIC_MEAN_WITHOUT_ZEROS.calcAverage(emptyCollection)).isEqualTo(0.0);
+            assertThat(AverageType.GEOMETRIC_MEAN.calcAverage(emptyCollection)).isEqualTo(0.0);
+            assertThat(AverageType.GEOMETRIC_MEAN_WITHOUT_ZEROS.calcAverage(emptyCollection)).isEqualTo(0.0);
             assertThat(AverageType.HARMONIC_MEAN.calcAverage(emptyCollection)).isEqualTo(0.0);
-
-            // Note: ARITHMETIC_MEAN_WITHOUT_ZEROS and GEOMETRIC_MEAN_WITHOUT_ZEROS have
-            // inconsistent behavior between test runs - documented as bug
         }
 
         @Test
@@ -273,16 +270,12 @@ class AverageTypeTest {
         void testCollectionWithOnlyZeros() {
             List<Number> zerosOnly = Arrays.asList(0, 0, 0, 0);
 
-            // Bug 6: Some average types have inconsistent behavior for zero-only
-            // collections
-            // Testing only stable types to avoid flaky tests
+            // Zero-only collections should have mathematically correct behavior
             assertThat(AverageType.ARITHMETIC_MEAN.calcAverage(zerosOnly)).isEqualTo(0.0);
-            assertThat(AverageType.GEOMETRIC_MEAN.calcAverage(zerosOnly)).isEqualTo(1.0); // Bug: returns 1.0 instead of
-                                                                                          // 0.0
+            assertThat(AverageType.ARITHMETIC_MEAN_WITHOUT_ZEROS.calcAverage(zerosOnly)).isEqualTo(0.0);
+            assertThat(AverageType.GEOMETRIC_MEAN.calcAverage(zerosOnly)).isEqualTo(0.0); // should be 0.0, not 1.0
+            assertThat(AverageType.GEOMETRIC_MEAN_WITHOUT_ZEROS.calcAverage(zerosOnly)).isEqualTo(0.0);
             assertThat(AverageType.HARMONIC_MEAN.calcAverage(zerosOnly)).isEqualTo(0.0);
-
-            // Note: The "without zeros" versions have inconsistent behavior (0.0 vs NaN)
-            // between test runs - documented as bug
         }
 
         @Test
@@ -372,14 +365,19 @@ class AverageTypeTest {
         @Test
         @DisplayName("Should handle large datasets efficiently")
         void testLargeDatasets() {
-            // Create a smaller dataset to avoid inconsistent behavior
-            List<Number> dataset = Collections.nCopies(100, 5);
+            // Create a larger dataset - should now be stable with fixes
+            List<Number> dataset = Collections.nCopies(10000, 5);
 
-            // Bug 8: Large datasets have inconsistent behavior between test runs
-            // Testing with smaller dataset for stability
+            // Large datasets should now have consistent behavior
             for (AverageType type : AverageType.values()) {
-                double result = type.calcAverage(dataset);
-                assertThat(result).isCloseTo(5.0, within(0.001));
+                try {
+                    double result = type.calcAverage(dataset);
+                    assertThat(result)
+                            .as("Average type %s should return 5.0 for dataset of all 5s, but got %f", type, result)
+                            .isCloseTo(5.0, within(0.001));
+                } catch (Exception e) {
+                    throw new AssertionError("Type " + type + " threw exception: " + e.getMessage(), e);
+                }
             }
         }
 

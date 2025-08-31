@@ -80,7 +80,8 @@ class MemProgressBarUpdaterTest {
         @DisplayName("should throw when progress bar is null")
         void shouldThrowWhenProgressBarIsNull() {
             assertThatThrownBy(() -> new MemProgressBarUpdater(null))
-                    .isInstanceOf(NullPointerException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("JProgressBar cannot be null");
         }
     }
 

@@ -132,8 +132,8 @@ class ScheduledLinesBuilderTest {
 
             String result = builder.toString();
 
-            // Due to bug: maxLevel is size() - 1 = 2 - 1 = 1, so level 2 is not shown
-            assertThat(result).isEqualTo("0 -> element1\n1 -> ---\n");
+            // maxLevel is now Collections.max(keySet()) = 2, so all levels are shown
+            assertThat(result).isEqualTo("0 -> element1\n1 -> ---\n2 -> element3\n");
         }
 
         @Test

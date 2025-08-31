@@ -58,12 +58,10 @@ public class BufferedStringBuilderTest {
         @Test
         @DisplayName("Should handle null file parameter")
         void testNullFile() {
-            // This test expects NullPointerException due to bug #15
-            assertThatThrownBy(() -> {
-                try (BufferedStringBuilder builder = new BufferedStringBuilder(null)) {
-                    // Constructor should validate, but doesn't - close() will fail
-                }
-            }).isInstanceOf(NullPointerException.class);
+            // Constructor should validate null file parameter
+            assertThatThrownBy(() -> new BufferedStringBuilder(null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Output file cannot be null");
         }
 
         @Test
@@ -350,10 +348,13 @@ public class BufferedStringBuilderTest {
         @Test
         @DisplayName("Should handle null object append")
         void testNullObjectAppend() {
-            // This test expects NullPointerException due to bug #14
+            // null objects should be converted to "null" string
             try (BufferedStringBuilder builder = new BufferedStringBuilder(outputFile)) {
-                assertThatThrownBy(() -> builder.append((Object) null))
-                        .isInstanceOf(NullPointerException.class);
+                builder.append((Object) null);
+                builder.close();
+
+                String content = SpecsIo.read(outputFile);
+                assertThat(content).isEqualTo("null");
             }
         }
 

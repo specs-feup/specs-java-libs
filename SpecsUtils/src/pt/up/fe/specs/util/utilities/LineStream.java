@@ -250,7 +250,7 @@ public class LineStream implements AutoCloseable {
             }
 
             // Store line, if active
-            if (lastLines != null) {
+            if (lastLines != null && line != null) {
                 lastLines.insertElement(line);
             }
 

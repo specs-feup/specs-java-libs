@@ -20,6 +20,7 @@
 package pt.up.fe.specs.util.utilities.heapwindow;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.Timer;
@@ -92,7 +93,7 @@ public class HeapBar extends JPanel {
 
     public void run() {
 
-        java.awt.EventQueue.invokeLater(() -> {
+        EventQueue.invokeLater(() -> {
             timer = new Timer();
             timer.scheduleAtFixedRate(buildTimerTask(memProgressBar), 0, HeapBar.UPDATE_PERIOD_MS);
             setVisible(true);
@@ -100,8 +101,11 @@ public class HeapBar extends JPanel {
     }
 
     public void close() {
-        java.awt.EventQueue.invokeLater(() -> {
-            HeapBar.this.timer.cancel();
+        EventQueue.invokeLater(() -> {
+            if (HeapBar.this.timer != null) {
+                HeapBar.this.timer.cancel();
+                HeapBar.this.timer = null;
+            }
             setVisible(false);
         });
     }

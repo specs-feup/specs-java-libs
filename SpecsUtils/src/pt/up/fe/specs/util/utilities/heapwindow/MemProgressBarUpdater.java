@@ -23,6 +23,9 @@ import javax.swing.SwingWorker;
 class MemProgressBarUpdater extends SwingWorker<Object, Object> {
 
     public MemProgressBarUpdater(JProgressBar jProgressBar) {
+        if (jProgressBar == null) {
+            throw new IllegalArgumentException("JProgressBar cannot be null");
+        }
         this.jProgressBar = jProgressBar;
         this.jProgressBar.setStringPainted(true);
     }

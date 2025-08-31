@@ -128,13 +128,12 @@ class ClassMapperTest {
         }
 
         @Test
-        @DisplayName("Should allow adding null class")
+        @DisplayName("Should reject adding null class")
         void testAddNullClass() {
-            // ClassMapper allows null classes (LinkedHashSet behavior)
-            boolean result = classMapper.add(null);
-
-            assertThat(result).isTrue();
-            // Note: This might be a bug - adding null classes is questionable
+            // ClassMapper should validate null classes
+            assertThatThrownBy(() -> classMapper.add(null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Class cannot be null");
         }
     }
 
@@ -287,7 +286,7 @@ class ClassMapperTest {
         }
 
         @Test
-        @DisplayName("Should only check direct interfaces, not interface hierarchy")
+        @DisplayName("Should support interface hierarchy mapping")
         void testInterfaceHierarchy() {
             interface ExtendedInterface extends TestInterface {
             }
@@ -298,9 +297,9 @@ class ClassMapperTest {
 
             Optional<Class<?>> result = classMapper.map(InterfaceImplementor.class);
 
-            // ClassMapper only checks direct interfaces, not extended ones
-            assertThat(result).isEmpty();
-            // Note: This might be a limitation - interface inheritance not fully supported
+            // ClassMapper DOES support interface hierarchy - it recursively checks
+            // interfaces
+            assertThat(result).contains(TestInterface.class);
         }
     }
 
@@ -368,13 +367,12 @@ class ClassMapperTest {
     class EdgeCasesTests {
 
         @Test
-        @DisplayName("Should allow null mapping parameter")
+        @DisplayName("Should reject null mapping parameter")
         void testNullMapping() {
-            // ClassMapper allows null mapping (relies on HashMap.get behavior)
-            Optional<Class<?>> result = classMapper.map(null);
-
-            assertThat(result).isEmpty();
-            // Note: This might be a bug - null inputs should be validated
+            // ClassMapper should validate null classes
+            assertThatThrownBy(() -> classMapper.map(null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Class cannot be null");
         }
 
         @Test

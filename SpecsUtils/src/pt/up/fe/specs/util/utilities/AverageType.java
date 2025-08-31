@@ -39,26 +39,94 @@ public enum AverageType {
     }
 
     public double calcAverage(Collection<Number> values) {
-        if (values == null) {
-            return 0;
+        if (values == null || values.isEmpty()) {
+            return 0.0;
         }
+
+        // Check if all values are zero (for specific handling)
+        boolean allZeros = values.stream().allMatch(n -> n.doubleValue() == 0.0);
+        // Check if any values are zero (for geometric mean)
+        boolean hasZeros = values.stream().anyMatch(n -> n.doubleValue() == 0.0);
 
         switch (this) {
             case ARITHMETIC_MEAN:
                 return SpecsMath.arithmeticMean(values);
+
             case ARITHMETIC_MEAN_WITHOUT_ZEROS:
-                return SpecsMath.arithmeticMeanWithoutZeros(values);
+                if (allZeros) {
+                    return 0.0; // Mathematically correct: mean of zeros is zero
+                }
+                Double result = SpecsMath.arithmeticMeanWithoutZeros(values);
+                return result != null ? result : 0.0; // Handle null returns safely
+
             case GEOMETRIC_MEAN:
+                if (hasZeros) {
+                    return 0.0; // Geometric mean is 0 if any value is 0
+                }
+                // Fixed: Handle large datasets that could cause overflow (Bug 13)
+                if (values.size() > 1000) {
+                    return calculateGeometricMeanSafe(values, false);
+                }
                 return SpecsMath.geometricMean(values, false);
+
             case GEOMETRIC_MEAN_WITHOUT_ZEROS:
+                if (allZeros) {
+                    return 0.0; // No non-zero values to calculate
+                }
+                // Fixed: Handle large datasets that could cause overflow (Bug 13)
+                if (values.size() > 1000) {
+                    return calculateGeometricMeanSafe(values, true);
+                }
                 return SpecsMath.geometricMean(values, true);
+
             case HARMONIC_MEAN:
-                // return CalcUtils.harmonicMean(values);
+                if (hasZeros) {
+                    return 0.0; // Harmonic mean is 0 if any value is 0
+                }
                 return SpecsMath.harmonicMean(values, true);
+
             default:
                 SpecsLogs.getLogger().warning("Case not implemented: '" + this + "'");
                 return 0.0;
         }
+    }
+
+    /**
+     * Calculates geometric mean using logarithmic approach to avoid overflow
+     * with large datasets.
+     * 
+     * @param values       the collection of numbers
+     * @param withoutZeros if true, excludes zeros from calculation
+     * @return the geometric mean
+     */
+    private double calculateGeometricMeanSafe(Collection<Number> values, boolean withoutZeros) {
+        double sumOfLogs = 0.0;
+        int validCount = 0;
+
+        for (Number value : values) {
+            double d = value.doubleValue();
+
+            // Skip zeros if withoutZeros is true
+            if (d == 0.0 && withoutZeros) {
+                continue;
+            }
+
+            // Skip negative values and zeros (geometric mean undefined for negatives, zero
+            // for zeros)
+            if (d > 0.0) {
+                sumOfLogs += Math.log(d);
+                validCount++;
+            }
+        }
+
+        if (validCount == 0) {
+            return 0.0;
+        }
+
+        // Use appropriate count based on withoutZeros flag (matching SpecsMath
+        // behavior)
+        int denominator = withoutZeros ? validCount : values.size();
+        return Math.exp(sumOfLogs / denominator);
     }
 
     private final boolean ignoresZeros;

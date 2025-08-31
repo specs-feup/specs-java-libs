@@ -59,7 +59,7 @@ public class StringList implements Iterable<String> {
             return Collections.emptyList();
         }
 
-        return Arrays.asList(values.split(StringList.DEFAULT_SEPARATOR));
+        return Arrays.asList(values.split(StringList.DEFAULT_SEPARATOR, -1));
     }
 
     public StringList(Collection<String> stringList) {
