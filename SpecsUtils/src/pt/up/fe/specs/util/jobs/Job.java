@@ -46,14 +46,15 @@ public class Job {
 
         int result = this.execution.run();
 
-        if (result != 0) {
-            SpecsLogs.msgInfo("Execution returned with error value '" + result + "'");
-            return -1;
-        }
-
+        // Check for interruption regardless of return code
         if (this.execution.isInterrupted()) {
             this.interrupted = true;
             return 0;
+        }
+
+        if (result != 0) {
+            SpecsLogs.msgInfo("Execution returned with error value '" + result + "'");
+            return -1;
         }
 
         return 0;

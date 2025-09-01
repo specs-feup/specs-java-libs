@@ -507,7 +507,7 @@ public class SpecsIoTest {
             // Execute
             List<File> files = SpecsIo.getFilesRecursive(tempDir.toFile(), Collections.emptyList());
 
-            // Verify - empty extensions list returns all files (actual behavior)
+            // Verify - empty extensions list returns all files
             assertThat(files).hasSize(1);
             assertThat(files.get(0).getName()).isEqualTo("test.txt");
         }
@@ -544,22 +544,22 @@ public class SpecsIoTest {
         void testGetFileMapVariants(@TempDir Path tempDir) throws IOException {
             File subDir = tempDir.resolve("subdir").toFile();
             subDir.mkdirs();
-            
+
             File file1 = tempDir.resolve("file1.txt").toFile();
             File file2 = subDir.toPath().resolve("file2.txt").toFile();
-            
+
             Files.write(file1.toPath(), "content1".getBytes());
             Files.write(file2.toPath(), "content2".getBytes());
-            
+
             List<File> sources = Arrays.asList(tempDir.toFile());
             Set<String> extensions = new HashSet<>(Arrays.asList("txt"));
-            
+
             Map<String, File> fileMap1 = SpecsIo.getFileMap(sources, extensions);
             assertThat(fileMap1).isNotEmpty();
-            
+
             Map<String, File> fileMap2 = SpecsIo.getFileMap(sources, true, extensions);
             assertThat(fileMap2).isNotEmpty();
-            
+
             Collection<String> extCollection = extensions;
             SpecsList<File> files1 = SpecsIo.getFiles(sources, true, extCollection);
             assertThat(files1).isNotEmpty();
@@ -570,7 +570,7 @@ public class SpecsIoTest {
         void testGetParent(@TempDir Path tempDir) {
             File testFile = tempDir.resolve("subdir").resolve("test.txt").toFile();
             testFile.getParentFile().mkdirs();
-            
+
             File parent = SpecsIo.getParent(testFile);
             assertThat(parent).isNotNull();
             assertThat(parent.getName()).isEqualTo("subdir");
@@ -581,7 +581,7 @@ public class SpecsIoTest {
         void testRemoveCommonPath(@TempDir Path tempDir) {
             File path1 = tempDir.resolve("common").resolve("path1").resolve("file1.txt").toFile();
             File path2 = tempDir.resolve("common").resolve("path2").resolve("file2.txt").toFile();
-            
+
             File result = SpecsIo.removeCommonPath(path1, path2);
             assertThat(result).isNotNull();
         }
@@ -616,7 +616,7 @@ public class SpecsIoTest {
         @DisplayName("Test getDepth")
         void testGetDepth(@TempDir Path tempDir) {
             File deepFile = tempDir.resolve("a").resolve("b").resolve("c").resolve("file.txt").toFile();
-            
+
             int depth = SpecsIo.getDepth(deepFile);
             assertThat(depth).isGreaterThan(0);
         }
@@ -626,10 +626,10 @@ public class SpecsIoTest {
         void testExistingPath(@TempDir Path tempDir) throws IOException {
             File existingFile = tempDir.resolve("existing.txt").toFile();
             Files.write(existingFile.toPath(), "content".getBytes());
-            
+
             File result1 = SpecsIo.existingPath(existingFile.getAbsolutePath());
             assertThat(result1).isNotNull();
-            
+
             try {
                 @SuppressWarnings("unused")
                 File result2 = SpecsIo.existingPath("nonexistent/path");
@@ -644,7 +644,7 @@ public class SpecsIoTest {
         @DisplayName("Test resourceCopy variants")
         void testResourceCopyVariants(@TempDir Path tempDir) {
             File destination = tempDir.resolve("resource-copy-test.txt").toFile();
-            
+
             try {
                 File result1 = SpecsIo.resourceCopy("test-resource.txt");
                 assertThat(result1).isNotNull();
@@ -652,7 +652,7 @@ public class SpecsIoTest {
                 // Expected if resource doesn't exist
                 assertThat(e).isNotNull();
             }
-            
+
             try {
                 File result2 = SpecsIo.resourceCopy("test-resource.txt", destination);
                 assertThat(result2).isNotNull();
@@ -660,7 +660,7 @@ public class SpecsIoTest {
                 // Expected if resource doesn't exist
                 assertThat(e).isNotNull();
             }
-            
+
             try {
                 File result3 = SpecsIo.resourceCopy("test-resource.txt", destination, false);
                 assertThat(result3).isNotNull();
@@ -688,7 +688,7 @@ public class SpecsIoTest {
             File testFile = tempDir.resolve("read-test.txt").toFile();
             String content = "test content for reading";
             Files.write(testFile.toPath(), content.getBytes());
-            
+
             String result = SpecsIo.read(testFile.getAbsolutePath());
             assertThat(result).isEqualTo(content);
         }
@@ -699,7 +699,7 @@ public class SpecsIoTest {
             // Test with non-existent resource - should return null
             String resource1 = SpecsIo.getResource("non-existent-resource.txt");
             assertThat(resource1).isNull();
-            
+
             // Test with ResourceProvider for non-existent resource
             ResourceProvider provider = () -> "non-existent-resource.txt";
             String resource2 = SpecsIo.getResource(provider);
@@ -710,7 +710,7 @@ public class SpecsIoTest {
         @DisplayName("Test getPath")
         void testGetPath(@TempDir Path tempDir) {
             File testFile = tempDir.resolve("path-test.txt").toFile();
-            
+
             String path = SpecsIo.getPath(testFile);
             assertThat(path).isNotNull();
             assertThat(path).contains("path-test.txt");
@@ -721,7 +721,7 @@ public class SpecsIoTest {
         void testCloseStreamAfterError(@TempDir Path tempDir) throws IOException {
             File testFile = tempDir.resolve("stream-test.txt").toFile();
             OutputStream stream = new FileOutputStream(testFile);
-            
+
             SpecsIo.closeStreamAfterError(stream);
             // Verify method completes without exception
         }
@@ -732,10 +732,10 @@ public class SpecsIoTest {
             InputStream stream1 = SpecsIo.toInputStream("test string");
             assertThat(stream1).isNotNull();
             stream1.close();
-            
+
             File testFile = tempDir.resolve("input-stream-test.txt").toFile();
             Files.write(testFile.toPath(), "file content".getBytes());
-            
+
             InputStream stream2 = SpecsIo.toInputStream(testFile);
             assertThat(stream2).isNotNull();
             stream2.close();
@@ -789,15 +789,16 @@ public class SpecsIoTest {
         void testResourceCopyVersionedVariants(@TempDir Path tempDir) {
             File destination = tempDir.resolve("versioned-resource.txt").toFile();
             ResourceProvider provider = () -> "test-resource.txt";
-            
+
             try {
-                SpecsIo.ResourceCopyData result1 = SpecsIo.resourceCopyVersioned(provider, destination, false, SpecsIoTest.class);
+                SpecsIo.ResourceCopyData result1 = SpecsIo.resourceCopyVersioned(provider, destination, false,
+                        SpecsIoTest.class);
                 assertThat(result1).isNotNull();
             } catch (RuntimeException e) {
                 // Expected if resource doesn't exist
                 assertThat(e).isNotNull();
             }
-            
+
             try {
                 SpecsIo.ResourceCopyData result2 = SpecsIo.resourceCopyVersioned(provider, destination, false);
                 assertThat(result2).isNotNull();
@@ -813,13 +814,13 @@ public class SpecsIoTest {
             Files.createDirectories(tempDir.resolve("subdir"));
             Files.write(tempDir.resolve("file1.txt"), "content1".getBytes());
             Files.write(tempDir.resolve("subdir").resolve("file2.txt"), "content2".getBytes());
-            
+
             List<File> sources = Arrays.asList(tempDir.toFile());
             Collection<String> extensions = new HashSet<>(Arrays.asList("txt"));
-            
+
             SpecsList<File> files = SpecsIo.getFiles(sources, true, extensions, file -> false);
             assertThat(files).isNotEmpty();
-            
+
             SpecsList<File> files2 = SpecsIo.getFiles(sources, true, extensions);
             assertThat(files2).isNotEmpty();
         }
@@ -844,7 +845,7 @@ public class SpecsIoTest {
             File targetFile = tempDir.resolve("target.txt").toFile();
             File workingFolder = tempDir.resolve("work").toFile();
             workingFolder.mkdirs();
-            
+
             String extendedName = SpecsIo.getExtendedFoldername(baseFolder, targetFile, workingFolder);
             assertThat(extendedName).isNotNull();
         }
@@ -854,7 +855,7 @@ public class SpecsIoTest {
         void testAdditionalUncoveredMethods(@TempDir Path tempDir) throws IOException {
             File testFile = tempDir.resolve("test.txt").toFile();
             Files.write(testFile.toPath(), "content".getBytes());
-            
+
             // Test getCanonicalPath
             String canonicalPath = SpecsIo.getCanonicalPath(testFile);
             assertThat(canonicalPath).isNotNull();
@@ -992,7 +993,7 @@ public class SpecsIoTest {
         @DisplayName("Test MD5 operations")
         void testMd5Operations(@TempDir Path tempDir) throws IOException {
             String content = "test content";
-            
+
             String md5String = SpecsIo.getMd5(content);
             assertThat(md5String).hasSize(32).matches("[a-fA-F0-9]+");
 
@@ -1111,7 +1112,7 @@ public class SpecsIoTest {
             File emptyDir = tempDir.resolve("empty").toFile();
             emptyDir.mkdirs();
             assertThat(SpecsIo.isEmptyFolder(emptyDir)).isTrue();
-            
+
             // Create a file to make directory non-empty
             File testFile = tempDir.resolve("test.txt").toFile();
             testFile.createNewFile();
@@ -1127,17 +1128,17 @@ public class SpecsIoTest {
         @DisplayName("download(URL, File) - 101 instructions")
         void testDownloadUrlToFile(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("downloaded.txt").toFile();
-            
+
             // Create a simple HTTP URL for testing
             String content = "test content for download";
-            
+
             // Test with file:// URL which is more reliable in tests
             File sourceFile = tempDir.resolve("source.txt").toFile();
             SpecsIo.write(sourceFile, content);
             URL fileUrl = sourceFile.toURI().toURL();
-            
+
             SpecsIo.download(fileUrl, targetFile);
-            
+
             assertThat(targetFile).exists();
             assertThat(SpecsIo.read(targetFile)).isEqualTo(content);
         }
@@ -1145,15 +1146,17 @@ public class SpecsIoTest {
         @Test
         @DisplayName("getResourceListing(Class, String) - 91 instructions")
         void testGetResourceListing() throws Exception {
-            // Test getting resource listing - this is an instance method, so we need to create an instance
+            // Test getting resource listing - this is an instance method, so we need to
+            // create an instance
             try {
                 SpecsIo specsIo = new SpecsIo();
                 String[] resources = specsIo.getResourceListing(SpecsIoTest.class, "");
-                
+
                 // Should return some resources (may be empty but shouldn't throw)
                 assertThat(resources).isNotNull();
             } catch (Exception e) {
-                // If method is not accessible or has different signature, just verify it doesn't crash
+                // If method is not accessible or has different signature, just verify it
+                // doesn't crash
                 assertThat(e).isNotNull();
             }
         }
@@ -1162,10 +1165,10 @@ public class SpecsIoTest {
         @DisplayName("resourceCopyVersioned(ResourceProvider, File, boolean, Class) - 75 instructions")
         void testResourceCopyVersioned(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("versioned.txt").toFile();
-            
+
             // Create a test resource provider
             ResourceProvider provider = () -> "test-resource.txt";
-            
+
             try {
                 SpecsIo.resourceCopyVersioned(provider, targetFile, true, SpecsIoTest.class);
             } catch (Exception e) {
@@ -1182,7 +1185,7 @@ public class SpecsIoTest {
             File file2 = tempDir.resolve("file2.txt").toFile();
             file1.createNewFile();
             file2.createNewFile();
-            
+
             // Test alternative method since getFilesPrivate is private
             List<File> files = SpecsIo.getFiles(Arrays.asList(tempDir.toFile()), true, new HashSet<>());
             assertThat(files).isNotNull();
@@ -1195,11 +1198,11 @@ public class SpecsIoTest {
             File txtFile = tempDir.resolve("test.txt").toFile();
             File javaFile = tempDir.resolve("Test.java").toFile();
             File otherFile = tempDir.resolve("other.dat").toFile();
-            
+
             txtFile.createNewFile();
             javaFile.createNewFile();
             otherFile.createNewFile();
-            
+
             try {
                 // Test getting paths with pattern using String filter parameter
                 List<File> paths = SpecsIo.getPathsWithPattern(tempDir.toFile(), "*.txt", true, "");
@@ -1215,7 +1218,7 @@ public class SpecsIoTest {
         @DisplayName("resourceCopy(Class, File, boolean) - 40 instructions")
         void testResourceCopyClassFileBool(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("resource-copy.txt").toFile();
-            
+
             try {
                 SpecsIo.resourceCopy("nonexistent.txt", targetFile, true);
             } catch (Exception e) {
@@ -1228,7 +1231,7 @@ public class SpecsIoTest {
         @DisplayName("resourceCopyWithName(String, String, File) - 40 instructions")
         void testResourceCopyWithName(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("resource-with-name.txt").toFile();
-            
+
             try {
                 SpecsIo.resourceCopyWithName("test-resource", "test.txt", targetFile);
             } catch (Exception e) {
@@ -1242,12 +1245,12 @@ public class SpecsIoTest {
         void testGetFolder(@TempDir Path tempDir) throws Exception {
             File parentDir = tempDir.toFile();
             String folderName = "test-folder";
-            
+
             // Test getting folder that doesn't exist
             File folder = SpecsIo.getFolder(parentDir, folderName, false);
             assertThat(folder).isNotNull();
             assertThat(folder.getName()).isEqualTo(folderName);
-            
+
             // Test creating folder
             File createdFolder = SpecsIo.getFolder(parentDir, folderName, true);
             assertThat(createdFolder).exists();
@@ -1261,14 +1264,14 @@ public class SpecsIoTest {
             File txtFile = tempDir.resolve("test.txt").toFile();
             File javaFile = tempDir.resolve("Test.java").toFile();
             File otherFile = tempDir.resolve("other.dat").toFile();
-            
+
             txtFile.createNewFile();
             javaFile.createNewFile();
             otherFile.createNewFile();
-            
+
             List<File> inputFiles = Arrays.asList(txtFile, javaFile, otherFile);
             Collection<String> extensions = Arrays.asList("txt", "java");
-            
+
             List<File> filtered = SpecsIo.getFilesWithExtension(inputFiles, extensions);
             assertThat(filtered).hasSize(2);
             assertThat(filtered).contains(txtFile, javaFile);
@@ -1282,11 +1285,11 @@ public class SpecsIoTest {
             File txtFile = tempDir.resolve("test.txt").toFile();
             File javaFile = tempDir.resolve("Test.java").toFile();
             File otherFile = tempDir.resolve("other.dat").toFile();
-            
+
             txtFile.createNewFile();
             javaFile.createNewFile();
             otherFile.createNewFile();
-            
+
             // Since getFilesWithPattern is private, test with getFiles instead
             List<File> allFiles = SpecsIo.getFiles(Arrays.asList(tempDir.toFile()), true, new HashSet<>());
             assertThat(allFiles).hasSizeGreaterThanOrEqualTo(3);
@@ -1299,7 +1302,7 @@ public class SpecsIoTest {
             String url = SpecsIo.getUrl("https://www.example.com");
             assertThat(url).isNotNull();
             assertThat(url).isEqualTo("https://www.example.com");
-            
+
             // Test with file path
             String fileUrl = SpecsIo.getUrl("test.txt");
             assertThat(fileUrl).isNotNull();
@@ -1311,7 +1314,7 @@ public class SpecsIoTest {
             // Create a test object and serialize it
             String testString = "test object";
             byte[] bytes = SpecsIo.getBytes(testString);
-            
+
             // Deserialize it back
             Object result = SpecsIo.getObject(bytes);
             assertThat(result).isEqualTo(testString);
@@ -1321,16 +1324,16 @@ public class SpecsIoTest {
         @DisplayName("download(String, File) - 19 instructions")
         void testDownloadStringToFile(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("downloaded2.txt").toFile();
-            
+
             // Create a test file and use its file:// URL
             File sourceFile = tempDir.resolve("source2.txt").toFile();
             String content = "test download content";
             SpecsIo.write(sourceFile, content);
-            
+
             String fileUrl = sourceFile.toURI().toString();
-            
+
             SpecsIo.download(fileUrl, targetFile);
-            
+
             assertThat(targetFile).exists();
             assertThat(SpecsIo.read(targetFile)).isEqualTo(content);
         }
@@ -1354,7 +1357,7 @@ public class SpecsIoTest {
             File testDir = tempDir.toFile();
             File testFile = new File(testDir, "test.txt");
             testFile.createNewFile();
-            
+
             try {
                 List<File> paths = SpecsIo.getPathsWithPattern(testDir, "*.txt", true, "");
                 assertThat(paths).isNotNull();
@@ -1370,11 +1373,11 @@ public class SpecsIoTest {
             File testDir = tempDir.toFile();
             File testFile = new File(testDir, "test.txt");
             testFile.createNewFile();
-            
+
             try {
                 List<File> files1 = SpecsIo.getFilesRecursive(testDir, new ArrayList<String>());
                 assertThat(files1).isNotNull();
-                
+
                 List<File> files2 = SpecsIo.getFilesRecursive(testDir, new ArrayList<String>(), true);
                 assertThat(files2).isNotNull();
             } catch (Exception e) {
@@ -1387,21 +1390,21 @@ public class SpecsIoTest {
         @DisplayName("Should handle resourceCopy variations")
         void testResourceCopyVariations(@TempDir Path tempDir) throws Exception {
             File testFile = tempDir.resolve("test.txt").toFile();
-            
+
             try {
                 File result1 = SpecsIo.resourceCopy("test.txt");
                 assertThat(result1).isNotNull();
-                
+
                 File result2 = SpecsIo.resourceCopy("test.txt", testFile);
                 assertThat(result2).isNotNull();
-                
+
                 File result3 = SpecsIo.resourceCopy("test.txt", testFile, true);
                 assertThat(result3).isNotNull();
-                
+
                 ResourceProvider provider = () -> "test.txt";
                 File result4 = SpecsIo.resourceCopy(provider, testFile);
                 assertThat(result4).isNotNull();
-                
+
                 SpecsIo.ResourceCopyData result5 = SpecsIo.resourceCopyVersioned(provider, testFile, true);
                 assertThat(result5).isNotNull();
             } catch (Exception e) {
@@ -1416,15 +1419,15 @@ public class SpecsIoTest {
             File testDir = tempDir.toFile();
             File testFile = new File(testDir, "test.txt");
             testFile.createNewFile();
-            
+
             try {
                 // Test various lambda-based methods to trigger lambda coverage
                 List<File> files = SpecsIo.getFiles(testDir, "*");
                 assertThat(files).isNotNull();
-                
+
                 String cleanUrl = SpecsIo.cleanUrl("http://example.com/test%20file.txt");
                 assertThat(cleanUrl).isNotNull();
-                
+
             } catch (Exception e) {
                 // Expected for this test
                 assertThat(e).isNotNull();
@@ -1449,7 +1452,7 @@ public class SpecsIoTest {
         @DisplayName("resourceCopy(Collection) - 15 instructions")
         void testResourceCopyCollection() throws Exception {
             Collection<String> resources = Arrays.asList("test1.txt", "test2.txt");
-            
+
             try {
                 SpecsIo.resourceCopy(resources);
             } catch (Exception e) {
@@ -1463,7 +1466,7 @@ public class SpecsIoTest {
         void testGetFile(@TempDir Path tempDir) throws Exception {
             File parentDir = tempDir.toFile();
             String fileName = "test-file.txt";
-            
+
             File file = SpecsIo.getFile(parentDir, fileName);
             assertThat(file).isNotNull();
             assertThat(file.getName()).isEqualTo(fileName);
@@ -1476,12 +1479,12 @@ public class SpecsIoTest {
             // Create test files
             File txtFile = tempDir.resolve("test.txt").toFile();
             txtFile.createNewFile();
-            
+
             File subDir = tempDir.resolve("subdir").toFile();
             subDir.mkdirs();
             File subTxtFile = tempDir.resolve("subdir/sub.txt").toFile();
             subTxtFile.createNewFile();
-            
+
             List<File> files = SpecsIo.getFilesRecursive(tempDir.toFile(), "txt");
             assertThat(files).hasSize(2);
         }
@@ -1493,10 +1496,10 @@ public class SpecsIoTest {
             File javaFile = tempDir.resolve("Test.java").toFile();
             txtFile.createNewFile();
             javaFile.createNewFile();
-            
+
             List<File> inputFiles = Arrays.asList(txtFile, javaFile);
             List<File> txtFiles = SpecsIo.getFilesWithExtension(inputFiles, "txt");
-            
+
             assertThat(txtFiles).hasSize(1);
             assertThat(txtFiles.get(0)).isEqualTo(txtFile);
         }
@@ -1506,10 +1509,10 @@ public class SpecsIoTest {
         void testExistingFileWithParent(@TempDir Path tempDir) throws Exception {
             File testFile = tempDir.resolve("existing.txt").toFile();
             testFile.createNewFile();
-            
+
             File result = SpecsIo.existingFile(tempDir.toFile(), "existing.txt");
             assertThat(result).isEqualTo(testFile);
-            
+
             // Test with non-existing file
             File nonExisting = SpecsIo.existingFile(tempDir.toFile(), "nonexisting.txt");
             assertThat(nonExisting).isNull();
@@ -1520,7 +1523,7 @@ public class SpecsIoTest {
         void testHasResourceClassString() {
             boolean hasResource = SpecsIo.hasResource(SpecsIoTest.class, "nonexistent.txt");
             assertThat(hasResource).isFalse();
-            
+
             // Test with a resource that might exist
             boolean hasClass = SpecsIo.hasResource(SpecsIoTest.class, "");
             // Result may vary, but method should not throw
@@ -1532,7 +1535,7 @@ public class SpecsIoTest {
         void testGetPathsWithPatternStringFilter(@TempDir Path tempDir) throws Exception {
             File txtFile = tempDir.resolve("test.txt").toFile();
             txtFile.createNewFile();
-            
+
             try {
                 List<File> paths = SpecsIo.getPathsWithPattern(tempDir.toFile(), "*.txt", true, "default");
                 assertThat(paths).isNotNull();
@@ -1559,7 +1562,7 @@ public class SpecsIoTest {
             File file2 = tempDir.resolve("file2.txt").toFile();
             file1.createNewFile();
             file2.createNewFile();
-            
+
             List<File> files = SpecsIo.getFiles(tempDir.toFile());
             assertThat(files).hasSize(2);
             assertThat(files).containsExactlyInAnyOrder(file1, file2);
@@ -1569,7 +1572,7 @@ public class SpecsIoTest {
         @DisplayName("resourceToStream(ResourceProvider) - 4 instructions")
         void testResourceToStreamProvider() throws Exception {
             ResourceProvider provider = () -> "nonexistent.txt";
-            
+
             try {
                 InputStream stream = SpecsIo.resourceToStream(provider);
                 if (stream != null) {
@@ -1604,7 +1607,7 @@ public class SpecsIoTest {
         void testGetRelativePathSingle(@TempDir Path tempDir) throws Exception {
             File testFile = tempDir.resolve("test.txt").toFile();
             testFile.createNewFile();
-            
+
             String relativePath = SpecsIo.getRelativePath(testFile);
             assertThat(relativePath).isNotNull();
             assertThat(relativePath).contains("test.txt");
@@ -1615,7 +1618,7 @@ public class SpecsIoTest {
         void testResourceCopyProviderFile(@TempDir Path tempDir) throws Exception {
             ResourceProvider provider = () -> "test.txt";
             File targetFile = tempDir.resolve("target.txt").toFile();
-            
+
             try {
                 SpecsIo.resourceCopy(provider, targetFile);
             } catch (Exception e) {
@@ -1628,7 +1631,7 @@ public class SpecsIoTest {
         @DisplayName("resourceCopy(String, File) - 5 instructions")
         void testResourceCopyStringFile(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("target2.txt").toFile();
-            
+
             try {
                 SpecsIo.resourceCopy("test.txt", targetFile);
             } catch (Exception e) {
@@ -1641,7 +1644,7 @@ public class SpecsIoTest {
         @DisplayName("resourceCopy(String, File, boolean) - 6 instructions")
         void testResourceCopyStringFileBool(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("target3.txt").toFile();
-            
+
             try {
                 SpecsIo.resourceCopy("test.txt", targetFile, true);
             } catch (Exception e) {
@@ -1655,7 +1658,7 @@ public class SpecsIoTest {
         void testResourceCopyVersionedSimple(@TempDir Path tempDir) throws Exception {
             ResourceProvider provider = () -> "test.txt";
             File targetFile = tempDir.resolve("versioned2.txt").toFile();
-            
+
             try {
                 SpecsIo.resourceCopyVersioned(provider, targetFile, true);
             } catch (Exception e) {
@@ -1673,17 +1676,17 @@ public class SpecsIoTest {
         @DisplayName("getPathsWithPattern(File, String, boolean, PathFilter) - 53 instructions")
         void testGetPathsWithPatternWithFilter(@TempDir Path tempDir) throws Exception {
             File testDir = tempDir.toFile();
-            
+
             // Create test structure
             File subDir = SpecsIo.mkdir(testDir, "subdir");
             File file1 = new File(testDir, "test1.txt");
             File file2 = new File(subDir, "test2.txt");
             File file3 = new File(testDir, "readme.md");
-            
+
             SpecsIo.write(file1, "content1");
             SpecsIo.write(file2, "content2");
             SpecsIo.write(file3, "readme");
-            
+
             // Test with PathFilter.FILES (53 instructions, 0% coverage)
             try {
                 List<File> paths = SpecsIo.getPathsWithPattern(testDir, "*.txt", true, PathFilter.FILES);
@@ -1693,7 +1696,7 @@ public class SpecsIoTest {
                 // Method might not work as expected but should provide coverage
                 assertThat(e).isNotNull();
             }
-            
+
             // Test with PathFilter.FOLDERS
             try {
                 List<File> folderPaths = SpecsIo.getPathsWithPattern(testDir, "*", false, PathFilter.FOLDERS);
@@ -1705,18 +1708,18 @@ public class SpecsIoTest {
 
         @Test
         @DisplayName("resourceCopy(Class, File, boolean) - 40 instructions")
-        @SuppressWarnings({"unchecked", "rawtypes"})
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         void testResourceCopyClassFile(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("class_target.txt").toFile();
-            
+
             // Test with null class - should throw RuntimeException
             assertThrows(RuntimeException.class, () -> {
-                SpecsIo.resourceCopy((Class)null, targetFile, true);
+                SpecsIo.resourceCopy((Class) null, targetFile, true);
             });
-            
-            // Test different branch with false flag  
+
+            // Test different branch with false flag
             assertThrows(RuntimeException.class, () -> {
-                SpecsIo.resourceCopy((Class)null, targetFile, false);
+                SpecsIo.resourceCopy((Class) null, targetFile, false);
             });
         }
 
@@ -1724,14 +1727,14 @@ public class SpecsIoTest {
         @DisplayName("getPathsWithPattern(File, String, boolean, String) - 9 instructions")
         void testGetPathsWithPatternStringFilter(@TempDir Path tempDir) throws Exception {
             File testDir = tempDir.toFile();
-            
+
             // Create test files
             File file1 = new File(testDir, "test1.txt");
             File file2 = new File(testDir, "test2.java");
-            
+
             SpecsIo.write(file1, "content1");
             SpecsIo.write(file2, "content2");
-            
+
             try {
                 // This method converts string to PathFilter enum internally
                 List<File> paths = SpecsIo.getPathsWithPattern(testDir, "*.txt", true, "FILES");
@@ -1747,51 +1750,51 @@ public class SpecsIoTest {
         @DisplayName("Test various lambda functions - 9 instructions each")
         void testLambdaFunctions(@TempDir Path tempDir) throws Exception {
             File testDir = tempDir.toFile();
-            
+
             // Create complex directory structure to trigger lambda functions
             File level1 = SpecsIo.mkdir(testDir, "level1");
             File level2 = SpecsIo.mkdir(level1, "level2");
             File level3 = SpecsIo.mkdir(level2, "level3");
-            
+
             // Create files at different levels
             File file1 = new File(level1, "file1.txt");
             File file2 = new File(level2, "file2.java");
             File file3 = new File(level3, "file3.cpp");
-            
+
             SpecsIo.write(file1, "content1");
             SpecsIo.write(file2, "content2");
             SpecsIo.write(file3, "content3");
-            
+
             try {
                 // Test lambda$cleanUrl$18 (6 instructions, 0% coverage)
                 String cleanedUrl = SpecsIo.cleanUrl("http://example.com/path?param=value");
                 assertThat(cleanedUrl).isNotNull();
-                
+
                 // Test lambda$deleteOnExit$16 (4 instructions, 0% coverage)
                 File tempFile = new File(testDir, "tempfile.txt");
                 SpecsIo.write(tempFile, "temp content");
                 SpecsIo.deleteOnExit(tempFile);
                 assertThat(tempFile).exists(); // File should still exist until JVM exit
-                
+
                 // Test lambda$copy$7 (4 instructions, 0% coverage)
                 File source = new File(testDir, "source.txt");
                 File target = new File(testDir, "target.txt");
                 SpecsIo.write(source, "test content");
                 SpecsIo.copy(source, target);
                 assertThat(target).exists();
-                
+
                 // Test various lambda functions in getFilesRecursivePrivate
                 // lambda$getFilesRecursivePrivate$2, $3, $4 (4 instructions each, 0% coverage)
                 List<File> recursiveFiles = SpecsIo.getFilesRecursive(testDir);
                 assertThat(recursiveFiles).hasSize(4); // 3 created + 1 copied
-                
+
                 Collection<String> extensions = Arrays.asList("txt", "java");
                 List<File> filteredFiles = SpecsIo.getFilesRecursive(testDir, extensions);
                 assertThat(filteredFiles).hasSizeGreaterThanOrEqualTo(2);
-                
+
                 List<File> filesWithPredicate = SpecsIo.getFilesRecursive(testDir, extensions, true);
                 assertThat(filesWithPredicate).isNotEmpty();
-                
+
             } catch (Exception e) {
                 // Lambda functions might not be triggered as expected
                 // We're primarily testing for coverage
@@ -1803,7 +1806,7 @@ public class SpecsIoTest {
         @DisplayName("Test complex operations to trigger more lambdas")
         void testComplexOperationsForLambdas(@TempDir Path tempDir) throws Exception {
             File testDir = tempDir.toFile();
-            
+
             try {
                 // Create source directory structure
                 File sourceDir = SpecsIo.mkdir(testDir, "source");
@@ -1812,29 +1815,29 @@ public class SpecsIoTest {
                 File file2 = new File(sourceDir, "file2.java");
                 File subSourceDir = SpecsIo.mkdir(sourceDir, "subdir");
                 File file3 = new File(subSourceDir, "file3.cpp");
-                
+
                 SpecsIo.write(file1, "content1");
                 SpecsIo.write(file2, "content2");
                 SpecsIo.write(file3, "content3");
-                
+
                 // Test operations that should trigger various lambda functions
                 SpecsIo.copyFolderContents(sourceDir, targetDir);
-                
+
                 List<File> targetFiles = SpecsIo.getFiles(targetDir);
                 assertThat(targetFiles).isNotEmpty();
-                
+
                 // Test file mapping operations
                 Set<String> extensionsSet = new HashSet<>(Arrays.asList("txt", "java", "cpp"));
                 Map<String, File> fileMap = SpecsIo.getFileMap(Arrays.asList(sourceDir), true, extensionsSet);
                 assertThat(fileMap).isNotEmpty();
-                
+
                 // Test folder operations
                 List<File> folders = SpecsIo.getFolders(testDir);
                 assertThat(folders).isNotEmpty();
-                
+
                 List<File> foldersRecursive = SpecsIo.getFoldersRecursive(testDir);
                 assertThat(foldersRecursive).isNotEmpty();
-                
+
             } catch (Exception e) {
                 // Complex operations might fail but should provide coverage
                 assertThat(e).isNotNull();
@@ -1845,38 +1848,38 @@ public class SpecsIoTest {
         @DisplayName("Test additional resource and stream operations")
         void testAdditionalResourceOperations(@TempDir Path tempDir) throws Exception {
             File testDir = tempDir.toFile();
-            
+
             try {
                 // Test resourceCopy variations that haven't been fully covered
                 File targetFile1 = new File(testDir, "target1.txt");
                 File targetFile2 = new File(testDir, "target2.txt");
-                
+
                 // Test different resourceCopy methods
                 try {
                     SpecsIo.resourceCopy("nonexistent1.txt");
                 } catch (Exception e) {
                     // Expected
                 }
-                
+
                 try {
                     SpecsIo.resourceCopy("nonexistent2.txt", targetFile1);
                 } catch (Exception e) {
                     // Expected
                 }
-                
+
                 try {
                     SpecsIo.resourceCopy("nonexistent3.txt", targetFile2, true);
                 } catch (Exception e) {
                     // Expected
                 }
-                
+
                 try {
                     ResourceProvider provider = () -> "nonexistent4.txt";
                     SpecsIo.resourceCopy(provider, targetFile1);
                 } catch (Exception e) {
                     // Expected
                 }
-                
+
                 // Test stream operations
                 try {
                     String testContent = "test for stream";
@@ -1889,11 +1892,11 @@ public class SpecsIoTest {
                 } catch (Exception e) {
                     // Stream operations might have issues
                 }
-                
+
                 // Test file operations that might trigger additional lambdas
                 File testFile = new File(testDir, "test.txt");
                 SpecsIo.write(testFile, "test content");
-                
+
                 try {
                     InputStream fileStream = SpecsIo.toInputStream(testFile);
                     if (fileStream != null) {
@@ -1904,13 +1907,13 @@ public class SpecsIoTest {
                 } catch (Exception e) {
                     // File stream operations might have issues
                 }
-                
+
             } catch (Exception e) {
                 // Overall test failure is acceptable for coverage
                 assertThat(e).isNotNull();
             }
         }
-        
+
         @Test
         @DisplayName("Test remaining zero-coverage resource methods")
         void testRemainingZeroCoverageMethods() throws IOException {
@@ -1918,31 +1921,31 @@ public class SpecsIoTest {
             try {
                 // Test resourceCopyVersioned with String provider - 7 instructions
                 assertThatThrownBy(() -> SpecsIo.resourceCopyVersioned(() -> "nonexistent.txt", tempDir, true))
-                    .isInstanceOf(RuntimeException.class);
-                
+                        .isInstanceOf(RuntimeException.class);
+
                 // Test resourceCopy(String, File, boolean) - 6 instructions
                 assertThatThrownBy(() -> SpecsIo.resourceCopy("nonexistent.txt", tempDir, true))
-                    .isInstanceOf(RuntimeException.class);
-                
+                        .isInstanceOf(RuntimeException.class);
+
                 // Test resourceCopy(ResourceProvider, File) - 5 instructions
                 ResourceProvider provider = () -> "nonexistent.txt";
                 assertThatThrownBy(() -> SpecsIo.resourceCopy(provider, tempDir))
-                    .isInstanceOf(RuntimeException.class);
-                
+                        .isInstanceOf(RuntimeException.class);
+
                 // Test resourceCopy(String, File) - 5 instructions
                 assertThatThrownBy(() -> SpecsIo.resourceCopy("nonexistent.txt", tempDir))
-                    .isInstanceOf(RuntimeException.class);
-                
+                        .isInstanceOf(RuntimeException.class);
+
                 // Test resourceCopy(String) - 4 instructions
                 assertThatThrownBy(() -> SpecsIo.resourceCopy("nonexistent.txt"))
-                    .isInstanceOf(RuntimeException.class);
-                    
+                        .isInstanceOf(RuntimeException.class);
+
             } finally {
                 SpecsIo.deleteFolderContents(tempDir);
                 tempDir.delete();
             }
         }
-        
+
         @Test
         @DisplayName("Test cleanUrl lambda function")
         void testCleanUrlLambda() {
@@ -1951,7 +1954,7 @@ public class SpecsIoTest {
             String cleanedUrl = SpecsIo.cleanUrl(url);
             assertThat(cleanedUrl).isEqualTo("https://example.com/path%20with%20spaces");
         }
-        
+
         @Test
         @DisplayName("Test copy lambda functions")
         void testCopyLambdaFunctions() throws IOException {
@@ -1959,32 +1962,32 @@ public class SpecsIoTest {
             try {
                 File sourceFile = new File(tempDir, "source.txt");
                 File targetFile = new File(tempDir, "target.txt");
-                
+
                 assertThat(sourceFile.createNewFile()).isTrue();
-                
+
                 // Test lambda$copy$7(File) - 4 instructions
                 SpecsIo.copy(sourceFile, targetFile);
                 assertThat(targetFile).exists();
-                
+
             } finally {
                 SpecsIo.deleteFolderContents(tempDir);
                 tempDir.delete();
             }
         }
-        
+
         @Test
         @DisplayName("Test deleteOnExit lambda function")
         void testDeleteOnExitLambda() throws IOException {
             File tempFile = Files.createTempFile("test", ".tmp").toFile();
-            
+
             // Test lambda$deleteOnExit$16(File) - 4 instructions
             SpecsIo.deleteOnExit(tempFile);
-            
+
             // The lambda should be called during deleteOnExit
             assertThat(tempFile).exists(); // File still exists but marked for deletion
             tempFile.delete(); // Clean up manually
         }
-        
+
         @Test
         @DisplayName("Test additional high-instruction methods")
         void testHighInstructionMethods() throws IOException {
@@ -1993,34 +1996,34 @@ public class SpecsIoTest {
                 // Test getObject(byte[]) - 22 instructions
                 String testString = "Hello World";
                 byte[] bytes = SpecsIo.getBytes(testString);
-                
+
                 Object result = SpecsIo.getObject(bytes);
                 assertThat(result).isEqualTo(testString);
-                
+
                 // Test extractZipResource(String, File) - 14 instructions
                 assertThatThrownBy(() -> SpecsIo.extractZipResource("nonexistent.zip", tempDir))
-                    .isInstanceOf(RuntimeException.class);
-                
+                        .isInstanceOf(RuntimeException.class);
+
                 // Test additional lambda triggers
                 File sourceFile = new File(tempDir, "source.txt");
                 File targetFile = new File(tempDir, "target.txt");
                 sourceFile.createNewFile();
-                
+
                 // Multiple operations to trigger different lambda functions
                 SpecsIo.copy(sourceFile, targetFile);
                 List<File> files = SpecsIo.getFilesRecursive(tempDir);
                 assertThat(files).hasSizeGreaterThan(0);
-                
+
                 // Test with different extensions
                 List<File> txtFiles = SpecsIo.getFilesRecursive(tempDir, "txt");
                 assertThat(txtFiles).hasSizeGreaterThan(0);
-                
+
             } finally {
                 SpecsIo.deleteFolderContents(tempDir);
                 tempDir.delete();
             }
         }
-        
+
         @Test
         @DisplayName("Test getRelativePath variants")
         void testGetRelativePathVariants() throws IOException {
@@ -2029,81 +2032,81 @@ public class SpecsIoTest {
                 File baseDir = new File(tempDir, "base");
                 File subDir = new File(baseDir, "sub");
                 subDir.mkdirs();
-                
+
                 File targetFile = new File(subDir, "target.txt");
                 targetFile.createNewFile();
-                
+
                 // Test getRelativePath with different overloads - 44 missed instructions
                 String relativePath1 = SpecsIo.getRelativePath(baseDir, targetFile);
                 assertThat(relativePath1).contains("sub");
-                
-                // Test other getRelativePath variants  
+
+                // Test other getRelativePath variants
                 File anotherFile = new File(baseDir, "another.txt");
                 anotherFile.createNewFile();
                 String relativePath2 = SpecsIo.getRelativePath(baseDir, anotherFile);
                 assertThat(relativePath2).contains("another.txt");
-                
+
             } finally {
                 SpecsIo.deleteFolderContents(tempDir);
                 tempDir.delete();
             }
         }
-        
+
         @Test
         @DisplayName("Test parseUrlQuery with edge cases")
         void testParseUrlQueryEdgeCases() throws Exception {
-            // Test parseUrlQuery(URL) with complex scenarios - 60 instructions  
+            // Test parseUrlQuery(URL) with complex scenarios - 60 instructions
             URL url1 = URI.create("https://example.com/path?param1=value1&param2=value2&encoded=%20space").toURL();
             Map<String, String> result1 = SpecsIo.parseUrlQuery(url1);
-            
+
             assertThat(result1).isNotNull();
             assertThat(result1).containsEntry("param1", "value1");
             assertThat(result1).containsEntry("encoded", " space"); // URL decoded
-            
+
             // Test with empty query
             URL url2 = URI.create("https://example.com/path").toURL();
             Map<String, String> result2 = SpecsIo.parseUrlQuery(url2);
             assertThat(result2).isNotNull();
-            
+
             // Test with complex encoding
             URL url3 = URI.create("https://example.com/path?special=%21%40%23%24%25").toURL();
             Map<String, String> result3 = SpecsIo.parseUrlQuery(url3);
             assertThat(result3).isNotNull();
             assertThat(result3).containsEntry("special", "!@#$%");
         }
-        
+
         @Test
         @DisplayName("Test writeAppendHelper method - 27 instructions")
         void testWriteAppendHelper(@TempDir Path tempDir) throws Exception {
             File testFile = tempDir.resolve("writeAppendTest.txt").toFile();
-            
+
             // Test writeAppendHelper with different modes to achieve full coverage
             try {
                 String content1 = "First line\n";
                 String content2 = "Second line\n";
-                
+
                 // Create initial file
                 SpecsIo.write(testFile, content1);
-                
+
                 // Now append using writeAppendHelper indirectly through append
                 SpecsIo.append(testFile, content2);
-                
+
                 String finalContent = SpecsIo.read(testFile);
                 assertThat(finalContent).isEqualTo(content1 + content2);
-                
+
                 // Test with additional content to trigger different code paths
                 String content3 = "Third line\n";
                 SpecsIo.append(testFile, content3);
-                
+
                 String updatedContent = SpecsIo.read(testFile);
                 assertThat(updatedContent).isEqualTo(content1 + content2 + content3);
-                
+
             } catch (Exception e) {
                 // Method should work but may have edge cases
                 assertThat(e).isNotNull();
             }
         }
-        
+
         @Test
         @DisplayName("Test comprehensive copy operations - 28 instructions total")
         void testComprehensiveCopyOperations(@TempDir Path tempDir) throws Exception {
@@ -2112,27 +2115,27 @@ public class SpecsIoTest {
             File targetFile1 = tempDir.resolve("copyTarget1.txt").toFile();
             File targetFile2 = tempDir.resolve("copyTarget2.txt").toFile();
             File targetFile3 = tempDir.resolve("copyTarget3.txt").toFile();
-            
+
             String content = "Copy test content with special characters: éñ中文";
             SpecsIo.write(sourceFile, content);
-            
+
             // Test copy(File, File) - standard copy
             boolean copyResult1 = SpecsIo.copy(sourceFile, targetFile1);
             assertThat(copyResult1).isTrue();
             assertThat(SpecsIo.read(targetFile1)).isEqualTo(content);
-            
+
             // Test copy(File, File, boolean) - copy with verbose flag
             boolean copyResult2 = SpecsIo.copy(sourceFile, targetFile2, true);
             assertThat(copyResult2).isTrue();
             assertThat(SpecsIo.read(targetFile2)).isEqualTo(content);
-            
+
             // Test copy with InputStream to File
             try (InputStream stream = SpecsIo.toInputStream(content)) {
                 boolean copyResult3 = SpecsIo.copy(stream, targetFile3);
                 assertThat(copyResult3).isTrue();
                 assertThat(SpecsIo.read(targetFile3)).isEqualTo(content);
             }
-            
+
             // Test additional copy scenarios to maximize coverage
             File largeContentFile = tempDir.resolve("large.txt").toFile();
             StringBuilder largeContent = new StringBuilder();
@@ -2140,105 +2143,105 @@ public class SpecsIoTest {
                 largeContent.append("Line ").append(i).append(" with content\n");
             }
             SpecsIo.write(largeContentFile, largeContent.toString());
-            
+
             File largeCopyTarget = tempDir.resolve("largeCopy.txt").toFile();
             boolean largeCopyResult = SpecsIo.copy(largeContentFile, largeCopyTarget);
             assertThat(largeCopyResult).isTrue();
             assertThat(SpecsIo.read(largeCopyTarget)).hasSize(largeContent.length());
         }
-        
+
         @Test
         @DisplayName("Test getResourceListing with comprehensive scenarios - 91 instructions")
         void testGetResourceListingComprehensive() throws Exception {
             // Test getResourceListing with various scenarios for maximum coverage
             try {
                 SpecsIo specsIo = new SpecsIo();
-                
+
                 // Test with empty path
                 String[] resources1 = specsIo.getResourceListing(SpecsIoTest.class, "");
                 assertThat(resources1).isNotNull();
-                
+
                 // Test with specific package path
                 String[] resources2 = specsIo.getResourceListing(SpecsIoTest.class, "pt/up/fe/specs/util");
                 assertThat(resources2).isNotNull();
-                
+
                 // Test with non-existent path
                 String[] resources3 = specsIo.getResourceListing(SpecsIoTest.class, "nonexistent/path");
                 assertThat(resources3).isNotNull();
-                
+
                 // Test with different class types
                 String[] resources4 = specsIo.getResourceListing(String.class, "");
                 assertThat(resources4).isNotNull();
-                
+
                 // Test edge cases to maximize coverage
                 String[] resources5 = specsIo.getResourceListing(getClass(), "/");
                 assertThat(resources5).isNotNull();
-                
+
             } catch (Exception e) {
                 // Resource listing may fail in test environment but should provide coverage
                 assertThat(e).isNotNull();
             }
         }
-        
+
         @Test
         @DisplayName("Test resourceCopyVersioned comprehensive scenarios - 75 instructions")
         void testResourceCopyVersionedComprehensive(@TempDir Path tempDir) throws Exception {
             File targetFile1 = tempDir.resolve("versionedTarget1.txt").toFile();
             File targetFile2 = tempDir.resolve("versionedTarget2.txt").toFile();
             File targetFile3 = tempDir.resolve("versionedTarget3.txt").toFile();
-            
+
             // Test multiple ResourceProvider implementations
             ResourceProvider provider1 = () -> "test1.txt";
             ResourceProvider provider2 = () -> "test2.txt";
             ResourceProvider provider3 = () -> "test3.txt";
-            
+
             try {
                 // Test resourceCopyVersioned(ResourceProvider, File, boolean, Class)
                 SpecsIo.ResourceCopyData result1 = SpecsIo.resourceCopyVersioned(
-                    provider1, targetFile1, true, SpecsIoTest.class);
+                        provider1, targetFile1, true, SpecsIoTest.class);
                 assertThat(result1).isNotNull();
             } catch (Exception e) {
                 // Expected if resource doesn't exist
                 assertThat(e).isNotNull();
             }
-            
+
             try {
                 // Test resourceCopyVersioned(ResourceProvider, File, boolean)
                 SpecsIo.ResourceCopyData result2 = SpecsIo.resourceCopyVersioned(
-                    provider2, targetFile2, false);
+                        provider2, targetFile2, false);
                 assertThat(result2).isNotNull();
             } catch (Exception e) {
                 // Expected if resource doesn't exist
                 assertThat(e).isNotNull();
             }
-            
+
             try {
                 // Test with different boolean flag to trigger different code paths
                 SpecsIo.ResourceCopyData result3 = SpecsIo.resourceCopyVersioned(
-                    provider3, targetFile3, true);
+                        provider3, targetFile3, true);
                 assertThat(result3).isNotNull();
             } catch (Exception e) {
                 // Expected if resource doesn't exist
                 assertThat(e).isNotNull();
             }
-            
+
             // Test with null scenarios to trigger exception handling
             try {
                 ResourceProvider nullProvider = () -> null;
                 SpecsIo.ResourceCopyData result4 = SpecsIo.resourceCopyVersioned(
-                    nullProvider, targetFile1, false, String.class);
+                        nullProvider, targetFile1, false, String.class);
                 assertThat(result4).isNotNull();
             } catch (Exception e) {
                 // Expected for null resource
                 assertThat(e).isNotNull();
             }
         }
-        
+
         @Test
         @DisplayName("Test comprehensive zero coverage methods - mixed instructions")
         void testComprehensiveZeroCoverageMethods(@TempDir Path tempDir) throws Exception {
             // Test multiple zero-coverage methods in one comprehensive test
-            
+
             // Test getFilesPrivate equivalent (58 instructions)
             File testDir = tempDir.toFile();
             File subDir = SpecsIo.mkdir(testDir, "subtest");
@@ -2246,110 +2249,110 @@ public class SpecsIoTest {
             File file2 = new File(subDir, "test2.java");
             file1.createNewFile();
             file2.createNewFile();
-            
+
             // Trigger various file operations to hit private methods
             List<File> allFiles = SpecsIo.getFiles(Arrays.asList(testDir), true, new HashSet<>());
             assertThat(allFiles).hasSizeGreaterThanOrEqualTo(2);
-            
+
             // Test getFilesWithExtension(List, Collection) - 33 instructions
             Collection<String> extensions = Arrays.asList("txt", "java");
             List<File> filteredFiles = SpecsIo.getFilesWithExtension(allFiles, extensions);
             assertThat(filteredFiles).hasSize(2);
-            
+
             // Test getFilesWithPattern equivalent - 33 instructions
             List<File> patternFiles = SpecsIo.getFiles(Arrays.asList(testDir), true, Set.of("txt"));
             assertThat(patternFiles).hasSize(1);
-            
+
             // Test getUrl method - 30 instructions
             String url1 = SpecsIo.getUrl("https://example.com/test");
             assertThat(url1).isEqualTo("https://example.com/test");
-            
+
             String url2 = SpecsIo.getUrl("relative/path/file.txt");
             assertThat(url2).isNotNull();
-            
+
             // Test getObject(byte[]) - 29 instructions
             String testObject = "Serializable test string";
             byte[] objectBytes = SpecsIo.getBytes(testObject);
             Object deserializedObject = SpecsIo.getObject(objectBytes);
             assertThat(deserializedObject).isEqualTo(testObject);
-            
+
             // Test download(String, File) - 19 instructions
             File downloadTarget = new File(testDir, "download.txt");
             File sourceForDownload = new File(testDir, "downloadSource.txt");
             SpecsIo.write(sourceForDownload, "Download test content");
-            
+
             String fileUrl = sourceForDownload.toURI().toString();
             SpecsIo.download(fileUrl, downloadTarget);
             assertThat(downloadTarget).exists();
             assertThat(SpecsIo.read(downloadTarget)).isEqualTo("Download test content");
         }
-        
+
         @Test
         @DisplayName("Test final lambda and edge case coverage")
         void testFinalLambdaAndEdgeCases(@TempDir Path tempDir) throws Exception {
             // Final comprehensive test to catch remaining lambda functions and edge cases
-            
+
             File testDir = tempDir.toFile();
-            
+
             // Create complex directory structure to trigger all lambda functions
             File level1 = SpecsIo.mkdir(testDir, "level1");
             File level2 = SpecsIo.mkdir(level1, "level2");
             File level3 = SpecsIo.mkdir(level2, "level3");
-            
+
             // Create files with various extensions
             File txtFile = new File(level1, "file.txt");
             File javaFile = new File(level2, "File.java");
             File cppFile = new File(level3, "file.cpp");
             File pyFile = new File(level1, "script.py");
             File jsFile = new File(level2, "app.js");
-            
+
             SpecsIo.write(txtFile, "text content");
             SpecsIo.write(javaFile, "java content");
             SpecsIo.write(cppFile, "cpp content");
             SpecsIo.write(pyFile, "python content");
             SpecsIo.write(jsFile, "javascript content");
-            
+
             // Trigger lambda functions through comprehensive operations
-            
+
             // Test lambda$getFilesRecursivePrivate variants (4 instructions each)
             List<File> recursiveAll = SpecsIo.getFilesRecursive(testDir);
             assertThat(recursiveAll).hasSize(5);
-            
+
             List<File> recursiveTxt = SpecsIo.getFilesRecursive(testDir, "txt");
             assertThat(recursiveTxt).hasSize(1);
-            
+
             Collection<String> multiExtensions = Arrays.asList("txt", "java", "cpp");
             List<File> recursiveMulti = SpecsIo.getFilesRecursive(testDir, multiExtensions);
             assertThat(recursiveMulti).hasSize(3);
-            
+
             List<File> recursiveWithFlag = SpecsIo.getFilesRecursive(testDir, multiExtensions, true);
             assertThat(recursiveWithFlag).hasSize(3);
-            
+
             // Test lambda$cleanUrl$18 (6 instructions)
             String complexUrl = "https://example.com/path with spaces/file.txt?param=value with spaces";
             String cleanedUrl = SpecsIo.cleanUrl(complexUrl);
             assertThat(cleanedUrl).contains("%20");
-            
+
             // Test lambda$copy$7 (4 instructions)
             File sourceForCopy = new File(testDir, "copySource.txt");
             File targetForCopy = new File(testDir, "copyTarget.txt");
             SpecsIo.write(sourceForCopy, "content for copy lambda");
             SpecsIo.copy(sourceForCopy, targetForCopy);
             assertThat(targetForCopy).exists();
-            
+
             // Test lambda$deleteOnExit$16 (4 instructions)
             File tempForExit = new File(testDir, "tempExit.txt");
             SpecsIo.write(tempForExit, "temp content");
             SpecsIo.deleteOnExit(tempForExit);
             assertThat(tempForExit).exists(); // Still exists until JVM exit
-            
+
             // Test additional edge cases
             Map<String, File> fileMap = SpecsIo.getFileMap(Arrays.asList(testDir), true, Set.of("txt", "java"));
             assertThat(fileMap).isNotEmpty();
-            
+
             List<File> folders = SpecsIo.getFoldersRecursive(testDir);
             assertThat(folders).hasSizeGreaterThanOrEqualTo(3);
-            
+
             // Test resource operations to trigger remaining coverage
             try {
                 Collection<String> resourceNames = Arrays.asList("test1.txt", "test2.txt", "test3.txt");
@@ -2358,18 +2361,18 @@ public class SpecsIoTest {
                 // Expected for non-existent resources
                 assertThat(e).isNotNull();
             }
-            
+
             // Final cleanup to trigger additional operations
             tempForExit.delete(); // Manual cleanup
         }
-        
+
         @Test
         @DisplayName("Test ultra-comprehensive coverage push to 80%")
         void testUltraComprehensiveCoveragePush(@TempDir Path tempDir) throws Exception {
             // Final massive push to hit remaining zero-coverage high-instruction methods
-            
+
             File testDir = tempDir.toFile();
-            
+
             // Test resourceCopyVersioned variants with different parameters
             try {
                 ResourceProvider provider1 = () -> "test-resource-1.txt";
@@ -2377,100 +2380,99 @@ public class SpecsIoTest {
                 File target1 = new File(testDir, "target1.txt");
                 File target2 = new File(testDir, "target2.txt");
                 File target3 = new File(testDir, "target3.txt");
-                
+
                 // Test all 4 overloads of resourceCopyVersioned
                 SpecsIo.resourceCopyVersioned(provider1, target1, true, SpecsIoTest.class);
                 SpecsIo.resourceCopyVersioned(provider2, target2, false);
-                
+
                 // Test resourceCopyWithName - 40 instructions
                 SpecsIo.resourceCopyWithName("test", "resource.txt", target3);
-                
+
             } catch (Exception e) {
                 // Expected for non-existent resources but provides coverage
                 assertThat(e).isNotNull();
             }
-            
+
             // Test getFolder with all code paths - 39 instructions
             File folder1 = SpecsIo.getFolder(testDir, "folder1", false);
             assertThat(folder1).isNotNull();
-            
+
             File folder2 = SpecsIo.getFolder(testDir, "folder2", true);
             assertThat(folder2).exists();
-            
+
             // Test resourceCopy(Class, File, boolean) - 40 instructions
             try {
                 SpecsIo.resourceCopy("test.txt", new File(testDir, "class-target.txt"), true);
             } catch (Exception e) {
                 assertThat(e).isNotNull();
             }
-            
+
             // Test getFilesWithExtension(List, Collection) - 33 instructions
             List<File> testFiles = Arrays.asList(
-                new File(testDir, "test1.txt"),
-                new File(testDir, "test2.java"),
-                new File(testDir, "test3.cpp"),
-                new File(testDir, "test4.py")
-            );
-            
+                    new File(testDir, "test1.txt"),
+                    new File(testDir, "test2.java"),
+                    new File(testDir, "test3.cpp"),
+                    new File(testDir, "test4.py"));
+
             for (File f : testFiles) {
                 SpecsIo.write(f, "content");
             }
-            
+
             Collection<String> extensions = Arrays.asList("txt", "java");
             List<File> filtered = SpecsIo.getFilesWithExtension(testFiles, extensions);
             assertThat(filtered).hasSize(2);
-            
+
             // Test getFilesWithPattern equivalent methods - 33 instructions
             List<File> patternFiles = SpecsIo.getFiles(Arrays.asList(testDir), true, Set.of("txt"));
             assertThat(patternFiles).hasSize(1);
-            
+
             // Test getUrl variants - 30 instructions
             String url1 = SpecsIo.getUrl("https://example.com/path");
             assertThat(url1).isEqualTo("https://example.com/path");
-            
+
             String url2 = SpecsIo.getUrl("relative/file.txt");
             assertThat(url2).isNotNull();
-            
+
             // Test getObject(byte[]) serialization - 29 instructions
             String testObj = "Serialization test object";
             byte[] objBytes = SpecsIo.getBytes(testObj);
             Object deserializedObj = SpecsIo.getObject(objBytes);
             assertThat(deserializedObj).isEqualTo(testObj);
-            
+
             // Test download variants - 19 + 101 instructions
             File downloadSource = new File(testDir, "downloadSource.txt");
             File downloadTarget1 = new File(testDir, "downloadTarget1.txt");
             File downloadTarget2 = new File(testDir, "downloadTarget2.txt");
-            
+
             String downloadContent = "Download test content with special chars: éñ中文";
             SpecsIo.write(downloadSource, downloadContent);
-            
+
             // Test download(String, File) - 19 instructions
             SpecsIo.download(downloadSource.toURI().toString(), downloadTarget1);
             assertThat(downloadTarget1).exists();
             assertThat(SpecsIo.read(downloadTarget1)).isEqualTo(downloadContent);
-            
+
             // Test download(URL, File) - 101 instructions
             SpecsIo.download(downloadSource.toURI().toURL(), downloadTarget2);
             assertThat(downloadTarget2).exists();
             assertThat(SpecsIo.read(downloadTarget2)).isEqualTo(downloadContent);
-            
+
             // Test getResourceListing comprehensively - 91 instructions
             try {
                 SpecsIo specsIo = new SpecsIo();
                 String[] resources1 = specsIo.getResourceListing(SpecsIoTest.class, "");
                 String[] resources2 = specsIo.getResourceListing(String.class, "java/lang");
                 String[] resources3 = specsIo.getResourceListing(Object.class, "/");
-                
+
                 assertThat(resources1).isNotNull();
                 assertThat(resources2).isNotNull();
                 assertThat(resources3).isNotNull();
-                
+
             } catch (Exception e) {
                 // May fail in test environment but provides coverage
                 assertThat(e).isNotNull();
             }
-            
+
             // Test extractZipResource(String, File) - 14 instructions
             try {
                 SpecsIo.extractZipResource("test.zip", testDir);
@@ -2478,69 +2480,70 @@ public class SpecsIoTest {
                 // Expected for non-existent resource
                 assertThat(e).isNotNull();
             }
-            
+
             // Test copy method comprehensively to trigger all paths - 28 instructions
             File copySource = new File(testDir, "copySource.txt");
             File copyTarget1 = new File(testDir, "copyTarget1.txt");
             File copyTarget2 = new File(testDir, "copyTarget2.txt");
             File copyTarget3 = new File(testDir, "copyTarget3.txt");
-            
+
             String copyContent = "Copy content with unicode: 🚀📊💻";
             SpecsIo.write(copySource, copyContent);
-            
+
             // Test different copy overloads
             SpecsIo.copy(copySource, copyTarget1);
             SpecsIo.copy(copySource, copyTarget2, true);
             SpecsIo.copy(copySource, copyTarget3, false);
-            
+
             assertThat(copyTarget1).exists();
             assertThat(copyTarget2).exists();
             assertThat(copyTarget3).exists();
-            
+
             // Test with InputStream copy
             try (InputStream stream = SpecsIo.toInputStream(copyContent)) {
                 File streamTarget = new File(testDir, "streamTarget.txt");
                 SpecsIo.copy(stream, streamTarget);
                 assertThat(streamTarget).exists();
             }
-            
+
             // Test writeAppendHelper through append operations - 27 instructions
             File appendFile = new File(testDir, "appendTest.txt");
             SpecsIo.write(appendFile, "Initial\n");
             SpecsIo.append(appendFile, "Appended1\n");
             SpecsIo.append(appendFile, "Appended2\n");
             SpecsIo.append(appendFile, "Appended3\n");
-            
+
             String appendedContent = SpecsIo.read(appendFile);
-            assertThat(appendedContent).contains("Initial").contains("Appended1").contains("Appended2").contains("Appended3");
-            
+            assertThat(appendedContent).contains("Initial").contains("Appended1").contains("Appended2")
+                    .contains("Appended3");
+
             // Test additional high-value methods to push to 80%
-            
+
             // Test extensive file operations to trigger more lambda coverage
             for (int i = 0; i < 10; i++) {
                 File loopFile = new File(testDir, "loop" + i + ".txt");
                 SpecsIo.write(loopFile, "Loop content " + i);
             }
-            
+
             // Get all files to trigger various lambda functions
             List<File> allFiles = SpecsIo.getFilesRecursive(testDir);
             assertThat(allFiles).hasSizeGreaterThan(10);
-            
+
             // Test with different extension filters
             List<File> txtFiles = SpecsIo.getFilesRecursive(testDir, "txt");
             assertThat(txtFiles).hasSizeGreaterThan(5);
-            
+
             Collection<String> multiExt = Arrays.asList("txt", "java", "cpp");
             List<File> multiFiles = SpecsIo.getFilesRecursive(testDir, multiExt);
             assertThat(multiFiles).hasSize(txtFiles.size() + 2); // txt + java + cpp files
-            
+
             // Final comprehensive operations to maximize coverage
             Map<String, File> fileMap = SpecsIo.getFileMap(Arrays.asList(testDir), true, Set.of("txt"));
             assertThat(fileMap).isNotEmpty();
-            
+
             List<File> folderList = SpecsIo.getFoldersRecursive(testDir);
             assertThat(folderList).isNotEmpty();
-            
+
             // Test edge cases for maximum coverage
             try {
                 SpecsIo.copy(new File("nonexistent.txt"), new File(testDir, "nonexistent-target.txt"));
@@ -2548,56 +2551,58 @@ public class SpecsIoTest {
                 // Expected for non-existent source
                 assertThat(e).isNotNull();
             }
-            
+
             // Test directory operations
             File subDir = SpecsIo.mkdir(testDir, "subdir-final");
             assertThat(subDir).exists();
-            
+
             File deepDir = SpecsIo.mkdir(subDir.getAbsolutePath() + "/deep/nested/path");
             assertThat(deepDir).exists();
         }
-        
+
         @Test
         @DisplayName("Final push - Targeting highest missed instruction methods for 80% goal")
         void testFinalPushFor80PercentGoal(@TempDir Path tempDir) throws Exception {
             // Target top missed instruction methods based on JaCoCo report
-            
+
             // 1. resourceCopyVersioned - 75 missed instructions (highest priority)
             ResourceProvider mockProvider = () -> "test content";
             File target1 = tempDir.resolve("resource_versioned_test.txt").toFile();
-            
+
             try {
                 // Test all branches and paths in resourceCopyVersioned
                 SpecsIo.resourceCopyVersioned(mockProvider, target1, true, String.class);
                 SpecsIo.resourceCopyVersioned(mockProvider, target1, false, SpecsIoTest.class);
-                
+
                 // Test with existing file scenarios
                 Files.write(target1.toPath(), "existing content".getBytes());
                 SpecsIo.resourceCopyVersioned(mockProvider, target1, true, Object.class);
                 SpecsIo.resourceCopyVersioned(mockProvider, target1, false, null);
-                
+
                 // Test with null provider
                 SpecsIo.resourceCopyVersioned(null, target1, true, String.class);
-            } catch (Exception ignored) {}
-            
+            } catch (Exception ignored) {
+            }
+
             // 2. getResourceListing - 65 missed instructions (non-static method)
             try {
                 // Create SpecsIo instance to test non-static method
                 SpecsIo specsIo = new SpecsIo();
-                
+
                 // Test different class types and paths
                 specsIo.getResourceListing(String.class, "");
                 specsIo.getResourceListing(String.class, "/");
                 specsIo.getResourceListing(String.class, "java/");
                 specsIo.getResourceListing(String.class, "META-INF/");
                 specsIo.getResourceListing(Object.class, "/java/lang/");
-                
+
                 // Test with various path patterns
                 specsIo.getResourceListing(getClass(), "nonexistent/");
                 specsIo.getResourceListing(getClass(), "../");
                 specsIo.getResourceListing(getClass(), "./");
-            } catch (Exception ignored) {}
-            
+            } catch (Exception ignored) {
+            }
+
             // 3. Test write methods that use writeAppendHelper internally
             File appendTarget = tempDir.resolve("append_test.txt").toFile();
             try {
@@ -2606,63 +2611,67 @@ public class SpecsIoTest {
                 SpecsIo.append(appendTarget, "second line\n");
                 SpecsIo.write(appendTarget, "overwrite content");
                 SpecsIo.append(appendTarget, "appended content");
-                
+
                 // Test with null/empty content
                 SpecsIo.write(appendTarget, "");
                 SpecsIo.append(appendTarget, "");
-                
+
                 // Test with invalid file path
                 File invalidFile = new File("/invalid/path/file.txt");
                 SpecsIo.write(invalidFile, "content");
                 SpecsIo.append(invalidFile, "content");
-            } catch (Exception ignored) {}
-            
+            } catch (Exception ignored) {
+            }
+
             // 4. copy(File, File, boolean) - 34 missed instructions
             File source = tempDir.resolve("copy_source.txt").toFile();
             File dest1 = tempDir.resolve("copy_dest1.txt").toFile();
             File dest2 = tempDir.resolve("copy_dest2.txt").toFile();
-            
+
             try {
                 // Setup source file
                 Files.write(source.toPath(), "source content for copying".getBytes());
-                
+
                 // Test different copy scenarios
-                SpecsIo.copy(source, dest1, true);  // with overwrite
+                SpecsIo.copy(source, dest1, true); // with overwrite
                 SpecsIo.copy(source, dest2, false); // without overwrite
                 SpecsIo.copy(source, dest1, false); // existing target, no overwrite
-                SpecsIo.copy(source, dest1, true);  // existing target, with overwrite
-                
+                SpecsIo.copy(source, dest1, true); // existing target, with overwrite
+
                 // Test with invalid sources/destinations
                 File invalidSource = new File("/nonexistent/source.txt");
                 File invalidDest = new File("/invalid/dest.txt");
                 SpecsIo.copy(invalidSource, dest1, true);
                 SpecsIo.copy(source, invalidDest, false);
                 SpecsIo.copy(invalidSource, invalidDest, true);
-            } catch (Exception ignored) {}
-            
+            } catch (Exception ignored) {
+            }
+
             // 5. mkdir(String) - 33 missed instructions
             try {
                 // Test various mkdir scenarios
                 String testDir1 = tempDir.resolve("mkdir_test1").toString();
                 String testDir2 = tempDir.resolve("mkdir_test2/nested/deep").toString();
                 String testDir3 = tempDir.resolve("existing_dir").toString();
-                
+
                 SpecsIo.mkdir(testDir1);
                 SpecsIo.mkdir(testDir2); // nested creation
                 SpecsIo.mkdir(testDir3);
                 SpecsIo.mkdir(testDir3); // already exists
-                
+
                 // Test with invalid paths
                 SpecsIo.mkdir("/invalid/permission/denied/path");
                 SpecsIo.mkdir("");
                 // SpecsIo.mkdir((String) null); // Explicitly cast to avoid ambiguous method
-                
+
                 // Test with very long path
-                String longPath = tempDir.toString() + "/very/long/path/with/many/nested/directories/that/should/be/created";
+                String longPath = tempDir.toString()
+                        + "/very/long/path/with/many/nested/directories/that/should/be/created";
                 SpecsIo.mkdir(longPath);
-            } catch (Exception ignored) {}
-            
-            // 6. Additional coverage for getParent (File) - 25 missed instructions  
+            } catch (Exception ignored) {
+            }
+
+            // 6. Additional coverage for getParent (File) - 25 missed instructions
             try {
                 SpecsIo.getParent(new File("/path/to/file.txt"));
                 SpecsIo.getParent(new File("relative/path/file.txt"));
@@ -2671,33 +2680,37 @@ public class SpecsIoTest {
                 SpecsIo.getParent(new File(".."));
                 SpecsIo.getParent(new File("file.txt"));
                 SpecsIo.getParent(null);
-            } catch (Exception ignored) {}
-            
+            } catch (Exception ignored) {
+            }
+
             // 7. Additional coverage for extractZipResource methods (24 instructions each)
             try {
                 String zipPath = "/test.zip";
                 SpecsIo.extractZipResource(zipPath, tempDir.toFile());
-                
+
                 // Test with InputStream
                 try (InputStream is = new ByteArrayInputStream(new byte[0])) {
                     SpecsIo.extractZipResource(is, tempDir.toFile());
-                } catch (Exception ignored) {}
-            } catch (Exception ignored) {}
-            
+                } catch (Exception ignored) {
+                }
+            } catch (Exception ignored) {
+            }
+
             // 8. Test more getObject and readObject scenarios for serialization coverage
             try {
                 // Test with different byte arrays
                 SpecsIo.getObject(new byte[0]);
-                SpecsIo.getObject(new byte[]{1, 2, 3, 4, 5});
+                SpecsIo.getObject(new byte[] { 1, 2, 3, 4, 5 });
                 SpecsIo.getObject("test string".getBytes());
                 SpecsIo.getObject(null);
-                
+
                 // Test readObject with various files
                 File objFile = tempDir.resolve("test.obj").toFile();
                 SpecsIo.readObject(objFile);
                 SpecsIo.readObject(new File("/nonexistent.obj"));
-            } catch (Exception ignored) {}
-            
+            } catch (Exception ignored) {
+            }
+
             // 9. Test getResource variations for resource loading coverage
             try {
                 SpecsIo.getResource("/test.txt");
@@ -2705,197 +2718,187 @@ public class SpecsIoTest {
                 SpecsIo.getResource("nonexistent.txt");
                 SpecsIo.getResource("");
                 SpecsIo.getResource((String) null);
-                
+
                 // Test with ResourceProvider
                 ResourceProvider provider = () -> "resource content";
                 SpecsIo.getResource(provider);
                 SpecsIo.getResource(() -> null);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         @Test
         @DisplayName("Test 80% coverage goal - ultra intensive remaining methods")
         void testUltraIntensive80PercentGoal(@TempDir Path tempDir) throws IOException {
-            // ULTRA INTENSIVE coverage of the top 5 highest impact methods to push from 73% to 80%
-            
-            // 1. ULTRA resourceCopyVersioned coverage - 75 missed instructions (currently 18% coverage)
+            // ULTRA INTENSIVE coverage of the top 5 highest impact methods to push from 73%
+            // to 80%
+
+            // 1. ULTRA resourceCopyVersioned coverage - 75 missed instructions (currently
+            // 18% coverage)
             try {
                 // Test all possible parameter combinations and edge cases
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(null, tempDir.resolve("null-provider").toFile(), false, String.class));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(() -> null, tempDir.resolve("null-resource").toFile(), false, String.class));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(() -> "", tempDir.resolve("empty-resource").toFile(), true, String.class));
-                
+                assertThrows(RuntimeException.class, () -> SpecsIo.resourceCopyVersioned(null,
+                        tempDir.resolve("null-provider").toFile(), false, String.class));
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.resourceCopyVersioned(() -> null,
+                        tempDir.resolve("null-resource").toFile(), false, String.class));
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.resourceCopyVersioned(() -> "",
+                        tempDir.resolve("empty-resource").toFile(), true, String.class));
+
                 // Test with various class types
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(() -> "fake.txt", tempDir.resolve("out1").toFile(), false, SpecsIoTest.class));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(() -> "fake.dat", tempDir.resolve("out2").toFile(), true, Object.class));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(() -> "fake.bin", tempDir.resolve("out3").toFile(), false, Integer.class));
-                
+                assertThrows(RuntimeException.class, () -> SpecsIo.resourceCopyVersioned(() -> "fake.txt",
+                        tempDir.resolve("out1").toFile(), false, SpecsIoTest.class));
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.resourceCopyVersioned(() -> "fake.dat",
+                        tempDir.resolve("out2").toFile(), true, Object.class));
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.resourceCopyVersioned(() -> "fake.bin",
+                        tempDir.resolve("out3").toFile(), false, Integer.class));
+
                 // Test with file paths that require parent directory creation
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(() -> "missing.res", tempDir.resolve("deep/nested/path/file.out").toFile(), true, String.class));
-                
+                assertThrows(RuntimeException.class, () -> SpecsIo.resourceCopyVersioned(() -> "missing.res",
+                        tempDir.resolve("deep/nested/path/file.out").toFile(), true, String.class));
+
                 // Test overwrite scenarios
                 File existingFile = tempDir.resolve("existing.txt").toFile();
                 SpecsIo.write(existingFile, "existing content");
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(() -> "replacement.txt", existingFile, false, String.class));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.resourceCopyVersioned(() -> "replacement.txt", existingFile, true, String.class));
-                
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.resourceCopyVersioned(() -> "replacement.txt",
+                        existingFile, false, String.class));
+
+                assertThrows(RuntimeException.class,
+                        () -> SpecsIo.resourceCopyVersioned(() -> "replacement.txt", existingFile, true, String.class));
+
             } catch (Exception e) {
                 // Expected for non-existent resources
             }
-            
-            // 2. ULTRA getResourceListing coverage - 65 missed instructions (currently 40% coverage)
+
+            // 2. ULTRA getResourceListing coverage - 65 missed instructions (currently 40%
+            // coverage)
             SpecsIo instance = new SpecsIo();
             try {
                 // Test all possible parameter combinations
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(null, "path"));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(String.class, null));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(SpecsIoTest.class, "nonexistent/"));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(Object.class, "invalid/path/"));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(Integer.class, "missing/dir/"));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(Boolean.class, "fake/package/"));
-                
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(null, "path"));
+
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(String.class, null));
+
+                assertThrows(RuntimeException.class,
+                        () -> instance.getResourceListing(SpecsIoTest.class, "nonexistent/"));
+
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(Object.class, "invalid/path/"));
+
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(Integer.class, "missing/dir/"));
+
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(Boolean.class, "fake/package/"));
+
                 // Test with various path formats
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(String.class, ""));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(String.class, "/"));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(String.class, "META-INF/"));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(String.class, "com/example/"));
-                
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(String.class, ""));
+
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(String.class, "/"));
+
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(String.class, "META-INF/"));
+
+                assertThrows(RuntimeException.class, () -> instance.getResourceListing(String.class, "com/example/"));
+
                 // Test static method as well (using instance method)
-                assertThrows(RuntimeException.class, () -> 
-                    instance.getResourceListing(SpecsIoTest.class, "nonexistent/static/"));
-                
+                assertThrows(RuntimeException.class,
+                        () -> instance.getResourceListing(SpecsIoTest.class, "nonexistent/static/"));
+
             } catch (Exception e) {
                 // Expected for invalid resources
             }
-            
-            // 3. ULTRA writeAppendHelper coverage - 35 missed instructions (currently 61% coverage)
+
+            // 3. ULTRA writeAppendHelper coverage - 35 missed instructions (currently 61%
+            // coverage)
             try {
                 File testFile1 = tempDir.resolve("write-test-1.txt").toFile();
                 File testFile2 = tempDir.resolve("write-test-2.txt").toFile();
                 File testFile3 = tempDir.resolve("write-test-3.txt").toFile();
-                
+
                 // Test all writeAppendHelper scenarios through write/append
                 SpecsIo.write(testFile1, "content1");
                 SpecsIo.append(testFile1, "\nappended1");
-                
+
                 SpecsIo.write(testFile2, "content2");
                 SpecsIo.append(testFile2, "\nappended2");
-                
+
                 // Test append to non-existent file (creates file)
                 SpecsIo.append(testFile3, "created by append");
-                
+
                 // Test with null content
                 try {
                     SpecsIo.write(tempDir.resolve("null-content.txt").toFile(), null);
-                } catch (Exception ignored) {}
-                
+                } catch (Exception ignored) {
+                }
+
                 try {
                     SpecsIo.append(testFile1, null);
-                } catch (Exception ignored) {}
-                
+                } catch (Exception ignored) {
+                }
+
                 // Test with directory as target (should fail)
                 File dirAsFile = tempDir.resolve("test-directory").toFile();
                 dirAsFile.mkdirs();
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.write(dirAsFile, "content"));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.append(dirAsFile, "content"));
-                
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.write(dirAsFile, "content"));
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.append(dirAsFile, "content"));
+
                 // Test with read-only file (platform dependent)
                 File readOnlyFile = tempDir.resolve("readonly.txt").toFile();
                 SpecsIo.write(readOnlyFile, "initial");
                 readOnlyFile.setReadOnly();
-                
+
                 try {
                     SpecsIo.append(readOnlyFile, "\nmore");
                 } catch (Exception ignored) {
                     // Expected on some platforms
                 }
-                
+
             } catch (Exception e) {
                 // Some tests may fail on different platforms
             }
-            
+
             // 4. ULTRA download coverage - 31 missed instructions (currently 69% coverage)
             try {
                 // Test all download scenarios
                 String invalidUrlString = "http://this-domain-definitely-does-not-exist-12345.invalid/file.txt";
                 String malformedUrlString = "http://invalid-url-format";
                 String timeoutUrlString = "http://10.255.255.1/timeout-test"; // Non-routable IP
-                
+
                 File downloadTarget1 = tempDir.resolve("download1.txt").toFile();
                 File downloadTarget2 = tempDir.resolve("download2.txt").toFile();
                 File downloadTarget3 = tempDir.resolve("download3.txt").toFile();
-                
+
                 // Test various failure scenarios
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.download(invalidUrlString, downloadTarget1));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.download(malformedUrlString, downloadTarget2));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.download(timeoutUrlString, downloadTarget3));
-                
+                assertThrows(RuntimeException.class, () -> SpecsIo.download(invalidUrlString, downloadTarget1));
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.download(malformedUrlString, downloadTarget2));
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.download(timeoutUrlString, downloadTarget3));
+
                 // Test with null string parameter
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.download((String) null, downloadTarget1));
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.download(invalidUrlString, null));
-                
+                assertThrows(RuntimeException.class, () -> SpecsIo.download((String) null, downloadTarget1));
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.download(invalidUrlString, null));
+
                 // Test download to existing file
                 SpecsIo.write(downloadTarget1, "existing content");
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.download(invalidUrlString, downloadTarget1));
-                
+                assertThrows(RuntimeException.class, () -> SpecsIo.download(invalidUrlString, downloadTarget1));
+
                 // Test download to directory (should fail)
                 File dirTarget = tempDir.resolve("download-dir").toFile();
                 dirTarget.mkdirs();
-                
-                assertThrows(RuntimeException.class, () -> 
-                    SpecsIo.download(invalidUrlString, dirTarget));
-                
+
+                assertThrows(RuntimeException.class, () -> SpecsIo.download(invalidUrlString, dirTarget));
+
             } catch (Exception e) {
                 // Expected for all these invalid scenarios
             }
-            
-            // 5. ULTRA getRelativePath coverage - 28 missed instructions (currently 84% coverage)
+
+            // 5. ULTRA getRelativePath coverage - 28 missed instructions (currently 84%
+            // coverage)
             try {
                 // Test all possible getRelativePath scenarios
                 File base1 = new File("/base/path");
@@ -2904,7 +2907,7 @@ public class SpecsIoTest {
                 File target2 = new File("/base/different/file.txt");
                 File target3 = new File("/completely/different/path.txt");
                 File target4 = new File("/base/path"); // Same as base
-                
+
                 // Test all boolean flag combinations - getRelativePath returns Optional<String>
                 var rel1 = SpecsIo.getRelativePath(base1, target1, true);
                 var rel2 = SpecsIo.getRelativePath(base1, target1, false);
@@ -2916,38 +2919,41 @@ public class SpecsIoTest {
                 var rel8 = SpecsIo.getRelativePath(base1, target4, false);
                 var rel9 = SpecsIo.getRelativePath(base2, target1, true);
                 var rel10 = SpecsIo.getRelativePath(base2, target1, false);
-                
+
                 // Test with relative paths
                 File relBase = new File("relative/base");
                 File relTarget = new File("relative/base/sub/file.txt");
                 var rel11 = SpecsIo.getRelativePath(relBase, relTarget, true);
                 var rel12 = SpecsIo.getRelativePath(relBase, relTarget, false);
-                
+
                 // Test with current directory
                 File currentDir = new File(".");
                 File currentFile = new File("./file.txt");
                 var rel13 = SpecsIo.getRelativePath(currentDir, currentFile, true);
                 var rel14 = SpecsIo.getRelativePath(currentDir, currentFile, false);
-                
+
                 // Test with parent directory
                 File parentDir = new File("..");
                 File parentFile = new File("../file.txt");
                 var rel15 = SpecsIo.getRelativePath(parentDir, parentFile, true);
                 var rel16 = SpecsIo.getRelativePath(parentDir, parentFile, false);
-                
+
                 // Test with null parameters (should handle gracefully or throw exception)
                 try {
                     SpecsIo.getRelativePath(null, target1, true);
-                } catch (Exception ignored) {}
-                
+                } catch (Exception ignored) {
+                }
+
                 try {
                     SpecsIo.getRelativePath(base1, null, true);
-                } catch (Exception ignored) {}
-                
+                } catch (Exception ignored) {
+                }
+
                 try {
                     SpecsIo.getRelativePath(null, null, false);
-                } catch (Exception ignored) {}
-                
+                } catch (Exception ignored) {
+                }
+
                 // Verify all results are not null (if no exception thrown)
                 assertThat(rel1).isNotNull();
                 assertThat(rel2).isNotNull();
@@ -2978,7 +2984,7 @@ public class SpecsIoTest {
 
             // 1. Additional getResourceListing edge cases (65 missed instructions)
             SpecsIo instance = new SpecsIo();
-            
+
             try {
                 // Test with more class and path combinations to hit different branches
                 instance.getResourceListing(Thread.class, "META-INF");
@@ -2988,13 +2994,13 @@ public class SpecsIoTest {
                 instance.getResourceListing(Math.class, "javax");
                 instance.getResourceListing(List.class, "org");
                 instance.getResourceListing(Map.class, "com");
-                
+
                 // Test edge path formats
                 instance.getResourceListing(String.class, "META-INF/");
                 instance.getResourceListing(Object.class, "/META-INF");
                 instance.getResourceListing(Integer.class, "META-INF/services");
                 instance.getResourceListing(Boolean.class, "/java/lang");
-                
+
             } catch (Exception e) {
                 // Expected for most resource lookups
             }
@@ -3004,22 +3010,23 @@ public class SpecsIoTest {
             File copyDest2 = tempDir.resolve("copy_dest_2.txt").toFile();
             File copyDest3 = tempDir.resolve("nested/copy_dest_3.txt").toFile();
             copyDest3.getParentFile().mkdirs();
-            
+
             try {
                 // Test with different class contexts and resource providers
                 SpecsIo.resourceCopyVersioned(() -> "META-INF/MANIFEST.MF", copyDest1, false, Thread.class);
                 SpecsIo.resourceCopyVersioned(() -> "java/lang/Object.class", copyDest2, true, Runtime.class);
-                SpecsIo.resourceCopyVersioned(() -> "javax/xml/parsers/DocumentBuilder.class", copyDest3, false, System.class);
-                
+                SpecsIo.resourceCopyVersioned(() -> "javax/xml/parsers/DocumentBuilder.class", copyDest3, false,
+                        System.class);
+
                 // Test overwrite scenarios with existing files
                 copyDest1.createNewFile();
                 SpecsIo.resourceCopyVersioned(() -> "test.resource", copyDest1, true, Math.class);
                 SpecsIo.resourceCopyVersioned(() -> "another.resource", copyDest1, false, List.class);
-                
+
                 // Test with various resource path formats
                 SpecsIo.resourceCopyVersioned(() -> "/absolute/resource/path", copyDest2, true, Map.class);
                 SpecsIo.resourceCopyVersioned(() -> "./relative/resource/path", copyDest3, false, String.class);
-                
+
             } catch (Exception e) {
                 // Expected for non-existent resources
             }
@@ -3029,23 +3036,23 @@ public class SpecsIoTest {
             File writeTest2 = tempDir.resolve("write_edge_2.txt").toFile();
             File writeTest3 = tempDir.resolve("deeply/nested/write_edge_3.txt").toFile();
             writeTest3.getParentFile().mkdirs();
-            
+
             try {
                 // Test various content scenarios to hit different branches
                 SpecsIo.write(writeTest1, "initial line 1\n");
                 SpecsIo.append(writeTest1, "appended line 2\n");
                 SpecsIo.append(writeTest1, "appended line 3");
-                
+
                 // Test with empty and null-like content
                 SpecsIo.write(writeTest2, "");
                 SpecsIo.append(writeTest2, "\n");
                 SpecsIo.append(writeTest2, "\t\r\n");
-                
+
                 // Test with special characters and encodings
                 SpecsIo.write(writeTest3, "Special chars: àáâãç ñü €\n");
                 SpecsIo.append(writeTest3, "Unicode: 你好世界 🌍\n");
                 SpecsIo.append(writeTest3, "Symbols: ∑∆∏∫ ≠≤≥\n");
-                
+
             } catch (Exception e) {
                 // Expected for some edge cases
             }
@@ -3054,23 +3061,23 @@ public class SpecsIoTest {
             File dlTest1 = tempDir.resolve("download_edge_1.txt").toFile();
             File dlTest2 = tempDir.resolve("download_edge_2.txt").toFile();
             File dlTest3 = tempDir.resolve("download_edge_3.txt").toFile();
-            
+
             try {
                 // Test various URL patterns to trigger different branches
                 SpecsIo.download("https://example.com/test", dlTest1);
                 SpecsIo.download("http://httpbin.org/status/200", dlTest2);
                 SpecsIo.download("https://jsonplaceholder.typicode.com/posts/1", dlTest3);
-                
+
                 // Test edge case URLs
                 SpecsIo.download("file:///tmp/nonexistent", dlTest1);
                 SpecsIo.download("ftp://ftp.example.com/test", dlTest2);
                 SpecsIo.download("https://invalid.tld.xyz/test", dlTest3);
-                
+
                 // Test with malformed URLs
                 SpecsIo.download("not-a-url", dlTest1);
                 SpecsIo.download("http://", dlTest2);
                 SpecsIo.download("://malformed", dlTest3);
-                
+
             } catch (Exception e) {
                 // Expected for most downloads due to invalid URLs
             }
@@ -3080,14 +3087,14 @@ public class SpecsIoTest {
             File relBase2 = tempDir.resolve("level1/rel_base_2").toFile();
             File relTarget1 = tempDir.resolve("rel_target_1").toFile();
             File relTarget2 = tempDir.resolve("level1/level2/rel_target_2").toFile();
-            
+
             relBase2.getParentFile().mkdirs();
             relTarget2.getParentFile().mkdirs();
             relBase1.createNewFile();
             relBase2.createNewFile();
             relTarget1.createNewFile();
             relTarget2.createNewFile();
-            
+
             try {
                 // Test all combinations of boolean flags and nested structures
                 var result1 = SpecsIo.getRelativePath(relBase1, relTarget1, true);
@@ -3098,17 +3105,17 @@ public class SpecsIoTest {
                 var result6 = SpecsIo.getRelativePath(relBase2, relTarget1, false);
                 var result7 = SpecsIo.getRelativePath(relBase2, relTarget2, true);
                 var result8 = SpecsIo.getRelativePath(relBase2, relTarget2, false);
-                
+
                 // Test with directory relationships
                 var result9 = SpecsIo.getRelativePath(tempDir.toFile(), relBase1, true);
                 var result10 = SpecsIo.getRelativePath(relTarget2, tempDir.toFile(), false);
-                
+
                 // Test with absolute vs relative paths
                 File absoluteBase = new File("/tmp/absolute_base");
                 File absoluteTarget = new File("/tmp/absolute_target");
                 var result11 = SpecsIo.getRelativePath(absoluteBase, absoluteTarget, true);
                 var result12 = SpecsIo.getRelativePath(absoluteTarget, absoluteBase, false);
-                
+
                 // Verify results
                 assertThat(result1).isNotNull();
                 assertThat(result2).isNotNull();
@@ -3122,7 +3129,7 @@ public class SpecsIoTest {
                 assertThat(result10).isNotNull();
                 assertThat(result11).isNotNull();
                 assertThat(result12).isNotNull();
-                
+
             } catch (Exception e) {
                 // Some operations may fail due to path complexities
             }
@@ -3132,22 +3139,25 @@ public class SpecsIoTest {
         @DisplayName("Ultimate 80% Target - Final High-Impact Methods")
         void testUltimate80PercentTarget(@TempDir Path tempDir) throws IOException {
             // Target the absolute highest-impact remaining methods (158+ instructions)
-            
-            // First, let's try to trigger the 158-instruction method and other high-impact ones
-            // Based on JaCoCo analysis, focus on uncovered resourceCopy variants and helpers
-            
+
+            // First, let's try to trigger the 158-instruction method and other high-impact
+            // ones
+            // Based on JaCoCo analysis, focus on uncovered resourceCopy variants and
+            // helpers
+
             File ultimateTarget1 = tempDir.resolve("ultimate1.txt").toFile();
             File ultimateTarget2 = tempDir.resolve("ultimate2.txt").toFile();
             File ultimateTarget3 = tempDir.resolve("nested/ultimate3.txt").toFile();
             ultimateTarget3.getParentFile().mkdirs();
-            
+
             try {
-                // Test maximum resourceCopy variants - these tend to have high instruction counts
+                // Test maximum resourceCopy variants - these tend to have high instruction
+                // counts
                 SpecsIo.resourceCopy("META-INF/MANIFEST.MF", ultimateTarget1, false);
                 SpecsIo.resourceCopy("/META-INF/MANIFEST.MF", ultimateTarget2, true);
                 SpecsIo.resourceCopy("java/lang/Object.class", ultimateTarget3, false);
-                
-                // Test with class-based resource copying  
+
+                // Test with class-based resource copying
                 // Note: these will likely fail but will provide coverage
                 try {
                     SpecsIo.resourceCopy(ultimateTarget1.getName(), ultimateTarget1, true);
@@ -3156,16 +3166,16 @@ public class SpecsIoTest {
                 } catch (Exception ignored) {
                     // Expected failures for non-existent resources
                 }
-                
+
                 // resourceCopyVersioned with all combinations
                 SpecsIo.resourceCopyVersioned(() -> "test.properties", ultimateTarget1, false, Thread.class);
                 SpecsIo.resourceCopyVersioned(() -> "config.xml", ultimateTarget2, true, Runtime.class);
                 SpecsIo.resourceCopyVersioned(() -> "data.json", ultimateTarget3, false, System.class);
-                
+
             } catch (Exception e) {
                 // Expected for non-existent resources
             }
-            
+
             // High-impact getResourceListing scenarios
             SpecsIo specsIoInstance = new SpecsIo();
             try {
@@ -3180,67 +3190,67 @@ public class SpecsIoTest {
                 specsIoInstance.getResourceListing(Throwable.class, "jdk");
                 specsIoInstance.getResourceListing(ThreadGroup.class, "/");
                 specsIoInstance.getResourceListing(Process.class, "/META-INF/");
-                
+
             } catch (Exception e) {
                 // Expected for most resource listing operations
             }
-            
+
             // High-impact download scenarios with comprehensive coverage
             File dlUltimate1 = tempDir.resolve("dl_ultimate1.txt").toFile();
             File dlUltimate2 = tempDir.resolve("dl_ultimate2.txt").toFile();
             File dlUltimate3 = tempDir.resolve("dl_ultimate3.txt").toFile();
-            
+
             try {
                 // Test comprehensive download scenarios
                 SpecsIo.download("https://www.google.com/robots.txt", dlUltimate1);
                 SpecsIo.download("https://httpbin.org/get", dlUltimate2);
                 SpecsIo.download("https://api.github.com", dlUltimate3);
-                
+
                 // Test file:// URLs
                 SpecsIo.download("file:///etc/hosts", dlUltimate1);
                 SpecsIo.download("file:///proc/version", dlUltimate2);
                 SpecsIo.download("file:///dev/null", dlUltimate3);
-                
+
                 // Test edge URL formats
                 SpecsIo.download("http://127.0.0.1:8080/test", dlUltimate1);
                 SpecsIo.download("https://localhost:443/secure", dlUltimate2);
                 SpecsIo.download("ftp://anonymous@ftp.example.com/file", dlUltimate3);
-                
+
             } catch (Exception e) {
                 // Expected for most download attempts
             }
-            
+
             // Maximum writeAppendHelper coverage through write/append variants
             File writeUltimate1 = tempDir.resolve("write_ultimate1.txt").toFile();
             File writeUltimate2 = tempDir.resolve("write_ultimate2.txt").toFile();
             File writeUltimate3 = tempDir.resolve("write_ultimate3.txt").toFile();
-            
+
             try {
                 // Comprehensive write/append combinations
                 SpecsIo.write(writeUltimate1, "Line 1\n");
                 SpecsIo.append(writeUltimate1, "Line 2\n");
                 SpecsIo.write(writeUltimate1, "Overwrite\n");
                 SpecsIo.append(writeUltimate1, "Final append\n");
-                
+
                 // Test with various content types
                 SpecsIo.write(writeUltimate2, "");
                 SpecsIo.append(writeUltimate2, "First content");
                 SpecsIo.write(writeUltimate2, "Replaced content");
                 SpecsIo.append(writeUltimate2, " + appended");
-                
+
                 // Test with special characters and large content
                 StringBuilder largeContent = new StringBuilder();
                 for (int i = 0; i < 1000; i++) {
                     largeContent.append("Line ").append(i).append(" with content\n");
                 }
-                
+
                 SpecsIo.write(writeUltimate3, largeContent.toString());
                 SpecsIo.append(writeUltimate3, "Final large append");
-                
+
             } catch (Exception e) {
                 // Expected for some edge cases
             }
-            
+
             // Ultimate getRelativePath coverage with all combinations
             File relUltBase1 = tempDir.resolve("rel_ult_base1").toFile();
             File relUltBase2 = tempDir.resolve("level1/rel_ult_base2").toFile();
@@ -3248,13 +3258,13 @@ public class SpecsIoTest {
             File relUltTarget1 = tempDir.resolve("rel_ult_target1").toFile();
             File relUltTarget2 = tempDir.resolve("level1/rel_ult_target2").toFile();
             File relUltTarget3 = tempDir.resolve("level1/level2/level3/rel_ult_target3").toFile();
-            
+
             // Create directory structure
             relUltBase2.getParentFile().mkdirs();
             relUltBase3.getParentFile().mkdirs();
             relUltTarget2.getParentFile().mkdirs();
             relUltTarget3.getParentFile().mkdirs();
-            
+
             // Create files
             relUltBase1.createNewFile();
             relUltBase2.createNewFile();
@@ -3262,7 +3272,7 @@ public class SpecsIoTest {
             relUltTarget1.createNewFile();
             relUltTarget2.createNewFile();
             relUltTarget3.createNewFile();
-            
+
             try {
                 // Test all possible combinations to maximize branch coverage
                 var rel1 = SpecsIo.getRelativePath(relUltBase1, relUltTarget1, true);
@@ -3271,21 +3281,21 @@ public class SpecsIoTest {
                 var rel4 = SpecsIo.getRelativePath(relUltBase1, relUltTarget2, false);
                 var rel5 = SpecsIo.getRelativePath(relUltBase1, relUltTarget3, true);
                 var rel6 = SpecsIo.getRelativePath(relUltBase1, relUltTarget3, false);
-                
+
                 var rel7 = SpecsIo.getRelativePath(relUltBase2, relUltTarget1, true);
                 var rel8 = SpecsIo.getRelativePath(relUltBase2, relUltTarget1, false);
                 var rel9 = SpecsIo.getRelativePath(relUltBase2, relUltTarget2, true);
                 var rel10 = SpecsIo.getRelativePath(relUltBase2, relUltTarget2, false);
                 var rel11 = SpecsIo.getRelativePath(relUltBase2, relUltTarget3, true);
                 var rel12 = SpecsIo.getRelativePath(relUltBase2, relUltTarget3, false);
-                
+
                 var rel13 = SpecsIo.getRelativePath(relUltBase3, relUltTarget1, true);
                 var rel14 = SpecsIo.getRelativePath(relUltBase3, relUltTarget1, false);
                 var rel15 = SpecsIo.getRelativePath(relUltBase3, relUltTarget2, true);
                 var rel16 = SpecsIo.getRelativePath(relUltBase3, relUltTarget2, false);
                 var rel17 = SpecsIo.getRelativePath(relUltBase3, relUltTarget3, true);
                 var rel18 = SpecsIo.getRelativePath(relUltBase3, relUltTarget3, false);
-                
+
                 // Verify all results (expecting non-null)
                 assertThat(rel1).isNotNull();
                 assertThat(rel2).isNotNull();
@@ -3305,7 +3315,7 @@ public class SpecsIoTest {
                 assertThat(rel16).isNotNull();
                 assertThat(rel17).isNotNull();
                 assertThat(rel18).isNotNull();
-                
+
             } catch (Exception e) {
                 // Some relative path operations may fail
             }
@@ -3315,24 +3325,25 @@ public class SpecsIoTest {
     @Test
     @DisplayName("Final push to 80% - Max intensity targeting")
     void testFinalPushTo80PercentMaxIntensity(@TempDir Path tempDir) {
-        // Ultra-intensive final push targeting the absolute highest missed instruction methods
-        
+        // Ultra-intensive final push targeting the absolute highest missed instruction
+        // methods
+
         // Maximum intensity getResourceListing testing (65 missed instructions)
         try {
             for (Class<?> clazz : new Class<?>[] {
-                Object.class, String.class, Integer.class, Long.class, Double.class, Float.class,
-                Boolean.class, Character.class, Byte.class, Short.class, Class.class,
-                List.class, Map.class, Set.class, Collection.class,
-                File.class, Path.class, URL.class, URI.class, Exception.class,
-                RuntimeException.class, Thread.class, System.class, Math.class,
-                Package.class, ClassLoader.class, Runtime.class, Throwable.class
+                    Object.class, String.class, Integer.class, Long.class, Double.class, Float.class,
+                    Boolean.class, Character.class, Byte.class, Short.class, Class.class,
+                    List.class, Map.class, Set.class, Collection.class,
+                    File.class, Path.class, URL.class, URI.class, Exception.class,
+                    RuntimeException.class, Thread.class, System.class, Math.class,
+                    Package.class, ClassLoader.class, Runtime.class, Throwable.class
             }) {
                 for (String path : new String[] {
-                    "", "/", "java", "java/", "java/lang", "java/lang/", "javax", "javax/",
-                    "com", "com/", "org", "org/", "sun", "sun/", "META-INF", "META-INF/",
-                    "WEB-INF", "WEB-INF/", "classes", "classes/", "lib", "lib/",
-                    "resources", "resources/", "static", "static/", "templates", "templates/",
-                    null
+                        "", "/", "java", "java/", "java/lang", "java/lang/", "javax", "javax/",
+                        "com", "com/", "org", "org/", "sun", "sun/", "META-INF", "META-INF/",
+                        "WEB-INF", "WEB-INF/", "classes", "classes/", "lib", "lib/",
+                        "resources", "resources/", "static", "static/", "templates", "templates/",
+                        null
                 }) {
                     try {
                         // Use instance method correctly
@@ -3346,28 +3357,28 @@ public class SpecsIoTest {
         } catch (Exception e) {
             // Expected
         }
-        
+
         // Maximum intensity resourceCopyVersioned testing (64 missed instructions)
         File maxIntensityDir = tempDir.resolve("max_intensity").toFile();
         maxIntensityDir.mkdirs();
-        
+
         try {
             String[] resourcePaths = {
-                "META-INF/MANIFEST.MF", "java/lang/Object.class", "javax/servlet/Servlet.class",
-                "com/example/Test.class", "org/junit/Test.class", "sun/misc/Unsafe.class",
-                "WEB-INF/web.xml", "application.properties", "logback.xml", "spring.xml",
-                "hibernate.cfg.xml", "persistence.xml", "beans.xml", "faces-config.xml",
-                "web.xml", "pom.xml", "build.gradle", "settings.gradle", "build.xml",
-                "", "/", "nonexistent.file", "missing.txt", null
+                    "META-INF/MANIFEST.MF", "java/lang/Object.class", "javax/servlet/Servlet.class",
+                    "com/example/Test.class", "org/junit/Test.class", "sun/misc/Unsafe.class",
+                    "WEB-INF/web.xml", "application.properties", "logback.xml", "spring.xml",
+                    "hibernate.cfg.xml", "persistence.xml", "beans.xml", "faces-config.xml",
+                    "web.xml", "pom.xml", "build.gradle", "settings.gradle", "build.xml",
+                    "", "/", "nonexistent.file", "missing.txt", null
             };
-            
+
             Class<?>[] classes = {
-                Object.class, String.class, Integer.class, List.class, Map.class,
-                Set.class, File.class, Path.class, URL.class, Exception.class
+                    Object.class, String.class, Integer.class, List.class, Map.class,
+                    Set.class, File.class, Path.class, URL.class, Exception.class
             };
-            
-            boolean[] booleans = {true, false};
-            
+
+            boolean[] booleans = { true, false };
+
             for (String resource : resourcePaths) {
                 for (Class<?> clazz : classes) {
                     for (boolean flag : booleans) {
@@ -3382,23 +3393,24 @@ public class SpecsIoTest {
         } catch (Exception e) {
             // Expected
         }
-        
-        // Maximum intensity resourceCopy testing (27 missed instructions) - use string-based methods
+
+        // Maximum intensity resourceCopy testing (27 missed instructions) - use
+        // string-based methods
         File resourceIntensityDir = tempDir.resolve("resource_intensity").toFile();
         resourceIntensityDir.mkdirs();
-        
+
         try {
             String[] resourcePaths = {
-                "META-INF/MANIFEST.MF", "java/lang/Object.class", "javax/servlet/Servlet.class",
-                "com/example/Test.class", "org/junit/Test.class", "sun/misc/Unsafe.class",
-                "WEB-INF/web.xml", "application.properties", "logback.xml", "spring.xml",
-                "hibernate.cfg.xml", "persistence.xml", "beans.xml", "faces-config.xml",
-                "web.xml", "pom.xml", "build.gradle", "settings.gradle", "build.xml",
-                "", "/", "nonexistent.file", "missing.txt", "test.txt", "sample.properties",
-                "config.xml", "data.json", "style.css", "script.js", "image.png",
-                "document.pdf", "archive.zip", "library.jar", "executable.exe"
+                    "META-INF/MANIFEST.MF", "java/lang/Object.class", "javax/servlet/Servlet.class",
+                    "com/example/Test.class", "org/junit/Test.class", "sun/misc/Unsafe.class",
+                    "WEB-INF/web.xml", "application.properties", "logback.xml", "spring.xml",
+                    "hibernate.cfg.xml", "persistence.xml", "beans.xml", "faces-config.xml",
+                    "web.xml", "pom.xml", "build.gradle", "settings.gradle", "build.xml",
+                    "", "/", "nonexistent.file", "missing.txt", "test.txt", "sample.properties",
+                    "config.xml", "data.json", "style.css", "script.js", "image.png",
+                    "document.pdf", "archive.zip", "library.jar", "executable.exe"
             };
-            
+
             for (String resourcePath : resourcePaths) {
                 try {
                     SpecsIo.resourceCopy(resourcePath, resourceIntensityDir, true);
@@ -3410,25 +3422,25 @@ public class SpecsIoTest {
         } catch (Exception e) {
             // Expected
         }
-        
+
         // Maximum intensity writeAppendHelper via write/append (35 missed instructions)
         File[] writeFiles = new File[50];
         for (int i = 0; i < writeFiles.length; i++) {
             writeFiles[i] = tempDir.resolve("write_max_" + i + ".txt").toFile();
         }
-        
+
         try {
             String[] testContents = {
-                null, "", " ", "\n", "\r\n", "\t", "\r", "\f", "\b", "\0",
-                "single", "two\nlines", "three\nlines\nhere",
-                "unicode: αβγδε", "chinese: 中文测试", "emoji: 🚀🎉🔥💫⭐🌟",
-                "special: !@#$%^&*()_+-=[]{}|;':\",./<>?",
-                "mixed: αβγ 中文 🚀 !@# 123",
-                "tabs:\t\t\ttabs", "spaces:     spaces", "mixed\t \r\n\fchars",
-                String.valueOf((char) 0), String.valueOf((char) 1), String.valueOf((char) 127),
-                String.valueOf((char) 255), String.valueOf((char) 65535)
+                    null, "", " ", "\n", "\r\n", "\t", "\r", "\f", "\b", "\0",
+                    "single", "two\nlines", "three\nlines\nhere",
+                    "unicode: αβγδε", "chinese: 中文测试", "emoji: 🚀🎉🔥💫⭐🌟",
+                    "special: !@#$%^&*()_+-=[]{}|;':\",./<>?",
+                    "mixed: αβγ 中文 🚀 !@# 123",
+                    "tabs:\t\t\ttabs", "spaces:     spaces", "mixed\t \r\n\fchars",
+                    String.valueOf((char) 0), String.valueOf((char) 1), String.valueOf((char) 127),
+                    String.valueOf((char) 255), String.valueOf((char) 65535)
             };
-            
+
             // Generate massive contents of different sizes
             StringBuilder[] massiveContents = new StringBuilder[10];
             for (int i = 0; i < massiveContents.length; i++) {
@@ -3436,14 +3448,14 @@ public class SpecsIoTest {
                 int size = (i + 1) * 1000;
                 for (int j = 0; j < size; j++) {
                     massiveContents[i].append("Line ").append(j).append(" content for size ")
-                                    .append(size).append(" iteration ").append(i).append("\n");
+                            .append(size).append(" iteration ").append(i).append("\n");
                 }
             }
-            
+
             // Test every combination
             for (int fileIndex = 0; fileIndex < writeFiles.length; fileIndex++) {
                 File writeFile = writeFiles[fileIndex];
-                
+
                 // Test with all basic contents
                 for (String content : testContents) {
                     try {
@@ -3453,7 +3465,7 @@ public class SpecsIoTest {
                         // Expected for some content types
                     }
                 }
-                
+
                 // Test with massive contents
                 for (StringBuilder massiveContent : massiveContents) {
                     try {
@@ -3468,34 +3480,34 @@ public class SpecsIoTest {
             // Expected
         }
     }
-    
+
     @Nested
     @DisplayName("Final Zero-Coverage Methods Tests (Push to 80%)")
     class FinalZeroCoverageMethodsTests {
-        
+
         @Test
         @DisplayName("Test resourceCopy(String) method")
         void testResourceCopyStringOnly() {
             // Test basic resource copy - should return null for non-existent resource
             File result = SpecsIo.resourceCopy("non/existent/resource.txt");
             assertThat(result).isNull();
-            
+
             // Test with actual existing resource from classpath
             File result2 = SpecsIo.resourceCopy("test-resource.txt");
             if (result2 != null) {
                 assertThat(result2).exists();
             }
         }
-        
-        @Test 
+
+        @Test
         @DisplayName("Test resourceCopy(String, File) method")
         void testResourceCopyStringFile(@TempDir Path tempDir) {
             File destFolder = tempDir.toFile();
-            
+
             // Test basic resource copy - should return null for non-existent resource
             File result = SpecsIo.resourceCopy("non/existent/resource.txt", destFolder);
             assertThat(result).isNull();
-            
+
             // Test with actual existing resource from classpath
             File result2 = SpecsIo.resourceCopy("test-resource.txt", destFolder);
             if (result2 != null) {
@@ -3503,15 +3515,15 @@ public class SpecsIoTest {
                 assertThat(result2.getParentFile()).isEqualTo(destFolder);
             }
         }
-        
+
         @Test
-        @DisplayName("Test resourceCopyVersioned(ResourceProvider, File, boolean) method")  
+        @DisplayName("Test resourceCopyVersioned(ResourceProvider, File, boolean) method")
         void testResourceCopyVersionedThreeArgs(@TempDir Path tempDir) {
             File destFolder = tempDir.toFile();
-            
+
             // Create a test ResourceProvider
             ResourceProvider provider = () -> "test/resource/path";
-            
+
             // Test the method - should handle gracefully even with non-existent resource
             try {
                 Object result = SpecsIo.resourceCopyVersioned(provider, destFolder, true);
@@ -3523,7 +3535,7 @@ public class SpecsIoTest {
             } catch (Exception e) {
                 // Expected for non-existent resources - method should handle gracefully
             }
-            
+
             // Test with useResourcePath false
             try {
                 Object result2 = SpecsIo.resourceCopyVersioned(provider, destFolder, false);
@@ -3535,15 +3547,15 @@ public class SpecsIoTest {
                 // Expected for non-existent resources - method should handle gracefully
             }
         }
-        
+
         @Test
         @DisplayName("Test resourceCopy(ResourceProvider, File) method")
         void testResourceCopyProviderFile(@TempDir Path tempDir) {
             File destFolder = tempDir.toFile();
-            
+
             // Create a test ResourceProvider
             ResourceProvider provider = () -> "test/resource/path";
-            
+
             // Test the method - should handle gracefully even with non-existent resource
             try {
                 File result = SpecsIo.resourceCopy(provider, destFolder);
@@ -3557,60 +3569,64 @@ public class SpecsIoTest {
                 // Expected for non-existent resources - method should handle gracefully
             }
         }
-        
+
         @Test
         @DisplayName("Test copy method with lambda execution")
         void testCopyWithLambdaExecution(@TempDir Path tempDir) throws IOException {
-            // This test is designed to trigger lambda$copy$7 by testing copy operation scenarios
+            // This test is designed to trigger lambda$copy$7 by testing copy operation
+            // scenarios
             File sourceFile = tempDir.resolve("source.txt").toFile();
             File destFile = tempDir.resolve("dest.txt").toFile();
-            
+
             // Create source file
             Files.write(sourceFile.toPath(), "Test content for lambda execution".getBytes());
-            
+
             // Test copy that might trigger lambda execution paths
             boolean result = SpecsIo.copy(sourceFile, destFile, true);
             assertThat(result).isTrue();
             assertThat(destFile).exists();
             assertThat(Files.readString(destFile.toPath())).isEqualTo("Test content for lambda execution");
-            
+
             // Test copy with overwrite false on existing file (different path)
             File destFile2 = tempDir.resolve("dest2.txt").toFile();
             Files.write(destFile2.toPath(), "Existing content".getBytes());
-            
+
             SpecsIo.copy(sourceFile, destFile2, false);
             // Should not overwrite existing file
             assertThat(Files.readString(destFile2.toPath())).isEqualTo("Existing content");
         }
-        
+
         @Test
         @DisplayName("Test deleteOnExit method with lambda execution")
         void testDeleteOnExitWithLambdaExecution(@TempDir Path tempDir) throws IOException {
-            // This test is designed to trigger lambda$deleteOnExit$16 by creating complex folder structures
+            // This test is designed to trigger lambda$deleteOnExit$16 by creating complex
+            // folder structures
             File testFolder = tempDir.resolve("delete-on-exit-test").toFile();
             testFolder.mkdirs();
-            
+
             // Create nested structure to trigger lambda execution
             File subFolder1 = new File(testFolder, "sub1");
-            File subFolder2 = new File(testFolder, "sub2");  
+            File subFolder2 = new File(testFolder, "sub2");
             File deepFolder = new File(subFolder1, "deep");
             subFolder1.mkdirs();
             subFolder2.mkdirs();
             deepFolder.mkdirs();
-            
+
             // Create files in various locations
             File file1 = new File(testFolder, "file1.txt");
             File file2 = new File(subFolder1, "file2.txt");
             File file3 = new File(deepFolder, "file3.txt");
-            
+
             Files.write(file1.toPath(), "content1".getBytes());
-            Files.write(file2.toPath(), "content2".getBytes());  
+            Files.write(file2.toPath(), "content2".getBytes());
             Files.write(file3.toPath(), "content3".getBytes());
-            
-            // Test deleteOnExit - this should trigger lambda execution for recursive deletion registration
+
+            // Test deleteOnExit - this should trigger lambda execution for recursive
+            // deletion registration
             SpecsIo.deleteOnExit(testFolder);
-            
-            // Verify structure still exists (deleteOnExit only registers for deletion on JVM exit)
+
+            // Verify structure still exists (deleteOnExit only registers for deletion on
+            // JVM exit)
             assertThat(testFolder).exists();
             assertThat(subFolder1).exists();
             assertThat(subFolder2).exists();
@@ -3619,57 +3635,61 @@ public class SpecsIoTest {
             assertThat(file2).exists();
             assertThat(file3).exists();
         }
-        
+
         @Test
-        @DisplayName("Test getFilesRecursivePrivate lambda methods") 
+        @DisplayName("Test getFilesRecursivePrivate lambda methods")
         void testGetFilesRecursivePrivateLambdas(@TempDir Path tempDir) throws IOException {
-            // This test is designed to trigger lambda$getFilesRecursivePrivate$2, $3, $4 methods
-            // by creating scenarios that exercise the various lambda functions in getFilesRecursivePrivate
-            
+            // This test is designed to trigger lambda$getFilesRecursivePrivate$2, $3, $4
+            // methods
+            // by creating scenarios that exercise the various lambda functions in
+            // getFilesRecursivePrivate
+
             File testRoot = tempDir.resolve("recursive-test").toFile();
             testRoot.mkdirs();
-            
+
             // Create complex folder structure to trigger various lambda paths
             File folder1 = new File(testRoot, "folder1");
             File folder2 = new File(testRoot, "folder2");
             File hiddenFolder = new File(testRoot, ".hidden");
             File deepFolder = new File(folder1, "deep");
-            
+
             folder1.mkdirs();
             folder2.mkdirs();
             hiddenFolder.mkdirs();
             deepFolder.mkdirs();
-            
+
             // Create various file types to trigger different lambda conditions
             File txtFile = new File(folder1, "test.txt");
             File javaFile = new File(folder2, "Test.java");
             File hiddenFile = new File(hiddenFolder, ".hiddenfile");
             File deepFile = new File(deepFolder, "deep.txt");
             File rootFile = new File(testRoot, "root.txt");
-            
+
             Files.write(txtFile.toPath(), "txt content".getBytes());
             Files.write(javaFile.toPath(), "java content".getBytes());
             Files.write(hiddenFile.toPath(), "hidden content".getBytes());
             Files.write(deepFile.toPath(), "deep content".getBytes());
             Files.write(rootFile.toPath(), "root content".getBytes());
-            
-            // Test getFilesRecursive with various patterns and predicates to trigger lambda execution
+
+            // Test getFilesRecursive with various patterns and predicates to trigger lambda
+            // execution
             List<File> allFiles = SpecsIo.getFilesRecursive(testRoot);
             assertThat(allFiles).hasSizeGreaterThan(0);
-            
+
             // Test with extension filtering to trigger lambda conditions
             List<File> txtFiles = SpecsIo.getFilesRecursive(testRoot, "txt");
             assertThat(txtFiles).hasSizeGreaterThan(0);
-            
-            // Test with collection and recursive flag variations to trigger different lambda paths
+
+            // Test with collection and recursive flag variations to trigger different
+            // lambda paths
             Collection<String> collectedFiles = new ArrayList<>();
             SpecsIo.getFilesRecursive(testRoot, collectedFiles, true);
             assertThat(collectedFiles).hasSizeGreaterThan(0);
-            
+
             Collection<String> nonRecursiveFiles = new ArrayList<>();
             SpecsIo.getFilesRecursive(testRoot, nonRecursiveFiles, false);
             assertThat(nonRecursiveFiles).hasSizeGreaterThanOrEqualTo(1); // At least root.txt
-            
+
             // Test with file predicate to trigger lambda execution paths
             Collection<String> filteredFiles = new ArrayList<>();
             java.util.function.Predicate<File> predicate = file -> file.getName().contains("test");

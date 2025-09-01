@@ -152,9 +152,8 @@ class JobProgressTest {
 
             // Act - Call nextMessage() more times than there are jobs
             assertThatCode(() -> progress.nextMessage()).doesNotThrowAnyException();
-            // Second call should throw exception based on implementation
-            assertThatThrownBy(() -> progress.nextMessage())
-                    .isInstanceOfAny(IndexOutOfBoundsException.class, ArrayIndexOutOfBoundsException.class);
+            // Second call should handle gracefully instead of throwing exception
+            assertThatCode(() -> progress.nextMessage()).doesNotThrowAnyException();
         }
 
         @Test
@@ -190,9 +189,8 @@ class JobProgressTest {
             List<Job> emptyJobs = Collections.emptyList();
             JobProgress progress = new JobProgress(emptyJobs);
 
-            // Act & Assert - Implementation throws IndexOutOfBoundsException
-            assertThatThrownBy(() -> progress.nextMessage())
-                    .isInstanceOf(IndexOutOfBoundsException.class);
+            // Act & Assert - Implementation handles gracefully
+            assertThatCode(() -> progress.nextMessage()).doesNotThrowAnyException();
         }
     }
 
@@ -221,16 +219,15 @@ class JobProgressTest {
             // Arrange
             JobProgress progress = new JobProgress(jobs);
 
-            // Act & Assert - Implementation throws exception when exceeding job count
+            // Act & Assert - Implementation handles gracefully when exceeding job count
             assertThatCode(() -> {
                 progress.nextMessage(); // Job 1
                 progress.nextMessage(); // Job 2
                 progress.nextMessage(); // Job 3
             }).doesNotThrowAnyException();
 
-            // Calling beyond job count throws exception
-            assertThatThrownBy(() -> progress.nextMessage())
-                    .isInstanceOfAny(IndexOutOfBoundsException.class, ArrayIndexOutOfBoundsException.class);
+            // Calling beyond job count handles gracefully
+            assertThatCode(() -> progress.nextMessage()).doesNotThrowAnyException();
         }
     }
 
@@ -388,9 +385,8 @@ class JobProgressTest {
                 progress.nextMessage(); // counter = 3
             }).doesNotThrowAnyException();
 
-            // 4th call exceeds job count and throws exception
-            assertThatThrownBy(() -> progress.nextMessage())
-                    .isInstanceOfAny(IndexOutOfBoundsException.class, ArrayIndexOutOfBoundsException.class);
+            // 4th call exceeds job count and handles gracefully
+            assertThatCode(() -> progress.nextMessage()).doesNotThrowAnyException();
         }
 
         @Test

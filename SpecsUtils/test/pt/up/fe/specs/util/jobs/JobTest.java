@@ -291,12 +291,9 @@ class JobTest {
             int result = job.run();
 
             // Assert
-            assertThat(result).isEqualTo(-1);
-            // BUG: Job does not propagate interrupted flag when execution returns error
-            // code
-            // The JavaExecution sets interrupted=true internally, but Job only checks
-            // interruption when execution returns 0
-            assertThat(job.isInterrupted()).isFalse(); // Current behavior - should be true
+            assertThat(result).isEqualTo(0); // Returns 0 when interrupted
+            // Job properly propagates interrupted flag when execution throws exception
+            assertThat(job.isInterrupted()).isTrue();
         }
     }
 
