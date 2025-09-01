@@ -36,7 +36,7 @@ public class ParserResult<T> {
     }
 
     public static <T> ParserResult<Optional<T>> asOptional(ParserResult<T> parserResult) {
-        return new ParserResult<>(parserResult.getModifiedString(), Optional.of(parserResult.getResult()));
+        return new ParserResult<>(parserResult.getModifiedString(), Optional.ofNullable(parserResult.getResult()));
     }
 
 }

@@ -202,14 +202,17 @@ public class ParserResultTest {
         }
 
         @Test
-        @DisplayName("Should handle null result by throwing NPE")
+        @DisplayName("Should handle null result by returning empty Optional")
         void testAsOptionalWithNullResult() {
             StringSlice slice = new StringSlice("text");
             ParserResult<String> original = new ParserResult<>(slice, null);
 
-            // The implementation uses Optional.of() which throws NPE for null values
-            assertThatThrownBy(() -> ParserResult.asOptional(original))
-                    .isInstanceOf(NullPointerException.class);
+            // The implementation uses Optional.ofNullable() which gracefully handles null
+            // values
+            ParserResult<Optional<String>> optionalResult = ParserResult.asOptional(original);
+
+            assertThat(optionalResult.getModifiedString()).isEqualTo(slice);
+            assertThat(optionalResult.getResult()).isEmpty();
         }
 
         @Test

@@ -56,12 +56,12 @@ public class StringParser {
     }
 
     public <T> T applyPrivate(ParserResult<T> result) {
-        int originalLength = currentString.length();
+        StringSlice originalString = currentString;
 
         currentString = result.getModifiedString();
 
-        // Apply trim if there where modifications
-        if (trimAfterApply && currentString.length() != originalLength) {
+        // Apply trim if there were modifications (string object changed)
+        if (trimAfterApply && currentString != originalString) {
             currentString = currentString.trim();
         }
 

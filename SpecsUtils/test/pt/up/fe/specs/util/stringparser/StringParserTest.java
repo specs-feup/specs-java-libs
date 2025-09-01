@@ -424,8 +424,8 @@ public class StringParserTest {
 
             assertThat(first).isEqualTo("first");
             assertThat(second).isEqualTo("second");
-            // The actual behavior includes the comma due to trim implementation
-            assertThat(parser.toString().trim()).isEqualTo(",third");
+            // The remaining string includes the comma, as trim() only removes whitespace
+            assertThat(parser.toString()).isEqualTo(",third");
         }
 
         @Test
