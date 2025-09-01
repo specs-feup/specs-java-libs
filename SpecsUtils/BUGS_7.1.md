@@ -23,7 +23,7 @@ boolean hasAnnotation = method.isAnnotationPresent(Override.class); // Returns f
 ### Bug 2: PragmaRule Whitespace Handling in Multi-line Continuation
 **Affected Class:** PragmaRule
 **Date Found:** During comprehensive testing of Phase 7.1
-**Severity:** Low (Design Behavior Issue)
+**Severity:** THIS IS NOT A BUG. FIX THE TESTS TO EXPECT THIS BEHAVIOUR.
 
 **Description:**
 The PragmaRule implementation preserves trailing whitespace when removing backslash continuation characters from multi-line pragma directives. When a line ends with "content \\" (content followed by spaces and backslash), the implementation removes only the final backslash character but preserves the trailing spaces, resulting in "content " in the output. This behavior is consistent with how the implementation works - it only removes the last character (backslash) without trimming surrounding whitespace. Additionally, the implementation does not handle null iterators gracefully for multi-line pragmas, throwing NullPointerException instead of returning an empty result or handling the error more elegantly.
@@ -50,7 +50,7 @@ The PragmaMacroRule implementation throws RuntimeExceptions when encountering ma
 ### Bug 4: PragmaMacroRule Escape Sequence Preservation
 **Affected Class:** PragmaMacroRule
 **Date Found:** During comprehensive testing of Phase 7.1
-**Severity:** Low (Behavior Documentation Issue)
+**Severity:** THIS IS NOT A BUG. FIX THE TESTS TO EXPECT THIS BEHAVIOUR.
 
 **Description:**
 The PragmaMacroRule preserves escape sequences in the parsed output rather than processing them. For example, when parsing `_Pragma("message(\"Hello World\")")`, the output contains the literal string `message(\"Hello World\")` with escaped quotes rather than `message("Hello World")` with processed quotes. This preservation of escape sequences appears to be a design choice to maintain the raw content as it appears in the source code, allowing downstream processors to handle escape sequence interpretation as needed.
@@ -61,31 +61,32 @@ The PragmaMacroRule preserves escape sequences in the parsed output rather than 
 
 **Issue**: ArgumentsParser preserves literal escape sequences in output rather than processing them.
 
-**Description**: The `ArgumentsParser.parse()` method captures escape sequences using the `Escape.newSlashChar()` implementation, which returns the full escape sequence (backslash + escaped character) as-is rather than processing the escape and returning only the escaped character. For example, `"arg\\with\\spaces"` parses to `["arg\\with\\spaces"]` instead of `["arg with spaces"]`. This behavior suggests the parser is designed to preserve escape information for downstream processing rather than immediately interpreting escapes. The `Escape.newSlashChar()` method specifically captures 2 characters (backslash + next character) without transformation.
+**Description**: The `ArgumentsParser.parse()` method captures escape sequences using the `Escape.newSlashChar()` implementation, which returns the full escape sequence (backslash + escaped character) as-is rather than processing the escape and returning only the escaped character. For example, `"arg\\with\\spaces"` parses to `["arg\\with\\spaces"]` instead of `["arg with spaces"]`. This behavior suggests the parser is designed to preserve escape information for downstream processing rather than immediately interpreting escapes. The `Escape.newSlashChar()` method specifically captures 2 characters (backslash + next character) without transformation. NOT A BUG. THIS IS EXPECTED BEHAVIOUR. FIX THE TESTS TO EXPECT THIS.
 
 ### ArgumentsParser Empty Arguments Handling
 
 **Issue**: ArgumentsParser skips empty arguments produced by empty quoted strings or consecutive delimiters.
 
-**Description**: The `ArgumentsParser.parse()` method contains logic that only adds arguments to the result list if they are not empty (`if (!tentativeArg.isEmpty())`). This means inputs like `"arg1 \"\" arg2"` or `"arg1  arg2"` (with empty gluers) produce `["arg1", "arg2"]` instead of including empty strings. This is a design decision that filters out empty arguments, which may be intentional for command-line parsing scenarios where empty arguments are typically not meaningful.
+**Description**: The `ArgumentsParser.parse()` method contains logic that only adds arguments to the result list if they are not empty (`if (!tentativeArg.isEmpty())`). This means inputs like `"arg1 \"\" arg2"` or `"arg1  arg2"` (with empty gluers) produce `["arg1", "arg2"]` instead of including empty strings. This is a design decision that filters out empty arguments, which may be intentional for command-line parsing scenarios where empty arguments are typically not meaningful. NOT A BUG. THIS IS EXPECTED BEHAVIOUR. FIX THE TESTS TO EXPECT THIS.
 
 ### ArgumentsParser Null Input Exception Type
 
 **Issue**: ArgumentsParser throws IllegalArgumentException instead of NullPointerException for null input.
 
-**Description**: When `ArgumentsParser.parse(null)` is called, the method throws an `IllegalArgumentException` with message "value must not be null" rather than a `NullPointerException`. This occurs because the parser creates a `StringSlice(null)` which validates the input and throws `IllegalArgumentException` when null. This is actually better error handling than a raw NPE, providing more descriptive error messages.
+**Description**: When `ArgumentsParser.parse(null)` is called, the method throws an `IllegalArgumentException` with message "value must not be null" rather than a `NullPointerException`. This occurs because the parser creates a `StringSlice(null)` which validates the input and throws `IllegalArgumentException` when null. This is actually better error handling than a raw NPE, providing more descriptive error messages. NOT A BUG. THIS IS EXPECTED BEHAVIOUR. FIX THE TESTS TO EXPECT THIS.
 
 ### ArgumentsParser Trim Behavior Scope
 
 **Issue**: ArgumentsParser with trimming enabled trims more aggressively than expected.
 
 **Description**: When `trimArgs=false` is specified in factory methods like `newCommandLineWithTrim(false)`, the parser still appears to perform some trimming operations. The trim flag controls post-processing trimming of individual arguments, but the parser may perform other whitespace handling during parsing. The factory method naming suggests different behavior than what is implemented.
+EXPLAIN THE ERROR TO ME USING EXAMPLES. DO NOT MAKE ANY CHANGES.
 
 ### ArgumentsParser Pragma Text Factory Configuration
 
 **Issue**: ArgumentsParser pragma text factory has unexpected delimiter and gluer configuration.
 
-**Description**: The `newPragmaText()` factory method creates a parser with space delimiters and parenthesis gluers, but when tested with simple pragma-style input, it doesn't behave as expected for pragma parsing scenarios. The configuration may be designed for specific pragma syntax patterns that differ from general pragma text parsing expectations.
+**Description**: The `newPragmaText()` factory method creates a parser with space delimiters and parenthesis gluers, but when tested with simple pragma-style input, it doesn't behave as expected for pragma parsing scenarios. The configuration may be designed for specific pragma syntax patterns that differ from general pragma text parsing expectations. EXPLAIN THE ERROR TO ME USING EXAMPLES. DO NOT MAKE ANY CHANGES.
 
 ## Escape Behavior Documentation
 
@@ -115,7 +116,7 @@ The `StringParser.apply()` method has a trimming behavior that appears to not tr
 
 **StringParsers.parseWord() Behavior**: The parseWord() method does not stop at whitespace boundaries as expected. When parsing "word\tafter" with tab separator, it returns "word\tafter" instead of just "word". Similarly, when parsing complex content like "function(arg1, arg2)" expecting to extract just "function", it returns the entire "function(arg1," portion. This suggests parseWord() continues parsing until it encounters specific terminators rather than stopping at the first whitespace.
 
-**StringParsersLegacy.parseInt() Graceful Failure**: The parseInt() method in StringParsersLegacy does not throw exceptions for empty strings as expected in standard integer parsing. When attempting to parse an empty string, it returns a result rather than throwing a NumberFormatException, indicating it may have a default value or graceful fallback behavior.
+**StringParsersLegacy.parseInt() Graceful Failure**: The parseInt() method in StringParsersLegacy does not throw exceptions for empty strings as expected in standard integer parsing. When attempting to parse an empty string, it returns a result rather than throwing a NumberFormatException, indicating it may have a default value or graceful fallback behavior. THIS IS NOT A BUG. Analyse the code, then FIX THE TESTS TO EXPECT THIS BEHAVIOUR.
 
 **StringParsers.parseNested() Error Handling**: The parseNested() method throws IndexOutOfBoundsException rather than meaningful parsing exceptions when encountering malformed nested structures. For unmatched opening brackets like "{unclosed", it throws IndexOutOfBoundsException from StringSlice.charAt() instead of a proper parsing error with message "Could not find matching". Additionally, it does not properly validate missing opening brackets in strings like "content}", suggesting the error handling is incomplete or inconsistent.
 
