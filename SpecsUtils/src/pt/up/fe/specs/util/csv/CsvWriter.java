@@ -75,7 +75,7 @@ public class CsvWriter {
     }
 
     private String getDataEndColumn() {
-        return SpecsStrings.toExcelColumn(header.size());
+        return SpecsStrings.toExcelColumn(header.size() + dataOffset);
     }
 
     public CsvWriter addField(CsvField... fields) {
@@ -134,6 +134,12 @@ public class CsvWriter {
         // Separator
         if (excelSupport) {
             csv.append("sep=").append(this.delimiter).append(newline);
+        }
+
+        // Handle empty header case
+        if (this.header.isEmpty()) {
+            csv.append(this.newline);
+            return csv.toString();
         }
 
         // Header
