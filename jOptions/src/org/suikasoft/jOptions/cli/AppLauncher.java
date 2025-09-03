@@ -1,14 +1,14 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.cli;
@@ -27,109 +27,62 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * @author Joao Bispo
- * 
+ * Utility class for launching jOptions-based applications from the command line.
  */
 public class AppLauncher {
 
     private final App app;
-    // private final AppKernel app;
-    // private final String appName;
-    // private final SetupDefinition setupDefition;
-
     private final List<String> resources;
-    // private final Map<Class<?>, Object> defaultValues;
-
     private File baseFolder;
 
-    // private final AppPersistence persistence;
-
-    /*
-    public AppLauncher(AppKernel app, String appName,
-        Class<? extends Enum<? extends SetupProvider>> setupDefinitionClass,
-        AppPersistence persistence) {
-    
-    this(app, appName, getDefinition(setupDefinitionClass), persistence);
-    }
-    */
-    /*
-    private static SetupDefinition getDefinition(
-        Class<? extends Enum<? extends SetupProvider>> setupDefinitionClass) {
-    Enum<? extends SetupProvider> enums[] = setupDefinitionClass.getEnumConstants();
-    if (enums.length == 0) {
-        throw new RuntimeException("Given enum class '" + setupDefinitionClass
-    	    + "' has zero enums.");
-    }
-    
-    return ((SetupProvider) enums[0]).getSetupDefinition();
-    }
-    */
     /**
-     * @param app
+     * Constructs an AppLauncher instance for the given application.
+     *
+     * @param app the application to be launched
      */
-    // public AppLauncher(AppKernel app, String appName, SetupDefinition setupDefinition,
-    // AppPersistence persistence) {
     public AppLauncher(App app) {
-
         this.app = app;
-        // this.app = app;
-        // this.appName = appName;
-        // this.setupDefition = setupDefinition;
-
         resources = SpecsFactory.newArrayList();
-        // defaultValues = CommandLineUtils.getDefaultValues();
-
-        // persistence = new XmlPersistence(setupDefinition.getOptions());
-        // this.persistence = persistence;
         baseFolder = null;
     }
 
+    /**
+     * Adds resources to the launcher.
+     *
+     * @param resources a collection of resource paths
+     */
     public void addResources(Collection<String> resources) {
         this.resources.addAll(resources);
     }
 
     /**
-     * @return the app
+     * Retrieves the application associated with this launcher.
+     *
+     * @return the application instance
      */
     public App getApp() {
         return app;
     }
 
     /**
-     * @return the appName
-     */
-    /*
-    public String getAppName() {
-    return appName;
-    }
-    */
-
-    /**
-     * Helper method with String array.
-     * 
-     * @param args
-     * @return
+     * Launches the application with the given arguments.
+     *
+     * @param args an array of command-line arguments
+     * @return true if the application launched successfully, false otherwise
      */
     public boolean launch(String[] args) {
         return launch(Arrays.asList(args));
     }
 
     /**
-     * Parse the input arguments looking for a configuration file in the first argument.
-     * 
-     * <p>
-     * If found, parses other arguments as key-value pairs, to be replaced in the given setup file, and launches the
-     * program returning true upon completion.
-     * 
-     * If the first argument is not a configuration file, applies default values to the non-defined parameters.
-     * 
-     * @param args
-     * @return
+     * Launches the application with the given arguments.
+     *
+     * @param args a list of command-line arguments
+     * @return true if the application launched successfully, false otherwise
      */
     public boolean launch(List<String> args) {
         if (args.isEmpty()) {
-            SpecsLogs
-                    .msgInfo("No arguments found. Please enter a configuration file, or key/value pairs.");
+            SpecsLogs.msgInfo("No arguments found. Please enter a configuration file, or key/value pairs.");
             return false;
         }
 
@@ -154,8 +107,10 @@ public class AppLauncher {
     }
 
     /**
-     * @param args
-     * @return
+     * Parses special arguments such as base folder configuration.
+     *
+     * @param args a list of command-line arguments
+     * @return the modified list of arguments
      */
     private List<String> parseSpecialArguments(List<String> args) {
         // If first argument is base_folder="path", create temporary file there and remove option
@@ -171,29 +126,14 @@ public class AppLauncher {
     }
 
     /**
-     * Adds a default value for options of the given class.
-     * 
-     * @param aClass
-     * @param value
+     * Launches the application in command-line mode without a setup file.
+     *
+     * @param args a list of command-line arguments
+     * @return true if the application launched successfully, false otherwise
      */
-    /*
-    public void addDefaultValue(Class<?> aClass, Object value) {
-    Object previousValue = defaultValues.get(aClass);
-    if (previousValue != null) {
-        LoggingUtils.msgInfo("Replacing previous default value for class '"
-    	    + aClass.getSimpleName() + "': " + previousValue + " -> " + value);
-    }
-    
-    defaultValues.put(aClass, value);
-    }
-    */
-
     private boolean launchCommandLineNoSetup(List<String> args) {
-
         // Create empty setup data
         DataStore data = DataStore.newInstance(app.getDefinition());
-
-        // SimpleSetup setupData = SimpleSetup.newInstance(app.getDefinition(), defaultValues);
 
         // Execute command-line mode
         commandLineWithSetup(args, data);
@@ -201,11 +141,15 @@ public class AppLauncher {
         return true;
     }
 
+    /**
+     * Executes the application with the given setup data and arguments.
+     *
+     * @param args a list of command-line arguments
+     * @param setupData the setup data for the application
+     */
     private void commandLineWithSetup(List<String> args, DataStore setupData) {
-
         new CommandLineUtils(app.getDefinition()).addArgs(setupData, args);
 
-        // File tempFile = new File(baseFolder, app.getClass().getSimpleName() + "__temp_config.xml");
         File tempFile = new File(baseFolder, app.getClass().getSimpleName() + "__temp_config.data");
 
         app.getPersistence().saveData(tempFile, setupData, true);
@@ -218,6 +162,12 @@ public class AppLauncher {
         tempFile.delete();
     }
 
+    /**
+     * Executes the application with the given setup file.
+     *
+     * @param setupFile the setup file containing configuration data
+     * @return the result of the application execution
+     */
     public int execute(File setupFile) {
         DataStore setupData = app.getPersistence().loadData(setupFile);
 

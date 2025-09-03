@@ -1,14 +1,14 @@
 /*
  * Copyright 2013 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 package org.specs.generators.java.members;
 
@@ -31,10 +31,9 @@ import pt.up.fe.specs.util.SpecsLogs;
 import tdrc.utils.StringUtils;
 
 /**
- * Method declaration for a {@link JavaClass}
- * 
+ * Represents a method declaration for a Java class, including return type, arguments, and modifiers.
+ *
  * @author Tiago
- * 
  */
 public class Method implements IGenerate {
 
@@ -49,26 +48,21 @@ public class Method implements IGenerate {
     private StringBuffer methodBody;
 
     /**
-     * Generate a public method with return type returnType
-     * 
-     * @param returnType
-     *            the return of the method
-     * @param name
-     *            the name for the method
+     * Generates a public method with the specified return type and name.
+     *
+     * @param returnType the return type of the method
+     * @param name the name of the method
      */
     public Method(JavaType returnType, String name) {
         init(returnType, name);
     }
 
     /**
-     * Generate a method of return type returnType with the chosen privacy
-     * 
-     * @param returnType
-     *            the return of the method
-     * @param name
-     *            the name for the method
-     * @param privacy
-     *            the privacy level
+     * Generates a method with the specified return type, name, and privacy level.
+     *
+     * @param returnType the return type of the method
+     * @param name the name of the method
+     * @param privacy the privacy level
      */
     public Method(JavaType returnType, String name, Privacy privacy) {
         init(returnType, name);
@@ -76,14 +70,11 @@ public class Method implements IGenerate {
     }
 
     /**
-     * Generate a method of return type returnType with the chosen modifier
-     * 
-     * @param returnType
-     *            the return of the method
-     * @param name
-     *            the name for the method
-     * @param modifier
-     *            the modifier for the method
+     * Generates a method with the specified return type, name, and modifier.
+     *
+     * @param returnType the return type of the method
+     * @param name the name of the method
+     * @param modifier the modifier for the method
      */
     public Method(JavaType returnType, String name, Modifier modifier) {
         init(returnType, name);
@@ -91,16 +82,12 @@ public class Method implements IGenerate {
     }
 
     /**
-     * Generate a method of return type returnType with the chosen privacy and modifier
-     * 
-     * @param returnType
-     *            the return of the method
-     * @param name
-     *            the name for the method
-     * @param privacy
-     *            the privacy level
-     * @param modifier
-     *            the modifier for the method
+     * Generates a method with the specified return type, name, privacy, and modifier.
+     *
+     * @param returnType the return type of the method
+     * @param name the name of the method
+     * @param privacy the privacy level
+     * @param modifier the modifier for the method
      */
     public Method(JavaType returnType, String name, Privacy privacy, Modifier modifier) {
         init(returnType, name);

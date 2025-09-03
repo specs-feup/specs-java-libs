@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
+ * Codec for handling multiple enums in jOptions.
+ * 
  * @deprecated
  * @author JoaoBispo
  *
@@ -35,6 +37,11 @@ public class MultiEnumCodec<T extends Enum<T>> implements StringCodec<List<T>> {
     private final Class<T> anEnum;
     private final Map<String, T> decodeMap;
 
+    /**
+     * Constructor for MultiEnumCodec.
+     * 
+     * @param anEnum the class of the enum type
+     */
     public MultiEnumCodec(Class<T> anEnum) {
         this.anEnum = anEnum;
         this.decodeMap = new HashMap<>();
@@ -44,6 +51,12 @@ public class MultiEnumCodec<T extends Enum<T>> implements StringCodec<List<T>> {
         }
     }
 
+    /**
+     * Decodes a string into a list of enum values.
+     * 
+     * @param value the string to decode
+     * @return a list of decoded enum values
+     */
     @Override
     public List<T> decode(String value) {
         List<T> decodedValues = new ArrayList<>();
@@ -71,6 +84,12 @@ public class MultiEnumCodec<T extends Enum<T>> implements StringCodec<List<T>> {
         return enumValue;
     }
 
+    /**
+     * Encodes a list of enum values into a string.
+     * 
+     * @param value the list of enum values to encode
+     * @return the encoded string
+     */
     @Override
     public String encode(List<T> value) {
         return value.stream()

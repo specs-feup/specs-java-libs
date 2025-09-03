@@ -13,10 +13,18 @@
 
 package pt.up.fe.specs.jsengine;
 
+/**
+ * Enum representing the types of iteration supported by JavaScript 'for...of' loops.
+ */
 public enum ForOfType {
 
-    // Natively supports 'for(var a of...)
+    /**
+     * Represents native support for 'for(var a of...)' loops.
+     */
     NATIVE,
-    // Support the code 'for each (...' as for-each implementation
+
+    /**
+     * Represents support for 'for each (...' as a for-each implementation.
+     */
     FOR_EACH;
 }

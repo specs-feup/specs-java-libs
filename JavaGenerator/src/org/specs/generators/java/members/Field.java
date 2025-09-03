@@ -1,14 +1,14 @@
 /*
  * Copyright 2013 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 package org.specs.generators.java.members;
 
@@ -26,10 +26,9 @@ import org.specs.generators.java.types.JavaTypeFactory;
 import org.specs.generators.java.utils.Utils;
 
 /**
- * Field declaration for a {@link JavaClass} field
- * 
+ * Represents a field declaration for a Java class.
+ *
  * @author Tiago
- * 
  */
 public class Field implements IGenerate {
     private Privacy privacy;
@@ -41,26 +40,21 @@ public class Field implements IGenerate {
     private IExpression initializer;
 
     /**
-     * Generate a private field of type classType
-     * 
-     * @param classType
-     *            the class of the field
-     * @param name
-     *            the name for the field
+     * Generates a private field of the specified type and name.
+     *
+     * @param classType the type of the field
+     * @param name the name of the field
      */
     public Field(JavaType classType, String name) {
         init(classType, name, Privacy.PRIVATE);
     }
 
     /**
-     * Generate a field of type classType with the chosen privacy
-     * 
-     * @param classType
-     *            the class of the field
-     * @param name
-     *            the name for the field
-     * @param privacy
-     *            the privacy level
+     * Generates a field of the specified type, name, and privacy level.
+     *
+     * @param classType the type of the field
+     * @param name the name of the field
+     * @param privacy the privacy level
      */
     public Field(JavaType classType, String name, Privacy privacy) {
         init(classType, name, privacy);
@@ -77,10 +71,9 @@ public class Field implements IGenerate {
     }
 
     /**
-     * Add a new modifier to the field
-     * 
-     * @param newMod
-     *            the new modifier
+     * Adds a new modifier to the field.
+     *
+     * @param newMod the new modifier
      */
     public void addModifier(Modifier newMod) {
         if (!modifiers.contains(newMod)) {
@@ -89,10 +82,9 @@ public class Field implements IGenerate {
     }
 
     /**
-     * Add a new annotation to the class
-     * 
-     * @param annotation
-     *            the new annotation
+     * Adds a new annotation to the field.
+     *
+     * @param annotation the new annotation
      * @return true if the annotation was successfully added
      */
     public boolean add(Annotation annotation) {
@@ -100,10 +92,9 @@ public class Field implements IGenerate {
     }
 
     /**
-     * Removes a annotation from the class
-     * 
-     * @param annotation
-     *            the annotation to remove
+     * Removes an annotation from the field.
+     *
+     * @param annotation the annotation to remove
      * @return true if the annotation was successfully removed
      */
     public boolean remove(Annotation annotation) {
@@ -111,11 +102,10 @@ public class Field implements IGenerate {
     }
 
     /**
-     * Generate java source based on the field's privacy, modifiers, class and name
-     * 
-     * @param indentation
-     *            the code indentation
-     * @return
+     * Generates Java source code based on the field's privacy, modifiers, type, and name.
+     *
+     * @param indentation the code indentation
+     * @return the generated code as a StringBuilder
      */
     @Override
     public StringBuilder generateCode(int indentation) {
@@ -157,76 +147,88 @@ public class Field implements IGenerate {
     }
 
     /**
-     * @return the privacy
+     * @return the privacy level of the field
      */
     public Privacy getPrivacy() {
         return privacy;
     }
 
     /**
-     * @param privacy
-     *            the privacy to set
+     * Sets the privacy level of the field.
+     *
+     * @param privacy the privacy level to set
      */
     public void setPrivacy(Privacy privacy) {
         this.privacy = privacy;
     }
 
     /**
-     * @return the name
+     * @return the name of the field
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @param name
-     *            the name to set
+     * Sets the name of the field.
+     *
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return the classType
+     * @return the type of the field
      */
     public JavaType getType() {
         return classType;
     }
 
     /**
-     * @param classType
-     *            the classType to set
+     * Sets the type of the field.
+     *
+     * @param classType the type to set
      */
     public void setType(JavaType classType) {
         this.classType = classType;
     }
 
     /**
-     * @return the modifiers
+     * @return the list of modifiers applied to the field
      */
     public List<Modifier> getModifiers() {
         return modifiers;
     }
 
     /**
-     * @return the defaultInitializer
+     * @return true if the field has a default initializer, false otherwise
      */
     public boolean isDefaultInitializer() {
         return defaultInitializer;
     }
 
     /**
-     * @param defaultInitializer
-     *            the defaultInitializer to set
+     * Sets whether the field has a default initializer.
+     *
+     * @param defaultInitializer the default initializer flag to set
      */
     public void setDefaultInitializer(boolean defaultInitializer) {
         this.defaultInitializer = defaultInitializer;
     }
 
+    /**
+     * @return the initializer expression of the field
+     */
     public IExpression getInitializer() {
         return initializer;
     }
 
+    /**
+     * Sets the initializer expression of the field.
+     *
+     * @param initializer the initializer expression to set
+     */
     public void setInitializer(IExpression initializer) {
         this.initializer = initializer;
     }

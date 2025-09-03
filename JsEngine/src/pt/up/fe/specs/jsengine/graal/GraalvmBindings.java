@@ -27,33 +27,38 @@ import javax.script.Bindings;
 import org.apache.commons.lang3.tuple.Pair;
 import org.graalvm.polyglot.Value;
 
+/**
+ * Utility class for managing bindings in GraalVM JavaScript engine contexts.
+ */
 public class GraalvmBindings implements Bindings {
 
-    // private final Bindings bindings;
-    // private final GraalvmJsEngine engine;
     private final Value bindings;
 
-    // public GraalvmBindings(GraalvmJsEngine engine, Object bindings) {
-    // this(engine, engine.asValue(bindings));
-    // // this.engine = engine;
-    // // this.bindings = engine.asValue(bindings);
-    // }
-
-    // public GraalvmBindings(GraalvmJsEngine engine, Value bindings) {
+    /**
+     * Constructs a GraalvmBindings instance with the given bindings.
+     *
+     * @param bindings the GraalVM Value representing the bindings
+     */
     public GraalvmBindings(Value bindings) {
-        // this.engine = engine;
         this.bindings = bindings;
-        // System.out.println("CONSTRUCTOR VALUE: " + bindings);
-        // System.out.println("HAS ARRAY ELEM: " + bindings.hasArrayElements());
     }
 
+    /**
+     * Retrieves the underlying GraalVM Value object.
+     *
+     * @return the GraalVM Value object
+     */
     public Value getValue() {
         return bindings;
     }
 
+    /**
+     * Returns the number of elements in the bindings.
+     *
+     * @return the size of the bindings
+     */
     @Override
     public int size() {
-
         if (bindings.hasArrayElements()) {
             return (int) bindings.getArraySize();
         }
@@ -63,20 +68,32 @@ public class GraalvmBindings implements Bindings {
         }
 
         return 0;
-
     }
 
+    /**
+     * Checks if the bindings are empty.
+     *
+     * @return true if the bindings are empty, false otherwise
+     */
     @Override
     public boolean isEmpty() {
         return size() == 0;
-        // return bindings.getMemberKeys().isEmpty();
     }
 
+    /**
+     * Checks if the bindings contain the specified value.
+     *
+     * @param value the value to check
+     * @return true if the value is present, false otherwise
+     */
     @Override
     public boolean containsValue(Object value) {
         return values().contains(value);
     }
 
+    /**
+     * Clears all elements in the bindings.
+     */
     @Override
     public void clear() {
         int arraySize = (int) bindings.getArraySize();
@@ -86,9 +103,13 @@ public class GraalvmBindings implements Bindings {
 
         bindings.getMemberKeys().stream()
                 .forEach(bindings::removeMember);
-
     }
 
+    /**
+     * Retrieves the set of keys in the bindings.
+     *
+     * @return a set of keys
+     */
     @Override
     public Set<String> keySet() {
         if (bindings.hasArrayElements()) {
@@ -108,6 +129,11 @@ public class GraalvmBindings implements Bindings {
         return Collections.emptySet();
     }
 
+    /**
+     * Retrieves the collection of values in the bindings.
+     *
+     * @return a collection of values
+     */
     @Override
     public Collection<Object> values() {
         if (bindings.hasArrayElements()) {
@@ -129,9 +155,13 @@ public class GraalvmBindings implements Bindings {
         return Collections.emptyList();
     }
 
+    /**
+     * Retrieves the set of entries in the bindings.
+     *
+     * @return a set of entries
+     */
     @Override
     public Set<Entry<String, Object>> entrySet() {
-
         if (bindings.hasArrayElements()) {
             Set<Entry<String, Object>> set = new HashSet<>();
             for (int i = 0; i < bindings.getArraySize(); i++) {
@@ -153,6 +183,13 @@ public class GraalvmBindings implements Bindings {
         return Collections.emptySet();
     }
 
+    /**
+     * Adds a new key-value pair to the bindings.
+     *
+     * @param name  the key
+     * @param value the value
+     * @return the previous value associated with the key, or null if none
+     */
     @Override
     public Object put(String name, Object value) {
         if (bindings.hasArrayElements()) {
@@ -164,16 +201,16 @@ public class GraalvmBindings implements Bindings {
             return previousValue;
         }
 
-        // Value valueObject = engine.asValue(bindings);
-        // Value previousValue = valueObject.getMember(name);
-        // valueObject.putMember(name, value);
-
-        // Assume object map
         Value previousValue = bindings.getMember(name);
         bindings.putMember(name, value);
         return previousValue;
     }
 
+    /**
+     * Merges the given map into the bindings.
+     *
+     * @param toMerge the map to merge
+     */
     @Override
     public void putAll(Map<? extends String, ? extends Object> toMerge) {
         if (bindings.hasArrayElements()) {
@@ -186,6 +223,12 @@ public class GraalvmBindings implements Bindings {
                 .forEach(entry -> bindings.putMember(entry.getKey(), entry.getValue()));
     }
 
+    /**
+     * Checks if the bindings contain the specified key.
+     *
+     * @param key the key to check
+     * @return true if the key is present, false otherwise
+     */
     @Override
     public boolean containsKey(Object key) {
         if (bindings.hasArrayElements()) {
@@ -195,16 +238,27 @@ public class GraalvmBindings implements Bindings {
         return bindings.hasMember(key.toString());
     }
 
+    /**
+     * Retrieves the value associated with the specified key.
+     *
+     * @param key the key
+     * @return the value associated with the key, or null if none
+     */
     @Override
     public Object get(Object key) {
         if (bindings.hasArrayElements()) {
-            // System.out.println("ARRAY GET: " + bindings.getArrayElement(Long.valueOf(key.toString())));
             return bindings.getArrayElement(Long.valueOf(key.toString()));
         }
 
         return bindings.getMember(key.toString());
     }
 
+    /**
+     * Removes the value associated with the specified key.
+     *
+     * @param key the key
+     * @return the previous value associated with the key, or null if none
+     */
     @Override
     public Object remove(Object key) {
         if (bindings.hasArrayElements()) {
@@ -219,31 +273,13 @@ public class GraalvmBindings implements Bindings {
         return previousValue;
     }
 
+    /**
+     * Returns a string representation of the bindings.
+     *
+     * @return a string representation of the bindings
+     */
     @Override
     public String toString() {
-        // System.out.println("TOSTRING");
-        // Special case for array
-        /*
-        if (bindings.hasArrayElements()) {
-            StringBuilder arrayString = new StringBuilder();
-            for (int i = 0; i < bindings.getArraySize(); i++) {
-                if (i != 0) {
-                    arrayString.append(",");
-                }
-                arrayString.append(bindings.getArrayElement(i));
-            }
-        
-            return arrayString.toString();
-            // Object[] list = bindings.as(Object[].class);
-            // return Arrays.toString(list);
-        }
-        */
-
-        // Undefined
-        // if (bindings.isNull()) {
-        // return "";
-        // }
-
         return bindings.toString();
     }
 }

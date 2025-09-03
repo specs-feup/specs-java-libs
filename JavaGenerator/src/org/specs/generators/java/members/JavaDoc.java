@@ -1,14 +1,14 @@
 /*
  * Copyright 2013 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 package org.specs.generators.java.members;
 
@@ -20,10 +20,9 @@ import org.specs.generators.java.enums.JDocTag;
 import org.specs.generators.java.utils.Utils;
 
 /**
- * Generate a comment used for a java document
- * 
+ * Represents a JavaDoc comment for code generation, including tags and descriptions.
+ *
  * @author Tiago
- * 
  */
 public class JavaDoc implements IGenerate {
 
@@ -31,7 +30,7 @@ public class JavaDoc implements IGenerate {
     private final List<JavaDocTag> tags;
 
     /**
-     * Empty constructor
+     * Constructs an empty JavaDoc comment.
      */
     public JavaDoc() {
         tags = new ArrayList<>();
@@ -39,10 +38,9 @@ public class JavaDoc implements IGenerate {
     }
 
     /**
-     * Create a javadoc comment with a predefined {@link StringBuilder}
-     * 
-     * @param comment
-     *            the {@link StringBuilder} containing the comment
+     * Constructs a JavaDoc comment with a predefined StringBuilder.
+     *
+     * @param comment the StringBuilder containing the comment
      */
     public JavaDoc(StringBuilder comment) {
         tags = new ArrayList<>();
@@ -50,51 +48,57 @@ public class JavaDoc implements IGenerate {
     }
 
     /**
-     * Create a javadoc comment with a predefined {@link String}
-     * 
-     * @param comment
-     *            the {@link String} containing the comment
+     * Constructs a JavaDoc comment with a predefined String.
+     *
+     * @param comment the String containing the comment
      */
     public JavaDoc(String comment) {
         tags = new ArrayList<>();
         setComment(new StringBuilder(comment));
     }
 
+    /**
+     * Appends a string to the current comment.
+     *
+     * @param comment the string to append
+     * @return the updated StringBuilder
+     */
     public StringBuilder appendComment(String comment) {
         return this.comment.append(comment);
     }
 
     /**
-     * Add a tag with no description
-     * 
-     * @param tag
-     *            the new tag for the comment
+     * Adds a tag with no description.
+     *
+     * @param tag the new tag for the comment
      */
     public void addTag(JDocTag tag) {
         tags.add(new JavaDocTag(tag));
     }
 
     /**
-     * Add a tag with description
-     * 
-     * @param tag
-     *            the new tag for the comment
+     * Adds a tag with a string description.
+     *
+     * @param tag the new tag for the comment
+     * @param descriptionStr the description string
      */
     public void addTag(JDocTag tag, String descriptionStr) {
         tags.add(new JavaDocTag(tag, descriptionStr));
     }
 
     /**
-     * Add a tag with description
-     * 
-     * @param tag
-     *            the new tag for the comment
+     * Adds a tag with a StringBuilder description.
+     *
+     * @param tag the new tag for the comment
+     * @param description the description as a StringBuilder
      */
     public void addTag(JDocTag tag, StringBuilder description) {
         tags.add(new JavaDocTag(tag, description));
     }
 
     /**
+     * Returns the comment StringBuilder.
+     *
      * @return the comment
      */
     public StringBuilder getComment() {
@@ -102,18 +106,18 @@ public class JavaDoc implements IGenerate {
     }
 
     /**
-     * @param comment
-     *            the comment to set
+     * Sets the comment StringBuilder.
+     *
+     * @param comment the comment to set
      */
     public void setComment(StringBuilder comment) {
         this.comment = comment;
     }
 
     /**
-     * Remove a tag from the list of tags
-     * 
-     * @param index
-     *            the position of the tag
+     * Removes a tag from the list of tags.
+     *
+     * @param index the position of the tag
      * @return the removed tag
      */
     public JavaDocTag removeTag(int index) {
@@ -121,21 +125,20 @@ public class JavaDoc implements IGenerate {
     }
 
     /**
-     * Get a tag in the position index
-     * 
-     * @param index
-     *            the position of the tag
-     * @return
+     * Gets a tag in the position index.
+     *
+     * @param index the position of the tag
+     * @return the tag at the specified index
      */
     public JavaDocTag getTag(int index) {
         return tags.get(index);
     }
 
     /**
-     * Generate a javadoc comment with the specified indentation
-     * 
-     * @param indentation
-     * @return
+     * Generates a javadoc comment with the specified indentation.
+     *
+     * @param indentation the level of indentation
+     * @return the generated javadoc comment
      */
     @Override
     public StringBuilder generateCode(int indentation) {
@@ -161,9 +164,13 @@ public class JavaDoc implements IGenerate {
         return commentBuilder;
     }
 
+    /**
+     * Clones the current JavaDoc instance.
+     *
+     * @return a new JavaDoc instance with the same content
+     */
     @Override
     public JavaDoc clone() {
-
         final JavaDoc javaDoc = new JavaDoc(new StringBuilder(comment));
         tags.forEach(t -> javaDoc.addTag(t.getTag(), t.getDescription()));
         return javaDoc;

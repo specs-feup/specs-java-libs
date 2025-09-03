@@ -23,24 +23,60 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import pt.up.fe.specs.util.SpecsNumbers;
 
 /**
- * A class that replaces fields with public static DataKey instances.
- * 
- * @author JoaoBispo
+ * Interface for classes that replace fields with public static DataKey instances.
  *
- * @param <T>
+ * <p>This interface defines the contract for data classes that use DataKeys instead of fields, supporting get/set operations and store definition access.
+ *
+ * @param <T> the type of the DataClass
  */
 public interface DataClass<T extends DataClass<T>> {
 
+    /**
+     * Returns the name of this DataClass.
+     *
+     * @return the name of the DataClass
+     */
     String getDataClassName();
 
+    /**
+     * Gets the value for the given DataKey.
+     *
+     * @param key the DataKey
+     * @param <K> the value type
+     * @return the value for the key
+     */
     <K> K get(DataKey<K> key);
 
+    /**
+     * Sets the value for the given DataKey.
+     *
+     * @param key the DataKey
+     * @param value the value to set
+     * @param <K> the value type
+     * @param <E> the value type (extends K)
+     * @return this instance
+     */
     <K, E extends K> T set(DataKey<K> key, E value);
 
+    /**
+     * Sets a boolean DataKey to true.
+     *
+     * @param key the boolean DataKey
+     * @return this instance
+     */
     default T set(DataKey<Boolean> key) {
         return set(key, true);
     }
 
+    /**
+     * Sets an Optional DataKey to the given value, or empty if value is null.
+     *
+     * @param key the Optional DataKey
+     * @param value the value to set
+     * @param <K> the value type
+     * @param <E> the value type (extends K)
+     * @return this instance
+     */
     default <K, E extends K> T setOptional(DataKey<Optional<K>> key, E value) {
         if (value == null) {
             return set(key, Optional.empty());
@@ -49,6 +85,12 @@ public interface DataClass<T extends DataClass<T>> {
         return set(key, Optional.of(value));
     }
 
+    /**
+     * Gets the value for the given key name (String).
+     *
+     * @param key the key name
+     * @return the value for the key
+     */
     default Object getValue(String key) {
         var def = getStoreDefinitionTry().orElseThrow(
                 () -> new RuntimeException(".getValue() only supported if DataClass has a StoreDefinition"));
@@ -58,6 +100,13 @@ public interface DataClass<T extends DataClass<T>> {
         return get(datakey);
     }
 
+    /**
+     * Sets the value for the given key name (String).
+     *
+     * @param key the key name
+     * @param value the value to set
+     * @return the previous value
+     */
     default Object setValue(String key, Object value) {
         var def = getStoreDefinitionTry().orElseThrow(
                 () -> new RuntimeException(".setValue() only supported if DataClass has a StoreDefinition"));
@@ -69,33 +118,44 @@ public interface DataClass<T extends DataClass<T>> {
     }
 
     /**
-     * 
-     * @return an Optional containing a StoreDefinition, if defined. By default returns empty.
+     * Returns an Optional containing the StoreDefinition, if defined.
+     *
+     * @return an Optional with the StoreDefinition, or empty if not present
      */
     default Optional<StoreDefinition> getStoreDefinitionTry() {
         return Optional.empty();
     }
 
+    /**
+     * Returns the StoreDefinition, or throws if not defined.
+     *
+     * @return the StoreDefinition
+     */
     default StoreDefinition getStoreDefinition() {
         return getStoreDefinitionTry().orElseThrow(() -> new RuntimeException("No StoreDefinition defined"));
     }
 
-    // default T set(DataKey<Optional<T>> key, T value) {
-    // return set(key, Optional.of(value));
-    // }
-
+    /**
+     * Sets all values from another DataClass instance.
+     *
+     * @param instance the instance to copy from
+     * @return this instance
+     */
     T set(T instance);
 
     /**
-     * 
-     * @param key
-     * @return true, if it contains a non-null value for the given key, not considering default values
+     * Checks if this DataClass has a non-null value for the given key (not considering defaults).
+     *
+     * @param key the DataKey
+     * @param <VT> the value type
+     * @return true if a value is present, false otherwise
      */
     <VT> boolean hasValue(DataKey<VT> key);
 
     /**
-     * 
-     * @return All the keys that are mapped to a value
+     * Returns all DataKeys that are mapped to a value.
+     *
+     * @return a collection of DataKeys with values
      */
     Collection<DataKey<?>> getDataKeysWithValues();
 
@@ -105,7 +165,7 @@ public interface DataClass<T extends DataClass<T>> {
      * <p>
      * By default, returns false.
      * 
-     * @return
+     * @return true if the DataClass is closed, false otherwise
      */
     default boolean isClosed() {
         return false;
@@ -114,13 +174,10 @@ public interface DataClass<T extends DataClass<T>> {
     /**
      * Increments the value of the given key by one.
      * 
-     * @param key
-     * @return
+     * @param key the DataKey
+     * @return the previous value
      */
     default Number inc(DataKey<? extends Number> key) {
-        // if (Integer.class.isAssignableFrom(key.getValueClass())) {
-        // return inc(key, (int) 1);
-        // }
         return inc(key, 1);
     }
 
@@ -130,13 +187,14 @@ public interface DataClass<T extends DataClass<T>> {
      * <p>
      * If there is not value for the given key, it is initialized to zero.
      * 
-     * @param key
-     * @param amount
-     * @return
+     * @param key the DataKey
+     * @param amount the amount to increment
+     * @param <N1> the type of the key's value
+     * @param <N2> the type of the amount
+     * @return the previous value
      */
     @SuppressWarnings("unchecked")
     default <N1 extends Number, N2 extends Number> N1 inc(DataKey<N1> key, N2 amount) {
-        // Check if value is already present
         if (!hasValue(key)) {
             set(key, (N1) SpecsNumbers.zero(key.getValueClass()));
         }
@@ -149,7 +207,7 @@ public interface DataClass<T extends DataClass<T>> {
     /**
      * Increments the value of all given keys by the amounts in the given DataClass.
      * 
-     * @param dataClass
+     * @param dataClass the DataClass containing the keys and amounts
      */
     @SuppressWarnings("unchecked")
     default void inc(DataClass<?> dataClass) {
@@ -164,27 +222,34 @@ public interface DataClass<T extends DataClass<T>> {
         }
     }
 
+    /**
+     * Increments the value of the given integer key by one.
+     * 
+     * @param key the DataKey
+     * @return the previous value
+     */
     default Integer incInt(DataKey<Integer> key) {
         return incInt(key, 1);
     }
 
+    /**
+     * Increments the value of the given integer key by the given amount.
+     * 
+     * @param key the DataKey
+     * @param amount the amount to increment
+     * @return the previous value
+     */
     default Integer incInt(DataKey<Integer> key, int amount) {
         Integer previousValue = get(key);
         set(key, previousValue + amount);
         return previousValue;
     }
 
-    // default Integer inc(DataKey<Integer> key, int amount) {
-    // // Check if value is already present
-    // if (!hasValue(key)) {
-    // set(key, 0);
-    // }
-    //
-    // Integer previousValue = get(key);
-    // set(key, previousValue + amount);
-    // return previousValue;
-    // }
-
+    /**
+     * Returns a string representation of this DataClass in an inline format.
+     * 
+     * @return the inline string representation
+     */
     default String toInlinedString() {
         var keys = getDataKeysWithValues();
 
@@ -197,7 +262,6 @@ public interface DataClass<T extends DataClass<T>> {
         return keys.stream()
                 .map(key -> key.getName() + ": " + DataClassUtils.toString(get(key)))
                 .collect(Collectors.joining(", ", "[", "]"));
-
     }
 
     /**
@@ -206,29 +270,14 @@ public interface DataClass<T extends DataClass<T>> {
      * <p>
      * This function should be safe to use as long as the keys refer to immutable objects.
      * 
-     * @param <K>
-     * @param <E>
-     * @param key
-     * @param source
-     * @return
+     * @param key the DataKey
+     * @param source the source DataClass
+     * @param <K> the type of the key's value
+     * @param <E> the type of the value (extends K)
+     * @return this instance
      */
     default <K, E extends K> T copyValue(DataKey<K> key, T source) {
         var value = source.get(key);
-        // Not many keys implement copy...
-        // // System.out.println("SOURCE: " + source.get(key));
-        // if (key.getCopyFunction().isPresent()) {
-        // value = key.copy(value);
-        // SpecsLogs.info("Copy successful");
-        // } else {
-        // SpecsLogs.info(
-        // "DataClass.copyValue: could not copy value of DataKey '" + key
-        // + "', using the original value");
-        // }
-
         return set(key, value);
     }
-
-    // default List<DataKey<?>> getKeys() {
-    // return getStoreDefinition().getKeys();
-    // }
 }

@@ -1,11 +1,11 @@
 /*
  * Copyright 2009 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -15,8 +15,11 @@ package pt.up.fe.specs.util;
 import java.nio.ByteBuffer;
 
 /**
- * Methods for bit manipulation.
- * 
+ * Utility methods for bitwise operations.
+ * <p>
+ * Provides static helper methods for manipulating bits and binary representations.
+ * </p>
+ *
  * @author Joao Bispo
  */
 public class SpecsBits {
@@ -24,33 +27,88 @@ public class SpecsBits {
     // /
     // CONSTANTS
     // /
+
+    /**
+     * String representation of zero.
+     */
     private static final String ZERO = "0";
+
+    /**
+     * Prefix for hexadecimal numbers.
+     */
     private static final String HEX_PREFIX = "0x";
+
+    /**
+     * Mask for 16 bits.
+     */
     private static final long MASK_16_BITS = 0xFFFFL;
+
+    /**
+     * Mask for 32 bits.
+     */
     private static final long MASK_32_BITS = 0xFFFFFFFFL;
+
+    /**
+     * Mask for the 33rd bit.
+     */
     private static final long MASK_BIT_33 = 0x100000000L;
+
+    /**
+     * Mask for the least significant bit.
+     */
     private static final int MASK_BIT_1 = 0x1;
-    // public static final short UNSIGNED_BYTE_MASK = 0x00FF;
+
+    /**
+     * Mask for unsigned byte.
+     */
     private static final int UNSIGNED_BYTE_MASK = 0x000000FF;
 
     // Floating-point related constants
 
-    // Bits 30 to 23 set.
+    /**
+     * Mask for denormalized floating-point numbers.
+     */
     private static final int DENORMAL_MASK = 0x7F800000;
-    // Bits 30 to 23 set.
+
+    /**
+     * Mask for non-sign bits in floating-point numbers.
+     */
     private static final int NOT_SIGN_MASK = 0x7FFFFFFF;
-    // Bits 30 to 23 set.
+
+    /**
+     * Mask for zero floating-point numbers.
+     */
     private static final int ZERO_MASK = 0x7FFFFFFF;
 
+    /**
+     * Mask for the sign bit in floating-point numbers.
+     */
     private static final int FLOAT_SIGN_MASK = 0x80000000;
+
+    /**
+     * Representation of infinity in floating-point numbers.
+     */
     private static final int FLOAT_INFINITY = 0x7F800000;
 
+    /**
+     * Number of bits in a byte.
+     */
     private static final int BITS_IN_A_BYTE = 8;
 
+    /**
+     * Returns the mask for 32 bits.
+     * 
+     * @return the mask for 32 bits
+     */
     public static long getMask32Bits() {
         return MASK_32_BITS;
     }
 
+    /**
+     * Returns the mask for the 33rd bit.
+     * 
+     * @return the mask for the 33rd bit
+     */
     public static long getMaskBit33() {
         return MASK_BIT_33;
     }
@@ -342,9 +400,14 @@ public class SpecsBits {
         return result;
     }
 
+    /**
+     * Converts a signed byte to an unsigned integer representation.
+     * 
+     * @param aByte
+     *            the byte to convert
+     * @return the unsigned integer representation of the byte
+     */
     public static int getUnsignedByte(byte aByte) {
-        // short byteAsShort = aByte;
-        // return (short) (byteAsShort & UNSIGNED_BYTE_MASK);
         int byteAsInt = aByte;
         // When casting a byte to an int, if the byte is signed the additional
         // bits will be set to 1.
@@ -354,8 +417,11 @@ public class SpecsBits {
     }
 
     /**
+     * Calculates the base-2 logarithm of the given integer, rounding up.
+     * 
      * @param i
-     * @return log2 of the given integer. Rounds up
+     *            the integer to calculate the logarithm for
+     * @return the base-2 logarithm of the integer, rounded up
      */
     public static int log2(int i) {
         double log2 = Math.log(i) / Math.log(2);
@@ -445,6 +511,13 @@ public class SpecsBits {
                 + binaryValue.substring(lsbSignalIndex + 1, binaryValue.length());
     }
 
+    /**
+     * Parses a signed binary string into an integer.
+     * 
+     * @param binaryString
+     *            the binary string to parse
+     * @return the integer representation of the binary string
+     */
     public static int parseSignedBinary(String binaryString) {
         if (binaryString.length() > 32) {
             SpecsLogs.warn("Given string has more than 32 bits. Truncating MSB.");
@@ -498,8 +571,10 @@ public class SpecsBits {
     }
 
     /**
+     * Converts a boolean value to an integer representation.
      * 
      * @param boolResult
+     *            the boolean value to convert
      * @return 1 if true, or 0 if false
      */
     public static int boolToInt(boolean boolResult) {
@@ -606,6 +681,15 @@ public class SpecsBits {
         }
     }
 
+    /**
+     * Extracts a specific byte from an integer.
+     * 
+     * @param value
+     *            the integer to extract the byte from
+     * @param byteOffset
+     *            the offset of the byte to extract (0-based)
+     * @return the extracted byte as an integer
+     */
     public static int getByte(int value, int byteOffset) {
         switch (byteOffset) {
         case 0:
@@ -651,6 +735,18 @@ public class SpecsBits {
          */
     }
 
+    /**
+     * Reads an unsigned 32-bit number from a byte array. This method reads four bytes from the array, starting at the
+     * given offset.
+     * 
+     * @param byteArray
+     *            the byte array to read from
+     * @param offset
+     *            the starting offset in the array
+     * @param isLittleEndian
+     *            whether the bytes are in little-endian order
+     * @return the unsigned 32-bit number as a long
+     */
     public static long readUnsignedInteger(byte[] byteArray, int offset,
             boolean isLittleEndian) {
 
@@ -664,7 +760,7 @@ public class SpecsBits {
     }
 
     /**
-     * Positions an byte inside a bigger unit according to its endianess and the position of the byte. A long is used to
+     * Positions a byte inside a bigger unit according to its endianess and the position of the byte. A long is used to
      * support unsigned integers.
      *
      * TODO: Test/check this method so see if it can support longs, not just integers
@@ -695,6 +791,13 @@ public class SpecsBits {
         return shiftedByte;
     }
 
+    /**
+     * Reverses the half-words in the given integer.
+     * 
+     * @param data
+     *            the integer to reverse the half-words of
+     * @return the integer with reversed half-words
+     */
     public static int reverseHalfWords(int data) {
 
         int higherHalf = data << 16;
@@ -704,10 +807,11 @@ public class SpecsBits {
     }
 
     /**
-     * Reverses the bytes on the given int.
+     * Reverses the bytes in the given integer.
      * 
      * @param data
-     * @return
+     *            the integer to reverse the bytes of
+     * @return the integer with reversed bytes
      */
     public static int reverse(int data) {
         // Reverse bytes of data
@@ -726,6 +830,13 @@ public class SpecsBits {
         return wrapped.getInt();
     }
 
+    /**
+     * Reverses the bytes in the given short.
+     * 
+     * @param data
+     *            the short to reverse the bytes of
+     * @return the short with reversed bytes
+     */
     public static short reverse(short data) {
         // Reverse bytes of data
         byte[] bytes = ByteBuffer.allocate(2).putShort(data).array();
@@ -739,10 +850,11 @@ public class SpecsBits {
     }
 
     /**
-     * Reverses an array of bytes.
+     * Reverses the order of bytes in the given array.
      * 
      * @param bytes
-     * @return
+     *            the array of bytes to reverse
+     * @return the array with reversed byte order
      */
     public static byte[] reverse(byte[] bytes) {
         byte[] reversedBytes = new byte[bytes.length];
@@ -753,6 +865,13 @@ public class SpecsBits {
         return reversedBytes;
     }
 
+    /**
+     * Decodes an unsigned byte value from a string representation.
+     * 
+     * @param unsignedByteValue
+     *            the string representation of the unsigned byte value
+     * @return the decoded unsigned byte value
+     */
     public static byte decodeUnsignedByte(String unsignedByteValue) {
         // Bytes in Java are signed, decode as Short
         return Short.valueOf(unsignedByteValue).byteValue();

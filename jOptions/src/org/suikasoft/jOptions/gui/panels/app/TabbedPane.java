@@ -30,6 +30,8 @@ import org.suikasoft.jOptions.app.App;
 
 /**
  * Panel which contains the principal panels of the program and coordinates updates between panels.
+ *
+ * <p>This panel manages the main tabs of the application, including program and options panels.
  * 
  * @author Joao Bispo
  */
@@ -39,6 +41,11 @@ public class TabbedPane extends JPanel {
 
     private static final DataKey<String> APP_NAME = KeyFactory.string("tabbed pane app name");
 
+    /**
+     * Returns the DataKey for the application name.
+     *
+     * @return the DataKey for the app name
+     */
     public static DataKey<String> getAppNameKey() {
         return APP_NAME;
     }
@@ -49,6 +56,11 @@ public class TabbedPane extends JPanel {
 
     private final OptionsPanel optionsPanel;
 
+    /**
+     * Constructs a TabbedPane for the given application.
+     *
+     * @param application the application to display
+     */
     public TabbedPane(App application) {
         super(new GridLayout(1, 1));
 
@@ -74,16 +86,6 @@ public class TabbedPane extends JPanel {
         for (TabProvider provider : application.getOtherTabs()) {
             tabs.add(provider.getTab(tabData));
         }
-
-        // Check if program uses global options
-        /*
-        if (AppUsesGlobalOptions.class.isInstance(application)) {
-        GlobalOptionsPanel globalPanel = new GlobalOptionsPanel(
-        	    ((AppUsesGlobalOptions) application).getGlobalOptions());
-        
-        tabs.add(globalPanel);
-        }
-        */
 
         int baseMnemonic = KeyEvent.VK_1;
         int currentIndex = 0;
@@ -125,6 +127,11 @@ public class TabbedPane extends JPanel {
 
     }
 
+    /**
+     * Returns the options panel associated with this TabbedPane.
+     *
+     * @return the options panel
+     */
     public OptionsPanel getOptionsPanel() {
         return optionsPanel;
     }
