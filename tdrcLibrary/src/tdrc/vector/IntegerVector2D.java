@@ -54,8 +54,8 @@ public class IntegerVector2D implements Comparable<IntegerVector2D> {
         if (magv < mago) {
             return -1;
         }
-        double anglev = Math.atan(y / x);
-        double angleo = Math.atan(o.y / o.x);
+        double anglev = Math.atan2(y, x);
+        double angleo = Math.atan2(o.y, o.x);
         return anglev == angleo ? 0 : anglev > angleo ? 1 : -1;
     }
 

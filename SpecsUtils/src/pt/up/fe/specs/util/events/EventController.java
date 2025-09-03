@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -15,9 +15,10 @@ package pt.up.fe.specs.util.events;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.collections.AccumulatorMap;
 
@@ -29,13 +30,13 @@ public class EventController implements EventNotifier, EventRegister {
     private final AccumulatorMap<EventReceiver> listenersCount;
 
     public EventController() {
-	this.registeredListeners = SpecsFactory.newHashMap();
+	this.registeredListeners = new HashMap<>();
 	this.listenersCount = new AccumulatorMap<>();
     }
 
     /**
      * Registers receiver to all its supported events.
-     * 
+     *
      * @param reciver
      * @param eventIds
      */
@@ -46,7 +47,7 @@ public class EventController implements EventNotifier, EventRegister {
 
     /**
      * Unregisters listener to all its supported events.
-     * 
+     *
      * @param receiver
      * @param eventIds
      */
@@ -84,7 +85,7 @@ public class EventController implements EventNotifier, EventRegister {
 
     /**
      * Helper method.
-     * 
+     *
      * @param listener
      * @param eventIds
      */
@@ -95,7 +96,7 @@ public class EventController implements EventNotifier, EventRegister {
 
     /**
      * Registers a listener to a list of events.
-     * 
+     *
      * @param listener
      * @param event
      */
@@ -111,7 +112,7 @@ public class EventController implements EventNotifier, EventRegister {
 
     /**
      * Registers a listener to a single event.
-     * 
+     *
      * @param listener
      * @param eventId
      */
@@ -120,7 +121,7 @@ public class EventController implements EventNotifier, EventRegister {
 	// Check if event is already on table
 	Collection<EventReceiver> listeners = this.registeredListeners.get(eventId);
 	if (listeners == null) {
-	    listeners = SpecsFactory.newLinkedHashSet();
+	    listeners = new LinkedHashSet<>();
 	    this.registeredListeners.put(eventId, listeners);
 	}
 
@@ -160,7 +161,7 @@ public class EventController implements EventNotifier, EventRegister {
     }
 
     /**
-     * 
+     *
      * @return the listeners currently registered to the controller
      */
     public Collection<EventReceiver> getListeners() {

@@ -61,10 +61,11 @@ public class UniqueList<E> extends ArrayList<E> {
      */
     @Override
     public boolean addAll(Collection<? extends E> c) {
+        boolean changed = false;
         for (final E element : c) {
-            add(element);
+            changed |= add(element);
         }
-        return true;
+        return changed;
     }
 
     /**
@@ -76,13 +77,16 @@ public class UniqueList<E> extends ArrayList<E> {
      */
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
+        boolean changed = false;
+        int currentIndex = index;
         for (final E element : c) {
             if (!contains(element)) {
-                add(index, element);
-                index++;
+                add(currentIndex, element);
+                currentIndex++;
+                changed = true;
             }
         }
-        return true;
+        return changed;
     }
 
 }

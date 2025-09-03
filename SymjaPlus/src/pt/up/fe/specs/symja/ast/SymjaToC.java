@@ -30,6 +30,7 @@ public class SymjaToC {
         CONVERTERS = new FunctionClassMap<>();
         CONVERTERS.put(SymjaSymbol.class, SymjaToC::symbolConverter);
         CONVERTERS.put(SymjaInteger.class, SymjaToC::integerConverter);
+        CONVERTERS.put(SymjaOperator.class, SymjaToC::operatorConverter);
         CONVERTERS.put(SymjaFunction.class, SymjaToC::functionConverter);
         CONVERTERS.put(SymjaNode.class, SymjaToC::defaultConverter);
     }
@@ -52,6 +53,16 @@ public class SymjaToC {
      */
     private static String integerConverter(SymjaInteger node) {
         return node.get(SymjaInteger.VALUE_STRING);
+    }
+
+    /**
+     * Converts a SymjaOperator node to C code.
+     *
+     * @param node the operator node
+     * @return the operator symbol as a string
+     */
+    private static String operatorConverter(SymjaOperator node) {
+        return node.get(SymjaOperator.OPERATOR).getSymbol();
     }
 
     /**

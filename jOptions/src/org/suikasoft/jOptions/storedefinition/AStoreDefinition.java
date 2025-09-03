@@ -104,7 +104,7 @@ public abstract class AStoreDefinition implements StoreDefinition {
      */
     @Override
     public List<StoreSection> getSections() {
-        return sections;
+        return new ArrayList<>(sections);
     }
 
     /**

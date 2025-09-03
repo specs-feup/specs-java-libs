@@ -55,6 +55,19 @@ public class GenericApp implements App {
             AppPersistence persistence, AppKernel kernel, Collection<TabProvider> otherTabs, Class<?> nodeClass,
             ResourceProvider icon) {
 
+        if (name == null) {
+            throw new IllegalArgumentException("Application name cannot be null");
+        }
+        if (definition == null) {
+            throw new IllegalArgumentException("Store definition cannot be null");
+        }
+        if (persistence == null) {
+            throw new IllegalArgumentException("Persistence mechanism cannot be null");
+        }
+        if (kernel == null) {
+            throw new IllegalArgumentException("Application kernel cannot be null");
+        }
+
         this.name = name;
         this.definition = definition;
         this.persistence = persistence;
@@ -157,6 +170,9 @@ public class GenericApp implements App {
      * @return a new GenericApp instance with the updated tabs
      */
     public GenericApp setOtherTabs(Collection<TabProvider> otherTabs) {
+        if (otherTabs == null) {
+            throw new IllegalArgumentException("Other tabs collection cannot be null");
+        }
         return new GenericApp(name, definition, persistence, kernel, otherTabs, nodeClass, icon);
     }
 

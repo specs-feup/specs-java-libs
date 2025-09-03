@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.specs.generators.java.IGenerate;
-import org.specs.generators.java.classtypes.JavaClass;
 import org.specs.generators.java.enums.Annotation;
 import org.specs.generators.java.enums.JDocTag;
 import org.specs.generators.java.enums.Modifier;
@@ -27,7 +26,6 @@ import org.specs.generators.java.types.Primitive;
 import org.specs.generators.java.utils.UniqueList;
 import org.specs.generators.java.utils.Utils;
 
-import pt.up.fe.specs.util.SpecsLogs;
 import tdrc.utils.StringUtils;
 
 /**
@@ -103,7 +101,7 @@ public class Method implements IGenerate {
      */
     private void init(JavaType returnType, String name) {
         this.name = name;
-        this.returnType = returnType;
+        setReturnType(returnType);
         privacy = Privacy.PUBLIC;
         annotations = new UniqueList<>();
         modifiers = new ArrayList<>();
@@ -268,8 +266,7 @@ public class Method implements IGenerate {
 
             } else {
                 methodStr.append("// TODO Auto-generated method stub" + ln());
-                SpecsLogs.warn("Potential bug: check this");
-                if (!returnType.equals(Primitive.VOID.getType())) {
+                if (!returnType.getName().equals(Primitive.VOID.getType())) {
 
                     final String returnValue = JavaTypeFactory.getDefaultValue(returnType);
                     methodStr.append(indent);
@@ -354,7 +351,10 @@ public class Method implements IGenerate {
      * @param returnType
      *            the returnType to set
      */
-    public void setReturnType(JavaType returnType) {
+    public void setReturnType(JavaType returnType) throws IllegalArgumentException {
+        if (returnType == null) {
+            throw new IllegalArgumentException("Method return type cannot be null");
+        }
         this.returnType = returnType;
     }
 

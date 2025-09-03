@@ -92,14 +92,13 @@ public class HashBag<T> {
      */
     public int take(T element, int val) {
         final int newVal = get(element) - val;
-        if (newVal == 0) {
+        if (newVal <= 0) {
             this.bag.remove(element);
-        } else if (newVal < 0) {
             return 0;
         } else {
             this.bag.put(element, newVal);
+            return newVal;
         }
-        return newVal;
     }
 
     /**

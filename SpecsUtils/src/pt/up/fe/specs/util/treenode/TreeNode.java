@@ -76,7 +76,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      * @return
      */
     default K getChild(int index) {
-        if (!hasChildren()) {
+        if (index < 0 || index >= getNumChildren()) {
             SpecsLogs.warn("Tried to get child with index '" + index + "', but children size is " + getNumChildren());
             return null;
         }
@@ -467,6 +467,11 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     default <T extends K> Optional<T> getChildTry(Class<T> nodeClass, int index) {
+        // Check bounds first
+        if (index < 0 || index >= getNumChildren()) {
+            return Optional.empty();
+        }
+
         K childNode = getChild(index);
 
         SpecsCheck.checkNotNull(childNode, () -> "No child at index " + index + " of node '" + getClass()
@@ -477,6 +482,19 @@ public interface TreeNode<K extends TreeNode<K>> {
         }
 
         return Optional.of(nodeClass.cast(childNode));
+    }
+
+    /**
+     * Convenience method to get a child by index safely, without requiring a class parameter.
+     *
+     * @param index the index of the child to retrieve
+     * @return an Optional containing the child if the index is valid, Optional.empty() otherwise
+     */
+    default Optional<K> getChildTry(int index) {
+        if (index < 0 || index >= getNumChildren()) {
+            return Optional.empty();
+        }
+        return Optional.of(getChild(index));
     }
 
     /*

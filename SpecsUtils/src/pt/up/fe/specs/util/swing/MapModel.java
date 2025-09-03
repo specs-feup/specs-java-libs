@@ -14,13 +14,13 @@
 package pt.up.fe.specs.util.swing;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
-
-import pt.up.fe.specs.util.SpecsFactory;
 
 /**
  * @author Joao Bispo
@@ -48,8 +48,7 @@ public class MapModel<K extends Comparable<? super K>, V> extends AbstractTableM
     }
 
     public MapModel(Map<K, V> map, List<K> keys, boolean rowWise, Class<V> valueClass) {
-	// this.map = map;
-	this.map = SpecsFactory.newHashMap(map);
+	this.map = map == null ? Collections.emptyMap() : new HashMap<>(map);
 
 	this.rowWise = rowWise;
 

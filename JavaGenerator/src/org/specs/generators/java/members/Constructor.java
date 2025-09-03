@@ -15,6 +15,7 @@ package org.specs.generators.java.members;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.specs.generators.java.IGenerate;
@@ -46,7 +47,7 @@ public class Constructor implements IGenerate {
      * @param javaClass the class pertaining to the constructor
      */
     public Constructor(JavaClass javaClass) {
-        this.javaClass = javaClass;
+        setJavaClass(javaClass);
         privacy = Privacy.PUBLIC;
         init(javaClass);
     }
@@ -57,6 +58,9 @@ public class Constructor implements IGenerate {
      * @param javaEnum the enum pertaining to the constructor
      */
     public Constructor(JavaEnum javaEnum) {
+        if (javaEnum == null) {
+            throw new IllegalArgumentException("Java enum cannot be null");
+        }
         this.javaEnum = javaEnum;
         privacy = Privacy.PRIVATE;
         init(javaEnum);
@@ -81,7 +85,7 @@ public class Constructor implements IGenerate {
      * @param javaClass the class pertaining to the constructor
      */
     public Constructor(Privacy privacy, JavaClass javaClass) {
-        this.javaClass = javaClass;
+        setJavaClass(javaClass);
         this.privacy = privacy;
         init(javaClass);
     }
@@ -132,8 +136,10 @@ public class Constructor implements IGenerate {
         constructorStr.append(" ");
         if (javaEnum != null) {
             constructorStr.append(javaEnum.getName());
-        } else {
+        } else if (javaClass != null) {
             constructorStr.append(javaClass.getName());
+        } else {
+            throw new IllegalStateException("Constructor must be associated with a Java class or enum");
         }
         constructorStr.append("(");
 
@@ -215,7 +221,10 @@ public class Constructor implements IGenerate {
      *
      * @param javaClass the Java class to set
      */
-    public void setJavaClass(JavaClass javaClass) {
+    public void setJavaClass(JavaClass javaClass) throws IllegalArgumentException {
+        if (javaClass == null) {
+            throw new IllegalArgumentException("Java class cannot be null");
+        }
         this.javaClass = javaClass;
     }
 
@@ -293,5 +302,20 @@ public class Constructor implements IGenerate {
      */
     public void clearCode() {
         methodBody.delete(0, methodBody.length());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        
+        Constructor that = (Constructor) obj;
+
+        return this.hashCode() == that.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(privacy, javaClass, javaEnum, javaDocComment, arguments, methodBody);
     }
 }

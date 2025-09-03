@@ -34,6 +34,11 @@ public enum PropertyWithNodeType {
      * @return the property type
      */
     public static PropertyWithNodeType getKeyType(DataNode<?> node, DataKey<?> key) {
+        // Handle null node
+        if (node == null) {
+            return NOT_FOUND;
+        }
+        
         // DataNode keys
         if (node.getBaseClass().isAssignableFrom(key.getValueClass())) {
             return DATA_NODE;

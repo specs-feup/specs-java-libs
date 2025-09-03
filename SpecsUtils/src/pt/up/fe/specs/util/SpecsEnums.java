@@ -1,11 +1,11 @@
 /*
  * Copyright 2010 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -36,7 +36,7 @@ import pt.up.fe.specs.util.providers.StringProvider;
 
 /**
  * Methods for Enumeration manipulation.
- * 
+ *
  * @author Joao Bispo
  */
 public class SpecsEnums {
@@ -51,8 +51,8 @@ public class SpecsEnums {
     /**
      * Transforms a String into a constant of the same name in a specific Enum. Returns null instead of throwing
      * exceptions.
-     * 
-     * 
+     *
+     *
      * @param <T>
      *            The Enum where the constant is
      * @param enumType
@@ -84,7 +84,7 @@ public class SpecsEnums {
     }
 
     public static <T extends Enum<T>> List<T> getValues(Class<T> enumType, List<String> names) {
-        List<T> values = SpecsFactory.newArrayList();
+        List<T> values = new ArrayList<>();
 
         for (String name : names) {
             T value = valueOf(enumType, name);
@@ -100,7 +100,7 @@ public class SpecsEnums {
 
     /**
      * Checks if a specific enum contains a constant with the given name.
-     * 
+     *
      * @param <T>
      *            The Enum where the constant is
      * @param enumType
@@ -121,11 +121,11 @@ public class SpecsEnums {
 
     /**
      * Builds an unmmodifiable table which maps the string representation of the enum to the enum itself.
-     * 
+     *
      * <p>
      * This table can be useful to get the enum correspondent to a particular option in String format which was
      * collected from, for example, a config file.
-     * 
+     *
      * @param <K>
      * @param values
      * @return
@@ -143,12 +143,12 @@ public class SpecsEnums {
     /**
      * Builds a n unmodifiable of the enum to the enum itself. If the enum implements StringProvider, .getString() is
      * used instead of .name().
-     * 
-     * 
+     *
+     *
      * <p>
      * This table can be useful to get the enum correspondent to a particular option in String format which was
      * collected from, for example, a config file.
-     * 
+     *
      * @param <K>
      * @param values
      * @return
@@ -174,7 +174,7 @@ public class SpecsEnums {
     }
 
     /**
-     * 
+     *
      * @param <K>
      * @param values
      * @return a list with the names of the enums
@@ -193,7 +193,7 @@ public class SpecsEnums {
     }
 
     /**
-     * 
+     *
      * @param <K>
      * @param values
      * @return a list with the string representation of the enums
@@ -209,7 +209,7 @@ public class SpecsEnums {
 
     /**
      * Returns the class of the enum correspondent to the values of the given array.
-     * 
+     *
      * @param <K>
      * @param values
      * @return the class correspondent to the given array of enums
@@ -236,7 +236,7 @@ public class SpecsEnums {
 
     /**
      * If the class represents an enum, returns a list with the values of that enum. Otherwise, returns null.
-     * 
+     *
      * @param anEnumClass
      * @return
      */
@@ -261,14 +261,14 @@ public class SpecsEnums {
     /**
      * If the class represents an enum, returns a list of Strings with the names of the values of that enum. Otherwise,
      * returns null.
-     * 
+     *
      * @param anEnumClass
      * @return
      */
     public static <T extends Enum<T>> List<String> extractNames(Class<? extends T> anEnumClass) {
         List<T> values = extractValues(anEnumClass);
 
-        List<String> names = SpecsFactory.newArrayList();
+        List<String> names = new ArrayList<>();
 
         for (T value : values) {
             names.add(value.name());
@@ -279,7 +279,7 @@ public class SpecsEnums {
 
     /**
      * Extracts an instance of an interface from a class which represents an Enum which implements such interface.
-     * 
+     *
      * @param enumSetupDefiner
      */
     // public static <E extends Enum<E>> Object getInterfaceFromEnum(Class<?> enumImplementingInterface,
@@ -313,12 +313,12 @@ public class SpecsEnums {
     }
 
     /**
-     * 
+     *
      * <p>
      * The following code can be used to dump the complement collection into a newly allocated array:
      * <p>
      * AnEnum[] y = EnumUtils.getComplement(new AnEnum[0], anEnum1, anEnum2);
-     * 
+     *
      * @param <K>
      * @param a
      *            a - the array into which the elements of this set are to be stored, if it is big enough; otherwise, a
@@ -344,14 +344,14 @@ public class SpecsEnums {
 
     /**
      * Build a map from an enumeration class which implements a KeyProvider.
-     * 
+     *
      * @param enumClass
      * @return
      */
     public static <K extends Enum<K> & KeyProvider<T>, T> Map<T, K> buildMap(Class<K> enumClass) {
 
         // Map<T, K> enumMap = FactoryUtils.newHashMap();
-        Map<T, K> enumMap = SpecsFactory.newLinkedHashMap();
+        Map<T, K> enumMap = new LinkedHashMap<>();
         for (K enumConstant : enumClass.getEnumConstants()) {
             enumMap.put(enumConstant.getKey(), enumConstant);
         }
@@ -361,10 +361,10 @@ public class SpecsEnums {
 
     /**
      * Returns the first enumeration of a class than extends enum.
-     * 
+     *
      * <p>
      * If the given class has no enums, throws a Runtime Exception.
-     * 
+     *
      * @param anEnumClass
      * @return
      */
@@ -386,13 +386,13 @@ public class SpecsEnums {
     /*
     public static <K extends Enum<K> & ResourceProvider> List<String> getResources(Class<K> enumClass) {
     K[] enums = enumClass.getEnumConstants();
-    
+
     List<String> resources = FactoryUtils.newArrayList(enums.length);
-    
+
     for (K anEnum : enums) {
         resources.add(anEnum.getResource());
     }
-    
+
     return resources;
     }
      */
@@ -404,7 +404,7 @@ public class SpecsEnums {
     public static <T, K extends Enum<K> & KeyProvider<T>> List<T> getKeys(Class<K> enumClass) {
         K[] enums = enumClass.getEnumConstants();
 
-        List<T> resources = SpecsFactory.newArrayList(enums.length);
+        List<T> resources = new ArrayList<>(enums.length);
 
         for (K anEnum : enums) {
             resources.add(anEnum.getKey());
@@ -416,7 +416,7 @@ public class SpecsEnums {
     /**
      * Returns a string representing the enum options using ',' as delimiter and '[' and ']' and prefix and suffix,
      * respectively.
-     * 
+     *
      * @param anEnumClass
      * @return
      */
@@ -461,7 +461,7 @@ public class SpecsEnums {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param anEnum
      * @return the next enum, according to the ordinal order, or the first enum if this one is the last
@@ -481,7 +481,7 @@ public class SpecsEnums {
 
     /**
      * Converts a map with string keys to a map
-     * 
+     *
      * @param <T>
      * @param <R>
      * @param enumClass
@@ -513,7 +513,7 @@ public class SpecsEnums {
 
     /**
      * Uses enum helpers, supports interface StringProvider.
-     * 
+     *
      * @param enumClass
      * @param value
      */

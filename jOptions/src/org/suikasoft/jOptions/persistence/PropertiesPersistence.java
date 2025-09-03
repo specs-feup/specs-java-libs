@@ -14,7 +14,6 @@
 package org.suikasoft.jOptions.persistence;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.JOptionKeys;
@@ -101,7 +100,6 @@ public class PropertiesPersistence implements AppPersistence {
 
     private boolean write(File file, DataStore data) {
         var properties = toProperties(data);
-        // TODO Auto-generated method stub
         return SpecsIo.write(file, properties);
     }
 

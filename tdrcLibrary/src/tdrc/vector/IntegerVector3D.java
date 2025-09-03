@@ -57,13 +57,13 @@ public class IntegerVector3D implements Comparable<IntegerVector3D> {
         if (magv < mago) {
             return -1;
         }
-        double anglev = Math.atan(y / x);
-        double angleo = Math.atan(o.y / o.x);
+        double anglev = Math.atan2(y, x);
+        double angleo = Math.atan2(o.y, o.x);
         return anglev == angleo ? 0 : anglev > angleo ? 1 : -1;
     }
 
     /**
-     * Calculates the distance between this vector and another vector in 2D space.
+     * Calculates the distance between this vector and another vector in 3D space.
      * 
      * @param o the other vector
      * @return the distance between the two vectors
@@ -71,7 +71,8 @@ public class IntegerVector3D implements Comparable<IntegerVector3D> {
     public double getDistance(IntegerVector3D o) {
         double dx = x - o.x;
         double dy = y - o.y;
-        return Math.sqrt(dx * dx + dy * dy);
+        double dz = z - o.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
     /**

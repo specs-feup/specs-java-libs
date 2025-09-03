@@ -287,11 +287,16 @@ public class SpecsMath {
      */
     public static long factorial(int number) {
         long result = 1;
+        boolean isNegative = number < 0;
+
+        if (isNegative) {
+            number = -number; // Convert to positive for factorial calculation
+        }
 
         for (int factor = 2; factor <= number; factor++) {
             result *= factor;
         }
 
-        return result;
+        return isNegative ? -result : result;
     }
 }

@@ -1,11 +1,11 @@
 /**
  * Copyright 2012 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -15,17 +15,17 @@ package pt.up.fe.specs.util.collections;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * Map which stores values according to a scope, defined by a list of Strings.
- * 
+ *
  * @author Joao Bispo
- * 
+ *
  */
 public class ScopedMap<V> {
 
@@ -35,7 +35,7 @@ public class ScopedMap<V> {
 
     /**
      * Creates an empty SymbolMap.
-     * 
+     *
      */
     public ScopedMap() {
 	this.rootNode = new ScopeNode<>();
@@ -49,7 +49,7 @@ public class ScopedMap<V> {
 
     /**
      * Helper method with variadic inputs.
-     * 
+     *
      * @param scope
      * @return
      */
@@ -59,10 +59,10 @@ public class ScopedMap<V> {
 
     /**
      * Builds a new SymbolMap with the variables of the specified scope, but without preserving the original scope.
-     * 
+     *
      * <p>
      * For instance, if a scope 'x' is asked, the scopes in the returned SymbolMap will start after 'x'.
-     * 
+     *
      * @param scope
      * @return
      */
@@ -93,7 +93,7 @@ public class ScopedMap<V> {
 
     /**
      * Returns the keys corresponding to all entries in this map.
-     * 
+     *
      * @return
      */
     public List<List<String>> getKeys() {
@@ -102,7 +102,7 @@ public class ScopedMap<V> {
 
     /**
      * Helper method with variadic inputs.
-     * 
+     *
      * @param key
      * @return
      */
@@ -112,10 +112,10 @@ public class ScopedMap<V> {
 
     /**
      * Returns the symbol mapped to the given key. If a symbol cannot be found, returns null.
-     * 
+     *
      * <p>
      * A key is composed by a scope, in the form of a list of Strings, plus a String with the name of the symbol.
-     * 
+     *
      * @param key
      * @return
      */
@@ -125,7 +125,7 @@ public class ScopedMap<V> {
 
     /**
      * Helper method, with scope and symbol name given separately.
-     * 
+     *
      * @param scope
      * @param variableName
      * @return
@@ -138,8 +138,8 @@ public class ScopedMap<V> {
 
     /**
      * Helper method, with scope and symbol name given separately.
-     * 
-     * 
+     *
+     *
      * @param scope
      * @param name
      * @param symbol
@@ -155,10 +155,10 @@ public class ScopedMap<V> {
 
     /**
      * Adds a symbol mapped to the given key.
-     * 
+     *
      * <p>
      * A key is composed by a scope, in the form of a list of Strings, plus a String with the name of the symbol.
-     * 
+     *
      * @param key
      * @param symbol
      */
@@ -168,7 +168,7 @@ public class ScopedMap<V> {
 
     /**
      * Helper method which receives only one key element.
-     * 
+     *
      * @param key
      * @param symbol
      */
@@ -178,7 +178,7 @@ public class ScopedMap<V> {
 
     /**
      * Helper method which receives several key elements.
-     * 
+     *
      * @param symbol
      * @param key
      */
@@ -201,7 +201,7 @@ public class ScopedMap<V> {
 
     /**
      * Adds all the symbols in the given map to the current map, preserving the original scope.
-     * 
+     *
      * @param map
      */
     public void addSymbols(ScopedMap<V> map) {
@@ -217,7 +217,7 @@ public class ScopedMap<V> {
 
     /**
      * Adds all the symbols in the given map to the current map, mapping them to the given scope.
-     * 
+     *
      * @param scope
      * @param inputVectorsTypes
      */
@@ -238,7 +238,7 @@ public class ScopedMap<V> {
 
     /**
      * Returns a map with all the symbols for a given scope, mapped to their name.
-     * 
+     *
      * @param scope
      * @return
      */
@@ -253,14 +253,14 @@ public class ScopedMap<V> {
 
 	ScopeNode<V> scopeNode = getScopeNode(scope);
 	if (scopeNode == null) {
-	    return SpecsFactory.newHashMap();
+	    return new HashMap<>();
 	}
 
 	return scopeNode.getSymbols();
     }
 
     /**
-     * 
+     *
      * @param scope
      * @return a collection with all the symbols in the map
      */
@@ -275,7 +275,7 @@ public class ScopedMap<V> {
 
     /**
      * Checks if the given scope contains a symbol for the given name.
-     * 
+     *
      * @param symbolName
      * @param scope
      * @return

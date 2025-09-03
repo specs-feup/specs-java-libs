@@ -33,7 +33,7 @@ public class JsonWriter<K extends TreeNode<K>> {
     }
 
     private String toJson(K node, int identationLevel) {
-	BuilderWithIndentation builder = new BuilderWithIndentation(identationLevel);
+	BuilderWithIndentation builder = new BuilderWithIndentation(identationLevel, "  ");
 
 	builder.addLines("{");
 	builder.increaseIndentation();

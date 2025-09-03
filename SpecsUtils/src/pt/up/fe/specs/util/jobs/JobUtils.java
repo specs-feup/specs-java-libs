@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -20,19 +20,18 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class JobUtils {
 
     /**
      * The given path represents a folder that contains several folders, and each folder is a project.
-     * 
+     *
      * @param sourceFolder
      * @param extensions
      * @param folderLevel
@@ -48,7 +47,7 @@ public class JobUtils {
 	while (currentLevel > 0) {
 	    currentLevel--;
 
-	    List<File> newFolderList = SpecsFactory.newArrayList();
+	    List<File> newFolderList = new ArrayList<>();
 	    for (File folder : currentFolderList) {
 		newFolderList.addAll(SpecsIo.getFolders(folder));
 	    }
@@ -107,7 +106,7 @@ public class JobUtils {
 
     /**
      * The given path represents a folder that contains several files, each file is a project.
-     * 
+     *
      * @param jobOptions
      * @param targetOptions
      * @return
@@ -131,7 +130,7 @@ public class JobUtils {
 
     /**
      * The source is a single .c file which is a program.
-     * 
+     *
      * @param jobOptions
      * @param targetOptions
      * @return
@@ -140,7 +139,7 @@ public class JobUtils {
 	    Collection<String> extensions) {
 
 	// The file is a program
-	List<FileSet> programSources = SpecsFactory.newArrayList();
+	List<FileSet> programSources = new ArrayList<>();
 	String sourceFoldername = sourceFile.getParent();
 
 	programSources.add(singleFileProgramSource(sourceFile, sourceFoldername));
@@ -161,7 +160,7 @@ public class JobUtils {
 
     /**
      * Runs a job, returns the return value of the job after completing.
-     * 
+     *
      * @param job
      * @return
      */
@@ -179,7 +178,7 @@ public class JobUtils {
     /**
      * Runs a batch of jobs. If any job terminated abruptly (a job has flag 'isInterruped' active), remaning jobs are
      * cancelled.
-     * 
+     *
      * @param jobs
      * @return true if all jobs completed successfully, false otherwise
      */
@@ -204,10 +203,10 @@ public class JobUtils {
 
     /**
      * Creates a ProgramSource from a given folder.
-     * 
+     *
      * <p>
      * Collects all files in the given folder with the given extension.
-     * 
+     *
      * @param sourceFolder
      * @param extensions
      * @param sourceFoldername
@@ -232,7 +231,7 @@ public class JobUtils {
     private static FileSet singleFileProgramSource(File sourceFile, String sourceFoldername) {
 	File sourceFolder = sourceFile.getParentFile();
 
-	List<String> sourceFilenames = SpecsFactory.newArrayList();
+	List<String> sourceFilenames = new ArrayList<>();
 	sourceFilenames.add(sourceFile.getPath());
 
 	String outputName = SpecsIo.removeExtension(sourceFile.getName());

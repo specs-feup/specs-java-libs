@@ -46,7 +46,7 @@ public class StringConverter<T> extends AbstractSingleValueConverter {
     @SuppressWarnings("rawtypes")
     @Override
     public boolean canConvert(Class type) {
-        return supportedClass.isAssignableFrom(type);
+        return type != null && supportedClass.isAssignableFrom(type);
     }
 
     /**

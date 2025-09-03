@@ -74,7 +74,9 @@ public enum Primitive {
 
 	if (equals(Primitive.INT)) {
 	    return "Integer";
-	}
+	} else if (equals(Primitive.CHAR)) {
+        return "Character";
+    }
 	return StringUtils.firstCharToUpper(type);
 
     }

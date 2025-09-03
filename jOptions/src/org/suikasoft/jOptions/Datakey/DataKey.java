@@ -299,9 +299,9 @@ public interface DataKey<T> extends KeyProvider<String> {
                 }
 
             } else {
-                String defaultValueString = defaultValue.toString();
+                String defaultValueString = value.toString();
                 if (StringLines.getLines(defaultValueString).size() == 1) {
-                    builder.append(" = ").append(defaultValue).append(")");
+                    builder.append(" = ").append(value).append(")");
                 } else {
                     builder.append(" - has default value, but spans several lines)");
                 }
@@ -324,6 +324,9 @@ public interface DataKey<T> extends KeyProvider<String> {
         StringBuilder builder = new StringBuilder();
 
         for (DataKey<?> option : keys) {
+            if (option == null) {
+                throw new IllegalArgumentException("DataKey collection contains null element");
+            }
             builder.append(option);
             builder.append("\n");
 

@@ -235,7 +235,7 @@ public class SpecsSwing {
         }
 
         // Build map
-        Map<K, V> newMap = SpecsFactory.newLinkedHashMap();
+        Map<K, V> newMap = new LinkedHashMap<>();
         for (K key : currentKeys) {
             newMap.put(key, map.get(key));
         }
@@ -327,10 +327,9 @@ public class SpecsSwing {
             SpecsLogs.debug(() -> "SpecsSwing.browseFileDirectory(): file '" + file + "' does not exist");
         }
 
-        // Tested on Java 15, Desktop.browseFileDirectory() was not working for Windows
         if (SpecsSystem.isWindows()) {
 
-            var command = "explorer.exe /select, " + file.getAbsoluteFile();
+            String[] command = {"explorer.exe", "/select,", file.getAbsoluteFile().getAbsolutePath()};
             try {
                 Runtime.getRuntime().exec(command);
             } catch (IOException e) {

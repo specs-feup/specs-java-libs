@@ -38,7 +38,7 @@ public class RegisterUtils {
      */
     public static Integer decodeFlagBit(String registerFlagName) {
 	// int beginIndex = registerFlagName.indexOf(REGISTER_BIT_OPEN);
-	int beginIndex = registerFlagName.indexOf(RegisterUtils.REGISTER_BIT_START);
+	int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
 	// int endIndex = registerFlagName.indexOf(REGISTER_BIT_CLOSE);
 
 	// if(beginIndex == -1 || endIndex == -1) {
@@ -63,7 +63,7 @@ public class RegisterUtils {
      */
     public static String decodeFlagName(String registerFlagName) {
 	// int beginIndex = registerFlagName.indexOf(REGISTER_BIT_OPEN);
-	int beginIndex = registerFlagName.indexOf(RegisterUtils.REGISTER_BIT_START);
+	int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
 	if (beginIndex == -1) {
 	    SpecsLogs.getLogger().
 		    warning("Flag '" + registerFlagName + "' does not represent "

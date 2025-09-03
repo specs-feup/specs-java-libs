@@ -17,10 +17,10 @@
 package org.suikasoft.XStreamPlus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.PersistenceFormat;
 
@@ -30,7 +30,7 @@ import pt.up.fe.specs.util.utilities.PersistenceFormat;
  */
 public class XmlPersistence extends PersistenceFormat {
 
-   private final Map<Class<?>, ObjectXml<?>> xmlObjects = SpecsFactory.newHashMap();
+   private final Map<Class<?>, ObjectXml<?>> xmlObjects = new HashMap<>();
 
     /**
      * Adds a list of ObjectXml mappings to this persistence instance.

@@ -44,6 +44,9 @@ public class RangeMap<K extends Number, V> {
      * @return the value associated with the range containing the key, or null if no such range exists
      */
     public V get(K key) {
+        if (key == null) {
+            return null;
+        }
         Entry<K, V> e = getLowerEntry(key);
         return e == null ? null : e.getValue();
     }
@@ -55,6 +58,9 @@ public class RangeMap<K extends Number, V> {
      * @return the entry with the largest key less than or equal to the given key, or null if no such entry exists
      */
     private Entry<K, V> getLowerEntry(K key) {
+        if (key == null) {
+            return null;
+        }
         Entry<K, V> e = map.floorEntry(key);
         if (e != null && e.getValue() == null) {
             e = map.lowerEntry(key);

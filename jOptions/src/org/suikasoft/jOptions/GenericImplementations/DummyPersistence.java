@@ -34,8 +34,12 @@ public class DummyPersistence implements AppPersistence {
      * Constructs a DummyPersistence with the given DataStore.
      *
      * @param setup the DataStore to use
+     * @throws NullPointerException if setup is null
      */
     public DummyPersistence(DataStore setup) {
+        if (setup == null) {
+            throw new NullPointerException("DataStore cannot be null");
+        }
         this.setup = setup;
     }
 
@@ -66,9 +70,13 @@ public class DummyPersistence implements AppPersistence {
      * @param setup the DataStore to save
      * @param keepSetupFile whether to keep the setup file (ignored)
      * @return true always
+     * @throws NullPointerException if setup is null
      */
     @Override
     public boolean saveData(File file, DataStore setup, boolean keepSetupFile) {
+        if (setup == null) {
+            throw new NullPointerException("DataStore cannot be null");
+        }
         this.setup = setup;
         return true;
     }

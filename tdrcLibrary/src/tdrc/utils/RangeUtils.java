@@ -39,10 +39,11 @@ public class RangeUtils {
 	 * @param key the key to search for
 	 * @return the value associated with the closest key less than or equal to the given key, or null if no such key exists
 	 */
-	public static <K, V> V getValueByRangedKey(TreeMap<K, V> map, K key) {
+	public static <K extends Comparable<K>, V> V getValueByRangedKey(TreeMap<K, V> map, K key) {
 		Entry<K, V> e = map.floorEntry(key);
-		if (e != null && e.getValue() == null) {
-			e = map.lowerEntry(key);
+		// Skip over consecutive null values to find the nearest non-null value
+		while (e != null && e.getValue() == null) {
+			e = map.lowerEntry(e.getKey());
 		}
 		return e == null ? null : e.getValue();
 	}

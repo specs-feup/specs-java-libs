@@ -14,10 +14,10 @@
 package org.suikasoft.jOptions.Options;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -42,7 +42,7 @@ public class MultipleChoice {
      */
     private MultipleChoice(List<String> choices, Map<String, String> alias) {
         this.choices = choices;
-        choicesMap = SpecsFactory.newHashMap();
+        choicesMap = new HashMap<>();
         for (int i = 0; i < choices.size(); i++) {
             choicesMap.put(choices.get(i), i);
         }

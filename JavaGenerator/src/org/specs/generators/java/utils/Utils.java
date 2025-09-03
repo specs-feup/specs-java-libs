@@ -48,6 +48,9 @@ public class Utils {
      * @return true if the file was written or replaced, false otherwise
      */
     public static boolean generateToFile(File outputDir, ClassType java, boolean replace) {
+        if (outputDir == null || java == null) {
+            return false;
+        }
         final String pack = java.getClassPackage();
         final String name = java.getName();
         final File outputClass = getFilePath(outputDir, pack, name);
@@ -98,7 +101,7 @@ public class Utils {
      * @param dir the directory to create
      */
     public static void makeDirs(File dir) {
-        if (!dir.exists()) {
+        if (dir != null && !dir.exists()) {
             dir.mkdirs();
         }
     }

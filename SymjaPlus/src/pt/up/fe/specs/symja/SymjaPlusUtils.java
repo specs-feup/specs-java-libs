@@ -67,12 +67,22 @@ public class SymjaPlusUtils {
      */
     public static String simplify(String expression, Map<String, String> constants) {
         SpecsCheck.checkNotNull(constants, () -> "Argument 'constants' cannot be null");
-        evaluator().clearVariables();
+        
+        // Enhanced thread safety: Clear variables before evaluation
+        var evaluator = evaluator();
+        evaluator.clearVariables();
+        
+        // Set constants in evaluator
         for (String constantName : constants.keySet()) {
             String constantValue = constants.get(constantName);
-            evaluator().defineVariable(constantName, evaluator().eval(constantValue));
+            evaluator.defineVariable(constantName, evaluator.eval(constantValue));
         }
-        var output = evaluator().eval("expand(" + expression + ")").toString();
+        
+        var output = evaluator.eval("expand(" + expression + ")").toString();
+        
+        // Clear variables again after evaluation to ensure clean state for next operation
+        evaluator.clearVariables();
+        
         return output;
     }
 
@@ -81,8 +91,14 @@ public class SymjaPlusUtils {
      *
      * @param expression the Symja expression
      * @return the equivalent C code as a string
+     * @throws IllegalArgumentException if expression is null
      */
-    public static String convertToC(String expression) {
+    public static String convertToC(String expression) throws IllegalArgumentException {
+        // Validate input to prevent NullPointerException
+        if (expression == null) {
+            throw new IllegalArgumentException("Expression cannot be null");
+        }
+        
         // Convert to Symja AST
         var symjaNode = SymjaAst.parse(expression);
 

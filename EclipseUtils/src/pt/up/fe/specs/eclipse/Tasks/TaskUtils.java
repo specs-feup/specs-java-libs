@@ -1,11 +1,11 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -15,6 +15,8 @@ package pt.up.fe.specs.eclipse.Tasks;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,20 +29,19 @@ import pt.up.fe.specs.eclipse.Tasks.SftpTask.SftpSetup;
 import pt.up.fe.specs.eclipse.Tasks.SftpTask.SftpTask;
 import pt.up.fe.specs.eclipse.Utilities.DeployUtils;
 import pt.up.fe.specs.guihelper.Base.SetupFieldEnum;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class TaskUtils {
 
     // private static final Map<String, TaskExecutor> tasks;
     private static final Map<Class<? extends SetupFieldEnum>, TaskExecutor> tasks;
     static {
-        tasks = SpecsFactory.newLinkedHashMap();
+        tasks = new LinkedHashMap<>();
         // tasks.put(SftpSetup.DestinationFolder.getSetupName(), new SftpTask());
         // tasks.put(FtpSetup.DestinationFolder.getSetupName(), new FtpTask());
         // tasks.put(CopySetup.DestinationFolder.getSetupName(), new CopyTask());
@@ -67,7 +68,7 @@ public class TaskUtils {
     }
 
     public static Map<String, TaskExecutor> getTasksByName() {
-        Map<String, TaskExecutor> tasksByName = SpecsFactory.newHashMap();
+        Map<String, TaskExecutor> tasksByName = new HashMap<>();
 
         for (Class<? extends SetupFieldEnum> aClass : tasks.keySet()) {
             // Get executor
@@ -85,7 +86,7 @@ public class TaskUtils {
 
     /**
      * Returns a File object pointing to a file equal to the given, but with another name.
-     * 
+     *
      * @param file
      * @param newName
      * @return

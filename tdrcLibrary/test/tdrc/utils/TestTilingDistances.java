@@ -18,9 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.SpecsIo;
 import tdrc.tuple.Tuple;
@@ -31,40 +29,6 @@ public class TestTilingDistances {
 
     public static void main(String[] args) {
         tuplesDistancesByClosest();
-        // IoUtils.append(out, eucledianDistances.toString());
-        // System.out.println(eucledianDistances);
-    }
-
-    private static void tuplesDistances() {
-        File out = new File("out.txt");
-        Integer[] values = { 8, 16, 32, 64, 128, 256, 512, 1024, 2048 };
-        TupleList<Integer> tupleList = ListUtils.createTuples(values, values, values);
-        SpecsIo.write(out, tupleList.toString());
-        Map<Tuple<Integer>, Tuple<Float>> normMap = TupleUtils.createNormalizedMap(tupleList, 3);
-        Map<Tuple<Float>, Tuple<Integer>> invertedNormMap = new HashMap<>();
-        normMap.entrySet().forEach(entry -> invertedNormMap.put(entry.getValue(), entry.getKey()));
-        System.out.println("-------------------------");
-        SpecsIo.append(out, "\n");
-        SpecsIo.append(out, normMap.toString());
-        SpecsIo.append(out, "\n");
-        System.out.println("-------------------------");
-        Map<Tuple<Float>, Map<Tuple<Float>, Float>> eucledianDistances = TupleUtils
-                .eucledianDistances(normMap.values());
-        Optional<Entry<Tuple<Float>, Map<Tuple<Float>, Float>>> first = eucledianDistances.entrySet().stream()
-                .findFirst();
-        List<Tuple<Integer>> rows = first.get().getValue().keySet().stream().map(invertedNormMap::get)
-                .collect(Collectors.toList());
-        // IoUtils.append(out, StringUtils.join(rows, ";"));
-        Function<Tuple<Integer>, String> tuple2String = tuple -> "("
-                + StringUtils.join(tuple, val -> String.format("%1$04d", val), ";") + ")";
-        String separator = " ,";
-        SpecsIo.append(out, "\n\n------- EUCLEDIAN DISTANCES --------\n");
-        SpecsIo.append(out, separator + StringUtils.join(rows, tuple2String, separator));
-        for (Entry<Tuple<Float>, Map<Tuple<Float>, Float>> entry : eucledianDistances.entrySet()) {
-            SpecsIo.append(out,
-                    "\n" + tuple2String.apply(invertedNormMap.get(entry.getKey())) + separator
-                            + StringUtils.join(entry.getValue().values(), separator));
-        }
     }
 
     private static void tuplesDistancesByClosest() {
@@ -93,10 +57,9 @@ public class TestTilingDistances {
             String firstTuple = "\n" + tuple2String.apply(invertedNormMap.get(entry.getKey())) + separator;
             for (Pair<Tuple<Float>, Float> tuple2 : entry.getValue()) {
                 builder.append(firstTuple);
-                builder.append(tuple2String.apply(invertedNormMap.get(tuple2.getLeft())));
+                builder.append(tuple2String.apply(invertedNormMap.get(tuple2.left())));
                 builder.append(separator);
-                builder.append(tuple2.getRight());
-                // + StringUtils.join(entry.getValue().values(), separator)
+                builder.append(tuple2.right());
             }
         }
         SpecsIo.append(out, builder.toString());
@@ -106,10 +69,8 @@ public class TestTilingDistances {
         for (Entry<Tuple<Float>, List<Pair<Tuple<Float>, Float>>> entry : eucledianDistances.entrySet()) {
             String firstTuple = "\n" + tuple2String.apply(invertedNormMap.get(entry.getKey())) + separator;
             builder.append(firstTuple);
-            builder.append(StringUtils.join(entry.getValue(), p -> tuple2String.apply(invertedNormMap.get(p.getLeft())),
+            builder.append(StringUtils.join(entry.getValue(), p -> tuple2String.apply(invertedNormMap.get(p.left())),
                     separator));
-            // + StringUtils.join(entry.getValue().values(), separator)
-
         }
         SpecsIo.append(out, builder.toString());
     }
