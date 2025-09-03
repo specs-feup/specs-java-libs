@@ -127,8 +127,10 @@ public interface XmlNode {
             case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
                 return node.getNodeValue();
             case org.w3c.dom.Node.DOCUMENT_NODE:
-                // For documents, return the aggregated text content (can be empty string)
-                return node.getTextContent();
+                // For documents, return the text content from the document element
+                org.w3c.dom.Document doc = (org.w3c.dom.Document) node;
+                org.w3c.dom.Element docElement = doc.getDocumentElement();
+                return docElement != null ? docElement.getTextContent() : null;
             default:
                 // For element-like nodes, return null only if there are no text/CDATA nodes in
                 // the subtree

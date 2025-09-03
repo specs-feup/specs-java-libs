@@ -13,21 +13,30 @@
 
 package pt.up.fe.specs.util.utilities;
 
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
 
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class PrintOnce {
 
-    private static final Set<String> PRINTED_MESSAGES = new HashSet<>();
+    private static final Set<String> PRINTED_MESSAGES = ConcurrentHashMap.newKeySet();
 
     public static void info(String message) {
-        if (PRINTED_MESSAGES.contains(message)) {
-            return;
-        }
+        // Handle null messages by using a special marker
+        String key = message == null ? "__NULL_MESSAGE__" : message;
 
-        SpecsLogs.info(message);
-        PRINTED_MESSAGES.add(message);
+        if (PRINTED_MESSAGES.add(key)) {
+            SpecsLogs.info(message);
+        }
+    }
+
+    /**
+     * Clears the internal cache of printed messages. This is primarily intended for testing
+     * purposes to ensure test isolation. In production code, this should rarely be needed
+     * as the whole point of PrintOnce is to maintain state across the application lifecycle.
+     */
+    public static void clearCache() {
+        PRINTED_MESSAGES.clear();
     }
 }

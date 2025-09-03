@@ -364,8 +364,8 @@ class XmlDocumentTest {
                     "<root><child></root>", // Mismatched tags
                     "<root><child><child></root>", // Unclosed nested tag
                     "<root attr=\"unclosed>content</root>", // Unclosed attribute
-                    "<?xml version=\"1.0\"?><root>content", // Missing closing tag
-                    "<root>>content</root>" // Invalid character
+                    "<?xml version=\"1.0\"?><root>content" // Missing closing tag
+                    // Note: "<root>>content</root>" is actually valid XML (> is allowed in text content)
             };
 
             for (String malformedXml : malformedXmls) {
