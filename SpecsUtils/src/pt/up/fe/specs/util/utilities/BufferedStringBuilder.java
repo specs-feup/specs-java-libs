@@ -40,7 +40,8 @@ public class BufferedStringBuilder implements AutoCloseable {
     }
 
     /**
-     * WARNING: The contents of the file given to this class will be erased when the object is created.
+     * WARNING: The contents of the file given to this class will be erased when the
+     * object is created.
      * 
      * @param outputFile
      */
@@ -64,7 +65,6 @@ public class BufferedStringBuilder implements AutoCloseable {
         }
 
         save();
-        // IoUtils.append(writeFile, builder.toString());
         this.builder = null;
         this.isClosed = true;
     }
@@ -95,11 +95,8 @@ public class BufferedStringBuilder implements AutoCloseable {
 
         // Add to StringBuilder
         this.builder.append(string);
-        // System.out.println("BUILDER ("+this.hashCode()+"):\n"+builder.toString());
 
-        // if (builder.length() > DEFAULT_BUFFER_CAPACITY) {
         if (this.builder.length() >= this.bufferCapacity) {
-            // System.out.println("ADASDADADADASD BUILDER ("+this.hashCode()+"):\n"+builder.toString());
             save();
         }
 

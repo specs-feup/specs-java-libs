@@ -37,62 +37,62 @@ class ScopeNode<V> {
      * 
      */
     public ScopeNode() {
-	this.childScopes = new LinkedHashMap<>();
-	this.symbols = new LinkedHashMap<>();
+        this.childScopes = new LinkedHashMap<>();
+        this.symbols = new LinkedHashMap<>();
     }
 
     /**
      * @return the symbols
      */
     public Map<String, V> getSymbols() {
-	return this.symbols;
+        return this.symbols;
     }
 
     public List<String> getScopes() {
-	return new ArrayList<>(this.childScopes.keySet());
+        return new ArrayList<>(this.childScopes.keySet());
     }
 
     public V getSymbol(String... key) {
-	return getSymbol(Arrays.asList(key));
+        return getSymbol(Arrays.asList(key));
     }
 
     public V getSymbol(List<String> key) {
-	if (key.isEmpty()) {
-	    return null;
-	}
+        if (key.isEmpty()) {
+            return null;
+        }
 
-	if (key.size() == 1) {
-	    return this.symbols.get(key.get(0));
+        if (key.size() == 1) {
+            return this.symbols.get(key.get(0));
 
-	}
+        }
 
-	ScopeNode<V> scopeChild = this.childScopes.get(key.get(0));
-	if (scopeChild == null) {
-	    return null;
-	}
+        ScopeNode<V> scopeChild = this.childScopes.get(key.get(0));
+        if (scopeChild == null) {
+            return null;
+        }
 
-	return scopeChild.getSymbol(key.subList(1, key.size()));
+        return scopeChild.getSymbol(key.subList(1, key.size()));
     }
 
     public void addSymbol(String name, V symbol) {
-	V previousSymbol = this.symbols.put(name, symbol);
-	if (previousSymbol != null) {
-	    SpecsLogs.msgLib("Replacing symbol with name '" + name + "'. Previous content: '" + previousSymbol
-		    + "'. Current content: '" + symbol + "'");
-	}
+        V previousSymbol = this.symbols.put(name, symbol);
+        if (previousSymbol != null) {
+            SpecsLogs.msgLib("Replacing symbol with name '" + name + "'. Previous content: '" + previousSymbol
+                    + "'. Current content: '" + symbol + "'");
+        }
     }
 
     public void addSymbol(List<String> scope, String name, V symbol) {
-	if (name == null) {
-	    throw new RuntimeException("'null' is not allowed as a name");
-	}
+        if (name == null) {
+            throw new RuntimeException("'null' is not allowed as a name");
+        }
 
-	if (scope == null) {
-	    scope = Collections.emptyList();
-	}
-	List<String> key = new ArrayList<>(scope);
-	key.add(name);
-	addSymbol(key, symbol);
+        if (scope == null) {
+            scope = Collections.emptyList();
+        }
+        List<String> key = new ArrayList<>(scope);
+        key.add(name);
+        addSymbol(key, symbol);
     }
 
     /**
@@ -100,82 +100,83 @@ class ScopeNode<V> {
      * @param symbol
      */
     public void addSymbol(List<String> key, V symbol) {
-	if (key.isEmpty()) {
-	    SpecsLogs.warn("Empty key, symbol '" + symbol + "' not inserted.");
-	    return;
-	}
+        if (key.isEmpty()) {
+            SpecsLogs.warn("Empty key, symbol '" + symbol + "' not inserted.");
+            return;
+        }
 
-	if (key.size() == 1) {
-	    addSymbol(key.get(0), symbol);
-	    return;
-	}
+        if (key.size() == 1) {
+            addSymbol(key.get(0), symbol);
+            return;
+        }
 
-	String scopeName = key.get(0);
-	ScopeNode<V> childScope = this.childScopes.get(scopeName);
-	if (childScope == null) {
-	    childScope = new ScopeNode<>();
-	    this.childScopes.put(scopeName, childScope);
-	}
+        String scopeName = key.get(0);
+        ScopeNode<V> childScope = this.childScopes.get(scopeName);
+        if (childScope == null) {
+            childScope = new ScopeNode<>();
+            this.childScopes.put(scopeName, childScope);
+        }
 
-	childScope.addSymbol(key.subList(1, key.size()), symbol);
+        childScope.addSymbol(key.subList(1, key.size()), symbol);
     }
 
     /**
      * @return
      */
     public List<List<String>> getKeys() {
-	return getKeys(new ArrayList<>());
+        return getKeys(new ArrayList<>());
     }
 
     private List<List<String>> getKeys(List<String> currentScope) {
-	List<List<String>> keys = new ArrayList<>();
+        List<List<String>> keys = new ArrayList<>();
 
-	// Add current node keys
-	for (String key : this.symbols.keySet()) {
-	    List<String> newKey = new ArrayList<>(currentScope);
-	    newKey.add(key);
-	    keys.add(newKey);
-	}
+        // Add current node keys
+        for (String key : this.symbols.keySet()) {
+            List<String> newKey = new ArrayList<>(currentScope);
+            newKey.add(key);
+            keys.add(newKey);
+        }
 
-	// Add node keys from scopes
-	for (String scope : this.childScopes.keySet()) {
-	    List<String> newScope = new ArrayList<>(currentScope);
-	    newScope.add(scope);
-	    keys.addAll(this.childScopes.get(scope).getKeys(newScope));
-	}
+        // Add node keys from scopes
+        for (String scope : this.childScopes.keySet()) {
+            List<String> newScope = new ArrayList<>(currentScope);
+            newScope.add(scope);
+            keys.addAll(this.childScopes.get(scope).getKeys(newScope));
+        }
 
-	return keys;
+        return keys;
     }
 
     public ScopeNode<V> getScopeNode(List<String> scope) {
-	if (scope.isEmpty()) {
-	    SpecsLogs.warn("Scope is empty.");
-	    return null;
-	}
+        if (scope.isEmpty()) {
+            SpecsLogs.warn("Scope is empty.");
+            return null;
+        }
 
-	String scopeName = scope.get(0);
-	ScopeNode<V> childScope = this.childScopes.get(scopeName);
-	if (childScope == null) {
-	    return null;
-	}
+        String scopeName = scope.get(0);
+        ScopeNode<V> childScope = this.childScopes.get(scopeName);
+        if (childScope == null) {
+            return null;
+        }
 
-	if (scope.size() == 1) {
-	    return childScope;
-	}
+        if (scope.size() == 1) {
+            return childScope;
+        }
 
-	return childScope.getScopeNode(scope.subList(1, scope.size()));
+        return childScope.getScopeNode(scope.subList(1, scope.size()));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-	// return "Symbols:\n"+symbols + "\nChildScopes:\n" + childScopes;
-	return this.symbols + "\n" + this.childScopes;
+        return this.symbols + "\n" + this.childScopes;
     }
 
     public ScopeNode<V> getScope(String scope) {
-	return this.childScopes.get(scope);
+        return this.childScopes.get(scope);
     }
 }

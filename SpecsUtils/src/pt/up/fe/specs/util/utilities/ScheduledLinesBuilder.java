@@ -18,57 +18,58 @@ import java.util.Map;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
- * Builds a string representation of a scheduling, according to elements and levels.
+ * Builds a string representation of a scheduling, according to elements and
+ * levels.
  * 
  * Ex.: element1 | element2 element3 |
  * 
- * TODO: Instead of building the map iteratively, store the data and build the lines when asked, to use the same space
- * for the elements
+ * TODO: Instead of building the map iteratively, store the data and build the
+ * lines when asked, to use the same space for the elements
  * 
  * @author Joao Bispo
  */
 public class ScheduledLinesBuilder {
 
     public ScheduledLinesBuilder() {
-	this.scheduledLines = new HashMap<>();
+        this.scheduledLines = new HashMap<>();
     }
 
     public void addElement(String element, int nodeLevel) {
-	String line = this.scheduledLines.get(nodeLevel);
-	if (line == null) {
-	    line = "";
-	} else {
-	    line += " | ";
-	}
+        String line = this.scheduledLines.get(nodeLevel);
+        if (line == null) {
+            line = "";
+        } else {
+            line += " | ";
+        }
 
-	line += element;
+        line += element;
 
-	this.scheduledLines.put(nodeLevel, line);
+        this.scheduledLines.put(nodeLevel, line);
     }
 
     @Override
     public String toString() {
-	int maxLevel = this.scheduledLines.size() - 1;
-	return toString(maxLevel);
+        int maxLevel = this.scheduledLines.size() - 1;
+        return toString(maxLevel);
     }
 
     public String toString(int maxLevel) {
-	StringBuilder builder = new StringBuilder();
-	int numberSize = Integer.toString(maxLevel).length();
-	for (int i = 0; i <= maxLevel; i++) {
-	    String line = this.scheduledLines.get(i);
-	    if (line == null) {
-		line = "---";
-	    }
-	    builder.append(SpecsStrings.padLeft(Integer.toString(i), numberSize, '0')).
-		    append(" -> ").append(line).append("\n");
-	}
+        StringBuilder builder = new StringBuilder();
+        int numberSize = Integer.toString(maxLevel).length();
+        for (int i = 0; i <= maxLevel; i++) {
+            String line = this.scheduledLines.get(i);
+            if (line == null) {
+                line = "---";
+            }
+            builder.append(SpecsStrings.padLeft(Integer.toString(i), numberSize, '0')).append(" -> ").append(line)
+                    .append("\n");
+        }
 
-	return builder.toString();
+        return builder.toString();
     }
 
     public Map<Integer, String> getScheduledLines() {
-	return this.scheduledLines;
+        return this.scheduledLines;
     }
 
     private final Map<Integer, String> scheduledLines;

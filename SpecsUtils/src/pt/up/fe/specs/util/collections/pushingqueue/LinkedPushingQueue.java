@@ -47,8 +47,7 @@ public class LinkedPushingQueue<T> implements PushingQueue<T> {
      * Inserts an element at the head of the queue, pushing all other elements one
      * position forward. If the queue is full, the last element is dropped.
      *
-     * @param element
-     *                an element to insert in the queue
+     * @param element an element to insert in the queue
      */
     @Override
     public void insertElement(T element) {
@@ -67,8 +66,7 @@ public class LinkedPushingQueue<T> implements PushingQueue<T> {
     /**
      * Returns the element at the specified position in this queue.
      *
-     * @param index
-     *              index of the element to return
+     * @param index index of the element to return
      * @return the element at the specified position in this queue
      */
     @Override
@@ -125,7 +123,6 @@ public class LinkedPushingQueue<T> implements PushingQueue<T> {
         builder.append("]");
 
         return builder.toString();
-
     }
 
 }

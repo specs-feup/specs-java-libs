@@ -24,40 +24,34 @@ import pt.up.fe.specs.util.SpecsGraphviz;
  */
 public class GraphToDotty {
 
-    /*
-    public static <GN extends GraphNodeV2<GN, N, C>, N, C> String getDotty(GraphV2<GN, N, C> graph) {
-    return getDotty(graph);
-    }
-     */
-
     public static <GN extends GraphNode<GN, N, C>, N, C> String getDotty(Graph<GN, N, C> graph) {
-	// Build Declarations and Connections
-	List<String> declarations = new ArrayList<>();
-	List<String> connections = new ArrayList<>();
-	for (GN graphNode : graph.getNodeList()) {
-	    declarations.add(getDeclaration(graphNode));
+        // Build Declarations and Connections
+        List<String> declarations = new ArrayList<>();
+        List<String> connections = new ArrayList<>();
+        for (GN graphNode : graph.getNodeList()) {
+            declarations.add(getDeclaration(graphNode));
 
-	    for (int i = 0; i < graphNode.getChildrenConnections().size(); i++) {
-		String connection = getConnection(graphNode, i);
-		connections.add(connection);
-	    }
-	}
+            for (int i = 0; i < graphNode.getChildrenConnections().size(); i++) {
+                String connection = getConnection(graphNode, i);
+                connections.add(connection);
+            }
+        }
 
-	return SpecsGraphviz.generateGraph(declarations, connections);
+        return SpecsGraphviz.generateGraph(declarations, connections);
     }
 
     public static <GN extends GraphNode<GN, N, C>, N, C> String getDeclaration(GN node) {
-	N nodeInfo = node.getNodeInfo();
-	return SpecsGraphviz.declaration(node.getId(), nodeInfo.toString(),
-		"box", "white");
+        N nodeInfo = node.getNodeInfo();
+        return SpecsGraphviz.declaration(node.getId(), nodeInfo.toString(),
+                "box", "white");
     }
 
     public static <GN extends GraphNode<GN, N, C>, N, C> String getConnection(GN node, int index) {
-	String inputId = node.getId();
-	String outputId = node.getChildren().get(index).getId();
+        String inputId = node.getId();
+        String outputId = node.getChildren().get(index).getId();
 
-	String label = node.getChildrenConnections().get(index).toString();
+        String label = node.getChildrenConnections().get(index).toString();
 
-	return SpecsGraphviz.connection(inputId, outputId, label);
+        return SpecsGraphviz.connection(inputId, outputId, label);
     }
 }

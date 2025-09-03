@@ -28,8 +28,9 @@ import pt.up.fe.specs.util.utilities.ClassMapper;
  * 
  * <p>
  * Use this class if you want to:<br>
- * 1) Use classes as keys and want the map to respect the hierarchy (e.g., a value mapped to class Number will be
- * returned if the key is the class Integer and there is no explicit mapping for the class Integer).<br>
+ * 1) Use classes as keys and want the map to respect the hierarchy (e.g., a
+ * value mapped to class Number will be returned if the key is the class Integer
+ * and there is no explicit mapping for the class Integer).<br>
  * 
  * @author JoaoBispo
  *
@@ -39,7 +40,7 @@ import pt.up.fe.specs.util.utilities.ClassMapper;
 public class ClassMap<T, V> {
 
     private final Map<Class<? extends T>, V> map;
-    // private final boolean supportInterfaces;
+
     // Can be null
     private final V defaultValue;
 
@@ -57,7 +58,6 @@ public class ClassMap<T, V> {
             ClassMapper classMapper) {
 
         this.map = map;
-        // this.supportInterfaces = supportInterfaces;
         this.defaultValue = defaultValue;
         this.classMapper = classMapper;
     }
@@ -70,7 +70,8 @@ public class ClassMap<T, V> {
      * Associates the specified value with the specified key.
      * 
      * <p>
-     * The key is always a class of a type that is a subtype of the type in the value.
+     * The key is always a class of a type that is a subtype of the type in the
+     * value.
      * <p>
      * Example: <br>
      * - put(Subclass.class, usesSuperClass), ok<br>
@@ -82,49 +83,9 @@ public class ClassMap<T, V> {
      */
     public <ET extends T, K extends ET> V put(Class<K> aClass,
             V value) {
-
-        // if (!this.supportInterfaces) {
-        // if (aClass.isInterface()) {
-        // SpecsLogs.warn("Support for interfaces is disabled, map is unchanged");
-        // return null;
-        // }
-        // }
-
         classMapper.add(aClass);
         return this.map.put(aClass, value);
     }
-
-    /**
-     * 
-     * @param key
-     * @return the class that will be used to access the map, based on the given key
-     */
-    /*
-    public <TK extends T> Optional<Class<?>> getEquivalentKey(Class<TK> key) {
-        Class<?> currentKey = key;
-    
-        while (currentKey != null) {
-            // Test key
-            V result = this.map.get(currentKey);
-            if (result != null) {
-                return Optional.of(currentKey);
-            }
-    
-            if (this.supportInterfaces) {
-                for (Class<?> interf : currentKey.getInterfaces()) {
-                    result = this.map.get(interf);
-                    if (result != null) {
-                        return Optional.of(interf);
-                    }
-                }
-            }
-    
-            currentKey = currentKey.getSuperclass();
-        }
-    
-        return Optional.empty();
-    }
-    */
 
     public <TK extends T> Optional<V> tryGet(Class<TK> key) {
         // Map given class to a class supported by this instance
@@ -136,30 +97,6 @@ public class ClassMap<T, V> {
             return Optional.of(result);
         }
 
-        /*
-        Class<?> currentKey = key;
-        
-        while (currentKey != null) {
-            // Test key
-            V result = this.map.get(currentKey);
-            if (result != null) {
-                return Optional.of(result);
-            }
-        
-            if (this.supportInterfaces) {
-                // System.out.println("INTERFACES OF " + currentKey + ": " +
-                // Arrays.toString(currentKey.getInterfaces()));
-                for (Class<?> interf : currentKey.getInterfaces()) {
-                    result = this.map.get(interf);
-                    if (result != null) {
-                        return Optional.of(result);
-                    }
-                }
-            }
-        
-            currentKey = currentKey.getSuperclass();
-        }
-        */
         // Return default value if present
         if (this.defaultValue != null) {
             return Optional.of(this.defaultValue);

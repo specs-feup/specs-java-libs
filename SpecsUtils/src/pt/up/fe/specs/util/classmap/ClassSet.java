@@ -22,8 +22,9 @@ import java.util.List;
  * 
  * <p>
  * Use this class if you want to:<br>
- * 1) Use classes as elements of a set and want the set to respect the hierarchy (e.g., contains will return true for an
- * Integer instance if the class Number is in the set)<br>
+ * 1) Use classes as elements of a set and want the set to respect the hierarchy
+ * (e.g., contains will return true for an Integer instance if the class Number
+ * is in the set)<br>
  * 
  * @author JoaoBispo
  *
@@ -73,12 +74,12 @@ public class ClassSet<E> {
     }
 
     /**
-     * Returns <tt>true</tt> if this set contains the specified element. More formally, returns <tt>true</tt> if and
-     * only if this set contains an element <tt>e</tt> such that
+     * Returns <tt>true</tt> if this set contains the specified element. More
+     * formally, returns <tt>true</tt> if and only if this set contains an element
+     * <tt>e</tt> such that
      * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>.
      *
-     * @param o
-     *            element whose presence in this set is to be tested
+     * @param o element whose presence in this set is to be tested
      * @return <tt>true</tt> if this set contains the specified element
      */
     public boolean contains(Class<? extends E> aClass) {

@@ -18,9 +18,6 @@ import java.util.function.Function;
 
 class GenericCodec<T> implements StringCodec<T>, Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     private final Function<T, String> encoder;

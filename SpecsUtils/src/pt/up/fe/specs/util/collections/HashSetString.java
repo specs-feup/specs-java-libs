@@ -18,9 +18,6 @@ import java.util.HashSet;
 
 public class HashSetString extends HashSet<String> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public HashSetString() {

@@ -29,7 +29,6 @@ public class BufferedCsvWriter extends CsvWriter {
         super(header);
 
         this.bufferFile = bufferFile;
-        // this.outputFile = new File(outputFile.getParent(), outputFile.getName() + ".buffer");
         this.headerWritten = false;
         this.lineCounter = 0;
         // Delete buffer
@@ -38,29 +37,12 @@ public class BufferedCsvWriter extends CsvWriter {
 
     @Override
     public BufferedCsvWriter addLine(List<String> line) {
-        // When adding a line, write directly to the file
-        // super.addLine(line);
-
         // Write header
         if (!this.headerWritten) {
             this.headerWritten = true;
             // Increment line counter
             lineCounter++;
-            /*
-            StringBuilder builder = new StringBuilder();
-            
-            // Separator
-            builder.append("sep=").append(this.delimiter).append("\n");
-            
-            // Header
-            builder.append(this.header.get(0));
-            for (int i = 1; i < this.header.size(); i++) {
-                builder.append(this.delimiter).append(this.header.get(i));
-            }
-            builder.append(this.newline);
-            
-            IoUtils.append(this.bufferFile, builder.toString());
-            */
+
             SpecsIo.append(this.bufferFile, buildHeader());
         }
 
@@ -69,17 +51,6 @@ public class BufferedCsvWriter extends CsvWriter {
 
         // Write line
         SpecsIo.append(this.bufferFile, buildLine(line, lineCounter));
-        /*
-        StringBuilder builder = new StringBuilder();
-        
-        builder.append(line.get(0));
-        for (int i = 1; i < line.size(); i++) {
-            builder.append(this.delimiter).append(line.get(i));
-        }
-        builder.append(this.newline);
-        
-        IoUtils.append(this.bufferFile, builder.toString());
-        */
 
         return this;
     }

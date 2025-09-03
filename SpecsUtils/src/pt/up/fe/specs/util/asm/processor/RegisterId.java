@@ -13,20 +13,12 @@
 
 package pt.up.fe.specs.util.asm.processor;
 
-// import java.io.Serializable;
-
 /**
  * Identifies registers in the DTool simulator.
  *
  * @author Joao Bispo
  */
-// public interface RegisterId extends Serializable {
 public interface RegisterId {
-
-    /**
-     * @return the register number used in the DTool simulator corresponding to this particular register.
-     */
-    // int getRegisterNumber();
 
     /**
      *

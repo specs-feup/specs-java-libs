@@ -31,22 +31,27 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @deprecated This class was created when the code base was still using Java 5.0. With Java 7, the Diamond Operator and the
- * Collections methods, this class should no longer be used. Consider using Guava classes in com.google.common.collect, such as Maps,
- * Lists, etc.
+ * @deprecated This class was created when the code base was still using Java
+ *             5.0. With Java 7, the Diamond Operator and the Collections
+ *             methods, this class should no longer be used.
+ *             Consider using Guava classes in com.google.common.collect, such
+ *             as Maps, Lists, etc.
  *
- * Factory methods for common objects, such as the ones in Java Collections.
+ *             Factory methods for common objects, such as the ones in Java
+ *             Collections.
  *
- * <p>
- * The purpose of theses methods is to avoid writing the generic type when creating a new class.
+ *             <p>
+ *             The purpose of theses methods is to avoid writing the generic
+ *             type when creating a new class.
  *
- * <p>
- * IMPORTANT: Instead of using this class, consider using Guava classes in com.google.common.collect, such as Maps,
- * Lists, etc.
+ *             <p>
+ *             IMPORTANT: Instead of using this class, consider using Guava
+ *             classes in com.google.common.collect, such as Maps, Lists, etc.
  *
- * <p>
- * PS.: This class was created when the code base was still using Java 5.0. With Java 7, the Diamond Operator and the
- * Collections methods, this class should no longer be used.
+ *             <p>
+ *             PS.: This class was created when the code base was still using
+ *             Java 5.0. With Java 7, the Diamond Operator and the Collections
+ *             methods, this class should no longer be used.
  *
  * @author Joao Bispo
  */
@@ -57,7 +62,7 @@ public class SpecsFactory {
      * Creates a list of the given class type, containing 'elements'.
      *
      * @param listClass the class type of the list elements
-     * @param elements the elements to be added to the list
+     * @param elements  the elements to be added to the list
      * @return a list containing the given elements
      */
     public static <T> List<T> asList(Class<T> listClass, Object... elements) {
@@ -89,7 +94,7 @@ public class SpecsFactory {
      * Creates a new ArrayList with the specified initial capacity.
      *
      * @param initialCapacity the initial capacity of the list
-     * @param <T> the type of elements in the list
+     * @param <T>             the type of elements in the list
      * @return a new ArrayList
      */
     public static <T> List<T> newArrayList(int initialCapacity) {
@@ -100,7 +105,7 @@ public class SpecsFactory {
      * Creates a new ArrayList containing the elements of the specified collection.
      *
      * @param elements the collection whose elements are to be placed into the list
-     * @param <T> the type of elements in the list
+     * @param <T>      the type of elements in the list
      * @return a new ArrayList
      */
     public static <T> List<T> newArrayList(Collection<? extends T> elements) {
@@ -121,7 +126,7 @@ public class SpecsFactory {
      * Creates a new LinkedList containing the elements of the specified collection.
      *
      * @param elements the collection whose elements are to be placed into the list
-     * @param <T> the type of elements in the list
+     * @param <T>      the type of elements in the list
      * @return a new LinkedList
      */
     public static <T> List<T> newLinkedList(Collection<? extends T> elements) {
@@ -170,8 +175,8 @@ public class SpecsFactory {
      * Creates a new EnumMap for the specified key class.
      *
      * @param keyClass the class of the keys in the map
-     * @param <K> the type of keys in the map
-     * @param <V> the type of values in the map
+     * @param <K>      the type of keys in the map
+     * @param <V>      the type of values in the map
      * @return a new EnumMap
      */
     public static <K extends Enum<K>, V> Map<K, V> newEnumMap(Class<K> keyClass) {
@@ -182,7 +187,7 @@ public class SpecsFactory {
      * Creates a new HashSet containing the elements of the specified collection.
      *
      * @param elements the collection whose elements are to be placed into the set
-     * @param <T> the type of elements in the set
+     * @param <T>      the type of elements in the set
      * @return a new HashSet
      */
     public static <T> Set<T> newHashSet(Collection<? extends T> elements) {
@@ -203,8 +208,8 @@ public class SpecsFactory {
      * Creates a new LinkedHashMap containing the mappings of the specified map.
      *
      * @param elements the map whose mappings are to be placed into the new map
-     * @param <K> the type of keys in the map
-     * @param <V> the type of values in the map
+     * @param <K>      the type of keys in the map
+     * @param <V>      the type of values in the map
      * @return a new LinkedHashMap
      */
     public static <K, V> Map<K, V> newLinkedHashMap(Map<? extends K, ? extends V> elements) {
@@ -222,10 +227,11 @@ public class SpecsFactory {
     }
 
     /**
-     * Creates a new LinkedHashSet containing the elements of the specified collection.
+     * Creates a new LinkedHashSet containing the elements of the specified
+     * collection.
      *
      * @param elements the collection whose elements are to be placed into the set
-     * @param <T> the type of elements in the set
+     * @param <T>      the type of elements in the set
      * @return a new LinkedHashSet
      */
     public static <T> Set<T> newLinkedHashSet(Collection<? extends T> elements) {
@@ -266,10 +272,11 @@ public class SpecsFactory {
     }
 
     /**
-     * Builds a set with a sequence of integers starting at 'startIndex' and with 'size' integers.
+     * Builds a set with a sequence of integers starting at 'startIndex' and with
+     * 'size' integers.
      *
      * @param startIndex the starting index of the sequence
-     * @param size the number of integers in the sequence
+     * @param size       the number of integers in the sequence
      * @return a set containing the sequence of integers
      */
     public static Set<Integer> newSetSequence(int startIndex, int size) {
@@ -300,14 +307,17 @@ public class SpecsFactory {
     }
 
     /**
-     * If the given value is null, returns an empty collection. Otherwise, returns an unmodifiable view of the list.
+     * If the given value is null, returns an empty collection. Otherwise, returns
+     * an unmodifiable view of the list.
      *
      * <p>
-     * This method is useful for final fields whose contents do not need to be changed.
+     * This method is useful for final fields whose contents do not need to be
+     * changed.
      *
      * @param aList the list to be checked
-     * @param <T> the type of elements in the list
-     * @return an unmodifiable view of the list, or an empty list if the original list is null or empty
+     * @param <T>   the type of elements in the list
+     * @return an unmodifiable view of the list, or an empty list if the original
+     *         list is null or empty
      */
     public static <T> List<T> getUnmodifiableList(List<T> aList) {
         if (aList == null) {
@@ -321,14 +331,15 @@ public class SpecsFactory {
     }
 
     /**
-     * Method similar to Collections.addAll, but that accepts 'null' as the source argument.
+     * Method similar to Collections.addAll, but that accepts 'null' as the source
+     * argument.
      *
      * <p>
      * If the source argument is null, the collection sink remains unmodified.
      *
-     * @param sink the collection to which elements are to be added
+     * @param sink   the collection to which elements are to be added
      * @param source the collection whose elements are to be added to the sink
-     * @param <T> the type of elements in the collections
+     * @param <T>    the type of elements in the collections
      */
     public static <T> void addAll(Collection<T> sink, Collection<? extends T> source) {
         if (source == null) {

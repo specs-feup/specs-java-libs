@@ -45,7 +45,7 @@ public enum LogSourceInfo {
         if (level == null) {
             return NONE;
         }
-        
+
         LogSourceInfo info = LOGGER_SOURCE_INFO.get(level);
 
         return info != null ? info : NONE;
@@ -59,7 +59,7 @@ public enum LogSourceInfo {
         if (info == null) {
             throw new NullPointerException("LogSourceInfo cannot be null");
         }
-        
+
         LOGGER_SOURCE_INFO.put(level, info);
     }
 

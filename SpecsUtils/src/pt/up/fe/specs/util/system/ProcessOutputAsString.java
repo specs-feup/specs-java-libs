@@ -25,7 +25,8 @@ public class ProcessOutputAsString extends ProcessOutput<String, String> {
     }
 
     /**
-     * Returns the contents of the standard output, followed by the contents of the standard error.
+     * Returns the contents of the standard output, followed by the contents of the
+     * standard error.
      * 
      * @return
      */
@@ -39,8 +40,8 @@ public class ProcessOutputAsString extends ProcessOutput<String, String> {
             return out;
         }
 
-        // Add new line if standard out does not end with a newline, and if both standard output and standard error is
-        // not empty.
+        // Add new line if standard out does not end with a newline, and if both
+        // standard output and standard error is not empty.
         builder.append(out);
         if (!out.isEmpty() && !out.endsWith("\n")) {
             builder.append("\n");

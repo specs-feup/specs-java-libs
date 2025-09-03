@@ -73,10 +73,9 @@ public class JarPath {
         jarPath = jarPath.replace('\\', '/');
         jarPath = jarPath.substring(0, jarPath.lastIndexOf("/") + 1);
 
-        // 3. As last resort, return current directory. Warn user and recommend to set property
+        // 3. As last resort, return current directory. Warn user and recommend to set
+        // property
         if (verbose) {
-            // SpecsLogs.warn("Could not find Jar path (maybe application is being run from "
-            // + "another application in a different process)");
             SpecsLogs.debug(() -> "Could not find Jar path (maybe application is being run from "
                     + "another application in a different process)");
             SpecsLogs.msgInfo(
@@ -87,7 +86,6 @@ public class JarPath {
         }
 
         return jarPath;
-
     }
 
     private Optional<String> buildJarPathInternalTry() {

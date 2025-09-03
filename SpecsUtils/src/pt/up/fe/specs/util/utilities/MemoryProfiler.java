@@ -30,7 +30,8 @@ import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 
 /**
- * Launches a thread that periodically calls the garbage collector and reads the memory used after collection.
+ * Launches a thread that periodically calls the garbage collector and reads the
+ * memory used after collection.
  * 
  * @author JBispo
  *
@@ -48,25 +49,18 @@ public class MemoryProfiler {
     }
 
     /**
-     * Helper constructor, which measure memory every 500 milliseconds, to a file "memory_profile.csv" in the current
-     * working directory.
+     * Helper constructor, which measure memory every 500 milliseconds, to a file
+     * "memory_profile.csv" in the current working directory.
      */
     public MemoryProfiler() {
         this(500, TimeUnit.MILLISECONDS, new File("memory_profile.csv"));
     }
 
-    // public static void run(long period, TimeUnit timeUnit, ) {
-    // ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    // scheduler.scheduleAtFixedRate(yourRunnable, 0, period, timeUnit);
-    // }
-
     public void execute() {
-
         // Launch thread
         var threadExecutor = Executors.newSingleThreadExecutor();
         threadExecutor.execute(this::profile);
         threadExecutor.shutdown();
-
     }
 
     private void profile() {
@@ -105,7 +99,6 @@ public class MemoryProfiler {
 
             while (true) {
                 // Sleep
-                // SpecsLogs.info("Sleeping...");
                 try {
                     Thread.sleep(totalMillis, (int) partialNanos);
                 } catch (InterruptedException e) {
@@ -125,15 +118,10 @@ public class MemoryProfiler {
 
                 // Write to file
                 writer.write(line, 0, line.length());
-                // writer.flush();
-                // System.out.println("WROTE " + line);
             }
 
         } catch (Exception e) {
             SpecsLogs.info("Interrupting memory profile, " + e.getMessage());
         }
-
-        // SpecsIo.append(file, contents)
-        // try()
     }
 }

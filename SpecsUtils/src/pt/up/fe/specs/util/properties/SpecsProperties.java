@@ -51,7 +51,8 @@ public class SpecsProperties {
     }
 
     /**
-     * Helper method which accepts a ResourceProvider and copies the file if it does not exist.
+     * Helper method which accepts a ResourceProvider and copies the file if it does
+     * not exist.
      * 
      * @param resource
      * @return
@@ -59,14 +60,7 @@ public class SpecsProperties {
     public static SpecsProperties newInstance(ResourceProvider resource) {
 
         File propsFile = resource.writeVersioned(SpecsIo.getWorkingDir(), resource.getClass()).getFile();
-        /*
-        File propsFile = new File(resource.getResourceName());
-        
-        // If file does not exist, copy resource
-        if (!propsFile.isFile()) {
-        propsFile = IoUtils.resourceCopy(resource.getResource(), IoUtils.getWorkingDir(), false);
-        }
-        */
+
         return newInstance(propsFile);
     }
 
@@ -81,15 +75,16 @@ public class SpecsProperties {
     }
 
     /**
-     * Given a File object, loads the contents of the file into a Java Properties object.
+     * Given a File object, loads the contents of the file into a Java Properties
+     * object.
      *
      * <p>
-     * If an error occurs (ex.: the File argument does not represent a file, could not load the Properties object)
-     * returns null and logs the cause.
+     * If an error occurs (ex.: the File argument does not represent a file, could
+     * not load the Properties object) returns null and logs the cause.
      * 
-     * @param file
-     *            a File object representing a file.
-     * @return If successfull, a Properties objects with the contents of the file. Null otherwise.
+     * @param file a File object representing a file.
+     * @return If successfull, a Properties objects with the contents of the file.
+     *         Null otherwise.
      */
     private static SpecsProperties load(InputStream inputStream) {
 

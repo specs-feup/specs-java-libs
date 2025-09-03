@@ -19,7 +19,8 @@ import java.util.List;
 /**
  * Utility methods for mathematical operations.
  * <p>
- * Provides static helper methods for arithmetic, rounding, and other math-related tasks.
+ * Provides static helper methods for arithmetic, rounding, and other
+ * math-related tasks.
  * </p>
  *
  * @author Joao Bispo
@@ -37,9 +38,10 @@ public class SpecsMath {
     }
 
     /**
-     * Calculates the ratio of values below a given threshold in a collection of numbers.
+     * Calculates the ratio of values below a given threshold in a collection of
+     * numbers.
      *
-     * @param values the collection of numbers
+     * @param values    the collection of numbers
      * @param threshold the threshold value
      * @return the ratio of values below the threshold
      */
@@ -78,10 +80,12 @@ public class SpecsMath {
     }
 
     /**
-     * Calculates the arithmetic mean of a collection of numbers, excluding zero values.
+     * Calculates the arithmetic mean of a collection of numbers, excluding zero
+     * values.
      *
      * @param values the collection of numbers
-     * @return the arithmetic mean excluding zeros, or null if the collection is empty
+     * @return the arithmetic mean excluding zeros, or null if the collection is
+     *         empty
      */
     public static Double arithmeticMeanWithoutZeros(Collection<Number> values) {
         if (values.isEmpty()) {
@@ -113,8 +117,9 @@ public class SpecsMath {
     /**
      * Calculates the geometric mean of a collection of numbers.
      *
-     * @param values the collection of numbers
-     * @param withoutZeros if false, performs geometric mean with zero correction; otherwise, ignores zero values
+     * @param values       the collection of numbers
+     * @param withoutZeros if false, performs geometric mean with zero correction;
+     *                     otherwise, ignores zero values
      * @return the geometric mean
      */
     public static double geometricMean(Collection<Number> values, boolean withoutZeros) {
@@ -145,8 +150,9 @@ public class SpecsMath {
     /**
      * Calculates the harmonic mean of a collection of numbers.
      *
-     * @param values the collection of numbers
-     * @param useZeroCorrection if true, applies zero correction to the harmonic mean calculation
+     * @param values            the collection of numbers
+     * @param useZeroCorrection if true, applies zero correction to the harmonic
+     *                          mean calculation
      * @return the harmonic mean
      */
     public static double harmonicMean(Collection<Number> values, boolean useZeroCorrection) {
@@ -178,7 +184,7 @@ public class SpecsMath {
     /**
      * Finds the maximum value in a list of numbers.
      *
-     * @param values the list of numbers
+     * @param values      the list of numbers
      * @param ignoreZeros if true, ignores zero values in the calculation
      * @return the maximum value, or null if the list is null or empty
      */
@@ -215,7 +221,7 @@ public class SpecsMath {
     /**
      * Finds the minimum value in a list of numbers.
      *
-     * @param values the list of numbers
+     * @param values      the list of numbers
      * @param ignoreZeros if true, ignores zero values in the calculation
      * @return the minimum value, or null if the list is null or empty
      */

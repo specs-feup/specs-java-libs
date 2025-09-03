@@ -29,7 +29,7 @@ public class ReporterUtils {
      * Formats a message with a given type and content.
      *
      * @param messageType the type of the message (e.g., "Error", "Warning")
-     * @param message the content of the message
+     * @param message     the content of the message
      * @return a formatted message string
      */
     public static String formatMessage(String messageType,
@@ -42,11 +42,12 @@ public class ReporterUtils {
     }
 
     /**
-     * Formats a stack line for a file, including the file name, line number, and code line.
+     * Formats a stack line for a file, including the file name, line number, and
+     * code line.
      *
-     * @param fileName the name of the file
+     * @param fileName   the name of the file
      * @param lineNumber the line number in the file
-     * @param codeLine the code line at the specified line number
+     * @param codeLine   the code line at the specified line number
      * @return a formatted stack line string
      */
     public static String formatFileStackLine(String fileName, int lineNumber, String codeLine) {
@@ -57,12 +58,13 @@ public class ReporterUtils {
     }
 
     /**
-     * Formats a stack line for a function, including the function name, file name, line number, and code line.
+     * Formats a stack line for a function, including the function name, file name,
+     * line number, and code line.
      *
      * @param functionName the name of the function
-     * @param fileName the name of the file
-     * @param lineNumber the line number in the file
-     * @param codeLine the code line at the specified line number
+     * @param fileName     the name of the file
+     * @param lineNumber   the line number in the file
+     * @param codeLine     the code line at the specified line number
      * @return a formatted stack line string
      */
     public static String formatFunctionStackLine(String functionName, String fileName, int lineNumber,
@@ -87,7 +89,8 @@ public class ReporterUtils {
      *
      * @param code the code string
      * @param line the line number to retrieve
-     * @return the code line at the specified line number, or a message if the code is null
+     * @return the code line at the specified line number, or a message if the code
+     *         is null
      */
     public static String getErrorLine(String code, int line) {
         if (code == null) {

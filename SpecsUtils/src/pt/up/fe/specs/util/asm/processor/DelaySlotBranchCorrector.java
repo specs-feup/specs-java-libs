@@ -13,34 +13,36 @@
 package pt.up.fe.specs.util.asm.processor;
 
 /**
- * Indicates instructions where the control flow may change in architectures with delay slots.
+ * Indicates instructions where the control flow may change in architectures
+ * with delay slots.
  *
  * @author Joao Bispo
  */
 public class DelaySlotBranchCorrector {
 
     public DelaySlotBranchCorrector() {
-	this.currentDelaySlot = 0;
+        this.currentDelaySlot = 0;
     }
 
     public void giveInstruction(boolean isJump, int delaySlots) {
-	this.wasJump = this.isJump;
-	this.isJump = isJump(isJump, delaySlots);
+        this.wasJump = this.isJump;
+        this.isJump = isJump(isJump, delaySlots);
     }
 
     /**
      * @return true if the control-flow can change after the given instruction
      */
     public boolean isJumpPoint() {
-	return this.isJump;
+        return this.isJump;
     }
 
     /**
      *
-     * @return true if the control-flow could have changed between the given instruction and the one before.
+     * @return true if the control-flow could have changed between the given
+     *         instruction and the one before.
      */
     public boolean wasJumpPoint() {
-	return this.wasJump;
+        return this.wasJump;
     }
 
     /**
@@ -50,36 +52,35 @@ public class DelaySlotBranchCorrector {
      * @return true if the current instruction is a jump
      */
     private boolean isJump(boolean isJump, int delaySlots) {
-	// If we are currently in a delay slot that is not the last,
-	// just decrement.
-	if (this.currentDelaySlot > 1) {
-	    this.currentDelaySlot--;
-	    return false;
-	}
+        // If we are currently in a delay slot that is not the last, just decrement.
+        if (this.currentDelaySlot > 1) {
+            this.currentDelaySlot--;
+            return false;
+        }
 
-	// This is the last delay slot. This instruction will jump.
-	if (this.currentDelaySlot == 1) {
-	    this.currentDelaySlot--;
-	    return true;
-	}
+        // This is the last delay slot. This instruction will jump.
+        if (this.currentDelaySlot == 1) {
+            this.currentDelaySlot--;
+            return true;
+        }
 
-	// Check if it is a jump instruction
-	if (isJump) {
-	    return processJump(delaySlots);
-	}
+        // Check if it is a jump instruction
+        if (isJump) {
+            return processJump(delaySlots);
+        }
 
-	// It is not a jump instruction
-	return false;
+        // It is not a jump instruction
+        return false;
     }
 
     private boolean processJump(int delaySlots) {
-	// Check if it has delay slots
-	if (delaySlots > 0) {
-	    this.currentDelaySlot = delaySlots;
-	    return false;
-	}
+        // Check if it has delay slots
+        if (delaySlots > 0) {
+            this.currentDelaySlot = delaySlots;
+            return false;
+        }
 
-	return true;
+        return true;
     }
 
     private int currentDelaySlot;

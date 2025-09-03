@@ -39,8 +39,8 @@ public class ArgumentsParser {
     }
 
     /**
-     * Argument parser that delimits arguments by spaces (' '), glues them with double quotes ('"') and escapes single
-     * characters with backslash ('\').
+     * Argument parser that delimits arguments by spaces (' '), glues them with
+     * double quotes ('"') and escapes single characters with backslash ('\').
      * 
      * @return
      */
@@ -120,7 +120,8 @@ public class ArgumentsParser {
             // Delimiters are only enabled if there is no current gluer
             if (currentGluer == null) {
                 Optional<String> delimiter = checkDelimiters(slice);
-                // If there is a delimiter, store current argument (if not empty) and reset current argument
+                // If there is a delimiter, store current argument (if not empty) and reset
+                // current argument
                 if (delimiter.isPresent()) {
                     // Update slice
                     slice = slice.substring(delimiter.get().length());

@@ -38,7 +38,8 @@ public class Resources {
     private final List<String> resources;
 
     /**
-     * Constructs a Resources object with a base folder and an array of resource names.
+     * Constructs a Resources object with a base folder and an array of resource
+     * names.
      *
      * @param baseFolder the base folder where resources are located
      * @param resources  an array of resource names
@@ -48,7 +49,8 @@ public class Resources {
     }
 
     /**
-     * Constructs a Resources object with a base folder and a list of resource names.
+     * Constructs a Resources object with a base folder and a list of resource
+     * names.
      *
      * @param baseFolder the base folder where resources are located
      * @param resources  a list of resource names

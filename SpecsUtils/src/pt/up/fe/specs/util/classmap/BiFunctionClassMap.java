@@ -22,7 +22,8 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
 /**
- * Maps a class to a BiFunction that receives an instance of that class being used as key and other object.
+ * Maps a class to a BiFunction that receives an instance of that class being
+ * used as key and other object.
  * 
  * @author JoaoBispo
  *
@@ -32,7 +33,6 @@ import pt.up.fe.specs.util.utilities.ClassMapper;
 public class BiFunctionClassMap<T, U, R> {
 
     private final Map<Class<? extends T>, BiFunction<? extends T, U, R>> map;
-    // private final boolean supportInterfaces;
     private final ClassMapper classMapper;
 
     public BiFunctionClassMap() {
@@ -45,7 +45,8 @@ public class BiFunctionClassMap<T, U, R> {
      * Associates the specified value with the specified key.
      * 
      * <p>
-     * The key is always a class of a type that is a subtype of the type in the value.
+     * The key is always a class of a type that is a subtype of the type in the
+     * value.
      * <p>
      * Example: <br>
      * - put(Subclass.class, usesSuperClass), ok<br>
@@ -57,14 +58,6 @@ public class BiFunctionClassMap<T, U, R> {
      */
     public <VS extends T, KS extends VS> void put(Class<KS> aClass,
             BiFunction<VS, U, R> value) {
-
-        // if (!this.supportInterfaces) {
-        // if (aClass.isInterface()) {
-        // SpecsLogs.warn("Support for interfaces is disabled, map is unchanged");
-        // return;
-        // }
-        // }
-
         this.map.put(aClass, value);
         classMapper.add(aClass);
     }
@@ -83,30 +76,6 @@ public class BiFunctionClassMap<T, U, R> {
         SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
         return (BiFunction<T, U, R>) function;
-
-        // Class<?> currentKey = key;
-        //
-        // while (currentKey != null) {
-        // // Test key
-        // BiFunction<? extends T, U, R> result = this.map.get(currentKey);
-        // if (result != null) {
-        // return (BiFunction<T, U, R>) result;
-        // }
-        //
-        // if (this.supportInterfaces) {
-        // for (Class<?> interf : currentKey.getInterfaces()) {
-        // result = this.map.get(interf);
-        // if (result != null) {
-        // return (BiFunction<T, U, R>) result;
-        // }
-        // }
-        // }
-        //
-        // currentKey = currentKey.getSuperclass();
-        // }
-        //
-        // return null;
-
     }
 
     @SuppressWarnings("unchecked")
@@ -115,8 +84,8 @@ public class BiFunctionClassMap<T, U, R> {
     }
 
     /**
-     * Calls the BiFunction.accept associated with class of the value t, or throws an Exception if no BiFunction could
-     * be found in the map.
+     * Calls the BiFunction.accept associated with class of the value t, or throws
+     * an Exception if no BiFunction could be found in the map.
      * 
      * @param t
      * @param u

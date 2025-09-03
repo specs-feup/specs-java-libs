@@ -28,7 +28,8 @@ import pt.up.fe.specs.util.Preconditions;
  */
 public class ProvidersSupport {
     /**
-     * Retrieves a list of resources from a single enum class implementing the ResourceProvider interface.
+     * Retrieves a list of resources from a single enum class implementing the
+     * ResourceProvider interface.
      *
      * @param enumClass the class of the enum implementing ResourceProvider
      * @return a list of resources provided by the enum

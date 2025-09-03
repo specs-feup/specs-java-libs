@@ -32,12 +32,6 @@ import pt.up.fe.specs.util.SpecsLogs;
 public interface TreeNode<K extends TreeNode<K>> {
 
     /**
-     *
-     * @return a mutable view of the children
-     */
-    // List<K> getChildrenMutable();
-
-    /**
      * 
      * @return
      */
@@ -60,7 +54,6 @@ public interface TreeNode<K extends TreeNode<K>> {
      */
     default String toNodeString() {
         String prefix = getNodeName();
-        // String prefix = getType().toString();
         String content = toContentString();
         if (content.isEmpty()) {
             return prefix;
@@ -187,7 +180,8 @@ public interface TreeNode<K extends TreeNode<K>> {
      * Returns an unmodifiable view of the children of the token.
      *
      * <p>
-     * To modify the children of the token use methods such as addChild() or removeChild().
+     * To modify the children of the token use methods such as addChild() or
+     * removeChild().
      *
      * @return the children
      */
@@ -220,7 +214,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * Searches for a child of the given class. If more than one child is found, throws exception.
+     * Searches for a child of the given class. If more than one child is found,
+     * throws exception.
      * 
      * @param <T>
      * @param aClass
@@ -244,8 +239,6 @@ public interface TreeNode<K extends TreeNode<K>> {
         return cast(subList(getChildren(), startIndex), aClass);
     }
 
-    // Object getContent();
-
     /**
      *
      * @return a string representing the contents of the node
@@ -253,22 +246,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     String toContentString();
 
     /**
-     * If getContent() returns null, this method returns an empty string.
-     *
-     * @return
-     */
-    // default String toContentString() {
-    // Object content = getContent();
-    // if (content == null) {
-    // return "";
-    // }
-    //
-    // return getContent().toString();
-    // }
-
-    /**
-     * @param children
-     *            the children to set
+     * @param children the children to set
      */
     void setChildren(Collection<? extends K> children);
 
@@ -322,7 +300,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * Replaces the token at the specified position in this list with the specified token.
+     * Replaces the token at the specified position in this list with the specified
+     * token.
      *
      * @param index
      * @param token
@@ -332,8 +311,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      *
      * @param child
-     * @return the object that was really inserted in the tree (e.g., if child already had a parent, usually a copy is
-     *         inserted)
+     * @return the object that was really inserted in the tree (e.g., if child
+     *         already had a parent, usually a copy is inserted)
      */
     // boolean addChild(K child);
     K addChild(K child);
@@ -368,7 +347,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     K copy();
 
     /**
-     * Returns a new copy of the node with the same content and type, but not children.
+     * Returns a new copy of the node with the same content and type, but not
+     * children.
      *
      * @return
      */
@@ -387,8 +367,7 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      * Tests whether the given node is an ancestor of this node.
      *
-     * @param node
-     *            the node to test
+     * @param node the node to test
      * @return true if it is ancestor, false otherwise
      */
     default boolean isAncestor(K node) {
@@ -434,7 +413,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * @return the index of this token in its parent token, or -1 if it does not have a parent
+     * @return the index of this token in its parent token, or -1 if it does not
+     *         have a parent
      */
     default int indexOfSelf() {
         if (!hasParent()) {
@@ -447,7 +427,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      *
      * @param nodeClass
-     * @return the index of the first child that is an instance of the given class, or -1 if none is found
+     * @return the index of the first child that is an instance of the given class,
+     *         or -1 if none is found
      */
     default int getChildIndex(Class<? extends K> nodeClass) {
         for (int i = 0; i < getNumChildren(); i++) {
@@ -485,10 +466,12 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * Convenience method to get a child by index safely, without requiring a class parameter.
+     * Convenience method to get a child by index safely, without requiring a class
+     * parameter.
      *
      * @param index the index of the child to retrieve
-     * @return an Optional containing the child if the index is valid, Optional.empty() otherwise
+     * @return an Optional containing the child if the index is valid,
+     *         Optional.empty() otherwise
      */
     default Optional<K> getChildTry(int index) {
         if (index < 0 || index >= getNumChildren()) {
@@ -496,12 +479,6 @@ public interface TreeNode<K extends TreeNode<K>> {
         }
         return Optional.of(getChild(index));
     }
-
-    /*
-    default boolean is(Class<? extends K> nodeClass) {
-    return nodeClass.isInstance(this);
-    }
-    */
 
     /**
      * By default, returns the name of the class.
@@ -517,10 +494,8 @@ public interface TreeNode<K extends TreeNode<K>> {
      *
      *
      * @param token
-     * @param startIndex
-     *            (inclusive)
-     * @param endIndex
-     *            (exclusive)
+     * @param startIndex (inclusive)
+     * @param endIndex   (exclusive)
      */
     default void removeChildren(int startIndex, int endIndex) {
 
@@ -542,8 +517,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     * Sets 'newChild' in 'token' at the position 'startIndex', and removes tokens from startIndex+1 (inclusive) to
-     * endIndex (exclusive).
+     * Sets 'newChild' in 'token' at the position 'startIndex', and removes tokens
+     * from startIndex+1 (inclusive) to endIndex (exclusive).
      *
      * <p>
      * If startIndex+1 is equal to endIndex, no tokens are removed from the list.
@@ -591,7 +566,8 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      * Returns an Iterator of the children of the node.
      *
-     * @return a ListIterator over the children of the node. The iterator supports methods that modify the node (set,
+     * @return a ListIterator over the children of the node. The iterator supports
+     *         methods that modify the node (set,
      *         remove, insert...)
      */
     default ChildrenIterator<K> getChildrenIterator() {
@@ -604,12 +580,14 @@ public interface TreeNode<K extends TreeNode<K>> {
     public void removeParent();
 
     /**
-     * Detaches this node from the parent. If this node does not have a parent, throws an exception.
+     * Detaches this node from the parent. If this node does not have a parent,
+     * throws an exception.
      */
     public void detach();
 
     /**
-     * Sets this node as the parent of the given node. If the given node already has a parent, throws an exception.
+     * Sets this node as the parent of the given node. If the given node already has
+     * a parent, throws an exception.
      *
      * @param childToken
      */
@@ -649,7 +627,8 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * 
-     * @return the depth of this node (e.g., 0 if it has no parent, 1 if it is a child of the root node)
+     * @return the depth of this node (e.g., 0 if it has no parent, 1 if it is a
+     *         child of the root node)
      */
     default int getDepth() {
         if (!hasParent()) {
@@ -662,9 +641,9 @@ public interface TreeNode<K extends TreeNode<K>> {
     /**
      * 
      * @param child
-     *            the child left of which the sibling will be inserted
+     *                the child left of which the sibling will be inserted
      * @param sibling
-     *            the node to be inserted
+     *                the node to be inserted
      */
     default public void addChildLeftOf(K child, K sibling) {
         var idx = indexOfChild(child);

@@ -23,7 +23,8 @@ import pt.up.fe.specs.util.utilities.StringSlice;
  * Utility class for performing parsing over a String.
  *
  * <p>
- * Uses a mutable StringSlice to apply parsing rules over the string which can update it.
+ * Uses a mutable StringSlice to apply parsing rules over the string which can
+ * update it.
  *
  * @author JoaoBispo
  *
@@ -57,7 +58,6 @@ public class StringParser {
     public <T> T applyPrivate(ParserResult<T> result) {
         int originalLength = currentString.length();
 
-        // currentString = currentString.setString(result.getModifiedString());
         currentString = result.getModifiedString();
 
         // Apply trim if there where modifications
@@ -78,47 +78,21 @@ public class StringParser {
         ParserResult<T> result = worker.apply(currentString);
 
         return applyPrivate(result);
-        /*
-        int originalLength = currentString.length();
-        currentString = result.getModifiedString();
-        
-        // Apply trim if there where modifications
-        if (currentString.length() != originalLength) {
-            currentString = currentString.trim();
-        }
-        
-        return result.getResult();
-        */
     }
 
     public <T, U> T apply(ParserWorkerWithParam<T, U> worker, U parameter) {
         ParserResult<T> result = worker.apply(currentString, parameter);
         return applyPrivate(result);
-        /*
-        currentString = result.getModifiedString();
-        
-        return result.getResult();
-        */
     }
 
     public <T, U, V> T apply(ParserWorkerWithParam2<T, U, V> worker, U parameter1, V parameter2) {
         ParserResult<T> result = worker.apply(currentString, parameter1, parameter2);
         return applyPrivate(result);
-        /*
-        currentString = result.getModifiedString();
-        
-        return result.getResult();
-        */
     }
 
     public <T, U, V, W> T apply(ParserWorkerWithParam3<T, U, V, W> worker, U parameter1, V parameter2, W parameter3) {
         ParserResult<T> result = worker.apply(currentString, parameter1, parameter2, parameter3);
         return applyPrivate(result);
-        /*
-        currentString = result.getModifiedString();
-        
-        return result.getResult();
-        */
     }
 
     public <T, U, V, W, Y> T apply(ParserWorkerWithParam4<T, U, V, W, Y> worker, U parameter1, V parameter2,
@@ -146,7 +120,6 @@ public class StringParser {
 
     public String clear() {
         String consumedString = currentString.toString();
-        // currentString = new StringSlice("");
         currentString = currentString.clear();
         return consumedString;
     }
@@ -156,7 +129,8 @@ public class StringParser {
     }
 
     /**
-     * Checks if the internal string is empty, after trimming. If it is not, throws an Exception.
+     * Checks if the internal string is empty, after trimming. If it is not, throws
+     * an Exception.
      */
     public void checkEmpty() {
         if (currentString.trim().isEmpty()) {

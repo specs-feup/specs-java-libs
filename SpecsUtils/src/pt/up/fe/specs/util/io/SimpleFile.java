@@ -41,30 +41,19 @@ public interface SimpleFile {
      * @return
      */
     static SimpleFile newInstance(String filename, String contents) {
-	return new SimpleFile() {
+        return new SimpleFile() {
 
-	    @Override
-	    public String getContents() {
-		return contents;
-	    }
+            @Override
+            public String getContents() {
+                return contents;
+            }
 
-	    @Override
-	    public String getFilename() {
-		return filename;
-	    }
+            @Override
+            public String getFilename() {
+                return filename;
+            }
 
-	};
+        };
     }
 
-    /**
-     * Helper constructor that receives a file.
-     * 
-     * @param file
-     * @return
-     */
-    /*
-    static LoadedFile newInstance(File file) {
-    return newInstance(file.getName(), IoUtils.read(file));
-    }
-     */
 }

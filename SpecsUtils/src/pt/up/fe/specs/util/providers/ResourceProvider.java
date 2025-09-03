@@ -35,7 +35,8 @@ import pt.up.fe.specs.util.providers.impl.GenericResource;
  * Represents a class which provides a string to a Java resource.
  *
  * <p>
- * The resource must exist, the ResourceProvider is responsible for guaranteeing that the resource is valid.
+ * The resource must exist, the ResourceProvider is responsible for guaranteeing
+ * that the resource is valid.
  *
  * @author Joao Bispo
  * @see SpecsIo#getResource(ResourceProvider)
@@ -55,10 +56,11 @@ public interface ResourceProvider extends FileResourceProvider {
     }
 
     /**
-     * Creates a new instance of ResourceProvider with the given resource string and version.
+     * Creates a new instance of ResourceProvider with the given resource string and
+     * version.
      *
      * @param resource the resource string
-     * @param version the version string
+     * @param version  the version string
      * @return a new ResourceProvider instance
      */
     static ResourceProvider newInstance(String resource, String version) {
@@ -85,7 +87,8 @@ public interface ResourceProvider extends FileResourceProvider {
     String getResource();
 
     /**
-     * Returns a list with all the resources, in case this class is an enum. Otherwise, returns an empty list.
+     * Returns a list with all the resources, in case this class is an enum.
+     * Otherwise, returns an empty list.
      *
      * @return a list of ResourceProvider instances
      */
@@ -136,7 +139,8 @@ public interface ResourceProvider extends FileResourceProvider {
     }
 
     /**
-     * Utility method which returns the ResourceProviders in an enumeration that implements ResourceProvider.
+     * Utility method which returns the ResourceProviders in an enumeration that
+     * implements ResourceProvider.
      *
      * @param enumClass the class of the enumeration
      * @return a list of ResourceProvider instances
@@ -178,7 +182,7 @@ public interface ResourceProvider extends FileResourceProvider {
      */
     default String getResourceLocation() {
         String resourcePath = getFileLocation();
-        // String resourcePath = getResource();
+
         // Remove resource name
         int slashIndex = resourcePath.lastIndexOf('/');
         if (slashIndex == -1) {
@@ -189,7 +193,8 @@ public interface ResourceProvider extends FileResourceProvider {
     }
 
     /**
-     * Returns the path that should be used when copying this resource. By default returns the same as getResource().
+     * Returns the path that should be used when copying this resource. By default
+     * returns the same as getResource().
      *
      * @return the file location path
      */
@@ -220,7 +225,7 @@ public interface ResourceProvider extends FileResourceProvider {
     /**
      * Writes the resource to the specified folder, with an option to overwrite.
      *
-     * @param folder the folder where the resource will be written
+     * @param folder    the folder where the resource will be written
      * @param overwrite whether to overwrite the file if it exists
      * @return the written file
      */
@@ -229,10 +234,11 @@ public interface ResourceProvider extends FileResourceProvider {
     }
 
     /**
-     * Writes the resource to the specified folder, with options to overwrite and map the resource name.
+     * Writes the resource to the specified folder, with options to overwrite and
+     * map the resource name.
      *
-     * @param folder the folder where the resource will be written
-     * @param overwrite whether to overwrite the file if it exists
+     * @param folder     the folder where the resource will be written
+     * @param overwrite  whether to overwrite the file if it exists
      * @param nameMapper a function to map the resource name
      * @return the written file
      */
@@ -249,9 +255,7 @@ public interface ResourceProvider extends FileResourceProvider {
 
         // Write file
         boolean success = SpecsIo.resourceCopyWithName(getResource(), filename, folder);
-        /*
-        boolean success = SpecsIo.write(outputFile, SpecsIo.getResource(this));
-        */
+
         if (!success) {
             throw new RuntimeException("Could not write file '" + outputFile + "'");
         }

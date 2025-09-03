@@ -31,33 +31,35 @@ public class FileSet {
     private String outputName;
 
     public FileSet(File sourceFolder, List<String> sourceFiles, String outputName) {
-	this.sourceFilenames = sourceFiles;
-	this.sourceFolder = sourceFolder;
-	this.outputName = outputName;
+        this.sourceFilenames = sourceFiles;
+        this.sourceFolder = sourceFolder;
+        this.outputName = outputName;
     }
 
     public List<String> getSourceFilenames() {
-	return this.sourceFilenames;
+        return this.sourceFilenames;
     }
 
     public File getSourceFolder() {
-	return this.sourceFolder;
+        return this.sourceFolder;
     }
 
     public String outputName() {
-	return this.outputName;
+        return this.outputName;
     }
 
     public void setOutputName(String outputName) {
-	this.outputName = outputName;
+        this.outputName = outputName;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-	return "SOURCEFOLDER:" + this.sourceFolder;
+        return "SOURCEFOLDER:" + this.sourceFolder;
     }
 
 }

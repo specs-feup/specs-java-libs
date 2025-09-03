@@ -30,26 +30,24 @@ public interface Reporter {
      * Emits a warning or error.
      * 
      * <p>
-     * A warning is a potential problem in the code that does not prevent the generation of valid C code. It usually
-     * indicates bugs or performance issues.
+     * A warning is a potential problem in the code that does not prevent the
+     * generation of valid C code. It usually indicates bugs or performance issues.
      * 
      * <p>
-     * An error is an actual problem in the code that prevents the generation of C code and therefore should stop the
-     * code generation through an exception.
+     * An error is an actual problem in the code that prevents the generation of C
+     * code and therefore should stop the code generation through an exception.
      * 
-     * @param type
-     *            The type of message.
-     * @param message
-     *            The message body. Messages should be formatted as one or more simple sentences. Usually ends in a "."
-     *            or "?".
+     * @param type    The type of message.
+     * @param message The message body. Messages should be formatted as one or more
+     *                simple sentences. Usually ends in a "."
+     *                or "?".
      */
     public void emitMessage(MessageType type, String message);
 
     /**
      * Prints the stack trace to the provided PrintStream.
      * 
-     * @param reportStream
-     *            The stream where the stack trace will be printed.
+     * @param reportStream The stream where the stack trace will be printed.
      */
     public void printStackTrace(PrintStream reportStream);
 
@@ -64,52 +62,49 @@ public interface Reporter {
      * Emits an error.
      * 
      * <p>
-     * An error is an actual problem in the code that prevents the generation of C code and therefore should stop the
-     * code generation through an exception.
+     * An error is an actual problem in the code that prevents the generation of C
+     * code and therefore should stop the code generation through an exception.
      * 
-     * @param type
-     *            The type of message.
-     * @param message
-     *            The message body. Messages should be formatted as one or more simple sentences. Usually ends in a "."
-     *            or "?".
-     * @return A null RuntimeException. It is merely meant to enable the "throw emitError()" syntax.
+     * @param type    The type of message.
+     * @param message The message body. Messages should be formatted as one or more
+     *                simple sentences. Usually ends in a "."
+     *                or "?".
+     * @return A null RuntimeException. It is merely meant to enable the "throw
+     *         emitError()" syntax.
      */
     public default RuntimeException emitError(MessageType type, String message) {
-	Preconditions.checkArgument(type.getMessageCategory() == ReportCategory.ERROR);
+        Preconditions.checkArgument(type.getMessageCategory() == ReportCategory.ERROR);
 
-	emitMessage(type, message);
+        emitMessage(type, message);
 
-	return new RuntimeException(message);
+        return new RuntimeException(message);
     }
 
     /**
      * Emits a default warning message.
      * 
-     * @param message
-     *            The warning message to be emitted.
+     * @param message The warning message to be emitted.
      */
     public default void warn(String message) {
-	emitMessage(MessageType.WARNING_TYPE, message);
+        emitMessage(MessageType.WARNING_TYPE, message);
     }
 
     /**
      * Emits a default info message.
      * 
-     * @param message
-     *            The info message to be emitted.
+     * @param message The info message to be emitted.
      */
     public default void info(String message) {
-	emitMessage(MessageType.INFO_TYPE, message);
+        emitMessage(MessageType.INFO_TYPE, message);
     }
 
     /**
      * Emits a default error message.
      * 
-     * @param message
-     *            The error message to be emitted.
+     * @param message The error message to be emitted.
      * @return A RuntimeException containing the error message.
      */
     public default RuntimeException error(String message) {
-	return emitError(MessageType.ERROR_TYPE, message);
+        return emitError(MessageType.ERROR_TYPE, message);
     }
 }

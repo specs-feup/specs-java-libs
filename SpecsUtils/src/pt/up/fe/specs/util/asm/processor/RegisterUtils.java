@@ -24,8 +24,7 @@ import pt.up.fe.specs.util.SpecsStrings;
 public class RegisterUtils {
 
     public static String buildRegisterBit(RegisterId regId, int bitPosition) {
-	// return regId.getName() + REGISTER_BIT_OPEN + bitPosition + REGISTER_BIT_CLOSE;
-	return regId.getName() + RegisterUtils.REGISTER_BIT_START + bitPosition;
+        return regId.getName() + RegisterUtils.REGISTER_BIT_START + bitPosition;
     }
 
     /**
@@ -37,44 +36,34 @@ public class RegisterUtils {
      * @return
      */
     public static Integer decodeFlagBit(String registerFlagName) {
-	// int beginIndex = registerFlagName.indexOf(REGISTER_BIT_OPEN);
-	int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
-	// int endIndex = registerFlagName.indexOf(REGISTER_BIT_CLOSE);
+        int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
 
-	// if(beginIndex == -1 || endIndex == -1) {
-	if (beginIndex == -1) {
-	    SpecsLogs.getLogger().
-		    warning("Flag '" + registerFlagName + "' does not represent "
-			    + "a valid flag.");
-	    return null;
-	}
+        if (beginIndex == -1) {
+            SpecsLogs.getLogger().warning("Flag '" + registerFlagName + "' does not represent "
+                    + "a valid flag.");
+            return null;
+        }
 
-	// String bitNumber = registerFlagName.substring(beginIndex+1, endIndex);
-	String bitNumber = registerFlagName.substring(beginIndex + 1);
-	return SpecsStrings.parseInteger(bitNumber);
+        String bitNumber = registerFlagName.substring(beginIndex + 1);
+        return SpecsStrings.parseInteger(bitNumber);
     }
 
     /**
-     * <p>
      * Example: if given the string MSR[29], returns MSR.
      * 
      * @param registerFlagName
      * @return
      */
     public static String decodeFlagName(String registerFlagName) {
-	// int beginIndex = registerFlagName.indexOf(REGISTER_BIT_OPEN);
-	int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
-	if (beginIndex == -1) {
-	    SpecsLogs.getLogger().
-		    warning("Flag '" + registerFlagName + "' does not represent "
-			    + "a valid flag.");
-	    return null;
-	}
+        int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
+        if (beginIndex == -1) {
+            SpecsLogs.getLogger().warning("Flag '" + registerFlagName + "' does not represent "
+                    + "a valid flag.");
+            return null;
+        }
 
-	return registerFlagName.substring(0, beginIndex);
+        return registerFlagName.substring(0, beginIndex);
     }
 
     private static final String REGISTER_BIT_START = "_";
-    // private static final String REGISTER_BIT_OPEN = "[";
-    // private static final String REGISTER_BIT_CLOSE = "]";
 }

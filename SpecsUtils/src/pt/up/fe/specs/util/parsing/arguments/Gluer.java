@@ -27,7 +27,6 @@ public class Gluer {
         this.delimiterStart = start;
         this.delimiterEnd = end;
         this.keepDelimiters = keepDelimiters;
-
     }
 
     /**

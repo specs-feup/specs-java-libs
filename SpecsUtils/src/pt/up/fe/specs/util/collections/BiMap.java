@@ -28,89 +28,56 @@ public class BiMap<T> {
     private int maxX;
 
     public BiMap() {
-	this.bimap = new HashMap<>();
-	this.maxY = 0;
-	this.maxX = 0;
+        this.bimap = new HashMap<>();
+        this.maxY = 0;
+        this.maxX = 0;
     }
 
     public void put(int x, int y, T value) {
-	Map<Integer, T> yMap = this.bimap.get(x);
-	if (yMap == null) {
-	    yMap = new HashMap<>();
-	    this.bimap.put(x, yMap);
-	}
+        Map<Integer, T> yMap = this.bimap.get(x);
+        if (yMap == null) {
+            yMap = new HashMap<>();
+            this.bimap.put(x, yMap);
+        }
 
-	yMap.put(y, value);
+        yMap.put(y, value);
 
-	this.maxX = Math.max(this.maxX, x + 1);
-	this.maxY = Math.max(this.maxY, y + 1);
+        this.maxX = Math.max(this.maxX, x + 1);
+        this.maxY = Math.max(this.maxY, y + 1);
     }
 
     public T get(int x, int y) {
-	Map<Integer, T> yMap = this.bimap.get(x);
-	if (yMap == null) {
-	    return null;
-	}
+        Map<Integer, T> yMap = this.bimap.get(x);
+        if (yMap == null) {
+            return null;
+        }
 
-	return yMap.get(y);
+        return yMap.get(y);
     }
 
     public String getBoolString(int x, int y) {
-	T value = get(x, y);
-	if (value == null) {
-	    return "-";
-	}
+        T value = get(x, y);
+        if (value == null) {
+            return "-";
+        }
 
-	return "x";
+        return "x";
     }
 
-    /*
-        public void put(int x, int y, T value) {
-    	// Y is the first list
-    	List<T> xList = null;
-    	if(y < bimap.size()) {
-    	    xList = bimap.get(y);
-    	}
-
-    	if(xList == null) {
-    	    xList = new ArrayList<T>();
-    	    bimap.add(y, xList);
-    	}
-
-    	xList.add(value);
-        }
-
-        public T get(int x, int y) {
-    	// Y is the first list
-    	List<T> xList = null;
-    	if(y < bimap.size()) {
-    	    xList = bimap.get(y);
-    	}
-
-    	if(xList == null) {
-    	    return null;
-    	}
-
-    	if(x >= xList.size()) {
-    	    return null;
-    	}
-    	return xList.get(x);
-        }
-     */
     @Override
     public String toString() {
-	StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
 
-	for (int y = 0; y < this.maxY; y++) {
-	    if (this.maxX > 0) {
-		builder.append(getBoolString(0, y));
-	    }
-	    for (int x = 1; x < this.maxX; x++) {
-		builder.append(getBoolString(x, y));
-	    }
-	    builder.append("\n");
-	}
-	return builder.toString();
+        for (int y = 0; y < this.maxY; y++) {
+            if (this.maxX > 0) {
+                builder.append(getBoolString(0, y));
+            }
+            for (int x = 1; x < this.maxX; x++) {
+                builder.append(getBoolString(x, y));
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
 
     }
 

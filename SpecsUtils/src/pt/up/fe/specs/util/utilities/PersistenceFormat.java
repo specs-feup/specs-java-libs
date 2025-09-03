@@ -32,8 +32,8 @@ public abstract class PersistenceFormat {
      * @return
      */
     public boolean write(File outputFile, Object anObject) {
-	String contents = to(anObject);
-	return SpecsIo.write(outputFile, contents);
+        String contents = to(anObject);
+        return SpecsIo.write(outputFile, contents);
     }
 
     /**
@@ -45,8 +45,8 @@ public abstract class PersistenceFormat {
      * @return
      */
     public <T> T read(File inputFile, Class<T> classOfObject) {
-	String contents = SpecsIo.read(inputFile);
-	return from(contents, classOfObject);
+        String contents = SpecsIo.read(inputFile);
+        return from(contents, classOfObject);
     }
 
     public abstract String to(Object anObject);

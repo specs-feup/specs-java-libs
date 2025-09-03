@@ -30,7 +30,7 @@ public interface MessageType {
      * @return the name of the message type
      */
     public default String getName() {
-	return toString();
+        return toString();
     }
 
     /**

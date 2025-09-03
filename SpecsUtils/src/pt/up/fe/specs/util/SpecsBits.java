@@ -17,7 +17,8 @@ import java.nio.ByteBuffer;
 /**
  * Utility methods for bitwise operations.
  * <p>
- * Provides static helper methods for manipulating bits and binary representations.
+ * Provides static helper methods for manipulating bits and binary
+ * representations.
  * </p>
  *
  * @author Joao Bispo
@@ -114,18 +115,16 @@ public class SpecsBits {
     }
 
     /**
-     * Pads the string with zeros on the left until it has the requested size, and prefixes "0x" to the resulting
-     * String.
+     * Pads the string with zeros on the left until it has the requested size, and
+     * prefixes "0x" to the resulting String.
      * 
      * <p>
      * Example: <br>
      * Input - padHexString(166, 4) <br>
      * Output - 0x00A6.
      * 
-     * @param hexNumber
-     *            a long.
-     * @param size
-     *            the pretended number of digits of the hexadecimal number.
+     * @param hexNumber a long.
+     * @param size      the pretended number of digits of the hexadecimal number.
      * @return a string
      */
     public static String padHexString(long hexNumber, int size) {
@@ -133,18 +132,16 @@ public class SpecsBits {
     }
 
     /**
-     * Pads the string with zeros on the left until it has the requested size, and prefixes "0x" to the resulting
-     * String.
+     * Pads the string with zeros on the left until it has the requested size, and
+     * prefixes "0x" to the resulting String.
      * 
      * <p>
      * Example:2 <br>
      * Input - padHexString(A6, 4) <br>
      * Output - 0x00A6.
      * 
-     * @param hexNumber
-     *            an hexadecimal number in String format.
-     * @param size
-     *            the pretended number of digits of the hexadecimal number.
+     * @param hexNumber an hexadecimal number in String format.
+     * @param size      the pretended number of digits of the hexadecimal number.
      * @return a string
      */
     public static String padHexString(String hexNumber, int size) {
@@ -172,10 +169,8 @@ public class SpecsBits {
      * Input - padBinaryString(101, 5) <br>
      * Output - 00101.
      * 
-     * @param binaryNumber
-     *            a binary number in String format.
-     * @param size
-     *            the pretended number of digits of the binary number.
+     * @param binaryNumber a binary number in String format.
+     * @param size         the pretended number of digits of the binary number.
      * @return a string
      */
     public static String padBinaryString(String binaryNumber, int size) {
@@ -196,10 +191,8 @@ public class SpecsBits {
     /**
      * Gets the a single bit of the integer target.
      * 
-     * @param position
-     *            a number between 0 and 31, inclusive, where 0 is the LSB
-     * @param target
-     *            an integer
+     * @param position a number between 0 and 31, inclusive, where 0 is the LSB
+     * @param target   an integer
      * @return 1 if the bit at the specified position is 1; 0 otherwise
      */
     public static int getBit(int position, int target) {
@@ -207,22 +200,19 @@ public class SpecsBits {
     }
 
     /**
-     * Returns an integer representing the 16 bits from the long number from a specified offset.
+     * Returns an integer representing the 16 bits from the long number from a
+     * specified offset.
      * 
-     * @param data
-     *            a long number
-     * @param offset
-     *            a number between 0 and 3, inclusive
+     * @param data   a long number
+     * @param offset a number between 0 and 3, inclusive
      * @return an int representing the 16 bits of the specified offset
      */
     public static int get16BitsAligned(long data, int offset) {
         // Normalize offset
         offset = offset % 4;
-        // System.out.println("offset:"+offset);
+
         // Align the mask
         long mask = SpecsBits.MASK_16_BITS << 16 * offset;
-        // System.out.println("Mask:"+Long.toHexString(mask));
-        // System.out.println("Data:"+Long.toHexString(data));
 
         // Get the bits
         long result = data & mask;
@@ -234,23 +224,15 @@ public class SpecsBits {
     /**
      * Paul Hsieh's Hash Function, for long numbers.
      * 
-     * @param data
-     *            data to hash
-     * @param hash
-     *            previous value of the hash. If this it is the start of the method, a recomended value to use is the
-     *            length of the data. In this case because it is a long use the number 8 (8 bytes).
+     * @param data data to hash
+     * @param hash previous value of the hash. If this it is the start of the
+     *             method, a recomended value to use is the
+     *             length of the data. In this case because it is a long use the
+     *             number 8 (8 bytes).
      * @return a hash value
      */
     public static int superFastHash(long data, int hash) {
         int tmp;
-        // int rem;
-
-        // if (len <= 0) {
-        // return 0;
-        // }
-
-        // rem = len & 3;
-        // len >>= 2;
 
         // Main Loop
         for (int i = 0; i < 4; i += 2) {
@@ -281,28 +263,19 @@ public class SpecsBits {
     /**
      * Paul Hsieh's Hash Function, for int numbers.
      * 
-     * @param data
-     *            data to hash
-     * @param hash
-     *            previous value of the hash. If this it is the start of the method, a recomended value to use is the
-     *            length of the data. In this case because it is an integer use the number 4 (4 bytes).
+     * @param data data to hash
+     * @param hash previous value of the hash. If this it is the start of the
+     *             method, a recomended value to use is the
+     *             length of the data. In this case because it is an integer use the
+     *             number 4 (4 bytes).
      * @return a hash value
      */
     public static int superFastHash(int data, int hash) {
         int tmp;
-        // int rem;
-
-        // if (len <= 0) {
-        // return 0;
-        // }
-
-        // rem = len & 3;
-        // len >>= 2;
 
         // Main Loop
         int i = 0;
-        // for (int i = 0; i < 2; i += 2) {
-        // System.out.println("Iteration:"+i);
+
         // Get lower 16 bits
         hash += SpecsBits.get16BitsAligned(data, i);
         // Calculate some random value with second-lower 16 bits
@@ -312,8 +285,6 @@ public class SpecsBits {
         // At this point, it would advance the data, but since it is restricted
         // to longs (64-bit values), it is unnecessary).
         hash += hash >> 11;
-
-        // }
 
         // Handle end cases //
         // There are no end cases, main loop is done in chuncks of 32 bits.
@@ -332,10 +303,8 @@ public class SpecsBits {
     /**
      * Sets a specific bit of an int.
      * 
-     * @param bit
-     *            the bit to set. The least significant bit is bit 0
-     * @param target
-     *            the integer where the bit will be set
+     * @param bit    the bit to set. The least significant bit is bit 0
+     * @param target the integer where the bit will be set
      * @return the updated value of the target
      */
     public static int setBit(int bit, int target) {
@@ -348,10 +317,8 @@ public class SpecsBits {
     /**
      * Clears a specific bit of an int.
      * 
-     * @param bit
-     *            the bit to clear. The least significant bit is bit 0
-     * @param target
-     *            the integer where the bit will be cleared
+     * @param bit    the bit to clear. The least significant bit is bit 0
+     * @param target the integer where the bit will be cleared
      * @return the updated value of the target
      */
     public static int clearBit(int bit, int target) {
@@ -394,17 +361,13 @@ public class SpecsBits {
         upper16 = upper16 << 16;
         // Merge
         int result = upper16 | lower16;
-        // System.out.println("Upper16:"+ParseUtils.padLeft(Integer.toBinaryString(upper16), 16, '0'));
-        // System.out.println("Lower16:"+ParseUtils.padLeft(Integer.toBinaryString(lower16), 16, '0'));
-        // System.out.println("Fused:"+ParseUtils.padLeft(Integer.toBinaryString(result), 32, '0'));
         return result;
     }
 
     /**
      * Converts a signed byte to an unsigned integer representation.
      * 
-     * @param aByte
-     *            the byte to convert
+     * @param aByte the byte to convert
      * @return the unsigned integer representation of the byte
      */
     public static int getUnsignedByte(byte aByte) {
@@ -419,8 +382,7 @@ public class SpecsBits {
     /**
      * Calculates the base-2 logarithm of the given integer, rounding up.
      * 
-     * @param i
-     *            the integer to calculate the logarithm for
+     * @param i the integer to calculate the logarithm for
      * @return the base-2 logarithm of the integer, rounded up
      */
     public static int log2(int i) {
@@ -469,12 +431,12 @@ public class SpecsBits {
             binaryString.append(getBit(i, value));
         }
 
-        // return Integer.parseInt(binaryString.toString(), 2);
         return parseSignedBinary(binaryString.toString());
     }
 
     /**
-     * Converts a 0-based, LSB-order bit to the corresponding index in a String representation of the number.
+     * Converts a 0-based, LSB-order bit to the corresponding index in a String
+     * representation of the number.
      * 
      * @param signalBit
      * @param stringSize
@@ -488,9 +450,10 @@ public class SpecsBits {
      * Sign-extends the given String representing a binary value (only 0s and 1s).
      * 
      * @param binaryValue
-     * @param signalBit
-     *            the 0-based index, counting from the LSB, that represents the signal
-     * @return a String with the same size but where all values higher than signalBit are the same as the value at the
+     * @param signalBit   the 0-based index, counting from the LSB, that represents
+     *                    the signal
+     * @return a String with the same size but where all values higher than
+     *         signalBit are the same as the value at the
      *         signalBit value.
      */
     public static String signExtend(String binaryValue, int signalBit) {
@@ -501,14 +464,14 @@ public class SpecsBits {
         if (signalBit < 0) {
             throw new IllegalArgumentException("Signal bit must be a non-negative integer.");
         }
-        
-        // If bit is not represented in the binary value, value does not need sign extension
+
+        // If bit is not represented in the binary value, value does not need sign
+        // extension
         if (signalBit >= binaryValue.length()) {
             return binaryValue;
         }
 
         // Convert LSB signalBit to String index
-        // int lsbSignalIndex = binaryValue.length() - signalBit - 1;
         int lsbSignalIndex = fromLsbToStringIndex(signalBit, binaryValue.length());
 
         // Get signal bit
@@ -522,8 +485,7 @@ public class SpecsBits {
     /**
      * Parses a signed binary string into an integer.
      * 
-     * @param binaryString
-     *            the binary string to parse
+     * @param binaryString the binary string to parse
      * @return the integer representation of the binary string
      */
     public static int parseSignedBinary(String binaryString) {
@@ -581,8 +543,7 @@ public class SpecsBits {
     /**
      * Converts a boolean value to an integer representation.
      * 
-     * @param boolResult
-     *            the boolean value to convert
+     * @param boolResult the boolean value to convert
      * @return 1 if true, or 0 if false
      */
     public static int boolToInt(boolean boolResult) {
@@ -594,8 +555,9 @@ public class SpecsBits {
     }
 
     /**
-     * Transforms the given integer value into an unsigned long. If the value is negative, returns the positive long
-     * value as if the given value is decoded from an equivalent 32-bit hexadecimal string.
+     * Transforms the given integer value into an unsigned long. If the value is
+     * negative, returns the positive long value as if the given value is decoded
+     * from an equivalent 32-bit hexadecimal string.
      * 
      * @param value
      * @return
@@ -609,9 +571,12 @@ public class SpecsBits {
      * Checks if a NaN is quiet. Does not test if number is a NaN.
      * 
      * <p>
-     * IEEE 754 NaNs are represented with the exponential field filled with ones and some non-zero number in the
-     * significand. A bit-wise example of a IEEE floating-point standard single precision NaN: x111 1111 1axx xxxx xxxx
-     * xxxx xxxx xxxx where x means don't care. If a = 1, it is a quiet NaN, otherwise it is a signalling NaN.
+     * IEEE 754 NaNs are represented with the exponential field filled with ones and
+     * some non-zero number in the significand. A bit-wise example of a IEEE
+     * floating-point standard single precision NaN:
+     * x111 1111 1axx xxxx xxxx xxxx xxxx xxxx
+     * where x means don't care. If a = 1, it is a quiet NaN, otherwise it is a
+     * signalling NaN.
      * 
      * @param aNanN
      * @return true if the given NaN is quiet.
@@ -624,7 +589,8 @@ public class SpecsBits {
      * Checks if a float is denormalized.
      * 
      * <p>
-     * IEEE 754 denormals are identified by having the exponents bits set to zero (30 to 23).
+     * IEEE 754 denormals are identified by having the exponents bits set to zero
+     * (30 to 23).
      * 
      * @param aFloat
      * @return true if the given float is denormal
@@ -641,7 +607,8 @@ public class SpecsBits {
      * Checks if a float is zero.
      * 
      * <p>
-     * IEEE 754 zeros are identified by having the all bits except the sign set to zero (30 to 0).
+     * IEEE 754 zeros are identified by having the all bits except the sign set to
+     * zero (30 to 0).
      * 
      * @param aFloat
      * @return true if the given float represents zero
@@ -674,47 +641,46 @@ public class SpecsBits {
      * 
      * 
      * @param value
-     * @param byteOffset
-     *            can have value 0 or 1, where 0 is the least significant short
+     * @param byteOffset can have value 0 or 1, where 0 is the least significant
+     *                   short
      * @return
      */
     public static int getShort(int value, int byteOffset) {
         switch (byteOffset) {
-        case 0:
-            return value & 0x0000FFFF;
-        case 2:
-            return (value & 0xFFFF0000) >>> 16;
-        default:
-            throw new RuntimeException("Invalid case: " + byteOffset);
+            case 0:
+                return value & 0x0000FFFF;
+            case 2:
+                return (value & 0xFFFF0000) >>> 16;
+            default:
+                throw new RuntimeException("Invalid case: " + byteOffset);
         }
     }
 
     /**
      * Extracts a specific byte from an integer.
      * 
-     * @param value
-     *            the integer to extract the byte from
-     * @param byteOffset
-     *            the offset of the byte to extract (0-based)
+     * @param value      the integer to extract the byte from
+     * @param byteOffset the offset of the byte to extract (0-based)
      * @return the extracted byte as an integer
      */
     public static int getByte(int value, int byteOffset) {
         switch (byteOffset) {
-        case 0:
-            return value & 0x000000FF;
-        case 1:
-            return (value & 0x0000FF00) >>> 8;
-        case 2:
-            return (value & 0x00FF0000) >>> 16;
-        case 3:
-            return (value & 0xFF000000) >>> 24;
-        default:
-            throw new RuntimeException("Invalid case: " + byteOffset);
+            case 0:
+                return value & 0x000000FF;
+            case 1:
+                return (value & 0x0000FF00) >>> 8;
+            case 2:
+                return (value & 0x00FF0000) >>> 16;
+            case 3:
+                return (value & 0xFF000000) >>> 24;
+            default:
+                throw new RuntimeException("Invalid case: " + byteOffset);
         }
     }
 
     /**
-     * Reads an unsigned 16-bit number from a byte array. This method reads two bytes from the array, starting at the
+     * Reads an unsigned 16-bit number from a byte array. This method reads two
+     * bytes from the array, starting at the
      * given offset.
      * 
      * @param byteArray
@@ -731,28 +697,15 @@ public class SpecsBits {
             result |= SpecsBits.positionByte(byteArray[offset + i], i, numBytes, isLittleEndian);
         }
         return result;
-        /*
-        if(isLittleEndian) {
-           return byteArray[offset] << BITS_IN_A_BYTE*0 | byteArray[offset+1] << BITS_IN_A_BYTE*1;
-           //return byteArray[offset] << BITS_IN_A_BYTE*0 | byteArray[offset+1] << BITS_IN_A_BYTE*1 | byteArray[offset+2] << BITS_IN_A_BYTE*2;
-        } else {
-           return byteArray[offset] << BITS_IN_A_BYTE*1 | byteArray[offset+1] << BITS_IN_A_BYTE*0;
-           //return byteArray[offset] << BITS_IN_A_BYTE*2 | byteArray[offset+1] << BITS_IN_A_BYTE*1 | byteArray[offset+2] << BITS_IN_A_BYTE*0;
-        }
-         *
-         */
     }
 
     /**
-     * Reads an unsigned 32-bit number from a byte array. This method reads four bytes from the array, starting at the
-     * given offset.
+     * Reads an unsigned 32-bit number from a byte array. This method reads four
+     * bytes from the array, starting at the given offset.
      * 
-     * @param byteArray
-     *            the byte array to read from
-     * @param offset
-     *            the starting offset in the array
-     * @param isLittleEndian
-     *            whether the bytes are in little-endian order
+     * @param byteArray      the byte array to read from
+     * @param offset         the starting offset in the array
+     * @param isLittleEndian whether the bytes are in little-endian order
      * @return the unsigned 32-bit number as a long
      */
     public static long readUnsignedInteger(byte[] byteArray, int offset,
@@ -768,15 +721,15 @@ public class SpecsBits {
     }
 
     /**
-     * Positions a byte inside a bigger unit according to its endianess and the position of the byte. A long is used to
-     * support unsigned integers.
+     * Positions a byte inside a bigger unit according to its endianess and the
+     * position of the byte. A long is used to support unsigned integers.
      *
-     * TODO: Test/check this method so see if it can support longs, not just integers
+     * TODO: Test/check this method so see if it can support longs, not just
+     * integers
      *
      * @param aByte
      * @param bytePosition
-     * @param totalBytes
-     *            the bytes of the unit (short = 2, int = 4).
+     * @param totalBytes     the bytes of the unit (short = 2, int = 4).
      * @param isLittleEndian
      * @return
      */
@@ -791,19 +744,13 @@ public class SpecsBits {
         int shift = SpecsBits.BITS_IN_A_BYTE * multiplier;
         int shiftedByte = getUnsignedByte(aByte) << shift;
 
-        // System.out.println("Byte:"+aByte);
-        // System.out.println("Unsigned Byte:"+BitUtils.getUnsignedByte(aByte));
-        // System.out.println("Shift:"+multiplier);
-        // System.out.println("Shifted:"+shiftedByte);
-
         return shiftedByte;
     }
 
     /**
      * Reverses the half-words in the given integer.
      * 
-     * @param data
-     *            the integer to reverse the half-words of
+     * @param data the integer to reverse the half-words of
      * @return the integer with reversed half-words
      */
     public static int reverseHalfWords(int data) {
@@ -817,8 +764,7 @@ public class SpecsBits {
     /**
      * Reverses the bytes in the given integer.
      * 
-     * @param data
-     *            the integer to reverse the bytes of
+     * @param data the integer to reverse the bytes of
      * @return the integer with reversed bytes
      */
     public static int reverse(int data) {
@@ -826,11 +772,6 @@ public class SpecsBits {
         byte[] bytes = ByteBuffer.allocate(4).putInt(data).array();
 
         byte[] reversedBytes = SpecsBits.reverse(bytes);
-        // System.out.println("ARRAY BEFORE:" + Arrays.toString(bytes));
-        // Someone on StackOverflow indicated this solution
-        // http://stackoverflow.com/questions/12678781/reversing-an-array-in-java
-        // Collections.reverse(Arrays.asList(bytes));
-        // System.out.println("ARRAY AFTER:" + Arrays.toString(reversedBytes));
 
         // Create reversed int
         ByteBuffer wrapped = ByteBuffer.wrap(reversedBytes); // big-endian by default
@@ -841,8 +782,7 @@ public class SpecsBits {
     /**
      * Reverses the bytes in the given short.
      * 
-     * @param data
-     *            the short to reverse the bytes of
+     * @param data the short to reverse the bytes of
      * @return the short with reversed bytes
      */
     public static short reverse(short data) {
@@ -860,8 +800,7 @@ public class SpecsBits {
     /**
      * Reverses the order of bytes in the given array.
      * 
-     * @param bytes
-     *            the array of bytes to reverse
+     * @param bytes the array of bytes to reverse
      * @return the array with reversed byte order
      */
     public static byte[] reverse(byte[] bytes) {
@@ -876,8 +815,7 @@ public class SpecsBits {
     /**
      * Decodes an unsigned byte value from a string representation.
      * 
-     * @param unsignedByteValue
-     *            the string representation of the unsigned byte value
+     * @param unsignedByteValue the string representation of the unsigned byte value
      * @return the decoded unsigned byte value
      */
     public static byte decodeUnsignedByte(String unsignedByteValue) {
