@@ -14,17 +14,17 @@
 package pt.up.fe.specs.util.system;
 
 public enum OutputType {
-    StdErr {
-        @Override
-        public void print(String stdline) {
-            System.err.print(stdline);
-        }
-    },
-
     StdOut {
         @Override
         public void print(String stdline) {
             System.out.print(stdline);
+        }
+    },
+
+    StdErr {
+        @Override
+        public void print(String stdline) {
+            System.err.print(stdline);
         }
     };
 

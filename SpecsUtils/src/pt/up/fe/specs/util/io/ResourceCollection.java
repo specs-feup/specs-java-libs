@@ -25,13 +25,11 @@ public class ResourceCollection {
 
     /**
      * 
-     * @param id
-     *            identifier for this collection of resources
-     * @param isIdUnique
-     *            true if this collection of resources have a unique mapping to this id, false if the resources can
-     *            change over time for this id
-     * @param resources
-     *            a collection of resources
+     * @param id         identifier for this collection of resources
+     * @param isIdUnique true if this collection of resources have a unique mapping
+     *                   to this id, false if the resources can change over time for
+     *                   this id
+     * @param resources  a collection of resources
      */
     public ResourceCollection(String id, boolean isIdUnique, Collection<ResourceProvider> resources) {
         this.id = id;

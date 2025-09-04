@@ -62,7 +62,8 @@ public class StringSliceWithSplit extends StringSlice {
     }
 
     /**
-     * Parses a word according to the current rules (i.e., trim, reverse and separator).
+     * Parses a word according to the current rules (i.e., trim, reverse and
+     * separator).
      * <p>
      * If no separator is found, the result contains the remaining string.
      * 
@@ -102,7 +103,6 @@ public class StringSliceWithSplit extends StringSlice {
                 separator);
 
         return new SplitResult<>(modifiedSlice, word);
-
     }
 
     private SplitResult<String> nextReverse(int internalSeparatorIndex) {
@@ -151,24 +151,6 @@ public class StringSliceWithSplit extends StringSlice {
                 }
             }
         }
-
-        // Using class methods
-        // // Test reverse order
-        // if (reverse) {
-        // for (int i = length() - 1; i >= 0; i--) {
-        // if (target.test(charAtUnchecked(i))) {
-        // return i;
-        // }
-        // }
-        // }
-        // // Test original order
-        // else {
-        // for (int i = 0; i < length(); i++) {
-        // if (target.test(charAtUnchecked(i))) {
-        // return i;
-        // }
-        // }
-        // }
 
         return -1;
     }

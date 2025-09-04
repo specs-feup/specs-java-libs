@@ -24,23 +24,23 @@ public abstract class ANodeTransform<K extends TreeNode<K>> implements NodeTrans
     private final List<K> operands;
 
     public ANodeTransform(String type, List<K> operands) {
-	this.type = type;
-	this.operands = operands;
+        this.type = type;
+        this.operands = operands;
     }
 
     @Override
     public String getType() {
-	return type;
+        return type;
     }
 
     @Override
     public List<K> getOperands() {
-	return operands;
+        return operands;
     }
 
     @Override
     public String toString() {
-	return getType() + " " + getOperands().stream().map(node -> Integer.toHexString(node.hashCode()))
-		.collect(Collectors.joining(" "));
+        return getType() + " " + getOperands().stream().map(node -> Integer.toHexString(node.hashCode()))
+                .collect(Collectors.joining(" "));
     }
 }

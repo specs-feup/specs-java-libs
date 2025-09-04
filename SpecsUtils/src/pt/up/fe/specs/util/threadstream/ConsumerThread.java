@@ -8,10 +8,8 @@ import pt.up.fe.specs.util.SpecsCheck;
  * 
  * @author nuno
  *
- * @param <T>
- *            Type of input object from ObjectStream
- * @param <K>
- *            Type of consumption output
+ * @param <T> Type of input object from ObjectStream
+ * @param <K> Type of consumption output
  */
 public class ConsumerThread<T, K> implements Runnable {
 

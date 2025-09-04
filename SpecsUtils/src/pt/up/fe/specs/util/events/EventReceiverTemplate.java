@@ -28,19 +28,19 @@ public abstract class EventReceiverTemplate implements EventReceiver {
 
     @Override
     public void acceptEvent(Event event) {
-	if (getActionsMap() == null) {
-	    return;
-	}
+        if (getActionsMap() == null) {
+            return;
+        }
 
-	getActionsMap().performAction(event);
+        getActionsMap().performAction(event);
     }
 
     @Override
     public Collection<EventId> getSupportedEvents() {
-	if (getActionsMap() == null) {
-	    return Collections.emptyList();
-	}
+        if (getActionsMap() == null) {
+            return Collections.emptyList();
+        }
 
-	return getActionsMap().getSupportedEvents();
+        return getActionsMap().getSupportedEvents();
     }
 }

@@ -51,13 +51,6 @@ public class StreamToString implements Function<InputStream, String> {
 
             String stdline = null;
 
-            // int currentChar = -1;
-            // System.out.println("START: " + reader.read());
-            // while ((currentChar = reader.read()) != -1) {
-            // System.out.println("ADAS");
-            // type.print(String.valueOf((char) currentChar));
-            // }
-
             while ((stdline = reader.readLine()) != null) {
 
                 if (this.printOutput) {
@@ -72,7 +65,6 @@ public class StreamToString implements Function<InputStream, String> {
 
             }
 
-            // inputStream.close();
             reader.close();
 
         } catch (IOException e) {

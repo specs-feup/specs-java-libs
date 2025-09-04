@@ -1,11 +1,11 @@
 /*
  * Copyright 2011 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -24,12 +24,11 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
  * Represents a list of several Strings.
- * 
+ *
  * @author Joao Bispo
  */
 public class StringList implements Iterable<String> {
@@ -60,7 +59,7 @@ public class StringList implements Iterable<String> {
             return Collections.emptyList();
         }
 
-        return Arrays.asList(values.split(StringList.DEFAULT_SEPARATOR));
+        return Arrays.asList(values.split(StringList.DEFAULT_SEPARATOR, -1));
     }
 
     public StringList(Collection<String> stringList) {
@@ -90,15 +89,15 @@ public class StringList implements Iterable<String> {
     }
 
     /**
-     * Creates a StringList with the file names from the files on the list passed as parameter.
-     * 
-     * @param files
-     *            - the list of files
+     * Creates a StringList with the file names from the files on the list passed as
+     * parameter.
+     *
+     * @param files the list of files
      * @return a new StringList instance
      */
     public static StringList newInstanceFromListOfFiles(List<File> files) {
 
-        List<String> strings = SpecsFactory.newArrayList();
+        List<String> strings = new ArrayList<>();
 
         for (File file : files) {
             strings.add(file.getAbsolutePath());
@@ -107,7 +106,9 @@ public class StringList implements Iterable<String> {
         return new StringList(strings);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -118,7 +119,9 @@ public class StringList implements Iterable<String> {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -158,7 +161,7 @@ public class StringList implements Iterable<String> {
 
     /**
      * Helper constructor with variadic inputs.
-     * 
+     *
      * @param string
      * @param string2
      * @return

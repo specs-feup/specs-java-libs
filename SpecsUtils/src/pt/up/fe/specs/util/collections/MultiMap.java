@@ -35,15 +35,7 @@ public class MultiMap<K, V> {
         Map<K, List<V>> newInstance();
     }
 
-    // --------------------------------------------------------------------- attributes
-    // ---------- - - - - - - - - - - - - - - - - - - - - - - - - - - ---------- static
-
-    // ---------- - - - - - - - - - - - - - - - - - - - - - - - - - ----------- dynamic
-
     private final Map<K, List<V>> map;
-
-    // ----------------------------------------------------------------- public_Methods
-    // ---------- - - - - - - - - - - - - - - - - - - - - - - - ----------- constructor
 
     public MultiMap() {
         this.map = new HashMap<>();
@@ -57,26 +49,13 @@ public class MultiMap<K, V> {
         this.map = mapProvider.newInstance();
     }
 
-    // ---------- - - - - - - - - - - - - - - - - - - - - - - - - - - ---------- static
-
-    // ---------- - - - - - - - - - - - - - - - - - - - - - - - - - ----------- dynamic
-
     /**
      * Returns the values associated to the parameter key.
      * 
-     * @param key
-     *            The key the user wants the values of.
+     * @param key The key the user wants the values of.
      * @return the values associated to the parameter key.
      */
     public List<V> get(K key) {
-        // List<V> values = this.map.get(key);
-        // if (values == null) {
-        // values = new ArrayList<>();
-        // this.map.put(key, values);
-        // }
-        //
-        // return values;
-        //// return Collections.unmodifiableList(this.map.getOrDefault(key, Collections.emptyList()));
         return this.map.getOrDefault(key, Collections.emptyList());
     }
 
@@ -98,19 +77,12 @@ public class MultiMap<K, V> {
 
     /**
      * Adds the given value to the key.
-     * 
-     * @param key
-     *            the key the user wants to attribute a value to.
-     * @param value
-     *            the value the user wants to attribute to the key.
+     *
+     * @param key   the key the user wants to attribute a value to.
+     * @param value the value the user wants to attribute to the key.
      */
     public void put(K key, V value) {
         List<V> values = getPrivate(key);
-        // List<V> values = this.map.get(key);
-        // if (values == null) {
-        // values = new ArrayList<>();
-        // this.map.put(key, values);
-        // }
 
         values.add(value);
     }
@@ -122,10 +94,9 @@ public class MultiMap<K, V> {
     /**
      * Replaces the current value mapped to the given key with the given values
      * 
-     * @param key
-     *            the key the user wants to attribute a values to.
-     * @param values
-     *            a List containing all the values the user wants to attribute to the key.
+     * @param key    the key the user wants to attribute a values to.
+     * @param values a List containing all the values the user wants to attribute to
+     *               the key.
      */
     public void put(K key, List<V> values) {
         this.map.put(key, new ArrayList<>(values));
@@ -153,32 +124,6 @@ public class MultiMap<K, V> {
     @Override
     public String toString() {
         return map.toString();
-        /*
-        StringBuilder builder = new StringBuilder();
-        
-        boolean isFirst = true;
-        for (K key : this.map.keySet()) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                builder.append("; ");
-            }
-        
-            List<V> values = this.map.get(key);
-            builder.append(key).append(": ");
-            if (values.isEmpty()) {
-                builder.append("(empty)");
-            } else {
-                builder.append(values.get(0));
-            }
-        
-            for (int i = 1; i < values.size(); i++) {
-                builder.append(", ").append(values.get(i));
-            }
-        }
-        
-        return builder.toString();
-        */
     }
 
     public Map<K, List<V>> getMap() {

@@ -65,7 +65,8 @@ public class AccumulatorMap<T> {
      * Adds 1 to the count of this element.
      *
      * @param element
-     * @return the current number of added elements. If it is the first time we are adding an element, returns 1
+     * @return the current number of added elements. If it is the first time we are
+     *         adding an element, returns 1
      */
     public Integer add(T element) {
         return add(element, 1);
@@ -88,8 +89,7 @@ public class AccumulatorMap<T> {
         if (value == null) {
             value = 0;
         }
-
-        // int incrementValue = 1;
+        ;
 
         value += incrementValue;
         this.accMap.put(element, value);
@@ -132,8 +132,6 @@ public class AccumulatorMap<T> {
             return false;
         }
 
-        // int incrementValue = 1;
-
         value -= incrementValue;
         this.accMap.put(element, value);
         this.accumulator -= incrementValue;
@@ -147,12 +145,6 @@ public class AccumulatorMap<T> {
     }
 
     /**
-     * private void updateTable(T element, Integer value) {
-     *
-     * }
-     */
-
-    /**
      *
      * @param element
      * @return the number of times the given element was added to the table.
@@ -163,7 +155,6 @@ public class AccumulatorMap<T> {
             return 0;
         }
 
-        // return accMap.get(element);
         return count;
     }
 
@@ -184,17 +175,7 @@ public class AccumulatorMap<T> {
      * @param histogram
      * @return
      */
-    // public int getSum() {
     public long getSum() {
-        /*
-        int accumulator = 0;
-        for(T key : accMap.keySet()) {
-           accumulator += accMap.get(key);
-        }
-        
-        return accumulator;
-         *
-         */
         return this.accumulator;
     }
 

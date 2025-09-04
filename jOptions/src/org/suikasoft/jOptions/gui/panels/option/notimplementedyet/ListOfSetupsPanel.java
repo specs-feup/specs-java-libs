@@ -41,6 +41,9 @@ import pt.up.fe.specs.util.SpecsCollections;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
+ * Panel for editing and managing a list of setup panels.
+ *
+ * <p>This panel provides controls for adding, removing, and selecting setup elements for a MultipleSetup instance.
  * 
  * @author Joao Bispo
  */
@@ -52,8 +55,6 @@ public class ListOfSetupsPanel extends FieldPanel {
     private JPanel choicePanel;
 
     private JLabel label;
-    // private JComboBox<String> elementsBox;
-    // private JComboBox<String> choicesBox;
     private JComboBox<String> elementsBox;
     private JComboBox<String> choicesBox;
     private JButton removeButton;
@@ -69,356 +70,349 @@ public class ListOfSetupsPanel extends FieldPanel {
     // Properties
     private static final String ENUM_NAME_SEPARATOR = "-";
 
+    /**
+     * Constructs a ListOfSetupsPanel for the given enum option, label, and MultipleSetup.
+     *
+     * @param enumOption the SetupFieldEnum
+     * @param labelName the label for the panel
+     * @param setup the MultipleSetup instance
+     */
     public ListOfSetupsPanel(SetupFieldEnum enumOption, String labelName, MultipleSetup setup) {
-	// Initiallize objects
-	// id = enumOption;
-	// masterFile = null;
-	label = new JLabel(labelName + ":");
-	removeButton = new JButton("X");
-	addButton = new JButton("Add");
+        label = new JLabel(labelName + ":");
+        removeButton = new JButton("X");
+        addButton = new JButton("Add");
 
-	initChoices(setup);
-	initElements();
+        initChoices(setup);
+        initElements();
 
-	// Add actions
-	addButton.addActionListener(new ActionListener() {
-	    @Override
-	    public void actionPerformed(ActionEvent evt) {
-		addButtonActionPerformed(evt);
-	    }
-	});
+        // Add actions
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
-	removeButton.addActionListener(new ActionListener() {
-	    @Override
-	    public void actionPerformed(ActionEvent evt) {
-		removeButtonActionPerformed(evt);
-	    }
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
 
-	});
+        });
 
-	elementsBox.addActionListener(new ActionListener() {
+        elementsBox.addActionListener(new ActionListener() {
 
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-		elementComboBoxActionPerformed(e);
-	    }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                elementComboBoxActionPerformed(e);
+            }
 
-	});
+        });
 
-	// Build choice panel
-	choicePanel = buildChoicePanel();
+        // Build choice panel
+        choicePanel = buildChoicePanel();
 
-	currentOptionsPanel = null;
+        currentOptionsPanel = null;
 
-	// setLayout(new BorderLayout(5, 5));
-	// add(choicePanel, BorderLayout.PAGE_START);
-	LayoutManager layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-	setLayout(layout);
-	add(choicePanel);
+        LayoutManager layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(layout);
+        add(choicePanel);
 
-    }
-
-    private void initChoices(MultipleSetup setupList) {
-	// setups = new ArrayList<SingleSetupEnum>();
-	setups = setupList.getSetups();
-	// System.out.println("Setups:"+setups);
-	// setups.addAll(setupList.getSetups());
-
-	// choicesBox = new JComboBox<String>();
-	choicesBox = new JComboBox<>();
-	choicesBoxShadow = new ArrayList<>();
-
-	// for(SingleSetupEnum setup : setups) {
-	// for(String setupName : setups.getNameList()) {
-	for (SetupDefinition setup : setups.getSetupKeysList()) {
-	    // String setupName = ((Enum)setup).name();
-	    String setupName = setup.getSetupName();
-	    choicesBox.addItem(setupName);
-	    choicesBoxShadow.add(setupName);
-	}
-
-    }
-
-    private void initElements() {
-	elementsBoxShadow = new ArrayList<>();
-	// elementsBox = new JComboBox<String>();
-	elementsBox = new JComboBox<>();
-	elementsFiles = new ArrayList<>();
-	elementsOptionPanels = new ArrayList<>();
-    }
-
-    private JPanel buildChoicePanel() {
-	JPanel panel = new JPanel();
-
-	panel.add(label);
-	panel.add(elementsBox);
-	panel.add(removeButton);
-	panel.add(choicesBox);
-	panel.add(addButton);
-
-	panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-	return panel;
     }
 
     /**
-     * Adds the option from the avaliable list to selected list.
+     * Initializes the choices available in the panel.
+     *
+     * @param setupList the MultipleSetup instance containing the setup definitions
+     */
+    private void initChoices(MultipleSetup setupList) {
+        setups = setupList.getSetups();
+
+        choicesBox = new JComboBox<>();
+        choicesBoxShadow = new ArrayList<>();
+
+        for (SetupDefinition setup : setups.getSetupKeysList()) {
+            String setupName = setup.getSetupName();
+            choicesBox.addItem(setupName);
+            choicesBoxShadow.add(setupName);
+        }
+
+    }
+
+    /**
+     * Initializes the elements list and related components.
+     */
+    private void initElements() {
+        elementsBoxShadow = new ArrayList<>();
+        elementsBox = new JComboBox<>();
+        elementsFiles = new ArrayList<>();
+        elementsOptionPanels = new ArrayList<>();
+    }
+
+    /**
+     * Builds the choice panel containing controls for managing setup elements.
+     *
+     * @return the constructed JPanel
+     */
+    private JPanel buildChoicePanel() {
+        JPanel panel = new JPanel();
+
+        panel.add(label);
+        panel.add(elementsBox);
+        panel.add(removeButton);
+        panel.add(choicesBox);
+        panel.add(addButton);
+
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        return panel;
+    }
+
+    /**
+     * Adds the option from the available list to the selected list.
      * 
-     * @param evt
+     * @param evt the ActionEvent triggered by the add button
      */
     private void addButtonActionPerformed(ActionEvent evt) {
-	// Determine what element is selected
-	int choice = choicesBox.getSelectedIndex();
-	if (choice == -1) {
-	    return;
-	}
+        int choice = choicesBox.getSelectedIndex();
+        if (choice == -1) {
+            return;
+        }
 
-	addElement(choice);
+        addElement(choice);
     }
 
     /**
      * Removes the option from the selected list to the available list.
      * 
-     * @param evt
+     * @param evt the ActionEvent triggered by the remove button
      */
     private void removeButtonActionPerformed(ActionEvent evt) {
-	// Determine index of selected element to remove
-	int indexToRemove = elementsBox.getSelectedIndex();
-	if (indexToRemove == -1) {
-	    return;
-	}
+        int indexToRemove = elementsBox.getSelectedIndex();
+        if (indexToRemove == -1) {
+            return;
+        }
 
-	removeElement(indexToRemove);
+        removeElement(indexToRemove);
     }
 
     /**
-     * Updates the options panel.
+     * Updates the options panel based on the selected element.
      * 
-     * @param e
+     * @param e the ActionEvent triggered by the elements combo box
      */
     private void elementComboBoxActionPerformed(ActionEvent e) {
-	updateSetupOptions();
+        updateSetupOptions();
     }
 
     @Override
     public FieldType getType() {
-	return FieldType.setupList;
+        return FieldType.setupList;
     }
 
     /**
      * Adds an element to the elements list, from the choices list.
      * 
+     * @param choice the index of the choice to add
      * @return the index of the added element
      */
     public int addElement(int choice) {
-	// Add index to elements
-	elementsBoxShadow.add(choice);
-	// Get setup options and create option file for element
-	SetupDefinition setupKeys = setups.getSetupKeysList().get(choice);
+        elementsBoxShadow.add(choice);
+        SetupDefinition setupKeys = setups.getSetupKeysList().get(choice);
 
-	elementsFiles.add(SetupData.create(setupKeys));
+        elementsFiles.add(SetupData.create(setupKeys));
 
-	BaseSetupPanel newPanel = new BaseSetupPanel(setupKeys, identationLevel + 1);
+        BaseSetupPanel newPanel = new BaseSetupPanel(setupKeys, identationLevel + 1);
 
-	if (!setupKeys.getSetupKeys().isEmpty()) {
-	    // newPanel.add(new javax.swing.JSeparator(), 0);
-	    // newPanel.add(new javax.swing.JSeparator());
-	}
+        if (!setupKeys.getSetupKeys().isEmpty()) {
+            // newPanel.add(new javax.swing.JSeparator(), 0);
+        }
 
-	elementsOptionPanels.add(newPanel);
+        elementsOptionPanels.add(newPanel);
 
-	// Refresh
-	updateElementsComboBox();
+        updateElementsComboBox();
 
-	int elementIndex = elementsBoxShadow.size() - 1;
-	// Select last item
-	elementsBox.setSelectedIndex(elementIndex);
-	// Update vision of setup options - not needed, when we select, automatically updates
-	// updateSetupOptions();
+        int elementIndex = elementsBoxShadow.size() - 1;
+        elementsBox.setSelectedIndex(elementIndex);
 
-	return elementIndex;
+        return elementIndex;
     }
 
     /**
-     * Loads several elements from an AppValue.
+     * Loads several elements from a FieldValue.
      * 
-     * @param choice
+     * @param value the FieldValue containing the elements to load
      */
     @Override
-    // public void updatePanel(FieldValue value) {
     public void updatePanel(Object value) {
-	// Clear previous values
-	clearElements();
+        clearElements();
 
-	ListOfSetups maps = (ListOfSetups) value;
+        ListOfSetups maps = (ListOfSetups) value;
 
-	for (SetupData key : maps.getMapOfSetups()) {
-	    // String enumName = BaseUtils.decodeMapOfSetupsKey(key);
-	    // extractEnumNameFromListName(key);
-	    // loadElement(enumName, maps.get(key));
-	    loadElement(key);
-	}
+        for (SetupData key : maps.getMapOfSetups()) {
+            loadElement(key);
+        }
 
     }
 
     /**
-     * Loads a single element from a file
+     * Loads a single element from a SetupData instance.
      * 
-     * @param aClass
-     * @param aFile
+     * @param table the SetupData instance to load
      */
-    // private void loadElement(String enumName, SetupData table) {
     private void loadElement(SetupData table) {
-	// Build name
-	String enumName = table.getSetupName();
+        String enumName = table.getSetupName();
 
-	int setupIndex = choicesBoxShadow.indexOf(enumName);
+        int setupIndex = choicesBoxShadow.indexOf(enumName);
 
-	if (setupIndex == -1) {
-	    SpecsLogs.getLogger().warning("Could not find enum '" + enumName + "'. Available enums:" + setups);
-	    return;
-	}
+        if (setupIndex == -1) {
+            SpecsLogs.getLogger().warning("Could not find enum '" + enumName + "'. Available enums:" + setups);
+            return;
+        }
 
-	// Create element
-	int elementsIndex = addElement(setupIndex);
+        int elementsIndex = addElement(setupIndex);
 
-	// Set option file
-	elementsFiles.set(elementsIndex, table);
-	// Load values in the file
-	elementsOptionPanels.get(elementsIndex).loadValues(table);
+        elementsFiles.set(elementsIndex, table);
+        elementsOptionPanels.get(elementsIndex).loadValues(table);
 
     }
 
+    /**
+     * Updates the elements combo box with the current elements.
+     */
     private void updateElementsComboBox() {
-	// Build list of strings to present
-	elementsBox.removeAllItems();
-	for (int i = 0; i < elementsBoxShadow.size(); i++) {
-	    // Get choice name
-	    int choice = elementsBoxShadow.get(i);
-	    // SingleSetupEnum setup = setups.get(choice);
-	    // String setupName = setups.getNameList().get(choice);
-	    String setupName = setups.getSetupKeysList().get(choice).getSetupName();
+        elementsBox.removeAllItems();
+        for (int i = 0; i < elementsBoxShadow.size(); i++) {
+            int choice = elementsBoxShadow.get(i);
+            String setupName = setups.getSetupKeysList().get(choice).getSetupName();
 
-	    // String boxString = (i+1)+ " - "+((Enum)setup).name();
-	    // String boxString = createListName((i+1), ((Enum)setup).name());
-
-	    // String boxString = BaseUtils.encodeMapOfSetupsKey(((Enum)setup).name(), i+1);
-	    // String boxString = BaseUtils.encodeMapOfSetupsKey(setupName, i+1);
-	    String boxString = buildSetupString(setupName, i + 1);
-	    elementsBox.addItem(boxString);
-	}
+            String boxString = buildSetupString(setupName, i + 1);
+            elementsBox.addItem(boxString);
+        }
     }
 
+    /**
+     * Updates the setup options panel based on the selected element.
+     */
     private void updateSetupOptions() {
-	if (currentOptionsPanel != null) {
-	    remove(currentOptionsPanel);
-	    currentOptionsPanel = null;
-	}
+        if (currentOptionsPanel != null) {
+            remove(currentOptionsPanel);
+            currentOptionsPanel = null;
+        }
 
-	// Determine what item is selected in the elements combo
-	int index = elementsBox.getSelectedIndex();
+        int index = elementsBox.getSelectedIndex();
 
-	if (index != -1) {
-	    currentOptionsPanel = elementsOptionPanels.get(index);
-	    add(currentOptionsPanel);
-	    currentOptionsPanel.revalidate();
-	}
+        if (index != -1) {
+            currentOptionsPanel = elementsOptionPanels.get(index);
+            add(currentOptionsPanel);
+            currentOptionsPanel.revalidate();
+        }
 
-	// TODO: Is it repaint necessary here, or revalidate on panel solves it?
-	repaint();
-	// System.out.println("SetupPanel Repainted");
+        repaint();
     }
 
     /**
      * Removes an element from the elements list.
      * 
-     * @return
+     * @param index the index of the element to remove
      */
     public void removeElement(int index) {
-	// Check if the index is valid
-	if (elementsBox.getItemCount() <= index) {
-	    SpecsLogs.getLogger().warning(
-		    "Given index ('" + index + "')is too big. Elements size: " + elementsBox.getItemCount());
-	    return;
-	}
+        if (elementsBox.getItemCount() <= index) {
+            SpecsLogs.getLogger().warning(
+                    "Given index ('" + index + "')is too big. Elements size: " + elementsBox.getItemCount());
+            return;
+        }
 
-	// Remove shadow index, AppOptionFile and panel
-	elementsBoxShadow.remove(index);
-	elementsFiles.remove(index);
-	elementsOptionPanels.remove(index);
+        elementsBoxShadow.remove(index);
+        elementsFiles.remove(index);
+        elementsOptionPanels.remove(index);
 
-	// Refresh
-	updateElementsComboBox();
+        updateElementsComboBox();
 
-	// Calculate new index of selected element and select it
-	int newIndex = calculateIndexAfterRemoval(index);
-	if (newIndex != -1) {
-	    elementsBox.setSelectedIndex(newIndex);
-	}
+        int newIndex = calculateIndexAfterRemoval(index);
+        if (newIndex != -1) {
+            elementsBox.setSelectedIndex(newIndex);
+        }
     }
 
+    /**
+     * Calculates the new index after an element is removed.
+     * 
+     * @param index the index of the removed element
+     * @return the new index
+     */
     private int calculateIndexAfterRemoval(int index) {
-	int numElements = elementsBox.getItemCount();
+        int numElements = elementsBox.getItemCount();
 
-	// If there are no elements, return -1
-	if (numElements == 0) {
-	    return -1;
-	}
+        if (numElements == 0) {
+            return -1;
+        }
 
-	// If there are enough elements, the index is the same
-	if (numElements > index) {
-	    return index;
-	}
+        if (numElements > index) {
+            return index;
+        }
 
-	// If size is the same as index, it means that we removed the last element
-	// Return the index of the current last element
-	if (numElements == index) {
-	    return index - 1;
-	}
+        if (numElements == index) {
+            return index - 1;
+        }
 
-	SpecsLogs.getLogger().warning("Invalid index '" + index + "' for list with '" + numElements + "' elements.");
-	return -1;
+        SpecsLogs.getLogger().warning("Invalid index '" + index + "' for list with '" + numElements + "' elements.");
+        return -1;
     }
 
-    // public Map<String, SetupData> getPackedValues() {
+    /**
+     * Retrieves the packed values of the panel.
+     * 
+     * @return the ListOfSetups containing the packed values
+     */
     public ListOfSetups getPackedValues() {
 
-	List<SetupData> listOfSetups = new ArrayList<>();
+        List<SetupData> listOfSetups = new ArrayList<>();
 
-	// For each selected panel, add the corresponding options table to the return list
-	for (int i = 0; i < elementsOptionPanels.size(); i++) {
-	    listOfSetups.add(elementsOptionPanels.get(i).getMapWithValues());
-	}
+        for (int i = 0; i < elementsOptionPanels.size(); i++) {
+            listOfSetups.add(elementsOptionPanels.get(i).getMapWithValues());
+        }
 
-	return new ListOfSetups(listOfSetups);
+        return new ListOfSetups(listOfSetups);
     }
 
+    /**
+     * Clears all elements from the panel.
+     */
     private void clearElements() {
-	elementsBox.removeAllItems();
+        elementsBox.removeAllItems();
 
-	elementsBoxShadow = new ArrayList<>();
-	elementsFiles = new ArrayList<>();
-	elementsOptionPanels = new ArrayList<>();
+        elementsBoxShadow = new ArrayList<>();
+        elementsFiles = new ArrayList<>();
+        elementsOptionPanels = new ArrayList<>();
     }
 
     @Override
     public FieldValue getOption() {
-	return FieldValue.create(getPackedValues(), getType());
+        return FieldValue.create(getPackedValues(), getType());
     }
 
+    /**
+     * Builds a string representation of a setup element.
+     * 
+     * @param enumName the name of the enum
+     * @param index the index of the element
+     * @return the string representation
+     */
     private static String buildSetupString(String enumName, int index) {
-	return index + ENUM_NAME_SEPARATOR + enumName;
+        return index + ENUM_NAME_SEPARATOR + enumName;
     }
 
     @Override
     public JLabel getLabel() {
-	return label;
+        return label;
     }
 
     @Override
     public Collection<FieldPanel> getPanels() {
-	return elementsOptionPanels.stream()
-		.map(setupPanel -> setupPanel.getPanels().values())
-		.reduce(new ArrayList<>(), SpecsCollections::add);
+        return elementsOptionPanels.stream()
+                .map(setupPanel -> setupPanel.getPanels().values())
+                .reduce(new ArrayList<>(), SpecsCollections::add);
     }
 }

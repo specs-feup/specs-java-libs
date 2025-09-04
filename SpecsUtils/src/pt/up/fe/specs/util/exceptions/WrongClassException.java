@@ -18,12 +18,12 @@ public class WrongClassException extends UnsupportedOperationException {
     private static final long serialVersionUID = 1L;
 
     public WrongClassException(Object testedInstance, Class<?> expectedClass) {
-	this(testedInstance.getClass(), expectedClass);
+        this(testedInstance.getClass(), expectedClass);
     }
 
     public WrongClassException(Class<?> foundClass, Class<?> expectedClass) {
-	super("Expected class '" + expectedClass.getSimpleName() + "', found "
-		+ foundClass.getSimpleName());
+        super("Expected class '" + expectedClass.getSimpleName() + "', found "
+                + foundClass.getSimpleName());
     }
 
 }

@@ -13,23 +13,26 @@
 
 package pt.up.fe.specs.util.parsing;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import pt.up.fe.specs.util.parsing.arguments.ArgumentsParser;
 
+@DisplayName("ArgumentParsing Tests")
 public class ArgumentParsingTest {
 
     private void test(ArgumentsParser commandLineParser, String input, String... expected) {
         List<String> args = commandLineParser.parse(input);
-        assertEquals(Arrays.asList(expected), args);
+        assertThat(args).isEqualTo(Arrays.asList(expected));
     }
 
     @Test
+    @DisplayName("Should parse command line arguments correctly")
     public void commandLine() {
         ArgumentsParser parser = ArgumentsParser.newCommandLine(false);
 
@@ -39,7 +42,5 @@ public class ArgumentParsingTest {
         test(parser, "    \"Hello   World\"   ", "Hello   World");
         test(parser, "    \" Hello   World \"   ", " Hello   World ");
         test(parser, "    \" Hello \\\"  World \"   ", " Hello \\\"  World ");
-
     }
-
 }

@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.lazy;
 
 import java.util.function.Supplier;
 
+import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.function.SerializableSupplier;
 
 public interface Lazy<T> extends Supplier<T> {
@@ -28,15 +29,18 @@ public interface Lazy<T> extends Supplier<T> {
 
     /**
      * 
-     * @return true if the value encapsulated by the Lazy object has been initialized
+     * @return true if the value encapsulated by the Lazy object has been
+     *         initialized
      */
     boolean isInitialized();
 
     static <T> Lazy<T> newInstance(Supplier<T> supplier) {
+        Preconditions.checkNotNull(supplier, "Supplier cannot be null");
         return new ThreadSafeLazy<>(supplier);
     }
 
     static <T> Lazy<T> newInstanceSerializable(SerializableSupplier<T> supplier) {
+        Preconditions.checkNotNull(supplier, "SerializableSupplier cannot be null");
         return new ThreadSafeLazy<>(supplier);
     }
 }

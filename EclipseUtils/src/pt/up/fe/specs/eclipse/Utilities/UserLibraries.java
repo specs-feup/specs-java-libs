@@ -27,7 +27,6 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsXml;
@@ -91,7 +90,7 @@ public class UserLibraries {
         Properties properties = SpecsProperties.newInstance(propertiesFile).getProperties();
 
         // Create map
-        Map<String, List<File>> userLibraries = SpecsFactory.newHashMap();
+        Map<String, List<File>> userLibraries = new HashMap<>();
 
         for (Object keyObj : properties.keySet()) {
             String key = (String) keyObj;
@@ -143,7 +142,7 @@ public class UserLibraries {
 
     private static Optional<List<File>> getLibraryJars(EclipseProjects eclipseProjects, Element element) {
         // Create List
-        List<File> jarFiles = SpecsFactory.newArrayList();
+        List<File> jarFiles = new ArrayList<>();
 
         // Check children
         // for (int i = 0; i < element.getChildCount(); i++) {

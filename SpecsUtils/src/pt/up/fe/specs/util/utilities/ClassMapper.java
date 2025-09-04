@@ -21,8 +21,9 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Maps classes to other assignable classes that have been added to this instance, respecting the hierarchy and the
- * order by which classes where added.
+ * Maps classes to other assignable classes that have been added to this
+ * instance, respecting the hierarchy and the order by which classes where
+ * added.
  * 
  * @author jbispo
  *
@@ -56,6 +57,10 @@ public class ClassMapper {
     }
 
     public boolean add(Class<?> aClass) {
+        if (aClass == null) {
+            throw new IllegalArgumentException("Class cannot be null");
+        }
+
         // Everytime a class is added, invalidate cache
         emptyCache();
 
@@ -63,6 +68,10 @@ public class ClassMapper {
     }
 
     public Optional<Class<?>> map(Class<?> aClass) {
+        if (aClass == null) {
+            throw new IllegalArgumentException("Class cannot be null");
+        }
+
         // Check if correct class has been calculated
         var mapping = cacheFound.get(aClass);
         if (mapping != null) {
@@ -75,7 +84,6 @@ public class ClassMapper {
         }
 
         // Calculate mapping of current class
-
         mapping = calculateMapping(aClass);
 
         if (mapping == null) {
@@ -102,17 +110,31 @@ public class ClassMapper {
                 return currentClass;
             }
 
-            // Test interfaces
-            for (Class<?> interf : currentClass.getInterfaces()) {
-                if (this.currentClasses.contains(interf)) {
-                    return interf;
-                }
+            // Test interfaces recursively
+            Class<?> interfaceMapping = findInterfaceMapping(currentClass);
+            if (interfaceMapping != null) {
+                return interfaceMapping;
             }
 
             // Go to the next super class
             currentClass = currentClass.getSuperclass();
         }
 
+        return null;
+    }
+
+    private Class<?> findInterfaceMapping(Class<?> aClass) {
+        // Check interfaces of this class
+        for (Class<?> interf : aClass.getInterfaces()) {
+            if (this.currentClasses.contains(interf)) {
+                return interf;
+            }
+            // Recursively check interfaces of interfaces
+            Class<?> nestedInterfaceMapping = findInterfaceMapping(interf);
+            if (nestedInterfaceMapping != null) {
+                return nestedInterfaceMapping;
+            }
+        }
         return null;
     }
 

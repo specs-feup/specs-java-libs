@@ -14,7 +14,6 @@
 package org.suikasoft.jOptions.persistence;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.JOptionKeys;
@@ -33,13 +32,10 @@ import pt.up.fe.specs.util.properties.SpecsProperties;
  */
 public class PropertiesPersistence implements AppPersistence {
 
-    private final Collection<DataKey<?>> options;
-
     // Used to check values being loaded
     private final StoreDefinition definition;
 
     public PropertiesPersistence(StoreDefinition storeDefinition) {
-        options = storeDefinition.getKeys();
         definition = storeDefinition;
     }
 
@@ -104,7 +100,6 @@ public class PropertiesPersistence implements AppPersistence {
 
     private boolean write(File file, DataStore data) {
         var properties = toProperties(data);
-        // TODO Auto-generated method stub
         return SpecsIo.write(file, properties);
     }
 

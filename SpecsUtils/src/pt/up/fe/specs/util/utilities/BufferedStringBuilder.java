@@ -36,15 +36,33 @@ public class BufferedStringBuilder implements AutoCloseable {
     private boolean isClosed;
 
     public BufferedStringBuilder(File outputFile) {
-        this(outputFile, BufferedStringBuilder.DEFAULT_BUFFER_CAPACITY);
+        this(validateOutputFile(outputFile), BufferedStringBuilder.DEFAULT_BUFFER_CAPACITY);
+    }
+
+    private static File validateOutputFile(File outputFile) {
+        if (outputFile == null) {
+            throw new IllegalArgumentException("Output file cannot be null");
+        }
+        return outputFile;
     }
 
     /**
-     * WARNING: The contents of the file given to this class will be erased when the object is created.
+     * WARNING: The contents of the file given to this class will be erased when the
+     * object is created.
      * 
      * @param outputFile
      */
     public BufferedStringBuilder(File outputFile, int bufferCapacity) {
+        this(outputFile, bufferCapacity, true);
+    }
+
+    /**
+     * Protected constructor for internal use (e.g., NullStringBuilder)
+     */
+    protected BufferedStringBuilder(File outputFile, int bufferCapacity, boolean validateFile) {
+        if (validateFile && outputFile == null) {
+            throw new IllegalArgumentException("Output file cannot be null");
+        }
         this.writeFile = outputFile;
         this.bufferCapacity = bufferCapacity;
 
@@ -64,7 +82,6 @@ public class BufferedStringBuilder implements AutoCloseable {
         }
 
         save();
-        // IoUtils.append(writeFile, builder.toString());
         this.builder = null;
         this.isClosed = true;
     }
@@ -74,6 +91,9 @@ public class BufferedStringBuilder implements AutoCloseable {
     }
 
     public BufferedStringBuilder append(Object object) {
+        if (object == null) {
+            return append("null");
+        }
         return append(object.toString());
     }
 
@@ -95,11 +115,8 @@ public class BufferedStringBuilder implements AutoCloseable {
 
         // Add to StringBuilder
         this.builder.append(string);
-        // System.out.println("BUILDER ("+this.hashCode()+"):\n"+builder.toString());
 
-        // if (builder.length() > DEFAULT_BUFFER_CAPACITY) {
         if (this.builder.length() >= this.bufferCapacity) {
-            // System.out.println("ADASDADADADASD BUILDER ("+this.hashCode()+"):\n"+builder.toString());
             save();
         }
 
@@ -107,8 +124,10 @@ public class BufferedStringBuilder implements AutoCloseable {
     }
 
     public void save() {
-        SpecsIo.append(this.writeFile, this.builder.toString());
-        this.builder = newStringBuilder();
+        if (this.writeFile != null && this.builder != null) {
+            SpecsIo.append(this.writeFile, this.builder.toString());
+            this.builder = newStringBuilder();
+        }
     }
 
     private StringBuilder newStringBuilder() {

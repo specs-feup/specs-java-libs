@@ -27,41 +27,42 @@ public class JobProgress {
     /**
      * INSTANCE VARIABLES
      */
-    // private String jobFilename;
     private final List<Job> jobs;
     private final int numJobs;
 
     private int counter;
 
-    // private final static Logger logger = Logger.getLogger(JobProgress.class.getName());
-
-    // public JobProgress(int numJobs) {
     public JobProgress(List<Job> jobs) {
-	// this.numJobs = numJobs;
-	this.jobs = jobs;
-	this.numJobs = jobs.size();
-	this.counter = 0;
+        this.jobs = jobs;
+        this.numJobs = jobs.size();
+        this.counter = 0;
     }
 
     public void initialMessage() {
-	SpecsLogs.msgInfo("Found " + this.numJobs + " jobs.");
+        SpecsLogs.msgInfo("Found " + this.numJobs + " jobs.");
     }
 
     public void nextMessage() {
-	if (this.counter >= this.numJobs) {
-	    SpecsLogs.warn("Already showed the total number of steps.");
-	}
+        if (this.counter >= this.numJobs) {
+            SpecsLogs.warn("Already showed the total number of steps.");
+            return;
+        }
 
-	this.counter++;
+        this.counter++;
 
-	String message = "Job " + this.counter + " of " + this.numJobs;
+        // Check bounds before accessing jobs list
+        if (this.counter - 1 >= this.jobs.size() || this.jobs.isEmpty()) {
+            SpecsLogs.warn("Job index out of bounds: " + (this.counter - 1) + " for " + this.jobs.size() + " jobs.");
+            return;
+        }
 
-	String description = this.jobs.get(this.counter - 1).getDescription();
-	if (description != null) {
-	    message = message + " (" + description + ").";
-	}
+        String message = "Job " + this.counter + " of " + this.numJobs;
 
-	SpecsLogs.msgInfo(message);
-	// LoggingUtils.msgInfo("Job " + counter + " of " + numJobs + " (" + description + ").");
+        String description = this.jobs.get(this.counter - 1).getDescription();
+        if (description != null) {
+            message = message + " (" + description + ").";
+        }
+
+        SpecsLogs.msgInfo(message);
     }
 }

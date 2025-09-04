@@ -20,12 +20,12 @@ import pt.up.fe.specs.util.treenode.transform.TwoOperandTransform;
 public class MoveBeforeTransform<K extends TreeNode<K>> extends TwoOperandTransform<K> {
 
     public MoveBeforeTransform(K baseNode, K newNode) {
-	super("move-before", baseNode, newNode);
+        super("move-before", baseNode, newNode);
     }
 
     @Override
     public void execute() {
-	NodeInsertUtils.insertBefore(getNode1(), getNode2(), true);
+        NodeInsertUtils.insertBefore(getNode1(), getNode2(), true);
     }
 
 }

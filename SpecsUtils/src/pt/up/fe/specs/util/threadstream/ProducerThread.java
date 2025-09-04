@@ -24,9 +24,6 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
      */
     private final K producer;
 
-    /*
-     * 
-     */
     private final Function<K, T> produceFunction;
 
     /*
@@ -53,7 +50,8 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
     }
 
     /*
-     * creates a new channel into which this runnable object will pump data, with depth 1
+     * creates a new channel into which this runnable object will pump data, with
+     * depth 1
      */
     protected ObjectStream<T> newChannel() {
         return this.newChannel(1);

@@ -1,14 +1,14 @@
 /**
  * Copyright 2016 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.storedefinition;
@@ -25,77 +25,80 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 
 import pt.up.fe.specs.util.SpecsLogs;
 
+/**
+ * Builder for creating {@link StoreDefinition} instances, supporting sections and default data.
+ */
 public class StoreDefinitionBuilder {
 
+    /** The name of the application or store. */
     private final String appName;
-    // private final List<DataKey<?>> options;
+    /** The list of sections in the store definition. */
     private final List<StoreSection> sections;
+    /** The section currently being built. */
     private StoreSectionBuilder currentSection;
-
+    /** Set of key names already added, to avoid duplicates. */
     private final Set<String> addedKeys;
+    /** Default data for the store definition. */
     private DataStore defaultData;
 
-    // private StoreDefinitionBuilder(String appName, Set<String> addedKeys,
-    // DataStore defaultData) {
-    //
-    // //super(appName, new ArrayList<>());
-    // this.appName = appName;
-    // this.
-    //
-    // this.addedKeys = addedKeys;
-    // this.defaultData = defaultData;
-    // }
-
-    // private StoreDefinitionBuilder(String appName, List<DataKey<?>> options, Set<String> addedKeys,
-    // DataStore defaultData) {
-    //
-    // this.appName = appName;
-    // this.options = options;
-    // this.addedKeys = addedKeys;
-    // this.defaultData = defaultData;
-    // }
-
+    /**
+     * Creates a new builder for the given application name.
+     *
+     * @param appName the name of the application or store
+     */
     public StoreDefinitionBuilder(String appName) {
         this.appName = appName;
         sections = new ArrayList<>();
         currentSection = null;
-
         addedKeys = new HashSet<>();
         defaultData = null;
-        // this(appName, new ArrayList<>(), new HashSet<>(), null);
     }
 
+    /**
+     * Creates a new builder and adds a definition from the given class interface.
+     *
+     * @param aClass the class to extract a definition from
+     */
     public StoreDefinitionBuilder(Class<?> aClass) {
         this(aClass.getSimpleName());
-
         addDefinition(StoreDefinitions.fromInterface(aClass));
     }
 
     /**
-     * Helper method to add several keys.
-     * 
-     * @param keys
-     * @return
+     * Adds several keys to the current section or store.
+     *
+     * @param keys the keys to add
+     * @return this builder
      */
     public StoreDefinitionBuilder addKeys(DataKey<?>... keys) {
         return addKeys(Arrays.asList(keys));
     }
 
+    /**
+     * Adds a collection of keys to the current section or store.
+     *
+     * @param keys the keys to add
+     * @return this builder
+     */
     public StoreDefinitionBuilder addKeys(Collection<DataKey<?>> keys) {
         for (DataKey<?> key : keys) {
             addKey(key);
         }
-
         return this;
     }
 
+    /**
+     * Adds a single key to the current section or store.
+     *
+     * @param key the key to add
+     * @return this builder
+     */
     public StoreDefinitionBuilder addKey(DataKey<?> key) {
         // Check if key is not already added
         if (addedKeys.contains(key.getName())) {
             SpecsLogs.warn("Duplicated key while building Store Definition: '" + key.getName() + "'");
             return this;
         }
-
         addedKeys.add(key.getName());
 
         // Section logic
@@ -108,6 +111,12 @@ public class StoreDefinitionBuilder {
         return this;
     }
 
+    /**
+     * Starts a new section with the given name.
+     *
+     * @param name the name of the section
+     * @return this builder
+     */
     public StoreDefinitionBuilder startSection(String name) {
         // If current section not null, store it
         if (currentSection != null) {
@@ -120,27 +129,22 @@ public class StoreDefinitionBuilder {
         return this;
     }
 
-    /*
-    @Override
-    public DataStore getDefaultValues() {
-    if (defaultData != null) {
-        return defaultData;
-    }
-    
-    return super.getDefaultValues();
-    }
-    */
-
-    // @Override
+    /**
+     * Sets the default values for the store definition.
+     *
+     * @param data the default data
+     * @return this builder
+     */
     public StoreDefinitionBuilder setDefaultValues(DataStore data) {
         defaultData = data;
         return this;
-        // StoreDefinitionBuilder builder = new StoreDefinitionBuilder(getName(), addedKeys, data);
-        // builder.getKeys().addAll(getKeys());
-        //
-        // return builder;
     }
 
+    /**
+     * Builds the store definition.
+     *
+     * @return the constructed {@link StoreDefinition}
+     */
     public StoreDefinition build() {
         // Save last section
         if (currentSection != null) {
@@ -150,22 +154,47 @@ public class StoreDefinitionBuilder {
         return new GenericStoreDefinition(appName, sections, defaultData);
     }
 
+    /**
+     * Adds a store definition to this builder.
+     *
+     * @param storeDefinition the store definition to add
+     * @return this builder
+     */
     public StoreDefinitionBuilder addDefinition(StoreDefinition storeDefinition) {
         addDefinitionPrivate(storeDefinition, false);
 
         return this;
     }
 
+    /**
+     * Adds a named store definition to this builder.
+     *
+     * @param name the name of the store definition
+     * @param storeDefinition the store definition to add
+     * @return this builder
+     */
     public StoreDefinitionBuilder addNamedDefinition(String name, StoreDefinition storeDefinition) {
         return addNamedDefinition(new StoreDefinitionBuilder(name).addDefinition(storeDefinition).build());
     }
 
+    /**
+     * Adds a named store definition to this builder.
+     *
+     * @param storeDefinition the store definition to add
+     * @return this builder
+     */
     public StoreDefinitionBuilder addNamedDefinition(StoreDefinition storeDefinition) {
         addDefinitionPrivate(storeDefinition, true);
 
         return this;
     }
 
+    /**
+     * Adds a store definition to this builder, optionally using its name as a section name.
+     *
+     * @param storeDefinition the store definition to add
+     * @param useName whether to use the store definition's name as a section name
+     */
     private void addDefinitionPrivate(StoreDefinition storeDefinition, boolean useName) {
         if (useName) {
             startSection(storeDefinition.getName());

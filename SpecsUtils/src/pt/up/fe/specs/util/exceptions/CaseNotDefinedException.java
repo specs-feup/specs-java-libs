@@ -17,10 +17,6 @@ public class CaseNotDefinedException extends UnsupportedOperationException {
 
     private static final long serialVersionUID = 1L;
 
-    // public CaseNotDefinedException(Object origin) {
-    // this(origin.getClass());
-    // }
-
     public CaseNotDefinedException(Class<?> undefinedCase) {
         super(getDefaultMessageClass(undefinedCase.getName()));
     }
@@ -32,10 +28,6 @@ public class CaseNotDefinedException extends UnsupportedOperationException {
     public CaseNotDefinedException(Object object) {
         super(getDefaultMessageObject(object));
     }
-
-    // public CaseNotDefinedException(String message) {
-    // super("Case not defined: " + message);
-    // }
 
     private static String getDefaultMessageClass(String originClass) {
         return "Case not defined for class '" + originClass + "'";

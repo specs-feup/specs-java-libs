@@ -1,11 +1,11 @@
 /*
  * Copyright 2011 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -24,7 +24,6 @@ import pt.up.fe.specs.guihelper.BaseTypes.ListOfSetups;
 import pt.up.fe.specs.guihelper.BaseTypes.RawType;
 import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
 import pt.up.fe.specs.util.SpecsEnums;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -34,10 +33,10 @@ import pt.up.fe.specs.util.utilities.StringList;
 
 /**
  * Convenient access to data inside SetupData objects.
- * 
+ *
  * <p>
  * Contains getters for the possible types of a SetupData.
- * 
+ *
  * @author Joao Bispo
  */
 public class SetupAccess {
@@ -151,7 +150,7 @@ public class SetupAccess {
         	    LoggingUtils.msgInfo("Could not parse '" + value.toString() + "' into a double.");
         	    newValue = ParseUtils.parseDouble(RawType.getEmptyValueDouble());
         	}
-        
+
         	return newValue;
         	*/
     }
@@ -163,14 +162,14 @@ public class SetupAccess {
     /*
     public Long getLong(SetupFieldEnum setupField) {
     Object value = getHelper(setupField, FieldType.integer.getRawType());
-    
-    
+
+
     Long newValue = ParseUtils.parseLong(value.toString());
     if (newValue == null) {
         LoggingUtils.msgInfo("Could not parse '" + value.toString() + "' into a double.");
         newValue = ParseUtils.parseLong(RawType.EMPTY_VALUE_INTEGER);
     }
-    
+
     return newValue;
     }
     */
@@ -231,7 +230,7 @@ public class SetupAccess {
     }
 
     /**
-     * 
+     *
      * @param map
      *            a table with values
      * @param option
@@ -240,7 +239,7 @@ public class SetupAccess {
      *         null.
      */
     /**
-     * 
+     *
      * @param setupField
      *            an option
      * @return the folder mapped to the given option. If the folder does not exist and could not be created, returns
@@ -252,7 +251,7 @@ public class SetupAccess {
 
     /**
      * Returns a file to the specified folder. The method will try to create the folder, if it does not exist.
-     * 
+     *
      * @param baseFolder
      * @param setupField
      *            an option
@@ -273,7 +272,7 @@ public class SetupAccess {
     // public static File getExistingFolder(SetupData setup, SetupFieldEnum option) {
     // public static File getExistingFolder(FieldValue option) {
     /**
-     * 
+     *
      * @param setupField
      *            an option
      * @return the folder mapped to the given option. If the folder does not exist, returns null
@@ -288,7 +287,7 @@ public class SetupAccess {
 
     /**
      * Convenience method which throws a RuntimeException if the result is null.
-     * 
+     *
      * @param setupField
      * @return
      */
@@ -307,7 +306,7 @@ public class SetupAccess {
     }
 
     /**
-     * 
+     *
      * @param baseFolder
      * @param setupField
      * @return the folder mapped to the given option. If the folder does not exist, returns null
@@ -341,7 +340,7 @@ public class SetupAccess {
     }
 
     /**
-     * 
+     *
      * @param map
      *            a table with values
      * @param option
@@ -371,7 +370,7 @@ public class SetupAccess {
     /**
      * Helper method which assumes the file may not exist yet and the parent folder is the location of the setup file,
      * if available.
-     * 
+     *
      * @param setupField
      * @return
      */
@@ -382,18 +381,18 @@ public class SetupAccess {
 
     /**
      * Helper method which assumes the file may not exist yet.
-     * 
+     *
      * @param parentFolder
      * @param setupField
      * @return
-     * 
+     *
      */
     public File getFile(File parentFolder, SetupFieldEnum setupField) {
         return getFile(parentFolder, setupField, false);
         /*
         	String filename = getString(setupField);
         	File newFile = new File(parentFolder, filename);
-        
+
         	return newFile;
         	*/
     }
@@ -427,7 +426,7 @@ public class SetupAccess {
 
     /**
      * Get enums from a StringList.
-     * 
+     *
      * @param <T>
      * @param setupField
      * @param enumType
@@ -463,7 +462,7 @@ public class SetupAccess {
 
     /**
      * Convenience method without baseFolder.
-     * 
+     *
      * @param setupField
      * @return
      */
@@ -475,7 +474,7 @@ public class SetupAccess {
 
     /**
      * Parses the given value to see if it is a file or a folder with a list of files.
-     * 
+     *
      * @param baseFolder
      * @param setupField
      * @return
@@ -491,7 +490,7 @@ public class SetupAccess {
         } else {
            fullInputPath = (new File(baseFolder, inputPath)).getPath();
         }
-         * 
+         *
          */
 
         // System.out.println("Full Input Path:"+fullInputPath);
@@ -502,17 +501,17 @@ public class SetupAccess {
 
     /**
      * Maps a StringList to a List<String>.
-     * 
+     *
      * <p>
      * If StringList value is null, returns an empty list.
-     * 
+     *
      * @param setupField
      * @return
      */
     public List<String> getListOfStrings(SetupFieldEnum setupField) {
         Object value = getHelper(setupField, RawType.ListOfStrings);
         if (value == null) {
-            return SpecsFactory.newArrayList();
+            return new ArrayList<>();
         }
 
         return ((StringList) value).getStringList();
@@ -522,7 +521,7 @@ public class SetupAccess {
      * - If given path is absolute, uses that path;<br>
      * - Tries to combine global folder with the given path;<br>
      * - Tries to combine the folder of the setup file with the given path;<br>
-     * 
+     *
      * @param parentFolder
      * @param folder
      * @param existingFolder
@@ -543,12 +542,12 @@ public class SetupAccess {
         // If empty string, return null
         /*
         if(folderpath.isEmpty()) {
-        
+
         // Warn user if 'existingFolder' is true
         if(existingFolder) {
         	LoggingUtils.msgWarn("Given empty string as path for an existing folder.");
         }
-        
+
         return new File("./");
         //LoggingUtils.msgWarn("What should be done in this case?");
         //folderpath = IoUtils.getWorkingDir().getPath();
@@ -606,9 +605,9 @@ public class SetupAccess {
      * - Tries to combine global folder with the given path;<br>
      * - Tries to combine the folder of the setup file with the given path;<br>
      * - If given path is empty, returns current folder;<br>
-     * 
+     *
      * TODO: Change name to getPath; Create function that checks if it is a 'file'
-     * 
+     *
      * @param parentFolder
      * @param file
      * @param existingFile
@@ -716,7 +715,7 @@ public class SetupAccess {
 
     /**
      * If the contents are empty or have only whitespace, returns null.
-     * 
+     *
      * @param filewithmain
      * @return
      */

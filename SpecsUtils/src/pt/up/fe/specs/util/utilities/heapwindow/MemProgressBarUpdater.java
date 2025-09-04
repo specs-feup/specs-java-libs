@@ -23,6 +23,9 @@ import javax.swing.SwingWorker;
 class MemProgressBarUpdater extends SwingWorker<Object, Object> {
 
     public MemProgressBarUpdater(JProgressBar jProgressBar) {
+        if (jProgressBar == null) {
+            throw new IllegalArgumentException("JProgressBar cannot be null");
+        }
         this.jProgressBar = jProgressBar;
         this.jProgressBar.setStringPainted(true);
     }
@@ -34,7 +37,6 @@ class MemProgressBarUpdater extends SwingWorker<Object, Object> {
         long usedMemory = heapSize - heapFreeSize;
 
         long mbFactor = (long) Math.pow(1024, 2);
-        // long kbFactor = (long) Math.pow(1024, 1);
 
         heapSizeMb = (int) (heapSize / mbFactor);
         currentSizeMb = (int) (usedMemory / mbFactor);
@@ -48,8 +50,6 @@ class MemProgressBarUpdater extends SwingWorker<Object, Object> {
             MemProgressBarUpdater.this.jProgressBar.setMaximum(MemProgressBarUpdater.this.heapSizeMb);
             MemProgressBarUpdater.this.jProgressBar.setValue(MemProgressBarUpdater.this.currentSizeMb);
             MemProgressBarUpdater.this.jProgressBar.setString(barString);
-            // System.err.println("Heap Size:"+heapSizeMb);
-            // System.err.println("Current Size:"+currentSizeMb);
         });
 
         return null;
@@ -57,14 +57,6 @@ class MemProgressBarUpdater extends SwingWorker<Object, Object> {
 
     @Override
     protected void done() {
-        /*
-        jProgressBar.setMinimum(0);
-        jProgressBar.setMaximum(heapSizeMb);
-        jProgressBar.setValue(currentSizeMb);
-        System.err.println("Heap Size:"+heapSizeMb);
-        System.err.println("Current Size:"+currentSizeMb);
-         *
-         */
     }
 
     /**

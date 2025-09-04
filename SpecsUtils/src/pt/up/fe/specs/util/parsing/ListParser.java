@@ -40,8 +40,8 @@ public class ListParser<T> {
      * 
      * 
      * @param aClass
-     * @return a list with the consecutive elements of the given class, starting at the head. These elements are removed
-     *         from this list
+     * @return a list with the consecutive elements of the given class, starting at
+     *         the head. These elements are removed from this list
      */
     public <K extends T> List<K> pop(Class<K> aClass) {
         if (currentList.isEmpty()) {

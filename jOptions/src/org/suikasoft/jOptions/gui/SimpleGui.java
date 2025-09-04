@@ -8,7 +8,7 @@
  * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.gui;
@@ -18,18 +18,28 @@ import javax.swing.JFrame;
 import org.suikasoft.jOptions.app.App;
 
 /**
- * Wrapper around AppFrame.
+ * Wrapper around AppFrame for launching and managing the application GUI.
  *
- * @author Joao Bispo
+ * <p>This class provides a simple interface to start and control the main application window.
  */
 public class SimpleGui {
 
     private final AppFrame frame;
 
+    /**
+     * Constructs a SimpleGui for the given application.
+     *
+     * @param application the application to launch
+     */
     public SimpleGui(App application) {
         frame = new AppFrame(application);
     }
 
+    /**
+     * Returns the AppFrame instance.
+     *
+     * @return the AppFrame
+     */
     public AppFrame getAppFrame() {
         return frame;
     }
@@ -47,10 +57,20 @@ public class SimpleGui {
         });
     }
 
+    /**
+     * Sets the window title.
+     *
+     * @param windowTitle the title to set
+     */
     public void setTitle(String windowTitle) {
         frame.setFrameTitle(windowTitle);
     }
 
+    /**
+     * Returns the main JFrame window.
+     *
+     * @return the main JFrame
+     */
     public JFrame getFrame() {
         return frame.getMainWindow();
     }

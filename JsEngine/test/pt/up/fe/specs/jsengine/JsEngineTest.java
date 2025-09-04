@@ -25,6 +25,7 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.PolyglotAccess;
 import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.io.IOAccess;
 import org.junit.Test;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
@@ -35,7 +36,6 @@ import pt.up.fe.specs.util.SpecsLogs;
 public class JsEngineTest {
 
     // private static final Lazy<JsEngine> GRAAL_JS = Lazy.newInstance(() -> JsEngineType.GRAALVM.newEngine());
-    // private static final Lazy<JsEngine> NASHORN = Lazy.newInstance(() -> JsEngineType.NASHORN.newEngine());
 
     private static final String getResource(String resource) {
         return SpecsIo.getResource("pt/up/fe/specs/jsengine/test/" + resource);
@@ -43,7 +43,6 @@ public class JsEngineTest {
 
     private JsEngine getEngine() {
         return JsEngineType.GRAALVM.newEngine();
-        // return JsEngineType.NASHORN.newEngine();
         // return GRAAL_JS.get();
     }
 
@@ -67,7 +66,7 @@ public class JsEngineTest {
         Context.Builder contextBuilder = Context.newBuilder("js")
                 .allowAllAccess(true)
                 .allowHostAccess(HostAccess.ALL)
-                .allowIO(true)
+                .allowIO(IOAccess.ALL)
                 .allowCreateThread(true)
                 .allowNativeAccess(true)
                 .allowPolyglotAccess(PolyglotAccess.ALL);

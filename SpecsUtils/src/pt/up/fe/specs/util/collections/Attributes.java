@@ -1,6 +1,5 @@
 package pt.up.fe.specs.util.collections;
 
-
 import pt.up.fe.specs.util.SpecsCollections;
 
 import java.util.*;
@@ -23,13 +22,13 @@ public interface Attributes {
         return getAttributes().contains(attribute);
     }
 
-
     /**
      * @param attribute
-     * @returns the value of an attribute, or throws exception if attribute is not available.
-     * <p>
-     * To see all the attributes iterate the list provided by
-     * {@link Attributes#getAttributes()}
+     * @returns the value of an attribute, or throws exception if attribute is not
+     *          available.
+     *          <p>
+     *          To see all the attributes iterate the list provided by
+     *          {@link Attributes#getAttributes()}
      */
     Object getObject(String attribute);
 
@@ -38,10 +37,10 @@ public interface Attributes {
      *
      * @param attribute
      * @param value
-     * @returns the previous value assigned to the given attribute, or null if value was assigned before
+     * @returns the previous value assigned to the given attribute, or null if value
+     *          was assigned before
      */
     Object putObject(String attribute, Object value);
-
 
     /**
      * Convenience method which casts the attribute to the given class.
@@ -56,7 +55,8 @@ public interface Attributes {
     }
 
     /**
-     * Attempts to retrieve and convert the value of the corresponding attribute into a list.
+     * Attempts to retrieve and convert the value of the corresponding attribute
+     * into a list.
      * <p>
      * Currently, supports values which are arrays or a Collection.
      *
@@ -77,7 +77,6 @@ public interface Attributes {
         throw new RuntimeException("Could not convert object of class '" + value.getClass() + "' in a list");
     }
 
-
     /**
      * Convenience method which casts the elements of the list to the given class.
      *
@@ -92,8 +91,8 @@ public interface Attributes {
 
     /**
      * @param attribute
-     * @return the value of the attribute wrapped around an Optional, or Optional.empty() if there is no value for the
-     * given attribute
+     * @return the value of the attribute wrapped around an Optional, or
+     *         Optional.empty() if there is no value for the given attribute
      */
     default Optional<Object> getOptionalObject(String attribute) {
         if (!hasAttribute(attribute)) {

@@ -45,7 +45,8 @@ public class Buffer<T> {
     }
 
     /**
-     * Returns the buffer according to the relative index. If index is 0, returns the current buffer.
+     * Returns the buffer according to the relative index. If index is 0, returns
+     * the current buffer.
      * 
      * @param index
      * @return
@@ -72,7 +73,8 @@ public class Buffer<T> {
     }
 
     /**
-     * Moves the relative index of the current buffer to the next buffer, returns the next buffer.
+     * Moves the relative index of the current buffer to the next buffer, returns
+     * the next buffer.
      * 
      * @return
      */

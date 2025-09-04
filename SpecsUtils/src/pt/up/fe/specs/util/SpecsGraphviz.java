@@ -164,10 +164,6 @@ public class SpecsGraphviz {
      */
     public static String formatId(String label) {
         return formatId(label, '0', '0');
-
-        // String newLabel = label.replace('[', '0');
-        // newLabel = newLabel.replace(']', '0');
-        // return newLabel;
     }
 
     public static String formatId(String label, char leftSquare, char rightSquare) {

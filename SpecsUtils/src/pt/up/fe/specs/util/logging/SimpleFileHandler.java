@@ -22,48 +22,36 @@ public class SimpleFileHandler extends StreamHandler {
     /**
      * Create a <tt>ConsoleHandler</tt> for <tt>System.err</tt>.
      * <p>
-     * The <tt>ConsoleHandler</tt> is configured based on <tt>LogManager</tt> properties (or their default values).
+     * The <tt>ConsoleHandler</tt> is configured based on <tt>LogManager</tt>
+     * properties (or their default values).
      * 
      */
     public SimpleFileHandler(PrintStream printStream) {
-	setOutputStream(printStream);
+        setOutputStream(printStream);
     }
 
-    /*
-    public static SimpleFileHandler newInstance(File logFile) {
-    FileOutputStream outputStream = null;
-
-    try {
-        outputStream = new FileOutputStream(logFile);
-    } catch (FileNotFoundException e) {
-        return null;
-    }
-
-    return new SimpleFileHandler(new PrintStream(outputStream));
-    }
-     */
     /**
      * Publish a <tt>LogRecord</tt>.
      * <p>
-     * The logging request was made initially to a <tt>Logger</tt> object, which initialized the <tt>LogRecord</tt> and
-     * forwarded it here.
+     * The logging request was made initially to a <tt>Logger</tt> object, which
+     * initialized the <tt>LogRecord</tt> and forwarded it here.
      * <p>
      * 
-     * @param record
-     *            description of the log event. A null record is silently ignored and is not published
+     * @param record description of the log event. A null record is silently ignored
+     *               and is not published
      */
     @Override
     public synchronized void publish(LogRecord record) {
-	super.publish(record);
-	flush();
+        super.publish(record);
+        flush();
     }
 
     /**
-     * Override <tt>StreamHandler.close</tt> to do a flush but not to close the output stream. That is, we do <b>not</b>
-     * close <tt>System.err</tt>.
+     * Override <tt>StreamHandler.close</tt> to do a flush but not to close the
+     * output stream. That is, we do <b>not</b> close <tt>System.err</tt>.
      */
     @Override
     public synchronized void close() {
-	flush();
+        flush();
     }
 }

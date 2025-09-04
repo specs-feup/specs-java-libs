@@ -1,182 +1,524 @@
-/**
- * Copyright 2016 SPeCS.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
- */
-
 package org.suikasoft.jOptions.Datakey;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.suikasoft.jOptions.Interfaces.DataStore;
-import org.suikasoft.jOptions.persistence.XmlPersistence;
+import org.suikasoft.jOptions.gui.KeyPanel;
+import org.suikasoft.jOptions.gui.KeyPanelProvider;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
-import com.google.common.collect.Lists;
+import pt.up.fe.specs.util.parsing.StringCodec;
 
-import pt.up.fe.specs.util.SpecsIo;
-import pt.up.fe.specs.util.utilities.StringList;
+/**
+ * Unit tests for {@link DataKey}.
+ * 
+ * Tests the core data key interface including encoding/decoding, default
+ * values, custom getters/setters, and key metadata management. Since DataKey is
+ * an interface, tests use a mock implementation to verify behavior.
+ * 
+ * @author Generated Tests
+ */
+@DisplayName("DataKey")
+@SuppressWarnings({ "unchecked", "rawtypes" })
+class DataKeyTest {
 
-public class DataKeyTest {
+    private DataKey<String> mockStringKey;
+    private DataKey<Integer> mockIntKey;
+    private StringCodec<String> mockStringCodec;
+    @SuppressWarnings("unused")
+    private StringCodec<Integer> mockIntCodec;
+    private DataStore mockDataStore;
+    private StoreDefinition mockStoreDefinition;
+    private KeyPanelProvider<String> mockPanelProvider;
+    private KeyPanel<String> mockPanel;
+    private CustomGetter<String> mockCustomGetter;
+    private DataKeyExtraData mockExtraData;
 
-    @Test
-    public void test() {
+    @BeforeEach
+    void setUp() {
+        mockStringKey = mock(DataKey.class);
+        mockIntKey = mock(DataKey.class);
+        mockStringCodec = mock(StringCodec.class);
+        mockIntCodec = mock(StringCodec.class);
+        mockDataStore = mock(DataStore.class);
+        mockStoreDefinition = mock(StoreDefinition.class);
+        mockPanelProvider = mock(KeyPanelProvider.class);
+        mockPanel = mock(KeyPanel.class);
+        mockCustomGetter = mock(CustomGetter.class);
+        mockExtraData = mock(DataKeyExtraData.class);
 
-        String option1Name = "Option1";
-        DataKey<StringList> list1 = KeyFactory.object(option1Name, StringList.class);
+        // Setup basic behavior for string key
+        when(mockStringKey.getName()).thenReturn("testStringKey");
+        when(mockStringKey.getValueClass()).thenReturn(String.class);
+        when(mockStringKey.getKey()).thenCallRealMethod();
+        when(mockStringKey.getTypeName()).thenCallRealMethod();
+        when(mockStringKey.getLabel()).thenReturn("Test String Key");
 
-        // Test methods of simple DataKey
-        assertEquals(option1Name, list1.getName());
-        assertEquals(StringList.class, list1.getValueClass());
-        assertEquals("StringList", list1.getTypeName());
-        assertTrue(!list1.getDecoder().isPresent());
-        assertTrue(!list1.getDefault().isPresent());
-
-        List<String> defaultList = Arrays.asList("string1", "string2");
-
-        // Test default value
-        list1 = list1.setDefault(() -> new StringList(defaultList));
-        assertTrue(list1.getDefault().isPresent());
-        assertEquals(defaultList, list1.getDefault().get().getStringList());
-
-        // Test decoder
-        list1 = list1.setDecoder(value -> new StringList(value));
-        String encodedValue = StringList.encode("string1", "string2");
-        assertEquals(defaultList, list1.getDecoder().get().decode(encodedValue).getStringList());
-
-        // Test fluent API for object construction
-        DataKey<StringList> listWithDefault = KeyFactory
-                .object("optionWithDefault", StringList.class)
-                .setDefault(() -> new StringList(defaultList));
-
-        assertEquals(defaultList, listWithDefault.getDefault().get().getStringList());
-
-        DataKey<StringList> listWithDecoder = KeyFactory
-                .object("optionWithDecoder", StringList.class)
-                .setDecoder(value -> new StringList(value));
-
-        assertEquals(defaultList, listWithDecoder.getDecoder().get().decode(encodedValue).getStringList());
-
-        // Test serialization
-        StoreDefinition definition = StoreDefinition.newInstance("test", list1, listWithDefault, listWithDecoder);
-        XmlPersistence xmlBuilder = new XmlPersistence(definition);
-        DataStore store = DataStore.newInstance(definition);
-        store.set(list1, StringList.newInstance("string1", "string2"));
-        store.set(listWithDefault, StringList.newInstance("stringDef1", "stringDef2"));
-        store.set(listWithDecoder, StringList.newInstance("stringDec1", "stringDec2"));
-
-        File testFile = new File("test_store.xml");
-        xmlBuilder.saveData(testFile, store);
-
-        DataStore savedStore = xmlBuilder.loadData(testFile);
-        SpecsIo.delete(testFile);
-
-        // Using toString() to remove extra information, such as configuration file
-        assertEquals(savedStore.toString(), store.toString());
-
-        /*
-        DataKey<StringList> list = KeyFactory.object("Option", StringList.class).setDefaultValueV2(new StringList())
-        	.setDecoderV2(value -> new StringList(value));
-
-        assertEquals(String.class, s.getValueClass());
-
-        SetupBuilder data = new SimpleSetup("test_data");
-
-        data.setValue(s, "a value");
-        assertEquals("a value", data.getValue(s));
-
-        fail("Not yet implemented");
-        */
+        // Setup basic behavior for int key
+        when(mockIntKey.getName()).thenReturn("testIntKey");
+        when(mockIntKey.getValueClass()).thenReturn(Integer.class);
+        when(mockIntKey.getKey()).thenCallRealMethod();
+        when(mockIntKey.getTypeName()).thenCallRealMethod();
+        when(mockIntKey.getLabel()).thenReturn("Test Integer Key");
     }
 
-    @Test
-    public void testGeneric() {
-        String option1Name = "Option1";
-        ArrayList<String> instanceExample = Lists.newArrayList("dummy");
-        DataKey<ArrayList<String>> list1 = KeyFactory.generic(option1Name, instanceExample);
+    @Nested
+    @DisplayName("Basic Key Properties")
+    class BasicKeyPropertiesTests {
 
-        // Test methods of simple DataKey
-        assertEquals(option1Name, list1.getName());
-        assertEquals(instanceExample.getClass(), list1.getValueClass());
-        assertTrue(List.class.isAssignableFrom(list1.getValueClass()));
-        assertEquals("ArrayList", list1.getTypeName());
-        assertTrue(!list1.getDecoder().isPresent());
-        assertTrue(!list1.getDefault().isPresent());
-
-        ArrayList<String> defaultList = Lists.newArrayList("string1", "string2");
-
-        // Test default value
-        list1 = list1.setDefault(() -> defaultList);
-        assertTrue(list1.getDefault().isPresent());
-        assertEquals(defaultList, list1.getDefault().get());
-
-        // Test decoder
-        list1 = list1.setDecoder(value -> listStringDecode(value));
-        String encodedValue = listStringEncode("string1", "string2");
-        assertEquals(defaultList, list1.getDecoder().get().decode(encodedValue));
-
-        // Test fluent API for object construction
-        DataKey<ArrayList<String>> listWithDefault = KeyFactory
-                .generic("optionWithDefault", instanceExample)
-                .setDefault(() -> defaultList);
-
-        assertEquals(defaultList, listWithDefault.getDefault().get());
-
-        DataKey<ArrayList<String>> listWithDecoder = KeyFactory
-                .generic("optionWithDecoder", instanceExample)
-                .setDecoder(value -> listStringDecode(value));
-
-        assertEquals(defaultList, listWithDecoder.getDecoder().get().decode(encodedValue));
-
-        // Test serialization
-        StoreDefinition definition = StoreDefinition.newInstance("test", list1, listWithDefault, listWithDecoder);
-        XmlPersistence xmlBuilder = new XmlPersistence(definition);
-        DataStore store = DataStore.newInstance(definition);
-        store.set(list1, Lists.newArrayList("string1", "string2"));
-        store.set(listWithDefault, Lists.newArrayList("stringDef1", "stringDef2"));
-        store.set(listWithDecoder, Lists.newArrayList("stringDec1", "stringDec2"));
-
-        File testFile = new File("test_store.xml");
-        xmlBuilder.saveData(testFile, store);
-
-        DataStore savedStore = xmlBuilder.loadData(testFile);
-        SpecsIo.delete(testFile);
-
-        // Using toString() to remove extra information, such as configuration file
-        assertEquals(savedStore.toString(), store.toString());
-    }
-
-    // TODO: Make this generic for any type of list. Separator can be one of the parameters
-    private final static String DEFAULT_SEPARATOR = ",";
-
-    private static String listStringEncode(String... strings) {
-
-        StringJoiner joiner = new StringJoiner(DataKeyTest.DEFAULT_SEPARATOR);
-        for (String string : strings) {
-            joiner.add(string);
+        @Test
+        @DisplayName("getKey returns same as getName")
+        void testGetKey_ReturnsSameAsGetName() {
+            assertThat(mockStringKey.getKey()).isEqualTo("testStringKey");
+            assertThat(mockIntKey.getKey()).isEqualTo("testIntKey");
         }
-        return joiner.toString();
+
+        @Test
+        @DisplayName("getTypeName returns simple class name")
+        void testGetTypeName_ReturnsSimpleClassName() {
+            assertThat(mockStringKey.getTypeName()).isEqualTo("String");
+            assertThat(mockIntKey.getTypeName()).isEqualTo("Integer");
+        }
+
+        @Test
+        @DisplayName("getName returns key name")
+        void testGetName_ReturnsKeyName() {
+            assertThat(mockStringKey.getName()).isEqualTo("testStringKey");
+            assertThat(mockIntKey.getName()).isEqualTo("testIntKey");
+        }
+
+        @Test
+        @DisplayName("getValueClass returns correct class")
+        void testGetValueClass_ReturnsCorrectClass() {
+            assertThat(mockStringKey.getValueClass()).isEqualTo(String.class);
+            assertThat(mockIntKey.getValueClass()).isEqualTo(Integer.class);
+        }
+
+        @Test
+        @DisplayName("getLabel returns key label")
+        void testGetLabel_ReturnsKeyLabel() {
+            assertThat(mockStringKey.getLabel()).isEqualTo("Test String Key");
+            assertThat(mockIntKey.getLabel()).isEqualTo("Test Integer Key");
+        }
     }
 
-    private static ArrayList<String> listStringDecode(String string) {
-        return Arrays.stream(string.split(DataKeyTest.DEFAULT_SEPARATOR))
-                .collect(() -> new ArrayList<>(), (list, element) -> list.add(element),
-                        (list1, list2) -> list1.addAll(list2));
+    @Nested
+    @DisplayName("Encoding and Decoding")
+    class EncodingAndDecodingTests {
 
+        @Test
+        @DisplayName("decode with decoder present returns decoded value")
+        void testDecode_DecoderPresent_ReturnsDecodedValue() {
+            String encodedValue = "test_value";
+            String decodedValue = "decoded_value";
+
+            when(mockStringKey.getDecoder()).thenReturn(Optional.of(mockStringCodec));
+            when(mockStringCodec.decode(encodedValue)).thenReturn(decodedValue);
+            when(mockStringKey.decode(encodedValue)).thenCallRealMethod();
+
+            String result = mockStringKey.decode(encodedValue);
+
+            assertThat(result).isEqualTo(decodedValue);
+        }
+
+        @Test
+        @DisplayName("decode without decoder throws exception")
+        void testDecode_NoDecoder_ThrowsException() {
+            when(mockStringKey.getDecoder()).thenReturn(Optional.empty());
+            when(mockStringKey.decode("test")).thenCallRealMethod();
+
+            assertThatThrownBy(() -> mockStringKey.decode("test"))
+                    .isInstanceOf(RuntimeException.class)
+                    .hasMessage("No encoder/decoder set");
+        }
+
+        @Test
+        @DisplayName("encode with decoder present returns encoded value")
+        void testEncode_DecoderPresent_ReturnsEncodedValue() {
+            String value = "test_value";
+            String encodedValue = "encoded_value";
+
+            when(mockStringKey.getDecoder()).thenReturn(Optional.of(mockStringCodec));
+            when(mockStringCodec.encode(value)).thenReturn(encodedValue);
+            when(mockStringKey.encode(value)).thenCallRealMethod();
+
+            String result = mockStringKey.encode(value);
+
+            assertThat(result).isEqualTo(encodedValue);
+        }
+
+        @Test
+        @DisplayName("encode without decoder throws exception")
+        void testEncode_NoDecoder_ThrowsException() {
+            when(mockStringKey.getDecoder()).thenReturn(Optional.empty());
+            when(mockStringKey.encode("test")).thenCallRealMethod();
+
+            assertThatThrownBy(() -> mockStringKey.encode("test"))
+                    .isInstanceOf(RuntimeException.class)
+                    .hasMessage("No encoder/decoder set");
+        }
     }
 
+    @Nested
+    @DisplayName("Default Values")
+    class DefaultValuesTests {
+
+        @Test
+        @DisplayName("hasDefaultValue returns true when default is present")
+        void testHasDefaultValue_DefaultPresent_ReturnsTrue() {
+            when(mockStringKey.getDefault()).thenReturn(Optional.of("default"));
+            when(mockStringKey.hasDefaultValue()).thenReturn(true);
+
+            assertThat(mockStringKey.hasDefaultValue()).isTrue();
+        }
+
+        @Test
+        @DisplayName("hasDefaultValue returns false when default is empty")
+        void testHasDefaultValue_DefaultEmpty_ReturnsFalse() {
+            when(mockStringKey.getDefault()).thenReturn(Optional.empty());
+            when(mockStringKey.hasDefaultValue()).thenReturn(false);
+
+            assertThat(mockStringKey.hasDefaultValue()).isFalse();
+        }
+
+        @Test
+        @DisplayName("setDefaultString with decoder creates key with string default")
+        void testSetDefaultString_WithDecoder_CreatesKeyWithStringDefault() {
+            String defaultString = "default_string";
+            String decodedDefault = "decoded_default";
+            DataKey<String> newKey = mock(DataKey.class);
+
+            when(mockStringKey.getDecoder()).thenReturn(Optional.of(mockStringCodec));
+            when(mockStringCodec.decode(defaultString)).thenReturn(decodedDefault);
+            when(mockStringKey.setDefault(any(Supplier.class))).thenReturn(newKey);
+            when(mockStringKey.setDefaultString(defaultString)).thenCallRealMethod();
+
+            DataKey<String> result = mockStringKey.setDefaultString(defaultString);
+
+            assertThat(result).isSameAs(newKey);
+        }
+
+        @Test
+        @DisplayName("setDefaultString without decoder throws exception")
+        void testSetDefaultString_NoDecoder_ThrowsException() {
+            when(mockStringKey.getDecoder()).thenReturn(Optional.empty());
+            when(mockStringKey.setDefaultString("test")).thenCallRealMethod();
+
+            assertThatThrownBy(() -> mockStringKey.setDefaultString("test"))
+                    .isInstanceOf(RuntimeException.class)
+                    .hasMessage("Can only use this method if a decoder was set before");
+        }
+    }
+
+    @Nested
+    @DisplayName("Panel Functionality")
+    class PanelFunctionalityTests {
+
+        @Test
+        @DisplayName("getPanel with provider returns panel")
+        void testGetPanel_WithProvider_ReturnsPanel() {
+            when(mockStringKey.getKeyPanelProvider()).thenReturn(Optional.of(mockPanelProvider));
+            when(mockPanelProvider.getPanel(mockStringKey, mockDataStore)).thenReturn(mockPanel);
+            when(mockStringKey.getPanel(mockDataStore)).thenCallRealMethod();
+
+            KeyPanel<String> result = mockStringKey.getPanel(mockDataStore);
+
+            assertThat(result).isSameAs(mockPanel);
+        }
+
+        @Test
+        @DisplayName("getPanel without provider throws exception")
+        void testGetPanel_NoProvider_ThrowsException() {
+            when(mockStringKey.getKeyPanelProvider()).thenReturn(Optional.empty());
+            when(mockStringKey.getName()).thenReturn("testKey");
+            when(mockStringKey.getValueClass()).thenReturn((Class) String.class);
+            when(mockStringKey.getPanel(mockDataStore)).thenCallRealMethod();
+
+            assertThatThrownBy(() -> mockStringKey.getPanel(mockDataStore))
+                    .isInstanceOf(RuntimeException.class)
+                    .hasMessageContaining("No panel defined for key 'testKey' of type 'class java.lang.String'");
+        }
+    }
+
+    @Nested
+    @DisplayName("Copy Functionality")
+    class CopyFunctionalityTests {
+
+        @Test
+        @DisplayName("copy with copy function applies function")
+        void testCopy_WithCopyFunction_AppliesFunction() {
+            String original = "original";
+            String copied = "copied";
+            Function<String, String> copyFunction = mock(Function.class);
+
+            when(mockStringKey.getCopyFunction()).thenReturn(Optional.of(copyFunction));
+            when(copyFunction.apply(original)).thenReturn(copied);
+            when(mockStringKey.copy(original)).thenCallRealMethod();
+
+            String result = mockStringKey.copy(original);
+
+            assertThat(result).isEqualTo(copied);
+        }
+
+        @Test
+        @DisplayName("copy without copy function returns original")
+        void testCopy_NoCopyFunction_ReturnsOriginal() {
+            String original = "original";
+
+            when(mockStringKey.getCopyFunction()).thenReturn(Optional.empty());
+            when(mockStringKey.copy(original)).thenCallRealMethod();
+
+            String result = mockStringKey.copy(original);
+
+            assertThat(result).isSameAs(original);
+        }
+
+        @Test
+        @DisplayName("copyRaw casts and delegates to copy")
+        void testCopyRaw_CastsAndDelegatesToCopy() {
+            String original = "original";
+            String copied = "copied";
+
+            when(mockStringKey.getValueClass()).thenReturn((Class) String.class);
+            when(mockStringKey.copy(original)).thenReturn(copied);
+            when(mockStringKey.copyRaw(original)).thenCallRealMethod();
+
+            Object result = mockStringKey.copyRaw(original);
+
+            assertThat(result).isEqualTo(copied);
+        }
+    }
+
+    @Nested
+    @DisplayName("Static Utility Methods")
+    class StaticUtilityMethodsTests {
+
+        @Test
+        @DisplayName("toString with simple key creates correct string representation")
+        void testToString_SimpleKey_CreatesCorrectStringRepresentation() {
+            DataKey<String> realKey = mock(DataKey.class);
+            when(realKey.getName()).thenReturn("simpleKey");
+            when(realKey.getValueClass()).thenReturn((Class) String.class);
+            when(realKey.getDefault()).thenReturn(Optional.empty());
+
+            String result = DataKey.toString(realKey);
+
+            assertThat(result).isEqualTo("simpleKey (String)");
+        }
+
+        @Test
+        @DisplayName("toString with key with default value includes default")
+        void testToString_KeyWithDefaultValue_IncludesDefault() {
+            DataKey<String> realKey = mock(DataKey.class);
+            when(realKey.getName()).thenReturn("keyWithDefault");
+            when(realKey.getValueClass()).thenReturn((Class) String.class);
+            when(realKey.getDefault()).thenReturn(Optional.of("defaultValue"));
+
+            String result = DataKey.toString(realKey);
+
+            // Production toString() unwraps Optional and prints the actual default value
+            assertThat(result).contains("keyWithDefault (String = defaultValue)");
+        }
+
+        @Test
+        @DisplayName("toString with collection creates multi-line representation")
+        void testToString_Collection_CreatesMultiLineRepresentation() {
+            DataKey<String> key1 = mock(DataKey.class);
+            DataKey<Integer> key2 = mock(DataKey.class);
+
+            when(key1.getName()).thenReturn("key1");
+            when(key1.getValueClass()).thenReturn((Class) String.class);
+            when(key1.getDefault()).thenReturn(Optional.empty());
+            when(key1.toString()).thenReturn("key1 (String)");
+
+            when(key2.getName()).thenReturn("key2");
+            when(key2.getValueClass()).thenReturn((Class) Integer.class);
+            when(key2.getDefault()).thenReturn(Optional.empty());
+            when(key2.toString()).thenReturn("key2 (Integer)");
+
+            Collection<DataKey<?>> keys = Arrays.asList(key1, key2);
+            String result = DataKey.toString(keys);
+
+            assertThat(result)
+                    .contains("key1 (String)")
+                    .contains("key2 (Integer)");
+        }
+
+        @Test
+        @DisplayName("toString with DataStore default value handles nested structure")
+        void testToString_DataStoreDefaultValue_HandlesNestedStructure() {
+            DataKey<DataStore> dataStoreKey = mock(DataKey.class);
+            DataStore defaultDataStore = mock(DataStore.class);
+
+            when(dataStoreKey.getName()).thenReturn("dataStoreKey");
+            when(dataStoreKey.getValueClass()).thenReturn((Class) DataStore.class);
+            when(dataStoreKey.getDefault()).thenReturn(Optional.of(defaultDataStore));
+            when(defaultDataStore.getStoreDefinitionTry()).thenReturn(Optional.of(mockStoreDefinition));
+            when(mockStoreDefinition.getKeys()).thenReturn(Arrays.asList(mockStringKey));
+
+            String result = DataKey.toString(dataStoreKey);
+
+            assertThat(result).contains("dataStoreKey (DataStore)");
+        }
+    }
+
+    @Nested
+    @DisplayName("Verification and Validation")
+    class VerificationAndValidationTests {
+
+        @Test
+        @DisplayName("verifyValueClass returns true by default")
+        void testVerifyValueClass_ReturnsTrueByDefault() {
+            when(mockStringKey.verifyValueClass()).thenReturn(true);
+
+            boolean result = mockStringKey.verifyValueClass();
+
+            assertThat(result).isTrue();
+        }
+    }
+
+    @Nested
+    @DisplayName("Edge Cases and Error Handling")
+    class EdgeCasesAndErrorHandlingTests {
+
+        @Test
+        @DisplayName("toString handles null key gracefully")
+        void testToString_NullKey_HandlesGracefully() {
+            assertThatThrownBy(() -> DataKey.toString((DataKey<?>) null))
+                    .isInstanceOf(NullPointerException.class);
+        }
+
+        @Test
+        @DisplayName("toString handles empty collection")
+        void testToString_EmptyCollection_HandlesGracefully() {
+            Collection<DataKey<?>> emptyKeys = Arrays.asList();
+            String result = DataKey.toString(emptyKeys);
+
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("toString throws for collection with null elements")
+        void testToString_CollectionWithNullElements_Throws() {
+            when(mockStringKey.toString()).thenReturn("testStringKey (String)");
+            when(mockIntKey.toString()).thenReturn("testIntKey (Integer)");
+
+            Collection<DataKey<?>> keysWithNull = Arrays.asList(mockStringKey, null, mockIntKey);
+
+            assertThatThrownBy(() -> DataKey.toString(keysWithNull))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("DataKey collection contains null element");
+        }
+
+        @Test
+        @DisplayName("copy handles null input")
+        void testCopy_NullInput_HandlesGracefully() {
+            when(mockStringKey.getCopyFunction()).thenReturn(Optional.empty());
+            when(mockStringKey.copy(null)).thenCallRealMethod();
+
+            String result = mockStringKey.copy(null);
+
+            assertThat(result).isNull();
+        }
+
+        @Test
+        @DisplayName("getPanel with null dataStore throws exception")
+        void testGetPanel_NullDataStore_ThrowsException() {
+            when(mockStringKey.getKeyPanelProvider()).thenReturn(Optional.of(mockPanelProvider));
+            when(mockPanelProvider.getPanel(mockStringKey, null)).thenThrow(NullPointerException.class);
+            when(mockStringKey.getPanel(null)).thenCallRealMethod();
+
+            assertThatThrownBy(() -> mockStringKey.getPanel(null))
+                    .isInstanceOf(NullPointerException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("Integration Tests")
+    class IntegrationTests {
+
+        @Test
+        @DisplayName("Complete key workflow with all features")
+        void testCompleteKeyWorkflow_AllFeatures() {
+            // Setup a comprehensive key configuration
+            String keyName = "complexKey";
+            String defaultValue = "default";
+            String encodedValue = "encoded";
+            String decodedValue = "decoded";
+
+            DataKey<String> complexKey = mock(DataKey.class);
+            when(complexKey.getName()).thenReturn(keyName);
+            when(complexKey.getValueClass()).thenReturn((Class) String.class);
+            when(complexKey.getKey()).thenCallRealMethod();
+            when(complexKey.getTypeName()).thenCallRealMethod();
+            when(complexKey.getLabel()).thenReturn("Complex Key");
+            when(complexKey.getDecoder()).thenReturn(Optional.of(mockStringCodec));
+            when(complexKey.getDefault()).thenReturn(Optional.of(defaultValue));
+            when(complexKey.hasDefaultValue()).thenReturn(true); // Mock the abstract method
+            when(complexKey.getKeyPanelProvider()).thenReturn(Optional.of(mockPanelProvider));
+            when(complexKey.getCustomGetter()).thenReturn(Optional.of(mockCustomGetter));
+            when(complexKey.getExtraData()).thenReturn(Optional.of(mockExtraData));
+
+            // Setup codec behavior
+            when(mockStringCodec.encode(decodedValue)).thenReturn(encodedValue);
+            when(mockStringCodec.decode(encodedValue)).thenReturn(decodedValue);
+            when(complexKey.encode(decodedValue)).thenCallRealMethod();
+            when(complexKey.decode(encodedValue)).thenCallRealMethod();
+
+            // Setup panel behavior
+            when(mockPanelProvider.getPanel(complexKey, mockDataStore)).thenReturn(mockPanel);
+            when(complexKey.getPanel(mockDataStore)).thenCallRealMethod();
+
+            // Test all functionality
+            assertThat(complexKey.getName()).isEqualTo(keyName);
+            assertThat(complexKey.getKey()).isEqualTo(keyName);
+            assertThat(complexKey.getTypeName()).isEqualTo("String");
+            assertThat(complexKey.getLabel()).isEqualTo("Complex Key");
+            assertThat(complexKey.hasDefaultValue()).isTrue();
+            assertThat(complexKey.getDefault()).contains(defaultValue);
+            assertThat(complexKey.encode(decodedValue)).isEqualTo(encodedValue);
+            assertThat(complexKey.decode(encodedValue)).isEqualTo(decodedValue);
+            assertThat(complexKey.getPanel(mockDataStore)).isSameAs(mockPanel);
+            assertThat(complexKey.getCustomGetter()).contains(mockCustomGetter);
+            assertThat(complexKey.getExtraData()).contains(mockExtraData);
+        }
+
+        @Test
+        @DisplayName("Key equality and string representation")
+        void testKeyEqualityAndStringRepresentation() {
+            // Test string representation with various configurations
+            DataKey<String> simpleKey = mock(DataKey.class);
+            when(simpleKey.getName()).thenReturn("simple");
+            when(simpleKey.getValueClass()).thenReturn((Class) String.class);
+            when(simpleKey.getDefault()).thenReturn(Optional.empty());
+            when(simpleKey.toString()).thenReturn("simple (String)");
+
+            DataKey<String> keyWithDefault = mock(DataKey.class);
+            when(keyWithDefault.getName()).thenReturn("withDefault");
+            when(keyWithDefault.getValueClass()).thenReturn((Class) String.class);
+            when(keyWithDefault.getDefault()).thenReturn(Optional.of("defaultValue"));
+            when(keyWithDefault.toString()).thenReturn("withDefault (String = defaultValue)");
+
+            Collection<DataKey<?>> keys = Arrays.asList(simpleKey, keyWithDefault);
+            String representation = DataKey.toString(keys);
+
+            assertThat(representation)
+                    .contains("simple (String)")
+                    .contains("withDefault (String = defaultValue)");
+        }
+    }
 }

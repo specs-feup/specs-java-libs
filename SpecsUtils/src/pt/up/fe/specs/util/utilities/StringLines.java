@@ -62,7 +62,8 @@ public class StringLines implements Iterable<String> {
     }
 
     /**
-     * Builds a StringLines from the given String. If the object could not be created, throws an exception.
+     * Builds a StringLines from the given String. If the object could not be
+     * created, throws an exception.
      * 
      * @param string
      * @return
@@ -78,7 +79,8 @@ public class StringLines implements Iterable<String> {
     }
 
     /**
-     * @return the next line in the file, or null if the end of the stream has been reached.
+     * @return the next line in the file, or null if the end of the stream has been
+     *         reached.
      */
     public String nextLine() {
         if (nextLine != null) {
@@ -120,7 +122,8 @@ public class StringLines implements Iterable<String> {
     }
 
     /**
-     * @return the next line which is not empty, or null if the end of the stream has been reached.
+     * @return the next line which is not empty, or null if the end of the stream
+     *         has been reached.
      */
     public String nextNonEmptyLine() {
         boolean foundAnswer = false;
@@ -186,7 +189,8 @@ public class StringLines implements Iterable<String> {
     }
 
     /**
-     * Creates a stream over the LineReader. LineReader has to be disposed after use.
+     * Creates a stream over the LineReader. LineReader has to be disposed after
+     * use.
      * 
      * @return
      */

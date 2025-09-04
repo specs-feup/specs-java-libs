@@ -22,7 +22,8 @@ import java.util.logging.Logger;
  * An OutputStream that writes contents to a Logger upon each call to flush().
  *
  * <p>
- * This class is used by LoggingUtils methods to redirect the System.out and System.err streams.
+ * This class is used by LoggingUtils methods to redirect the System.out and
+ * System.err streams.
  * 
  * @author Joao Bispo
  * @author http://blogs.sun.com/nickstephen/entry/java_redirecting_system_out_and
@@ -38,41 +39,37 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
     /**
      * Constructor
      * 
-     * @param logger
-     *            Logger to write to
-     * @param level
-     *            Level at which to write the log message
+     * @param logger Logger to write to
+     * @param level  Level at which to write the log message
      */
     public LoggingOutputStream(Logger logger, Level level) {
-	super();
-	this.logger = logger;
-	this.level = level;
-	// lineSeparator = System.getProperty("line.separator");
+        super();
+        this.logger = logger;
+        this.level = level;
     }
 
     /**
-     * Upon flush() write the existing contents of the OutputStream to the logger as a log record.
+     * Upon flush() write the existing contents of the OutputStream to the logger as
+     * a log record.
      * 
-     * @throws java.io.IOException
-     *             in case of error
+     * @throws java.io.IOException in case of error
      */
     @Override
     public void flush() throws IOException {
 
-	String record;
-	synchronized (this) {
-	    super.flush();
-	    record = this.toString();
-	    super.reset();
+        String record;
+        synchronized (this) {
+            super.flush();
+            record = this.toString();
+            super.reset();
 
-	    // if (record.length() == 0 || record.equals(lineSeparator)) {
-	    if (record.length() == 0) {
-		// avoid empty records
-		return;
-	    }
+            if (record.length() == 0) {
+                // avoid empty records
+                return;
+            }
 
-	    this.logger.logp(this.level, "", "", record);
-	}
+            this.logger.logp(this.level, "", "", record);
+        }
     }
 
 }

@@ -18,7 +18,8 @@ import pt.up.fe.specs.util.treenode.transform.impl.DefaultTransformResult;
 public interface TransformResult {
 
     /**
-     * If true, applies this transformation to the nodes children, when using pre-order traversal strategy. <br>
+     * If true, applies this transformation to the nodes children, when using
+     * pre-order traversal strategy. <br>
      * 
      * By default returns true.
      * 
@@ -27,7 +28,7 @@ public interface TransformResult {
     boolean visitChildren();
 
     static TransformResult empty() {
-	return new DefaultTransformResult(true);
+        return new DefaultTransformResult(true);
     }
 
 }

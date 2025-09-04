@@ -19,7 +19,8 @@ import java.util.concurrent.TimeUnit;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Can only be created by a ConcurrentChannel objects, and represents a producer end of that channel.
+ * Can only be created by a ConcurrentChannel objects, and represents a producer
+ * end of that channel.
  *
  * @author Joao Bispo
  */
@@ -32,13 +33,14 @@ public class ChannelProducer<T> {
     }
 
     /**
-     * Inserts the specified element into this queue if it is possible to do so immediately without violating capacity
-     * restrictions, returning true upon success and false if no space is currently available. When using a
-     * capacity-restricted queue, this method is generally preferable to BlockingQueue.add, which can fail to insert an
-     * element only by throwing an exception.
+     * Inserts the specified element into this queue if it is possible to do so
+     * immediately without violating capacity restrictions, returning true upon
+     * success and false if no space is currently available. When using a
+     * capacity-restricted queue, this method is generally preferable to
+     * BlockingQueue.add, which can fail to insert an element only by throwing an
+     * exception.
      *
-     * @param e
-     *            the element to add
+     * @param e the element to add
      *
      * @return true if the element was added to this queue, else false
      */
@@ -47,16 +49,14 @@ public class ChannelProducer<T> {
     }
 
     /**
-     * inserts the specified element into this queue, waiting up to the specified wait time if necessary for space to
-     * become available.
+     * inserts the specified element into this queue, waiting up to the specified
+     * wait time if necessary for space to become available.
      *
-     * @param e
-     *            the element to add
-     * @param timeout
-     *            how long to wait before giving up, in units of unit
-     * @param unit
-     *            a TimeUnit determining how to interpret the timeout parameter
-     * @return true if successful, or false if the specified waiting time elapses before space is available
+     * @param e       the element to add
+     * @param timeout how long to wait before giving up, in units of unit
+     * @param unit    a TimeUnit determining how to interpret the timeout parameter
+     * @return true if successful, or false if the specified waiting time elapses
+     *         before space is available
      * @throws InterruptedException
      */
     public boolean offer(T e, long timeout, TimeUnit unit) throws InterruptedException {
@@ -64,7 +64,8 @@ public class ChannelProducer<T> {
     }
 
     /**
-     * Inserts the specified element into this queue, waiting if necessary for space to become available.
+     * Inserts the specified element into this queue, waiting if necessary for space
+     * to become available.
      * 
      * @param e
      */

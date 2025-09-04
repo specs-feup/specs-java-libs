@@ -23,57 +23,55 @@ public class StringHandler extends StreamHandler {
     /**
      * Create a <tt>ConsoleHandler</tt> for <tt>System.err</tt>.
      * <p>
-     * The <tt>ConsoleHandler</tt> is configured based on <tt>LogManager</tt> properties (or their default values).
+     * The <tt>ConsoleHandler</tt> is configured based on <tt>LogManager</tt>
+     * properties (or their default values).
      * 
      */
     public StringHandler() {
-	// setOutputStream(printStream);
-
-	this.buffer = new StringBuilder();
+        this.buffer = new StringBuilder();
     }
 
     public String getString() {
-	return this.buffer.toString();
+        return this.buffer.toString();
     }
 
-    /*
-    public static StringHandler newInstance() {
-    /*
-    FileOutputStream outputStream = null;
-
-    try {
-        outputStream = new FileOutputStream(logFile);
-    } catch (FileNotFoundException e) {
-        return null;
-    }
-     */
-    /*
-    	return new StringHandler(new PrintStream(outputStream));
-    }
-     */
     /**
      * Publish a <tt>LogRecord</tt>.
      * <p>
-     * The logging request was made initially to a <tt>Logger</tt> object, which initialized the <tt>LogRecord</tt> and
-     * forwarded it here.
+     * The logging request was made initially to a <tt>Logger</tt> object, which
+     * initialized the <tt>LogRecord</tt> and forwarded it here.
      * <p>
      * 
-     * @param record
-     *            description of the log event. A null record is silently ignored and is not published
+     * @param record description of the log event. A null record is silently ignored
+     *               and is not published
      */
     @Override
     public synchronized void publish(LogRecord record) {
-	// super.publish(record);
-	this.buffer.append(record.getMessage());
-	flush();
+        // Handle null records gracefully
+        if (record == null) {
+            return;
+        }
+
+        // Check level filtering
+        if (record.getLevel().intValue() < this.getLevel().intValue()) {
+            return;
+        }
+
+        // Check filter if set
+        if (this.getFilter() != null && !this.getFilter().isLoggable(record)) {
+            return;
+        }
+
+        this.buffer.append(record.getMessage());
+        flush();
     }
 
     /**
-     * Override <tt>StreamHandler.close</tt> to do a flush but not to close the output stream. That is, we do <b>not</b>
-     * close <tt>System.err</tt>.
+     * Override <tt>StreamHandler.close</tt> to do a flush but not to close the
+     * output stream. That is, we do <b>not</b> close <tt>System.err</tt>.
      */
     @Override
     public synchronized void close() {
-	flush();
+        flush();
     }
 }

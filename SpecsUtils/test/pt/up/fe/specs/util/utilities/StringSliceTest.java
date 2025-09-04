@@ -13,71 +13,104 @@
 
 package pt.up.fe.specs.util.utilities;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
+@DisplayName("StringSlice Tests")
 public class StringSliceTest {
 
-    @Test
-    public void testConstructorEmpty() {
-	assertEquals("", new StringSlice("").toString());
+    @Nested
+    @DisplayName("Constructor Tests")
+    class ConstructorTests {
+
+        @Test
+        @DisplayName("Should create empty string slice")
+        public void testConstructorEmpty() {
+            assertThat(new StringSlice("").toString()).isEqualTo("");
+        }
+
+        @Test
+        @DisplayName("Should create simple string slice")
+        public void testConstructorSimple() {
+            assertThat(new StringSlice("abc").toString()).isEqualTo("abc");
+        }
     }
 
-    @Test
-    public void testConstructorSimple() {
-	assertEquals("abc", new StringSlice("abc").toString());
+    @Nested
+    @DisplayName("Basic Properties Tests")
+    class BasicPropertiesTests {
+
+        @Test
+        @DisplayName("Should return correct length")
+        public void testLength() {
+            assertThat(new StringSlice("hello").length()).isEqualTo(5);
+        }
+
+        @Test
+        @DisplayName("Should identify empty slices")
+        public void testIsEmpty() {
+            assertThat(new StringSlice("").isEmpty()).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return correct character at index")
+        public void testCharAt() {
+            assertThat(new StringSlice("abc").charAt(1)).isEqualTo('b');
+            assertThat(new StringSlice("abc").substring(1).charAt(0)).isEqualTo('b');
+        }
     }
 
-    @Test
-    public void testLength() {
-	assertEquals(5, new StringSlice("hello").length());
+    @Nested
+    @DisplayName("Substring Tests")
+    class SubstringTests {
+
+        @Test
+        @DisplayName("Should create substring from index to end")
+        public void testSubstringPrefix() {
+            assertThat(new StringSlice("abcdef").substring(2).toString()).isEqualTo("cdef");
+            assertThat(new StringSlice("abcdef").substring(2).length()).isEqualTo(4);
+        }
+
+        @Test
+        @DisplayName("Should create substring with start and end indices")
+        public void testSubstring() {
+            assertThat(new StringSlice("abcdef").substring(2, 3).toString()).isEqualTo("c");
+        }
+
+        @Test
+        @DisplayName("Should handle empty substrings")
+        public void testEmptySubstring() {
+            assertThat(new StringSlice("abcdef").substring(2, 2).toString()).isEqualTo("");
+            assertThat(new StringSlice("ab").substring(2).toString()).isEqualTo("");
+        }
     }
 
-    @Test
-    public void testIsEmpty() {
-	assertTrue(new StringSlice("").isEmpty());
-    }
+    @Nested
+    @DisplayName("String Operations Tests")
+    class StringOperationsTests {
 
-    @Test
-    public void testSubstringPrefix() {
-	assertEquals("cdef", new StringSlice("abcdef").substring(2).toString());
-	assertEquals(4, new StringSlice("abcdef").substring(2).length());
-    }
+        @Test
+        @DisplayName("Should check prefix matching correctly")
+        public void testStartsWith() {
+            assertThat(new StringSlice("abc").startsWith("abc")).isTrue();
+            assertThat(new StringSlice("abc").substring(1).startsWith("bc")).isTrue();
+            assertThat(new StringSlice("abcd").startsWith("b")).isFalse();
+        }
 
-    @Test
-    public void testSubstring() {
-	assertEquals("c", new StringSlice("abcdef").substring(2, 3).toString());
-    }
+        @Test
+        @DisplayName("Should trim whitespace correctly")
+        public void testTrim() {
+            assertThat(new StringSlice("  a bc   ").trim().toString()).isEqualTo("a bc");
+        }
 
-    @Test
-    public void testEmptySubstring() {
-	assertEquals("", new StringSlice("abcdef").substring(2, 2).toString());
-	assertEquals("", new StringSlice("ab").substring(2).toString());
-    }
-
-    @Test
-    public void testCharAt() {
-	assertEquals('b', new StringSlice("abc").charAt(1));
-	assertEquals('b', new StringSlice("abc").substring(1).charAt(0));
-    }
-
-    @Test
-    public void testStartsWith() {
-	assertTrue(new StringSlice("abc").startsWith("abc"));
-	assertTrue(new StringSlice("abc").substring(1).startsWith("bc"));
-	assertTrue(!new StringSlice("abcd").startsWith("b"));
-    }
-
-    @Test
-    public void testTrim() {
-	assertEquals("a bc", new StringSlice("  a bc   ").trim().toString());
-    }
-
-    @Test
-    public void testTrimLineBreak() {
-	String base = "\nabc\n";
-	assertEquals(base.trim(), new StringSlice(base).trim().toString());
+        @Test
+        @DisplayName("Should trim line breaks correctly")
+        public void testTrimLineBreak() {
+            String base = "\nabc\n";
+            assertThat(new StringSlice(base).trim().toString()).isEqualTo(base.trim());
+        }
     }
 }

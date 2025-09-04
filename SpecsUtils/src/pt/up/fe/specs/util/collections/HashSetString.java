@@ -18,9 +18,6 @@ import java.util.HashSet;
 
 public class HashSetString extends HashSet<String> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public HashSetString() {
@@ -37,8 +34,9 @@ public class HashSetString extends HashSet<String> {
      * @param anEnum
      * @return
      */
+    @SuppressWarnings("unlikely-arg-type")
     public boolean contains(Enum<?> anEnum) {
-        return contains(anEnum.name());
+        return anEnum != null ? contains(anEnum.name()) : super.contains(anEnum);
     }
 
 }
