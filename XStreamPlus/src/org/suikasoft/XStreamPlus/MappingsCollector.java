@@ -84,6 +84,15 @@ public class MappingsCollector {
             Map<String, Class<?>> childrenMappings = collectMappingsInternal(nestedXml);
             addMappings(mappings, childrenMappings);
         }
+
+        // Also process any nested XML objects that don't correspond to XmlSerializable fields
+        for (ObjectXml<?> nestedXml : object.getNestedXml().values()) {
+            if (!collectedClasses.contains(nestedXml.getClass())) {
+                Map<String, Class<?>> nestedMappings = collectMappingsInternal(nestedXml);
+                addMappings(mappings, nestedMappings);
+            }
+        }
+        
         Map<String, Class<?>> ownMappings = object.getMappings();
         if (ownMappings == null) {
             ownMappings = new HashMap<>();
