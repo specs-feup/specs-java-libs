@@ -28,7 +28,7 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
-    private List<K> children;
+    private final List<K> children;
     protected K parent;
 
     public ATreeNode(Collection<? extends K> children) {
@@ -232,7 +232,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      * Returns a new copy of the node with the same content and type, but not
      * children.
      *
-     * @return
      */
     protected abstract K copyPrivate();
 
@@ -277,7 +276,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      * This method is needed because of Java generics not having information about
      * K.
      *
-     * @return
      */
     @SuppressWarnings("unchecked")
     protected K getThis() {
@@ -329,8 +327,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     /**
      * Removes the children that are an instance of the given class.
      *
-     * @param token
-     * @param type
      */
     public void removeChildren(Class<? extends K> type) {
 
@@ -353,8 +349,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      * Normalizes the token according to a given bypass set. The nodes in the bypass
      * set can have only one child.
      *
-     * @param bypassSet
-     * @return
      */
     public K normalize(Collection<Class<? extends K>> bypassSet) {
 

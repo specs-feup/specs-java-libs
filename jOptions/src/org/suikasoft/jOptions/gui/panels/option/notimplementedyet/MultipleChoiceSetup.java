@@ -16,7 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option.notimplementedyet;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +46,7 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class MultipleChoiceSetup extends FieldPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -83,14 +84,7 @@ public class MultipleChoiceSetup extends FieldPanel {
         }
 
         // Add actions
-        choicesBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                choiceComboBoxActionPerformed(e);
-            }
-
-        });
+        choicesBox.addActionListener(this::choiceComboBoxActionPerformed);
 
         // Build choice panel
         choicePanel = buildChoicePanel();
@@ -179,9 +173,7 @@ public class MultipleChoiceSetup extends FieldPanel {
         BaseSetupPanel newPanel = new BaseSetupPanel(setupKeys);
         elementsOptionPanels.add(newPanel);
 
-        int elementIndex = elementsBoxShadow.size() - 1;
-
-        return elementIndex;
+        return elementsBoxShadow.size() - 1;
     }
 
     /**
@@ -257,8 +249,8 @@ public class MultipleChoiceSetup extends FieldPanel {
     public ListOfSetups getSetups() {
         List<SetupData> listOfSetups = new ArrayList<>();
 
-        for (int i = 0; i < elementsOptionPanels.size(); i++) {
-            listOfSetups.add(elementsOptionPanels.get(i).getMapWithValues());
+        for (BaseSetupPanel elementsOptionPanel : elementsOptionPanels) {
+            listOfSetups.add(elementsOptionPanel.getMapWithValues());
         }
 
         ListOfSetups currentSetups = new ListOfSetups(listOfSetups);

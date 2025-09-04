@@ -28,9 +28,7 @@ public class ProgressCounter {
     public String next() {
         int currentCount = nextInt();
 
-        String message = "(" + currentCount + "/" + this.max_count + ")";
-
-        return message;
+        return "(" + currentCount + "/" + this.max_count + ")";
     }
 
     public int nextInt() {

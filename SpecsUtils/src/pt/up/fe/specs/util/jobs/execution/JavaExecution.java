@@ -15,6 +15,8 @@ package pt.up.fe.specs.util.jobs.execution;
 
 import pt.up.fe.specs.util.SpecsLogs;
 
+import java.util.Objects;
+
 public class JavaExecution implements Execution {
 
     private static final String DEFAULT_MESSAGE = "Java Execution";
@@ -50,11 +52,7 @@ public class JavaExecution implements Execution {
 
     @Override
     public String getDescription() {
-        if (this.description == null) {
-            return JavaExecution.DEFAULT_MESSAGE;
-        }
-
-        return this.description;
+        return Objects.requireNonNullElse(this.description, JavaExecution.DEFAULT_MESSAGE);
     }
 
     public void setDescription(String description) {

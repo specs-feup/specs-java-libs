@@ -65,10 +65,6 @@ public class CsvReader implements AutoCloseable {
         return csvLines.hasNextLine();
     }
 
-    /**
-     * 
-     * @return
-     */
     public List<String> next() {
 
         // Header is parsed, return data

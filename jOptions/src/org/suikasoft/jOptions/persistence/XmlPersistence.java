@@ -51,7 +51,6 @@ public class XmlPersistence implements AppPersistence {
     private final StoreDefinition definition;
 
     /**
-     * @param options
      * @deprecated Can only use constructor that receives storeDefinition
      */
     @Deprecated
@@ -179,9 +178,7 @@ public class XmlPersistence implements AppPersistence {
         for (DataKey<?> dataKey : definition.getKeys()) {
             Optional<?> value = parsedObject.getTry(dataKey);
 
-            if (value.isPresent()) {
-                dataStore.setRaw(dataKey, value.get());
-            }
+            value.ifPresent(o -> dataStore.setRaw(dataKey, o));
         }
 
         // Set configuration file information
@@ -214,15 +211,15 @@ public class XmlPersistence implements AppPersistence {
                     CustomProperty baseProp = CustomProperty.parse(line);
 
                     // Check if there is a filename
-                    if (!baseProp.getValue().isEmpty()) {
-                        File baseFile = new File(baseProp.getValue());
+                    if (!baseProp.value().isEmpty()) {
+                        File baseFile = new File(baseProp.value());
                         // If absolute path, just load the file
                         if (baseFile.isAbsolute()) {
                             baseData = loadData(baseFile);
                         }
                         // Otherwise, load relative to the current file
                         else {
-                            baseData = loadData(new File(file.getParentFile(), baseProp.getValue()));
+                            baseData = loadData(new File(file.getParentFile(), baseProp.value()));
                         }
 
                     }
@@ -244,22 +241,7 @@ public class XmlPersistence implements AppPersistence {
     /**
      * Represents a custom property with a name and value.
      */
-    static class CustomProperty {
-        private final String name;
-        private final String value;
-
-        public CustomProperty(String name, String value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue() {
-            return value;
-        }
+    record CustomProperty(String name, String value) {
 
         /**
          * Parses a custom property from a line of text.
@@ -288,9 +270,9 @@ public class XmlPersistence implements AppPersistence {
 
         CustomProperty prop = CustomProperty.parse(line);
 
-        DataKey<?> key = definition.getKey(prop.getName());
+        DataKey<?> key = definition.getKey(prop.name());
 
-        baseData.setString(key, prop.getValue());
+        baseData.setString(key, prop.value());
     }
 
     /**
@@ -376,7 +358,7 @@ public class XmlPersistence implements AppPersistence {
     public static DataStore getDataStoreToSave(DataStore data) {
         Optional<StoreDefinition> def = data.getStoreDefinitionTry();
 
-        if (!def.isPresent()) {
+        if (def.isEmpty()) {
             return DataStore.newInstance(data.getName(), data);
         }
 

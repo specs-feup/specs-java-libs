@@ -87,8 +87,7 @@ public class SpecsJackson {
                         .build();
                 mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
             }
-            T object = mapper.readValue(br, clazz);
-            return object;
+            return mapper.readValue(br, clazz);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -124,8 +123,7 @@ public class SpecsJackson {
                         .build();
                 mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
             }
-            T object = mapper.readValue(string, clazz);
-            return object;
+            return mapper.readValue(string, clazz);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

@@ -35,9 +35,9 @@ class GenericWebResourceProviderTest {
 
             // Then
             assertThat(provider).isNotNull();
-            assertThat(provider.getRootUrl()).isEqualTo(TEST_ROOT_URL);
-            assertThat(provider.getResourceUrl()).isEqualTo(TEST_RESOURCE_URL);
-            assertThat(provider.getVersion()).isEqualTo(TEST_VERSION);
+            assertThat(provider.rootUrl()).isEqualTo(TEST_ROOT_URL);
+            assertThat(provider.resourceUrl()).isEqualTo(TEST_RESOURCE_URL);
+            assertThat(provider.version()).isEqualTo(TEST_VERSION);
         }
 
         @Test
@@ -49,9 +49,9 @@ class GenericWebResourceProviderTest {
 
             // Then
             assertThat(provider).isNotNull();
-            assertThat(provider.getRootUrl()).isNull();
-            assertThat(provider.getResourceUrl()).isEqualTo(TEST_RESOURCE_URL);
-            assertThat(provider.getVersion()).isEqualTo(TEST_VERSION);
+            assertThat(provider.rootUrl()).isNull();
+            assertThat(provider.resourceUrl()).isEqualTo(TEST_RESOURCE_URL);
+            assertThat(provider.version()).isEqualTo(TEST_VERSION);
         }
 
         @Test
@@ -63,9 +63,9 @@ class GenericWebResourceProviderTest {
 
             // Then
             assertThat(provider).isNotNull();
-            assertThat(provider.getRootUrl()).isEqualTo(TEST_ROOT_URL);
-            assertThat(provider.getResourceUrl()).isNull();
-            assertThat(provider.getVersion()).isEqualTo(TEST_VERSION);
+            assertThat(provider.rootUrl()).isEqualTo(TEST_ROOT_URL);
+            assertThat(provider.resourceUrl()).isNull();
+            assertThat(provider.version()).isEqualTo(TEST_VERSION);
         }
 
         @Test
@@ -77,9 +77,9 @@ class GenericWebResourceProviderTest {
 
             // Then
             assertThat(provider).isNotNull();
-            assertThat(provider.getRootUrl()).isEqualTo(TEST_ROOT_URL);
-            assertThat(provider.getResourceUrl()).isEqualTo(TEST_RESOURCE_URL);
-            assertThat(provider.getVersion()).isNull();
+            assertThat(provider.rootUrl()).isEqualTo(TEST_ROOT_URL);
+            assertThat(provider.resourceUrl()).isEqualTo(TEST_RESOURCE_URL);
+            assertThat(provider.version()).isNull();
         }
 
         @Test
@@ -90,9 +90,9 @@ class GenericWebResourceProviderTest {
 
             // Then
             assertThat(provider).isNotNull();
-            assertThat(provider.getRootUrl()).isNull();
-            assertThat(provider.getResourceUrl()).isNull();
-            assertThat(provider.getVersion()).isNull();
+            assertThat(provider.rootUrl()).isNull();
+            assertThat(provider.resourceUrl()).isNull();
+            assertThat(provider.version()).isNull();
         }
     }
 
@@ -107,9 +107,9 @@ class GenericWebResourceProviderTest {
             GenericWebResourceProvider provider = new GenericWebResourceProvider("", "", "");
 
             // Then
-            assertThat(provider.getRootUrl()).isEmpty();
-            assertThat(provider.getResourceUrl()).isEmpty();
-            assertThat(provider.getVersion()).isEmpty();
+            assertThat(provider.rootUrl()).isEmpty();
+            assertThat(provider.resourceUrl()).isEmpty();
+            assertThat(provider.version()).isEmpty();
         }
 
         @Test
@@ -124,9 +124,9 @@ class GenericWebResourceProviderTest {
             GenericWebResourceProvider provider = new GenericWebResourceProvider(rootUrl, resourceUrl, version);
 
             // Then
-            assertThat(provider.getRootUrl()).isEqualTo(rootUrl);
-            assertThat(provider.getResourceUrl()).isEqualTo(resourceUrl);
-            assertThat(provider.getVersion()).isEqualTo(version);
+            assertThat(provider.rootUrl()).isEqualTo(rootUrl);
+            assertThat(provider.resourceUrl()).isEqualTo(resourceUrl);
+            assertThat(provider.version()).isEqualTo(version);
         }
 
         @Test
@@ -141,9 +141,9 @@ class GenericWebResourceProviderTest {
             GenericWebResourceProvider provider = new GenericWebResourceProvider(rootUrl, resourceUrl, version);
 
             // Then
-            assertThat(provider.getRootUrl()).isEqualTo(rootUrl);
-            assertThat(provider.getResourceUrl()).isEqualTo(resourceUrl);
-            assertThat(provider.getVersion()).isEqualTo(version);
+            assertThat(provider.rootUrl()).isEqualTo(rootUrl);
+            assertThat(provider.resourceUrl()).isEqualTo(resourceUrl);
+            assertThat(provider.version()).isEqualTo(version);
         }
     }
 
@@ -169,21 +169,21 @@ class GenericWebResourceProviderTest {
         @DisplayName("getRootUrl should return constructor value")
         void getRootUrlShouldReturnConstructorValue() {
             // When/Then
-            assertThat(provider.getRootUrl()).isEqualTo(TEST_ROOT_URL);
+            assertThat(provider.rootUrl()).isEqualTo(TEST_ROOT_URL);
         }
 
         @Test
         @DisplayName("getResourceUrl should return constructor value")
         void getResourceUrlShouldReturnConstructorValue() {
             // When/Then
-            assertThat(provider.getResourceUrl()).isEqualTo(TEST_RESOURCE_URL);
+            assertThat(provider.resourceUrl()).isEqualTo(TEST_RESOURCE_URL);
         }
 
         @Test
         @DisplayName("getVersion should return constructor value")
         void getVersionShouldReturnConstructorValue() {
             // When/Then
-            assertThat(provider.getVersion()).isEqualTo(TEST_VERSION);
+            assertThat(provider.version()).isEqualTo(TEST_VERSION);
         }
     }
 
@@ -199,12 +199,12 @@ class GenericWebResourceProviderTest {
                     TEST_ROOT_URL, TEST_RESOURCE_URL, TEST_VERSION);
 
             // When - Get values multiple times
-            String rootUrl1 = provider.getRootUrl();
-            String rootUrl2 = provider.getRootUrl();
-            String resourceUrl1 = provider.getResourceUrl();
-            String resourceUrl2 = provider.getResourceUrl();
-            String version1 = provider.getVersion();
-            String version2 = provider.getVersion();
+            String rootUrl1 = provider.rootUrl();
+            String rootUrl2 = provider.rootUrl();
+            String resourceUrl1 = provider.resourceUrl();
+            String resourceUrl2 = provider.resourceUrl();
+            String version1 = provider.version();
+            String version2 = provider.version();
 
             // Then - Values should be consistent
             assertThat(rootUrl1).isEqualTo(rootUrl2);
@@ -232,8 +232,8 @@ class GenericWebResourceProviderTest {
             GenericWebResourceProvider provider = new GenericWebResourceProvider(longUrl, longUrl, "1.0");
 
             // Then
-            assertThat(provider.getRootUrl()).isEqualTo(longUrl);
-            assertThat(provider.getResourceUrl()).isEqualTo(longUrl);
+            assertThat(provider.rootUrl()).isEqualTo(longUrl);
+            assertThat(provider.resourceUrl()).isEqualTo(longUrl);
         }
 
         @Test
@@ -247,9 +247,9 @@ class GenericWebResourceProviderTest {
                     internationalUrl, internationalUrl, "テスト");
 
             // Then
-            assertThat(provider.getRootUrl()).isEqualTo(internationalUrl);
-            assertThat(provider.getResourceUrl()).isEqualTo(internationalUrl);
-            assertThat(provider.getVersion()).isEqualTo("テスト");
+            assertThat(provider.rootUrl()).isEqualTo(internationalUrl);
+            assertThat(provider.resourceUrl()).isEqualTo(internationalUrl);
+            assertThat(provider.version()).isEqualTo("テスト");
         }
     }
 
@@ -267,9 +267,9 @@ class GenericWebResourceProviderTest {
                     TEST_ROOT_URL, TEST_RESOURCE_URL, TEST_VERSION);
 
             // Then
-            assertThat(provider1.getRootUrl()).isEqualTo(provider2.getRootUrl());
-            assertThat(provider1.getResourceUrl()).isEqualTo(provider2.getResourceUrl());
-            assertThat(provider1.getVersion()).isEqualTo(provider2.getVersion());
+            assertThat(provider1.rootUrl()).isEqualTo(provider2.rootUrl());
+            assertThat(provider1.resourceUrl()).isEqualTo(provider2.resourceUrl());
+            assertThat(provider1.version()).isEqualTo(provider2.version());
         }
 
         @Test
@@ -282,9 +282,9 @@ class GenericWebResourceProviderTest {
                     "https://other.com", "https://other.com/file2.txt", "2.0");
 
             // Then
-            assertThat(provider1.getRootUrl()).isNotEqualTo(provider2.getRootUrl());
-            assertThat(provider1.getResourceUrl()).isNotEqualTo(provider2.getResourceUrl());
-            assertThat(provider1.getVersion()).isNotEqualTo(provider2.getVersion());
+            assertThat(provider1.rootUrl()).isNotEqualTo(provider2.rootUrl());
+            assertThat(provider1.resourceUrl()).isNotEqualTo(provider2.resourceUrl());
+            assertThat(provider1.version()).isNotEqualTo(provider2.version());
         }
     }
 }

@@ -127,13 +127,10 @@ public abstract class ADataStore implements DataStore {
             return false;
         }
         if (values == null) {
-            if (other.values != null) {
-                return false;
-            }
-        } else if (!values.equals(other.values)) {
-            return false;
+            return other.values == null;
+        } else {
+            return values.equals(other.values);
         }
-        return true;
     }
 
     @Override
@@ -184,7 +181,7 @@ public abstract class ADataStore implements DataStore {
         Optional<T> value = getTry(key);
 
         // If not present, there was already no value there
-        if (!value.isPresent()) {
+        if (value.isEmpty()) {
             return Optional.empty();
         }
 
@@ -197,7 +194,7 @@ public abstract class ADataStore implements DataStore {
 
     @Override
     public String getName() {
-        return getStoreDefinitionTry().map(def -> def.getName()).orElse(name);
+        return getStoreDefinitionTry().map(StoreDefinition::getName).orElse(name);
     }
 
     @Override
@@ -219,7 +216,7 @@ public abstract class ADataStore implements DataStore {
         // If value is null, use default value
         if (value == null) {
             Optional<T> defaultValue = key.getDefault();
-            if (!defaultValue.isPresent()) {
+            if (defaultValue.isEmpty()) {
                 throw new RuntimeException("No default value for key '" + key.getName() + "' in this object: " + this);
             }
 

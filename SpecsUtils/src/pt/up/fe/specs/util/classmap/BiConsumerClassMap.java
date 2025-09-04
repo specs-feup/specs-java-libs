@@ -46,11 +46,6 @@ public class BiConsumerClassMap<T, U> {
         this.classMapper = classMapper;
     }
 
-    /**
-     * 
-     * @param ignoreNotFound
-     * @return
-     */
     public static <T, U> BiConsumerClassMap<T, U> newInstance(boolean ignoreNotFound) {
         return new BiConsumerClassMap<>(ignoreNotFound, new ClassMapper());
     }
@@ -66,9 +61,7 @@ public class BiConsumerClassMap<T, U> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <VS extends T, KS extends VS> void put(Class<KS> aClass,
             BiConsumer<VS, U> value) {
@@ -100,9 +93,7 @@ public class BiConsumerClassMap<T, U> {
     /**
      * Calls the BiConsumer.accept associated with class of the value t, or throws
      * an Exception if no BiConsumer could be found in the map.
-     * 
-     * @param t
-     * @param u
+     *
      */
     public void accept(T t, U u) {
         BiConsumer<T, U> result = get(t);

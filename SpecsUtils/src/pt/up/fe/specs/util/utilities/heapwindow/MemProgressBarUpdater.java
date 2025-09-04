@@ -31,7 +31,7 @@ class MemProgressBarUpdater extends SwingWorker<Object, Object> {
     }
 
     @Override
-    protected Object doInBackground() throws Exception {
+    protected Object doInBackground() {
         long heapSize = Runtime.getRuntime().totalMemory();
         long heapFreeSize = Runtime.getRuntime().freeMemory();
         long usedMemory = heapSize - heapFreeSize;

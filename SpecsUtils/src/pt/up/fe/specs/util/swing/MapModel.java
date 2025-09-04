@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.swing;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import javax.swing.table.TableModel;
  */
 public class MapModel<K extends Comparable<? super K>, V> extends AbstractTableModel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private final Map<K, V> map;
     private final boolean rowWise;

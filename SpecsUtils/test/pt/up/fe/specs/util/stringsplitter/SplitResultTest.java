@@ -33,8 +33,8 @@ class SplitResultTest {
             SplitResult<String> result = new SplitResult<>(slice, value);
 
             assertThat(result).isNotNull();
-            assertThat(result.getModifiedSlice()).isSameAs(slice);
-            assertThat(result.getValue()).isSameAs(value);
+            assertThat(result.modifiedSlice()).isSameAs(slice);
+            assertThat(result.value()).isSameAs(value);
         }
 
         @Test
@@ -45,8 +45,8 @@ class SplitResultTest {
             SplitResult<String> result = new SplitResult<>(null, value);
 
             assertThat(result).isNotNull();
-            assertThat(result.getModifiedSlice()).isNull();
-            assertThat(result.getValue()).isEqualTo(value);
+            assertThat(result.modifiedSlice()).isNull();
+            assertThat(result.value()).isEqualTo(value);
         }
 
         @Test
@@ -57,8 +57,8 @@ class SplitResultTest {
             SplitResult<String> result = new SplitResult<>(slice, null);
 
             assertThat(result).isNotNull();
-            assertThat(result.getModifiedSlice()).isSameAs(slice);
-            assertThat(result.getValue()).isNull();
+            assertThat(result.modifiedSlice()).isSameAs(slice);
+            assertThat(result.value()).isNull();
         }
 
         @Test
@@ -67,8 +67,8 @@ class SplitResultTest {
             SplitResult<String> result = new SplitResult<>(null, null);
 
             assertThat(result).isNotNull();
-            assertThat(result.getModifiedSlice()).isNull();
-            assertThat(result.getValue()).isNull();
+            assertThat(result.modifiedSlice()).isNull();
+            assertThat(result.value()).isNull();
         }
     }
 
@@ -85,8 +85,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(modifiedSlice, value);
 
-            assertThat(result.getModifiedSlice()).isSameAs(modifiedSlice);
-            assertThat(result.getModifiedSlice()).isNotSameAs(originalSlice);
+            assertThat(result.modifiedSlice()).isSameAs(modifiedSlice);
+            assertThat(result.modifiedSlice()).isNotSameAs(originalSlice);
         }
 
         @Test
@@ -98,8 +98,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(slice, value1);
 
-            assertThat(result.getValue()).isSameAs(value1);
-            assertThat(result.getValue()).isNotSameAs(value2);
+            assertThat(result.value()).isSameAs(value1);
+            assertThat(result.value()).isNotSameAs(value2);
         }
 
         @Test
@@ -111,12 +111,12 @@ class SplitResultTest {
             SplitResult<String> result = new SplitResult<>(slice, value);
 
             // The returned references should be the same (immutable container)
-            assertThat(result.getModifiedSlice()).isSameAs(slice);
-            assertThat(result.getValue()).isSameAs(value);
+            assertThat(result.modifiedSlice()).isSameAs(slice);
+            assertThat(result.value()).isSameAs(value);
 
             // Multiple calls should return the same references
-            assertThat(result.getModifiedSlice()).isSameAs(result.getModifiedSlice());
-            assertThat(result.getValue()).isSameAs(result.getValue());
+            assertThat(result.modifiedSlice()).isSameAs(result.modifiedSlice());
+            assertThat(result.value()).isSameAs(result.value());
         }
     }
 
@@ -132,8 +132,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getValue()).isInstanceOf(String.class);
-            assertThat(result.getValue()).isEqualTo("string value");
+            assertThat(result.value()).isInstanceOf(String.class);
+            assertThat(result.value()).isEqualTo("string value");
         }
 
         @Test
@@ -144,8 +144,8 @@ class SplitResultTest {
 
             SplitResult<Integer> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getValue()).isInstanceOf(Integer.class);
-            assertThat(result.getValue()).isEqualTo(42);
+            assertThat(result.value()).isInstanceOf(Integer.class);
+            assertThat(result.value()).isEqualTo(42);
         }
 
         @Test
@@ -156,8 +156,8 @@ class SplitResultTest {
 
             SplitResult<Boolean> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getValue()).isInstanceOf(Boolean.class);
-            assertThat(result.getValue()).isTrue();
+            assertThat(result.value()).isInstanceOf(Boolean.class);
+            assertThat(result.value()).isTrue();
         }
 
         @Test
@@ -168,8 +168,8 @@ class SplitResultTest {
 
             SplitResult<Double> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getValue()).isInstanceOf(Double.class);
-            assertThat(result.getValue()).isEqualTo(3.14159);
+            assertThat(result.value()).isInstanceOf(Double.class);
+            assertThat(result.value()).isEqualTo(3.14159);
         }
 
         @Test
@@ -180,8 +180,8 @@ class SplitResultTest {
 
             SplitResult<Float> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getValue()).isInstanceOf(Float.class);
-            assertThat(result.getValue()).isEqualTo(2.718f);
+            assertThat(result.value()).isInstanceOf(Float.class);
+            assertThat(result.value()).isEqualTo(2.718f);
         }
 
         @Test
@@ -192,8 +192,8 @@ class SplitResultTest {
 
             SplitResult<List<String>> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getValue()).isInstanceOf(List.class);
-            assertThat(result.getValue()).containsExactly("item1", "item2", "item3");
+            assertThat(result.value()).isInstanceOf(List.class);
+            assertThat(result.value()).containsExactly("item1", "item2", "item3");
         }
 
         @Test
@@ -204,9 +204,9 @@ class SplitResultTest {
 
             SplitResult<TestObject> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getValue()).isInstanceOf(TestObject.class);
-            assertThat(result.getValue().name).isEqualTo("test");
-            assertThat(result.getValue().number).isEqualTo(123);
+            assertThat(result.value()).isInstanceOf(TestObject.class);
+            assertThat(result.value().name).isEqualTo("test");
+            assertThat(result.value().number).isEqualTo(123);
         }
 
         private static class TestObject {
@@ -231,12 +231,12 @@ class SplitResultTest {
 
             // Simulate parsing an integer
             SplitResult<String> stringResult = originalSlice.split();
-            Integer parsedValue = Integer.parseInt(stringResult.getValue());
+            Integer parsedValue = Integer.parseInt(stringResult.value());
 
-            SplitResult<Integer> intResult = new SplitResult<>(stringResult.getModifiedSlice(), parsedValue);
+            SplitResult<Integer> intResult = new SplitResult<>(stringResult.modifiedSlice(), parsedValue);
 
-            assertThat(intResult.getValue()).isEqualTo(123);
-            assertThat(intResult.getModifiedSlice().toString()).isEqualTo("remaining text");
+            assertThat(intResult.value()).isEqualTo(123);
+            assertThat(intResult.modifiedSlice().toString()).isEqualTo("remaining text");
         }
 
         @Test
@@ -246,12 +246,12 @@ class SplitResultTest {
 
             // Simulate parsing a double
             SplitResult<String> stringResult = originalSlice.split();
-            Double parsedValue = Double.parseDouble(stringResult.getValue());
+            Double parsedValue = Double.parseDouble(stringResult.value());
 
-            SplitResult<Double> doubleResult = new SplitResult<>(stringResult.getModifiedSlice(), parsedValue);
+            SplitResult<Double> doubleResult = new SplitResult<>(stringResult.modifiedSlice(), parsedValue);
 
-            assertThat(doubleResult.getValue()).isEqualTo(45.67);
-            assertThat(doubleResult.getModifiedSlice().toString()).isEqualTo("more text");
+            assertThat(doubleResult.value()).isEqualTo(45.67);
+            assertThat(doubleResult.modifiedSlice().toString()).isEqualTo("more text");
         }
 
         @Test
@@ -264,11 +264,11 @@ class SplitResultTest {
                 StringSliceWithSplit afterPrefix = slice.substring(13); // Remove "valid_prefix:"
                 SplitResult<String> dataResult = afterPrefix.split();
 
-                SplitResult<String> conditionalResult = new SplitResult<>(dataResult.getModifiedSlice(),
-                        "VALIDATED:" + dataResult.getValue());
+                SplitResult<String> conditionalResult = new SplitResult<>(dataResult.modifiedSlice(),
+                        "VALIDATED:" + dataResult.value());
 
-                assertThat(conditionalResult.getValue()).isEqualTo("VALIDATED:data");
-                assertThat(conditionalResult.getModifiedSlice().toString()).isEqualTo("remaining");
+                assertThat(conditionalResult.value()).isEqualTo("VALIDATED:data");
+                assertThat(conditionalResult.modifiedSlice().toString()).isEqualTo("remaining");
             } else {
                 fail("Should have matched valid prefix");
             }
@@ -281,19 +281,19 @@ class SplitResultTest {
 
             // Chain multiple parsing operations
             SplitResult<String> firstResult = slice.split();
-            assertThat(firstResult.getValue()).isEqualTo("first");
+            assertThat(firstResult.value()).isEqualTo("first");
 
-            SplitResult<String> secondResult = firstResult.getModifiedSlice().split();
-            assertThat(secondResult.getValue()).isEqualTo("second");
+            SplitResult<String> secondResult = firstResult.modifiedSlice().split();
+            assertThat(secondResult.value()).isEqualTo("second");
 
-            SplitResult<String> thirdStringResult = secondResult.getModifiedSlice().split();
-            Integer thirdValue = Integer.parseInt(thirdStringResult.getValue());
-            SplitResult<Integer> thirdResult = new SplitResult<>(thirdStringResult.getModifiedSlice(), thirdValue);
-            assertThat(thirdResult.getValue()).isEqualTo(123);
+            SplitResult<String> thirdStringResult = secondResult.modifiedSlice().split();
+            Integer thirdValue = Integer.parseInt(thirdStringResult.value());
+            SplitResult<Integer> thirdResult = new SplitResult<>(thirdStringResult.modifiedSlice(), thirdValue);
+            assertThat(thirdResult.value()).isEqualTo(123);
 
-            SplitResult<String> finalResult = thirdResult.getModifiedSlice().split();
-            assertThat(finalResult.getValue()).isEqualTo("final");
-            assertThat(finalResult.getModifiedSlice().toString()).isEmpty();
+            SplitResult<String> finalResult = thirdResult.modifiedSlice().split();
+            assertThat(finalResult.value()).isEqualTo("final");
+            assertThat(finalResult.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -306,15 +306,15 @@ class SplitResultTest {
             SplitResult<Integer> errorResult;
 
             try {
-                Integer parsed = Integer.parseInt(stringResult.getValue());
-                errorResult = new SplitResult<>(stringResult.getModifiedSlice(), parsed);
+                Integer parsed = Integer.parseInt(stringResult.value());
+                errorResult = new SplitResult<>(stringResult.modifiedSlice(), parsed);
             } catch (NumberFormatException e) {
                 // Return null to indicate parsing failure
                 errorResult = new SplitResult<>(slice, null);
             }
 
-            assertThat(errorResult.getValue()).isNull();
-            assertThat(errorResult.getModifiedSlice()).isSameAs(slice);
+            assertThat(errorResult.value()).isNull();
+            assertThat(errorResult.modifiedSlice()).isSameAs(slice);
         }
     }
 
@@ -330,8 +330,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(emptySlice, value);
 
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
-            assertThat(result.getValue()).isEqualTo("parsed from empty");
+            assertThat(result.modifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo("parsed from empty");
         }
 
         @Test
@@ -343,13 +343,13 @@ class SplitResultTest {
             StringSliceWithSplit trimmedSlice = originalSlice.setTrim(true);
             SplitResult<String> trimmedResult = new SplitResult<>(trimmedSlice, "value");
 
-            assertThat(trimmedResult.getModifiedSlice()).isSameAs(trimmedSlice);
+            assertThat(trimmedResult.modifiedSlice()).isSameAs(trimmedSlice);
 
             // Test with custom separator
             StringSliceWithSplit customSepSlice = originalSlice.setSeparator(ch -> ch == 's');
             SplitResult<String> customSepResult = new SplitResult<>(customSepSlice, "value");
 
-            assertThat(customSepResult.getModifiedSlice()).isSameAs(customSepSlice);
+            assertThat(customSepResult.modifiedSlice()).isSameAs(customSepSlice);
         }
 
         @Test
@@ -360,8 +360,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(substringSlice, "extracted");
 
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("world test");
-            assertThat(result.getValue()).isEqualTo("extracted");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("world test");
+            assertThat(result.value()).isEqualTo("extracted");
         }
     }
 
@@ -378,8 +378,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getModifiedSlice().toString()).isEqualTo(input);
-            assertThat(result.getValue()).isEqualTo(value);
+            assertThat(result.modifiedSlice().toString()).isEqualTo(input);
+            assertThat(result.value()).isEqualTo(value);
         }
 
         @Test
@@ -390,8 +390,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("こんにちは 🌍 αβγ");
-            assertThat(result.getValue()).isEqualTo("Unicode test");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("こんにちは 🌍 αβγ");
+            assertThat(result.value()).isEqualTo("Unicode test");
         }
 
         @Test
@@ -402,8 +402,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(slice, value);
 
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("!@#$%^&*()_+-=[]{}|;':\",./<>?`~");
-            assertThat(result.getValue()).isEqualTo("Special chars");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("!@#$%^&*()_+-=[]{}|;':\",./<>?`~");
+            assertThat(result.value()).isEqualTo("Special chars");
         }
 
         @Test
@@ -414,8 +414,8 @@ class SplitResultTest {
 
             SplitResult<String> result = new SplitResult<>(slice, largeValue);
 
-            assertThat(result.getValue()).hasSize(10000);
-            assertThat(result.getValue()).isEqualTo(largeValue);
+            assertThat(result.value()).hasSize(10000);
+            assertThat(result.value()).isEqualTo(largeValue);
         }
 
         @Test
@@ -425,19 +425,19 @@ class SplitResultTest {
 
             // Test with maximum integer
             SplitResult<Integer> maxIntResult = new SplitResult<>(slice, Integer.MAX_VALUE);
-            assertThat(maxIntResult.getValue()).isEqualTo(Integer.MAX_VALUE);
+            assertThat(maxIntResult.value()).isEqualTo(Integer.MAX_VALUE);
 
             // Test with minimum integer
             SplitResult<Integer> minIntResult = new SplitResult<>(slice, Integer.MIN_VALUE);
-            assertThat(minIntResult.getValue()).isEqualTo(Integer.MIN_VALUE);
+            assertThat(minIntResult.value()).isEqualTo(Integer.MIN_VALUE);
 
             // Test with infinity
             SplitResult<Double> infResult = new SplitResult<>(slice, Double.POSITIVE_INFINITY);
-            assertThat(infResult.getValue()).isEqualTo(Double.POSITIVE_INFINITY);
+            assertThat(infResult.value()).isEqualTo(Double.POSITIVE_INFINITY);
 
             // Test with NaN
             SplitResult<Double> nanResult = new SplitResult<>(slice, Double.NaN);
-            assertThat(nanResult.getValue()).isNaN();
+            assertThat(nanResult.value()).isNaN();
         }
 
         @Test
@@ -453,8 +453,8 @@ class SplitResultTest {
             assertThat(result1).isNotSameAs(result2);
 
             // But same contained references
-            assertThat(result1.getModifiedSlice()).isSameAs(result2.getModifiedSlice());
-            assertThat(result1.getValue()).isSameAs(result2.getValue());
+            assertThat(result1.modifiedSlice()).isSameAs(result2.modifiedSlice());
+            assertThat(result1.value()).isSameAs(result2.value());
         }
     }
 
@@ -468,11 +468,11 @@ class SplitResultTest {
             StringSliceWithSplit slice = new StringSliceWithSplit("slice");
 
             SplitResult<? extends Number> numberResult = new SplitResult<>(slice, 42);
-            assertThat(numberResult.getValue()).isInstanceOf(Number.class);
-            assertThat(numberResult.getValue()).isInstanceOf(Integer.class);
+            assertThat(numberResult.value()).isInstanceOf(Number.class);
+            assertThat(numberResult.value()).isInstanceOf(Integer.class);
 
             SplitResult<? super String> stringResult = new SplitResult<>(slice, "test");
-            assertThat(stringResult.getValue()).isEqualTo("test");
+            assertThat(stringResult.value()).isEqualTo("test");
         }
 
         @Test
@@ -483,7 +483,7 @@ class SplitResultTest {
             @SuppressWarnings({ "rawtypes", "unchecked" })
             SplitResult rawResult = new SplitResult(slice, "raw value");
 
-            Object value = rawResult.getValue();
+            Object value = rawResult.value();
 
             assertThat(value).isEqualTo("raw value");
         }
@@ -494,13 +494,13 @@ class SplitResultTest {
             StringSliceWithSplit slice = new StringSliceWithSplit("slice");
 
             SplitResult<String> nullStringResult = new SplitResult<>(slice, null);
-            assertThat(nullStringResult.getValue()).isNull();
+            assertThat(nullStringResult.value()).isNull();
 
             SplitResult<Integer> nullIntResult = new SplitResult<>(slice, null);
-            assertThat(nullIntResult.getValue()).isNull();
+            assertThat(nullIntResult.value()).isNull();
 
             SplitResult<Object> nullObjectResult = new SplitResult<>(slice, null);
-            assertThat(nullObjectResult.getValue()).isNull();
+            assertThat(nullObjectResult.value()).isNull();
         }
     }
 }

@@ -56,7 +56,7 @@ public class CachedItems<K, V> {
             // Use AtomicBoolean to track if this was a cache miss
             AtomicBoolean wasCacheMiss = new AtomicBoolean(false);
 
-            V result = ((ConcurrentHashMap<K, V>) cache).computeIfAbsent(key, k -> {
+            V result = cache.computeIfAbsent(key, k -> {
                 wasCacheMiss.set(true);
                 cacheMisses.incrementAndGet();
                 return mapper.apply(k);
@@ -107,12 +107,11 @@ public class CachedItems<K, V> {
     }
 
     public String getAnalytics() {
-        StringBuilder builder = new StringBuilder();
 
-        builder.append("Cache size: ").append(getCacheSize()).append("\n");
-        builder.append("Total calls: ").append(getCacheTotalCalls()).append("\n");
-        builder.append("Hit ratio: ").append(SpecsStrings.toPercentage(getHitRatio())).append("\n");
+        String builder = "Cache size: " + getCacheSize() + "\n" +
+                "Total calls: " + getCacheTotalCalls() + "\n" +
+                "Hit ratio: " + SpecsStrings.toPercentage(getHitRatio()) + "\n";
 
-        return builder.toString();
+        return builder;
     }
 }

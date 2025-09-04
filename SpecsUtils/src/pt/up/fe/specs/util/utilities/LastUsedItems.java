@@ -56,7 +56,6 @@ public class LastUsedItems<T> {
     /**
      * Indicates that the given item was used.
      * 
-     * @param item
      * @return true if there were changes to the list of items
      */
     public boolean used(T item) {

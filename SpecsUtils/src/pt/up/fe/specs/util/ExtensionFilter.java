@@ -31,8 +31,7 @@ class ExtensionFilter implements FilenameFilter {
 
     /**
      * Note: By default follows symlinks.
-     * 
-     * @param extension
+     *
      */
     public ExtensionFilter(String extension) {
         this(extension, true);

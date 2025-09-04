@@ -103,17 +103,16 @@ public class Codecs {
         }
 
         if (basesToPaths.size() == 1 && basesToPaths.containsKey("")) {
-            return basesToPaths.get("").stream().collect(Collectors.joining());
+            return String.join("", basesToPaths.get(""));
         }
 
         String pathsNoPrefix = basesToPaths.get("") == null ? ""
-                : basesToPaths.get("").stream()
-                        .collect(Collectors.joining(FILES_WITH_BASE_FOLDER_SEPARATOR));
+                : String.join(FILES_WITH_BASE_FOLDER_SEPARATOR, basesToPaths.get(""));
 
         String pathsWithPrefix = basesToPaths.entrySet().stream()
                 .filter(entry -> !entry.getKey().isEmpty())
                 .map(entry -> "$" + entry.getKey() + "$"
-                        + entry.getValue().stream().collect(Collectors.joining(FILES_WITH_BASE_FOLDER_SEPARATOR)))
+                        + String.join(FILES_WITH_BASE_FOLDER_SEPARATOR, entry.getValue()))
                 .collect(Collectors.joining());
 
         return pathsNoPrefix + pathsWithPrefix;

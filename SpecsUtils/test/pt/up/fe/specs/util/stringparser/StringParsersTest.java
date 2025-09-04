@@ -53,8 +53,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("hello world");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEqualTo("hello");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" world");
+            assertThat(result.result()).isEqualTo("hello");
+            assertThat(result.modifiedString().toString()).isEqualTo(" world");
         }
 
         @Test
@@ -63,8 +63,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("singleword");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEqualTo("singleword");
-            assertThat(result.getModifiedString().isEmpty()).isTrue();
+            assertThat(result.result()).isEqualTo("singleword");
+            assertThat(result.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -73,8 +73,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEmpty();
-            assertThat(result.getModifiedString().isEmpty()).isTrue();
+            assertThat(result.result()).isEmpty();
+            assertThat(result.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -83,8 +83,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("  leading");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEmpty();
-            assertThat(result.getModifiedString().toString()).isEqualTo("  leading");
+            assertThat(result.result()).isEmpty();
+            assertThat(result.modifiedString().toString()).isEqualTo("  leading");
         }
 
         @Test
@@ -98,9 +98,9 @@ public class StringParsersTest {
 
             // These take the entire string because parseWord only stops at spaces, not
             // other whitespace
-            assertThat(tabResult.getResult()).isEqualTo("word\tafter");
-            assertThat(newlineResult.getResult()).isEqualTo("word\nafter");
-            assertThat(carriageResult.getResult()).isEqualTo("word\rafter");
+            assertThat(tabResult.result()).isEqualTo("word\tafter");
+            assertThat(newlineResult.result()).isEqualTo("word\nafter");
+            assertThat(carriageResult.result()).isEqualTo("word\rafter");
         }
     }
 
@@ -114,8 +114,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("123 remaining");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(123);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result()).isEqualTo(123);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -124,8 +124,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("-456 after");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(-456);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" after");
+            assertThat(result.result()).isEqualTo(-456);
+            assertThat(result.modifiedString().toString()).isEqualTo(" after");
         }
 
         @Test
@@ -134,8 +134,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("789");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(789);
-            assertThat(result.getModifiedString().isEmpty()).isTrue();
+            assertThat(result.result()).isEqualTo(789);
+            assertThat(result.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -144,8 +144,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("0 next");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(0);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" next");
+            assertThat(result.result()).isEqualTo(0);
+            assertThat(result.modifiedString().toString()).isEqualTo(" next");
         }
 
         @Test
@@ -154,8 +154,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("2147483647 max");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(Integer.MAX_VALUE);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" max");
+            assertThat(result.result()).isEqualTo(Integer.MAX_VALUE);
+            assertThat(result.modifiedString().toString()).isEqualTo(" max");
         }
 
         @Test
@@ -170,8 +170,8 @@ public class StringParsersTest {
         void testParseIntegerEmpty() {
             // StringParsersLegacy.parseInt() returns 0 for empty strings, not exception
             ParserResult<Integer> result = StringParsersLegacy.parseInt(new StringSlice(""));
-            assertThat(result.getResult()).isEqualTo(0); // Returns default value 0
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo(0); // Returns default value 0
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
     }
 
@@ -187,9 +187,9 @@ public class StringParsersTest {
 
             ParserResult<Optional<TestEnum>> result = StringParsers.checkEnum(input, helper);
 
-            assertThat(result.getResult()).isPresent();
-            assertThat(result.getResult().get()).isEqualTo(TestEnum.VALUE1);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result()).isPresent();
+            assertThat(result.result().get()).isEqualTo(TestEnum.VALUE1);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -200,8 +200,8 @@ public class StringParsersTest {
 
             ParserResult<Optional<TestEnum>> result = StringParsers.checkEnum(input, helper);
 
-            assertThat(result.getResult()).isPresent();
-            assertThat(result.getResult().get()).isEqualTo(TestEnum.SPECIAL_CASE);
+            assertThat(result.result()).isPresent();
+            assertThat(result.result().get()).isEqualTo(TestEnum.SPECIAL_CASE);
         }
 
         @Test
@@ -212,8 +212,8 @@ public class StringParsersTest {
 
             ParserResult<Optional<TestEnum>> result = StringParsers.checkEnum(input, helper);
 
-            assertThat(result.getResult()).isEmpty();
-            assertThat(result.getModifiedString().toString()).isEqualTo("invalid remaining");
+            assertThat(result.result()).isEmpty();
+            assertThat(result.modifiedString().toString()).isEqualTo("invalid remaining");
         }
 
         @Test
@@ -224,8 +224,8 @@ public class StringParsersTest {
 
             ParserResult<Optional<TestEnum>> result = StringParsers.checkEnum(input, helper);
 
-            assertThat(result.getResult()).isEmpty();
-            assertThat(result.getModifiedString().isEmpty()).isTrue();
+            assertThat(result.result()).isEmpty();
+            assertThat(result.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -238,8 +238,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("value1 text");
             ParserResult<Optional<TestEnum>> result = StringParsers.checkEnum(input, helper);
 
-            assertThat(result.getResult()).isPresent();
-            assertThat(result.getResult().get()).isEqualTo(TestEnum.VALUE1);
+            assertThat(result.result()).isPresent();
+            assertThat(result.result().get()).isEqualTo(TestEnum.VALUE1);
         }
     }
 
@@ -253,8 +253,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("(hello world) remaining");
             ParserResult<String> result = StringParsers.parseNested(input, '(', ')');
 
-            assertThat(result.getResult()).isEqualTo("hello world");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result()).isEqualTo("hello world");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -263,8 +263,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("[array content] after");
             ParserResult<String> result = StringParsers.parseNested(input, '[', ']');
 
-            assertThat(result.getResult()).isEqualTo("array content");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" after");
+            assertThat(result.result()).isEqualTo("array content");
+            assertThat(result.modifiedString().toString()).isEqualTo(" after");
         }
 
         @Test
@@ -273,8 +273,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("(outer (inner) more) end");
             ParserResult<String> result = StringParsers.parseNested(input, '(', ')');
 
-            assertThat(result.getResult()).isEqualTo("outer (inner) more");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" end");
+            assertThat(result.result()).isEqualTo("outer (inner) more");
+            assertThat(result.modifiedString().toString()).isEqualTo(" end");
         }
 
         @Test
@@ -283,8 +283,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("() remaining");
             ParserResult<String> result = StringParsers.parseNested(input, '(', ')');
 
-            assertThat(result.getResult()).isEmpty();
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result()).isEmpty();
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -305,8 +305,8 @@ public class StringParsersTest {
 
             // parseNested returns empty string when no opening bracket found
             ParserResult<String> result = StringParsers.parseNested(input, '(', ')');
-            assertThat(result.getResult()).isEqualTo("");
-            assertThat(result.getModifiedString().toString()).isEqualTo("no opening)");
+            assertThat(result.result()).isEqualTo("");
+            assertThat(result.modifiedString().toString()).isEqualTo("no opening)");
         }
 
         @Test
@@ -315,8 +315,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("{key: value} rest");
             ParserResult<String> result = StringParsers.parseNested(input, '{', '}');
 
-            assertThat(result.getResult()).isEqualTo("key: value");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" rest");
+            assertThat(result.result()).isEqualTo("key: value");
+            assertThat(result.modifiedString().toString()).isEqualTo(" rest");
         }
     }
 
@@ -330,8 +330,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("\"hello world\" remaining");
             ParserResult<String> result = StringParsers.parseNested(input, '"', '"');
 
-            assertThat(result.getResult()).isEqualTo("hello world");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result()).isEqualTo("hello world");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -340,8 +340,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("'single quoted' after");
             ParserResult<String> result = StringParsers.parseNested(input, '\'', '\'');
 
-            assertThat(result.getResult()).isEqualTo("single quoted");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" after");
+            assertThat(result.result()).isEqualTo("single quoted");
+            assertThat(result.modifiedString().toString()).isEqualTo(" after");
         }
 
         @Test
@@ -350,8 +350,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("\"\" remaining");
             ParserResult<String> result = StringParsers.parseNested(input, '"', '"');
 
-            assertThat(result.getResult()).isEmpty();
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result()).isEmpty();
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -360,8 +360,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("\"  spaced content  \" after");
             ParserResult<String> result = StringParsers.parseNested(input, '"', '"');
 
-            assertThat(result.getResult()).isEqualTo("  spaced content  ");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" after");
+            assertThat(result.result()).isEqualTo("  spaced content  ");
+            assertThat(result.modifiedString().toString()).isEqualTo(" after");
         }
     }
 
@@ -376,8 +376,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("0xFF remaining");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEqualTo("0xFF");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result()).isEqualTo("0xFF");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -386,8 +386,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("_var123 next");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEqualTo("_var123");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" next");
+            assertThat(result.result()).isEqualTo("_var123");
+            assertThat(result.modifiedString().toString()).isEqualTo(" next");
         }
 
         @Test
@@ -396,8 +396,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("package.name after");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEqualTo("package.name");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" after");
+            assertThat(result.result()).isEqualTo("package.name");
+            assertThat(result.modifiedString().toString()).isEqualTo(" after");
         }
 
         @Test
@@ -406,8 +406,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("http://example.com rest");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEqualTo("http://example.com");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" rest");
+            assertThat(result.result()).isEqualTo("http://example.com");
+            assertThat(result.modifiedString().toString()).isEqualTo(" rest");
         }
     }
 
@@ -422,8 +422,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice(longWord + " end");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).hasSize(10000);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" end");
+            assertThat(result.result()).hasSize(10000);
+            assertThat(result.modifiedString().toString()).isEqualTo(" end");
         }
 
         @Test
@@ -432,8 +432,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("café naïve");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEqualTo("café");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" naïve");
+            assertThat(result.result()).isEqualTo("café");
+            assertThat(result.modifiedString().toString()).isEqualTo(" naïve");
         }
 
         @Test
@@ -442,8 +442,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("$variable @annotation");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEqualTo("$variable");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" @annotation");
+            assertThat(result.result()).isEqualTo("$variable");
+            assertThat(result.modifiedString().toString()).isEqualTo(" @annotation");
         }
 
         @Test
@@ -453,8 +453,8 @@ public class StringParsersTest {
             ParserResult<String> result = StringParsers.parseWord(input);
 
             // parseWord only stops at space, so takes everything until space
-            assertThat(result.getResult()).isEqualTo("word\t\n\r");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" mixed");
+            assertThat(result.result()).isEqualTo("word\t\n\r");
+            assertThat(result.modifiedString().toString()).isEqualTo(" mixed");
         }
 
         @Test
@@ -463,8 +463,8 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("   \t\n  ");
             ParserResult<String> result = StringParsers.parseWord(input);
 
-            assertThat(result.getResult()).isEmpty();
-            assertThat(result.getModifiedString().toString()).isEqualTo("   \t\n  ");
+            assertThat(result.result()).isEmpty();
+            assertThat(result.modifiedString().toString()).isEqualTo("   \t\n  ");
         }
     }
 
@@ -478,16 +478,16 @@ public class StringParsersTest {
             StringSlice input = new StringSlice("first second third");
 
             ParserResult<String> first = StringParsers.parseWord(input);
-            input = first.getModifiedString().trim();
+            input = first.modifiedString().trim();
 
             ParserResult<String> second = StringParsers.parseWord(input);
-            input = second.getModifiedString().trim();
+            input = second.modifiedString().trim();
 
             ParserResult<String> third = StringParsers.parseWord(input);
 
-            assertThat(first.getResult()).isEqualTo("first");
-            assertThat(second.getResult()).isEqualTo("second");
-            assertThat(third.getResult()).isEqualTo("third");
+            assertThat(first.result()).isEqualTo("first");
+            assertThat(second.result()).isEqualTo("second");
+            assertThat(third.result()).isEqualTo("third");
         }
 
         @Test
@@ -522,8 +522,8 @@ public class StringParsersTest {
             ParserResult<String> funcName = StringParsers.parseWord(input);
 
             // The function name result includes everything until the first space
-            assertThat(funcName.getResult()).isEqualTo("function(arg1,");
-            assertThat(funcName.getModifiedString().toString()).isEqualTo(" arg2) { return value; }");
+            assertThat(funcName.result()).isEqualTo("function(arg1,");
+            assertThat(funcName.modifiedString().toString()).isEqualTo(" arg2) { return value; }");
         }
     }
 
@@ -543,7 +543,7 @@ public class StringParsersTest {
                 if (input.isEmpty())
                     break;
                 ParserResult<String> result = StringParsers.parseWord(input);
-                input = result.getModifiedString().trim();
+                input = result.modifiedString().trim();
             }
 
             long duration = System.nanoTime() - startTime;

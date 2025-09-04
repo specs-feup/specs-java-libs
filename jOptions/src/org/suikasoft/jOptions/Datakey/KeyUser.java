@@ -60,7 +60,7 @@ public interface KeyUser {
      * @throws RuntimeException if the {@link DataStore} does not contain values for all required keys
      */
     default void check(DataStore data, boolean noDefaults) {
-        if (!data.getStoreDefinitionTry().isPresent()) {
+        if (data.getStoreDefinitionTry().isEmpty()) {
             throw new RuntimeException("This method requires that the DataStore has a StoreDefinition");
         }
 

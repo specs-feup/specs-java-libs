@@ -17,7 +17,6 @@ public class SpecsArray {
 
     /**
      * 
-     * @param object
      * @return the length of the object if it is an array, or -1 if the object is
      *         not an array
      */
@@ -69,8 +68,6 @@ public class SpecsArray {
     }
 
     /**
-     * 
-     * @param anArray
      * 
      * @return the last element of the array, or null if the array is empty
      */

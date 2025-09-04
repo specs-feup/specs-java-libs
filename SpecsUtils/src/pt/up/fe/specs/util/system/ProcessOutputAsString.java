@@ -15,11 +15,6 @@ package pt.up.fe.specs.util.system;
 
 public class ProcessOutputAsString extends ProcessOutput<String, String> {
 
-    /**
-     * @param returnValue
-     * @param stdOut
-     * @param stdErr
-     */
     public ProcessOutputAsString(int returnValue, String stdOut, String stdErr) {
         super(returnValue, stdOut, stdErr);
     }
@@ -27,8 +22,7 @@ public class ProcessOutputAsString extends ProcessOutput<String, String> {
     /**
      * Returns the contents of the standard output, followed by the contents of the
      * standard error.
-     * 
-     * @return
+     *
      */
     public String getOutput() {
         String out = getStdOut();

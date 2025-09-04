@@ -118,7 +118,7 @@ public class JOptionsUtils {
         Optional<File> jarFolderTry = SpecsIo.getJarPath(classForJarpath);
 
         // If cannot find jar folder, just return an empty DataStore
-        if (!jarFolderTry.isPresent()) {
+        if (jarFolderTry.isEmpty()) {
             return localData;
         }
 

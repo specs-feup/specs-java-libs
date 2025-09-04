@@ -114,13 +114,10 @@ public class EnumItem implements IGenerate {
         }
         final EnumItem other = (EnumItem) obj;
         if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
-            return false;
+            return other.name == null;
+        } else {
+            return name.equals(other.name);
         }
-        return true;
     }
 
     /**

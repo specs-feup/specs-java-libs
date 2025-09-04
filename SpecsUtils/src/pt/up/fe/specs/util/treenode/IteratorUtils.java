@@ -39,9 +39,6 @@ public class IteratorUtils {
     /**
      * Convenience method with prunning set to false.
      *
-     * @param token
-     * @param loopTest
-     * @return
      */
     public static <K extends TreeNode<K>> Iterator<K> getDepthIterator(K token, TokenTester loopTest) {
         return getDepthIterator(token, loopTest, false);
@@ -51,8 +48,6 @@ public class IteratorUtils {
      * Returns a depth-first iterator for the children of the given token that
      * passes the given test.
      *
-     * @param token
-     * @return
      */
     public static <K extends TreeNode<K>> Iterator<K> getDepthIterator(K token, TokenTester loopTest,
             boolean prune) {
@@ -90,11 +85,8 @@ public class IteratorUtils {
     /**
      * Returns an object which tests for the given type
      *
-     * @return
      */
     public static <E extends TreeNode<?>> TokenTester newTypeTest(Class<E> type) {
-        return token -> {
-            return type.isInstance(token);
-        };
+        return type::isInstance;
     }
 }

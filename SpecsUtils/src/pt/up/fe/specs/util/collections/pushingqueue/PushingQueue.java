@@ -68,7 +68,7 @@ public interface PushingQueue<T> {
 
     default String toString(Function<T, String> mapper) {
         return stream()
-                .map(element -> mapper.apply(element))
+                .map(mapper)
                 .collect(Collectors.joining(", ", "[", "]"));
     }
 }

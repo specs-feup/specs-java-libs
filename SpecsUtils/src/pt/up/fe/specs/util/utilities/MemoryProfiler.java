@@ -66,7 +66,7 @@ public class MemoryProfiler {
     private void profile() {
         long totalMillis = TimeUnit.MILLISECONDS.convert(period, timeUnit);
         long totalNanos = TimeUnit.NANOSECONDS.convert(period, timeUnit);
-        long totalNanosTruncated = totalMillis * 1_000_000l;
+        long totalNanosTruncated = totalMillis * 1_000_000L;
         long partialNanos = totalNanos - totalNanosTruncated;
 
         long totalTime = totalNanosTruncated + partialNanos;
@@ -86,16 +86,13 @@ public class MemoryProfiler {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile, true),
                 SpecsIo.DEFAULT_CHAR_SET))) {
 
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        writer.close();
-                    } catch (IOException e) {
-                        SpecsLogs.info("Memory profile failed, " + e.getMessage());
-                    }
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    SpecsLogs.info("Memory profile failed, " + e.getMessage());
                 }
-            });
+            }));
 
             while (true) {
                 // Sleep

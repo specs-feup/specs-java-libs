@@ -98,9 +98,7 @@ public class NodeFieldReplacer<B extends DataNode<B>> {
         var clavaNodes = (List<B>) node.get(key);
         var newClavaNodes = new ArrayList<B>(clavaNodes.size());
 
-        for (int i = 0; i < clavaNodes.size(); i++) {
-            var oldNode = clavaNodes.get(i);
-
+        for (B oldNode : clavaNodes) {
             var normalizedNode = replacementDetector.apply(oldNode).orElse(oldNode);
             newClavaNodes.add(normalizedNode);
             if (normalizedNode != oldNode) {

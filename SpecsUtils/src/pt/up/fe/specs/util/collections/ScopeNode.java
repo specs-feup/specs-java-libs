@@ -95,10 +95,6 @@ class ScopeNode<V> {
         addSymbol(key, symbol);
     }
 
-    /**
-     * @param key
-     * @param symbol
-     */
     public void addSymbol(List<String> key, V symbol) {
         if (key.isEmpty()) {
             SpecsLogs.warn("Empty key, symbol '" + symbol + "' not inserted.");
@@ -120,9 +116,6 @@ class ScopeNode<V> {
         childScope.addSymbol(key.subList(1, key.size()), symbol);
     }
 
-    /**
-     * @return
-     */
     public List<List<String>> getKeys() {
         return getKeys(new ArrayList<>());
     }

@@ -41,8 +41,7 @@ public class PatternDetector {
     /**
      * Creates a new PatternFinder which will try to find patterns of maximum size
      * 'maxPatternSize', in the given integer values.
-     * 
-     * @param maxPatternSize
+     *
      */
     public PatternDetector(int maxPatternSize, boolean priorityToBiggerPatterns) {
         this.currentPatternSize = 0;
@@ -71,8 +70,7 @@ public class PatternDetector {
 
     /**
      * Gives another value to check for pattern.
-     * 
-     * @param value
+     *
      */
     public PatternState step(Integer hashValue) {
         // Insert new element
@@ -145,7 +143,7 @@ public class PatternDetector {
     }
 
     public static PatternState calculateState(int previousPatternSize, int patternSize) {
-        PatternState newState = null;
+        PatternState newState;
         // Check if pattern state has changed
         if (previousPatternSize != patternSize) {
             // If previous pattern size was 0, a new pattern started

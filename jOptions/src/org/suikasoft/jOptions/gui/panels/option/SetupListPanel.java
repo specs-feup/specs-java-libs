@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +42,7 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class SetupListPanel extends KeyPanel<SetupList> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final List<StoreDefinition> definitions;
@@ -330,8 +332,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
             dataStores.add(adaptedDataStore);
         }
 
-        var value = new SetupList(getKey().getName(), dataStores);
-        return value;
+        return new SetupList(getKey().getName(), dataStores);
     }
 
     @Override

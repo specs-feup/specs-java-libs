@@ -149,7 +149,7 @@ public class Constructor implements IGenerate {
 
         constructorStr.append("{");
         final StringBuilder indent = Utils.indent(indentation + 1);
-        if (methodBody.length() != 0) {
+        if (!methodBody.isEmpty()) {
             constructorStr.append(ln() + indent);
             final String bodyCode = methodBody.toString().replace(ln(), ln() + indent).trim();
             constructorStr.append(bodyCode);

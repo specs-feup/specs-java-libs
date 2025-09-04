@@ -13,6 +13,7 @@
 
 package org.suikasoft.jOptions.gui;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -36,6 +37,7 @@ public abstract class KeyPanel<T> extends JPanel {
     /**
      * 
      */
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

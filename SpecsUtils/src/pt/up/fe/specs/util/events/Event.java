@@ -18,7 +18,6 @@ package pt.up.fe.specs.util.events;
  * 
  * @author Joao Bispo
  *
- * @param <K>
  */
 public interface Event {
     EventId getId();

@@ -119,11 +119,10 @@ public class ListDataStore implements DataStore {
         } else if (!keys.getName().equals(other.keys.getName()))
             return false;
         if (values == null) {
-            if (other.values != null)
-                return false;
-        } else if (!values.equals(other.values))
-            return false;
-        return true;
+            return other.values == null;
+        } else {
+            return values.equals(other.values);
+        }
     }
 
     /**
@@ -266,7 +265,7 @@ public class ListDataStore implements DataStore {
         Optional<T> value = getTry(key);
 
         // If not present, there was already no value there
-        if (!value.isPresent()) {
+        if (value.isEmpty()) {
             return Optional.empty();
         }
 

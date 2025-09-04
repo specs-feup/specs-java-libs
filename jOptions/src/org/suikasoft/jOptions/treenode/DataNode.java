@@ -167,8 +167,7 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
      * @return a new DataStore instance
      */
     public static <K extends DataNode<K>, T extends K> DataStore newDataStore(Class<T> nodeClass) {
-        DataStore data = DataStore.newInstance(StoreDefinitions.fromInterface(nodeClass), true);
-        return data;
+        return DataStore.newInstance(StoreDefinitions.fromInterface(nodeClass), true);
     }
 
     /**

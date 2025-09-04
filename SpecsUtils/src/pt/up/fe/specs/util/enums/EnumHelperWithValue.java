@@ -47,8 +47,8 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
         Map<String, T> translationMap = SpecsEnums.buildMap(enumClass);
 
         excludeList.stream()
-                .map(exclude -> exclude.getString())
-                .forEach(key -> translationMap.remove(key));
+                .map(StringProvider::getString)
+                .forEach(translationMap::remove);
 
         return translationMap;
     }
@@ -64,9 +64,7 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
 
     /**
      * Helper method which converts the index of an enum to the enum.
-     * 
-     * @param index
-     * @return
+     *
      */
     public T fromValue(int index) {
         T[] array = values();
@@ -85,17 +83,15 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
 
     public List<T> fromValue(List<String> names) {
         return names.stream()
-                .map(name -> fromValue(name))
+                .map(this::fromValue)
                 .collect(Collectors.toList());
     }
 
     /**
-     * 
-     * @return
+     *
      */
     public String getAvailableValues() {
-        return translationMap.get().keySet().stream()
-                .collect(Collectors.joining(", "));
+        return String.join(", ", translationMap.get().keySet());
     }
 
     public EnumHelperWithValue<T> addAlias(String alias, T anEnum) {
@@ -117,7 +113,7 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
         if (anEnum == null) {
             throw new NullPointerException("Enum class cannot be null");
         }
-        return newLazyHelperWithValue(anEnum, Arrays.asList(exclude));
+        return newLazyHelperWithValue(anEnum, Collections.singletonList(exclude));
     }
 
     public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelperWithValue(

@@ -152,13 +152,10 @@ public class SpecsBits {
         }
 
         int numZeros = size - stringSize;
-        StringBuilder builder = new StringBuilder(numZeros + SpecsBits.HEX_PREFIX.length());
-        builder.append(SpecsBits.HEX_PREFIX);
-        for (int i = 0; i < numZeros; i++) {
-            builder.append(SpecsBits.ZERO);
-        }
+        String builder = SpecsBits.HEX_PREFIX +
+                SpecsBits.ZERO.repeat(numZeros);
 
-        return builder.toString() + hexNumber;
+        return builder + hexNumber;
     }
 
     /**
@@ -180,12 +177,8 @@ public class SpecsBits {
         }
 
         int numZeros = size - stringSize;
-        StringBuilder builder = new StringBuilder(numZeros);
-        for (int i = 0; i < numZeros; i++) {
-            builder.append(SpecsBits.ZERO);
-        }
 
-        return builder.toString() + binaryNumber;
+        return SpecsBits.ZERO.repeat(numZeros) + binaryNumber;
     }
 
     /**
@@ -330,10 +323,7 @@ public class SpecsBits {
 
     /**
      * Returns true if a is greater than b.
-     * 
-     * @param a
-     * @param b
-     * @return
+     *
      */
     public static boolean unsignedComp(int a, int b) {
         // Unsigned Comparison
@@ -348,10 +338,7 @@ public class SpecsBits {
      * TODO: Verify correcteness.
      * <p>
      * Ex.: upper16 = 1001 lower16 = 101 result = 00000000000010010000000000000101
-     * 
-     * @param upper16
-     * @param lower16
-     * @return
+     *
      */
     public static int fuseImm(int upper16, int lower16) {
         // Mask the 16 bits of each one
@@ -360,8 +347,7 @@ public class SpecsBits {
         // Shift Upper16
         upper16 = upper16 << 16;
         // Merge
-        int result = upper16 | lower16;
-        return result;
+        return upper16 | lower16;
     }
 
     /**
@@ -387,9 +373,8 @@ public class SpecsBits {
      */
     public static int log2(int i) {
         double log2 = Math.log(i) / Math.log(2);
-        int log2Int = (int) Math.ceil(log2);
 
-        return log2Int;
+        return (int) Math.ceil(log2);
     }
 
     /**
@@ -397,9 +382,7 @@ public class SpecsBits {
      * 
      * <p>
      * Ex.: value: 1011011101011010 return: 00000000000000001011011101011010
-     * 
-     * @param value
-     * @return
+     *
      */
     public static Integer extend(short value) {
         int returnValue = value;
@@ -412,9 +395,7 @@ public class SpecsBits {
      * 
      * <p>
      * Ex.: value: 1011011111011010; extendSize: 8 return: 1111111111011010
-     * 
-     * @param value
-     * @return
+     *
      */
     public static int signExtend(int value, int extendSize) {
         // Get signal bit
@@ -423,9 +404,7 @@ public class SpecsBits {
         // Append first 32-extendSize bits with the signal bit
         StringBuilder binaryString = new StringBuilder();
         int intBits = 32;
-        for (int i = 0; i < intBits - extendSize; i++) {
-            binaryString.append(signalBit);
-        }
+        binaryString.append(String.valueOf(signalBit).repeat(Math.max(0, intBits - extendSize)));
 
         for (int i = extendSize - 1; i >= 0; i--) {
             binaryString.append(getBit(i, value));
@@ -437,10 +416,7 @@ public class SpecsBits {
     /**
      * Converts a 0-based, LSB-order bit to the corresponding index in a String
      * representation of the number.
-     * 
-     * @param signalBit
-     * @param stringSize
-     * @return
+     *
      */
     public static int fromLsbToStringIndex(int signalBit, int stringSize) {
         return stringSize - signalBit - 1;
@@ -449,7 +425,6 @@ public class SpecsBits {
     /**
      * Sign-extends the given String representing a binary value (only 0s and 1s).
      * 
-     * @param binaryValue
      * @param signalBit   the 0-based index, counting from the LSB, that represents
      *                    the signal
      * @return a String with the same size but where all values higher than
@@ -479,7 +454,7 @@ public class SpecsBits {
 
         // Replicate signal value up to signal bit
         return SpecsStrings.buildLine(signalValue, lsbSignalIndex + 1)
-                + binaryValue.substring(lsbSignalIndex + 1, binaryValue.length());
+                + binaryValue.substring(lsbSignalIndex + 1);
     }
 
     /**
@@ -495,12 +470,12 @@ public class SpecsBits {
         }
 
         if (binaryString.length() < 32) {
-            return Integer.parseInt(binaryString.toString(), 2);
+            return Integer.parseInt(binaryString, 2);
         }
 
         // BinaryString has size 32. Check MSB if 0
         if (binaryString.charAt(0) == '0') {
-            return Integer.parseInt(binaryString.toString(), 2);
+            return Integer.parseInt(binaryString, 2);
         }
 
         StringBuilder builder = new StringBuilder();
@@ -522,22 +497,14 @@ public class SpecsBits {
      * Puts to zero all bits except numBits least significant bits.
      * 
      * Ex.: value: 1011; numBits: 3; return: 0011
-     * 
-     * @param value
-     * @param numBits
-     * @return
+     *
      */
     public static int mask(int value, int numBits) {
-        StringBuilder binaryString = new StringBuilder();
         int intBits = 32;
-        for (int i = 0; i < intBits - numBits; i++) {
-            binaryString.append(0);
-        }
-        for (int i = 0; i < numBits; i++) {
-            binaryString.append(1);
-        }
+        String binaryString = "0".repeat(Math.max(0, intBits - numBits)) +
+                "1".repeat(Math.max(0, numBits));
 
-        return value & Integer.parseInt(binaryString.toString(), 2);
+        return value & Integer.parseInt(binaryString, 2);
     }
 
     /**
@@ -558,9 +525,7 @@ public class SpecsBits {
      * Transforms the given integer value into an unsigned long. If the value is
      * negative, returns the positive long value as if the given value is decoded
      * from an equivalent 32-bit hexadecimal string.
-     * 
-     * @param value
-     * @return
+     *
      */
     public static Long getUnsignedLong(int value) {
         String hexValue = Integer.toHexString(value);
@@ -578,7 +543,6 @@ public class SpecsBits {
      * where x means don't care. If a = 1, it is a quiet NaN, otherwise it is a
      * signalling NaN.
      * 
-     * @param aNanN
      * @return true if the given NaN is quiet.
      */
     public static boolean isQuietNaN(int aNaN) {
@@ -592,7 +556,6 @@ public class SpecsBits {
      * IEEE 754 denormals are identified by having the exponents bits set to zero
      * (30 to 23).
      * 
-     * @param aFloat
      * @return true if the given float is denormal
      */
     public static boolean isDenormal(int aFloat) {
@@ -610,7 +573,6 @@ public class SpecsBits {
      * IEEE 754 zeros are identified by having the all bits except the sign set to
      * zero (30 to 0).
      * 
-     * @param aFloat
      * @return true if the given float represents zero
      */
     public static boolean isZero(int aFloat) {
@@ -619,7 +581,6 @@ public class SpecsBits {
 
     /**
      * 
-     * @param floatBits
      * @return a float zero with the same sign as the given floating point
      */
     public static int getSignedZero(int floatBits) {
@@ -629,7 +590,6 @@ public class SpecsBits {
 
     /**
      * 
-     * @param floatBits
      * @return a float zero with the same sign as the given floating point
      */
     public static int getSignedInfinity(int floatBits) {
@@ -639,21 +599,14 @@ public class SpecsBits {
 
     /**
      * 
-     * 
-     * @param value
-     * @param byteOffset can have value 0 or 1, where 0 is the least significant
-     *                   short
-     * @return
+     *
      */
     public static int getShort(int value, int byteOffset) {
-        switch (byteOffset) {
-            case 0:
-                return value & 0x0000FFFF;
-            case 2:
-                return (value & 0xFFFF0000) >>> 16;
-            default:
-                throw new RuntimeException("Invalid case: " + byteOffset);
-        }
+        return switch (byteOffset) {
+            case 0 -> value & 0x0000FFFF;
+            case 2 -> (value & 0xFFFF0000) >>> 16;
+            default -> throw new RuntimeException("Invalid case: " + byteOffset);
+        };
     }
 
     /**
@@ -664,29 +617,20 @@ public class SpecsBits {
      * @return the extracted byte as an integer
      */
     public static int getByte(int value, int byteOffset) {
-        switch (byteOffset) {
-            case 0:
-                return value & 0x000000FF;
-            case 1:
-                return (value & 0x0000FF00) >>> 8;
-            case 2:
-                return (value & 0x00FF0000) >>> 16;
-            case 3:
-                return (value & 0xFF000000) >>> 24;
-            default:
-                throw new RuntimeException("Invalid case: " + byteOffset);
-        }
+        return switch (byteOffset) {
+            case 0 -> value & 0x000000FF;
+            case 1 -> (value & 0x0000FF00) >>> 8;
+            case 2 -> (value & 0x00FF0000) >>> 16;
+            case 3 -> (value & 0xFF000000) >>> 24;
+            default -> throw new RuntimeException("Invalid case: " + byteOffset);
+        };
     }
 
     /**
      * Reads an unsigned 16-bit number from a byte array. This method reads two
      * bytes from the array, starting at the
      * given offset.
-     * 
-     * @param byteArray
-     * @param offset
-     * @param isLittleEndian
-     * @return
+     *
      */
     public static int readUnsignedShort(byte[] byteArray, int offset,
             boolean isLittleEndian) {
@@ -727,11 +671,6 @@ public class SpecsBits {
      * TODO: Test/check this method so see if it can support longs, not just
      * integers
      *
-     * @param aByte
-     * @param bytePosition
-     * @param totalBytes     the bytes of the unit (short = 2, int = 4).
-     * @param isLittleEndian
-     * @return
      */
     public static long positionByte(byte aByte, int bytePosition, int totalBytes, boolean isLittleEndian) {
         int multiplier;
@@ -742,9 +681,8 @@ public class SpecsBits {
         }
 
         int shift = SpecsBits.BITS_IN_A_BYTE * multiplier;
-        int shiftedByte = getUnsignedByte(aByte) << shift;
 
-        return shiftedByte;
+        return getUnsignedByte(aByte) << shift;
     }
 
     /**

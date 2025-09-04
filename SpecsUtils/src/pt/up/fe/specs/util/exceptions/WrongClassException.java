@@ -13,8 +13,11 @@
 
 package pt.up.fe.specs.util.exceptions;
 
+import java.io.Serial;
+
 public class WrongClassException extends UnsupportedOperationException {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public WrongClassException(Object testedInstance, Class<?> expectedClass) {

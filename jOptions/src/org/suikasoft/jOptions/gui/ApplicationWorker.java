@@ -105,13 +105,7 @@ public class ApplicationWorker {
      * @param enable true to enable buttons, false to disable
      */
     private void setButtons(final boolean enable) {
-        SpecsSwing.runOnSwing(new Runnable() {
-
-            @Override
-            public void run() {
-                mainWindow.setButtonsEnable(enable);
-            }
-        });
+        SpecsSwing.runOnSwing(() -> mainWindow.setButtonsEnable(enable));
 
     }
 

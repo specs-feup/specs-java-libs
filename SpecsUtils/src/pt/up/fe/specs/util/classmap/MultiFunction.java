@@ -91,9 +91,7 @@ public class MultiFunction<T, R> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <EM extends MultiFunction<T, R>, ET extends T, K extends ET> void put(Class<K> aClass,
             BiFunction<EM, ET, R> value) {
@@ -132,8 +130,7 @@ public class MultiFunction<T, R> {
     /**
      * Calls the Function.apply associated with class of the value t, or throws an
      * Exception if no mapping could be found.
-     * 
-     * @param t
+     *
      */
     public R apply(T t) {
         Optional<BiFunction<MultiFunction<T, R>, T, R>> function = get(t);
@@ -169,9 +166,7 @@ public class MultiFunction<T, R> {
 
     /**
      * Sets the default value, backed up by the same map.
-     * 
-     * @param defaultValue
-     * @return
+     *
      */
     public MultiFunction<T, R> setDefaultValue(R defaultValue) {
         this.defaultValue = defaultValue;

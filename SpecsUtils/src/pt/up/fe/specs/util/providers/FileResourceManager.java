@@ -41,7 +41,7 @@ public class FileResourceManager {
     /**
      * Map of local resources, keyed by their names.
      */
-    private Map<String, File> localResources;
+    private final Map<String, File> localResources;
 
     /**
      * Creates a FileResourceManager instance from an enum class.
@@ -93,7 +93,7 @@ public class FileResourceManager {
         // Check if there is a local resources file
         Optional<File> localResourcesTry = SpecsIo.getLocalFile(localResourcesFilename, getClass());
 
-        if (!localResourcesTry.isPresent()) {
+        if (localResourcesTry.isEmpty()) {
             return new HashMap<>();
         }
 
@@ -104,23 +104,23 @@ public class FileResourceManager {
         for (Object key : localResources.getProperties().keySet()) {
             if (!availableResources.containsKey(key.toString())) {
                 SpecsLogs.msgInfo(
-                        "Resource '" + key.toString() + "' in file '" + localResourcesTry.get().getAbsolutePath()
+                        "Resource '" + key + "' in file '" + localResourcesTry.get().getAbsolutePath()
                                 + "' not valid. Valid resources:" + availableResources.keySet());
                 continue;
             }
 
             // Check if empty filename
-            String filename = localResources.get(() -> key.toString());
+            String filename = localResources.get(key::toString);
             if (filename.trim().isEmpty()) {
                 continue;
             }
 
             // Get file of local resources
-            Optional<File> localFile = localResources.getExistingFile(() -> key.toString());
+            Optional<File> localFile = localResources.getExistingFile(key::toString);
 
-            if (!localFile.isPresent()) {
+            if (localFile.isEmpty()) {
                 SpecsLogs.msgInfo(
-                        "Resource '" + key.toString() + "' in file '" + localResourcesTry.get().getAbsolutePath()
+                        "Resource '" + key + "' in file '" + localResourcesTry.get().getAbsolutePath()
                                 + "' points to non-existing file, ignoring resource.");
                 continue;
             }
@@ -152,7 +152,7 @@ public class FileResourceManager {
         File localResource = localResources.get(resourceName);
         if (localResource != null) {
             SpecsLogs.debug(() -> "Using local resource '" + localResource.getAbsolutePath() + "'");
-            String version = availableResources.get(resourceName).getVersion();
+            String version = availableResources.get(resourceName).version();
             return FileResourceProvider.newInstance(localResource, version);
         }
 

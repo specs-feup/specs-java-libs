@@ -49,12 +49,7 @@ public class SimpleGui {
      */
     public void execute() {
         // Set SecurityManager to catch potential System.exit() calls
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                frame.launchGui();
-            }
-        });
+        java.awt.EventQueue.invokeLater(frame::launchGui);
     }
 
     /**

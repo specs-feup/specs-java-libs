@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -29,7 +28,7 @@ public class PragmaRule implements TextParserRule {
     public Optional<TextElement> apply(String line, Iterator<String> iterator) {
 
         // To calculate position of pragma
-        String lastLine = line;
+        String lastLine;
 
         // Check if line starts with '#pragma'
         String trimmedLine = line.trim();
@@ -40,14 +39,14 @@ public class PragmaRule implements TextParserRule {
         }
 
         String probe = trimmedLine.substring(0, PRAGMA.length());
-        if (!probe.toLowerCase().equals("#pragma")) {
+        if (!probe.equalsIgnoreCase("#pragma")) {
             return Optional.empty();
         }
 
         // Found start of pragma. Try to find the end
         trimmedLine = trimmedLine.substring(PRAGMA.length()).trim();
 
-        List<String> pragmaContents = new ArrayList<String>();
+        List<String> pragmaContents = new ArrayList<>();
 
         while (trimmedLine.endsWith("\\")) {
             // Add line, without the ending '\'
@@ -67,7 +66,7 @@ public class PragmaRule implements TextParserRule {
         pragmaContents.add(trimmedLine);
 
         return Optional.of(TextElement.newInstance(TextElementType.PRAGMA,
-                pragmaContents.stream().collect(Collectors.joining("\n"))));
+                String.join("\n", pragmaContents)));
 
     }
 

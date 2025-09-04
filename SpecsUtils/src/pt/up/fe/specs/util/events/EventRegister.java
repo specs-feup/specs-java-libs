@@ -17,15 +17,13 @@ public interface EventRegister {
 
     /**
      * Registers an EventReceiver.
-     * 
-     * @param receiver
+     *
      */
     public void registerReceiver(EventReceiver receiver);
 
     /**
      * Unregisters an EventReceiver.
-     * 
-     * @param receiver
+     *
      */
     public void unregisterReceiver(EventReceiver receiver);
 }

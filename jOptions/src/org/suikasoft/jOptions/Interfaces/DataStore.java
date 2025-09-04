@@ -112,7 +112,7 @@ public interface DataStore extends DataClass<DataStore> {
      * @return this DataStore
      */
     default <T> DataStore setString(DataKey<T> key, String value) {
-        if (!key.getDecoder().isPresent()) {
+        if (key.getDecoder().isEmpty()) {
             throw new RuntimeException("No decoder set for key '" + key + "'");
         }
         return set(key, key.getDecoder().get().decode(value));
@@ -313,7 +313,7 @@ public interface DataStore extends DataClass<DataStore> {
      * @return a copy of this DataStore
      */
     default DataStore copy() {
-        if (!getStoreDefinitionTry().isPresent()) {
+        if (getStoreDefinitionTry().isEmpty()) {
             throw new RuntimeException("No StoreDefinition defined, cannot copy. DataStore: " + this);
         }
 
@@ -417,9 +417,9 @@ public interface DataStore extends DataClass<DataStore> {
 
         if (getStoreDefinitionTry().isPresent()) {
             keys = getStoreDefinitionTry().get().getKeys().stream()
-                    .filter(key -> hasValue(key))
-                    .map(key -> key.getName())
-                    .collect(Collectors.toList());
+                    .filter(this::hasValue)
+                    .map(DataKey::getName)
+                    .toList();
         }
 
         return keys.stream()

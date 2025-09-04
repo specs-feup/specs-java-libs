@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.collections;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,6 @@ public class ScopedMap<V> {
     /**
      * Helper method with variadic inputs.
      *
-     * @param scope
-     * @return
      */
     public ScopedMap<V> getSymbolMap(String... scope) {
         return getSymbolMap(Arrays.asList(scope));
@@ -65,8 +64,6 @@ public class ScopedMap<V> {
      * For instance, if a scope 'x' is asked, the scopes in the returned SymbolMap
      * will start after 'x'.
      *
-     * @param scope
-     * @return
      */
     public ScopedMap<V> getSymbolMap(List<String> scope) {
         ScopedMap<V> scopedVariables = new ScopedMap<>();
@@ -80,9 +77,6 @@ public class ScopedMap<V> {
         return scopedVariables;
     }
 
-    /**
-     * @param scopeNode
-     */
     private void addSymbols(ScopeNode<V> scopeNode) {
         for (List<String> key : scopeNode.getKeys()) {
             V symbol = scopeNode.getSymbol(key);
@@ -96,7 +90,6 @@ public class ScopedMap<V> {
     /**
      * Returns the keys corresponding to all entries in this map.
      *
-     * @return
      */
     public List<List<String>> getKeys() {
         return this.rootNode.getKeys();
@@ -105,8 +98,6 @@ public class ScopedMap<V> {
     /**
      * Helper method with variadic inputs.
      *
-     * @param key
-     * @return
      */
     public V getSymbol(String... key) {
         return this.rootNode.getSymbol(key);
@@ -120,8 +111,6 @@ public class ScopedMap<V> {
      * A key is composed by a scope, in the form of a list of Strings, plus a String
      * with the name of the symbol.
      *
-     * @param key
-     * @return
      */
     public V getSymbol(List<String> key) {
         return this.rootNode.getSymbol(key);
@@ -130,9 +119,6 @@ public class ScopedMap<V> {
     /**
      * Helper method, with scope and symbol name given separately.
      *
-     * @param scope
-     * @param variableName
-     * @return
      */
     public V getSymbol(List<String> scope, String variableName) {
         List<String> key = new ArrayList<>(scope);
@@ -144,9 +130,6 @@ public class ScopedMap<V> {
      * Helper method, with scope and symbol name given separately.
      *
      *
-     * @param scope
-     * @param name
-     * @param symbol
      */
     public void addSymbol(List<String> scope, String name, V symbol) {
         this.rootNode.addSymbol(scope, name, symbol);
@@ -164,8 +147,6 @@ public class ScopedMap<V> {
      * A key is composed by a scope, in the form of a list of Strings, plus a String
      * with the name of the symbol.
      *
-     * @param key
-     * @param symbol
      */
     public void addSymbol(List<String> key, V symbol) {
         this.rootNode.addSymbol(key, symbol);
@@ -174,18 +155,14 @@ public class ScopedMap<V> {
     /**
      * Helper method which receives only one key element.
      *
-     * @param key
-     * @param symbol
      */
     public void addSymbol(String key, V symbol) {
-        this.rootNode.addSymbol(Arrays.asList(key), symbol);
+        this.rootNode.addSymbol(Collections.singletonList(key), symbol);
     }
 
     /**
      * Helper method which receives several key elements.
      *
-     * @param symbol
-     * @param key
      */
     public void addSymbol(V symbol, String... key) {
         this.rootNode.addSymbol(Arrays.asList(key), symbol);
@@ -198,18 +175,14 @@ public class ScopedMap<V> {
      */
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
 
-        builder.append(this.rootNode.toString());
-
-        return builder.toString();
+        return String.valueOf(this.rootNode);
     }
 
     /**
      * Adds all the symbols in the given map to the current map, preserving the
      * original scope.
      *
-     * @param map
      */
     public void addSymbols(ScopedMap<V> map) {
         for (List<String> key : map.getKeys()) {
@@ -226,8 +199,6 @@ public class ScopedMap<V> {
      * Adds all the symbols in the given map to the current map, mapping them to the
      * given scope.
      *
-     * @param scope
-     * @param inputVectorsTypes
      */
     public void addSymbols(List<String> scope, ScopedMap<V> symbolMap) {
         Map<String, V> symbols = symbolMap.getSymbols(null);
@@ -246,8 +217,6 @@ public class ScopedMap<V> {
     /**
      * Returns a map with all the symbols for a given scope, mapped to their name.
      *
-     * @param scope
-     * @return
      */
     public Map<String, V> getSymbols(List<String> scope) {
         if (scope == null) {
@@ -268,7 +237,6 @@ public class ScopedMap<V> {
 
     /**
      *
-     * @param scope
      * @return a collection with all the symbols in the map
      */
     public List<V> getSymbols() {
@@ -283,18 +251,11 @@ public class ScopedMap<V> {
     /**
      * Checks if the given scope contains a symbol for the given name.
      *
-     * @param symbolName
-     * @param scope
-     * @return
      */
     public boolean containsSymbol(List<String> scope, String symbolName) {
         Map<String, V> varTable = getSymbols(scope);
         V variable = varTable.get(symbolName);
-        if (variable != null) {
-            return true;
-        }
-
-        return false;
+        return variable != null;
     }
 
 }

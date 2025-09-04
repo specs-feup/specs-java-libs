@@ -83,13 +83,13 @@ class SpecsAsmTest {
         void testAdd32() {
             // Test basic addition
             ArithmeticResult32 result = SpecsAsm.add32(10, 20, 0);
-            assertThat(result.result).isEqualTo(30);
-            assertThat(result.carryOut).isEqualTo(0);
+            assertThat(result.result()).isEqualTo(30);
+            assertThat(result.carryOut()).isEqualTo(0);
 
             // Test with carry
             result = SpecsAsm.add32(10, 20, 1);
-            assertThat(result.result).isEqualTo(31);
-            assertThat(result.carryOut).isEqualTo(0);
+            assertThat(result.result()).isEqualTo(31);
+            assertThat(result.carryOut()).isEqualTo(0);
         }
 
         @Test
@@ -97,13 +97,13 @@ class SpecsAsmTest {
         void testAdd32_CarryOut() {
             // Test case that produces carry out
             ArithmeticResult32 result = SpecsAsm.add32(Integer.MAX_VALUE, 1, 0);
-            assertThat(result.result).isEqualTo(Integer.MIN_VALUE); // Overflow
-            assertThat(result.carryOut).isEqualTo(0); // Since we're working with signed arithmetic
+            assertThat(result.result()).isEqualTo(Integer.MIN_VALUE); // Overflow
+            assertThat(result.carryOut()).isEqualTo(0); // Since we're working with signed arithmetic
 
             // Test with unsigned values that would cause carry
             result = SpecsAsm.add32(0xFFFFFFFF, 1, 0); // -1 + 1 in signed arithmetic
-            assertThat(result.result).isEqualTo(0);
-            assertThat(result.carryOut).isEqualTo(1); // Should carry out
+            assertThat(result.result()).isEqualTo(0);
+            assertThat(result.carryOut()).isEqualTo(1); // Should carry out
         }
 
         @Test
@@ -111,8 +111,8 @@ class SpecsAsmTest {
         void testAdd32_InvalidCarry() {
             // Should work but generate warning for carry != 0 or 1
             ArithmeticResult32 result = SpecsAsm.add32(10, 20, 5);
-            assertThat(result.result).isEqualTo(35); // Still performs operation
-            assertThat(result.carryOut).isEqualTo(0);
+            assertThat(result.result()).isEqualTo(35); // Still performs operation
+            assertThat(result.carryOut()).isEqualTo(0);
         }
 
         @Test
@@ -121,8 +121,8 @@ class SpecsAsmTest {
             // Test basic reverse subtraction
             ArithmeticResult32 result = SpecsAsm.rsub32(10, 20, 1);
             // Operation: 20 + ~10 + 1 = 20 + (-11) + 1 = 10
-            assertThat(result.result).isEqualTo(10);
-            assertThat(result.carryOut).isEqualTo(0);
+            assertThat(result.result()).isEqualTo(10);
+            assertThat(result.carryOut()).isEqualTo(0);
         }
 
         @Test
@@ -132,7 +132,7 @@ class SpecsAsmTest {
             // since the actual carry calculation might work differently than expected
             ArithmeticResult32 result = SpecsAsm.rsub32(0, 1, 0);
             assertThat(result).isNotNull();
-            assertThat(result.result).isEqualTo(0); // 1 + ~0 + 0 = 1 + 0xFFFFFFFF + 0 = 0x100000000 -> 0 (masked)
+            assertThat(result.result()).isEqualTo(0); // 1 + ~0 + 0 = 1 + 0xFFFFFFFF + 0 = 0x100000000 -> 0 (masked)
             // We'll just verify the operation completes without asserting specific carry
             // value
         }
@@ -146,8 +146,8 @@ class SpecsAsmTest {
         @DisplayName("add32 should work correctly with various inputs")
         void testAdd32_ParameterizedTests(int input1, int input2, int carry, int expectedResult, int expectedCarryOut) {
             ArithmeticResult32 result = SpecsAsm.add32(input1, input2, carry);
-            assertThat(result.result).isEqualTo(expectedResult);
-            assertThat(result.carryOut).isEqualTo(expectedCarryOut);
+            assertThat(result.result()).isEqualTo(expectedResult);
+            assertThat(result.carryOut()).isEqualTo(expectedCarryOut);
         }
     }
 
@@ -382,8 +382,8 @@ class SpecsAsmTest {
             assertThat(SpecsAsm.add64(0L, 0L, 0L)).isEqualTo(0L);
 
             ArithmeticResult32 result = SpecsAsm.add32(0, 0, 0);
-            assertThat(result.result).isEqualTo(0);
-            assertThat(result.carryOut).isEqualTo(0);
+            assertThat(result.result()).isEqualTo(0);
+            assertThat(result.carryOut()).isEqualTo(0);
 
             // Test bitwise operations with zero
             assertThat(SpecsAsm.and32(0, 0xFFFFFFFF)).isEqualTo(0);
@@ -419,7 +419,7 @@ class SpecsAsmTest {
         void testInvalidCarryValues(int invalidCarry) {
             // Should work but generate warnings
             ArithmeticResult32 addResult = SpecsAsm.add32(10, 20, invalidCarry);
-            assertThat(addResult.result).isEqualTo(30 + invalidCarry);
+            assertThat(addResult.result()).isEqualTo(30 + invalidCarry);
 
             ArithmeticResult32 rsubResult = SpecsAsm.rsub32(10, 20, invalidCarry);
             assertThat(rsubResult).isNotNull(); // Should complete operation

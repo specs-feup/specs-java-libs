@@ -19,16 +19,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Can only be created by a ConcurrentChannel object, and represents a consumer
  * end of that channel.
- * 
+ *
  * @author Joao Bispo
  */
-public class ChannelConsumer<T> {
-
-    private final BlockingQueue<T> channel;
-
-    ChannelConsumer(BlockingQueue<T> channel) {
-        this.channel = channel;
-    }
+public record ChannelConsumer<T>(BlockingQueue<T> channel) {
 
     /**
      * Retrieves and removes the head of this queue, or returns null if this queue

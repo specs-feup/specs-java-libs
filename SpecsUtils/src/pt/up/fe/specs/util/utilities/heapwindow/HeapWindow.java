@@ -19,6 +19,7 @@
 
 package pt.up.fe.specs.util.utilities.heapwindow;
 
+import java.io.Serial;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -34,6 +35,7 @@ import pt.up.fe.specs.util.SpecsSystem;
  */
 public class HeapWindow extends javax.swing.JFrame {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private static final long UPDATE_PERIOD_MS = 500;

@@ -34,7 +34,6 @@ public class CsvWriter {
     /**
      * TODO: Check where this is used, probably replace with CsvWriter
      *
-     * @return
      */
     public static String getDefaultDelimiter() {
         return DEFAULT_DELIMITER;
@@ -44,12 +43,12 @@ public class CsvWriter {
     private String delimiter;
     private String newline;
     private final boolean excelSupport;
-    private int dataOffset; // The column where data starts. By default, is 1 (the second column)
+    private final int dataOffset; // The column where data starts. By default, is 1 (the second column)
     private final List<CsvField> extraFields; // Additional predefined fields that are applied over the data
 
     /* State */
     private final List<String> header;
-    private List<List<String>> lines;
+    private final List<List<String>> lines;
 
     private final Lazy<String> startColumn;
     private final Lazy<String> endColumn;
@@ -60,7 +59,7 @@ public class CsvWriter {
 
     public CsvWriter(List<String> header) {
         this.delimiter = CsvWriter.DEFAULT_DELIMITER;
-        this.newline = System.getProperty("line.separator");
+        this.newline = System.lineSeparator();
         this.header = header;
         this.lines = new ArrayList<>();
         this.excelSupport = true;
@@ -218,11 +217,7 @@ public class CsvWriter {
     }
 
     public boolean isHeaderSet() {
-        if (this.header == null) {
-            return false;
-        }
-
-        return true;
+        return this.header != null;
     }
 
 }

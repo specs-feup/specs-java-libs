@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util.events;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class EventUtils {
@@ -21,17 +22,9 @@ public class EventUtils {
     /**
      * Convenience method for building a list of event ids.
      *
-     * @param eventIds
-     * @return
      */
     public static Collection<EventId> getEventIds(EventId... eventIds) {
-        Collection<EventId> eventList = new ArrayList<>();
-
-        for (EventId eventId : eventIds) {
-            eventList.add(eventId);
-        }
-
-        return eventList;
+        return new ArrayList<>(Arrays.asList(eventIds));
     }
 
 }

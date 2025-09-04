@@ -25,11 +25,7 @@ public abstract class PersistenceFormat {
 
     /**
      * Writes an object to a file.
-     * 
-     * @param outputFile
-     * @param anObject
-     * @param aux
-     * @return
+     *
      */
     public boolean write(File outputFile, Object anObject) {
         if (outputFile == null) {
@@ -41,11 +37,7 @@ public abstract class PersistenceFormat {
 
     /**
      * Reads an object from a file.
-     * 
-     * @param inputFile
-     * @param classOfObject
-     * @param aux
-     * @return
+     *
      */
     public <T> T read(File inputFile, Class<T> classOfObject) {
         if (inputFile == null) {

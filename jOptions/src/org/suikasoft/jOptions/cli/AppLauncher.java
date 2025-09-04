@@ -106,7 +106,7 @@ public class AppLauncher {
         args = parseSpecialArguments(args);
 
         // Get first argument, check if it is an option.
-        if (args.get(0).indexOf("=") != -1) {
+        if (args.get(0).contains("=")) {
             return launchCommandLineNoSetup(args);
         }
 

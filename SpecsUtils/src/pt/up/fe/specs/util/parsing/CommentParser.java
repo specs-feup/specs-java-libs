@@ -55,7 +55,7 @@ public class CommentParser {
 
             Optional<TextElement> textElement = applyRules(currentLine, iterator);
 
-            if (!textElement.isPresent()) {
+            if (textElement.isEmpty()) {
                 continue;
             }
 

@@ -41,8 +41,7 @@ public class ProcessExecution implements Execution {
 
     /**
      * Launches the compilation job in a separate process.
-     * 
-     * @return
+     *
      */
     @Override
     public int run() {

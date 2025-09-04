@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +44,7 @@ import pt.up.fe.specs.util.utilities.StringList;
  */
 public class StringListPanel extends KeyPanel<StringList> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

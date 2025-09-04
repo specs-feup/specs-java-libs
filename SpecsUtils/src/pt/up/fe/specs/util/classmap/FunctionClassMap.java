@@ -68,7 +68,7 @@ public class FunctionClassMap<T, R> {
     public <ER extends R> FunctionClassMap(FunctionClassMap<T, ER> functionClassMap) {
         this.map = new HashMap<>();
         for (var keyPair : functionClassMap.map.entrySet()) {
-            this.map.put((Class<? extends T>) keyPair.getKey(), (Function<T, R>) keyPair.getValue());
+            this.map.put(keyPair.getKey(), (Function<T, R>) keyPair.getValue());
         }
 
         this.defaultValue = functionClassMap.defaultValue;
@@ -100,9 +100,7 @@ public class FunctionClassMap<T, R> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <ET extends T, K extends ET> void put(Class<K> aClass,
             Function<ET, R> value) {
@@ -135,8 +133,7 @@ public class FunctionClassMap<T, R> {
     /**
      * Calls the Function.apply associated with class of the value t, or
      * Optional.empty if no mapping could be found.
-     * 
-     * @param t
+     *
      */
     public Optional<R> applyTry(T t) {
         Optional<Function<T, R>> function = get(t);
@@ -161,8 +158,7 @@ public class FunctionClassMap<T, R> {
     /**
      * Calls the Function.apply associated with class of the value t, or throws an
      * Exception if no mapping could be found.
-     * 
-     * @param t
+     *
      */
     public R apply(T t) {
         Optional<Function<T, R>> function = get(t);
@@ -187,9 +183,7 @@ public class FunctionClassMap<T, R> {
 
     /**
      * Sets the default value, backed up by the same map.
-     * 
-     * @param defaultValue
-     * @return
+     *
      */
     public void setDefaultValue(R defaultValue) {
         this.defaultFunction = null;

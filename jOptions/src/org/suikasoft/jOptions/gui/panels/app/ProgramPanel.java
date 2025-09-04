@@ -21,13 +21,13 @@ package org.suikasoft.jOptions.gui.panels.app;
 
 import java.awt.Font;
 import java.io.File;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Handler;
 import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -52,6 +52,7 @@ import pt.up.fe.specs.util.utilities.LastUsedItems;
  */
 public class ProgramPanel extends GuiTab {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -177,13 +178,13 @@ public class ProgramPanel extends GuiTab {
         jLabel1.setText("Options file:");
 
         browseButton.setText("Browse...");
-        browseButton.addActionListener(evt -> browseButtonActionPerformed(evt));
+        browseButton.addActionListener(this::browseButtonActionPerformed);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(evt -> cancelButtonActionPerformed(evt));
+        cancelButton.addActionListener(this::cancelButtonActionPerformed);
 
         startButton.setText("Start");
-        startButton.addActionListener(evt -> startButtonActionPerformed(evt));
+        startButton.addActionListener(this::startButtonActionPerformed);
 
         outputArea.setEditable(false);
         outputArea.setRows(15);
@@ -311,7 +312,7 @@ public class ProgramPanel extends GuiTab {
      * @return the encoded string
      */
     private static String encodeList(List<String> lastUsedItems) {
-        return lastUsedItems.stream().collect(Collectors.joining(ProgramPanel.ITEMS_SEPARATOR));
+        return String.join(ProgramPanel.ITEMS_SEPARATOR, lastUsedItems);
     }
 
     /**
@@ -350,7 +351,7 @@ public class ProgramPanel extends GuiTab {
      */
     private String buildDefaultOptionFilename() {
         // Check if App implements AppDefaultConfig
-        if (!AppDefaultConfig.class.isInstance(application)) {
+        if (!(application instanceof AppDefaultConfig)) {
             return ProgramPanel.BLANK_OPTION_FILE;
         }
 

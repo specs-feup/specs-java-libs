@@ -14,7 +14,6 @@
 package org.suikasoft.jOptions.storedefinition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +40,7 @@ public abstract class AStoreDefinition implements StoreDefinition {
      * @param options the list of keys
      */
     protected AStoreDefinition(String appName, List<DataKey<?>> options) {
-        this(appName, Arrays.asList(StoreSection.newInstance(options)), null);
+        this(appName, List.of(StoreSection.newInstance(options)), null);
     }
 
     /**

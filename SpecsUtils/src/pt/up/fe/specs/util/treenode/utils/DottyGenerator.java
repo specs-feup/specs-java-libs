@@ -35,11 +35,11 @@ public class DottyGenerator<K extends TreeNode<K>> extends TreeNodeWalker<K> {
         var tagname = node.hashCode();
 
         // my label
-        dotty.append(tagname + "[shape = box, label = \"" + me.replace("\n", "\\l") + "\"];\n");
+        dotty.append(tagname).append("[shape = box, label = \"").append(me.replace("\n", "\\l")).append("\"];\n");
 
         // my children
         for (var kid : node.getChildren())
-            dotty.append(tagname + " -> " + kid.hashCode() + ";\n");
+            dotty.append(tagname).append(" -> ").append(kid.hashCode()).append(";\n");
 
         // visit children
         super.visit(node);

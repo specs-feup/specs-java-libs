@@ -31,8 +31,8 @@ public class GenericTextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isEqualTo(type);
-            assertThat(element.getText()).isEqualTo(text);
+            assertThat(element.type()).isEqualTo(type);
+            assertThat(element.text()).isEqualTo(text);
         }
 
         @Test
@@ -43,8 +43,8 @@ public class GenericTextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isNull();
-            assertThat(element.getText()).isEqualTo("Test text");
+            assertThat(element.type()).isNull();
+            assertThat(element.text()).isEqualTo("Test text");
         }
 
         @Test
@@ -55,8 +55,8 @@ public class GenericTextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(element.getText()).isNull();
+            assertThat(element.type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(element.text()).isNull();
         }
 
         @Test
@@ -67,8 +67,8 @@ public class GenericTextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isNull();
-            assertThat(element.getText()).isNull();
+            assertThat(element.type()).isNull();
+            assertThat(element.text()).isNull();
         }
 
         @Test
@@ -79,8 +79,8 @@ public class GenericTextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(element.getText()).isEmpty();
+            assertThat(element.type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(element.text()).isEmpty();
         }
     }
 
@@ -96,7 +96,7 @@ public class GenericTextElementTest {
             GenericTextElement element = new GenericTextElement(expectedType, "Test");
 
             // Act
-            TextElementType actualType = element.getType();
+            TextElementType actualType = element.type();
 
             // Assert
             assertThat(actualType).isEqualTo(expectedType);
@@ -111,7 +111,7 @@ public class GenericTextElementTest {
             GenericTextElement element = new GenericTextElement(TextElementType.INLINE_COMMENT, expectedText);
 
             // Act
-            String actualText = element.getText();
+            String actualText = element.text();
 
             // Assert
             assertThat(actualText).isEqualTo(expectedText);
@@ -125,10 +125,10 @@ public class GenericTextElementTest {
             GenericTextElement element = new GenericTextElement(TextElementType.PRAGMA, "Pragma text");
 
             // Act
-            TextElementType type1 = element.getType();
-            TextElementType type2 = element.getType();
-            String text1 = element.getText();
-            String text2 = element.getText();
+            TextElementType type1 = element.type();
+            TextElementType type2 = element.type();
+            String text1 = element.text();
+            String text2 = element.text();
 
             // Assert
             assertThat(type1).isEqualTo(type2);
@@ -143,7 +143,7 @@ public class GenericTextElementTest {
             // Act & Assert
             for (TextElementType type : TextElementType.values()) {
                 GenericTextElement element = new GenericTextElement(type, "Test");
-                assertThat(element.getType()).isEqualTo(type);
+                assertThat(element.type()).isEqualTo(type);
             }
         }
     }
@@ -163,8 +163,8 @@ public class GenericTextElementTest {
 
             // Verify interface methods work correctly
             TextElement interfaceRef = element;
-            assertThat(interfaceRef.getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(interfaceRef.getText()).isEqualTo("/* comment */");
+            assertThat(interfaceRef.type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(interfaceRef.text()).isEqualTo("/* comment */");
         }
 
         @Test
@@ -175,8 +175,8 @@ public class GenericTextElementTest {
 
             // Assert
             assertThat(element).isInstanceOf(GenericTextElement.class);
-            assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(element.getText()).isEqualTo("#pragma once");
+            assertThat(element.type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(element.text()).isEqualTo("#pragma once");
         }
 
         @Test
@@ -190,8 +190,8 @@ public class GenericTextElementTest {
 
             // Act & Assert
             for (TextElement element : elements) {
-                assertThat(element.getType()).isNotNull();
-                assertThat(element.getText()).isNotNull();
+                assertThat(element.type()).isNotNull();
+                assertThat(element.text()).isNotNull();
                 assertThat(element).isInstanceOf(GenericTextElement.class);
             }
         }
@@ -210,12 +210,12 @@ public class GenericTextElementTest {
             GenericTextElement element = new GenericTextElement(originalType, originalText);
 
             // Act - Get references to internal state
-            TextElementType retrievedType = element.getType();
-            String retrievedText = element.getText();
+            TextElementType retrievedType = element.type();
+            String retrievedText = element.text();
 
             // Assert - Values should remain the same
-            assertThat(element.getType()).isEqualTo(originalType);
-            assertThat(element.getText()).isEqualTo(originalText);
+            assertThat(element.type()).isEqualTo(originalType);
+            assertThat(element.text()).isEqualTo(originalText);
             assertThat(retrievedType).isSameAs(originalType);
             assertThat(retrievedText).isSameAs(originalText);
         }
@@ -231,8 +231,8 @@ public class GenericTextElementTest {
             GenericTextElement element = new GenericTextElement(type, text);
 
             // Assert - Should return same references
-            assertThat(element.getType()).isSameAs(type);
-            assertThat(element.getText()).isSameAs(text);
+            assertThat(element.type()).isSameAs(type);
+            assertThat(element.text()).isSameAs(text);
         }
     }
 
@@ -249,8 +249,8 @@ public class GenericTextElementTest {
 
             // Act & Assert
             // Note: Since equals() might not be overridden, we test logical equality
-            assertThat(element1.getType()).isEqualTo(element2.getType());
-            assertThat(element1.getText()).isEqualTo(element2.getText());
+            assertThat(element1.type()).isEqualTo(element2.type());
+            assertThat(element1.text()).isEqualTo(element2.text());
         }
 
         @Test
@@ -261,8 +261,8 @@ public class GenericTextElementTest {
             GenericTextElement element2 = new GenericTextElement(TextElementType.PRAGMA, "// comment 2");
 
             // Act & Assert
-            assertThat(element1.getType()).isNotEqualTo(element2.getType());
-            assertThat(element1.getText()).isNotEqualTo(element2.getText());
+            assertThat(element1.type()).isNotEqualTo(element2.type());
+            assertThat(element1.text()).isNotEqualTo(element2.text());
         }
 
         @Test
@@ -274,9 +274,9 @@ public class GenericTextElementTest {
             GenericTextElement element3 = new GenericTextElement(TextElementType.PRAGMA, "text");
 
             // Act & Assert
-            assertThat(element1.getType()).isEqualTo(element2.getType());
-            assertThat(element1.getText()).isEqualTo(element2.getText());
-            assertThat(element1.getType()).isNotEqualTo(element3.getType());
+            assertThat(element1.type()).isEqualTo(element2.type());
+            assertThat(element1.text()).isEqualTo(element2.text());
+            assertThat(element1.type()).isNotEqualTo(element3.type());
         }
 
         @Test
@@ -353,13 +353,13 @@ public class GenericTextElementTest {
 
             scenarios.forEach(testCase -> {
                 GenericTextElement element = new GenericTextElement(testCase.type, testCase.text);
-                assertThat(element.getType()).isEqualTo(testCase.type);
-                assertThat(element.getText()).isEqualTo(testCase.text);
+                assertThat(element.type()).isEqualTo(testCase.type);
+                assertThat(element.text()).isEqualTo(testCase.text);
 
                 // Should also work through interface
                 TextElement interfaceElement = element;
-                assertThat(interfaceElement.getType()).isEqualTo(testCase.type);
-                assertThat(interfaceElement.getText()).isEqualTo(testCase.text);
+                assertThat(interfaceElement.type()).isEqualTo(testCase.type);
+                assertThat(interfaceElement.text()).isEqualTo(testCase.text);
             });
         }
 
@@ -375,13 +375,13 @@ public class GenericTextElementTest {
             // Act & Assert
             assertThat(elements).hasSize(3);
             assertThat(elements).allSatisfy(element -> {
-                assertThat(element.getType()).isNotNull();
-                assertThat(element.getText()).isNotNull();
+                assertThat(element.type()).isNotNull();
+                assertThat(element.text()).isNotNull();
             });
 
             // Should be able to filter by type
             long inlineComments = elements.stream()
-                    .filter(e -> e.getType() == TextElementType.INLINE_COMMENT)
+                    .filter(e -> e.type() == TextElementType.INLINE_COMMENT)
                     .count();
             assertThat(inlineComments).isEqualTo(1);
         }
@@ -397,8 +397,8 @@ public class GenericTextElementTest {
                 var threads = java.util.stream.IntStream.range(0, 10)
                         .mapToObj(i -> new Thread(() -> {
                             for (int j = 0; j < 100; j++) {
-                                assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA_MACRO);
-                                assertThat(element.getText()).isEqualTo("Thread safe test");
+                                assertThat(element.type()).isEqualTo(TextElementType.PRAGMA_MACRO);
+                                assertThat(element.text()).isEqualTo("Thread safe test");
                             }
                         }))
                         .toList();
@@ -428,8 +428,8 @@ public class GenericTextElementTest {
             GenericTextElement element = new GenericTextElement(TextElementType.MULTILINE_COMMENT, largeText);
 
             // Assert
-            assertThat(element.getText()).isEqualTo(largeText);
-            assertThat(element.getText().length()).isEqualTo(largeText.length());
+            assertThat(element.text()).isEqualTo(largeText);
+            assertThat(element.text().length()).isEqualTo(largeText.length());
         }
 
         @Test
@@ -442,7 +442,7 @@ public class GenericTextElementTest {
             GenericTextElement element = new GenericTextElement(TextElementType.PRAGMA, specialText);
 
             // Assert
-            assertThat(element.getText()).isEqualTo(specialText);
+            assertThat(element.text()).isEqualTo(specialText);
         }
 
         @Test
@@ -455,8 +455,8 @@ public class GenericTextElementTest {
             GenericTextElement element = new GenericTextElement(TextElementType.INLINE_COMMENT, whitespaceText);
 
             // Assert
-            assertThat(element.getText()).isEqualTo(whitespaceText);
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).isEqualTo(whitespaceText);
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
         }
 
         @Test
@@ -468,7 +468,7 @@ public class GenericTextElementTest {
                     GenericTextElement element = new GenericTextElement(
                             TextElementType.values()[i % TextElementType.values().length],
                             "Text " + i);
-                    assertThat(element.getText()).isEqualTo("Text " + i);
+                    assertThat(element.text()).isEqualTo("Text " + i);
                 }
             }).doesNotThrowAnyException();
         }

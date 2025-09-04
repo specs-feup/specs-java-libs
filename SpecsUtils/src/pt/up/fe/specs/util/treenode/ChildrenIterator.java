@@ -114,8 +114,7 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * <p>
      * If the given amount is bigger than the number of positions, stops when the
      * cursor is at the beginning.
-     * 
-     * @param amount
+     *
      */
     public N back(int amount) {
         for (int i = 0; i < amount; i++) {
@@ -132,7 +131,6 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
 
     /**
      * 
-     * @param nodeClass
      * @return the next node that is an instance of the given class
      */
     public <K extends N> Optional<K> next(Class<K> nodeClass) {
@@ -148,7 +146,6 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
 
     /**
      * 
-     * @param nodeClass
      * @return the next node that is NOT an instance of the given class
      */
     public <K extends N> Optional<N> nextNot(Class<K> nodeClass) {
@@ -172,9 +169,7 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * next(1) is equivalent to next();<br>
      * If the amount is less than one, returns the -nth node of the amount. next(-1)
      * is equivalent to previous();<br>
-     * 
-     * @param i
-     * @return
+     *
      */
     public N move(int amount) {
         if (amount == 0) {
@@ -204,9 +199,7 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
      * <p>
      * At the end of the method, the cursor of the iterator is before the inserted
      * node.
-     * 
-     * @param node
-     * @param numberOfPreviousNodes
+     *
      */
     public void replace(N node, int numberOfPreviousNodes) {
         // Delete nodes
@@ -224,10 +217,8 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
     /**
      * Advances the cursor, and if it finds a statement of the given class, returns
      * it. The cursor advances event if it returns an empty optional.
-     * 
-     * @param nodeClass
-     * 
-     * @return
+     *
+     *
      */
     public <K extends N> Optional<K> nextOld(Class<K> nodeClass) {
 

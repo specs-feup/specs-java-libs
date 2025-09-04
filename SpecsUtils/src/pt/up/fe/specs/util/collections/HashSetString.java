@@ -13,11 +13,13 @@
 
 package pt.up.fe.specs.util.collections;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.HashSet;
 
 public class HashSetString extends HashSet<String> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public HashSetString() {
@@ -30,9 +32,7 @@ public class HashSetString extends HashSet<String> {
 
     /**
      * Helper method which accepts an enum and compares with its name.
-     * 
-     * @param anEnum
-     * @return
+     *
      */
     @SuppressWarnings("unlikely-arg-type")
     public boolean contains(Enum<?> anEnum) {

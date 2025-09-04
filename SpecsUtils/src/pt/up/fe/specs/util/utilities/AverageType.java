@@ -30,7 +30,7 @@ public enum AverageType {
     GEOMETRIC_MEAN_WITHOUT_ZEROS(true),
     HARMONIC_MEAN(false);
 
-    private AverageType(boolean ignoresZeros) {
+    AverageType(boolean ignoresZeros) {
         this.ignoresZeros = ignoresZeros;
     }
 

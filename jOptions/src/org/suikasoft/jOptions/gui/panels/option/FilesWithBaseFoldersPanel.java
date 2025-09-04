@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.BorderLayout;
 import java.io.File;
+import java.io.Serial;
 import java.util.Map;
 
 import javax.swing.JTextField;
@@ -30,6 +31,7 @@ import org.suikasoft.jOptions.gui.KeyPanel;
  */
 public class FilesWithBaseFoldersPanel extends KeyPanel<Map<File, File>> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

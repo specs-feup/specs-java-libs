@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.FlowLayout;
+import java.io.Serial;
 
 import javax.swing.JTextField;
 
@@ -30,6 +31,7 @@ import pt.up.fe.specs.util.SpecsStrings;
  */
 public class DoublePanel extends KeyPanel<Double> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

@@ -36,9 +36,6 @@ public class JarPath {
         this(programClass, programClass.getSimpleName(), jarPathProperty);
     }
 
-    /**
-     * @param programName
-     */
     public JarPath(Class<?> programClass, String programName, String jarPathProperty) {
         this(programClass, programName, jarPathProperty, true);
     }
@@ -50,9 +47,6 @@ public class JarPath {
         this.verbose = verbose;
     }
 
-    /**
-     * @return
-     */
     public String buildJarPath() {
         String path = buildJarPathInternal();
 
@@ -89,7 +83,7 @@ public class JarPath {
     }
 
     private Optional<String> buildJarPathInternalTry() {
-        String jarPath = null;
+        String jarPath;
 
         // 1. Check if property JAR_PATH is set
         jarPath = System.getProperty(this.jarPathProperty);
@@ -129,7 +123,7 @@ public class JarPath {
     }
 
     private String getJarPathAuto() {
-        String jarfilePath = null;
+        String jarfilePath;
 
         try {
             var codeSource = this.programClass.getProtectionDomain().getCodeSource();
@@ -154,9 +148,7 @@ public class JarPath {
             return null;
         }
 
-        String jarLoc = jarfilePath.substring(0, jarfilePath.lastIndexOf("/") + 1);
-
-        return jarLoc;
+        return jarfilePath.substring(0, jarfilePath.lastIndexOf("/") + 1);
 
     }
 

@@ -30,8 +30,8 @@ class StringSplitterRulesTest {
             SplitResult<String> result = StringSplitterRules.string(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("hello");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("world test");
+            assertThat(result.value()).isEqualTo("hello");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("world test");
         }
 
         @Test
@@ -41,8 +41,8 @@ class StringSplitterRulesTest {
             SplitResult<String> result = StringSplitterRules.string(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("helloworld");
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo("helloworld");
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -52,8 +52,8 @@ class StringSplitterRulesTest {
             SplitResult<String> result = StringSplitterRules.string(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEmpty();
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEmpty();
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -64,7 +64,7 @@ class StringSplitterRulesTest {
 
             assertThat(result).isNotNull();
             // With trim enabled, this should result in empty string
-            assertThat(result.getValue()).isEmpty();
+            assertThat(result.value()).isEmpty();
         }
 
         @Test
@@ -75,8 +75,8 @@ class StringSplitterRulesTest {
             SplitResult<String> result = StringSplitterRules.string(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("hello");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("world,test");
+            assertThat(result.value()).isEqualTo("hello");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("world,test");
         }
 
         @Test
@@ -88,7 +88,7 @@ class StringSplitterRulesTest {
 
             assertThat(result).isNotNull();
             // Leading spaces mean the first split result is empty string before first space
-            assertThat(result.getValue()).isEmpty();
+            assertThat(result.value()).isEmpty();
 
             // Test with trim enabled
             StringSliceWithSplit trimSlice = new StringSliceWithSplit("  hello  world  ")
@@ -96,7 +96,7 @@ class StringSplitterRulesTest {
             SplitResult<String> trimResult = StringSplitterRules.string(trimSlice);
 
             // With trim, empty result becomes empty after trimming
-            assertThat(trimResult.getValue()).isEmpty();
+            assertThat(trimResult.value()).isEmpty();
         }
     }
 
@@ -113,8 +113,8 @@ class StringSplitterRulesTest {
             SplitResult<String> result = StringSplitterRules.object(slice, upperCaseDecoder);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("TEST");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("input");
+            assertThat(result.value()).isEqualTo("TEST");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("input");
         }
 
         @Test
@@ -159,8 +159,8 @@ class StringSplitterRulesTest {
             SplitResult<Integer> result = StringSplitterRules.object(slice, extractNumberDecoder);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(123);
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("remaining");
+            assertThat(result.value()).isEqualTo(123);
+            assertThat(result.modifiedSlice().toString()).isEqualTo("remaining");
         }
     }
 
@@ -176,8 +176,8 @@ class StringSplitterRulesTest {
             SplitResult<Integer> result = StringSplitterRules.integer(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(Integer.parseInt(value));
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("remaining");
+            assertThat(result.value()).isEqualTo(Integer.parseInt(value));
+            assertThat(result.modifiedSlice().toString()).isEqualTo("remaining");
         }
 
         @Test
@@ -206,8 +206,8 @@ class StringSplitterRulesTest {
             SplitResult<Integer> result = StringSplitterRules.integer(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(42);
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo(42);
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -233,8 +233,8 @@ class StringSplitterRulesTest {
             SplitResult<Double> result = StringSplitterRules.doubleNumber(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(Double.parseDouble(value));
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("remaining");
+            assertThat(result.value()).isEqualTo(Double.parseDouble(value));
+            assertThat(result.modifiedSlice().toString()).isEqualTo("remaining");
         }
 
         @Test
@@ -253,19 +253,19 @@ class StringSplitterRulesTest {
             StringSliceWithSplit infSlice = new StringSliceWithSplit("Infinity remaining");
             SplitResult<Double> infResult = StringSplitterRules.doubleNumber(infSlice);
             assertThat(infResult).isNotNull();
-            assertThat(infResult.getValue()).isEqualTo(Double.POSITIVE_INFINITY);
+            assertThat(infResult.value()).isEqualTo(Double.POSITIVE_INFINITY);
 
             // Test negative infinity
             StringSliceWithSplit negInfSlice = new StringSliceWithSplit("-Infinity remaining");
             SplitResult<Double> negInfResult = StringSplitterRules.doubleNumber(negInfSlice);
             assertThat(negInfResult).isNotNull();
-            assertThat(negInfResult.getValue()).isEqualTo(Double.NEGATIVE_INFINITY);
+            assertThat(negInfResult.value()).isEqualTo(Double.NEGATIVE_INFINITY);
 
             // Test NaN
             StringSliceWithSplit nanSlice = new StringSliceWithSplit("NaN remaining");
             SplitResult<Double> nanResult = StringSplitterRules.doubleNumber(nanSlice);
             assertThat(nanResult).isNotNull();
-            assertThat(nanResult.getValue()).isNaN();
+            assertThat(nanResult.value()).isNaN();
         }
 
         @Test
@@ -275,8 +275,8 @@ class StringSplitterRulesTest {
             SplitResult<Double> result = StringSplitterRules.doubleNumber(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(42.5);
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo(42.5);
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -302,8 +302,8 @@ class StringSplitterRulesTest {
             SplitResult<Float> result = StringSplitterRules.floatNumber(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(Float.parseFloat(value));
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("remaining");
+            assertThat(result.value()).isEqualTo(Float.parseFloat(value));
+            assertThat(result.modifiedSlice().toString()).isEqualTo("remaining");
         }
 
         @Test
@@ -322,19 +322,19 @@ class StringSplitterRulesTest {
             StringSliceWithSplit infSlice = new StringSliceWithSplit("Infinity remaining");
             SplitResult<Float> infResult = StringSplitterRules.floatNumber(infSlice);
             assertThat(infResult).isNotNull();
-            assertThat(infResult.getValue()).isEqualTo(Float.POSITIVE_INFINITY);
+            assertThat(infResult.value()).isEqualTo(Float.POSITIVE_INFINITY);
 
             // Test negative infinity
             StringSliceWithSplit negInfSlice = new StringSliceWithSplit("-Infinity remaining");
             SplitResult<Float> negInfResult = StringSplitterRules.floatNumber(negInfSlice);
             assertThat(negInfResult).isNotNull();
-            assertThat(negInfResult.getValue()).isEqualTo(Float.NEGATIVE_INFINITY);
+            assertThat(negInfResult.value()).isEqualTo(Float.NEGATIVE_INFINITY);
 
             // Test NaN
             StringSliceWithSplit nanSlice = new StringSliceWithSplit("NaN remaining");
             SplitResult<Float> nanResult = StringSplitterRules.floatNumber(nanSlice);
             assertThat(nanResult).isNotNull();
-            assertThat(nanResult.getValue()).isNaN();
+            assertThat(nanResult.value()).isNaN();
         }
 
         @Test
@@ -345,8 +345,8 @@ class StringSplitterRulesTest {
             SplitResult<Float> result = StringSplitterRules.floatNumber(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isInstanceOf(Float.class);
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("remaining");
+            assertThat(result.value()).isInstanceOf(Float.class);
+            assertThat(result.modifiedSlice().toString()).isEqualTo("remaining");
         }
 
         @Test
@@ -356,8 +356,8 @@ class StringSplitterRulesTest {
             SplitResult<Float> result = StringSplitterRules.floatNumber(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(42.5f);
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo(42.5f);
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -383,23 +383,23 @@ class StringSplitterRulesTest {
             // Parse integer
             SplitResult<Integer> intResult = StringSplitterRules.integer(slice);
             assertThat(intResult).isNotNull();
-            assertThat(intResult.getValue()).isEqualTo(123);
+            assertThat(intResult.value()).isEqualTo(123);
 
             // Parse string from remaining
-            SplitResult<String> stringResult = StringSplitterRules.string(intResult.getModifiedSlice());
+            SplitResult<String> stringResult = StringSplitterRules.string(intResult.modifiedSlice());
             assertThat(stringResult).isNotNull();
-            assertThat(stringResult.getValue()).isEqualTo("hello");
+            assertThat(stringResult.value()).isEqualTo("hello");
 
             // Parse double from remaining
-            SplitResult<Double> doubleResult = StringSplitterRules.doubleNumber(stringResult.getModifiedSlice());
+            SplitResult<Double> doubleResult = StringSplitterRules.doubleNumber(stringResult.modifiedSlice());
             assertThat(doubleResult).isNotNull();
-            assertThat(doubleResult.getValue()).isEqualTo(45.6);
+            assertThat(doubleResult.value()).isEqualTo(45.6);
 
             // Parse final string
-            SplitResult<String> finalResult = StringSplitterRules.string(doubleResult.getModifiedSlice());
+            SplitResult<String> finalResult = StringSplitterRules.string(doubleResult.modifiedSlice());
             assertThat(finalResult).isNotNull();
-            assertThat(finalResult.getValue()).isEqualTo("world");
-            assertThat(finalResult.getModifiedSlice().toString()).isEmpty();
+            assertThat(finalResult.value()).isEqualTo("world");
+            assertThat(finalResult.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -411,7 +411,7 @@ class StringSplitterRulesTest {
             // This tests how rules behave with complex separator patterns
             SplitResult<String> result = StringSplitterRules.string(slice);
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("name");
+            assertThat(result.value()).isEqualTo("name");
         }
 
         @Test
@@ -424,7 +424,7 @@ class StringSplitterRulesTest {
             SplitResult<String> result = StringSplitterRules.string(slice);
             assertThat(result).isNotNull();
             // The exact behavior depends on the reverse implementation
-            assertThat(result.getValue()).isNotEmpty();
+            assertThat(result.value()).isNotEmpty();
         }
     }
 
@@ -453,7 +453,7 @@ class StringSplitterRulesTest {
             // Double might parse as a large number, not necessarily infinity
             if (doubleResult != null) {
                 // Could be infinity or just a very large number
-                assertThat(doubleResult.getValue()).isGreaterThan(1e50);
+                assertThat(doubleResult.value()).isGreaterThan(1e50);
             }
         }
 
@@ -464,8 +464,8 @@ class StringSplitterRulesTest {
 
             SplitResult<String> result = StringSplitterRules.string(slice);
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("こんにちは");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("世界 123");
+            assertThat(result.value()).isEqualTo("こんにちは");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("世界 123");
         }
 
         @Test

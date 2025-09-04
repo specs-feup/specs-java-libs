@@ -95,8 +95,8 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(element.getText()).isEqualTo(" This is a comment");
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).isEqualTo(" This is a comment");
         }
 
         @Test
@@ -111,11 +111,11 @@ class CommentParserTest {
 
             assertThat(result)
                     .hasSize(3)
-                    .allSatisfy(element -> assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT));
+                    .allSatisfy(element -> assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT));
 
-            assertThat(result.get(0).getText()).isEqualTo(" First comment");
-            assertThat(result.get(1).getText()).isEqualTo(" Second comment");
-            assertThat(result.get(2).getText()).isEqualTo(" Third comment");
+            assertThat(result.get(0).text()).isEqualTo(" First comment");
+            assertThat(result.get(1).text()).isEqualTo(" Second comment");
+            assertThat(result.get(2).text()).isEqualTo(" Third comment");
         }
 
         @Test
@@ -128,8 +128,8 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(element.getText()).isEqualTo(" This is a full line comment");
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).isEqualTo(" This is a full line comment");
         }
 
         @Test
@@ -142,8 +142,8 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(element.getText()).isEmpty();
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).isEmpty();
         }
 
         @ParameterizedTest
@@ -163,8 +163,8 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(element.getText()).isEqualTo(commentLine.substring(2));
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).isEqualTo(commentLine.substring(2));
         }
     }
 
@@ -182,7 +182,7 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(element.type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
             // The text should contain the comment content without the /* */ delimiters
         }
 
@@ -201,7 +201,7 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(element.type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
         }
 
         @Test
@@ -214,7 +214,7 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(element.type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
         }
 
         @Test
@@ -229,7 +229,7 @@ class CommentParserTest {
 
             assertThat(result)
                     .hasSize(2)
-                    .allSatisfy(element -> assertThat(element.getType()).isEqualTo(TextElementType.MULTILINE_COMMENT));
+                    .allSatisfy(element -> assertThat(element.type()).isEqualTo(TextElementType.MULTILINE_COMMENT));
         }
     }
 
@@ -247,7 +247,7 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(element.type()).isEqualTo(TextElementType.PRAGMA);
         }
 
         @Test
@@ -262,7 +262,7 @@ class CommentParserTest {
 
             assertThat(result)
                     .hasSize(3)
-                    .allSatisfy(element -> assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA));
+                    .allSatisfy(element -> assertThat(element.type()).isEqualTo(TextElementType.PRAGMA));
         }
 
         @Test
@@ -277,7 +277,7 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isIn(TextElementType.PRAGMA, TextElementType.PRAGMA_MACRO);
+            assertThat(element.type()).isIn(TextElementType.PRAGMA, TextElementType.PRAGMA_MACRO);
         }
     }
 
@@ -302,7 +302,7 @@ class CommentParserTest {
 
             // Check that we have different types of elements
             List<TextElementType> types = result.stream()
-                    .map(TextElement::getType)
+                    .map(TextElement::type)
                     .toList();
 
             assertThat(types).contains(
@@ -333,7 +333,7 @@ class CommentParserTest {
 
             // Should contain at least pragmas, inline comments, and multiline comments
             List<TextElementType> types = result.stream()
-                    .map(TextElement::getType)
+                    .map(TextElement::type)
                     .distinct()
                     .toList();
 
@@ -371,7 +371,7 @@ class CommentParserTest {
 
             // Should contain inline comments, pragmas, and multiline comments
             List<TextElementType> types = result.stream()
-                    .map(TextElement::getType)
+                    .map(TextElement::type)
                     .distinct()
                     .toList();
 
@@ -425,7 +425,7 @@ class CommentParserTest {
                     .hasSize(3);
 
             List<TextElementType> types = result.stream()
-                    .map(TextElement::getType)
+                    .map(TextElement::type)
                     .toList();
 
             assertThat(types).contains(
@@ -462,8 +462,8 @@ class CommentParserTest {
 
             assertThat(result).isPresent();
             TextElement element = result.get();
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(element.getText()).isEqualTo(" Test comment");
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).isEqualTo(" Test comment");
         }
 
         @Test
@@ -498,7 +498,7 @@ class CommentParserTest {
 
             assertThat(result).isPresent();
             TextElement element = result.get();
-            assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(element.type()).isEqualTo(TextElementType.PRAGMA);
         }
     }
 
@@ -522,8 +522,8 @@ class CommentParserTest {
 
             // All elements should be properly parsed without exceptions
             result.forEach(element -> {
-                assertThat(element.getType()).isNotNull();
-                assertThat(element.getText()).isNotNull();
+                assertThat(element.type()).isNotNull();
+                assertThat(element.text()).isNotNull();
             });
         }
 
@@ -538,8 +538,8 @@ class CommentParserTest {
                     .hasSize(1);
 
             TextElement element = result.get(0);
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(element.getText()).hasSize(longComment.length() - 2); // Minus "//"
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).hasSize(longComment.length() - 2); // Minus "//"
         }
 
         @Test
@@ -558,11 +558,11 @@ class CommentParserTest {
 
             // Rules are applied in order: Inline, Multiline, Pragma, PragmaMacro
             // First line matches inline comment rule first
-            assertThat(result.get(0).getType()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(result.get(0).type()).isEqualTo(TextElementType.INLINE_COMMENT);
             // Second line matches multiline comment rule (no // to interfere)
-            assertThat(result.get(1).getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(result.get(1).type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
             // Third line matches pragma rule
-            assertThat(result.get(2).getType()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(result.get(2).type()).isEqualTo(TextElementType.PRAGMA);
         }
     }
 
@@ -592,7 +592,7 @@ class CommentParserTest {
 
             // All should be inline comments
             assertThat(result)
-                    .allSatisfy(element -> assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT));
+                    .allSatisfy(element -> assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT));
         }
 
         @RetryingTest(5)
@@ -621,7 +621,7 @@ class CommentParserTest {
 
             // Should have all three types
             List<TextElementType> types = result.stream()
-                    .map(TextElement::getType)
+                    .map(TextElement::type)
                     .distinct()
                     .toList();
 

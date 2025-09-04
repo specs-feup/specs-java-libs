@@ -26,7 +26,6 @@ public class TreeNodeUtils {
     /**
      * Ensures that the token has a null parent.
      * 
-     * @param token
      * @return the given token if it does not have a parent, or a copy of the token
      *         if it has (a copy of a token does not have a parent)
      */
@@ -36,8 +35,7 @@ public class TreeNodeUtils {
         }
 
         // Copy token
-        K tokenCopy = token.copy();
-        return tokenCopy;
+        return token.copy();
     }
 
     public static <K extends TreeNode<K>> String toString(K token, String prefix) {
@@ -59,10 +57,7 @@ public class TreeNodeUtils {
 
     /**
      * Gets all the descendants of a certain type from a collection of nodes.
-     * 
-     * @param aClass
-     * @param nodes
-     * @return
+     *
      */
     public static <I extends K, O extends K, K extends TreeNode<K>> List<O> getDescendants(Class<O> aClass,
             Collection<I> nodes) {
@@ -76,10 +71,7 @@ public class TreeNodeUtils {
      * Gets all the descendants of a certain type from a collection of nodes. In
      * addition, if any of the provided nodes are of that class, then they are
      * returned as well.
-     * 
-     * @param aClass
-     * @param nodes
-     * @return
+     *
      */
     public static <I extends K, O extends K, K extends TreeNode<K>> List<O> getDescendantsAndSelves(Class<O> aClass,
             Collection<I> nodes) {
@@ -91,29 +83,19 @@ public class TreeNodeUtils {
 
     /**
      * Returns the index of the last token that is not of the given types.
-     * 
-     * @param currentTokens
-     * @param space
-     * @return
+     *
      */
     public static <K extends TreeNode<K>> Optional<K> lastNodeExcept(List<K> nodes,
             Collection<Class<? extends K>> exceptions) {
 
         Optional<Integer> index = TreeNodeIndexUtils.lastIndexExcept(nodes, exceptions);
-        if (!index.isPresent()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(nodes.get(index.get()));
+        return index.map(nodes::get);
     }
 
     /**
      * Tests two nodes, to check if one is ancestor of the other. If this is the
      * case, returns the ancestor, otherwise returns Optional.empty().
-     * 
-     * @param node1
-     * @param node2
-     * @return
+     *
      */
     public static <K extends TreeNode<K>> Optional<K> getAncestor(K node1, K node2) {
         if (node1.isAncestor(node2)) {

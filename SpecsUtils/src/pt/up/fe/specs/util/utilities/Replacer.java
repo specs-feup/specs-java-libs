@@ -50,10 +50,7 @@ public class Replacer {
 
     /**
      * Helper method which accepts any kind of object.
-     * 
-     * @param target
-     * @param replacement
-     * @return
+     *
      */
     public Replacer replace(Object target, Object replacement) {
         return replace(target.toString(), replacement.toString());

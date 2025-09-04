@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import pt.up.fe.specs.util.parsing.StringCodec;
@@ -38,7 +37,7 @@ public class StringList implements Iterable<String> {
     private final List<String> stringList;
 
     public StringList() {
-        this(new ArrayList<String>());
+        this(new ArrayList<>());
     }
 
     public StringList(String values) {
@@ -50,8 +49,7 @@ public class StringList implements Iterable<String> {
     }
 
     private static String encode(StringList value) {
-        return value.stringList.stream()
-                .collect(Collectors.joining(StringList.DEFAULT_SEPARATOR));
+        return String.join(StringList.DEFAULT_SEPARATOR, value.stringList);
     }
 
     private static List<String> decode(String values) {
@@ -137,13 +135,10 @@ public class StringList implements Iterable<String> {
         }
         StringList other = (StringList) obj;
         if (stringList == null) {
-            if (other.stringList != null) {
-                return false;
-            }
-        } else if (!stringList.equals(other.stringList)) {
-            return false;
+            return other.stringList == null;
+        } else {
+            return stringList.equals(other.stringList);
         }
-        return true;
     }
 
     @Override
@@ -162,9 +157,6 @@ public class StringList implements Iterable<String> {
     /**
      * Helper constructor with variadic inputs.
      *
-     * @param string
-     * @param string2
-     * @return
      */
     public static StringList newInstance(String... values) {
         return new StringList(Arrays.asList(values));

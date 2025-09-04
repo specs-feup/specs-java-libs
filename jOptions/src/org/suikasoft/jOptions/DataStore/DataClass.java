@@ -255,8 +255,8 @@ public interface DataClass<T extends DataClass<T>> {
 
         if (getStoreDefinitionTry().isPresent()) {
             keys = getStoreDefinitionTry().get().getKeys().stream()
-                    .filter(key -> hasValue(key))
-                    .collect(Collectors.toList());
+                    .filter(this::hasValue)
+                    .toList();
         }
 
         return keys.stream()

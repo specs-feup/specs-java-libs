@@ -48,7 +48,7 @@ public class PropertyWithNodeManager {
             if (storeDefOpt.isPresent()) {
                 // Use StoreDefinition name and hashCode to create unique identifier
                 org.suikasoft.jOptions.storedefinition.StoreDefinition storeDef = storeDefOpt.get();
-                this.storeDefinitionId = storeDef.getName() + "_" + Integer.toString(storeDef.hashCode());
+                this.storeDefinitionId = storeDef.getName() + "_" + storeDef.hashCode();
             } else {
                 // Use a special identifier for nodes without StoreDefinition
                 this.storeDefinitionId = "NO_STORE_DEFINITION";
@@ -111,7 +111,7 @@ public class PropertyWithNodeManager {
 
         // Check if node has a StoreDefinition - if not, return empty list
         Optional<org.suikasoft.jOptions.storedefinition.StoreDefinition> storeDefOpt = node.getStoreDefinitionTry();
-        if (!storeDefOpt.isPresent()) {
+        if (storeDefOpt.isEmpty()) {
             return keysWithNodes; // Return empty list for nodes without StoreDefinition
         }
 
@@ -155,7 +155,7 @@ public class PropertyWithNodeManager {
             case OPTIONAL:
                 DataKey<Optional<?>> optionalKey = (DataKey<Optional<?>>) key;
                 Optional<?> value = node.get(optionalKey);
-                if (value == null || !value.isPresent()) {
+                if (value.isEmpty()) {
                     break;
                 }
 

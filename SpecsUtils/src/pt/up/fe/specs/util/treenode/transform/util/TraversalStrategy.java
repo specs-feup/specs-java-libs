@@ -68,9 +68,7 @@ public enum TraversalStrategy {
     /**
      * Apply the rule to the given token and all children in the token tree, bottom
      * up.
-     * 
-     * @param node
-     * @param rule
+     *
      */
     private <K extends TreeNode<K>, T extends TransformResult> void bottomUpTraversal(K node, TransformRule<K, T> rule,
             TransformQueue<K> queue) {
@@ -87,9 +85,7 @@ public enum TraversalStrategy {
     /**
      * Apply the rule to the given token and all children in the token tree, top
      * down.
-     * 
-     * @param node
-     * @param rule
+     *
      */
     private <K extends TreeNode<K>, T extends TransformResult> void topDownTraversal(K node, TransformRule<K, T> rule,
             TransformQueue<K> queue) {

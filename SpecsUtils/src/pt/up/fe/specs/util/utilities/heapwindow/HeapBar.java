@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -40,6 +41,7 @@ import pt.up.fe.specs.util.swing.GenericMouseListener;
  */
 public class HeapBar extends JPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private static final long UPDATE_PERIOD_MS = 500;

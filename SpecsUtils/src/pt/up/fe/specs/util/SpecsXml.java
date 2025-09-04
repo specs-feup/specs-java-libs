@@ -89,11 +89,7 @@ public class SpecsXml {
             return doc;
         } catch (SAXParseException e) {
             throw new RuntimeException("XML document not according to schema", e);
-        } catch (ParserConfigurationException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        } catch (SAXException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | IOException | SAXException e) {
             SpecsLogs.warn("Error message:\n", e);
         }
 
@@ -116,11 +112,7 @@ public class SpecsXml {
             doc.getDocumentElement().normalize();
 
             return doc;
-        } catch (ParserConfigurationException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        } catch (SAXException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | IOException | SAXException e) {
             SpecsLogs.warn("Error message:\n", e);
         }
 
@@ -130,10 +122,6 @@ public class SpecsXml {
     /**
      * Returns the value of the attribute inside the given tag.
      *
-     * @param doc
-     * @param tag
-     * @param attribute
-     * @return
      */
     public static String getAttribute(Document doc, String tag, String attribute) {
         NodeList nList = doc.getElementsByTagName(tag);
@@ -191,9 +179,7 @@ public class SpecsXml {
             return null;
         }
 
-        Element eElement = (Element) nNode;
-
-        return eElement;
+        return (Element) nNode;
     }
 
     public static String getElementText(Element element, String tag) {
@@ -287,11 +273,9 @@ public class SpecsXml {
         List<Element> children = new ArrayList<>();
         for (int i = 0; i < entries.getLength(); i++) {
             Node currentNode = entries.item(i);
-            if (!(currentNode instanceof Element)) {
+            if (!(currentNode instanceof Element childElement)) {
                 continue;
             }
-
-            Element childElement = (Element) currentNode;
 
             if (tag.equals("*") || tag.equals(childElement.getTagName())) {
                 children.add(childElement);

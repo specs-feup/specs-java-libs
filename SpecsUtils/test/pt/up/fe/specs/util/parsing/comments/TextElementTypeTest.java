@@ -196,7 +196,7 @@ public class TextElementTypeTest {
             for (TextElementType type : TextElementType.values()) {
                 assertThatCode(() -> {
                     TextElement element = TextElement.newInstance(type, "test text");
-                    assertThat(element.getType()).isEqualTo(type);
+                    assertThat(element.type()).isEqualTo(type);
                 }).doesNotThrowAnyException();
             }
         }

@@ -73,7 +73,6 @@ public class BuilderWithIndentation {
     /**
      * Appends the current indentation and the string to the current buffer.
      *
-     * @param string
      */
     public BuilderWithIndentation add(String string) {
         if (string == null) {
@@ -89,7 +88,6 @@ public class BuilderWithIndentation {
     /**
      * Splits the given string around the newlines and a adds each line.
      *
-     * @param lines
      */
     public BuilderWithIndentation addLines(String lines) {
         if (lines == null) {
@@ -103,7 +101,7 @@ public class BuilderWithIndentation {
         }
 
         StringLines.newInstance(lines).stream()
-                .forEach(line -> addLine(line));
+                .forEach(this::addLine);
 
         return this;
     }
@@ -117,7 +115,6 @@ public class BuilderWithIndentation {
      * Appends the current indentation, the string and a newline to the current
      * buffer.
      *
-     * @param line
      */
     public BuilderWithIndentation addLine(String line) {
         // Add identation
@@ -129,9 +126,7 @@ public class BuilderWithIndentation {
     }
 
     private void addIndentation() {
-        for (int i = 0; i < currentIdentation; i++) {
-            builder.append(tab);
-        }
+        builder.append(String.valueOf(tab).repeat(Math.max(0, currentIdentation)));
     }
 
 }

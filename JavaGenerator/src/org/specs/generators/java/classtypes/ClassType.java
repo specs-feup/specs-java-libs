@@ -167,13 +167,11 @@ public abstract class ClassType implements IGenerate {
      * @return true if the inner class type was successfully added
      */
     public boolean add(ClassType type) {
-
         boolean added = getInnerTypes().add(type);
         if (added) {
             type.setParent(this);
         }
         return added;
-
     }
 
     /**
@@ -255,7 +253,7 @@ public abstract class ClassType implements IGenerate {
         } else {
             isAdded = addImport(newImport.getCanonicalName());
         }
-        newImport.getGenerics().forEach(gen -> addGenericImports(gen));
+        newImport.getGenerics().forEach(this::addGenericImports);
         return isAdded;
     }
 
@@ -266,7 +264,7 @@ public abstract class ClassType implements IGenerate {
      */
     private void addGenericImports(JavaGenericType genType) {
         addImport(genType.getTheType());
-        genType.getExtendingTypes().forEach(gen -> addImport(gen));
+        genType.getExtendingTypes().forEach(this::addImport);
     }
 
     /**
@@ -356,7 +354,7 @@ public abstract class ClassType implements IGenerate {
      */
     public StringBuilder generateClassHeader(int indentation) {
         StringBuilder classGen = new StringBuilder();
-        if (!getParent().isPresent()) { // I'm the main class
+        if (getParent().isEmpty()) { // I'm the main class
             if (!getClassPackage().isEmpty()) {
                 classGen.append("package ");
                 classGen.append(getClassPackage());

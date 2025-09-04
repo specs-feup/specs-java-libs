@@ -303,8 +303,8 @@ class RawValueUtilsTest {
         }
 
         @Test
-        @DisplayName("getRealValue throws NotImplementedException for DataKey with null value class")
-        void testGetRealValue_ThrowsNotImplementedExceptionForDataKeyWithNullValueClass() {
+        @DisplayName("getRealValue throws NPE for DataKey with null value class")
+        void testGetRealValue_ThrowsNPEForDataKeyWithNullValueClass() {
             @SuppressWarnings("unchecked")
             DataKey<String> keyWithNullClass = mock(DataKey.class);
             when(keyWithNullClass.getValueClass()).thenReturn(null);
@@ -317,9 +317,9 @@ class RawValueUtilsTest {
                 // If it doesn't throw, this is unexpected behavior
                 assertThat(result).isNull();
 
-            } catch (pt.up.fe.specs.util.exceptions.NotImplementedException e) {
+            } catch (NullPointerException e) {
                 // This is the actual behavior - ClassMap throws exception for null class
-                assertThat(e.getMessage()).contains("Not yet implemented: Function not defined for class 'null'");
+                assertThat(e.getMessage()).contains("Key cannot be null");
             }
         }
 

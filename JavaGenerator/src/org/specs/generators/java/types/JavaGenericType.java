@@ -90,8 +90,7 @@ public class JavaGenericType {
      */
     @Override
     public String toString() {
-        final String toString = "<" + getCanonicalType() + ">";
-        return toString;
+        return "<" + getCanonicalType() + ">";
     }
 
     /**

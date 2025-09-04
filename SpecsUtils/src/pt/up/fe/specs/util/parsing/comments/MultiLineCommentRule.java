@@ -37,7 +37,7 @@ public class MultiLineCommentRule implements TextParserRule {
 
         String currentLine = line.substring(startIndex + "/*".length());
 
-        int endIndex = -1;
+        int endIndex;
         while (true) {
 
             // Check if current line end the multi-line comment
@@ -59,7 +59,7 @@ public class MultiLineCommentRule implements TextParserRule {
         }
 
         return Optional.of(TextElement.newInstance(TextElementType.MULTILINE_COMMENT,
-                lines.stream().collect(Collectors.joining("\n"))));
+                String.join("\n", lines)));
     }
 
 }

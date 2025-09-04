@@ -17,26 +17,10 @@ import java.util.Optional;
 
 import pt.up.fe.specs.util.utilities.StringSlice;
 
-public class ParserResult<T> {
-
-    private final StringSlice modifiedString;
-    private final T result;
-
-    public ParserResult(StringSlice modifiedString, T result) {
-        this.modifiedString = modifiedString;
-        this.result = result;
-    }
-
-    public StringSlice getModifiedString() {
-        return modifiedString;
-    }
-
-    public T getResult() {
-        return result;
-    }
+public record ParserResult<T>(StringSlice modifiedString, T result) {
 
     public static <T> ParserResult<Optional<T>> asOptional(ParserResult<T> parserResult) {
-        return new ParserResult<>(parserResult.getModifiedString(), Optional.ofNullable(parserResult.getResult()));
+        return new ParserResult<>(parserResult.modifiedString(), Optional.ofNullable(parserResult.result()));
     }
 
 }

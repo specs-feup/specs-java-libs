@@ -63,7 +63,7 @@ public class LineStreamFileService implements FileService {
         }
 
         @Override
-        public void close() throws Exception {
+        public void close() {
             stream.close();
         }
 
@@ -102,7 +102,7 @@ public class LineStreamFileService implements FileService {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         for (CachedInfo cachedInfo : cache.values()) {
             cachedInfo.close();
         }

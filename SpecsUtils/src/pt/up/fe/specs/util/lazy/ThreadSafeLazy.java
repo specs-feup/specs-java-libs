@@ -42,8 +42,7 @@ public final class ThreadSafeLazy<T> implements Lazy<T> {
 
     /**
      * The same as the method get().
-     * 
-     * @return
+     *
      */
     public T getValue() {
         return get();

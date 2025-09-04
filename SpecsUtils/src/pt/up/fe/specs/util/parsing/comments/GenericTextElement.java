@@ -13,24 +13,6 @@
 
 package pt.up.fe.specs.util.parsing.comments;
 
-class GenericTextElement implements TextElement {
-
-    private final TextElementType type;
-    private final String text;
-
-    public GenericTextElement(TextElementType type, String text) {
-        this.type = type;
-        this.text = text;
-    }
-
-    @Override
-    public TextElementType getType() {
-        return type;
-    }
-
-    @Override
-    public String getText() {
-        return text;
-    }
+record GenericTextElement(TextElementType type, String text) implements TextElement {
 
 }

@@ -16,7 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option.notimplementedyet;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,6 +49,7 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class ListOfSetupsPanel extends FieldPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private JPanel currentOptionsPanel;
@@ -86,29 +87,11 @@ public class ListOfSetupsPanel extends FieldPanel {
         initElements();
 
         // Add actions
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
+        addButton.addActionListener(this::addButtonActionPerformed);
 
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                removeButtonActionPerformed(evt);
-            }
+        removeButton.addActionListener(this::removeButtonActionPerformed);
 
-        });
-
-        elementsBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                elementComboBoxActionPerformed(e);
-            }
-
-        });
+        elementsBox.addActionListener(this::elementComboBoxActionPerformed);
 
         // Build choice panel
         choicePanel = buildChoicePanel();
@@ -224,10 +207,6 @@ public class ListOfSetupsPanel extends FieldPanel {
         elementsFiles.add(SetupData.create(setupKeys));
 
         BaseSetupPanel newPanel = new BaseSetupPanel(setupKeys, identationLevel + 1);
-
-        if (!setupKeys.getSetupKeys().isEmpty()) {
-            // newPanel.add(new javax.swing.JSeparator(), 0);
-        }
 
         elementsOptionPanels.add(newPanel);
 
@@ -370,8 +349,8 @@ public class ListOfSetupsPanel extends FieldPanel {
 
         List<SetupData> listOfSetups = new ArrayList<>();
 
-        for (int i = 0; i < elementsOptionPanels.size(); i++) {
-            listOfSetups.add(elementsOptionPanels.get(i).getMapWithValues());
+        for (BaseSetupPanel elementsOptionPanel : elementsOptionPanels) {
+            listOfSetups.add(elementsOptionPanel.getMapWithValues());
         }
 
         return new ListOfSetups(listOfSetups);

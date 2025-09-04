@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option.notimplementedyet;
 
 import java.awt.LayoutManager;
+import java.io.Serial;
 import java.util.Collection;
 
 import javax.swing.BoxLayout;
@@ -35,6 +36,7 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class IntegratedSetupPanel extends FieldPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

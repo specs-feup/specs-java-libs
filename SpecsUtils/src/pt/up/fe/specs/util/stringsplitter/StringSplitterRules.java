@@ -26,44 +26,37 @@ public class StringSplitterRules {
      * <p>
      * The default separator is a whitespace, as determined by the function
      * {@link java.lang.Character#isWhitespace(char)}.
-     * 
-     * @param string
-     * @return
+     *
      */
     public static SplitResult<String> string(StringSliceWithSplit string) {
         SplitResult<String> nextResult = string.split();
 
-        return new SplitResult<>(nextResult.getModifiedSlice(), nextResult.getValue());
+        return new SplitResult<>(nextResult.modifiedSlice(), nextResult.value());
     }
 
     /**
      * Looks for a word (as defined by
      * {@link StringSplitterRules#string(StringSlice)}) and tries to transform into
      * an object using the provided decoder.
-     * 
-     * @param string
-     * @param decoder
-     * @return
+     *
      */
     public static <T> SplitResult<T> object(StringSliceWithSplit string, StringDecoder<T> decoder) {
         // Get word
         SplitResult<String> results = string(string);
 
         // Try to decode string
-        T decodedObject = decoder.apply(results.getValue());
+        T decodedObject = decoder.apply(results.value());
 
         if (decodedObject == null) {
             return null;
         }
 
-        return new SplitResult<>(results.getModifiedSlice(), decodedObject);
+        return new SplitResult<>(results.modifiedSlice(), decodedObject);
     }
 
     /**
      * Looks for an integer at the beginning of the string.
-     * 
-     * @param string
-     * @return
+     *
      */
     public static SplitResult<Integer> integer(StringSliceWithSplit string) {
         return object(string, SpecsStrings::parseInteger);
@@ -71,9 +64,7 @@ public class StringSplitterRules {
 
     /**
      * Looks for a double at the beginning of the string.
-     * 
-     * @param string
-     * @return
+     *
      */
     public static SplitResult<Double> doubleNumber(StringSliceWithSplit string) {
         return object(string, doubleString -> SpecsStrings.parseDouble(doubleString, false));
@@ -81,9 +72,7 @@ public class StringSplitterRules {
 
     /**
      * Looks for a float at the beginning of the string.
-     * 
-     * @param string
-     * @return
+     *
      */
     public static SplitResult<Float> floatNumber(StringSliceWithSplit string) {
         return object(string, floatString -> SpecsStrings.parseFloat(floatString, false));

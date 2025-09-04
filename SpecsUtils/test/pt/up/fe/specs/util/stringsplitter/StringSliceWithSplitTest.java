@@ -150,8 +150,8 @@ class StringSliceWithSplitTest {
             SplitResult<String> result = slice.split();
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("hello");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("world test");
+            assertThat(result.value()).isEqualTo("hello");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("world test");
         }
 
         @Test
@@ -163,8 +163,8 @@ class StringSliceWithSplitTest {
             SplitResult<String> result = slice.split();
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("hello");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("world,test");
+            assertThat(result.value()).isEqualTo("hello");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("world,test");
         }
 
         @Test
@@ -175,8 +175,8 @@ class StringSliceWithSplitTest {
             SplitResult<String> result = slice.split();
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("helloworld");
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo("helloworld");
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -189,8 +189,8 @@ class StringSliceWithSplitTest {
 
             assertThat(result).isNotNull();
             // Leading spaces cause empty string first, trimmed becomes empty
-            assertThat(result.getValue()).isEmpty();
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("hello  world");
+            assertThat(result.value()).isEmpty();
+            assertThat(result.modifiedSlice().toString()).isEqualTo("hello  world");
         }
 
         @Test
@@ -203,8 +203,8 @@ class StringSliceWithSplitTest {
 
             assertThat(result).isNotNull();
             // Leading spaces cause empty string first
-            assertThat(result.getValue()).isEmpty();
-            assertThat(result.getModifiedSlice().toString()).isEqualTo(" hello  world  ");
+            assertThat(result.value()).isEmpty();
+            assertThat(result.modifiedSlice().toString()).isEqualTo(" hello  world  ");
         }
 
         @Test
@@ -217,8 +217,8 @@ class StringSliceWithSplitTest {
 
             assertThat(result).isNotNull();
             // In reverse mode, should split from the end
-            assertThat(result.getValue()).isEqualTo("test");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("hello world");
+            assertThat(result.value()).isEqualTo("test");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("hello world");
         }
 
         @Test
@@ -229,8 +229,8 @@ class StringSliceWithSplitTest {
             SplitResult<String> result = slice.split();
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEmpty();
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEmpty();
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -242,7 +242,7 @@ class StringSliceWithSplitTest {
 
             assertThat(result).isNotNull();
             // With default trim=true, should result in empty strings
-            assertThat(result.getValue()).isEmpty();
+            assertThat(result.value()).isEmpty();
         }
 
         @ParameterizedTest
@@ -254,8 +254,8 @@ class StringSliceWithSplitTest {
             SplitResult<String> result = slice.split();
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("hello");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("world");
+            assertThat(result.value()).isEqualTo("hello");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("world");
         }
     }
 
@@ -269,18 +269,18 @@ class StringSliceWithSplitTest {
             StringSliceWithSplit slice = new StringSliceWithSplit("first second third fourth");
 
             SplitResult<String> first = slice.split();
-            assertThat(first.getValue()).isEqualTo("first");
+            assertThat(first.value()).isEqualTo("first");
 
-            SplitResult<String> second = first.getModifiedSlice().split();
-            assertThat(second.getValue()).isEqualTo("second");
+            SplitResult<String> second = first.modifiedSlice().split();
+            assertThat(second.value()).isEqualTo("second");
 
-            SplitResult<String> third = second.getModifiedSlice().split();
-            assertThat(third.getValue()).isEqualTo("third");
+            SplitResult<String> third = second.modifiedSlice().split();
+            assertThat(third.value()).isEqualTo("third");
 
-            SplitResult<String> fourth = third.getModifiedSlice().split();
-            assertThat(fourth.getValue()).isEqualTo("fourth");
+            SplitResult<String> fourth = third.modifiedSlice().split();
+            assertThat(fourth.value()).isEqualTo("fourth");
 
-            assertThat(fourth.getModifiedSlice().toString()).isEmpty();
+            assertThat(fourth.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -293,8 +293,8 @@ class StringSliceWithSplitTest {
 
             while (!current.isEmpty()) {
                 SplitResult<String> result = current.split();
-                assertThat(result.getValue()).isNotEmpty();
-                current = result.getModifiedSlice();
+                assertThat(result.value()).isNotEmpty();
+                current = result.modifiedSlice();
                 count++;
 
                 // Safety check to prevent infinite loop
@@ -312,13 +312,13 @@ class StringSliceWithSplitTest {
                     .setSeparator(ch -> ch == ',' || Character.isWhitespace(ch));
 
             SplitResult<String> first = slice.split();
-            assertThat(first.getValue()).isEqualTo("a");
+            assertThat(first.value()).isEqualTo("a");
 
-            SplitResult<String> second = first.getModifiedSlice().split();
-            assertThat(second.getValue()).isEqualTo("b");
+            SplitResult<String> second = first.modifiedSlice().split();
+            assertThat(second.value()).isEqualTo("b");
 
-            SplitResult<String> third = second.getModifiedSlice().split();
-            assertThat(third.getValue()).isEqualTo("c");
+            SplitResult<String> third = second.modifiedSlice().split();
+            assertThat(third.value()).isEqualTo("c");
         }
     }
 
@@ -396,8 +396,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("hello");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("23world456test");
+            assertThat(result.value()).isEqualTo("hello");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("23world456test");
         }
 
         @Test
@@ -408,8 +408,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("hello");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("world?test.");
+            assertThat(result.value()).isEqualTo("hello");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("world?test.");
         }
 
         @Test
@@ -420,8 +420,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("a");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("aAbBbBcCcC");
+            assertThat(result.value()).isEqualTo("a");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("aAbBbBcCcC");
         }
 
         @Test
@@ -432,8 +432,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("hello world test");
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo("hello world test");
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -444,8 +444,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEmpty();
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("ello");
+            assertThat(result.value()).isEmpty();
+            assertThat(result.modifiedSlice().toString()).isEqualTo("ello");
         }
     }
 
@@ -461,8 +461,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("three");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("one two");
+            assertThat(result.value()).isEqualTo("three");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("one two");
         }
 
         @Test
@@ -472,15 +472,15 @@ class StringSliceWithSplitTest {
                     .setReverse(true);
 
             SplitResult<String> first = slice.split();
-            assertThat(first.getValue()).isEqualTo("third");
+            assertThat(first.value()).isEqualTo("third");
 
-            SplitResult<String> second = first.getModifiedSlice().split();
-            assertThat(second.getValue()).isEqualTo("second");
+            SplitResult<String> second = first.modifiedSlice().split();
+            assertThat(second.value()).isEqualTo("second");
 
-            SplitResult<String> third = second.getModifiedSlice().split();
-            assertThat(third.getValue()).isEqualTo("first");
+            SplitResult<String> third = second.modifiedSlice().split();
+            assertThat(third.value()).isEqualTo("first");
 
-            assertThat(third.getModifiedSlice().toString()).isEmpty();
+            assertThat(third.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -492,8 +492,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("d");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("a,b,c");
+            assertThat(result.value()).isEqualTo("d");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("a,b,c");
         }
 
         @Test
@@ -507,8 +507,8 @@ class StringSliceWithSplitTest {
 
             assertThat(result).isNotNull();
             // In reverse mode with trailing spaces, empty string first
-            assertThat(result.getValue()).isEmpty();
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("first  second  third");
+            assertThat(result.value()).isEmpty();
+            assertThat(result.modifiedSlice().toString()).isEqualTo("first  second  third");
         }
 
         @Test
@@ -519,8 +519,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("noseparators");
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo("noseparators");
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
     }
 
@@ -536,8 +536,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("word");
-            assertThat(result.getModifiedSlice().toString()).startsWith("word ");
+            assertThat(result.value()).isEqualTo("word");
+            assertThat(result.modifiedSlice().toString()).startsWith("word ");
         }
 
         @Test
@@ -547,8 +547,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("こんにちは");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("世界 テスト");
+            assertThat(result.value()).isEqualTo("こんにちは");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("世界 テスト");
         }
 
         @Test
@@ -560,7 +560,7 @@ class StringSliceWithSplitTest {
 
             // The exact result depends on what characters are considered separators
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isNotNull();
+            assertThat(result.value()).isNotNull();
         }
 
         @Test
@@ -570,9 +570,9 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("word1");
+            assertThat(result.value()).isEqualTo("word1");
             // Remaining should still contain the other words
-            assertThat(result.getModifiedSlice().toString()).contains("word2");
+            assertThat(result.modifiedSlice().toString()).contains("word2");
         }
 
         @Test
@@ -584,7 +584,7 @@ class StringSliceWithSplitTest {
 
             assertThat(result).isNotNull();
             // Leading space causes empty string first
-            assertThat(result.getValue()).isEmpty();
+            assertThat(result.value()).isEmpty();
         }
 
         @Test
@@ -594,8 +594,8 @@ class StringSliceWithSplitTest {
 
             SplitResult<String> result = slice.split();
 
-            assertThat(result.getValue()).isEqualTo("a");
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo("a");
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -607,7 +607,7 @@ class StringSliceWithSplitTest {
             SplitResult<String> result = slice.split();
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEmpty();
+            assertThat(result.value()).isEmpty();
         }
     }
 
@@ -622,13 +622,13 @@ class StringSliceWithSplitTest {
 
             // This simulates how StringSplitter might use StringSliceWithSplit
             SplitResult<String> firstResult = slice.split();
-            assertThat(firstResult.getValue()).isEqualTo("123");
+            assertThat(firstResult.value()).isEqualTo("123");
 
-            SplitResult<String> secondResult = firstResult.getModifiedSlice().split();
-            assertThat(secondResult.getValue()).isEqualTo("hello");
+            SplitResult<String> secondResult = firstResult.modifiedSlice().split();
+            assertThat(secondResult.value()).isEqualTo("hello");
 
-            SplitResult<String> thirdResult = secondResult.getModifiedSlice().split();
-            assertThat(thirdResult.getValue()).isEqualTo("45.6");
+            SplitResult<String> thirdResult = secondResult.modifiedSlice().split();
+            assertThat(thirdResult.value()).isEqualTo("45.6");
         }
 
         @Test
@@ -639,14 +639,14 @@ class StringSliceWithSplitTest {
                     .setTrim(false);
 
             SplitResult<String> first = slice.split();
-            SplitResult<String> second = first.getModifiedSlice().split();
+            SplitResult<String> second = first.modifiedSlice().split();
 
-            assertThat(first.getValue()).isEqualTo("a");
-            assertThat(second.getValue()).isEqualTo("b");
+            assertThat(first.value()).isEqualTo("a");
+            assertThat(second.value()).isEqualTo("b");
 
             // Configuration should be maintained in the modified slice
-            SplitResult<String> third = second.getModifiedSlice().split();
-            assertThat(third.getValue()).isEqualTo("c");
+            SplitResult<String> third = second.modifiedSlice().split();
+            assertThat(third.value()).isEqualTo("c");
         }
     }
 }

@@ -51,7 +51,7 @@ class FileResourceProviderTest {
         void shouldHaveCorrectInterfaceMethods() {
             assertThatCode(() -> {
                 FileResourceProvider.class.getMethod("write", File.class);
-                FileResourceProvider.class.getMethod("getVersion");
+                FileResourceProvider.class.getMethod("version");
                 FileResourceProvider.class.getMethod("getFilename");
                 FileResourceProvider.class.getMethod("writeVersioned", File.class, Class.class);
                 FileResourceProvider.class.getMethod("writeVersioned", File.class, Class.class, boolean.class);
@@ -86,7 +86,7 @@ class FileResourceProviderTest {
             FileResourceProvider provider = FileResourceProvider.newInstance(testFile, versionSuffix);
 
             assertThat(provider).isNotNull();
-            assertThat(provider.getVersion()).contains(versionSuffix);
+            assertThat(provider.version()).contains(versionSuffix);
         }
 
         @Test
@@ -129,7 +129,7 @@ class FileResourceProviderTest {
         @Test
         @DisplayName("should return version information or null")
         void shouldReturnVersionInformationOrNull() {
-            String version = testProvider.getVersion();
+            String version = testProvider.version();
 
             // Version can be null for providers created without explicit version
             if (version != null) {
@@ -321,7 +321,7 @@ class FileResourceProviderTest {
             FileResourceProvider versionedProvider = testProvider.createResourceVersion("v2.0");
 
             assertThat(versionedProvider).isNotNull();
-            assertThat(versionedProvider.getVersion()).contains("v2.0");
+            assertThat(versionedProvider.version()).contains("v2.0");
         }
 
         @Test
@@ -463,11 +463,11 @@ class FileResourceProviderTest {
         void shouldWorkWithMockedImplementations() {
             FileResourceProvider mockProvider = mock(FileResourceProvider.class);
             when(mockProvider.getFilename()).thenReturn("mock.txt");
-            when(mockProvider.getVersion()).thenReturn("1.0.0");
+            when(mockProvider.version()).thenReturn("1.0.0");
             when(mockProvider.write(any(File.class))).thenReturn(testFile);
 
             assertThat(mockProvider.getFilename()).isEqualTo("mock.txt");
-            assertThat(mockProvider.getVersion()).isEqualTo("1.0.0");
+            assertThat(mockProvider.version()).isEqualTo("1.0.0");
             assertThat(mockProvider.write(tempDir.toFile())).isEqualTo(testFile);
         }
 
@@ -491,7 +491,7 @@ class FileResourceProviderTest {
             FileResourceProvider provider2 = FileResourceProvider.newInstance(testFile, "v1.0");
 
             assertThat(provider1.getFilename()).isEqualTo(provider2.getFilename());
-            assertThat(provider1.getVersion()).isNotEqualTo(provider2.getVersion());
+            assertThat(provider1.version()).isNotEqualTo(provider2.version());
         }
     }
 

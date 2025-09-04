@@ -33,8 +33,8 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(slice, result);
 
-            assertThat(parserResult.getModifiedString()).isEqualTo(slice);
-            assertThat(parserResult.getResult()).isEqualTo(result);
+            assertThat(parserResult.modifiedString()).isEqualTo(slice);
+            assertThat(parserResult.result()).isEqualTo(result);
         }
 
         @Test
@@ -44,8 +44,8 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(slice, null);
 
-            assertThat(parserResult.getModifiedString()).isEqualTo(slice);
-            assertThat(parserResult.getResult()).isNull();
+            assertThat(parserResult.modifiedString()).isEqualTo(slice);
+            assertThat(parserResult.result()).isNull();
         }
 
         @Test
@@ -56,9 +56,9 @@ public class ParserResultTest {
 
             ParserResult<Integer> parserResult = new ParserResult<>(emptySlice, result);
 
-            assertThat(parserResult.getModifiedString()).isEqualTo(emptySlice);
-            assertThat(parserResult.getModifiedString().toString()).isEmpty();
-            assertThat(parserResult.getResult()).isEqualTo(42);
+            assertThat(parserResult.modifiedString()).isEqualTo(emptySlice);
+            assertThat(parserResult.modifiedString().toString()).isEmpty();
+            assertThat(parserResult.result()).isEqualTo(42);
         }
 
         @Test
@@ -70,7 +70,7 @@ public class ParserResultTest {
             ParserResult<String> parserResult = new ParserResult<>(originalSlice, result);
 
             // Should preserve the exact reference, not a copy
-            assertThat(parserResult.getModifiedString()).isSameAs(originalSlice);
+            assertThat(parserResult.modifiedString()).isSameAs(originalSlice);
         }
     }
 
@@ -86,7 +86,7 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(slice, expected);
 
-            assertThat(parserResult.getResult()).isEqualTo(expected);
+            assertThat(parserResult.result()).isEqualTo(expected);
         }
 
         @Test
@@ -97,7 +97,7 @@ public class ParserResultTest {
 
             ParserResult<Integer> parserResult = new ParserResult<>(slice, expected);
 
-            assertThat(parserResult.getResult()).isEqualTo(expected);
+            assertThat(parserResult.result()).isEqualTo(expected);
         }
 
         @Test
@@ -108,7 +108,7 @@ public class ParserResultTest {
 
             ParserResult<Boolean> parserResult = new ParserResult<>(slice, expected);
 
-            assertThat(parserResult.getResult()).isEqualTo(expected);
+            assertThat(parserResult.result()).isEqualTo(expected);
         }
 
         @Test
@@ -122,9 +122,9 @@ public class ParserResultTest {
 
             ParserResult<ParsedData> parserResult = new ParserResult<>(slice, expected);
 
-            assertThat(parserResult.getResult()).isEqualTo(expected);
-            assertThat(parserResult.getResult().name()).isEqualTo("test");
-            assertThat(parserResult.getResult().value()).isEqualTo(42);
+            assertThat(parserResult.result()).isEqualTo(expected);
+            assertThat(parserResult.result().name()).isEqualTo("test");
+            assertThat(parserResult.result().value()).isEqualTo(42);
         }
     }
 
@@ -140,8 +140,8 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(expected, result);
 
-            assertThat(parserResult.getModifiedString()).isEqualTo(expected);
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo("modified content");
+            assertThat(parserResult.modifiedString()).isEqualTo(expected);
+            assertThat(parserResult.modifiedString().toString()).isEqualTo("modified content");
         }
 
         @Test
@@ -152,8 +152,8 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(emptySlice, result);
 
-            assertThat(parserResult.getModifiedString().isEmpty()).isTrue();
-            assertThat(parserResult.getModifiedString().toString()).isEmpty();
+            assertThat(parserResult.modifiedString().isEmpty()).isTrue();
+            assertThat(parserResult.modifiedString().toString()).isEmpty();
         }
 
         @Test
@@ -165,8 +165,8 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(modified, result);
 
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo("text");
-            assertThat(parserResult.getResult()).isEqualTo("original");
+            assertThat(parserResult.modifiedString().toString()).isEqualTo("text");
+            assertThat(parserResult.result()).isEqualTo("original");
         }
 
         @Test
@@ -178,8 +178,8 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(trimmed, result);
 
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo("spaced content");
-            assertThat(parserResult.getResult()).isEqualTo("trimmed");
+            assertThat(parserResult.modifiedString().toString()).isEqualTo("spaced content");
+            assertThat(parserResult.result()).isEqualTo("trimmed");
         }
     }
 
@@ -196,9 +196,9 @@ public class ParserResultTest {
 
             ParserResult<Optional<String>> optionalResult = ParserResult.asOptional(original);
 
-            assertThat(optionalResult.getModifiedString()).isEqualTo(slice);
-            assertThat(optionalResult.getResult()).isPresent();
-            assertThat(optionalResult.getResult()).hasValue("value");
+            assertThat(optionalResult.modifiedString()).isEqualTo(slice);
+            assertThat(optionalResult.result()).isPresent();
+            assertThat(optionalResult.result()).hasValue("value");
         }
 
         @Test
@@ -211,8 +211,8 @@ public class ParserResultTest {
             // values
             ParserResult<Optional<String>> optionalResult = ParserResult.asOptional(original);
 
-            assertThat(optionalResult.getModifiedString()).isEqualTo(slice);
-            assertThat(optionalResult.getResult()).isEmpty();
+            assertThat(optionalResult.modifiedString()).isEqualTo(slice);
+            assertThat(optionalResult.result()).isEmpty();
         }
 
         @Test
@@ -224,8 +224,8 @@ public class ParserResultTest {
 
             ParserResult<Optional<Integer>> optionalResult = ParserResult.asOptional(original);
 
-            assertThat(optionalResult.getModifiedString()).isSameAs(originalSlice);
-            assertThat(optionalResult.getResult()).hasValue(999);
+            assertThat(optionalResult.modifiedString()).isSameAs(originalSlice);
+            assertThat(optionalResult.result()).hasValue(999);
         }
 
         @Test
@@ -240,8 +240,8 @@ public class ParserResultTest {
 
             ParserResult<Optional<ComplexType>> optionalResult = ParserResult.asOptional(original);
 
-            assertThat(optionalResult.getResult()).isPresent();
-            assertThat(optionalResult.getResult()).hasValueSatisfying(complex -> {
+            assertThat(optionalResult.result()).isPresent();
+            assertThat(optionalResult.result()).hasValueSatisfying(complex -> {
                 assertThat(complex.data()).isEqualTo("test data");
                 assertThat(complex.number()).isEqualTo(123);
             });
@@ -261,12 +261,12 @@ public class ParserResultTest {
             ParserResult<String> parserResult = new ParserResult<>(slice, result);
 
             // Verify that the result cannot be changed (no setters should exist)
-            assertThat(parserResult.getResult()).isEqualTo("immutable result");
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo("immutable test");
+            assertThat(parserResult.result()).isEqualTo("immutable result");
+            assertThat(parserResult.modifiedString().toString()).isEqualTo("immutable test");
 
             // Multiple calls should return the same values
-            assertThat(parserResult.getResult()).isEqualTo(parserResult.getResult());
-            assertThat(parserResult.getModifiedString()).isEqualTo(parserResult.getModifiedString());
+            assertThat(parserResult.result()).isEqualTo(parserResult.result());
+            assertThat(parserResult.modifiedString()).isEqualTo(parserResult.modifiedString());
         }
 
         @Test
@@ -278,10 +278,10 @@ public class ParserResultTest {
             ParserResult<String> parserResult = new ParserResult<>(slice, result);
 
             // Capture initial state
-            String initialSliceContent = parserResult.getModifiedString().toString();
+            String initialSliceContent = parserResult.modifiedString().toString();
 
             // Note: StringSlice is typically immutable, but this tests the concept
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo(initialSliceContent);
+            assertThat(parserResult.modifiedString().toString()).isEqualTo(initialSliceContent);
         }
     }
 
@@ -298,8 +298,8 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(largeSlice, result);
 
-            assertThat(parserResult.getModifiedString().toString()).hasSize(100000);
-            assertThat(parserResult.getResult()).isEqualTo("large");
+            assertThat(parserResult.modifiedString().toString()).hasSize(100000);
+            assertThat(parserResult.result()).isEqualTo("large");
         }
 
         @Test
@@ -311,8 +311,8 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(specialSlice, result);
 
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo(specialContent);
-            assertThat(parserResult.getResult()).isEqualTo("special");
+            assertThat(parserResult.modifiedString().toString()).isEqualTo(specialContent);
+            assertThat(parserResult.result()).isEqualTo("special");
         }
 
         @Test
@@ -324,8 +324,8 @@ public class ParserResultTest {
 
             ParserResult<Integer> parserResult = new ParserResult<>(multilineSlice, result);
 
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo(multilineContent);
-            assertThat(parserResult.getResult()).isEqualTo(3);
+            assertThat(parserResult.modifiedString().toString()).isEqualTo(multilineContent);
+            assertThat(parserResult.result()).isEqualTo(3);
         }
 
         @Test
@@ -336,9 +336,9 @@ public class ParserResultTest {
 
             ParserResult<String> parserResult = new ParserResult<>(slice, emptyResult);
 
-            assertThat(parserResult.getResult()).isNotNull();
-            assertThat(parserResult.getResult()).isEmpty();
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo("non-empty");
+            assertThat(parserResult.result()).isNotNull();
+            assertThat(parserResult.result()).isEmpty();
+            assertThat(parserResult.modifiedString().toString()).isEqualTo("non-empty");
         }
     }
 
@@ -353,15 +353,15 @@ public class ParserResultTest {
 
             // String type
             ParserResult<String> stringResult = new ParserResult<>(slice, "text");
-            assertThat(stringResult.getResult()).isInstanceOf(String.class);
+            assertThat(stringResult.result()).isInstanceOf(String.class);
 
             // Integer type
             ParserResult<Integer> intResult = new ParserResult<>(slice, 42);
-            assertThat(intResult.getResult()).isInstanceOf(Integer.class);
+            assertThat(intResult.result()).isInstanceOf(Integer.class);
 
             // Boolean type
             ParserResult<Boolean> boolResult = new ParserResult<>(slice, true);
-            assertThat(boolResult.getResult()).isInstanceOf(Boolean.class);
+            assertThat(boolResult.result()).isInstanceOf(Boolean.class);
         }
 
         @Test
@@ -372,8 +372,8 @@ public class ParserResultTest {
 
             ParserResult<java.util.List<String>> parserResult = new ParserResult<>(slice, listResult);
 
-            assertThat(parserResult.getResult()).isInstanceOf(java.util.List.class);
-            assertThat(parserResult.getResult()).containsExactly("a", "b", "c");
+            assertThat(parserResult.result()).isInstanceOf(java.util.List.class);
+            assertThat(parserResult.result()).containsExactly("a", "b", "c");
         }
 
         @Test
@@ -395,8 +395,8 @@ public class ParserResultTest {
 
             ParserResult<CustomParsable> parserResult = new ParserResult<>(slice, result);
 
-            assertThat(parserResult.getResult()).isInstanceOf(CustomParsable.class);
-            assertThat(parserResult.getResult().getData()).isEqualTo("custom data");
+            assertThat(parserResult.result()).isInstanceOf(CustomParsable.class);
+            assertThat(parserResult.result().getData()).isEqualTo("custom data");
         }
     }
 
@@ -417,9 +417,9 @@ public class ParserResultTest {
 
             ParserResult<KeyValue> parserResult = new ParserResult<>(afterParsing, parsed);
 
-            assertThat(parserResult.getResult().key()).isEqualTo("key");
-            assertThat(parserResult.getResult().value()).isEqualTo("value");
-            assertThat(parserResult.getModifiedString().toString()).isEqualTo("&remaining=data");
+            assertThat(parserResult.result().key()).isEqualTo("key");
+            assertThat(parserResult.result().value()).isEqualTo("value");
+            assertThat(parserResult.modifiedString().toString()).isEqualTo("&remaining=data");
         }
 
         @Test
@@ -429,16 +429,16 @@ public class ParserResultTest {
             StringSlice afterFirst = input1.substring(6); // "second,third"
             ParserResult<String> firstResult = new ParserResult<>(afterFirst, "first");
 
-            StringSlice afterSecond = firstResult.getModifiedString().substring(7); // "third"
+            StringSlice afterSecond = firstResult.modifiedString().substring(7); // "third"
             ParserResult<String> secondResult = new ParserResult<>(afterSecond, "second");
 
-            StringSlice afterThird = secondResult.getModifiedString().clear();
+            StringSlice afterThird = secondResult.modifiedString().clear();
             ParserResult<String> thirdResult = new ParserResult<>(afterThird, "third");
 
-            assertThat(firstResult.getResult()).isEqualTo("first");
-            assertThat(secondResult.getResult()).isEqualTo("second");
-            assertThat(thirdResult.getResult()).isEqualTo("third");
-            assertThat(thirdResult.getModifiedString().isEmpty()).isTrue();
+            assertThat(firstResult.result()).isEqualTo("first");
+            assertThat(secondResult.result()).isEqualTo("second");
+            assertThat(thirdResult.result()).isEqualTo("third");
+            assertThat(thirdResult.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -451,8 +451,8 @@ public class ParserResultTest {
             ParserResult<Optional<String>> optionalResult = ParserResult.asOptional(stringResult);
 
             // Verify transformation preserves data
-            assertThat(optionalResult.getModifiedString()).isEqualTo(stringResult.getModifiedString());
-            assertThat(optionalResult.getResult()).hasValue("123");
+            assertThat(optionalResult.modifiedString()).isEqualTo(stringResult.modifiedString());
+            assertThat(optionalResult.result()).hasValue("123");
         }
     }
 }

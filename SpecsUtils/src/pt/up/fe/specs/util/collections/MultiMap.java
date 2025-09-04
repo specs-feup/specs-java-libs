@@ -61,18 +61,11 @@ public class MultiMap<K, V> {
 
     /**
      * If key does not exist, creates an entry.
-     * 
-     * @param key
-     * @return
+     *
      */
     private List<V> getPrivate(K key) {
-        List<V> values = this.map.get(key);
-        if (values == null) {
-            values = new ArrayList<>();
-            this.map.put(key, values);
-        }
 
-        return values;
+        return this.map.computeIfAbsent(key, k -> new ArrayList<>());
     }
 
     /**
@@ -102,11 +95,6 @@ public class MultiMap<K, V> {
         this.map.put(key, new ArrayList<>(values));
     }
 
-    /**
-     * 
-     * @param key
-     * @param values
-     */
     public void addAll(K key, List<V> values) {
         if (values.isEmpty()) {
             return;
@@ -118,8 +106,7 @@ public class MultiMap<K, V> {
 
     /**
      * TODO
-     * 
-     * @return
+     *
      */
     @Override
     public String toString() {
@@ -148,7 +135,7 @@ public class MultiMap<K, V> {
 
     public Collection<V> valuesFlat() {
         return map.values().stream()
-                .flatMap(list -> list.stream())
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
@@ -156,7 +143,7 @@ public class MultiMap<K, V> {
         return map
                 .values()
                 .stream()
-                .flatMap(v -> v.stream())
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 

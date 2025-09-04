@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util.providers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import pt.up.fe.specs.util.Preconditions;
@@ -42,9 +43,7 @@ public class ProvidersSupport {
 
         List<ResourceProvider> resources = new ArrayList<>(enums.length);
 
-        for (ResourceProvider anEnum : enums) {
-            resources.add(anEnum);
-        }
+        resources.addAll(Arrays.asList(enums));
 
         return resources;
     }

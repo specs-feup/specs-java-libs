@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.BorderLayout;
+import java.io.Serial;
 
 import javax.swing.JTextField;
 
@@ -28,6 +29,7 @@ import org.suikasoft.jOptions.gui.KeyPanel;
  */
 public class StringPanel extends KeyPanel<String> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

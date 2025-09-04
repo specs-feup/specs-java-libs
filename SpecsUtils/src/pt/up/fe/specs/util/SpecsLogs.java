@@ -16,7 +16,7 @@ package pt.up.fe.specs.util;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.FileHandler;
@@ -53,7 +53,6 @@ public class SpecsLogs {
     /**
      * Helper method to get the root Logger.
      *
-     * @return
      */
     public static Logger getRootLogger() {
         return Logger.getLogger("");
@@ -138,10 +137,9 @@ public class SpecsLogs {
     /**
      * Helper method.
      *
-     * @param handler
      */
     public static void addHandler(Handler handler) {
-        addHandlers(Arrays.asList(handler));
+        addHandlers(Collections.singletonList(handler));
     }
 
     public static void removeHandler(Handler handler) {
@@ -178,9 +176,7 @@ public class SpecsLogs {
         final Handler[] newHandlers = new Handler[handlersTemp.length + handlers.size()];
 
         // Add previous handlres
-        for (int i = 0; i < handlersTemp.length; i++) {
-            newHandlers[i] = handlersTemp[i];
-        }
+        System.arraycopy(handlersTemp, 0, newHandlers, 0, handlersTemp.length);
 
         // Add new handlers
         for (int i = 0; i < handlers.size(); i++) {
@@ -201,13 +197,7 @@ public class SpecsLogs {
         final StreamHandler cHandler = CustomConsoleHandler.newStdout();
         cHandler.setFormatter(new ConsoleFormatter());
 
-        cHandler.setFilter(record -> {
-
-            if (record.getLevel().intValue() > Level.INFO.intValue()) {
-                return false;
-            }
-            return true;
-        });
+        cHandler.setFilter(record -> record.getLevel().intValue() <= Level.INFO.intValue());
 
         cHandler.setLevel(Level.ALL);
 
@@ -224,13 +214,7 @@ public class SpecsLogs {
         final StreamHandler cHandler = CustomConsoleHandler.newStderr();
         cHandler.setFormatter(new ConsoleFormatter());
 
-        cHandler.setFilter(record -> {
-            if (record.getLevel().intValue() <= Level.INFO.intValue()) {
-                return false;
-            }
-
-            return true;
-        });
+        cHandler.setFilter(record -> record.getLevel().intValue() > Level.INFO.intValue());
 
         cHandler.setLevel(Level.ALL);
 
@@ -247,9 +231,7 @@ public class SpecsLogs {
         FileHandler fileHandler = null;
         try {
             fileHandler = new FileHandler(logFilename, false);
-        } catch (final SecurityException e) {
-            e.printStackTrace();
-        } catch (final IOException e) {
+        } catch (final SecurityException | IOException e) {
             e.printStackTrace();
         }
 
@@ -258,13 +240,7 @@ public class SpecsLogs {
         }
         fileHandler.setFormatter(new ConsoleFormatter());
 
-        fileHandler.setFilter(record -> {
-            if (record.getLevel().intValue() <= Level.INFO.intValue()) {
-                return false;
-            }
-
-            return true;
-        });
+        fileHandler.setFilter(record -> record.getLevel().intValue() > Level.INFO.intValue());
 
         fileHandler.setLevel(Level.ALL);
 
@@ -308,7 +284,6 @@ public class SpecsLogs {
     /**
      * Sets the level of the root Logger.
      *
-     * @param level
      */
     public static void setLevel(Level level) {
         SpecsLogs.getRootLogger().setLevel(level);
@@ -322,7 +297,6 @@ public class SpecsLogs {
      * this level to show a message for cases that are supposed to never happen if
      * the code is well used.
      *
-     * @param msg
      */
     public static void warn(String msg) {
         SPECS_LOGGER.get().warn(msg);
@@ -330,7 +304,6 @@ public class SpecsLogs {
 
     /**
      * @deprecated use warn() instead
-     * @param msg
      */
     @Deprecated
     public static void msgWarn(String msg) {
@@ -339,8 +312,6 @@ public class SpecsLogs {
 
     /**
      * @deprecated use warn() instead
-     * @param msg
-     * @param ourCause
      */
     @Deprecated
     public static void msgWarn(String msg, Throwable ourCause) {
@@ -379,7 +350,6 @@ public class SpecsLogs {
      * <p>
      * Use this level to show messages to the user of a program.
      *
-     * @param msg
      */
     public static void msgInfo(String msg) {
         info(msg);
@@ -397,7 +367,6 @@ public class SpecsLogs {
      * This is a logging level between INFO and CONFIG, to be used by libraries to
      * log execution information.
      *
-     * @param msg
      */
     public static void msgLib(String msg) {
         SPECS_LOGGER.get().log(LogLevel.LIB, msg);
@@ -409,7 +378,6 @@ public class SpecsLogs {
      * <p>
      * Messages written with this method are recorded as a log at severe level.
      *
-     * @param msg
      */
     public static void msgSevere(String msg) {
         SPECS_LOGGER.get().log(Level.SEVERE, msg);
@@ -422,7 +390,6 @@ public class SpecsLogs {
      * This method is for compatibility with previous code. Please use
      * LogSourceInfo.setLogSourceInfo instead.
      *
-     * @param bool
      */
     public static void setPrintStackTrace(boolean bool) {
         LogSourceInfo sourceInfo = bool ? LogSourceInfo.STACK_TRACE : LogSourceInfo.NONE;
@@ -434,11 +401,7 @@ public class SpecsLogs {
             return true;
         }
 
-        if (SpecsLogs.SYSTEM_ERR_LOGGER.equals(loggerName)) {
-            return true;
-        }
-
-        return false;
+        return SpecsLogs.SYSTEM_ERR_LOGGER.equals(loggerName);
     }
 
     public static void addLog(PrintStream stream) {
@@ -464,7 +427,6 @@ public class SpecsLogs {
      * receives a lambda, to avoid doing the
      * string computation when debug is not enabled.
      *
-     * @param string
      */
     public static void debug(String string) {
         debug(() -> string);
@@ -473,7 +435,6 @@ public class SpecsLogs {
     /**
      * When a certain case has not been yet tested and it can appear on the field.
      *
-     * @param untestedAction
      */
     public static void untested(String untestedAction) {
         SpecsLogs.warn(

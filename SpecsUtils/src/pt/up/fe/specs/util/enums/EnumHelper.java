@@ -38,7 +38,7 @@ public class EnumHelper<T extends Enum<T>> {
             throw new NullPointerException("Enum class cannot be null");
         }
         this.enumClass = enumClass;
-        enumValues = Lazy.newInstance(() -> enumClass.getEnumConstants());
+        enumValues = Lazy.newInstance(enumClass::getEnumConstants);
         namesTranslationMap = Lazy.newInstance(() -> SpecsEnums.buildNamesMap(enumClass, excludeList));
     }
 
@@ -87,7 +87,7 @@ public class EnumHelper<T extends Enum<T>> {
 
     public static <T extends Enum<T>> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum,
             T exclude) {
-        return newLazyHelper(anEnum, Arrays.asList(exclude));
+        return newLazyHelper(anEnum, Collections.singletonList(exclude));
     }
 
     public static <T extends Enum<T>> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum,
@@ -102,8 +102,7 @@ public class EnumHelper<T extends Enum<T>> {
     /**
      * The names used to map Strings to Enums. Might not be the same as the Enum
      * name, if the Enum implements StringProvider.
-     * 
-     * @return
+     *
      */
     public Collection<String> names() {
         return this.namesTranslationMap.get().keySet();

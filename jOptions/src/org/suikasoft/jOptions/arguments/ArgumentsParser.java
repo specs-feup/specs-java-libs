@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
@@ -54,7 +53,7 @@ public class ArgumentsParser {
      */
     public ArgumentsParser() {
         parsers = new LinkedHashMap<>();
-        datakeys = new MultiMap<>(() -> new LinkedHashMap<>());
+        datakeys = new MultiMap<>(LinkedHashMap::new);
         consumedArgs = new HashMap<>();
         ignoreFlags = new HashSet<>();
 
@@ -88,7 +87,7 @@ public class ArgumentsParser {
     private void printHelpMessage() {
         StringBuilder message = new StringBuilder();
         for (DataKey<?> key : datakeys.keySet()) {
-            String flags = datakeys.get(key).stream().collect(Collectors.joining(", "));
+            String flags = String.join(", ", datakeys.get(key));
             message.append(" ").append(flags);
 
             Integer consumedArgs = this.consumedArgs.get(key);
@@ -163,7 +162,7 @@ public class ArgumentsParser {
      * @return the updated ArgumentsParser instance
      */
     public ArgumentsParser addString(DataKey<String> key, String... flags) {
-        return add(key, list -> list.popSingle(), 1, flags);
+        return add(key, ListParser::popSingle, 1, flags);
     }
 
     /**
@@ -223,9 +222,7 @@ public class ArgumentsParser {
      * @return the updated ArgumentsParser instance
      */
     public ArgumentsParser addIgnore(String... ignoreFlags) {
-        for (String ignoreFlag : ignoreFlags) {
-            this.ignoreFlags.add(ignoreFlag);
-        }
+        this.ignoreFlags.addAll(Arrays.asList(ignoreFlags));
 
         return this;
     }

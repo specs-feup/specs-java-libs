@@ -12,6 +12,7 @@
  */
 package org.specs.generators.java.utils;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -24,6 +25,7 @@ public class UniqueList<E> extends ArrayList<E> {
     /**
      * Auto-Generated serial version UID.
      */
+    @Serial
     private static final long serialVersionUID = 8776711618197815102L;
 
     /**

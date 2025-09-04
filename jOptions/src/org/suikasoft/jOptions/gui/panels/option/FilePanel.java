@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -42,6 +43,7 @@ import pt.up.fe.specs.util.SpecsIo;
  */
 public class FilePanel extends KeyPanel<File> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -156,22 +158,20 @@ public class FilePanel extends KeyPanel<File> {
     private static File getFile(String fieldValue, DataKey<File> key, DataStore data) {
 
         Optional<String> currentFolderPath = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
-        if (!currentFolderPath.isPresent()) {
+        if (currentFolderPath.isEmpty()) {
             return new File(fieldValue);
         }
 
         DataStore tempData = DataStore.newInstance("FilePanelTemp", data);
         // When reading a value from the GUI to the user DataStore, use absolute path
 
-        tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(currentFolderPath.get()));
+        tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, currentFolderPath);
         tempData.set(JOptionKeys.USE_RELATIVE_PATHS, false);
         data.getTry(AppKeys.CONFIG_FILE).ifPresent(file -> tempData.set(AppKeys.CONFIG_FILE, file));
 
         tempData.setString(key, fieldValue);
 
-        File value = tempData.get(key);
-
-        return value;
+        return tempData.get(key);
 
     }
 

@@ -24,7 +24,7 @@ public class CachedValue<T> {
     public CachedValue(Supplier<T> supplier) {
         this.supplier = supplier;
         value = new SoftReference<>(supplier.get());
-    };
+    }
 
     public T getValue() {
 

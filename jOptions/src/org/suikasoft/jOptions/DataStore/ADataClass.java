@@ -170,7 +170,7 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     @Override
     public Collection<DataKey<?>> getDataKeysWithValues() {
         Optional<StoreDefinition> storeDefinitionOpt = data.getStoreDefinitionTry();
-        if (!storeDefinitionOpt.isPresent()) {
+        if (storeDefinitionOpt.isEmpty()) {
             SpecsLogs.warn("getDataKeysWithValues(): No StoreDefinition available");
             return new ArrayList<>();
         }

@@ -31,7 +31,7 @@ public class BufferedStringBuilder implements AutoCloseable {
     private final int bufferCapacity;
 
     public final static int DEFAULT_BUFFER_CAPACITY = 800000;
-    private static String newline = System.getProperty("line.separator");
+    private static final String newline = System.lineSeparator();
 
     private boolean isClosed;
 
@@ -49,8 +49,7 @@ public class BufferedStringBuilder implements AutoCloseable {
     /**
      * WARNING: The contents of the file given to this class will be erased when the
      * object is created.
-     * 
-     * @param outputFile
+     *
      */
     public BufferedStringBuilder(File outputFile, int bufferCapacity) {
         this(outputFile, bufferCapacity, true);
@@ -99,8 +98,7 @@ public class BufferedStringBuilder implements AutoCloseable {
 
     /**
      * Appends the system-dependent newline.
-     * 
-     * @return
+     *
      */
     public BufferedStringBuilder appendNewline() {
         return append(BufferedStringBuilder.newline);

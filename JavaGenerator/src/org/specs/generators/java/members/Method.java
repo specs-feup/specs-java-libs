@@ -95,9 +95,7 @@ public class Method implements IGenerate {
 
     /**
      * Initialize Method instance
-     * 
-     * @param returnType
-     * @param name
+     *
      */
     private void init(JavaType returnType, String name) {
         this.name = name;
@@ -126,8 +124,6 @@ public class Method implements IGenerate {
     /**
      * Removes a annotation from the class
      * 
-     * @param annotation
-     *            the annotation to remove
      * @return true if the annotation was successfully removed
      */
     public boolean remove(Modifier mod) {
@@ -136,9 +132,7 @@ public class Method implements IGenerate {
 
     /**
      * Add a new argument to the method's arguments
-     * 
-     * @param the
-     *            new modifier
+     *
      */
     public void addArgument(JavaType classType, String name) {
         addArgument(new Argument(classType, name));
@@ -146,9 +140,7 @@ public class Method implements IGenerate {
 
     /**
      * Add a new argument to the method's arguments
-     * 
-     * @param the
-     *            new modifier
+     *
      */
     public void addArgument(Argument argument) {
         arguments.add(argument);
@@ -156,9 +148,7 @@ public class Method implements IGenerate {
 
     /**
      * Add a new argument to the method's arguments
-     * 
-     * @param the
-     *            new modifier
+     *
      */
     public void addArgument(Class<?> classType, String name) {
         final Argument newArg = new Argument(new JavaType(classType), name);
@@ -223,9 +213,7 @@ public class Method implements IGenerate {
     /**
      * Generate java source based on the method's privacy, modifiers, return type and name
      * 
-     * @param indentiation
-     *            the code indentation
-     * @return
+     * @param indentation the code indentation
      */
     @Override
     public StringBuilder generateCode(int indentation) {
@@ -260,7 +248,7 @@ public class Method implements IGenerate {
             methodStr.append(" {" + ln());
             final StringBuilder indent = Utils.indent(indentation + 1);
             methodStr.append(indent);
-            if (methodBody.length() != 0) {
+            if (!methodBody.isEmpty()) {
                 final String bodyCode = methodBody.toString().replace(ln(), ln() + indent).trim();
                 methodStr.append(bodyCode);
 
@@ -447,8 +435,8 @@ public class Method implements IGenerate {
     @Override
     public Method clone() {
         final Method clone = new Method(returnType.clone(), name, privacy);
-        annotations.forEach(an -> clone.add(an));
-        modifiers.forEach(mod -> clone.add(mod));
+        annotations.forEach(clone::add);
+        modifiers.forEach(clone::add);
         arguments.forEach(arg -> clone.addArgument(arg.clone()));
         clone.setJavaDocComment(getJavaDocComment().clone());
         clone.setMethodBody(new StringBuffer(methodBody.toString()));

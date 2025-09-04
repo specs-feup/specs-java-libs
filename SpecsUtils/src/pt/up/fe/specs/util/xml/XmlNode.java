@@ -77,7 +77,6 @@ public interface XmlNode {
 
     /**
      * 
-     * @param tag
      * @return all the elements that have the given name
      */
     default public List<XmlElement> getElementsByName(String name) {
@@ -90,7 +89,6 @@ public interface XmlNode {
 
     /**
      * 
-     * @param name
      * @return the element that has the given name, null if no element is found, and
      *         exception if more than one element with that name is found
      */
@@ -162,7 +160,6 @@ public interface XmlNode {
 
     /**
      * 
-     * @param text
      * @return the previous text that was set, or null if no text was set
      */
     default public String setText(String text) {

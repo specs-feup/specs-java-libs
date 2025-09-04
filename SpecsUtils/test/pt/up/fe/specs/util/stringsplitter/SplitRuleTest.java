@@ -42,7 +42,7 @@ class SplitRuleTest {
             SplitResult<String> result = lambdaRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("test");
+            assertThat(result.value()).isEqualTo("test");
         }
 
         @Test
@@ -55,7 +55,7 @@ class SplitRuleTest {
             SplitResult<String> result = methodRefRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("processed");
+            assertThat(result.value()).isEqualTo("processed");
         }
 
         private SplitResult<String> simpleSplitRule(StringSliceWithSplit slice) {
@@ -81,8 +81,8 @@ class SplitRuleTest {
             SplitResult<String> result = rule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("h");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("ello");
+            assertThat(result.value()).isEqualTo("h");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("ello");
         }
 
         @Test
@@ -141,8 +141,8 @@ class SplitRuleTest {
             SplitResult<Integer> result = numberExtractorRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(123);
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("abc");
+            assertThat(result.value()).isEqualTo(123);
+            assertThat(result.modifiedSlice().toString()).isEqualTo("abc");
         }
     }
 
@@ -167,8 +167,8 @@ class SplitRuleTest {
             SplitResult<String> result = anonymousRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("HELLO");
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo("HELLO");
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
 
         @Test
@@ -187,10 +187,10 @@ class SplitRuleTest {
             StringSliceWithSplit slice = new StringSliceWithSplit("test");
 
             SplitResult<String> result1 = statefulRule.apply(slice);
-            assertThat(result1.getValue()).isEqualTo("call_1");
+            assertThat(result1.value()).isEqualTo("call_1");
 
             SplitResult<String> result2 = statefulRule.apply(slice);
-            assertThat(result2.getValue()).isEqualTo("call_2");
+            assertThat(result2.value()).isEqualTo("call_2");
         }
     }
 
@@ -212,9 +212,9 @@ class SplitRuleTest {
 
             StringSliceWithSplit slice = new StringSliceWithSplit("test");
 
-            assertThat(stringRule.apply(slice).getValue()).isEqualTo("string");
-            assertThat(intRule.apply(slice).getValue()).isEqualTo(42);
-            assertThat(boolRule.apply(slice).getValue()).isEqualTo(true);
+            assertThat(stringRule.apply(slice).value()).isEqualTo("string");
+            assertThat(intRule.apply(slice).value()).isEqualTo(42);
+            assertThat(boolRule.apply(slice).value()).isEqualTo(true);
         }
 
         @Test
@@ -229,7 +229,7 @@ class SplitRuleTest {
             SplitResult<java.util.List<String>> result = listRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).containsExactly("hello", "world", "test");
+            assertThat(result.value()).containsExactly("hello", "world", "test");
         }
 
         @Test
@@ -247,7 +247,7 @@ class SplitRuleTest {
             SplitResult<? extends Number> result = numberRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(123);
+            assertThat(result.value()).isEqualTo(123);
         }
     }
 
@@ -265,7 +265,7 @@ class SplitRuleTest {
             Function<StringSliceWithSplit, String> composedFunction = baseRule.andThen(result -> {
                 if (result == null)
                     return null;
-                return upperCaseFunction.apply(result.getValue());
+                return upperCaseFunction.apply(result.value());
             });
 
             StringSliceWithSplit slice = new StringSliceWithSplit("hello");
@@ -292,11 +292,11 @@ class SplitRuleTest {
             StringSliceWithSplit slice = new StringSliceWithSplit("hello");
 
             SplitResult<String> first = firstRule.apply(slice);
-            assertThat(first.getValue()).isEqualTo("h");
+            assertThat(first.value()).isEqualTo("h");
 
-            SplitResult<String> second = secondRule.apply(first.getModifiedSlice());
-            assertThat(second.getValue()).isEqualTo("e");
-            assertThat(second.getModifiedSlice().toString()).isEqualTo("llo");
+            SplitResult<String> second = secondRule.apply(first.modifiedSlice());
+            assertThat(second.value()).isEqualTo("e");
+            assertThat(second.modifiedSlice().toString()).isEqualTo("llo");
         }
 
         @Test
@@ -314,7 +314,7 @@ class SplitRuleTest {
 
             SplitResult<String> validResult = conditionalRule.apply(validSlice);
             assertThat(validResult).isNotNull();
-            assertThat(validResult.getValue()).isEqualTo("matched");
+            assertThat(validResult.value()).isEqualTo("matched");
 
             SplitResult<String> invalidResult = conditionalRule.apply(invalidSlice);
             assertThat(invalidResult).isNull();
@@ -349,8 +349,8 @@ class SplitRuleTest {
             SplitResult<String> result = wordRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("hello");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo("123world");
+            assertThat(result.value()).isEqualTo("hello");
+            assertThat(result.modifiedSlice().toString()).isEqualTo("123world");
         }
 
         @Test
@@ -379,8 +379,8 @@ class SplitRuleTest {
             SplitResult<String> result = quotedRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("hello world");
-            assertThat(result.getModifiedSlice().toString()).isEqualTo(" remaining");
+            assertThat(result.value()).isEqualTo("hello world");
+            assertThat(result.modifiedSlice().toString()).isEqualTo(" remaining");
         }
 
         @ParameterizedTest
@@ -418,8 +418,8 @@ class SplitRuleTest {
             SplitResult<Integer> result = numberRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(Integer.parseInt(number));
-            assertThat(result.getModifiedSlice().toString()).isEqualTo(" text");
+            assertThat(result.value()).isEqualTo(Integer.parseInt(number));
+            assertThat(result.modifiedSlice().toString()).isEqualTo(" text");
         }
     }
 
@@ -441,7 +441,7 @@ class SplitRuleTest {
             SplitResult<String> result = rule.apply(emptySlice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo("empty");
+            assertThat(result.value()).isEqualTo("empty");
         }
 
         @Test
@@ -474,7 +474,7 @@ class SplitRuleTest {
 
                     // Recursive call (should be careful with this pattern)
                     SplitResult<Integer> subResult = apply(slice.substring(1));
-                    return new SplitResult<>(subResult.getModifiedSlice(), subResult.getValue() + 1);
+                    return new SplitResult<>(subResult.modifiedSlice(), subResult.value() + 1);
                 }
             };
 
@@ -482,8 +482,8 @@ class SplitRuleTest {
             SplitResult<Integer> result = recursiveRule.apply(slice);
 
             assertThat(result).isNotNull();
-            assertThat(result.getValue()).isEqualTo(5); // Length of "hello"
-            assertThat(result.getModifiedSlice().toString()).isEmpty();
+            assertThat(result.value()).isEqualTo(5); // Length of "hello"
+            assertThat(result.modifiedSlice().toString()).isEmpty();
         }
     }
 }

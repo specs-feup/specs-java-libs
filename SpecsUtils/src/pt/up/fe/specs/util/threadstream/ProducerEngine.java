@@ -26,17 +26,17 @@ public class ProducerEngine<T, K extends ObjectProducer<T>> {
     private final List<ConsumerThread<T, ?>> consumers;
 
     public ProducerEngine(K producer, Function<K, T> produceFunction) {
-        this(new ProducerThread<T, K>(producer, produceFunction));
+        this(new ProducerThread<>(producer, produceFunction));
     }
 
     public ProducerEngine(K producer, Function<K, T> produceFunction,
             Function<ChannelConsumer<T>, ObjectStream<T>> cons) {
-        this(new ProducerThread<T, K>(producer, produceFunction, cons));
+        this(new ProducerThread<>(producer, produceFunction, cons));
     }
 
     private ProducerEngine(ProducerThread<T, K> producer) {
         this.producer = producer;
-        this.consumers = new ArrayList<ConsumerThread<T, ?>>();
+        this.consumers = new ArrayList<>();
     }
 
     public ConsumerThread<T, ?> subscribe(Function<ObjectStream<T>, ?> consumeFunction) {

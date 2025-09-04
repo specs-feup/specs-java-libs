@@ -83,13 +83,10 @@ public class AppFrame {
      * Launches the GUI in the event dispatch thread.
      */
     public void launchGui() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // Turn off metal's use of bold fonts
-                UIManager.put("swing.boldMetal", Boolean.FALSE);
-                showGui();
-            }
+        SwingUtilities.invokeLater(() -> {
+            // Turn off metal's use of bold fonts
+            UIManager.put("swing.boldMetal", Boolean.FALSE);
+            showGui();
         });
     }
 

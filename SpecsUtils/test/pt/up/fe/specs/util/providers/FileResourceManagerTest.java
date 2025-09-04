@@ -46,11 +46,11 @@ class FileResourceManagerTest {
     void setUp() {
         mockProvider1 = mock(FileResourceProvider.class);
         when(mockProvider1.getFilename()).thenReturn("resource1.txt");
-        when(mockProvider1.getVersion()).thenReturn("1.0");
+        when(mockProvider1.version()).thenReturn("1.0");
 
         mockProvider2 = mock(FileResourceProvider.class);
         when(mockProvider2.getFilename()).thenReturn("resource2.jar");
-        when(mockProvider2.getVersion()).thenReturn("2.0");
+        when(mockProvider2.version()).thenReturn("2.0");
 
         testResources = new LinkedHashMap<>();
         testResources.put("RESOURCE1", mockProvider1);
@@ -225,7 +225,7 @@ class FileResourceManagerTest {
             for (int i = 0; i < 1000; i++) {
                 FileResourceProvider provider = mock(FileResourceProvider.class);
                 when(provider.getFilename()).thenReturn("resource" + i + ".txt");
-                when(provider.getVersion()).thenReturn("1.0");
+                when(provider.version()).thenReturn("1.0");
                 largeResourceMap.put("RESOURCE_" + i, provider);
             }
 
@@ -241,7 +241,7 @@ class FileResourceManagerTest {
             Map<String, FileResourceProvider> specialResources = new HashMap<>();
             FileResourceProvider provider = mock(FileResourceProvider.class);
             when(provider.getFilename()).thenReturn("special-resource_123.txt");
-            when(provider.getVersion()).thenReturn("1.0");
+            when(provider.version()).thenReturn("1.0");
             specialResources.put("SPECIAL_RESOURCE_123", provider);
 
             FileResourceManager specialManager = new FileResourceManager(specialResources);

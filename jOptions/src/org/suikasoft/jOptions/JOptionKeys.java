@@ -44,7 +44,7 @@ public interface JOptionKeys {
     public static File getContextPath(File currentFile, DataStore dataStore) {
         Optional<String> workingFolder = dataStore.get(JOptionKeys.CURRENT_FOLDER_PATH);
         // No folder set, just return
-        if (!workingFolder.isPresent()) {
+        if (workingFolder.isEmpty()) {
             return currentFile;
         }
         // Path is absolute, respect that

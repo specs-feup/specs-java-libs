@@ -45,7 +45,7 @@ public class NodeDataParser {
     public NodeDataParser(Method defaultMethod, Collection<Class<?>> classesWithParsers) {
         this.defaultMethod = defaultMethod;
         this.dataParsers = new HashMap<>();
-        this.warnedNodes = new HashSet<String>();
+        this.warnedNodes = new HashSet<>();
 
         // Only supports static methods
         if (!Modifier.isStatic(defaultMethod.getModifiers())) {

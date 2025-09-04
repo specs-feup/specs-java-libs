@@ -165,8 +165,7 @@ class MagicKey<T> extends ADataKey<T> {
         if (currentClass.isAnonymousClass()) {
             try {
                 Type genericSuperclass = currentClass.getGenericSuperclass();
-                if (genericSuperclass instanceof java.lang.reflect.ParameterizedType) {
-                    java.lang.reflect.ParameterizedType pt = (java.lang.reflect.ParameterizedType) genericSuperclass;
+                if (genericSuperclass instanceof java.lang.reflect.ParameterizedType pt) {
                     Type[] actualTypes = pt.getActualTypeArguments();
                     if (actualTypes.length > 0 && actualTypes[0] instanceof Class) {
                         return (Class<T>) actualTypes[0];

@@ -32,9 +32,7 @@ public interface TransformRule<K extends TreeNode<K>, T extends TransformResult>
      * <p>
      * IMPORTANT: The tree itself should not be modified inside this method, instead
      * the method must queue the changes using methods from the 'queue' object.
-     * 
-     * @param node
-     * @param queue
+     *
      * 
      */
     T apply(K node, TransformQueue<K> queue);

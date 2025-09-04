@@ -53,8 +53,7 @@ public class CommandLineUtils {
      */
     private static String parseValue(String arg) {
         int index = arg.indexOf("=");
-        String value = arg.substring(index + 1);
-        return value;
+        return arg.substring(index + 1);
     }
 
     /**
@@ -115,7 +114,7 @@ public class CommandLineUtils {
         }
 
         // Check if first argument is WRITE
-        if (args.get(0).toLowerCase().equals(CommandLineUtils.ARG_WRITE)) {
+        if (args.get(0).equalsIgnoreCase(CommandLineUtils.ARG_WRITE)) {
             File config = new File("default.matisse");
 
             app.getPersistence().saveData(config, DataStore.newInstance(app.getDefinition()), false);
@@ -127,9 +126,7 @@ public class CommandLineUtils {
         }
 
         boolean hasHelp = args.stream()
-                .filter(arg -> arg.equals(CommandLineUtils.ARG_HELP))
-                .findFirst()
-                .map(arg -> true).orElse(false);
+                .anyMatch(arg -> arg.equals(CommandLineUtils.ARG_HELP));
 
         if (hasHelp) {
             // Show help message
@@ -170,7 +167,7 @@ public class CommandLineUtils {
             }
 
             // Decode value
-            if (!key.getDecoder().isPresent()) {
+            if (key.getDecoder().isEmpty()) {
                 SpecsLogs.msgInfo("No decoder found for key '" + key + "'");
                 continue;
             }
@@ -189,13 +186,10 @@ public class CommandLineUtils {
      * @return the help message
      */
     public static String getHelp(StoreDefinition setupDef) {
-        StringBuilder builder = new StringBuilder();
 
-        builder.append("Use: <OPTION>/<SUBOPTION1>/...=<VALUE> <OPTION>...\n\n");
-        builder.append("Available options:\n(Reference - <NAME> (<TYPE> [=<DEFAULT_VALUE>]) )\n\n"
-                + getHelpString(setupDef));
-
-        return builder.toString();
+        return "Use: <OPTION>/<SUBOPTION1>/...=<VALUE> <OPTION>...\n\n" +
+                "Available options:\n(Reference - <NAME> (<TYPE> [=<DEFAULT_VALUE>]) )\n\n"
+                + getHelpString(setupDef);
     }
 
     /**

@@ -34,11 +34,7 @@ public class BiMap<T> {
     }
 
     public void put(int x, int y, T value) {
-        Map<Integer, T> yMap = this.bimap.get(x);
-        if (yMap == null) {
-            yMap = new HashMap<>();
-            this.bimap.put(x, yMap);
-        }
+        Map<Integer, T> yMap = this.bimap.computeIfAbsent(x, k -> new HashMap<>());
 
         yMap.put(y, value);
 

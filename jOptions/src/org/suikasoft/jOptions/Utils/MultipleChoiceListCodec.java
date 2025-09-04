@@ -78,7 +78,7 @@ public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
     @Override
     public String encode(List<T> value) {
         return value.stream()
-                .map(element -> elementCodec.encode(element))
+                .map(elementCodec::encode)
                 .collect(Collectors.joining(SEPARATOR));
     }
 

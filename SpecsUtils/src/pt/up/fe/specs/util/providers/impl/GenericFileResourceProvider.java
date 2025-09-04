@@ -34,10 +34,7 @@ public class GenericFileResourceProvider implements FileResourceProvider {
      * 
      * <p>
      * Given file must exist, otherwhise an exception is thrown.
-     * 
-     * @param existingFile
-     * @param version
-     * @return
+     *
      */
     public static GenericFileResourceProvider newInstance(File existingFile, String version) {
         if (!existingFile.isFile()) {
@@ -72,7 +69,7 @@ public class GenericFileResourceProvider implements FileResourceProvider {
     }
 
     @Override
-    public String getVersion() {
+    public String version() {
         return version;
     }
 

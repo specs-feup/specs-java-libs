@@ -118,10 +118,9 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
     /**
      * Closes all workers associated with this parser.
      *
-     * @throws Exception if an error occurs during closing
      */
     @Override
-    public void close() throws Exception {
+    public void close() {
         for (LineStreamWorker<T> worker : workers.values()) {
             worker.close(data);
         }

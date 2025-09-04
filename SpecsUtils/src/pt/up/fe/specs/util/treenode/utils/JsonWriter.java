@@ -44,7 +44,7 @@ public class JsonWriter<K extends TreeNode<K>> {
 
         // Add children
         List<K> children = node.getChildren();
-        if (children.size() == 0) {
+        if (children.isEmpty()) {
             builder.addLines("\"children\": []");
         } else {
             StringBuilder childrenBuilder = new StringBuilder();

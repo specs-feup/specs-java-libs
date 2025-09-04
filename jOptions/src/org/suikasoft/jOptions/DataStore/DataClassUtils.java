@@ -44,15 +44,13 @@ public class DataClassUtils {
             return ((StringProvider) dataClassValue).getString();
         }
 
-        if (dataClassValue instanceof DataClass) {
-            DataClass<?> dataClass = (DataClass<?>) dataClassValue;
+        if (dataClassValue instanceof DataClass<?> dataClass) {
 
             return "'" + dataClass.getDataClassName() + "'";
         }
 
-        if (dataClassValue instanceof Optional) {
-            Optional<?> optional = (Optional<?>) dataClassValue;
-            return optional.map(value -> toString(value)).orElse("Optional.empty");
+        if (dataClassValue instanceof Optional<?> optional) {
+            return optional.map(DataClassUtils::toString).orElse("Optional.empty");
         }
 
         if (dataClassValue instanceof List) {

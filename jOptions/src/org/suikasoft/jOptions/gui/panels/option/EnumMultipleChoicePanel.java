@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.BorderLayout;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import pt.up.fe.specs.util.SpecsSwing;
  */
 public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -66,7 +68,7 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
 
         // Check if there is a default value
         getKey().getDefault()
-                .map(defaultValue -> valueToString(defaultValue))
+                .map(this::valueToString)
                 .ifPresent(comboBoxValues::setSelectedItem);
 
         setLayout(new BorderLayout());

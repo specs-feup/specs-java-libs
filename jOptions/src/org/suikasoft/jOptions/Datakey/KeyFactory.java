@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.Datakey;
 
 import java.io.File;
+import java.io.Serial;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,8 +75,8 @@ public class KeyFactory {
     public static DataKey<Boolean> bool(String id) {
         return new NormalKey<>(id, Boolean.class)
                 .setDefault(() -> Boolean.FALSE)
-                .setKeyPanelProvider((key, data) -> new BooleanPanel(key, data))
-                .setDecoder(s -> Boolean.valueOf(s));
+                .setKeyPanelProvider(BooleanPanel::new)
+                .setDecoder(Boolean::valueOf);
     }
 
     /**
@@ -86,7 +87,7 @@ public class KeyFactory {
      */
     public static DataKey<String> string(String id) {
         return new NormalKey<>(id, String.class)
-                .setKeyPanelProvider((key, data) -> new StringPanel(key, data))
+                .setKeyPanelProvider(StringPanel::new)
                 .setDecoder(s -> s)
                 .setDefault(() -> "");
     }
@@ -121,7 +122,7 @@ public class KeyFactory {
      */
     public static DataKey<Integer> integer(String id) {
         return new NormalKey<>(id, Integer.class)
-                .setKeyPanelProvider((key, data) -> new IntegerPanel(key, data))
+                .setKeyPanelProvider(IntegerPanel::new)
                 .setDecoder(s -> SpecsStrings.decodeInteger(s, () -> 0))
                 .setDefault(() -> 0);
     }
@@ -168,20 +169,22 @@ public class KeyFactory {
      */
     public static DataKey<Double> double64(String id) {
         return new NormalKey<>(id, Double.class)
-                .setKeyPanelProvider((key, data) -> new DoublePanel(key, data))
+                .setKeyPanelProvider(DoublePanel::new)
                 .setDecoder(s -> {
                     if (s == null) return 0d;
                     String v = s.trim();
                     if (v.isEmpty()) return 0d;
                     String lower = v.toLowerCase();
-                    if ("infinity".equals(lower) || "+infinity".equals(lower) || "+inf".equals(lower) || "inf".equals(lower)) {
-                        return Double.POSITIVE_INFINITY;
-                    }
-                    if ("-infinity".equals(lower) || "-inf".equals(lower)) {
-                        return Double.NEGATIVE_INFINITY;
-                    }
-                    if ("nan".equals(lower)) {
-                        return Double.NaN;
+                    switch (lower) {
+                        case "infinity", "+infinity", "+inf", "inf" -> {
+                            return Double.POSITIVE_INFINITY;
+                        }
+                        case "-infinity", "-inf" -> {
+                            return Double.NEGATIVE_INFINITY;
+                        }
+                        case "nan" -> {
+                            return Double.NaN;
+                        }
                     }
                     try {
                         return Double.valueOf(v);
@@ -200,7 +203,7 @@ public class KeyFactory {
      */
     public static DataKey<BigInteger> bigInteger(String id) {
         return new NormalKey<>(id, BigInteger.class)
-                .setDecoder(s -> new BigInteger(s));
+                .setDecoder(BigInteger::new);
     }
 
     /**
@@ -396,7 +399,7 @@ public class KeyFactory {
     @SuppressWarnings("unchecked")
     public static <T> DataKey<Optional<T>> optional(String id) {
         return generic(id, (Optional<T>) Optional.empty())
-                .setDefault(() -> Optional.empty());
+                .setDefault(Optional::empty);
     }
 
     /**
@@ -431,7 +434,7 @@ public class KeyFactory {
      * @return a {@link DataKey} for FileList values
      */
     public static DataKey<FileList> fileList(String optionName) {
-        return KeyFactory.object(optionName, FileList.class).setDefault(() -> new FileList())
+        return KeyFactory.object(optionName, FileList.class).setDefault(FileList::new)
                 .setStoreDefinition(FileList.getStoreDefinition())
                 .setDecoder(FileList::decode);
     }
@@ -521,6 +524,7 @@ public class KeyFactory {
     private static DataStore dataStoreDecoder(String string, StoreDefinition definition) {
         Gson gson = new Gson();
         Map<String, String> map = gson.fromJson(string, new TypeToken<Map<String, String>>() {
+            @Serial
             private static final long serialVersionUID = 1L;
         }.getType());
 
@@ -545,7 +549,7 @@ public class KeyFactory {
         return object(id, anEnum)
                 .setDefault(() -> anEnum.getEnumConstants()[0])
                 .setDecoder(new EnumCodec<>(anEnum))
-                .setKeyPanelProvider((key, data) -> new EnumMultipleChoicePanel<>(key, data));
+                .setKeyPanelProvider(EnumMultipleChoicePanel::new);
     }
 
     /**
@@ -641,11 +645,11 @@ public class KeyFactory {
      */
     public static DataKey<Map<File, File>> filesWithBaseFolders(String id) {
         return generic(id, (Map<File, File>) new HashMap<File, File>())
-                .setKeyPanelProvider((key, data) -> new FilesWithBaseFoldersPanel(key, data))
+                .setKeyPanelProvider(FilesWithBaseFoldersPanel::new)
                 .setDecoder(Codecs.filesWithBaseFolders())
                 .setCustomGetter(KeyFactory::customGetterFilesWithBaseFolders)
                 .setCustomSetter(KeyFactory::customSetterFilesWithBaseFolders)
-                .setDefault(() -> new HashMap<File, File>());
+                .setDefault(HashMap::new);
     }
 
     /**
@@ -679,7 +683,7 @@ public class KeyFactory {
      */
     public static Map<File, File> customSetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
         Optional<String> workingFolderTry = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
-        if (!workingFolderTry.isPresent()) {
+        if (workingFolderTry.isEmpty()) {
             return value;
         }
 
@@ -712,12 +716,12 @@ public class KeyFactory {
      */
     public static <T> DataKey<List<T>> multiplechoiceList(String id, StringCodec<T> codec,
             List<T> availableChoices) {
-        SpecsCheck.checkArgument(availableChoices.size() > 0, () -> "Must give at least one element");
+        SpecsCheck.checkArgument(!availableChoices.isEmpty(), () -> "Must give at least one element");
 
         return new MultipleChoiceListKey<>(id, availableChoices)
                 .setDecoder(new MultipleChoiceListCodec<>(codec))
                 .setKeyPanelProvider(
-                        (key, data) -> new MultipleChoiceListPanel<>(key, data));
+                        MultipleChoiceListPanel::new);
     }
 
     /**

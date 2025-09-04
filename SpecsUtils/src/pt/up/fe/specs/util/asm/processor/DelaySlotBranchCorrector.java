@@ -47,8 +47,6 @@ public class DelaySlotBranchCorrector {
 
     /**
      *
-     * @param isJumpPoint
-     * @param delaySlots
      * @return true if the current instruction is a jump
      */
     private boolean isJump(boolean isJump, int delaySlots) {

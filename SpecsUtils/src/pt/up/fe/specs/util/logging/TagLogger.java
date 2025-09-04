@@ -111,8 +111,7 @@ public interface TagLogger<T> {
     /**
      * Adds a class to the ignore list when printing the stack trace, or the source
      * code location.
-     * 
-     * @param aClass
+     *
      */
     default TagLogger<T> addToIgnoreList(Class<?> aClass) {
         SpecsLogging.addClassToIgnore(aClass);

@@ -5,7 +5,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
     private boolean inited = false;
     private boolean isClosed = false;
     private T currentT, nextT;
-    private T poison;
+    private final T poison;
 
     public AObjectStream(T poison) {
         this.currentT = null;
@@ -44,7 +44,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
          * to read from a ChannelProducer<T> which executes in another thread
          * which may not have yet been launched
          */
-        if (this.inited == false) {
+        if (!this.inited) {
             this.nextT = this.getNext();
             this.inited = true;
         }
@@ -66,7 +66,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
 
     @Override
     public boolean hasNext() {
-        if (this.inited == false)
+        if (!this.inited)
             return true;
         else
             return this.nextT != null;

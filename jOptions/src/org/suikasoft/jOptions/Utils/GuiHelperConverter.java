@@ -107,12 +107,11 @@ public class GuiHelperConverter {
         var key = getBaseDataKey(setupKey);
 
         // Set default value (must be immutable)
-        if (setupKey instanceof DefaultValue) {
-            var defaultValueProvider = (DefaultValue) setupKey;
+        if (setupKey instanceof DefaultValue defaultValueProvider) {
             var defaultValue = defaultValueProvider.getDefaultValue();
 
             if (defaultValue != null) {
-                Supplier<? extends Object> defaultSupplier = () -> defaultValue.getRawValue();
+                Supplier<?> defaultSupplier = defaultValue::getRawValue;
                 key.setDefaultRaw(defaultSupplier);
             }
         }
@@ -126,13 +125,11 @@ public class GuiHelperConverter {
      * @param setupKey the setup key
      * @return the base DataKey
      */
-    private <T extends Enum<?> & SetupFieldEnum> DataKey<? extends Object> getBaseDataKey(T setupKey) {
-        switch (setupKey.getType()) {
-        case string:
-            return KeyFactory.string(setupKey.name());
-        default:
-            throw new NotImplementedException(setupKey.getType());
-        }
+    private <T extends Enum<?> & SetupFieldEnum> DataKey<?> getBaseDataKey(T setupKey) {
+        return switch (setupKey.getType()) {
+            case string -> KeyFactory.string(setupKey.name());
+            default -> throw new NotImplementedException(setupKey.getType());
+        };
 
     }
 

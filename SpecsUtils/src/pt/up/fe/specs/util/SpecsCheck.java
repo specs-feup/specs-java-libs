@@ -71,7 +71,7 @@ public class SpecsCheck {
      * @param expectedSize the expected size of the collection
      */
     public static void checkSize(Collection<?> collection, int expectedSize) {
-        checkSize(expectedSize, collection.size(), () -> collection.toString());
+        checkSize(expectedSize, collection.size(), collection::toString);
     }
 
     /**
@@ -110,7 +110,7 @@ public class SpecsCheck {
      * @param maxSize    the maximum size
      */
     public static void checkSizeRange(Collection<?> collection, int minSize, int maxSize) {
-        checkSizeRange(minSize, maxSize, collection.size(), () -> collection.toString());
+        checkSizeRange(minSize, maxSize, collection.size(), collection::toString);
     }
 
     /**

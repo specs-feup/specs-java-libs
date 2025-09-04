@@ -33,9 +33,7 @@ public class Utils {
      */
     public static StringBuilder indent(int indentation) {
         final StringBuilder indentationBuffer = new StringBuilder();
-        for (int i = 0; i < indentation; i++) {
-            indentationBuffer.append(Utils.INDENTER);
-        }
+        indentationBuffer.append(Utils.INDENTER.repeat(Math.max(0, indentation)));
         return indentationBuffer;
     }
 
@@ -74,8 +72,7 @@ public class Utils {
         }
         makeDirs(new File(filePath));
         filePath += name + ".java";
-        final File outputClass = new File(filePath);
-        return outputClass;
+        return new File(filePath);
     }
 
     /**

@@ -46,7 +46,6 @@ public class AccumulatorMap<T> {
     /**
      * Returns an unmodifiable view of this map.
      *
-     * @return
      */
     public AccumulatorMap<T> getUnmodifiableMap() {
         AccumulatorMap<T> unmodMap = new AccumulatorMap<>();
@@ -64,7 +63,6 @@ public class AccumulatorMap<T> {
     /**
      * Adds 1 to the count of this element.
      *
-     * @param element
      * @return the current number of added elements. If it is the first time we are
      *         adding an element, returns 1
      */
@@ -75,9 +73,6 @@ public class AccumulatorMap<T> {
     /**
      * Adds a value to the count of this element.
      *
-     * @param element
-     * @param incrementValue
-     * @return
      */
     public Integer add(T element, int incrementValue) {
         if (this.unmodifiable) {
@@ -89,7 +84,6 @@ public class AccumulatorMap<T> {
         if (value == null) {
             value = 0;
         }
-        ;
 
         value += incrementValue;
         this.accMap.put(element, value);
@@ -101,7 +95,6 @@ public class AccumulatorMap<T> {
     /**
      * Sets the value for the given element.
      * 
-     * @param element
      * @return the previous value, or 0 if there was no value
      */
     public Integer set(T element, int value) {
@@ -146,7 +139,6 @@ public class AccumulatorMap<T> {
 
     /**
      *
-     * @param element
      * @return the number of times the given element was added to the table.
      */
     public int getCount(T element) {
@@ -160,11 +152,10 @@ public class AccumulatorMap<T> {
 
     /**
      *
-     * @param element
      * @return the number of times the given element was added to the table.
      */
     public double getRatio(T element) {
-        Integer count = getCount(element);
+        int count = getCount(element);
 
         return (double) count / (double) this.accumulator;
     }
@@ -172,8 +163,6 @@ public class AccumulatorMap<T> {
     /**
      * Sums all the values in this map.
      *
-     * @param histogram
-     * @return
      */
     public long getSum() {
         return this.accumulator;
@@ -190,11 +179,9 @@ public class AccumulatorMap<T> {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof AccumulatorMap)) {
+        if (!(obj instanceof AccumulatorMap<?> anotherObj)) {
             return false;
         }
-
-        AccumulatorMap<?> anotherObj = ((AccumulatorMap<?>) obj);
 
         if (this.accumulator != anotherObj.accumulator) {
             return false;
@@ -207,7 +194,7 @@ public class AccumulatorMap<T> {
     public int hashCode() {
         int hash = 7;
         hash = 47 * hash + (this.accMap != null ? this.accMap.hashCode() : 0);
-        hash = 47 * hash + (int) (this.accumulator ^ (this.accumulator >>> 32));
+        hash = 47 * hash + Long.hashCode(this.accumulator);
         return hash;
     }
 

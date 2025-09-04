@@ -55,12 +55,12 @@ class WebResourceProviderTest {
         @DisplayName("should have correct interface methods")
         void shouldHaveCorrectInterfaceMethods() {
             assertThatCode(() -> {
-                WebResourceProvider.class.getMethod("getResourceUrl");
-                WebResourceProvider.class.getMethod("getRootUrl");
+                WebResourceProvider.class.getMethod("resourceUrl");
+                WebResourceProvider.class.getMethod("rootUrl");
                 WebResourceProvider.class.getMethod("getUrlString");
                 WebResourceProvider.class.getMethod("getUrlString", String.class);
                 WebResourceProvider.class.getMethod("getUrl");
-                WebResourceProvider.class.getMethod("getVersion");
+                WebResourceProvider.class.getMethod("version");
                 WebResourceProvider.class.getMethod("getFilename");
                 WebResourceProvider.class.getMethod("write", File.class);
                 WebResourceProvider.class.getMethod("createResourceVersion", String.class);
@@ -90,8 +90,8 @@ class WebResourceProviderTest {
             WebResourceProvider provider = WebResourceProvider.newInstance(rootUrl, resourceUrl);
 
             assertThat(provider).isNotNull();
-            assertThat(provider.getRootUrl()).isEqualTo(rootUrl);
-            assertThat(provider.getResourceUrl()).isEqualTo(resourceUrl);
+            assertThat(provider.rootUrl()).isEqualTo(rootUrl);
+            assertThat(provider.resourceUrl()).isEqualTo(resourceUrl);
         }
 
         @Test
@@ -100,9 +100,9 @@ class WebResourceProviderTest {
             WebResourceProvider provider = WebResourceProvider.newInstance(rootUrl, resourceUrl, version);
 
             assertThat(provider).isNotNull();
-            assertThat(provider.getRootUrl()).isEqualTo(rootUrl);
-            assertThat(provider.getResourceUrl()).isEqualTo(resourceUrl);
-            assertThat(provider.getVersion()).isEqualTo(version);
+            assertThat(provider.rootUrl()).isEqualTo(rootUrl);
+            assertThat(provider.resourceUrl()).isEqualTo(resourceUrl);
+            assertThat(provider.version()).isEqualTo(version);
         }
 
         @Test
@@ -110,8 +110,8 @@ class WebResourceProviderTest {
         void shouldHandleNullRootUrl() {
             WebResourceProvider provider = WebResourceProvider.newInstance(null, resourceUrl);
 
-            assertThat(provider.getRootUrl()).isNull();
-            assertThat(provider.getResourceUrl()).isEqualTo(resourceUrl);
+            assertThat(provider.rootUrl()).isNull();
+            assertThat(provider.resourceUrl()).isEqualTo(resourceUrl);
         }
 
         @Test
@@ -119,8 +119,8 @@ class WebResourceProviderTest {
         void shouldHandleNullResourceUrl() {
             WebResourceProvider provider = WebResourceProvider.newInstance(rootUrl, null);
 
-            assertThat(provider.getRootUrl()).isEqualTo(rootUrl);
-            assertThat(provider.getResourceUrl()).isNull();
+            assertThat(provider.rootUrl()).isEqualTo(rootUrl);
+            assertThat(provider.resourceUrl()).isNull();
         }
 
         @Test
@@ -128,8 +128,8 @@ class WebResourceProviderTest {
         void shouldHandleNullVersion() {
             WebResourceProvider provider = WebResourceProvider.newInstance(rootUrl, resourceUrl, null);
 
-            assertThat(provider.getRootUrl()).isEqualTo(rootUrl);
-            assertThat(provider.getResourceUrl()).isEqualTo(resourceUrl);
+            assertThat(provider.rootUrl()).isEqualTo(rootUrl);
+            assertThat(provider.resourceUrl()).isEqualTo(resourceUrl);
         }
     }
 
@@ -241,7 +241,7 @@ class WebResourceProviderTest {
         @Test
         @DisplayName("should return correct version")
         void shouldReturnCorrectVersion() {
-            assertThat(testProvider.getVersion()).isEqualTo(version);
+            assertThat(testProvider.version()).isEqualTo(version);
         }
 
         @Test
@@ -249,7 +249,7 @@ class WebResourceProviderTest {
         void shouldReturnDefaultVersionWhenNotSpecified() {
             WebResourceProvider defaultProvider = WebResourceProvider.newInstance(rootUrl, resourceUrl);
 
-            assertThat(defaultProvider.getVersion()).isEqualTo("1.0");
+            assertThat(defaultProvider.version()).isEqualTo("1.0");
         }
 
         @Test
@@ -369,9 +369,9 @@ class WebResourceProviderTest {
             WebResourceProvider versionedProvider = testProvider.createResourceVersion("_v3.0");
 
             assertThat(versionedProvider).isNotNull();
-            assertThat(versionedProvider.getRootUrl()).isEqualTo(testProvider.getRootUrl());
-            assertThat(versionedProvider.getResourceUrl()).isEqualTo("resources/test_v3.0.jar");
-            assertThat(versionedProvider.getVersion()).isEqualTo("_v3.0");
+            assertThat(versionedProvider.rootUrl()).isEqualTo(testProvider.rootUrl());
+            assertThat(versionedProvider.resourceUrl()).isEqualTo("resources/test_v3.0.jar");
+            assertThat(versionedProvider.version()).isEqualTo("_v3.0");
         }
 
         @Test
@@ -380,7 +380,7 @@ class WebResourceProviderTest {
             WebResourceProvider provider = WebResourceProvider.newInstance(rootUrl, "resources/executable");
             WebResourceProvider versionedProvider = provider.createResourceVersion("_v2");
 
-            assertThat(versionedProvider.getResourceUrl()).isEqualTo("resources/executable_v2");
+            assertThat(versionedProvider.resourceUrl()).isEqualTo("resources/executable_v2");
         }
 
         @Test
@@ -389,7 +389,7 @@ class WebResourceProviderTest {
             WebResourceProvider versionedProvider = testProvider.createResourceVersion(null);
 
             assertThat(versionedProvider).isNotNull();
-            assertThat(versionedProvider.getResourceUrl()).isEqualTo("resources/testnull.jar");
+            assertThat(versionedProvider.resourceUrl()).isEqualTo("resources/testnull.jar");
         }
 
         @Test
@@ -398,7 +398,7 @@ class WebResourceProviderTest {
             WebResourceProvider versionedProvider = testProvider.createResourceVersion("");
 
             assertThat(versionedProvider).isNotNull();
-            assertThat(versionedProvider.getResourceUrl()).isEqualTo("resources/test.jar");
+            assertThat(versionedProvider.resourceUrl()).isEqualTo("resources/test.jar");
         }
 
         @Test
@@ -406,7 +406,7 @@ class WebResourceProviderTest {
         void shouldPreserveRootUrlInVersionedProvider() {
             WebResourceProvider versionedProvider = testProvider.createResourceVersion("_new");
 
-            assertThat(versionedProvider.getRootUrl()).isEqualTo(testProvider.getRootUrl());
+            assertThat(versionedProvider.rootUrl()).isEqualTo(testProvider.rootUrl());
         }
 
         @Test
@@ -417,7 +417,7 @@ class WebResourceProviderTest {
 
             // SpecsIo.removeExtension only removes the last extension (.gz), leaving
             // archive.tar
-            assertThat(versionedProvider.getResourceUrl()).isEqualTo("archive.tar_v2.gz");
+            assertThat(versionedProvider.resourceUrl()).isEqualTo("archive.tar_v2.gz");
         }
     }
 
@@ -436,7 +436,7 @@ class WebResourceProviderTest {
 
             WebResourceProvider provider = WebResourceProvider.newInstance(rootUrl, longPath.toString());
 
-            assertThat(provider.getResourceUrl()).isEqualTo(longPath.toString());
+            assertThat(provider.resourceUrl()).isEqualTo(longPath.toString());
             assertThat(provider.getFilename()).isEqualTo("file.txt");
         }
 
@@ -447,8 +447,8 @@ class WebResourceProviderTest {
                     "https://example.com/资源",
                     "文件.txt");
 
-            assertThat(provider.getRootUrl()).contains("资源");
-            assertThat(provider.getResourceUrl()).isEqualTo("文件.txt");
+            assertThat(provider.rootUrl()).contains("资源");
+            assertThat(provider.resourceUrl()).isEqualTo("文件.txt");
             assertThat(provider.getFilename()).isEqualTo("文件.txt");
         }
 
@@ -471,7 +471,7 @@ class WebResourceProviderTest {
                     "//resources//file.txt");
 
             assertThat(provider.getUrlString()).contains("//api//");
-            assertThat(provider.getResourceUrl()).contains("//resources//");
+            assertThat(provider.resourceUrl()).contains("//resources//");
         }
     }
 
@@ -486,7 +486,7 @@ class WebResourceProviderTest {
 
             assertThat(fileProvider).isNotNull();
             assertThat(fileProvider.getFilename()).isEqualTo("test.jar");
-            assertThat(fileProvider.getVersion()).isEqualTo(version);
+            assertThat(fileProvider.version()).isEqualTo(version);
         }
 
         @Test
@@ -506,15 +506,15 @@ class WebResourceProviderTest {
         @DisplayName("should work with mocked implementations")
         void shouldWorkWithMockedImplementations() {
             WebResourceProvider mockProvider = mock(WebResourceProvider.class);
-            when(mockProvider.getRootUrl()).thenReturn("http://mock.com");
-            when(mockProvider.getResourceUrl()).thenReturn("mock.jar");
+            when(mockProvider.rootUrl()).thenReturn("http://mock.com");
+            when(mockProvider.resourceUrl()).thenReturn("mock.jar");
             when(mockProvider.getFilename()).thenReturn("mock.jar");
-            when(mockProvider.getVersion()).thenReturn("mock-version");
+            when(mockProvider.version()).thenReturn("mock-version");
 
-            assertThat(mockProvider.getRootUrl()).isEqualTo("http://mock.com");
-            assertThat(mockProvider.getResourceUrl()).isEqualTo("mock.jar");
+            assertThat(mockProvider.rootUrl()).isEqualTo("http://mock.com");
+            assertThat(mockProvider.resourceUrl()).isEqualTo("mock.jar");
             assertThat(mockProvider.getFilename()).isEqualTo("mock.jar");
-            assertThat(mockProvider.getVersion()).isEqualTo("mock-version");
+            assertThat(mockProvider.version()).isEqualTo("mock-version");
         }
     }
 
@@ -527,7 +527,7 @@ class WebResourceProviderTest {
         void shouldImplementAllFileResourceProviderMethods() {
             assertThatCode(() -> {
                 testProvider.getFilename();
-                testProvider.getVersion();
+                testProvider.version();
                 testProvider.createResourceVersion("test");
                 // write method tested separately due to I/O nature
             }).doesNotThrowAnyException();
@@ -539,7 +539,7 @@ class WebResourceProviderTest {
             FileResourceProvider asFileProvider = testProvider;
 
             assertThat(asFileProvider.getFilename()).isEqualTo(testProvider.getFilename());
-            assertThat(asFileProvider.getVersion()).isEqualTo(testProvider.getVersion());
+            assertThat(asFileProvider.version()).isEqualTo(testProvider.version());
         }
     }
 }

@@ -39,7 +39,7 @@ public class ClassSet<E> {
     public static <E> ClassSet<E> newInstance(List<Class<? extends E>> classes) {
         ClassSet<E> classSet = new ClassSet<>();
 
-        classes.stream().forEach(aClass -> classSet.add(aClass));
+        classes.forEach(classSet::add);
 
         return classSet;
     }
@@ -53,11 +53,6 @@ public class ClassSet<E> {
         this.classMap = new ClassMap<>();
     }
 
-    /**
-     * 
-     * @param classes
-     * @return
-     */
     @SuppressWarnings("unchecked")
     public void addAll(Class<? extends E>... classes) {
         addAll(Arrays.asList(classes));
@@ -82,7 +77,7 @@ public class ClassSet<E> {
      * <tt>e</tt> such that
      * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>.
      *
-     * @param o element whose presence in this set is to be tested
+     * @param aClass element whose presence in this set is to be tested
      * @return <tt>true</tt> if this set contains the specified element
      */
     public boolean contains(Class<? extends E> aClass) {

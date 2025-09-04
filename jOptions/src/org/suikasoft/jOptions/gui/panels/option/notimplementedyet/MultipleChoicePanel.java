@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option.notimplementedyet;
 
 import java.awt.FlowLayout;
+import java.io.Serial;
 import java.util.Collection;
 
 import javax.swing.JComboBox;
@@ -32,6 +33,7 @@ import pt.up.fe.specs.util.SpecsSwing;
  */
 public class MultipleChoicePanel extends FieldPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -104,13 +106,7 @@ public class MultipleChoicePanel extends FieldPanel {
 	    return;
 	}
 
-	SpecsSwing.runOnSwing(new Runnable() {
-
-	    @Override
-	    public void run() {
-		comboBoxValues.setSelectedItem(currentChoice);
-	    }
-	});
+	SpecsSwing.runOnSwing(() -> comboBoxValues.setSelectedItem(currentChoice));
     }
 
     /**

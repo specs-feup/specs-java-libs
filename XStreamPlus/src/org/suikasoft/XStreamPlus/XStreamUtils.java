@@ -69,7 +69,7 @@ public class XStreamUtils {
      * @return true if the write operation was successful, false otherwise
      */
     public static <T> boolean write(File file, final T object, final Class<T> objectClass) {
-        ObjectXml<T> objXml = new ObjectXml<T>() {
+        ObjectXml<T> objXml = new ObjectXml<>() {
             @Override
             public Class<T> getTargetClass() {
                 return objectClass;
@@ -101,9 +101,6 @@ public class XStreamUtils {
     public static <T> T read(File file, ObjectXml<T> stream) {
         String xmlContents = SpecsIo.read(file);
         T newObject = stream.fromXml(xmlContents);
-        if (newObject == null) {
-            return null;
-        }
 
         return newObject;
     }
@@ -130,7 +127,7 @@ public class XStreamUtils {
      * @return the deserialized object
      */
     public static <T> T from(String contents, final Class<T> objectClass) {
-        ObjectXml<T> objXml = new ObjectXml<T>() {
+        ObjectXml<T> objXml = new ObjectXml<>() {
             @Override
             public Class<T> getTargetClass() {
                 return objectClass;

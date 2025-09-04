@@ -141,7 +141,7 @@ public class JavaType {
             final int lastDot = name.lastIndexOf('.');
             if (lastDot > -1) {
                 _package = name.substring(0, lastDot);
-                name = name.substring(lastDot + 1, name.length());
+                name = name.substring(lastDot + 1);
             }
         } else {
 

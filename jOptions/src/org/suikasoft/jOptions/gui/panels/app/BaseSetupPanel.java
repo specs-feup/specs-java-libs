@@ -17,6 +17,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -41,9 +42,10 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class BaseSetupPanel extends JPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    private final Map<String, KeyPanel<? extends Object>> panels;
+    private final Map<String, KeyPanel<?>> panels;
     private final StoreDefinition storeDefinition;
 
     /**
@@ -147,7 +149,7 @@ public class BaseSetupPanel extends JPanel {
      *
      * @return a map of KeyPanels
      */
-    public Map<String, KeyPanel<? extends Object>> getPanels() {
+    public Map<String, KeyPanel<?>> getPanels() {
         return panels;
     }
 

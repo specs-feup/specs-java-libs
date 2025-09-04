@@ -42,7 +42,6 @@ public class XmlElement extends AXmlNode {
 
     /**
      * 
-     * @param name
      * @return the value of the attribute with the given name, or empty string if no
      *         attribute with that name is present
      */
@@ -60,7 +59,6 @@ public class XmlElement extends AXmlNode {
 
     /**
      * 
-     * @param name
      * @return the value of the attribute with the given name, or throws exception
      *         if no attribute with that name is present
      */
@@ -76,8 +74,6 @@ public class XmlElement extends AXmlNode {
 
     /**
      * 
-     * @param name
-     * @param value
      * @return the previous value set to the given name, of null if no value was set
      *         for that name
      */

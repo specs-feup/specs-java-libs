@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.BorderLayout;
+import java.io.Serial;
 
 import javax.swing.JCheckBox;
 
@@ -30,6 +31,7 @@ import pt.up.fe.specs.util.SpecsSwing;
  */
 public class BooleanPanel extends KeyPanel<Boolean> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

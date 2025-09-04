@@ -158,7 +158,7 @@ public interface DataKey<T> extends KeyProvider<String> {
      * @throws RuntimeException if no decoder is set
      */
     default DataKey<T> setDefaultString(String stringValue) {
-        if (!getDecoder().isPresent()) {
+        if (getDecoder().isEmpty()) {
             throw new RuntimeException("Can only use this method if a decoder was set before");
         }
 
@@ -285,8 +285,7 @@ public interface DataKey<T> extends KeyProvider<String> {
         if (defaultValue.isPresent()) {
             Object value = defaultValue.get();
 
-            if (value instanceof DataStore) {
-                DataStore dataStoreValue = (DataStore) value;
+            if (value instanceof DataStore dataStoreValue) {
                 if (dataStoreValue.getStoreDefinitionTry().isPresent()) {
                     builder.append(")");
 
@@ -382,7 +381,7 @@ public interface DataKey<T> extends KeyProvider<String> {
      * @return the updated DataKey instance
      */
     default DataKey<T> setCopyConstructor() {
-        return setCopyFunction(object -> SpecsSystem.copy(object));
+        return setCopyFunction(SpecsSystem::copy);
     }
 
     /**

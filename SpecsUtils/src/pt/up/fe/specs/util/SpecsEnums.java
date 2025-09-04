@@ -42,7 +42,7 @@ import pt.up.fe.specs.util.providers.StringProvider;
 public class SpecsEnums {
 
     private static final ThreadLocal<Map<Class<Enum<?>>, EnumHelper<?>>> ENUM_HELPERS = ThreadLocal
-            .withInitial(() -> new HashMap<>());
+            .withInitial(HashMap::new);
 
     /**
      * Transforms a String into a constant of the same name in a specific Enum.
@@ -101,11 +101,7 @@ public class SpecsEnums {
      */
     public static <T extends Enum<T>> boolean containsEnum(Class<T> enumType, String name) {
         T enumeration = valueOf(enumType, name);
-        if (enumeration == null) {
-            return false;
-        }
-
-        return true;
+        return enumeration != null;
 
     }
 
@@ -117,9 +113,6 @@ public class SpecsEnums {
      * This table can be useful to get the enum correspondent to a particular option
      * in String format which was collected from, for example, a config file.
      *
-     * @param <K>
-     * @param values
-     * @return
      */
     public static <K extends Enum<K>> Map<String, K> buildMap(K[] values) {
         Map<String, K> aMap = new HashMap<>();
@@ -139,18 +132,15 @@ public class SpecsEnums {
      * This table can be useful to get the enum correspondent to a particular option
      * in String format which was collected from, for example, a config file.
      *
-     * @param <K>
-     * @param values
-     * @return
      */
     public static <K extends Enum<K>> Map<String, K> buildNamesMap(Class<K> enumClass, Collection<K> excludeList) {
         Map<String, K> aMap = new LinkedHashMap<>();
 
         Function<K, String> toString = StringProvider.class.isAssignableFrom(enumClass)
                 ? anEnum -> ((StringProvider) anEnum).getString()
-                : anEnum -> anEnum.name();
+                : Enum::name;
 
-        var excludeSet = new HashSet<K>(excludeList);
+        var excludeSet = new HashSet<>(excludeList);
 
         for (K enume : enumClass.getEnumConstants()) {
             if (excludeSet.contains(enume)) {
@@ -165,8 +155,6 @@ public class SpecsEnums {
 
     /**
      *
-     * @param <K>
-     * @param values
      * @return a list with the names of the enums
      */
     public static <K extends Enum<K>> List<String> buildList(K[] values) {
@@ -184,8 +172,6 @@ public class SpecsEnums {
 
     /**
      *
-     * @param <K>
-     * @param values
      * @return a list with the string representation of the enums
      */
     public static <K extends Enum<K>> List<String> buildListToString(K[] values) {
@@ -200,8 +186,6 @@ public class SpecsEnums {
     /**
      * Returns the class of the enum correspondent to the values of the given array.
      *
-     * @param <K>
-     * @param values
      * @return the class correspondent to the given array of enums
      */
     public static <K extends Enum<K>> Class<?> getClass(K[] values) {
@@ -215,7 +199,7 @@ public class SpecsEnums {
 
     public static <T> List<T> extractValues(List<Class<? extends T>> enumClasses) {
         return enumClasses.stream()
-                .map(anEnumClass -> extractValues(anEnumClass))
+                .map(SpecsEnums::extractValues)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
@@ -224,8 +208,6 @@ public class SpecsEnums {
      * If the class represents an enum, returns a list with the values of that enum.
      * Otherwise, returns null.
      *
-     * @param anEnumClass
-     * @return
      */
     public static <T> List<T> extractValues(Class<? extends T> anEnumClass) {
         // Check class
@@ -249,8 +231,6 @@ public class SpecsEnums {
      * If the class represents an enum, returns a list of Strings with the names of
      * the values of that enum. Otherwise, returns null.
      *
-     * @param anEnumClass
-     * @return
      */
     public static <T extends Enum<T>> List<String> extractNames(Class<? extends T> anEnumClass) {
         List<T> values = extractValues(anEnumClass);
@@ -268,7 +248,6 @@ public class SpecsEnums {
      * Extracts an instance of an interface from a class which represents an Enum
      * which implements such interface.
      *
-     * @param enumSetupDefiner
      */
     public static <E extends Enum<E>> Object getInterfaceFromEnum(Class<E> enumImplementingInterface,
             Class<?> interfaceClass) {
@@ -296,13 +275,6 @@ public class SpecsEnums {
      * <p>
      * AnEnum[] y = EnumUtils.getComplement(new AnEnum[0], anEnum1, anEnum2);
      *
-     * @param <K>
-     * @param a      a - the array into which the elements of this set are to be
-     *               stored, if it is big enough; otherwise, a
-     *               new array of the same runtime type is allocated for this
-     *               purpose.
-     * @param values
-     * @return
      */
     public static <K extends Enum<K>> K[] getComplement(K[] a, List<K> values) {
         EnumSet<K> complementSet = SpecsEnums.getComplement(values);
@@ -311,16 +283,13 @@ public class SpecsEnums {
 
     public static <K extends Enum<K>> EnumSet<K> getComplement(List<K> values) {
         EnumSet<K> originalSet = EnumSet.copyOf(values);
-        EnumSet<K> complementSet = EnumSet.complementOf(originalSet);
 
-        return complementSet;
+        return EnumSet.complementOf(originalSet);
     }
 
     /**
      * Build a map from an enumeration class which implements a KeyProvider.
      *
-     * @param enumClass
-     * @return
      */
     public static <K extends Enum<K> & KeyProvider<T>, T> Map<T, K> buildMap(Class<K> enumClass) {
         Map<T, K> enumMap = new LinkedHashMap<>();
@@ -337,12 +306,10 @@ public class SpecsEnums {
      * <p>
      * If the given class has no enums, throws a Runtime Exception.
      *
-     * @param anEnumClass
-     * @return
      */
     public static <T extends Enum<T>> T getFirstEnum(Class<T> anEnumClass) {
 
-        T enums[] = anEnumClass.getEnumConstants();
+        T[] enums = anEnumClass.getEnumConstants();
 
         if (enums.length == 0) {
             throw new RuntimeException("Class '" + anEnumClass + "' has no enum values.");
@@ -367,8 +334,6 @@ public class SpecsEnums {
      * Returns a string representing the enum options using ',' as delimiter and '['
      * and ']' and prefix and suffix, respectively.
      *
-     * @param anEnumClass
-     * @return
      */
     public static <E extends Enum<E>> String getEnumOptions(Class<E> anEnumClass) {
         StringJoiner joiner = new StringJoiner(", ", "[", "]");
@@ -406,8 +371,6 @@ public class SpecsEnums {
 
     /**
      *
-     * @param <T>
-     * @param anEnum
      * @return the next enum, according to the ordinal order, or the first enum if
      *         this one is the last
      */
@@ -427,11 +390,6 @@ public class SpecsEnums {
     /**
      * Converts a map with string keys to a map
      *
-     * @param <T>
-     * @param <R>
-     * @param enumClass
-     * @param map
-     * @return
      */
     public static <T extends Enum<T>, R> EnumMap<T, R> toEnumMap(Class<T> enumClass,
             Map<String, R> map) {
@@ -459,8 +417,6 @@ public class SpecsEnums {
     /**
      * Uses enum helpers, supports interface StringProvider.
      *
-     * @param enumClass
-     * @param value
      */
     public static <T extends Enum<T>> Optional<T> toEnumTry(Class<T> enumClass, String name) {
         return getHelper(enumClass).fromNameTry(name);

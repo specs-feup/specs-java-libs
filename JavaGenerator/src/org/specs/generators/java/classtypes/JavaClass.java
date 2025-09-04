@@ -284,7 +284,7 @@ public class JavaClass extends ClassType {
         if (isAdded) {
             addImport(method.getReturnType());
             // Add the imports for the argument of the method
-            method.getParams().stream().forEach(arg -> addImport(arg.getClassType()));
+            method.getParams().forEach(arg -> addImport(arg.getClassType()));
         }
         return isAdded;
     }
@@ -345,7 +345,7 @@ public class JavaClass extends ClassType {
      * @param methods the methods to add
      */
     public void addAll(Collection<Method> methods) {
-        methods.addAll(methods);
+        this.methods.addAll(methods);
     }
 
     /**

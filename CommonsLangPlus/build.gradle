@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'	
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.13.0'	
 
     // Testing dependencies
@@ -26,7 +26,7 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.5.0'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '5.2.0' // For static mocking
-    testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher'
+    testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.10.0'
 }
 
 java {

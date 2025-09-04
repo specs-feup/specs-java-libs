@@ -32,7 +32,6 @@ public class RegisterUtils {
      * <p>
      * Example: if given the string MSR[29], returns 29.
      * 
-     * @param registerFlagName
      * @return the bit position as an Integer, or null if the input is invalid or
      *         null
      */

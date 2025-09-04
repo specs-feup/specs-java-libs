@@ -53,9 +53,7 @@ public class SpecsProperties {
     /**
      * Helper method which accepts a ResourceProvider and copies the file if it does
      * not exist.
-     * 
-     * @param resource
-     * @return
+     *
      */
     public static SpecsProperties newInstance(ResourceProvider resource) {
 
@@ -81,8 +79,7 @@ public class SpecsProperties {
      * <p>
      * If an error occurs (ex.: the File argument does not represent a file, could
      * not load the Properties object) returns null and logs the cause.
-     * 
-     * @param file a File object representing a file.
+     *
      * @return If successfull, a Properties objects with the contents of the file.
      *         Null otherwise.
      */
@@ -102,7 +99,7 @@ public class SpecsProperties {
     }
 
     public boolean hasKey(KeyProvider<String> key) {
-        return props.keySet().contains(key.getKey());
+        return props.containsKey(key.getKey());
     }
 
     /**
@@ -110,12 +107,10 @@ public class SpecsProperties {
      * 
      * <p>
      * Trims the string before returning.
-     * 
-     * @param key
-     * @return
+     *
      */
     public String get(KeyProvider<String> key) {
-        if (!props.keySet().contains(key.getKey())) {
+        if (!props.containsKey(key.getKey())) {
             SpecsLogs.msgInfo("! Properties file is missing key '" + key.getKey() + "'");
             return "";
         }
@@ -145,7 +140,7 @@ public class SpecsProperties {
     public File getFolder(KeyProvider<String> key) {
         String folderName = get(key);
         File folder = null;
-        if (!folderName.equals("")) {
+        if (!folderName.isEmpty()) {
             folder = SpecsIo.mkdir(folderName);
         }
 
@@ -179,17 +174,12 @@ public class SpecsProperties {
     /**
      * Saves a properties object to a file.
      * 
-     * @param outputfile
-     * @param props
      * @return true if there was no problems. False otherwise
      */
     public boolean store(File outputfile) {
 
         try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(outputfile))) {
-
             props.store(outStream, "");
-            outStream.close();
-
         } catch (IOException ex) {
             SpecsLogs.warn("Could not save properties object to file '" + outputfile + "'", ex);
             return false;
@@ -213,8 +203,7 @@ public class SpecsProperties {
 
     /**
      * Creates a JSON string equivalent to this properties object.
-     * 
-     * @return
+     *
      */
     public String toJson() {
         StringBuilder json = new StringBuilder();

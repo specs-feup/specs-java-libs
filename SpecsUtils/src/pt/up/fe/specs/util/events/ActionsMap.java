@@ -50,7 +50,6 @@ public class ActionsMap {
     /**
      * Performs the action related to the given event.
      *
-     * @param event
      */
     public void performAction(Event event) {
         // Get action

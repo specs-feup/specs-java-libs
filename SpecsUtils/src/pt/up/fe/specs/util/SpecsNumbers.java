@@ -34,7 +34,7 @@ public class SpecsNumbers {
     static {
         ZEROS = new ClassMap<>();
         ZEROS.put(Integer.class, 0);
-        ZEROS.put(Long.class, 0l);
+        ZEROS.put(Long.class, 0L);
         ZEROS.put(Float.class, 0.0f);
         ZEROS.put(Double.class, 0.0);
     }
@@ -45,10 +45,10 @@ public class SpecsNumbers {
     private static final BiFunctionClassMap<Number, Number, Number> ADD;
     static {
         ADD = new BiFunctionClassMap<>();
-        ADD.put(Integer.class, (number1, number2) -> Integer.valueOf(number1.intValue() + number2.intValue()));
-        ADD.put(Long.class, (number1, number2) -> Long.valueOf(number1.longValue() + number2.longValue()));
-        ADD.put(Float.class, (number1, number2) -> Float.valueOf(number1.floatValue() + number2.floatValue()));
-        ADD.put(Double.class, (number1, number2) -> Double.valueOf(number1.doubleValue() + number2.doubleValue()));
+        ADD.put(Integer.class, (number1, number2) -> number1 + number2.intValue());
+        ADD.put(Long.class, (number1, number2) -> number1 + number2.longValue());
+        ADD.put(Float.class, (number1, number2) -> number1 + number2.floatValue());
+        ADD.put(Double.class, (number1, number2) -> number1 + number2.doubleValue());
     }
 
     /**

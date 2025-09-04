@@ -178,9 +178,7 @@ public enum SpecsProperty {
             Handler[] oldHandlers = SpecsLogs.getRootLogger().getHandlers();
             Handler[] newHandlers = new Handler[oldHandlers.length + 1];
 
-            for (int i = 0; i < oldHandlers.length; i++) {
-                newHandlers[i] = oldHandlers[i];
-            }
+            System.arraycopy(oldHandlers, 0, newHandlers, 0, oldHandlers.length);
 
             SpecsLogs.msgInfo("Setting error log to file '" + value + "'");
             newHandlers[oldHandlers.length] = SpecsLogs.buildErrorLogHandler(value);

@@ -119,7 +119,7 @@ public class PropertiesPersistence implements AppPersistence {
     public static DataStore getDataStoreToSave(DataStore data) {
         Optional<StoreDefinition> def = data.getStoreDefinitionTry();
 
-        if (!def.isPresent()) {
+        if (def.isEmpty()) {
             return DataStore.newInstance(data.getName(), data);
         }
 

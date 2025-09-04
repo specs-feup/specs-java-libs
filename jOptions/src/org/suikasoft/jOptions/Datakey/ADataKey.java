@@ -129,13 +129,10 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
         ADataKey<?> other = (ADataKey<?>) obj;
         if (id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        } else if (!id.equals(other.id)) {
-            return false;
+            return other.id == null;
+        } else {
+            return id.equals(other.id);
         }
-        return true;
     }
 
     /**
@@ -390,9 +387,7 @@ public abstract class ADataKey<T> implements DataKey<T> {
 
     private static <T> T copy(T value, StringCodec<T> codec) {
         var encodedValue = codec.encode(value);
-        var decodedValue = codec.decode(encodedValue);
-
-        return decodedValue;
+        return codec.decode(encodedValue);
     }
 
     /**

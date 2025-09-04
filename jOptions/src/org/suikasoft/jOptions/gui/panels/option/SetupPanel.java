@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.LayoutManager;
+import java.io.Serial;
 import java.util.Collection;
 
 import javax.swing.BoxLayout;
@@ -34,6 +35,7 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
  */
 public class SetupPanel extends KeyPanel<DataStore> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -81,7 +83,6 @@ public class SetupPanel extends KeyPanel<DataStore> {
     private void updateSetupOptions() {
         if (currentOptionsPanel != null) {
             remove(currentOptionsPanel);
-            currentOptionsPanel = null;
         }
 
         currentOptionsPanel = setupOptionsPanel;

@@ -15,7 +15,7 @@ package org.suikasoft.jOptions.gui.panels.option.notimplementedyet;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,6 +41,7 @@ import pt.up.fe.specs.util.utilities.StringList;
 @Deprecated
 public class MultipleChoiceListPanel extends FieldPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -75,20 +76,9 @@ public class MultipleChoiceListPanel extends FieldPanel {
         possibleValues = new JComboBox<>();
         resetChoiceLists();
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
+        addButton.addActionListener(this::addButtonActionPerformed);
 
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                removeButtonActionPerformed(evt);
-            }
-
-        });
+        removeButton.addActionListener(this::removeButtonActionPerformed);
 
         add(label);
         add(selectedValues);

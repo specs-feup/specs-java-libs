@@ -50,7 +50,7 @@ public class SpecsPlatforms {
      * @return true if Linux ARM, false otherwise
      */
     public static boolean isLinuxArm() {
-        return SystemUtils.IS_OS_LINUX && "arm".equals(System.getProperty("os.arch").toLowerCase());
+        return SystemUtils.IS_OS_LINUX && "arm".equalsIgnoreCase(System.getProperty("os.arch"));
     }
 
     /**

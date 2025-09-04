@@ -72,7 +72,7 @@ public class Resources {
     public List<ResourceProvider> getResources() {
         return resources.stream()
                 .map(resource -> baseFolder + resource)
-                .map(resource -> ResourceProvider.newInstance(resource))
+                .map(ResourceProvider::newInstance)
                 .collect(Collectors.toList());
     }
 

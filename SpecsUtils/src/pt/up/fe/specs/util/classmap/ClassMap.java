@@ -76,9 +76,7 @@ public class ClassMap<T, V> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <ET extends T, K extends ET> V put(Class<K> aClass,
             V value) {
@@ -145,9 +143,7 @@ public class ClassMap<T, V> {
 
     /**
      * Sets the default value, backed up by the same map.
-     * 
-     * @param defaultValue
-     * @return
+     *
      */
     public ClassMap<T, V> setDefaultValue(V defaultValue) {
         return new ClassMap<>(this.map, defaultValue, this.classMapper);

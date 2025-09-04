@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
+import java.io.Serial;
+
 /**
  * Abstract base class for tabs in the application GUI.
  *
@@ -46,6 +48,7 @@ public abstract class GuiTab extends JPanel {
         return data;
     }
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

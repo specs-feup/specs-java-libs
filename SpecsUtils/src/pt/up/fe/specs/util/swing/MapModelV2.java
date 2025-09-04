@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.swing;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,7 @@ public class MapModelV2 extends AbstractTableModel {
 
     public static final Color COLOR_DEFAULT = new Color(0, 0, 0, 0);
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final List<Object> keys;
@@ -41,10 +43,6 @@ public class MapModelV2 extends AbstractTableModel {
 
     private List<String> columnNames;
 
-    /**
-     * @param map
-     * @param columnNames
-     */
     public MapModelV2(Map<?, ?> map) {
         this.keys = new ArrayList<>();
         this.values = new ArrayList<>();
@@ -69,6 +67,7 @@ public class MapModelV2 extends AbstractTableModel {
     public static TableCellRenderer getRenderer() {
         return new DefaultTableCellRenderer() {
 
+            @Serial
             private static final long serialVersionUID = -2074238717877716002L;
 
             @Override
@@ -135,7 +134,6 @@ public class MapModelV2 extends AbstractTableModel {
     /**
      * Helper method with variadic inputs.
      *
-     * @param columnNames
      */
     public void setColumnNames(String... columnNames) {
         setColumnNames(Arrays.asList(columnNames));

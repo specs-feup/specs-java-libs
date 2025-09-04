@@ -36,8 +36,6 @@ public class EventController implements EventNotifier, EventRegister {
     /**
      * Registers receiver to all its supported events.
      *
-     * @param receiver
-     * @param eventIds
      */
     @Override
     public void registerReceiver(EventReceiver receiver) {
@@ -47,8 +45,6 @@ public class EventController implements EventNotifier, EventRegister {
     /**
      * Unregisters listener to all its supported events.
      *
-     * @param receiver
-     * @param eventIds
      */
     @Override
     public void unregisterReceiver(EventReceiver receiver) {
@@ -85,8 +81,6 @@ public class EventController implements EventNotifier, EventRegister {
     /**
      * Helper method.
      *
-     * @param listener
-     * @param eventIds
      */
     public void registerListener(EventReceiver listener, EventId... eventIds) {
         registerListener(listener, Arrays.asList(eventIds));
@@ -95,8 +89,6 @@ public class EventController implements EventNotifier, EventRegister {
     /**
      * Registers a listener to a list of events.
      *
-     * @param listener
-     * @param event
      */
     public void registerListener(EventReceiver listener, Collection<EventId> eventIds) {
         if (eventIds == null) {
@@ -111,16 +103,11 @@ public class EventController implements EventNotifier, EventRegister {
     /**
      * Registers a listener to a single event.
      *
-     * @param listener
-     * @param eventId
      */
     public void registerListener(EventReceiver listener, EventId eventId) {
         // Check if event is already on table
-        Collection<EventReceiver> listeners = this.registeredListeners.get(eventId);
-        if (listeners == null) {
-            listeners = new LinkedHashSet<>();
-            this.registeredListeners.put(eventId, listeners);
-        }
+        Collection<EventReceiver> listeners = this.registeredListeners.computeIfAbsent(eventId,
+                k -> new LinkedHashSet<>());
 
         // Check if listener is already registered
         if (listeners.contains(listener)) {
@@ -153,7 +140,7 @@ public class EventController implements EventNotifier, EventRegister {
      * @return true if there is at least one listeners registered
      */
     public boolean hasListeners() {
-        return !this.listenersCount.getAccMap().keySet().isEmpty();
+        return !this.listenersCount.getAccMap().isEmpty();
     }
 
     /**

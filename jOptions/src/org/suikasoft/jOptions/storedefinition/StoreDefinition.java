@@ -51,7 +51,7 @@ public interface StoreDefinition {
      * @return the sections
      */
     default List<StoreSection> getSections() {
-        return Arrays.asList(StoreSection.newInstance(getKeys()));
+        return List.of(StoreSection.newInstance(getKeys()));
     }
 
     /**
@@ -61,7 +61,7 @@ public interface StoreDefinition {
      */
     default Map<String, DataKey<?>> getKeyMap() {
         return getKeys().stream()
-                .collect(Collectors.toMap(key -> key.getName(), key -> key));
+                .collect(Collectors.toMap(DataKey::getName, key -> key));
     }
 
     /**
@@ -119,7 +119,7 @@ public interface StoreDefinition {
     default DataKey<?> getKey(String key) {
         DataKey<?> dataKey = getKeyMap().get(key);
         if (dataKey == null) {
-            throw new RuntimeException("Key '" + key + "' not found in store definition:" + toString());
+            throw new RuntimeException("Key '" + key + "' not found in store definition:" + this);
         }
 
         return dataKey;

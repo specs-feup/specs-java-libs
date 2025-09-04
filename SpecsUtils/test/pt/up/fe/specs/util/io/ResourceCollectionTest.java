@@ -54,10 +54,10 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(id, isIdUnique, resources);
 
             // Then
-            assertThat(collection.getId()).isEqualTo(id);
+            assertThat(collection.id()).isEqualTo(id);
             assertThat(collection.isIdUnique()).isTrue();
-            assertThat(collection.getResources()).isEqualTo(resources);
-            assertThat(collection.getResources()).hasSize(2);
+            assertThat(collection.resources()).isEqualTo(resources);
+            assertThat(collection.resources()).hasSize(2);
         }
 
         @Test
@@ -72,9 +72,9 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(id, isIdUnique, resources);
 
             // Then
-            assertThat(collection.getId()).isEqualTo(id);
+            assertThat(collection.id()).isEqualTo(id);
             assertThat(collection.isIdUnique()).isTrue();
-            assertThat(collection.getResources()).containsExactly(mockProvider1);
+            assertThat(collection.resources()).containsExactly(mockProvider1);
         }
 
         @Test
@@ -89,10 +89,10 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(id, isIdUnique, resources);
 
             // Then
-            assertThat(collection.getId()).isEqualTo(id);
+            assertThat(collection.id()).isEqualTo(id);
             assertThat(collection.isIdUnique()).isFalse();
-            assertThat(collection.getResources()).hasSize(3);
-            assertThat(collection.getResources()).containsExactly(mockProvider1, mockProvider2, mockProvider3);
+            assertThat(collection.resources()).hasSize(3);
+            assertThat(collection.resources()).containsExactly(mockProvider1, mockProvider2, mockProvider3);
         }
 
         @Test
@@ -107,9 +107,9 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(id, isIdUnique, resources);
 
             // Then
-            assertThat(collection.getId()).isEqualTo(id);
+            assertThat(collection.id()).isEqualTo(id);
             assertThat(collection.isIdUnique()).isTrue();
-            assertThat(collection.getResources()).isEmpty();
+            assertThat(collection.resources()).isEmpty();
         }
 
         @Test
@@ -124,9 +124,9 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(id, isIdUnique, resources);
 
             // Then
-            assertThat(collection.getId()).isNull();
+            assertThat(collection.id()).isNull();
             assertThat(collection.isIdUnique()).isTrue();
-            assertThat(collection.getResources()).isNotNull();
+            assertThat(collection.resources()).isNotNull();
         }
 
         @Test
@@ -141,9 +141,9 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(id, isIdUnique, resources);
 
             // Then
-            assertThat(collection.getId()).isEqualTo(id);
+            assertThat(collection.id()).isEqualTo(id);
             assertThat(collection.isIdUnique()).isTrue();
-            assertThat(collection.getResources()).isNull();
+            assertThat(collection.resources()).isNull();
         }
     }
 
@@ -159,7 +159,7 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(expectedId, true, Collections.emptyList());
 
             // When
-            String actualId = collection.getId();
+            String actualId = collection.id();
 
             // Then
             assertThat(actualId).isEqualTo(expectedId);
@@ -186,7 +186,7 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection("test", true, expectedResources);
 
             // When
-            Collection<ResourceProvider> actualResources = collection.getResources();
+            Collection<ResourceProvider> actualResources = collection.resources();
 
             // Then
             assertThat(actualResources).isSameAs(expectedResources);
@@ -202,15 +202,15 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection("ref-test", true, resources);
 
             // When
-            Collection<ResourceProvider> retrievedResources = collection.getResources();
+            Collection<ResourceProvider> retrievedResources = collection.resources();
 
             // Then
             assertThat(retrievedResources).isSameAs(resources);
 
             // Modifications to original should be reflected (if collection is mutable)
             resources.add(mockProvider3);
-            assertThat(collection.getResources()).hasSize(3);
-            assertThat(collection.getResources()).contains(mockProvider3);
+            assertThat(collection.resources()).hasSize(3);
+            assertThat(collection.resources()).contains(mockProvider3);
         }
     }
 
@@ -226,8 +226,8 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection("single", true, resources);
 
             // When/Then
-            assertThat(collection.getResources()).hasSize(1);
-            assertThat(collection.getResources()).containsExactly(mockProvider1);
+            assertThat(collection.resources()).hasSize(1);
+            assertThat(collection.resources()).containsExactly(mockProvider1);
         }
 
         @Test
@@ -238,8 +238,8 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection("multiple", false, resources);
 
             // When/Then
-            assertThat(collection.getResources()).hasSize(3);
-            assertThat(collection.getResources()).containsExactly(mockProvider1, mockProvider2, mockProvider3);
+            assertThat(collection.resources()).hasSize(3);
+            assertThat(collection.resources()).containsExactly(mockProvider1, mockProvider2, mockProvider3);
         }
 
         @Test
@@ -250,8 +250,8 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection("duplicates", true, resources);
 
             // When/Then
-            assertThat(collection.getResources()).hasSize(3);
-            assertThat(collection.getResources()).containsExactly(mockProvider1, mockProvider1, mockProvider2);
+            assertThat(collection.resources()).hasSize(3);
+            assertThat(collection.resources()).containsExactly(mockProvider1, mockProvider1, mockProvider2);
         }
 
         @Test
@@ -262,8 +262,8 @@ class ResourceCollectionTest {
             ResourceCollection listCollection = new ResourceCollection("list", true, list);
 
             // When/Then
-            assertThat(listCollection.getResources()).isInstanceOf(List.class);
-            assertThat(listCollection.getResources()).hasSize(2);
+            assertThat(listCollection.resources()).isInstanceOf(List.class);
+            assertThat(listCollection.resources()).hasSize(2);
         }
     }
 
@@ -288,7 +288,7 @@ class ResourceCollectionTest {
 
             for (String id : idFormats) {
                 ResourceCollection collection = new ResourceCollection(id, true, Collections.emptyList());
-                assertThat(collection.getId()).isEqualTo(id);
+                assertThat(collection.id()).isEqualTo(id);
             }
         }
 
@@ -303,10 +303,10 @@ class ResourceCollectionTest {
             ResourceCollection nonUnique2 = new ResourceCollection(sameId, false, Collections.emptyList());
 
             // When/Then
-            assertThat(unique1.getId()).isEqualTo(sameId);
-            assertThat(unique2.getId()).isEqualTo(sameId);
-            assertThat(nonUnique1.getId()).isEqualTo(sameId);
-            assertThat(nonUnique2.getId()).isEqualTo(sameId);
+            assertThat(unique1.id()).isEqualTo(sameId);
+            assertThat(unique2.id()).isEqualTo(sameId);
+            assertThat(nonUnique1.id()).isEqualTo(sameId);
+            assertThat(nonUnique2.id()).isEqualTo(sameId);
 
             assertThat(unique1.isIdUnique()).isTrue();
             assertThat(unique2.isIdUnique()).isTrue();
@@ -325,9 +325,9 @@ class ResourceCollectionTest {
             ResourceCollection nonUniqueCollection = new ResourceCollection(id, false, resources);
 
             // When/Then
-            assertThat(uniqueCollection.getId()).isEqualTo(nonUniqueCollection.getId());
+            assertThat(uniqueCollection.id()).isEqualTo(nonUniqueCollection.id());
             assertThat(uniqueCollection.isIdUnique()).isNotEqualTo(nonUniqueCollection.isIdUnique());
-            assertThat(uniqueCollection.getResources()).isEqualTo(nonUniqueCollection.getResources());
+            assertThat(uniqueCollection.resources()).isEqualTo(nonUniqueCollection.resources());
         }
     }
 
@@ -344,9 +344,9 @@ class ResourceCollectionTest {
                     Collections.singletonList(mockProvider1));
 
             // When/Then
-            assertThat(collection.getId()).isEmpty();
+            assertThat(collection.id()).isEmpty();
             assertThat(collection.isIdUnique()).isTrue();
-            assertThat(collection.getResources()).isNotEmpty();
+            assertThat(collection.resources()).isNotEmpty();
         }
 
         @Test
@@ -357,7 +357,7 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(whitespaceId, false, Collections.emptyList());
 
             // When/Then
-            assertThat(collection.getId()).isEqualTo(whitespaceId);
+            assertThat(collection.id()).isEqualTo(whitespaceId);
             assertThat(collection.isIdUnique()).isFalse();
         }
 
@@ -368,9 +368,9 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(null, true, null);
 
             // Then
-            assertThat(collection.getId()).isNull();
+            assertThat(collection.id()).isNull();
             assertThat(collection.isIdUnique()).isTrue();
-            assertThat(collection.getResources()).isNull();
+            assertThat(collection.resources()).isNull();
         }
 
         @Test
@@ -381,8 +381,8 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection("large", true, manyResources);
 
             // When/Then
-            assertThat(collection.getResources()).hasSize(1000);
-            assertThat(collection.getId()).isEqualTo("large");
+            assertThat(collection.resources()).hasSize(1000);
+            assertThat(collection.id()).isEqualTo("large");
             assertThat(collection.isIdUnique()).isTrue();
         }
 
@@ -398,13 +398,13 @@ class ResourceCollectionTest {
             ResourceCollection collection = new ResourceCollection(id, isUnique, resources);
 
             // Then - Changes to local variables should not affect the collection
-            String originalId = collection.getId();
+            String originalId = collection.id();
             boolean originalUnique = collection.isIdUnique();
-            Collection<ResourceProvider> originalResources = collection.getResources();
+            Collection<ResourceProvider> originalResources = collection.resources();
 
-            assertThat(collection.getId()).isEqualTo(originalId);
+            assertThat(collection.id()).isEqualTo(originalId);
             assertThat(collection.isIdUnique()).isEqualTo(originalUnique);
-            assertThat(collection.getResources()).isSameAs(originalResources);
+            assertThat(collection.resources()).isSameAs(originalResources);
         }
     }
 
@@ -423,13 +423,13 @@ class ResourceCollectionTest {
                     Collections.singletonList(mockProvider3));
 
             // When/Then
-            assertThat(configResources.getId()).isEqualTo("config-files");
+            assertThat(configResources.id()).isEqualTo("config-files");
             assertThat(configResources.isIdUnique()).isTrue();
-            assertThat(configResources.getResources()).hasSize(2);
+            assertThat(configResources.resources()).hasSize(2);
 
-            assertThat(dynamicResources.getId()).isEqualTo("dynamic-content");
+            assertThat(dynamicResources.id()).isEqualTo("dynamic-content");
             assertThat(dynamicResources.isIdUnique()).isFalse();
-            assertThat(dynamicResources.getResources()).hasSize(1);
+            assertThat(dynamicResources.resources()).hasSize(1);
         }
 
         @Test
@@ -443,11 +443,11 @@ class ResourceCollectionTest {
             ResourceCollection fallbackCollection = new ResourceCollection("fallback", true, fallbackResources);
 
             // When/Then
-            assertThat(primaryCollection.getResources()).hasSize(2);
-            assertThat(fallbackCollection.getResources()).hasSize(1);
+            assertThat(primaryCollection.resources()).hasSize(2);
+            assertThat(fallbackCollection.resources()).hasSize(1);
 
             // Collections can be used together for resource resolution strategies
-            assertThat(primaryCollection.getId()).isNotEqualTo(fallbackCollection.getId());
+            assertThat(primaryCollection.id()).isNotEqualTo(fallbackCollection.id());
             assertThat(primaryCollection.isIdUnique()).isEqualTo(fallbackCollection.isIdUnique());
         }
 
@@ -462,13 +462,13 @@ class ResourceCollectionTest {
 
             // When - Composing collections
             Collection<ResourceProvider> combined = Arrays.asList(
-                    collection1.getResources().iterator().next(),
-                    collection2.getResources().iterator().next());
+                    collection1.resources().iterator().next(),
+                    collection2.resources().iterator().next());
             ResourceCollection combinedCollection = new ResourceCollection("combined", false, combined);
 
             // Then
-            assertThat(combinedCollection.getResources()).hasSize(2);
-            assertThat(combinedCollection.getId()).isEqualTo("combined");
+            assertThat(combinedCollection.resources()).hasSize(2);
+            assertThat(combinedCollection.id()).isEqualTo("combined");
             assertThat(combinedCollection.isIdUnique()).isFalse();
         }
 
@@ -484,10 +484,10 @@ class ResourceCollectionTest {
 
             // When - Multiple accesses
             for (int i = 0; i < 100; i++) {
-                assertThat(collection.getId()).isEqualTo(id);
+                assertThat(collection.id()).isEqualTo(id);
                 assertThat(collection.isIdUnique()).isEqualTo(isUnique);
-                assertThat(collection.getResources()).hasSize(2);
-                assertThat(collection.getResources()).containsExactly(mockProvider1, mockProvider2);
+                assertThat(collection.resources()).hasSize(2);
+                assertThat(collection.resources()).containsExactly(mockProvider1, mockProvider2);
             }
         }
 
@@ -506,9 +506,9 @@ class ResourceCollectionTest {
                 final int index = i;
                 threads[i] = new Thread(() -> {
                     try {
-                        String id = collection.getId();
+                        String id = collection.id();
                         boolean isUnique = collection.isIdUnique();
-                        Collection<ResourceProvider> resources = collection.getResources();
+                        Collection<ResourceProvider> resources = collection.resources();
 
                         results[index] = "concurrent".equals(id) &&
                                 isUnique &&

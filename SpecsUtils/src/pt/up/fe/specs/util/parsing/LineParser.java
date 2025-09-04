@@ -52,7 +52,7 @@ public class LineParser {
         this.commentPrefix = oneLineComment;
 
         // Make some checks
-        if (oneLineComment.length() == 0) {
+        if (oneLineComment.isEmpty()) {
             Logger.getLogger(LineParser.class.getName())
                     .warning("OneLineComment is an empty string. This will make all " +
                             "lines in the file appear as comments.");
@@ -77,8 +77,6 @@ public class LineParser {
      * <p>
      * The input string is trimmed before parsing.
      *
-     * @param command
-     * @return
      */
     public List<String> splitCommand(String command) {
         // Trim string
@@ -91,7 +89,7 @@ public class LineParser {
 
         List<String> commands = new ArrayList<>();
 
-        while (command.length() > 0) {
+        while (!command.isEmpty()) {
             // Get indexes
             int spaceIndex = command.indexOf(this.commandSeparator);
             int quoteIndex = this.commandGatherer.isEmpty() ? -1 : command.indexOf(this.commandGatherer);

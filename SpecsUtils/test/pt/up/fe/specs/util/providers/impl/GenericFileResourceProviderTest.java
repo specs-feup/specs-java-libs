@@ -58,7 +58,7 @@ class GenericFileResourceProviderTest {
             assertThat(provider).isNotNull();
             assertThat(provider.getFile()).isEqualTo(testFile);
             assertThat(provider.getFilename()).isEqualTo("test.txt");
-            assertThat(provider.getVersion()).isNull();
+            assertThat(provider.version()).isNull();
         }
 
         @Test
@@ -71,7 +71,7 @@ class GenericFileResourceProviderTest {
             assertThat(provider).isNotNull();
             assertThat(provider.getFile()).isEqualTo(testFile);
             assertThat(provider.getFilename()).isEqualTo("test.txt");
-            assertThat(provider.getVersion()).isEqualTo("1.0");
+            assertThat(provider.version()).isEqualTo("1.0");
         }
 
         @Test
@@ -83,7 +83,7 @@ class GenericFileResourceProviderTest {
             // Then
             assertThat(provider).isNotNull();
             assertThat(provider.getFile()).isEqualTo(testFile);
-            assertThat(provider.getVersion()).isNull();
+            assertThat(provider.version()).isNull();
         }
 
         @Test
@@ -212,7 +212,7 @@ class GenericFileResourceProviderTest {
             GenericFileResourceProvider provider = GenericFileResourceProvider.newInstance(testFile);
 
             // When/Then
-            assertThat(provider.getVersion()).isNull();
+            assertThat(provider.version()).isNull();
         }
 
         @Test
@@ -222,7 +222,7 @@ class GenericFileResourceProviderTest {
             GenericFileResourceProvider provider = GenericFileResourceProvider.newInstance(testFile, "2.1");
 
             // When/Then
-            assertThat(provider.getVersion()).isEqualTo("2.1");
+            assertThat(provider.version()).isEqualTo("2.1");
         }
 
         @Test
@@ -236,7 +236,7 @@ class GenericFileResourceProviderTest {
 
             // Then
             assertThat(versionedProvider).isNotSameAs(provider);
-            assertThat(versionedProvider.getVersion()).isEqualTo("1.0");
+            assertThat(versionedProvider.version()).isEqualTo("1.0");
             assertThat(versionedProvider.getFilename()).isEqualTo("test.txt");
         }
 
@@ -251,7 +251,7 @@ class GenericFileResourceProviderTest {
 
             // Then
             assertThat(versionedProvider).isNotSameAs(provider);
-            assertThat(versionedProvider.getVersion()).isNull();
+            assertThat(versionedProvider.version()).isNull();
         }
 
         @Test
@@ -397,7 +397,7 @@ class GenericFileResourceProviderTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.getVersion()).isNull();
+            assertThat(result.version()).isNull();
         }
     }
 
@@ -416,7 +416,7 @@ class GenericFileResourceProviderTest {
 
             // Then
             assertThat(fileProvider.getFilename()).isEqualTo("test.txt");
-            assertThat(fileProvider.getVersion()).isNull();
+            assertThat(fileProvider.version()).isNull();
         }
 
         @Test
@@ -430,9 +430,9 @@ class GenericFileResourceProviderTest {
             // Then
             assertThat(provider1).isNotSameAs(provider2).isNotSameAs(provider3);
             assertThat(provider1.getFile()).isEqualTo(provider2.getFile()).isEqualTo(provider3.getFile());
-            assertThat(provider1.getVersion()).isNull();
-            assertThat(provider2.getVersion()).isEqualTo("1.0");
-            assertThat(provider3.getVersion()).isEqualTo("2.0");
+            assertThat(provider1.version()).isNull();
+            assertThat(provider2.version()).isEqualTo("1.0");
+            assertThat(provider3.version()).isEqualTo("2.0");
         }
 
         @Test
@@ -446,9 +446,9 @@ class GenericFileResourceProviderTest {
             FileResourceProvider v2 = original.createResourceVersion("2.0");
 
             // Then
-            assertThat(original.getVersion()).isNull();
-            assertThat(v1.getVersion()).isEqualTo("1.0");
-            assertThat(v2.getVersion()).isEqualTo("2.0");
+            assertThat(original.version()).isNull();
+            assertThat(v1.version()).isEqualTo("1.0");
+            assertThat(v2.version()).isEqualTo("2.0");
 
             // All should reference the same underlying file
             assertThat(((GenericFileResourceProvider) v1).getFile()).isEqualTo(testFile);

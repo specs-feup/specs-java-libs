@@ -104,7 +104,7 @@ public class SetupList implements DataStore {
      */
     public Collection<DataStore> getDataStores() {
         return keys.stream()
-                .map(key -> mapOfSetups.get(key))
+                .map(mapOfSetups::get)
                 .collect(Collectors.toList());
     }
 
@@ -180,7 +180,7 @@ public class SetupList implements DataStore {
         StringBuilder builder = new StringBuilder();
         for (var key : keys) {
             DataStore setup = mapOfSetups.get(key);
-            if (builder.length() != 0) {
+            if (!builder.isEmpty()) {
                 builder.append(", ");
             }
             builder.append(setup.getName());
@@ -222,7 +222,7 @@ public class SetupList implements DataStore {
         DataStore innerSetup = getMap().get(dataStoreName);
         if (innerSetup == null) {
             SpecsLogs.msgInfo("SetupList does not contain inner setup '" + dataStoreName + "'. Available setups: "
-                    + toString());
+                    + this);
             return null;
         }
         return innerSetup;

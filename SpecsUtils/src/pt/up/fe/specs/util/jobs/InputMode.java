@@ -37,11 +37,6 @@ public enum InputMode {
     singleFile,
     singleFolder;
 
-    /**
-     * @param folderLevel
-     * @param sourcePathname
-     * @return
-     */
     public List<FileSet> getPrograms(File sourcePath, Collection<String> extensions, Integer folderLevel) {
         switch (this) {
             case folders:
@@ -73,8 +68,7 @@ public enum InputMode {
     /**
      * Returns true if the path mode represents a folder. False, if it represents a
      * file.
-     * 
-     * @return
+     *
      */
     public boolean isFolder() {
         return (this != singleFile);

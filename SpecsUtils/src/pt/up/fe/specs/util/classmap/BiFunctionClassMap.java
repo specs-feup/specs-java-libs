@@ -52,9 +52,7 @@ public class BiFunctionClassMap<T, U, R> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <VS extends T, KS extends VS> void put(Class<KS> aClass,
             BiFunction<VS, U, R> value) {
@@ -86,9 +84,7 @@ public class BiFunctionClassMap<T, U, R> {
     /**
      * Calls the BiFunction.accept associated with class of the value t, or throws
      * an Exception if no BiFunction could be found in the map.
-     * 
-     * @param t
-     * @param u
+     *
      */
     public R apply(T t, U u) {
         BiFunction<T, U, R> result = get(t);

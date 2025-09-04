@@ -18,5 +18,5 @@ public abstract class TreeNodeWalker<K extends TreeNode<K>> {
 
     public void visit(K node) {
         this.visitChildren(node);
-    };
+    }
 }
