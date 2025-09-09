@@ -29,7 +29,8 @@ import org.specs.generators.java.utils.Utils;
 import tdrc.utils.StringUtils;
 
 /**
- * Represents a method declaration for a Java class, including return type, arguments, and modifiers.
+ * Represents a method declaration for a Java class, including return type,
+ * arguments, and modifiers.
  *
  * @author Tiago
  */
@@ -49,7 +50,7 @@ public class Method implements IGenerate {
      * Generates a public method with the specified return type and name.
      *
      * @param returnType the return type of the method
-     * @param name the name of the method
+     * @param name       the name of the method
      */
     public Method(JavaType returnType, String name) {
         init(returnType, name);
@@ -59,8 +60,8 @@ public class Method implements IGenerate {
      * Generates a method with the specified return type, name, and privacy level.
      *
      * @param returnType the return type of the method
-     * @param name the name of the method
-     * @param privacy the privacy level
+     * @param name       the name of the method
+     * @param privacy    the privacy level
      */
     public Method(JavaType returnType, String name, Privacy privacy) {
         init(returnType, name);
@@ -71,8 +72,8 @@ public class Method implements IGenerate {
      * Generates a method with the specified return type, name, and modifier.
      *
      * @param returnType the return type of the method
-     * @param name the name of the method
-     * @param modifier the modifier for the method
+     * @param name       the name of the method
+     * @param modifier   the modifier for the method
      */
     public Method(JavaType returnType, String name, Modifier modifier) {
         init(returnType, name);
@@ -80,12 +81,13 @@ public class Method implements IGenerate {
     }
 
     /**
-     * Generates a method with the specified return type, name, privacy, and modifier.
+     * Generates a method with the specified return type, name, privacy, and
+     * modifier.
      *
      * @param returnType the return type of the method
-     * @param name the name of the method
-     * @param privacy the privacy level
-     * @param modifier the modifier for the method
+     * @param name       the name of the method
+     * @param privacy    the privacy level
+     * @param modifier   the modifier for the method
      */
     public Method(JavaType returnType, String name, Privacy privacy, Modifier modifier) {
         init(returnType, name);
@@ -112,8 +114,7 @@ public class Method implements IGenerate {
     /**
      * Add a new modifier to the method
      * 
-     * @param newMod
-     *            the new modifier
+     * @param newMod the new modifier
      */
     public void add(Modifier newMod) {
         if (!modifiers.contains(newMod)) {
@@ -158,8 +159,7 @@ public class Method implements IGenerate {
     /**
      * Append text to the javadoc comment
      * 
-     * @param comment
-     *            the text to append
+     * @param comment the text to append
      * @return the {@link StringBuilder} with the new comment
      */
     public StringBuilder appendComment(String comment) {
@@ -179,10 +179,8 @@ public class Method implements IGenerate {
     /**
      * Add a new javadoc tag to the comment with description
      * 
-     * @param tag
-     *            the new tag to add
-     * @param description
-     *            the tag description
+     * @param tag         the new tag to add
+     * @param description the tag description
      */
     public void addJavaDocTag(JDocTag tag, String description) {
         javaDocComment.addTag(tag, description);
@@ -191,8 +189,7 @@ public class Method implements IGenerate {
     /**
      * Add a new annotation to the class
      * 
-     * @param annotation
-     *            the new annotation
+     * @param annotation the new annotation
      * @return true if the annotation was successfully added
      */
     public boolean add(Annotation annotation) {
@@ -202,8 +199,7 @@ public class Method implements IGenerate {
     /**
      * Removes a annotation from the class
      * 
-     * @param annotation
-     *            the annotation to remove
+     * @param annotation the annotation to remove
      * @return true if the annotation was successfully removed
      */
     public boolean remove(Annotation annotation) {
@@ -211,7 +207,8 @@ public class Method implements IGenerate {
     }
 
     /**
-     * Generate java source based on the method's privacy, modifiers, return type and name
+     * Generate java source based on the method's privacy, modifiers, return type
+     * and name
      * 
      * @param indentation the code indentation
      */
@@ -276,8 +273,7 @@ public class Method implements IGenerate {
     }
 
     /**
-     * @param body
-     *            the body to set
+     * @param body the body to set
      */
     public void setBody(boolean body) {
         this.body = body;
@@ -291,8 +287,7 @@ public class Method implements IGenerate {
     }
 
     /**
-     * @param methodBody
-     *            the methodBody to set
+     * @param methodBody the methodBody to set
      */
     public void setMethodBody(StringBuffer methodBody) {
         this.methodBody = methodBody;
@@ -301,8 +296,7 @@ public class Method implements IGenerate {
     /**
      * Append code to the method body
      * 
-     * @param code
-     *            the code to append
+     * @param code the code to append
      */
     public void appendCode(StringBuffer code) {
         methodBody.append(code);
@@ -311,8 +305,7 @@ public class Method implements IGenerate {
     /**
      * Append code to the method body
      * 
-     * @param code
-     *            the code to append
+     * @param code the code to append
      */
     public void appendCode(String code) {
         methodBody.append(code);
@@ -321,8 +314,7 @@ public class Method implements IGenerate {
     /**
      * Append code to the method body
      * 
-     * @param code
-     *            the code to append
+     * @param code the code to append
      */
     public void appendCodeln(String code) {
         methodBody.append(code + ln());
@@ -336,8 +328,7 @@ public class Method implements IGenerate {
     }
 
     /**
-     * @param returnType
-     *            the returnType to set
+     * @param returnType the returnType to set
      */
     public void setReturnType(JavaType returnType) throws IllegalArgumentException {
         if (returnType == null) {
@@ -354,8 +345,7 @@ public class Method implements IGenerate {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -369,8 +359,7 @@ public class Method implements IGenerate {
     }
 
     /**
-     * @param privacy
-     *            the privacy to set
+     * @param privacy the privacy to set
      */
     public void setPrivacy(Privacy privacy) {
         this.privacy = privacy;
@@ -384,8 +373,7 @@ public class Method implements IGenerate {
     }
 
     /**
-     * @param javaDocComment
-     *            the javaDocComment to set
+     * @param javaDocComment the javaDocComment to set
      */
     public void setJavaDocComment(JavaDoc javaDocComment) {
         this.javaDocComment = javaDocComment;
@@ -399,8 +387,7 @@ public class Method implements IGenerate {
     }
 
     /**
-     * @param modifiers
-     *            the modifiers to set
+     * @param modifiers the modifiers to set
      */
     public void setModifiers(List<Modifier> modifiers) {
         this.modifiers = modifiers;
@@ -414,8 +401,7 @@ public class Method implements IGenerate {
     }
 
     /**
-     * @param arguments
-     *            the arguments to set
+     * @param arguments the arguments to set
      */
     public void setArguments(List<Argument> arguments) {
         this.arguments = arguments;

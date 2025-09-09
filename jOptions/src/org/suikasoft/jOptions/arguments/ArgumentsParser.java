@@ -49,7 +49,8 @@ public class ArgumentsParser {
     private final Set<String> ignoreFlags;
 
     /**
-     * Constructs an ArgumentsParser instance and initializes default parsers and flags.
+     * Constructs an ArgumentsParser instance and initializes default parsers and
+     * flags.
      */
     public ArgumentsParser() {
         parsers = new LinkedHashMap<>();
@@ -82,7 +83,8 @@ public class ArgumentsParser {
     }
 
     /**
-     * Prints the help message for the command-line arguments, listing all supported flags and their descriptions.
+     * Prints the help message for the command-line arguments, listing all supported
+     * flags and their descriptions.
      */
     private void printHelpMessage() {
         StringBuilder message = new StringBuilder();
@@ -155,7 +157,8 @@ public class ArgumentsParser {
     }
 
     /**
-     * Adds a key that uses the next argument as a value, associating it with the given flags.
+     * Adds a key that uses the next argument as a value, associating it with the
+     * given flags.
      *
      * @param key   the DataKey representing the string value
      * @param flags the flags associated with the key
@@ -166,7 +169,8 @@ public class ArgumentsParser {
     }
 
     /**
-     * Uses the key's decoder to parse the next argument, associating it with the given flags.
+     * Uses the key's decoder to parse the next argument, associating it with the
+     * given flags.
      *
      * @param key   the DataKey representing the value
      * @param flags the flags associated with the key
@@ -189,7 +193,8 @@ public class ArgumentsParser {
     }
 
     /**
-     * Accepts a custom parser for the next argument, associating it with the given flags.
+     * Accepts a custom parser for the next argument, associating it with the given
+     * flags.
      *
      * @param key          the DataKey representing the value
      * @param parser       the custom parser function

@@ -23,9 +23,12 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import pt.up.fe.specs.util.SpecsNumbers;
 
 /**
- * Interface for classes that replace fields with public static DataKey instances.
+ * Interface for classes that replace fields with public static DataKey
+ * instances.
  *
- * <p>This interface defines the contract for data classes that use DataKeys instead of fields, supporting get/set operations and store definition access.
+ * <p>
+ * This interface defines the contract for data classes that use DataKeys
+ * instead of fields, supporting get/set operations and store definition access.
  *
  * @param <T> the type of the DataClass
  */
@@ -50,10 +53,10 @@ public interface DataClass<T extends DataClass<T>> {
     /**
      * Sets the value for the given DataKey.
      *
-     * @param key the DataKey
+     * @param key   the DataKey
      * @param value the value to set
-     * @param <K> the value type
-     * @param <E> the value type (extends K)
+     * @param <K>   the value type
+     * @param <E>   the value type (extends K)
      * @return this instance
      */
     <K, E extends K> T set(DataKey<K> key, E value);
@@ -71,10 +74,10 @@ public interface DataClass<T extends DataClass<T>> {
     /**
      * Sets an Optional DataKey to the given value, or empty if value is null.
      *
-     * @param key the Optional DataKey
+     * @param key   the Optional DataKey
      * @param value the value to set
-     * @param <K> the value type
-     * @param <E> the value type (extends K)
+     * @param <K>   the value type
+     * @param <E>   the value type (extends K)
      * @return this instance
      */
     default <K, E extends K> T setOptional(DataKey<Optional<K>> key, E value) {
@@ -103,7 +106,7 @@ public interface DataClass<T extends DataClass<T>> {
     /**
      * Sets the value for the given key name (String).
      *
-     * @param key the key name
+     * @param key   the key name
      * @param value the value to set
      * @return the previous value
      */
@@ -144,9 +147,10 @@ public interface DataClass<T extends DataClass<T>> {
     T set(T instance);
 
     /**
-     * Checks if this DataClass has a non-null value for the given key (not considering defaults).
+     * Checks if this DataClass has a non-null value for the given key (not
+     * considering defaults).
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param <VT> the value type
      * @return true if a value is present, false otherwise
      */
@@ -160,7 +164,8 @@ public interface DataClass<T extends DataClass<T>> {
     Collection<DataKey<?>> getDataKeysWithValues();
 
     /**
-     * If the DataClass is closed, this means that no keys are allowed besides the ones defined in the StoreDefinition.
+     * If the DataClass is closed, this means that no keys are allowed besides the
+     * ones defined in the StoreDefinition.
      * 
      * <p>
      * By default, returns false.
@@ -187,10 +192,10 @@ public interface DataClass<T extends DataClass<T>> {
      * <p>
      * If there is not value for the given key, it is initialized to zero.
      * 
-     * @param key the DataKey
+     * @param key    the DataKey
      * @param amount the amount to increment
-     * @param <N1> the type of the key's value
-     * @param <N2> the type of the amount
+     * @param <N1>   the type of the key's value
+     * @param <N2>   the type of the amount
      * @return the previous value
      */
     @SuppressWarnings("unchecked")
@@ -235,7 +240,7 @@ public interface DataClass<T extends DataClass<T>> {
     /**
      * Increments the value of the given integer key by the given amount.
      * 
-     * @param key the DataKey
+     * @param key    the DataKey
      * @param amount the amount to increment
      * @return the previous value
      */
@@ -265,15 +270,17 @@ public interface DataClass<T extends DataClass<T>> {
     }
 
     /**
-     * Makes a shallow copy of the value that has the same mapping in the given source.
+     * Makes a shallow copy of the value that has the same mapping in the given
+     * source.
      * 
      * <p>
-     * This function should be safe to use as long as the keys refer to immutable objects.
+     * This function should be safe to use as long as the keys refer to immutable
+     * objects.
      * 
-     * @param key the DataKey
+     * @param key    the DataKey
      * @param source the source DataClass
-     * @param <K> the type of the key's value
-     * @param <E> the type of the value (extends K)
+     * @param <K>    the type of the key's value
+     * @param <E>    the type of the value (extends K)
      * @return this instance
      */
     default <K, E extends K> T copyValue(DataKey<K> key, T source) {

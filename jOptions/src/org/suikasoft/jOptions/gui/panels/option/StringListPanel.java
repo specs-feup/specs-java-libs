@@ -38,7 +38,9 @@ import pt.up.fe.specs.util.utilities.StringList;
 /**
  * Panel for editing lists of strings using a JList and text fields.
  *
- * <p>This panel provides controls for adding, removing, and managing string values for a DataKey of type StringList.
+ * <p>
+ * This panel provides controls for adding, removing, and managing string values
+ * for a DataKey of type StringList.
  * 
  * @author Joao Bispo
  */
@@ -68,7 +70,7 @@ public class StringListPanel extends KeyPanel<StringList> {
     /**
      * Creates a new StringListPanel instance for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      * @return a new StringListPanel
      */
@@ -77,10 +79,11 @@ public class StringListPanel extends KeyPanel<StringList> {
     }
 
     /**
-     * Creates a new StringListPanel instance for the given DataKey, DataStore, and predefined values.
+     * Creates a new StringListPanel instance for the given DataKey, DataStore, and
+     * predefined values.
      *
-     * @param key the DataKey
-     * @param data the DataStore
+     * @param key                    the DataKey
+     * @param data                   the DataStore
      * @param predefinedLabelsValues the predefined values
      * @return a new StringListPanel
      */
@@ -95,7 +98,7 @@ public class StringListPanel extends KeyPanel<StringList> {
     /**
      * Constructs a StringListPanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public StringListPanel(DataKey<StringList> key, DataStore data) {

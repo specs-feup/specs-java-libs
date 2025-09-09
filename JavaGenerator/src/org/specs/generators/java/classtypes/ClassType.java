@@ -29,8 +29,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Abstract base class for Java class, interface, and enum representations in JavaGenerator.
- * Provides common fields and methods for code generation, including package, imports, JavaDoc, privacy, modifiers, and inner types.
+ * Abstract base class for Java class, interface, and enum representations in
+ * JavaGenerator.
+ * Provides common fields and methods for code generation, including package,
+ * imports, JavaDoc, privacy, modifiers, and inner types.
  */
 public abstract class ClassType implements IGenerate {
 
@@ -54,7 +56,7 @@ public abstract class ClassType implements IGenerate {
     /**
      * Creates a public class type with name and package.
      *
-     * @param name the name for the class
+     * @param name         the name for the class
      * @param classPackage the class package
      */
     public ClassType(String name, String classPackage) {
@@ -159,7 +161,8 @@ public abstract class ClassType implements IGenerate {
     }
 
     /**
-     * Adds a class type as an inner type of the class. This is just a temporary work around
+     * Adds a class type as an inner type of the class. This is just a temporary
+     * work around
      * <p>
      * <b>Note:</b> this method sets the parent of the type given as the invoked one
      *
@@ -299,7 +302,7 @@ public abstract class ClassType implements IGenerate {
     /**
      * Adds a new javadoc tag to the comment with description.
      *
-     * @param tag the new tag to add
+     * @param tag         the new tag to add
      * @param description the tag description
      */
     public void add(JDocTag tag, String description) {

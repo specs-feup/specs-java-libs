@@ -41,7 +41,8 @@ public class RangeMap<K extends Number, V> {
      * Retrieves the value associated with the range containing the given key.
      * 
      * @param key the key to search for
-     * @return the value associated with the range containing the key, or null if no such range exists
+     * @return the value associated with the range containing the key, or null if no
+     *         such range exists
      */
     public V get(K key) {
         if (key == null) {
@@ -55,7 +56,8 @@ public class RangeMap<K extends Number, V> {
      * Retrieves the entry with the largest key less than or equal to the given key.
      * 
      * @param key the key to search for
-     * @return the entry with the largest key less than or equal to the given key, or null if no such entry exists
+     * @return the entry with the largest key less than or equal to the given key,
+     *         or null if no such entry exists
      */
     private Entry<K, V> getLowerEntry(K key) {
         if (key == null) {
@@ -91,7 +93,8 @@ public class RangeMap<K extends Number, V> {
      * Removes the range starting at the given lower bound.
      * 
      * @param lower the lower bound of the range to remove
-     * @return the value associated with the removed range, or null if no such range exists
+     * @return the value associated with the removed range, or null if no such range
+     *         exists
      */
     public V remove(K lower) {
         Entry<K, V> lowerEntry = getLowerEntry(lower);

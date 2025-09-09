@@ -27,7 +27,8 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Utility class for launching jOptions-based applications from the command line.
+ * Utility class for launching jOptions-based applications from the command
+ * line.
  */
 public class AppLauncher {
 
@@ -97,7 +98,7 @@ public class AppLauncher {
         if (args == null) {
             throw new IllegalArgumentException("Arguments list cannot be null");
         }
-        
+
         if (args.isEmpty()) {
             SpecsLogs.msgInfo("No arguments found. Please enter a configuration file, or key/value pairs.");
             return false;
@@ -130,7 +131,8 @@ public class AppLauncher {
      * @return the modified list of arguments
      */
     private List<String> parseSpecialArguments(List<String> args) {
-        // If first argument is base_folder="path", create temporary file there and remove option
+        // If first argument is base_folder="path", create temporary file there and
+        // remove option
         String firstArg = args.get(0);
         if (firstArg.startsWith("base_folder=")) {
             firstArg = firstArg.substring("base_folder=".length());
@@ -161,7 +163,7 @@ public class AppLauncher {
     /**
      * Executes the application with the given setup data and arguments.
      *
-     * @param args a list of command-line arguments
+     * @param args      a list of command-line arguments
      * @param setupData the setup data for the application
      */
     private void commandLineWithSetup(List<String> args, DataStore setupData) {
@@ -190,7 +192,7 @@ public class AppLauncher {
         if (setupFile == null) {
             throw new IllegalArgumentException("Setup file cannot be null");
         }
-        
+
         DataStore setupData = app.getPersistence().loadData(setupFile);
 
         if (setupData == null) {

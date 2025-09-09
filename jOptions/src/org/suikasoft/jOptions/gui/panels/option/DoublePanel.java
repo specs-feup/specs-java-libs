@@ -27,7 +27,8 @@ import pt.up.fe.specs.util.SpecsStrings;
 /**
  * Panel for editing double values using a JTextField.
  *
- * <p>This panel provides a text field for double DataKey values in the GUI.
+ * <p>
+ * This panel provides a text field for double DataKey values in the GUI.
  */
 public class DoublePanel extends KeyPanel<Double> {
 
@@ -42,7 +43,7 @@ public class DoublePanel extends KeyPanel<Double> {
     /**
      * Constructs a DoublePanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public DoublePanel(DataKey<Double> key, DataStore data) {

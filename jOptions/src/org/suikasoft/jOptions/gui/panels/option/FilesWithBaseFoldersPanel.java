@@ -27,7 +27,9 @@ import org.suikasoft.jOptions.gui.KeyPanel;
 /**
  * Panel for editing mappings of files to base folders using a text field.
  *
- * <p>This panel provides a text field for DataKey values of type Map<File, File> in the GUI.
+ * <p>
+ * This panel provides a text field for DataKey values of type Map<File, File>
+ * in the GUI.
  */
 public class FilesWithBaseFoldersPanel extends KeyPanel<Map<File, File>> {
 
@@ -42,7 +44,7 @@ public class FilesWithBaseFoldersPanel extends KeyPanel<Map<File, File>> {
     /**
      * Constructs a FilesWithBaseFoldersPanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public FilesWithBaseFoldersPanel(DataKey<Map<File, File>> key, DataStore data) {
@@ -87,7 +89,7 @@ public class FilesWithBaseFoldersPanel extends KeyPanel<Map<File, File>> {
      * Sets the value of the text field from a map.
      *
      * @param value the map value to set
-     * @param <ET> the type of value (extends Map<File, File>)
+     * @param <ET>  the type of value (extends Map<File, File>)
      */
     @Override
     public <ET extends Map<File, File>> void setValue(ET value) {

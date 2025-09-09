@@ -27,7 +27,8 @@ import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 /**
- * Interface for parsing data from a {@link pt.up.fe.specs.util.utilities.LineStream} into a {@link DataClass}.
+ * Interface for parsing data from a
+ * {@link pt.up.fe.specs.util.utilities.LineStream} into a {@link DataClass}.
  *
  * @param <T> the type of DataClass
  */
@@ -37,7 +38,7 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
      * Returns a new parser instance for the given input data and workers.
      *
      * @param inputData the initial data
-     * @param workers the map of worker IDs to workers
+     * @param workers   the map of worker IDs to workers
      * @return a new LineStreamParser
      */
     static <T extends ADataClass<T>> LineStreamParser<T> newInstance(T inputData,
@@ -55,7 +56,7 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
     /**
      * Applies a LineStreamWorker to the given LineStream, based on the given id.
      *
-     * @param id the worker id
+     * @param id         the worker id
      * @param lineStream the line stream
      * @return true if the id was valid, false otherwise
      */
@@ -72,7 +73,7 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
      * Parses an input stream and optionally dumps unparsed lines to a file.
      *
      * @param inputStream the input stream
-     * @param dumpFile the file to dump unparsed lines
+     * @param dumpFile    the file to dump unparsed lines
      * @return lines of the inputStream that were not parsed
      */
     default String parse(InputStream inputStream, File dumpFile) {
@@ -82,8 +83,8 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
     /**
      * Parses an input stream and optionally dumps unparsed lines to a file.
      *
-     * @param inputStream the input stream
-     * @param dumpFile the file to dump unparsed lines
+     * @param inputStream         the input stream
+     * @param dumpFile            the file to dump unparsed lines
      * @param printLinesNotParsed whether to print unparsed lines
      * @param storeLinesNotParsed whether to store unparsed lines
      * @return lines of the inputStream that were not parsed
@@ -117,7 +118,6 @@ public interface LineStreamParser<T extends DataClass<T>> extends AutoCloseable 
 
                 // If line should not be ignored, add to warnings
                 if (!getLineIgnore().test(currentLine)) {
-                    // System.out.println("LINE NOT PARSED! Next line: " + lines.peekNextLine());
                     // Add line to the warnings
                     if (storeLinesNotParsed) {
                         if (SpecsSystem.isDebug()) {

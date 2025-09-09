@@ -30,7 +30,9 @@ import pt.up.fe.specs.util.providers.StringProvider;
 /**
  * Abstract base class for DataClass implementations.
  *
- * <p>This class provides a base implementation for data classes backed by a DataStore, supporting locking and common get/set operations.
+ * <p>
+ * This class provides a base implementation for data classes backed by a
+ * DataStore, supporting locking and common get/set operations.
  *
  * @param <T> the type of the DataClass
  */
@@ -116,10 +118,10 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     /**
      * Sets the value for the given DataKey.
      *
-     * @param key the DataKey
+     * @param key   the DataKey
      * @param value the value to set
-     * @param <K> the value type
-     * @param <E> the value type (extends K)
+     * @param <K>   the value type
+     * @param <E>   the value type (extends K)
      * @return this instance
      */
     @Override
@@ -153,7 +155,7 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
     /**
      * Checks if the given DataKey has a value.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param <VT> the value type
      * @return true if the key has a value, false otherwise
      */
@@ -174,7 +176,7 @@ public abstract class ADataClass<T extends DataClass<T>> implements DataClass<T>
             SpecsLogs.warn("getDataKeysWithValues(): No StoreDefinition available");
             return new ArrayList<>();
         }
-        
+
         StoreDefinition storeDefinition = storeDefinitionOpt.get();
 
         List<DataKey<?>> keysWithValues = new ArrayList<>();

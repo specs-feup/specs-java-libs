@@ -28,7 +28,8 @@ import pt.up.fe.specs.util.SpecsStrings;
 /**
  * Panel for editing integer values using a JTextField.
  *
- * <p>This panel provides a text field for integer DataKey values in the GUI.
+ * <p>
+ * This panel provides a text field for integer DataKey values in the GUI.
  */
 public class IntegerPanel extends KeyPanel<Integer> {
 
@@ -43,7 +44,7 @@ public class IntegerPanel extends KeyPanel<Integer> {
     /**
      * Constructs an IntegerPanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public IntegerPanel(DataKey<Integer> key, DataStore data) {

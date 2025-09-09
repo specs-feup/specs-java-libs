@@ -21,30 +21,33 @@ import java.util.TreeMap;
  */
 public class RangeUtils {
 
-	/**
-	 * Retrieves the value associated with the closest key less than or equal to the given key in the provided TreeMap.
-	 * If the closest key's value is null, it continues searching for the next lower key.
-	 * 
-	 * Example of usage: 
-	 * TreeMap<Double, Character> m = new TreeMap<Double, Character>();
-	 * m.put(1.0, 'A');
-	 * m.put(2.9, null);
-	 * m.put(4.0, 'B');
-	 * m.put(6.0, null);
-	 * m.put(6.5, 'C');
-	 * m.put(10.0, null);
-	 * getValueByRangedKey(m, 5) == 'B'
-	 * 
-	 * @param map the TreeMap containing the key-value pairs
-	 * @param key the key to search for
-	 * @return the value associated with the closest key less than or equal to the given key, or null if no such key exists
-	 */
-	public static <K extends Comparable<K>, V> V getValueByRangedKey(TreeMap<K, V> map, K key) {
-		Entry<K, V> e = map.floorEntry(key);
-		// Skip over consecutive null values to find the nearest non-null value
-		while (e != null && e.getValue() == null) {
-			e = map.lowerEntry(e.getKey());
-		}
-		return e == null ? null : e.getValue();
-	}
+    /**
+     * Retrieves the value associated with the closest key less than or equal to the
+     * given key in the provided TreeMap.
+     * If the closest key's value is null, it continues searching for the next lower
+     * key.
+     * 
+     * Example of usage:
+     * TreeMap<Double, Character> m = new TreeMap<Double, Character>();
+     * m.put(1.0, 'A');
+     * m.put(2.9, null);
+     * m.put(4.0, 'B');
+     * m.put(6.0, null);
+     * m.put(6.5, 'C');
+     * m.put(10.0, null);
+     * getValueByRangedKey(m, 5) == 'B'
+     * 
+     * @param map the TreeMap containing the key-value pairs
+     * @param key the key to search for
+     * @return the value associated with the closest key less than or equal to the
+     *         given key, or null if no such key exists
+     */
+    public static <K extends Comparable<K>, V> V getValueByRangedKey(TreeMap<K, V> map, K key) {
+        Entry<K, V> e = map.floorEntry(key);
+        // Skip over consecutive null values to find the nearest non-null value
+        while (e != null && e.getValue() == null) {
+            e = map.lowerEntry(e.getKey());
+        }
+        return e == null ? null : e.getValue();
+    }
 }

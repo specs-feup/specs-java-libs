@@ -29,13 +29,14 @@ import tdrc.utils.Pair;
 public class TupleUtils {
 
     /**
-     * Creates a normalized map from a collection of tuples. Each tuple is normalized based on the maximum and minimum
-     * values of its elements.
+     * Creates a normalized map from a collection of tuples. Each tuple is
+     * normalized based on the maximum and minimum values of its elements.
      * 
      * @param <T>       the type of number in the tuple
      * @param tuples    the collection of tuples to normalize
      * @param tupleSize the expected size of each tuple
-     * @return a map where the keys are the original tuples and the values are the normalized tuples
+     * @return a map where the keys are the original tuples and the values are the
+     *         normalized tuples
      */
     public static <T extends Number> Map<Tuple<T>, Tuple<Float>> createNormalizedMap(Collection<Tuple<T>> tuples,
             int tupleSize) {
@@ -86,10 +87,12 @@ public class TupleUtils {
     }
 
     /**
-     * Calculates the Euclidean distances between all pairs of tuples in the given collection.
+     * Calculates the Euclidean distances between all pairs of tuples in the given
+     * collection.
      * 
      * @param tuples the collection of tuples
-     * @return a map where the keys are tuples and the values are maps of tuples to their Euclidean distances
+     * @return a map where the keys are tuples and the values are maps of tuples to
+     *         their Euclidean distances
      */
     public static Map<Tuple<Float>, Map<Tuple<Float>, Float>> eucledianDistances(Collection<Tuple<Float>> tuples) {
 
@@ -122,12 +125,12 @@ public class TupleUtils {
     }
 
     /**
-     * Calculates the Euclidean distances between all pairs of tuples in the given collection, sorted by closest
-     * distance.
+     * Calculates the Euclidean distances between all pairs of tuples in the given
+     * collection, sorted by closest distance.
      * 
      * @param tuples the collection of tuples
-     * @return a map where the keys are tuples and the values are lists of pairs of tuples and their distances, sorted by
-     *         distance
+     * @return a map where the keys are tuples and the values are lists of pairs of
+     *         tuples and their distances, sorted by distance
      */
     public static Map<Tuple<Float>, List<Pair<Tuple<Float>, Float>>> eucledianDistancesByClosest(
             Collection<Tuple<Float>> tuples) {

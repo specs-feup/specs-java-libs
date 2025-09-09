@@ -18,12 +18,12 @@ package org.specs.generators.java.enums;
  * @author Tiago
  */
 public enum JDocTag {
-    AUTHOR("@author"), 
-    CATEGORY("@category"), 
-    DEPRECATED("@deprecated"), 
-    SEE("@see"), 
-    VERSION("@version"), 
-    PARAM("@param"), 
+    AUTHOR("@author"),
+    CATEGORY("@category"),
+    DEPRECATED("@deprecated"),
+    SEE("@see"),
+    VERSION("@version"),
+    PARAM("@param"),
     RETURN("@return");
 
     private String tag;

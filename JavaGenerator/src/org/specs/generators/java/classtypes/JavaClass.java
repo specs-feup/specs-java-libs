@@ -26,7 +26,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Represents a Java class for code generation. Provides methods to manage fields, methods, constructors, and interfaces.
+ * Represents a Java class for code generation. Provides methods to manage
+ * fields, methods, constructors, and interfaces.
  *
  * @author Tiago
  */
@@ -52,7 +53,7 @@ public class JavaClass extends ClassType {
     /**
      * Creates a public class with name and package.
      *
-     * @param name the name for the class
+     * @param name         the name for the class
      * @param classPackage the class package
      */
     public JavaClass(String name, String classPackage) {
@@ -62,9 +63,9 @@ public class JavaClass extends ClassType {
     /**
      * Creates a public class with name, package, and modifier.
      *
-     * @param name the name for the class
+     * @param name         the name for the class
      * @param classPackage the class package
-     * @param modifier the class modifier
+     * @param modifier     the class modifier
      */
     public JavaClass(String name, String classPackage, Modifier modifier) {
         super(name, classPackage);
@@ -89,7 +90,8 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Generates the corresponding Java class code, containing the package, imports, fields, methods, etc.
+     * Generates the corresponding Java class code, containing the package, imports,
+     * fields, methods, etc.
      *
      * @param indentation the indentation level
      * @return the generated Java class code
@@ -122,7 +124,7 @@ public class JavaClass extends ClassType {
      * Adds methods to the class code generation.
      *
      * @param indentation the indentation level
-     * @param classGen the StringBuilder for the class code
+     * @param classGen    the StringBuilder for the class code
      */
     protected void addMethods(int indentation, final StringBuilder classGen) {
 
@@ -143,7 +145,7 @@ public class JavaClass extends ClassType {
      * Adds constructors to the class code generation.
      *
      * @param indentation the indentation level
-     * @param classGen the StringBuilder for the class code
+     * @param classGen    the StringBuilder for the class code
      */
     protected void addConstructors(int indentation, final StringBuilder classGen) {
         if (!constructors.isEmpty()) {
@@ -162,7 +164,7 @@ public class JavaClass extends ClassType {
      * Adds fields to the class code generation.
      *
      * @param indentation the indentation level
-     * @param classGen the StringBuilder for the class code
+     * @param classGen    the StringBuilder for the class code
      */
     protected void addFields(int indentation, final StringBuilder classGen) {
 
@@ -363,7 +365,8 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Creates a constructor containing all the fields and generates the associated assignment code.
+     * Creates a constructor containing all the fields and generates the associated
+     * assignment code.
      *
      * @return the full constructor
      */

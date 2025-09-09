@@ -24,7 +24,8 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Utility methods related to XStreamPlus package, such as reading and writing ObjectXml objects to and from XML files.
+ * Utility methods related to XStreamPlus package, such as reading and writing
+ * ObjectXml objects to and from XML files.
  */
 public class XStreamUtils {
 
@@ -43,10 +44,10 @@ public class XStreamUtils {
     /**
      * Writes an object to a file using the provided ObjectXml stream.
      *
-     * @param file the file to write to
+     * @param file   the file to write to
      * @param object the object to write
      * @param stream the ObjectXml stream to use for serialization
-     * @param <T> the type of the object
+     * @param <T>    the type of the object
      * @return true if the write operation was successful, false otherwise
      */
     public static <T> boolean write(File file, Object object, ObjectXml<T> stream) {
@@ -60,12 +61,13 @@ public class XStreamUtils {
     }
 
     /**
-     * Writes an object to a file using a generic implementation without user-defined mappings.
+     * Writes an object to a file using a generic implementation without
+     * user-defined mappings.
      *
-     * @param file the file to write to
-     * @param object the object to write
+     * @param file        the file to write to
+     * @param object      the object to write
      * @param objectClass the class of the object
-     * @param <T> the type of the object
+     * @param <T>         the type of the object
      * @return true if the write operation was successful, false otherwise
      */
     public static <T> boolean write(File file, final T object, final Class<T> objectClass) {
@@ -93,9 +95,9 @@ public class XStreamUtils {
     /**
      * Reads an object from a file using the provided ObjectXml stream.
      *
-     * @param file the file to read from
+     * @param file   the file to read from
      * @param stream the ObjectXml stream to use for deserialization
-     * @param <T> the type of the object
+     * @param <T>    the type of the object
      * @return the deserialized object, or null if the operation failed
      */
     public static <T> T read(File file, ObjectXml<T> stream) {
@@ -106,11 +108,12 @@ public class XStreamUtils {
     }
 
     /**
-     * Reads an object from a file using a generic implementation without user-defined mappings.
+     * Reads an object from a file using a generic implementation without
+     * user-defined mappings.
      *
-     * @param file the file to read from
+     * @param file        the file to read from
      * @param objectClass the class of the object
-     * @param <T> the type of the object
+     * @param <T>         the type of the object
      * @return the deserialized object
      */
     public static <T> T read(File file, final Class<T> objectClass) {
@@ -121,9 +124,9 @@ public class XStreamUtils {
     /**
      * Converts an XML string to an object of the specified class.
      *
-     * @param contents the XML string
+     * @param contents    the XML string
      * @param objectClass the class of the object
-     * @param <T> the type of the object
+     * @param <T>         the type of the object
      * @return the deserialized object
      */
     public static <T> T from(String contents, final Class<T> objectClass) {
@@ -140,7 +143,7 @@ public class XStreamUtils {
     /**
      * Writes an object to a file.
      *
-     * @param file the file to write to
+     * @param file  the file to write to
      * @param value the object to write
      */
     public static void write(File file, Object value) {
@@ -152,7 +155,7 @@ public class XStreamUtils {
      * Copies an object by serializing and deserializing it.
      *
      * @param object the object to copy
-     * @param <T> the type of the object
+     * @param <T>    the type of the object
      * @return a copy of the object
      */
     @SuppressWarnings("unchecked")

@@ -34,9 +34,12 @@ import org.suikasoft.jOptions.storedefinition.StoreSection;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Panel which contains the options for a setup, organizing KeyPanels for each DataKey.
+ * Panel which contains the options for a setup, organizing KeyPanels for each
+ * DataKey.
  *
- * <p>This panel arranges option panels for each DataKey in a StoreDefinition, supporting indentation and sectioning.
+ * <p>
+ * This panel arranges option panels for each DataKey in a StoreDefinition,
+ * supporting indentation and sectioning.
  *
  * @author Joao Bispo
  */
@@ -59,10 +62,11 @@ public class BaseSetupPanel extends JPanel {
     }
 
     /**
-     * Constructs a BaseSetupPanel for the given StoreDefinition, DataStore, and indentation level.
+     * Constructs a BaseSetupPanel for the given StoreDefinition, DataStore, and
+     * indentation level.
      *
-     * @param keys the StoreDefinition
-     * @param data the DataStore
+     * @param keys            the StoreDefinition
+     * @param data            the DataStore
      * @param identationLevel the indentation level
      */
     public BaseSetupPanel(StoreDefinition keys, DataStore data, int identationLevel) {
@@ -174,9 +178,9 @@ public class BaseSetupPanel extends JPanel {
     /**
      * Sets the value of a KeyPanel without type checking.
      *
-     * @param <T> the type of the KeyPanel
+     * @param <T>   the type of the KeyPanel
      * @param panel the KeyPanel
-     * @param o the value to set
+     * @param o     the value to set
      */
     @SuppressWarnings("unchecked")
     private static <T> void uncheckedSet(KeyPanel<T> panel, Object o) {
@@ -217,7 +221,8 @@ public class BaseSetupPanel extends JPanel {
     }
 
     /**
-     * Collects information in all the panels and returns a DataStore with the information.
+     * Collects information in all the panels and returns a DataStore with the
+     * information.
      *
      * @return a DataStore containing the collected information
      */

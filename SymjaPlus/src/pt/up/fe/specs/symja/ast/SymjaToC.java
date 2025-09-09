@@ -101,17 +101,17 @@ public class SymjaToC {
     private static String convertOperator(SymjaOperator operator, List<SymjaNode> operands) {
         var symbol = operator.get(SymjaOperator.OPERATOR);
         switch (symbol) {
-        case Plus:
-        case Minus:
-        case Times:
-            return convertTwoOperandsOperator(symbol, operands);
-        case UnaryMinus:
-            SpecsCheck.checkSize(operands, 1);
-            return convertOneOperandOperator(symbol, operands.get(0), true);
-        case Power:
-            return "pow(" + CONVERTERS.apply(operands.get(0)) + ", " + CONVERTERS.apply(operands.get(1)) + ")";
-        default:
-            throw new CaseNotDefinedException(symbol);
+            case Plus:
+            case Minus:
+            case Times:
+                return convertTwoOperandsOperator(symbol, operands);
+            case UnaryMinus:
+                SpecsCheck.checkSize(operands, 1);
+                return convertOneOperandOperator(symbol, operands.get(0), true);
+            case Power:
+                return "pow(" + CONVERTERS.apply(operands.get(0)) + ", " + CONVERTERS.apply(operands.get(1)) + ")";
+            default:
+                throw new CaseNotDefinedException(symbol);
         }
 
     }
@@ -139,13 +139,14 @@ public class SymjaToC {
      * Converts a unary operator and its operand to C code.
      *
      * @param operator the operator
-     * @param operand the operand node
+     * @param operand  the operand node
      * @param isPrefix true if the operator is prefix
      * @return the C code as a string
      */
     private static String convertOneOperandOperator(Operator operator, SymjaNode operand, boolean isPrefix) {
-        // TODO: To be more correct, there should be an Operator interface, with UnaryOperator and BinaryOperator
-        // subclasses, and the UnaryOperator subclass would have a method .isPrefix()
+        // TODO: To be more correct, there should be an Operator interface, with
+        // UnaryOperator and BinaryOperator subclasses, and the UnaryOperator subclass
+        // would have a method .isPrefix()
         if (isPrefix) {
             return operator.getSymbol() + CONVERTERS.apply(operand);
         }

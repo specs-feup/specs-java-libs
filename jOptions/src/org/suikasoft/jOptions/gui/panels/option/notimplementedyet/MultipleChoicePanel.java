@@ -29,7 +29,9 @@ import pt.up.fe.specs.util.SpecsSwing;
 /**
  * Panel for selecting a single value from multiple choices.
  *
- * <p>This panel provides a combo box for selecting one value from a set of choices.
+ * <p>
+ * This panel provides a combo box for selecting one value from a set of
+ * choices.
  */
 public class MultipleChoicePanel extends FieldPanel {
 
@@ -47,21 +49,21 @@ public class MultipleChoicePanel extends FieldPanel {
      * Constructs a MultipleChoicePanel for the given label and choices.
      *
      * @param labelName the label for the panel
-     * @param choices the available choices
+     * @param choices   the available choices
      */
     public MultipleChoicePanel(String labelName, Collection<String> choices) {
-	label = new JLabel(labelName + ":");
-	comboBoxValues = new JComboBox<>();
-	availableChoices = choices;
+        label = new JLabel(labelName + ":");
+        comboBoxValues = new JComboBox<>();
+        availableChoices = choices;
 
-	for (String choice : choices) {
-	    comboBoxValues.addItem(choice);
-	}
+        for (String choice : choices) {
+            comboBoxValues.addItem(choice);
+        }
 
-	add(label);
-	add(comboBoxValues);
+        add(label);
+        add(comboBoxValues);
 
-	setLayout(new FlowLayout(FlowLayout.LEFT));
+        setLayout(new FlowLayout(FlowLayout.LEFT));
     }
 
     /**
@@ -70,7 +72,7 @@ public class MultipleChoicePanel extends FieldPanel {
      * @return the combo box
      */
     public JComboBox<String> getValues() {
-	return comboBoxValues;
+        return comboBoxValues;
     }
 
     /**
@@ -80,8 +82,8 @@ public class MultipleChoicePanel extends FieldPanel {
      */
     @Override
     public FieldValue getOption() {
-	String selectedString = getValues().getItemAt(getValues().getSelectedIndex());
-	return FieldValue.create(selectedString, getType());
+        String selectedString = getValues().getItemAt(getValues().getSelectedIndex());
+        return FieldValue.create(selectedString, getType());
     }
 
     /**
@@ -91,22 +93,22 @@ public class MultipleChoicePanel extends FieldPanel {
      */
     @Override
     public void updatePanel(Object value) {
-	String stringValue = (String) value;
-	if (stringValue.isEmpty()) {
-	    stringValue = availableChoices.iterator().next();
-	}
+        String stringValue = (String) value;
+        if (stringValue.isEmpty()) {
+            stringValue = availableChoices.iterator().next();
+        }
 
-	final String currentChoice = stringValue;
+        final String currentChoice = stringValue;
 
-	boolean foundChoice = availableChoices.contains(currentChoice);
+        boolean foundChoice = availableChoices.contains(currentChoice);
 
-	if (!foundChoice) {
-	    SpecsLogs.getLogger().warning(
-		    "Could not find choice '" + currentChoice + "'. Available " + "choices: " + availableChoices);
-	    return;
-	}
+        if (!foundChoice) {
+            SpecsLogs.getLogger().warning(
+                    "Could not find choice '" + currentChoice + "'. Available " + "choices: " + availableChoices);
+            return;
+        }
 
-	SpecsSwing.runOnSwing(() -> comboBoxValues.setSelectedItem(currentChoice));
+        SpecsSwing.runOnSwing(() -> comboBoxValues.setSelectedItem(currentChoice));
     }
 
     /**
@@ -116,7 +118,7 @@ public class MultipleChoicePanel extends FieldPanel {
      */
     @Override
     public FieldType getType() {
-	return FieldType.multipleChoice;
+        return FieldType.multipleChoice;
     }
 
     /**
@@ -126,7 +128,7 @@ public class MultipleChoicePanel extends FieldPanel {
      */
     @Override
     public JLabel getLabel() {
-	return label;
+        return label;
     }
 
 }

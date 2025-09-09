@@ -20,16 +20,22 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 /**
- * Interface for classes that use {@link DataKey} instances for reading and/or setting values.
+ * Interface for classes that use {@link DataKey} instances for reading and/or
+ * setting values.
  *
- * <p>This interface provides methods to retrieve the keys that are read or written by the implementing class, and to validate a {@link DataStore} against the keys required by the class.
+ * <p>
+ * This interface provides methods to retrieve the keys that are read or written
+ * by the implementing class, and to validate a {@link DataStore} against the
+ * keys required by the class.
  */
 public interface KeyUser {
 
     /**
      * Retrieves a collection of keys that are read by the implementing class.
      *
-     * <p>This method returns an empty collection by default, indicating that the class does not read any keys.
+     * <p>
+     * This method returns an empty collection by default, indicating that the class
+     * does not read any keys.
      *
      * @return a collection of {@link DataKey} instances that are read by the class
      */
@@ -40,24 +46,36 @@ public interface KeyUser {
     /**
      * Retrieves a collection of keys that are written by the implementing class.
      *
-     * <p>This method returns an empty collection by default, indicating that the class does not write any keys.
+     * <p>
+     * This method returns an empty collection by default, indicating that the class
+     * does not write any keys.
      *
-     * @return a collection of {@link DataKey} instances that are written by the class
+     * @return a collection of {@link DataKey} instances that are written by the
+     *         class
      */
     default Collection<DataKey<?>> getWriteKeys() {
         return Collections.emptyList();
     }
 
     /**
-     * Validates that the given {@link DataStore} contains values for all the keys required by the implementing class.
+     * Validates that the given {@link DataStore} contains values for all the keys
+     * required by the implementing class.
      *
-     * <p>If any required key is missing, an exception is thrown. This method requires the {@link DataStore} to have a {@link StoreDefinition}. If no definition is present, an exception is thrown.
+     * <p>
+     * If any required key is missing, an exception is thrown. This method requires
+     * the {@link DataStore} to have a {@link StoreDefinition}. If no definition is
+     * present, an exception is thrown.
      *
-     * <p>If the {@code noDefaults} parameter is set to {@code true}, the validation will require explicit values for all keys, even if the keys have default values.
+     * <p>
+     * If the {@code noDefaults} parameter is set to {@code true}, the validation
+     * will require explicit values for all keys, even if the keys have default
+     * values.
      *
-     * @param data the {@link DataStore} to validate
-     * @param noDefaults whether to enforce explicit values for all keys, ignoring default values
-     * @throws RuntimeException if the {@link DataStore} does not contain values for all required keys
+     * @param data       the {@link DataStore} to validate
+     * @param noDefaults whether to enforce explicit values for all keys, ignoring
+     *                   default values
+     * @throws RuntimeException if the {@link DataStore} does not contain values for
+     *                          all required keys
      */
     default void check(DataStore data, boolean noDefaults) {
         if (data.getStoreDefinitionTry().isEmpty()) {

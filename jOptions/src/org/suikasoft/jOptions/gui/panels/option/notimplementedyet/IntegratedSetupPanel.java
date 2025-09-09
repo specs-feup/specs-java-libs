@@ -32,7 +32,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * Panel for integrating setup options into a single panel.
  *
- * <p>This panel displays setup options for a SingleSetup instance.
+ * <p>
+ * This panel displays setup options for a SingleSetup instance.
  */
 public class IntegratedSetupPanel extends FieldPanel {
 

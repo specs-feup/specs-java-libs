@@ -121,7 +121,8 @@ public class EnumItem implements IGenerate {
     }
 
     /**
-     * Generates the code representation of this enum item with the specified indentation.
+     * Generates the code representation of this enum item with the specified
+     * indentation.
      *
      * @param indentation the level of indentation
      * @return the generated code as a StringBuilder

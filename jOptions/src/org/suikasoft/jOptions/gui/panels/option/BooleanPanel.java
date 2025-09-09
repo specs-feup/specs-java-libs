@@ -27,7 +27,8 @@ import pt.up.fe.specs.util.SpecsSwing;
 /**
  * Panel for editing boolean values using a JCheckBox.
  *
- * <p>This panel provides a checkbox for boolean DataKey values in the GUI.
+ * <p>
+ * This panel provides a checkbox for boolean DataKey values in the GUI.
  */
 public class BooleanPanel extends KeyPanel<Boolean> {
 
@@ -42,8 +43,8 @@ public class BooleanPanel extends KeyPanel<Boolean> {
     /**
      * Constructs a BooleanPanel for the given DataKey, DataStore, and label.
      *
-     * @param key the DataKey
-     * @param data the DataStore
+     * @param key   the DataKey
+     * @param data  the DataStore
      * @param label the label for the checkbox
      */
     public BooleanPanel(DataKey<Boolean> key, DataStore data, String label) {
@@ -58,7 +59,7 @@ public class BooleanPanel extends KeyPanel<Boolean> {
     /**
      * Constructs a BooleanPanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public BooleanPanel(DataKey<Boolean> key, DataStore data) {

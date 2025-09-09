@@ -18,7 +18,8 @@ import org.suikasoft.jOptions.Datakey.DataKey;
 /**
  * Interface for classes that provide data keys.
  *
- * <p>This interface defines a contract for providing a DataKey instance.
+ * <p>
+ * This interface defines a contract for providing a DataKey instance.
  */
 public interface DataKeyProvider {
     /**

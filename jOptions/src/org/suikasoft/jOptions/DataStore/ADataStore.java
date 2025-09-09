@@ -29,7 +29,9 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 /**
  * Abstract base class for DataStore implementations.
  *
- * <p>This class provides a base implementation for DataStore, including value storage, definition management, and persistence support.
+ * <p>
+ * This class provides a base implementation for DataStore, including value
+ * storage, definition management, and persistence support.
  */
 public abstract class ADataStore implements DataStore {
 
@@ -43,8 +45,8 @@ public abstract class ADataStore implements DataStore {
     /**
      * Constructs an ADataStore with the given name, values, and store definition.
      *
-     * @param name the name of the DataStore
-     * @param values the map of values
+     * @param name       the name of the DataStore
+     * @param values     the map of values
      * @param definition the store definition
      */
     protected ADataStore(String name, Map<String, Object> values,
@@ -66,7 +68,7 @@ public abstract class ADataStore implements DataStore {
     /**
      * Constructs an ADataStore with the given name and another DataStore as source.
      *
-     * @param name the name of the DataStore
+     * @param name      the name of the DataStore
      * @param dataStore the source DataStore
      */
     public ADataStore(String name, DataStore dataStore) {

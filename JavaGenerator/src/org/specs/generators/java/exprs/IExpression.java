@@ -17,7 +17,8 @@ import org.specs.generators.java.IGenerate;
 
 /**
  * Interface representing a Java expression for code generation.
- * Extends {@link IGenerate} to provide code generation capabilities for expressions.
+ * Extends {@link IGenerate} to provide code generation capabilities for
+ * expressions.
  */
 public interface IExpression extends IGenerate {
 

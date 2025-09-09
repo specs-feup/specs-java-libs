@@ -43,7 +43,9 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * Panel for editing and managing a list of setup panels.
  *
- * <p>This panel provides controls for adding, removing, and selecting setup elements for a MultipleSetup instance.
+ * <p>
+ * This panel provides controls for adding, removing, and selecting setup
+ * elements for a MultipleSetup instance.
  * 
  * @author Joao Bispo
  */
@@ -72,11 +74,12 @@ public class ListOfSetupsPanel extends FieldPanel {
     private static final String ENUM_NAME_SEPARATOR = "-";
 
     /**
-     * Constructs a ListOfSetupsPanel for the given enum option, label, and MultipleSetup.
+     * Constructs a ListOfSetupsPanel for the given enum option, label, and
+     * MultipleSetup.
      *
      * @param enumOption the SetupFieldEnum
-     * @param labelName the label for the panel
-     * @param setup the MultipleSetup instance
+     * @param labelName  the label for the panel
+     * @param setup      the MultipleSetup instance
      */
     public ListOfSetupsPanel(SetupFieldEnum enumOption, String labelName, MultipleSetup setup) {
         label = new JLabel(labelName + ":");
@@ -376,7 +379,7 @@ public class ListOfSetupsPanel extends FieldPanel {
      * Builds a string representation of a setup element.
      * 
      * @param enumName the name of the enum
-     * @param index the index of the element
+     * @param index    the index of the element
      * @return the string representation
      */
     private static String buildSetupString(String enumName, int index) {

@@ -42,7 +42,7 @@ public class Field implements IGenerate {
      * Generates a private field of the specified type and name.
      *
      * @param classType the type of the field
-     * @param name the name of the field
+     * @param name      the name of the field
      */
     public Field(JavaType classType, String name) {
         init(classType, name, Privacy.PRIVATE);
@@ -52,8 +52,8 @@ public class Field implements IGenerate {
      * Generates a field of the specified type, name, and privacy level.
      *
      * @param classType the type of the field
-     * @param name the name of the field
-     * @param privacy the privacy level
+     * @param name      the name of the field
+     * @param privacy   the privacy level
      */
     public Field(JavaType classType, String name, Privacy privacy) {
         init(classType, name, privacy);
@@ -101,7 +101,8 @@ public class Field implements IGenerate {
     }
 
     /**
-     * Generates Java source code based on the field's privacy, modifiers, type, and name.
+     * Generates Java source code based on the field's privacy, modifiers, type, and
+     * name.
      *
      * @param indentation the code indentation
      * @return the generated code as a StringBuilder

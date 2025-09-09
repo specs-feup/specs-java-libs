@@ -25,8 +25,8 @@ package org.suikasoft.XStreamPlus;
  */
 public interface XmlSerializable {
 
-   // Interface could make objects implement a method like getObjectXml. This
-   // works when writing an object. However, when reading an object, we do not
-   // have access to the object and as a consequence, no access to the method.
-   // Method is being implemented as a static method.
+    // Interface could make objects implement a method like getObjectXml. This
+    // works when writing an object. However, when reading an object, we do not
+    // have access to the object and as a consequence, no access to the method.
+    // Method is being implemented as a static method.
 }

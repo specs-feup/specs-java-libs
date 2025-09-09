@@ -24,7 +24,8 @@ import java.util.Set;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Applies methods that generate DataStores, based on arbitrary inputs defined by a signature Method.
+ * Applies methods that generate DataStores, based on arbitrary inputs defined
+ * by a signature Method.
  *
  * Provides a registry of compatible static methods for parsing node data.
  *
@@ -39,7 +40,8 @@ public class NodeDataParser {
     /**
      * Constructs a NodeDataParser instance.
      *
-     * @param defaultMethod the default method to use when no specific parser is found
+     * @param defaultMethod      the default method to use when no specific parser
+     *                           is found
      * @param classesWithParsers a collection of classes containing parser methods
      */
     public NodeDataParser(Method defaultMethod, Collection<Class<?>> classesWithParsers) {
@@ -61,7 +63,7 @@ public class NodeDataParser {
      * Adds parser methods from the given class to the registry.
      *
      * @param parserMethodSignature the signature method to validate compatibility
-     * @param classWithParsers the class containing parser methods
+     * @param classWithParsers      the class containing parser methods
      */
     private void addParsers(Method parserMethodSignature, Class<?> classWithParsers) {
         for (Method method : classWithParsers.getMethods()) {
@@ -81,7 +83,7 @@ public class NodeDataParser {
     /**
      * Validates if the given method is compatible with the signature method.
      *
-     * @param method the method to validate
+     * @param method    the method to validate
      * @param signature the signature method to compare against
      * @return true if both methods are considered equivalent
      */
@@ -124,7 +126,7 @@ public class NodeDataParser {
     /**
      * Parses data using the method associated with the given key.
      *
-     * @param key the key identifying the parser method
+     * @param key  the key identifying the parser method
      * @param args the arguments to pass to the parser method
      * @return the result of the parser method
      */
@@ -144,7 +146,8 @@ public class NodeDataParser {
         }
 
         try {
-            // Sanitize arguments: replace nulls for common types to avoid NPEs inside parser methods
+            // Sanitize arguments: replace nulls for common types to avoid NPEs inside
+            // parser methods
             var paramTypes = method.getParameterTypes();
             Object[] sanitizedArgs = new Object[paramTypes.length];
 
@@ -161,14 +164,22 @@ public class NodeDataParser {
                         value = ""; // replace null strings with empty string
                     } else if (p.isPrimitive()) {
                         // provide safe defaults for primitives
-                        if (p == boolean.class) value = false;
-                        else if (p == byte.class) value = (byte) 0;
-                        else if (p == short.class) value = (short) 0;
-                        else if (p == int.class) value = 0;
-                        else if (p == long.class) value = 0L;
-                        else if (p == float.class) value = 0f;
-                        else if (p == double.class) value = 0d;
-                        else if (p == char.class) value = '\0';
+                        if (p == boolean.class)
+                            value = false;
+                        else if (p == byte.class)
+                            value = (byte) 0;
+                        else if (p == short.class)
+                            value = (short) 0;
+                        else if (p == int.class)
+                            value = 0;
+                        else if (p == long.class)
+                            value = 0L;
+                        else if (p == float.class)
+                            value = 0f;
+                        else if (p == double.class)
+                            value = 0d;
+                        else if (p == char.class)
+                            value = '\0';
                     }
                     // for other reference types, keep null
                 }

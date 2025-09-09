@@ -26,11 +26,15 @@ import pt.up.fe.specs.util.parsing.StringCodec;
 /**
  * Special DataKey implementation for advanced or dynamic key scenarios.
  *
- * <p>This class is intended for use cases where the key type or behavior is determined dynamically or requires special handling.
+ * <p>
+ * This class is intended for use cases where the key type or behavior is
+ * determined dynamically or requires special handling.
  * 
- * <p>For reliable type information, consider using constructors that accept an explicit Class&lt;T&gt; parameter.
- * When no explicit type is provided, the class attempts to infer the type from generic parameters,
- * but this may fall back to Object.class in certain scenarios due to Java type erasure.
+ * <p>
+ * For reliable type information, consider using constructors that accept an
+ * explicit Class&lt;T&gt; parameter. When no explicit type is provided, the
+ * class attempts to infer the type from generic parameters, but this may fall
+ * back to Object.class in certain scenarios due to Java type erasure.
  *
  * @param <T> the type of value associated with this key
  */
@@ -52,7 +56,7 @@ class MagicKey<T> extends ADataKey<T> {
      * Private constructor with explicit value class support.
      * Use static factory methods for type-safe creation with explicit types.
      *
-     * @param id the key id
+     * @param id         the key id
      * @param valueClass the explicit value class
      */
     private MagicKey(String id, Class<T> valueClass) {
@@ -60,12 +64,13 @@ class MagicKey<T> extends ADataKey<T> {
     }
 
     /**
-     * Constructs a MagicKey with the given id, explicit value class, default value, and decoder.
+     * Constructs a MagicKey with the given id, explicit value class, default value,
+     * and decoder.
      *
-     * @param id the key id
-     * @param valueClass the explicit value class (may be null for type inference)
+     * @param id           the key id
+     * @param valueClass   the explicit value class (may be null for type inference)
      * @param defaultValue the default value provider
-     * @param decoder the string decoder
+     * @param decoder      the string decoder
      */
     private MagicKey(String id, Class<T> valueClass, Supplier<T> defaultValue, StringCodec<T> decoder) {
         this(id, valueClass, defaultValue, decoder, null, null, null, null, null, null, null);
@@ -73,10 +78,11 @@ class MagicKey<T> extends ADataKey<T> {
 
     /**
      * Creates a type-safe MagicKey with explicit class information.
-     * This method provides a convenient way to create MagicKey instances with reliable type information.
+     * This method provides a convenient way to create MagicKey instances with
+     * reliable type information.
      *
-     * @param <T> the type of value associated with this key
-     * @param id the key id
+     * @param <T>        the type of value associated with this key
+     * @param id         the key id
      * @param valueClass the value class
      * @return a new MagicKey instance with explicit type information
      */
@@ -85,11 +91,12 @@ class MagicKey<T> extends ADataKey<T> {
     }
 
     /**
-     * Creates a type-safe MagicKey with explicit class information and default value.
+     * Creates a type-safe MagicKey with explicit class information and default
+     * value.
      *
-     * @param <T> the type of value associated with this key
-     * @param id the key id
-     * @param valueClass the value class
+     * @param <T>          the type of value associated with this key
+     * @param id           the key id
+     * @param valueClass   the value class
      * @param defaultValue the default value
      * @return a new MagicKey instance with explicit type information
      */
@@ -100,17 +107,18 @@ class MagicKey<T> extends ADataKey<T> {
     /**
      * Full constructor for MagicKey with all options.
      *
-     * @param id the key id
-     * @param valueClass the explicit value class (may be null for type inference)
+     * @param id                   the key id
+     * @param valueClass           the explicit value class (may be null for type
+     *                             inference)
      * @param defaultValueProvider the default value provider
-     * @param decoder the string decoder
-     * @param customGetter the custom getter
-     * @param panelProvider the panel provider
-     * @param label the label
-     * @param definition the store definition
-     * @param copyFunction the copy function
-     * @param customSetter the custom setter
-     * @param extraData extra data for the key
+     * @param decoder              the string decoder
+     * @param customGetter         the custom getter
+     * @param panelProvider        the panel provider
+     * @param label                the label
+     * @param definition           the store definition
+     * @param copyFunction         the copy function
+     * @param customSetter         the custom setter
+     * @param extraData            extra data for the key
      */
     private MagicKey(String id, Class<T> valueClass, Supplier<T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
@@ -122,18 +130,19 @@ class MagicKey<T> extends ADataKey<T> {
 
     /**
      * Legacy constructor for backward compatibility.
-     * Used by reflection-based code that expects the original constructor signature.
+     * Used by reflection-based code that expects the original constructor
+     * signature.
      *
-     * @param id the key id
+     * @param id                   the key id
      * @param defaultValueProvider the default value provider
-     * @param decoder the string decoder
-     * @param customGetter the custom getter
-     * @param panelProvider the panel provider
-     * @param label the label
-     * @param definition the store definition
-     * @param copyFunction the copy function
-     * @param customSetter the custom setter
-     * @param extraData extra data for the key
+     * @param decoder              the string decoder
+     * @param customGetter         the custom getter
+     * @param panelProvider        the panel provider
+     * @param label                the label
+     * @param definition           the store definition
+     * @param copyFunction         the copy function
+     * @param customSetter         the custom setter
+     * @param extraData            extra data for the key
      */
     @SuppressWarnings("unused") // Used by reflection in tests
     private MagicKey(String id, Supplier<T> defaultValueProvider, StringCodec<T> decoder,
@@ -157,10 +166,10 @@ class MagicKey<T> extends ADataKey<T> {
         if (explicitValueClass != null) {
             return explicitValueClass;
         }
-        
+
         // Try to get type from this class (works for anonymous classes)
         Class<?> currentClass = this.getClass();
-        
+
         // For anonymous classes, get the generic superclass type
         if (currentClass.isAnonymousClass()) {
             try {
@@ -175,7 +184,7 @@ class MagicKey<T> extends ADataKey<T> {
                 // Continue to other approaches
             }
         }
-        
+
         // Try the SpecsStrings utility for regular inheritance
         try {
             Class<?> result = SpecsStrings.getSuperclassTypeParameter(currentClass);
@@ -185,7 +194,7 @@ class MagicKey<T> extends ADataKey<T> {
         } catch (RuntimeException e) {
             // Type inference failed, continue to fallback
         }
-        
+
         // Type inference failed, fallback to Object class
         // This can happen when MagicKey is created with raw types or through reflection
         return (Class<T>) Object.class;
@@ -194,16 +203,16 @@ class MagicKey<T> extends ADataKey<T> {
     /**
      * Creates a copy of this MagicKey with the given parameters.
      *
-     * @param id the key id
+     * @param id                   the key id
      * @param defaultValueProvider the default value provider
-     * @param decoder the string decoder
-     * @param customGetter the custom getter
-     * @param panelProvider the panel provider
-     * @param label the label
-     * @param definition the store definition
-     * @param copyFunction the copy function
-     * @param customSetter the custom setter
-     * @param extraData extra data for the key
+     * @param decoder              the string decoder
+     * @param customGetter         the custom getter
+     * @param panelProvider        the panel provider
+     * @param label                the label
+     * @param definition           the store definition
+     * @param copyFunction         the copy function
+     * @param customSetter         the custom setter
+     * @param extraData            extra data for the key
      * @return a new MagicKey instance
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -211,7 +220,8 @@ class MagicKey<T> extends ADataKey<T> {
     protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label, StoreDefinition definition,
             Function<T, T> copyFunction, CustomGetter<T> customSetter, DataKeyExtraData extraData) {
-        return new MagicKey(id, this.explicitValueClass, defaultValueProvider, decoder, customGetter, panelProvider, label,
+        return new MagicKey(id, this.explicitValueClass, defaultValueProvider, decoder, customGetter, panelProvider,
+                label,
                 definition, copyFunction, customSetter, extraData) {
         };
     }

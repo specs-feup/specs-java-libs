@@ -28,9 +28,9 @@ public class Triple<X, Y, Z> {
     /**
      * Creates a new instance of Triple with the given values.
      *
-     * @param x the first value
-     * @param y the second value
-     * @param z the third value
+     * @param x   the first value
+     * @param y   the second value
+     * @param z   the third value
      * @param <X> the type of the first value
      * @param <Y> the type of the second value
      * @param <Z> the type of the third value
@@ -133,8 +133,8 @@ public class Triple<X, Y, Z> {
         }
         Triple<?, ?, ?> triple = (Triple<?, ?, ?>) obj;
         return java.util.Objects.equals(x, triple.x) &&
-               java.util.Objects.equals(y, triple.y) &&
-               java.util.Objects.equals(z, triple.z);
+                java.util.Objects.equals(y, triple.y) &&
+                java.util.Objects.equals(z, triple.z);
     }
 
     /**

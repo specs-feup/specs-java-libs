@@ -24,7 +24,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import pt.up.fe.specs.util.utilities.StringList;
 
 /**
- * XStream converter for {@link JsonStringList} for compatibility with legacy Clava configuration files.
+ * XStream converter for {@link JsonStringList} for compatibility with legacy
+ * Clava configuration files.
  *
  * @author JBispo
  */
@@ -45,8 +46,8 @@ public class JsonStringListXstreamConverter implements Converter {
     /**
      * Not implemented. Throws exception if called.
      *
-     * @param source the source object
-     * @param writer the writer
+     * @param source  the source object
+     * @param writer  the writer
      * @param context the context
      * @throws RuntimeException always
      */
@@ -58,7 +59,7 @@ public class JsonStringListXstreamConverter implements Converter {
     /**
      * Unmarshals a JsonStringList from XML.
      *
-     * @param reader the XML reader
+     * @param reader  the XML reader
      * @param context the context
      * @return the unmarshalled object
      */

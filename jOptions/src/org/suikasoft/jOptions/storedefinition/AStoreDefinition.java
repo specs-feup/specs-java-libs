@@ -44,10 +44,11 @@ public abstract class AStoreDefinition implements StoreDefinition {
     }
 
     /**
-     * Creates a new store definition with the given name, sections, and default data.
+     * Creates a new store definition with the given name, sections, and default
+     * data.
      *
-     * @param appName the name of the store
-     * @param sections the sections
+     * @param appName     the name of the store
+     * @param sections    the sections
      * @param defaultData the default data
      */
     protected AStoreDefinition(String appName, List<StoreSection> sections, DataStore defaultData) {

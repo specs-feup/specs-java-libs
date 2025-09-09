@@ -18,7 +18,10 @@ package org.specs.generators.java.enums;
  * @author Tiago
  */
 public enum Privacy {
-    PUBLIC("public"), PRIVATE("private"), PROTECTED("protected"), PACKAGE_PROTECTED("");
+    PUBLIC("public"),
+    PRIVATE("private"),
+    PROTECTED("protected"),
+    PACKAGE_PROTECTED("");
 
     /**
      * Constructor for the Privacy enum.

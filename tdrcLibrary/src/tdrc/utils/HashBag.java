@@ -37,7 +37,8 @@ public class HashBag<T> {
     }
 
     /**
-     * Adds one occurrence of the specified element to the bag and returns the total number of occurrences.
+     * Adds one occurrence of the specified element to the bag and returns the total
+     * number of occurrences.
      * 
      * @param element the element to add
      * @return the total number of occurrences of the element
@@ -47,10 +48,11 @@ public class HashBag<T> {
     }
 
     /**
-     * Adds the specified number of occurrences of the element to the bag and returns the total number of occurrences.
+     * Adds the specified number of occurrences of the element to the bag and
+     * returns the total number of occurrences.
      * 
      * @param element the element to add
-     * @param val the number of occurrences to add
+     * @param val     the number of occurrences to add
      * @return the total number of occurrences of the element
      */
     public int put(T element, int val) {
@@ -74,7 +76,8 @@ public class HashBag<T> {
     }
 
     /**
-     * Removes one occurrence of the specified element from the bag and returns the remaining number of occurrences.
+     * Removes one occurrence of the specified element from the bag and returns the
+     * remaining number of occurrences.
      * 
      * @param element the element to remove
      * @return the remaining number of occurrences of the element
@@ -84,10 +87,11 @@ public class HashBag<T> {
     }
 
     /**
-     * Removes the specified number of occurrences of the element from the bag and returns the remaining number of occurrences.
+     * Removes the specified number of occurrences of the element from the bag and
+     * returns the remaining number of occurrences.
      * 
      * @param element the element to remove
-     * @param val the number of occurrences to remove
+     * @param val     the number of occurrences to remove
      * @return the remaining number of occurrences of the element
      */
     public int take(T element, int val) {
@@ -126,7 +130,8 @@ public class HashBag<T> {
     /**
      * Removes all items from the bag.
      * <br>
-     * <b>NOTE:</b> This method performs actual removal of items. If you intend to reset contents, use {@link HashBag#reset()}.
+     * <b>NOTE:</b> This method performs actual removal of items. If you intend to
+     * reset contents, use {@link HashBag#reset()}.
      */
     public void clear() {
         bag.clear();
@@ -135,7 +140,8 @@ public class HashBag<T> {
     /**
      * Resets the item counters to zero without removing the items.
      * <br>
-     * <b>NOTE:</b> This method does not remove the items, just resets their counts to zero. If you intend to remove the items, use {@link HashBag#clear()}.
+     * <b>NOTE:</b> This method does not remove the items, just resets their counts
+     * to zero. If you intend to remove the items, use {@link HashBag#clear()}.
      */
     public void reset() {
         bag.replaceAll((k, v) -> 0);

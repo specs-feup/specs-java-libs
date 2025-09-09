@@ -30,7 +30,8 @@ import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Represents a list of several SetupData objects, providing methods to manage and access them.
+ * Represents a list of several SetupData objects, providing methods to manage
+ * and access them.
  *
  * @author Joao Bispo
  */
@@ -41,10 +42,12 @@ public class SetupList implements DataStore {
     private String preferredSetupName;
 
     /**
-     * Constructs a SetupList with the given name and collection of DataStore objects.
+     * Constructs a SetupList with the given name and collection of DataStore
+     * objects.
      *
      * @param setupListName the name of the setup list
-     * @param listOfSetups the collection of DataStore objects to include in the setup list
+     * @param listOfSetups  the collection of DataStore objects to include in the
+     *                      setup list
      */
     public SetupList(String setupListName, Collection<DataStore> listOfSetups) {
         this.setupListName = setupListName;
@@ -64,7 +67,7 @@ public class SetupList implements DataStore {
     /**
      * Creates a new SetupList instance with the given name and store definitions.
      *
-     * @param setupListName the name of the setup list
+     * @param setupListName    the name of the setup list
      * @param storeDefinitions the store definitions to include in the setup list
      * @return a new SetupList instance
      */
@@ -73,10 +76,12 @@ public class SetupList implements DataStore {
     }
 
     /**
-     * Creates a new SetupList instance with the given name and list of store definitions.
+     * Creates a new SetupList instance with the given name and list of store
+     * definitions.
      *
-     * @param setupListName the name of the setup list
-     * @param storeDefinitions the list of store definitions to include in the setup list
+     * @param setupListName    the name of the setup list
+     * @param storeDefinitions the list of store definitions to include in the setup
+     *                         list
      * @return a new SetupList instance
      */
     public static SetupList newInstance(String setupListName, List<StoreDefinition> storeDefinitions) {
@@ -231,7 +236,7 @@ public class SetupList implements DataStore {
     /**
      * Sets a value for the given DataKey in the preferred setup.
      *
-     * @param key the DataKey
+     * @param key   the DataKey
      * @param value the value to set
      * @return this SetupList for chaining
      */
@@ -244,7 +249,7 @@ public class SetupList implements DataStore {
     /**
      * Sets a raw value for the given key in the preferred setup.
      *
-     * @param key the key
+     * @param key   the key
      * @param value the value to set
      * @return an Optional containing the previous value, if any
      */

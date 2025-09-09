@@ -29,7 +29,9 @@ import org.suikasoft.jOptions.gui.panels.app.TabbedPane;
 /**
  * Frame of the SimpleGui application.
  *
- * <p>This class manages the main application window, tabbed pane, and GUI launching for the application.
+ * <p>
+ * This class manages the main application window, tabbed pane, and GUI
+ * launching for the application.
  */
 public class AppFrame {
 
@@ -91,7 +93,8 @@ public class AppFrame {
     }
 
     /**
-     * Shows the GUI. For thread safety, this method should be invoked from the event dispatch thread.
+     * Shows the GUI. For thread safety, this method should be invoked from the
+     * event dispatch thread.
      */
     private void showGui() {
         mainWindow.pack();

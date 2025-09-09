@@ -41,7 +41,9 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * Panel which loads and can edit the options file.
  *
- * <p>This panel provides controls for loading, editing, and saving application options.
+ * <p>
+ * This panel provides controls for loading, editing, and saving application
+ * options.
  * 
  * @author Joao Bispo
  */
@@ -63,7 +65,7 @@ public class OptionsPanel extends GuiTab {
     /**
      * Constructs an OptionsPanel for the given application and DataStore.
      *
-     * @param app the application instance
+     * @param app  the application instance
      * @param data the DataStore
      */
     public OptionsPanel(App app, DataStore data) {
@@ -201,7 +203,8 @@ public class OptionsPanel extends GuiTab {
     }
 
     /**
-     * Called when entering the tab. Updates the setup panel with the current configuration.
+     * Called when entering the tab. Updates the setup panel with the current
+     * configuration.
      */
     @Override
     public void enterTab() {

@@ -39,7 +39,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 /**
- * XML-based implementation of AppPersistence for loading and saving DataStore objects.
+ * XML-based implementation of AppPersistence for loading and saving DataStore
+ * objects.
  *
  * @author Joao Bispo
  */
@@ -89,7 +90,7 @@ public class XmlPersistence implements AppPersistence {
     /**
      * Adds a single class mapping to the XML serializer.
      *
-     * @param name the mapping name
+     * @param name   the mapping name
      * @param aClass the class to map
      */
     public void addMapping(String name, Class<?> aClass) {
@@ -171,7 +172,8 @@ public class XmlPersistence implements AppPersistence {
                     + "', expected '" + dataStore.getName() + "'");
         }
 
-        // ParsedObject is not a properly constructed DataStore, it only has its name and the values
+        // ParsedObject is not a properly constructed DataStore, it only has its name
+        // and the values
         // Do not use it as a normal DataStore
 
         // Set values
@@ -260,7 +262,7 @@ public class XmlPersistence implements AppPersistence {
     /**
      * Parses a line of custom properties and updates the given DataStore.
      *
-     * @param line the line to parse
+     * @param line     the line to parse
      * @param baseData the DataStore to update
      */
     private void parseCustomPropertiesLine(String line, DataStore baseData) {
@@ -322,8 +324,8 @@ public class XmlPersistence implements AppPersistence {
     /**
      * Saves the given DataStore to the specified file.
      *
-     * @param file the file to save to
-     * @param data the DataStore to save
+     * @param file           the file to save to
+     * @param data           the DataStore to save
      * @param keepConfigFile whether to keep the configuration file
      * @return true if the save was successful, false otherwise
      */

@@ -27,14 +27,16 @@ import pt.up.fe.specs.util.treenode.transform.TransformQueue;
 import pt.up.fe.specs.util.treenode.transform.util.TraversalStrategy;
 
 /**
- * Transform that replaces multiplication by -1 with a unary minus in the Symja AST.
+ * Transform that replaces multiplication by -1 with a unary minus in the Symja
+ * AST.
  */
 public class RemoveMinusMultTransform implements VisitAllTransform {
 
     /**
-     * Applies the transform to all children of the given node, replacing multiplication by -1 where appropriate.
+     * Applies the transform to all children of the given node, replacing
+     * multiplication by -1 where appropriate.
      *
-     * @param node the node to transform
+     * @param node  the node to transform
      * @param queue the transform queue
      */
     @Override
@@ -42,12 +44,12 @@ public class RemoveMinusMultTransform implements VisitAllTransform {
         if (!(node instanceof SymjaFunction)) {
             return;
         }
-        
+
         // Check if node has sufficient children
         if (node.getNumChildren() < 3) {
             return;
         }
-        
+
         var operator = node.getChild(SymjaOperator.class, 0);
         var symbol = operator.get(SymjaOperator.OPERATOR);
         if (symbol != Operator.Times) {

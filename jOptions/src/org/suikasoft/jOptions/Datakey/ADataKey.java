@@ -27,7 +27,9 @@ import pt.up.fe.specs.util.parsing.StringCodec;
 /**
  * Abstract base class for {@link DataKey} implementations.
  *
- * <p>This class provides the foundational implementation for data keys, including support for default values, decoders, custom getters/setters, and extra data.
+ * <p>
+ * This class provides the foundational implementation for data keys, including
+ * support for default values, decoders, custom getters/setters, and extra data.
  *
  * @param <T> the type of value associated with this key
  */
@@ -47,16 +49,17 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Constructs an instance of {@code ADataKey} with the specified parameters.
      *
-     * @param id the unique identifier for this key
+     * @param id                   the unique identifier for this key
      * @param defaultValueProvider a supplier for the default value of this key
-     * @param decoder a codec for encoding and decoding values
-     * @param customGetter a custom getter for retrieving values
-     * @param panelProvider a provider for GUI panels associated with this key
-     * @param label a label for this key
-     * @param definition the store definition associated with this key
-     * @param copyFunction a function for copying values
-     * @param customSetter a custom setter for setting values
-     * @param extraData additional data associated with this key
+     * @param decoder              a codec for encoding and decoding values
+     * @param customGetter         a custom getter for retrieving values
+     * @param panelProvider        a provider for GUI panels associated with this
+     *                             key
+     * @param label                a label for this key
+     * @param definition           the store definition associated with this key
+     * @param copyFunction         a function for copying values
+     * @param customSetter         a custom setter for setting values
+     * @param extraData            additional data associated with this key
      */
     protected ADataKey(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
             CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
@@ -78,9 +81,10 @@ public abstract class ADataKey<T> implements DataKey<T> {
     }
 
     /**
-     * Constructs an instance of {@code ADataKey} with the specified identifier and default value provider.
+     * Constructs an instance of {@code ADataKey} with the specified identifier and
+     * default value provider.
      *
-     * @param id the unique identifier for this key
+     * @param id           the unique identifier for this key
      * @param defaultValue a supplier for the default value of this key
      */
     protected ADataKey(String id, Supplier<T> defaultValue) {
@@ -138,16 +142,17 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Creates a copy of this {@code DataKey} with the specified parameters.
      *
-     * @param id the unique identifier for the new key
+     * @param id                   the unique identifier for the new key
      * @param defaultValueProvider a supplier for the default value of the new key
-     * @param decoder a codec for encoding and decoding values
-     * @param customGetter a custom getter for retrieving values
-     * @param panelProvider a provider for GUI panels associated with the new key
-     * @param label a label for the new key
-     * @param definition the store definition associated with the new key
-     * @param copyFunction a function for copying values
-     * @param customSetter a custom setter for setting values
-     * @param extraData additional data associated with the new key
+     * @param decoder              a codec for encoding and decoding values
+     * @param customGetter         a custom getter for retrieving values
+     * @param panelProvider        a provider for GUI panels associated with the new
+     *                             key
+     * @param label                a label for the new key
+     * @param definition           the store definition associated with the new key
+     * @param copyFunction         a function for copying values
+     * @param customSetter         a custom setter for setting values
+     * @param extraData            additional data associated with the new key
      * @return a new {@code DataKey} instance
      */
     abstract protected DataKey<T> copy(String id, Supplier<? extends T> defaultValueProvider, StringCodec<T> decoder,
@@ -158,7 +163,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Returns the decoder associated with this key, if present.
      *
-     * @return an {@code Optional} containing the decoder, or an empty {@code Optional} if no decoder is set
+     * @return an {@code Optional} containing the decoder, or an empty
+     *         {@code Optional} if no decoder is set
      */
     @Override
     public Optional<StringCodec<T>> getDecoder() {
@@ -189,7 +195,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Returns the default value for this key, if present.
      *
-     * @return an {@code Optional} containing the default value, or an empty {@code Optional} if no default value is set
+     * @return an {@code Optional} containing the default value, or an empty
+     *         {@code Optional} if no default value is set
      */
     @Override
     public Optional<T> getDefault() {
@@ -214,7 +221,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
      * Sets the default value provider for this key.
      *
      * @param defaultValueProvider the new default value provider
-     * @return a new {@code DataKey} instance with the updated default value provider
+     * @return a new {@code DataKey} instance with the updated default value
+     *         provider
      */
     @Override
     public DataKey<T> setDefault(Supplier<? extends T> defaultValueProvider) {
@@ -265,7 +273,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Returns the custom getter associated with this key, if present.
      *
-     * @return an {@code Optional} containing the custom getter, or an empty {@code Optional} if no custom getter is set
+     * @return an {@code Optional} containing the custom getter, or an empty
+     *         {@code Optional} if no custom getter is set
      */
     @Override
     public Optional<CustomGetter<T>> getCustomGetter() {
@@ -275,7 +284,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Returns the custom setter associated with this key, if present.
      *
-     * @return an {@code Optional} containing the custom setter, or an empty {@code Optional} if no custom setter is set
+     * @return an {@code Optional} containing the custom setter, or an empty
+     *         {@code Optional} if no custom setter is set
      */
     @Override
     public Optional<CustomGetter<T>> getCustomSetter() {
@@ -297,7 +307,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Returns the panel provider associated with this key, if present.
      *
-     * @return an {@code Optional} containing the panel provider, or an empty {@code Optional} if no panel provider is set
+     * @return an {@code Optional} containing the panel provider, or an empty
+     *         {@code Optional} if no panel provider is set
      */
     @Override
     public Optional<KeyPanelProvider<T>> getKeyPanelProvider() {
@@ -317,7 +328,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
     }
 
     /**
-     * Returns the label for this key. If no label is set, returns the name of the key.
+     * Returns the label for this key. If no label is set, returns the name of the
+     * key.
      *
      * @return the label for this key
      */
@@ -345,7 +357,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Returns the store definition associated with this key, if present.
      *
-     * @return an {@code Optional} containing the store definition, or an empty {@code Optional} if no store definition is set
+     * @return an {@code Optional} containing the store definition, or an empty
+     *         {@code Optional} if no store definition is set
      */
     @Override
     public Optional<StoreDefinition> getStoreDefinition() {
@@ -370,9 +383,11 @@ public abstract class ADataKey<T> implements DataKey<T> {
     }
 
     /**
-     * Returns the copy function associated with this key, if present. If no copy function is set, uses the encoder/decoder by default.
+     * Returns the copy function associated with this key, if present. If no copy
+     * function is set, uses the encoder/decoder by default.
      *
-     * @return an {@code Optional} containing the copy function, or an empty {@code Optional} if no copy function is set
+     * @return an {@code Optional} containing the copy function, or an empty
+     *         {@code Optional} if no copy function is set
      */
     @Override
     public Optional<Function<T, T>> getCopyFunction() {
@@ -393,7 +408,8 @@ public abstract class ADataKey<T> implements DataKey<T> {
     /**
      * Returns the extra data associated with this key, if present.
      *
-     * @return an {@code Optional} containing the extra data, or an empty {@code Optional} if no extra data is set
+     * @return an {@code Optional} containing the extra data, or an empty
+     *         {@code Optional} if no extra data is set
      */
     @Override
     public Optional<DataKeyExtraData> getExtraData() {

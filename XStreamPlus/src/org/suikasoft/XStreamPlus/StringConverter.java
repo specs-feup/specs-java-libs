@@ -17,7 +17,8 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
- * Converter for serializing and deserializing objects using a StringCodec with XStream.
+ * Converter for serializing and deserializing objects using a StringCodec with
+ * XStream.
  *
  * @param <T> the type supported by this converter
  */
@@ -30,7 +31,7 @@ public class StringConverter<T> extends AbstractSingleValueConverter {
      * Constructs a StringConverter for the given class and codec.
      *
      * @param supportedClass the class supported by this converter
-     * @param codec the codec to use for encoding/decoding
+     * @param codec          the codec to use for encoding/decoding
      */
     public StringConverter(Class<T> supportedClass, StringCodec<T> codec) {
         this.supportedClass = supportedClass;

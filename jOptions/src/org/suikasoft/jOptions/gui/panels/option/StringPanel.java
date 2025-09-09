@@ -25,7 +25,8 @@ import org.suikasoft.jOptions.gui.KeyPanel;
 /**
  * Panel for editing string values using a JTextField.
  *
- * <p>This panel provides a text field for string DataKey values in the GUI.
+ * <p>
+ * This panel provides a text field for string DataKey values in the GUI.
  */
 public class StringPanel extends KeyPanel<String> {
 
@@ -40,7 +41,7 @@ public class StringPanel extends KeyPanel<String> {
     /**
      * Constructs a StringPanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public StringPanel(DataKey<String> key, DataStore data) {

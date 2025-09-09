@@ -26,7 +26,8 @@ import tdrc.utils.Pair;
 import tdrc.utils.StringUtils;
 
 /**
- * Factory class for creating and manipulating {@link JavaType} and {@link JavaGenericType} instances for code generation.
+ * Factory class for creating and manipulating {@link JavaType} and
+ * {@link JavaGenericType} instances for code generation.
  */
 public class JavaTypeFactory {
 
@@ -105,7 +106,8 @@ public class JavaTypeFactory {
     }
 
     /**
-     * Returns a {@link JavaType} representing a generic List with the specified generic type.
+     * Returns a {@link JavaType} representing a generic List with the specified
+     * generic type.
      *
      * @param genericType the {@link JavaGenericType} for the List
      * @return a JavaType for List<genericType>
@@ -117,7 +119,8 @@ public class JavaTypeFactory {
     }
 
     /**
-     * Returns a {@link JavaType} representing a generic List with the specified type.
+     * Returns a {@link JavaType} representing a generic List with the specified
+     * type.
      *
      * @param genericType the {@link JavaType} for the List
      * @return a JavaType for List<genericType>
@@ -142,7 +145,7 @@ public class JavaTypeFactory {
     /**
      * Adds a generic type to the given target type.
      *
-     * @param targetType the target {@link JavaType}
+     * @param targetType  the target {@link JavaType}
      * @param genericType the {@link JavaType} to convert to generic
      */
     public static final void addGenericType(JavaType targetType, JavaType genericType) {
@@ -218,8 +221,9 @@ public class JavaTypeFactory {
 
     /**
      * Converts the given {@link Class} into a {@link JavaType}.
-     * <b>WARNING:</b> Do not use this method to convert primitive types, it will throw an exception! If this is the
-     * case, please use {@link JavaTypeFactory#getPrimitiveType(Primitive)} instead.
+     * <b>WARNING:</b> Do not use this method to convert primitive types, it will
+     * throw an exception! If this is the case, please use
+     * {@link JavaTypeFactory#getPrimitiveType(Primitive)} instead.
      *
      * @param javaClass the {@link Class} to convert
      * @return the converted {@link JavaType}
@@ -229,7 +233,8 @@ public class JavaTypeFactory {
     }
 
     /**
-     * Unwraps the primitive type. For instance, for an Integer type an int is returned.
+     * Unwraps the primitive type. For instance, for an Integer type an int is
+     * returned.
      *
      * @param simpleType the simple type name
      * @return the unwrapped primitive type name
@@ -250,7 +255,8 @@ public class JavaTypeFactory {
     }
 
     /**
-     * Unwraps the primitive type. For instance, for an Integer type an int is returned.
+     * Unwraps the primitive type. For instance, for an Integer type an int is
+     * returned.
      *
      * @param attrClassType the {@link JavaType} to unwrap
      * @return the unwrapped {@link JavaType}

@@ -27,7 +27,8 @@ import com.google.common.base.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Utility methods for parsing and handling command-line arguments for jOptions-based applications.
+ * Utility methods for parsing and handling command-line arguments for
+ * jOptions-based applications.
  */
 public class CommandLineUtils {
 
@@ -39,7 +40,8 @@ public class CommandLineUtils {
     /**
      * Constructs a CommandLineUtils instance with the given store definition.
      *
-     * @param definition the store definition to be used for parsing command-line arguments
+     * @param definition the store definition to be used for parsing command-line
+     *                   arguments
      */
     public CommandLineUtils(StoreDefinition definition) {
         this.definition = definition;
@@ -78,7 +80,8 @@ public class CommandLineUtils {
      *
      * @param app  the application to be launched
      * @param args the command-line arguments
-     * @return true if the application was successfully launched or a special command was processed, false otherwise
+     * @return true if the application was successfully launched or a special
+     *         command was processed, false otherwise
      */
     public static boolean launch(App app, List<String> args) {
 

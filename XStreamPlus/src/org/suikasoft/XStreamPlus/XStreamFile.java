@@ -24,14 +24,14 @@ import com.thoughtworks.xstream.io.xml.CompactWriter;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Utility for serializing and deserializing objects to and from XML using XStream.
+ * Utility for serializing and deserializing objects to and from XML using
+ * XStream.
  *
  * @param <T> the type handled by this XStreamFile
  * @author Joao Bispo
  */
 public class XStreamFile<T> {
 
-    /** INSTANCE VARIABLES */
     private final ObjectXml<T> config;
     public final static Set<String> reservedAlias;
     public final XStream xstream;
@@ -58,7 +58,7 @@ public class XStreamFile<T> {
      * Creates a new XStreamFile instance for the given ObjectXml configuration.
      *
      * @param object the ObjectXml configuration
-     * @param <T> the type handled
+     * @param <T>    the type handled
      * @return a new XStreamFile instance
      */
     public static <T> XStreamFile<T> newInstance(ObjectXml<T> object) {

@@ -60,9 +60,12 @@ import pt.up.fe.specs.util.parsing.StringCodec;
 import pt.up.fe.specs.util.utilities.StringList;
 
 /**
- * Factory for creating common {@link DataKey} types and utility methods for key construction.
+ * Factory for creating common {@link DataKey} types and utility methods for key
+ * construction.
  *
- * <p>This class provides static methods to create DataKey instances for common types such as Boolean, String, Integer, and more.
+ * <p>
+ * This class provides static methods to create DataKey instances for common
+ * types such as Boolean, String, Integer, and more.
  */
 public class KeyFactory {
 
@@ -95,7 +98,7 @@ public class KeyFactory {
     /**
      * Creates a String {@link DataKey} with a specified default value.
      *
-     * @param id the identifier for the key
+     * @param id           the identifier for the key
      * @param defaultValue the default value for the key
      * @return a {@link DataKey} for String values
      */
@@ -106,7 +109,7 @@ public class KeyFactory {
     /**
      * Creates an Integer {@link DataKey} with a specified default value.
      *
-     * @param id the identifier for the key
+     * @param id           the identifier for the key
      * @param defaultValue the default value for the key
      * @return a {@link DataKey} for Integer values
      */
@@ -130,7 +133,7 @@ public class KeyFactory {
     /**
      * Creates a Long {@link DataKey} with a specified default value.
      *
-     * @param id the identifier for the key
+     * @param id           the identifier for the key
      * @param defaultValue the default value for the key
      * @return a {@link DataKey} for Long values
      */
@@ -153,7 +156,7 @@ public class KeyFactory {
     /**
      * Creates a Double {@link DataKey} with a specified default value.
      *
-     * @param id the identifier for the key
+     * @param id           the identifier for the key
      * @param defaultValue the default value for the key
      * @return a {@link DataKey} for Double values
      */
@@ -171,9 +174,11 @@ public class KeyFactory {
         return new NormalKey<>(id, Double.class)
                 .setKeyPanelProvider(DoublePanel::new)
                 .setDecoder(s -> {
-                    if (s == null) return 0d;
+                    if (s == null)
+                        return 0d;
                     String v = s.trim();
-                    if (v.isEmpty()) return 0d;
+                    if (v.isEmpty())
+                        return 0d;
                     String lower = v.toLowerCase();
                     switch (lower) {
                         case "infinity", "+infinity", "+inf", "inf" -> {
@@ -219,7 +224,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a file with specific extensions.
      *
-     * @param id the identifier for the key
+     * @param id         the identifier for the key
      * @param extensions the allowed extensions for the file
      * @return a {@link DataKey} for File values
      */
@@ -230,10 +235,10 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a file with various options.
      *
-     * @param id the identifier for the key
-     * @param isFolder whether the file is a folder
-     * @param create whether to create the file if it does not exist
-     * @param exists whether the file must exist
+     * @param id         the identifier for the key
+     * @param isFolder   whether the file is a folder
+     * @param create     whether to create the file if it does not exist
+     * @param exists     whether the file must exist
      * @param extensions the allowed extensions for the file
      * @return a {@link DataKey} for File values
      */
@@ -263,9 +268,10 @@ public class KeyFactory {
     }
 
     /**
-     * Creates a {@link DataKey} for a path that can be either a file or a folder, with an option to check existence.
+     * Creates a {@link DataKey} for a path that can be either a file or a folder,
+     * with an option to check existence.
      *
-     * @param id the identifier for the key
+     * @param id     the identifier for the key
      * @param exists whether the path must exist
      * @return a {@link DataKey} for File values
      */
@@ -279,12 +285,13 @@ public class KeyFactory {
     }
 
     /**
-     * Custom getter for file paths, with options for folders, files, creation, and existence checks.
+     * Custom getter for file paths, with options for folders, files, creation, and
+     * existence checks.
      *
      * @param canBeFolder whether the path can be a folder
-     * @param canBeFile whether the path can be a file
-     * @param create whether to create the path if it does not exist
-     * @param exists whether the path must exist
+     * @param canBeFile   whether the path can be a file
+     * @param create      whether to create the path if it does not exist
+     * @param exists      whether the path must exist
      * @return a custom getter for file paths
      */
     public static CustomGetter<File> customGetterFile(boolean canBeFolder, boolean canBeFile, boolean create,
@@ -294,14 +301,15 @@ public class KeyFactory {
     }
 
     /**
-     * Processes file paths with options for folders, files, creation, and existence checks.
+     * Processes file paths with options for folders, files, creation, and existence
+     * checks.
      *
-     * @param file the file to process
+     * @param file      the file to process
      * @param dataStore the data store containing additional information
-     * @param isFolder whether the path is a folder
-     * @param isFile whether the path is a file
-     * @param create whether to create the path if it does not exist
-     * @param exists whether the path must exist
+     * @param isFolder  whether the path is a folder
+     * @param isFile    whether the path is a file
+     * @param create    whether to create the path if it does not exist
+     * @param exists    whether the path must exist
      * @return the processed file
      */
     public static File customGetterFile(File file, DataStore dataStore, boolean isFolder, boolean isFile,
@@ -341,8 +349,8 @@ public class KeyFactory {
      * Processes the path with options for folders, files, and creation.
      *
      * @param canBeFolder whether the path can be a folder
-     * @param canBeFile whether the path can be a file
-     * @param create whether to create the path if it does not exist
+     * @param canBeFile   whether the path can be a file
+     * @param create      whether to create the path if it does not exist
      * @param currentFile the current file to process
      * @return the processed file
      */
@@ -370,7 +378,8 @@ public class KeyFactory {
     }
 
     /**
-     * Creates a {@link DataKey} for a {@link StringList} with an empty list as the default value.
+     * Creates a {@link DataKey} for a {@link StringList} with an empty list as the
+     * default value.
      *
      * @param id the identifier for the key
      * @return a {@link DataKey} for StringList values
@@ -382,7 +391,7 @@ public class KeyFactory {
     /**
      * Creates a generic {@link DataKey} without a default value.
      *
-     * @param id the identifier for the key
+     * @param id     the identifier for the key
      * @param aClass the class of the key's value
      * @return a {@link DataKey} for the specified type
      */
@@ -391,7 +400,8 @@ public class KeyFactory {
     }
 
     /**
-     * Creates an optional {@link DataKey} with an empty optional as the default value.
+     * Creates an optional {@link DataKey} with an empty optional as the default
+     * value.
      *
      * @param id the identifier for the key
      * @return a {@link DataKey} for Optional values
@@ -405,7 +415,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a {@link StringList} with predefined values.
      *
-     * @param id the identifier for the key
+     * @param id           the identifier for the key
      * @param defaultValue the default value for the key
      * @return a {@link DataKey} for StringList values
      */
@@ -419,7 +429,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a {@link StringList} with predefined values.
      *
-     * @param optionName the identifier for the key
+     * @param optionName    the identifier for the key
      * @param defaultValues the default values for the key
      * @return a {@link DataKey} for StringList values
      */
@@ -461,9 +471,10 @@ public class KeyFactory {
     }
 
     /**
-     * Creates a {@link DataKey} for a folder, with an option to create the folder if it does not exist.
+     * Creates a {@link DataKey} for a folder, with an option to create the folder
+     * if it does not exist.
      *
-     * @param id the identifier for the key
+     * @param id     the identifier for the key
      * @param create whether to create the folder if it does not exist
      * @return a {@link DataKey} for File values
      */
@@ -475,7 +486,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a {@link SetupList}.
      *
-     * @param id the identifier for the key
+     * @param id          the identifier for the key
      * @param definitions the store definitions for the setup list
      * @return a {@link DataKey} for SetupList values
      */
@@ -485,9 +496,10 @@ public class KeyFactory {
     }
 
     /**
-     * Creates a {@link DataKey} for a {@link SetupList} using store definition providers.
+     * Creates a {@link DataKey} for a {@link SetupList} using store definition
+     * providers.
      *
-     * @param id the identifier for the key
+     * @param id        the identifier for the key
      * @param providers the store definition providers for the setup list
      * @return a {@link DataKey} for SetupList values
      */
@@ -504,7 +516,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a {@link DataStore}.
      *
-     * @param id the identifier for the key
+     * @param id         the identifier for the key
      * @param definition the store definition for the data store
      * @return a {@link DataKey} for DataStore values
      */
@@ -517,7 +529,7 @@ public class KeyFactory {
     /**
      * Decodes a {@link DataStore} from a string representation.
      *
-     * @param string the string representation of the data store
+     * @param string     the string representation of the data store
      * @param definition the store definition for the data store
      * @return the decoded {@link DataStore}
      */
@@ -541,7 +553,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for an enumeration.
      *
-     * @param id the identifier for the key
+     * @param id     the identifier for the key
      * @param anEnum the enumeration class
      * @return a {@link DataKey} for enumeration values
      */
@@ -555,7 +567,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a list of enumeration values.
      *
-     * @param id the identifier for the key
+     * @param id     the identifier for the key
      * @param anEnum the enumeration class
      * @return a {@link DataKey} for a list of enumeration values
      */
@@ -566,7 +578,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a list of enumeration values.
      *
-     * @param id the identifier for the key
+     * @param id    the identifier for the key
      * @param enums the enumeration values
      * @return a {@link DataKey} for a list of enumeration values
      */
@@ -580,7 +592,7 @@ public class KeyFactory {
     /**
      * Creates a generic {@link DataKey} with a specified default value.
      *
-     * @param id the identifier for the key
+     * @param id              the identifier for the key
      * @param exampleInstance an example instance of the key's value
      * @return a {@link DataKey} for the specified type
      */
@@ -591,7 +603,7 @@ public class KeyFactory {
     /**
      * Creates a generic {@link DataKey} with a default value supplier.
      *
-     * @param id the identifier for the key
+     * @param id              the identifier for the key
      * @param defaultSupplier the supplier for the default value
      * @return a {@link DataKey} for the specified type
      */
@@ -604,7 +616,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a list of values.
      *
-     * @param id the identifier for the key
+     * @param id           the identifier for the key
      * @param elementClass the class of the list's elements
      * @return a {@link DataKey} for a list of values
      */
@@ -619,8 +631,8 @@ public class KeyFactory {
     /**
      * Custom setter for lists, ensuring the correct element type.
      *
-     * @param value the list to set
-     * @param data the data store containing additional information
+     * @param value        the list to set
+     * @param data         the data store containing additional information
      * @param elementClass the class of the list's elements
      * @return the processed list
      */
@@ -656,7 +668,7 @@ public class KeyFactory {
      * Custom getter for files with base folders, processing paths and base folders.
      *
      * @param value the map of files with base folders
-     * @param data the data store containing additional information
+     * @param data  the data store containing additional information
      * @return the processed map
      */
     public static Map<File, File> customGetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
@@ -678,7 +690,7 @@ public class KeyFactory {
      * Custom setter for files with base folders, ensuring relative paths.
      *
      * @param value the map of files with base folders
-     * @param data the data store containing additional information
+     * @param data  the data store containing additional information
      * @return the processed map
      */
     public static Map<File, File> customSetterFilesWithBaseFolders(Map<File, File> value, DataStore data) {
@@ -709,8 +721,8 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a list of multiple-choice values.
      *
-     * @param id the identifier for the key
-     * @param codec the codec for encoding and decoding values
+     * @param id               the identifier for the key
+     * @param codec            the codec for encoding and decoding values
      * @param availableChoices the available choices for the key
      * @return a {@link DataKey} for a list of multiple-choice values
      */
@@ -727,7 +739,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a list of multiple-choice string values.
      *
-     * @param id the identifier for the key
+     * @param id               the identifier for the key
      * @param availableChoices the available choices for the key
      * @return a {@link DataKey} for a list of multiple-choice string values
      */
@@ -738,7 +750,7 @@ public class KeyFactory {
     /**
      * Creates a {@link DataKey} for a list of multiple-choice string values.
      *
-     * @param id the identifier for the key
+     * @param id               the identifier for the key
      * @param availableChoices the available choices for the key
      * @return a {@link DataKey} for a list of multiple-choice string values
      */

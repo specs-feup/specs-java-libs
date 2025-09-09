@@ -30,7 +30,9 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinitionIndexes;
 /**
  * Implementation of DataStore that uses a List to store the data.
  *
- * <p>This implementation requires a StoreDefinition and stores values in a list indexed by the definition.
+ * <p>
+ * This implementation requires a StoreDefinition and stores values in a list
+ * indexed by the definition.
  *
  * @author JoaoBispo
  */
@@ -127,9 +129,9 @@ public class ListDataStore implements DataStore {
     /**
      * Sets the value for the given DataKey.
      *
-     * @param <T> the type of the value
-     * @param <E> the type of the value to set
-     * @param key the DataKey to set the value for
+     * @param <T>   the type of the value
+     * @param <E>   the type of the value to set
+     * @param key   the DataKey to set the value for
      * @param value the value to set
      * @return the current DataStore instance
      */
@@ -151,9 +153,10 @@ public class ListDataStore implements DataStore {
     /**
      * Sets the raw value for the given key.
      *
-     * @param key the key to set the value for
+     * @param key   the key to set the value for
      * @param value the value to set
-     * @return an Optional containing the previous value, or empty if the key does not exist
+     * @return an Optional containing the previous value, or empty if the key does
+     *         not exist
      */
     @Override
     public Optional<Object> setRaw(String key, Object value) {
@@ -190,7 +193,8 @@ public class ListDataStore implements DataStore {
      * Sets the StoreDefinition for this DataStore.
      *
      * @param definition the StoreDefinition to set
-     * @throws RuntimeException if called, as this implementation does not support setting the StoreDefinition after instantiation
+     * @throws RuntimeException if called, as this implementation does not support
+     *                          setting the StoreDefinition after instantiation
      */
     @Override
     public void setStoreDefinition(StoreDefinition definition) {
@@ -257,7 +261,8 @@ public class ListDataStore implements DataStore {
      *
      * @param <T> the type of the value
      * @param key the DataKey to remove the value for
-     * @return an Optional containing the removed value, or empty if no value was present
+     * @return an Optional containing the removed value, or empty if no value was
+     *         present
      */
     @Override
     public <T> Optional<T> remove(DataKey<T> key) {

@@ -16,9 +16,12 @@ package org.suikasoft.jOptions.Datakey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 /**
- * Functional interface for custom value retrieval from a {@link org.suikasoft.jOptions.Interfaces.DataStore}.
+ * Functional interface for custom value retrieval from a
+ * {@link org.suikasoft.jOptions.Interfaces.DataStore}.
  *
- * <p>Implement this interface to provide custom logic for retrieving values from a DataStore.
+ * <p>
+ * Implement this interface to provide custom logic for retrieving values from a
+ * DataStore.
  *
  * @param <T> the type of value
  */
@@ -27,7 +30,7 @@ public interface CustomGetter<T> {
     /**
      * Returns a value for the given key and DataStore.
      *
-     * @param value the current value
+     * @param value     the current value
      * @param dataStore the DataStore
      * @return the value to use
      */

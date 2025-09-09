@@ -79,9 +79,10 @@ public class Constructor implements IGenerate {
     }
 
     /**
-     * Generates an empty constructor with the required privacy for the specified Java class.
+     * Generates an empty constructor with the required privacy for the specified
+     * Java class.
      *
-     * @param privacy the privacy level
+     * @param privacy   the privacy level
      * @param javaClass the class pertaining to the constructor
      */
     public Constructor(Privacy privacy, JavaClass javaClass) {
@@ -94,7 +95,7 @@ public class Constructor implements IGenerate {
      * Adds a new argument to the constructor's arguments.
      *
      * @param classType the type of the argument
-     * @param name the name of the argument
+     * @param name      the name of the argument
      */
     public void addArgument(JavaType classType, String name) {
         final Argument newArg = new Argument(classType, name);
@@ -181,7 +182,7 @@ public class Constructor implements IGenerate {
     /**
      * Adds a new Javadoc tag to the comment with a description.
      *
-     * @param tag the new tag to add
+     * @param tag         the new tag to add
      * @param description the tag description
      */
     public void addJavaDocTag(JDocTag tag, String description) {
@@ -306,9 +307,11 @@ public class Constructor implements IGenerate {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
         Constructor that = (Constructor) obj;
 
         return this.hashCode() == that.hashCode();

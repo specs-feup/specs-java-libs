@@ -25,7 +25,7 @@ public interface VisitAllTransform extends TransformRule<SymjaNode, TransformRes
     /**
      * Applies the transform to the given node and its children.
      *
-     * @param node the node to transform
+     * @param node  the node to transform
      * @param queue the transform queue
      * @return the result of the transformation
      */
@@ -38,7 +38,7 @@ public interface VisitAllTransform extends TransformRule<SymjaNode, TransformRes
     /**
      * Applies the transform to all children of the given node.
      *
-     * @param node the node to transform
+     * @param node  the node to transform
      * @param queue the transform queue
      */
     void applyAll(SymjaNode node, TransformQueue<SymjaNode> queue);

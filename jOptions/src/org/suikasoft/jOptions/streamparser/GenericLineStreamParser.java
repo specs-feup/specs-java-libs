@@ -38,7 +38,7 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
      * Creates a new parser with the given input data and workers.
      *
      * @param inputData the initial data
-     * @param workers the map of worker IDs to workers
+     * @param workers   the map of worker IDs to workers
      */
     public GenericLineStreamParser(T inputData, Map<String, LineStreamWorker<T>> workers) {
         this.data = inputData;
@@ -85,7 +85,7 @@ class GenericLineStreamParser<T extends DataClass<T>> implements LineStreamParse
     /**
      * Parses the given line stream using the worker associated with the given ID.
      *
-     * @param id the worker ID
+     * @param id         the worker ID
      * @param lineStream the line stream to parse
      * @return true if the parsing was successful, false otherwise
      */

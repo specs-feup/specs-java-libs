@@ -20,7 +20,9 @@ import org.suikasoft.jOptions.app.App;
 /**
  * Wrapper around AppFrame for launching and managing the application GUI.
  *
- * <p>This class provides a simple interface to start and control the main application window.
+ * <p>
+ * This class provides a simple interface to start and control the main
+ * application window.
  */
 public class SimpleGui {
 

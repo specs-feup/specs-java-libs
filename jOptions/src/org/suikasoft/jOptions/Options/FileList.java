@@ -29,7 +29,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.StringList;
 
 /**
- * Utility class for managing a list of files and their associated folder in a DataStore.
+ * Utility class for managing a list of files and their associated folder in a
+ * DataStore.
  *
  * @author Joao Bispo
  */

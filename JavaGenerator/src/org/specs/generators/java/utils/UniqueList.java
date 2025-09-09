@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * A list implementation that only allows unique elements. Extends {@link ArrayList} and overrides add methods to prevent duplicates.
+ * A list implementation that only allows unique elements. Extends
+ * {@link ArrayList} and overrides add methods to prevent duplicates.
  *
  * @param <E> the type of elements in this list
  */
@@ -43,9 +44,10 @@ public class UniqueList<E> extends ArrayList<E> {
     }
 
     /**
-     * Inserts the specified element at the specified position in the list if it is not already present.
+     * Inserts the specified element at the specified position in the list if it is
+     * not already present.
      *
-     * @param index index at which the specified element is to be inserted
+     * @param index   index at which the specified element is to be inserted
      * @param element element to be inserted
      */
     @Override
@@ -56,7 +58,8 @@ public class UniqueList<E> extends ArrayList<E> {
     }
 
     /**
-     * Adds all of the elements in the specified collection to the list if they are not already present.
+     * Adds all of the elements in the specified collection to the list if they are
+     * not already present.
      *
      * @param c collection containing elements to be added
      * @return true if the list changed as a result of the call
@@ -71,10 +74,12 @@ public class UniqueList<E> extends ArrayList<E> {
     }
 
     /**
-     * Inserts all of the elements in the specified collection into the list at the specified position, if not already present.
+     * Inserts all of the elements in the specified collection into the list at the
+     * specified position, if not already present.
      *
-     * @param index index at which to insert the first element from the specified collection
-     * @param c collection containing elements to be added
+     * @param index index at which to insert the first element from the specified
+     *              collection
+     * @param c     collection containing elements to be added
      * @return true if the list changed as a result of the call
      */
     @Override

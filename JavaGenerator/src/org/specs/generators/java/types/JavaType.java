@@ -21,7 +21,8 @@ import tdrc.utils.Pair;
 import tdrc.utils.StringUtils;
 
 /**
- * Represents a Java type for code generation, including name, package, array information, and generics.
+ * Represents a Java type for code generation, including name, package, array
+ * information, and generics.
  */
 public class JavaType {
 
@@ -36,8 +37,8 @@ public class JavaType {
     /**
      * Constructs a JavaType with the specified name, package, and array dimension.
      *
-     * @param name the type name
-     * @param _package the package name
+     * @param name           the type name
+     * @param _package       the package name
      * @param arrayDimension the array dimension (≤ 0 means not an array)
      */
     public JavaType(String name, String _package, int arrayDimension) {
@@ -50,7 +51,8 @@ public class JavaType {
      * @param thisClass the {@link Class} to base the type on
      */
     public JavaType(Class<?> thisClass) {
-        // For array classes, we need to handle the component type and dimension separately
+        // For array classes, we need to handle the component type and dimension
+        // separately
         if (thisClass.isArray()) {
             // Get the base component type and count array dimensions
             Class<?> componentType = thisClass;
@@ -59,24 +61,25 @@ public class JavaType {
                 componentType = componentType.getComponentType();
                 dimensions++;
             }
-            init(componentType.getSimpleName(), 
-                 componentType.getPackage() != null ? componentType.getPackage().getName() : null, 
-                 dimensions);
+            init(componentType.getSimpleName(),
+                    componentType.getPackage() != null ? componentType.getPackage().getName() : null,
+                    dimensions);
             setEnum(componentType.isEnum());
         } else {
-            init(thisClass.getSimpleName(), 
-                 thisClass.getPackage() != null ? thisClass.getPackage().getName() : null, 
-                 0);
+            init(thisClass.getSimpleName(),
+                    thisClass.getPackage() != null ? thisClass.getPackage().getName() : null,
+                    0);
             setEnum(thisClass.isEnum());
         }
     }
 
     /**
-     * Constructs a JavaType with name, package, and array flag (dimension 1 if true).
+     * Constructs a JavaType with name, package, and array flag (dimension 1 if
+     * true).
      *
-     * @param name the type name
+     * @param name     the type name
      * @param _package the package name
-     * @param isArray true if this type is an array
+     * @param isArray  true if this type is an array
      */
     public JavaType(String name, String _package, boolean isArray) {
         this(name, _package, isArray ? 1 : 0);
@@ -94,7 +97,7 @@ public class JavaType {
     /**
      * Constructs a JavaType with name and package.
      *
-     * @param name the type name
+     * @param name     the type name
      * @param _package the package name
      */
     public JavaType(String name, String _package) {
@@ -104,7 +107,7 @@ public class JavaType {
     /**
      * Creates a JavaType representing an enum.
      *
-     * @param name the enum name
+     * @param name     the enum name
      * @param _package the package name
      * @return a new JavaType marked as enum
      */
@@ -117,7 +120,7 @@ public class JavaType {
     /**
      * Constructs a JavaType with name and array flag.
      *
-     * @param name the type name
+     * @param name    the type name
      * @param isArray true if this type is an array
      */
     public JavaType(String name, boolean isArray) {
@@ -127,7 +130,7 @@ public class JavaType {
     /**
      * Constructs a JavaType with name and array dimension.
      *
-     * @param name the type name
+     * @param name           the type name
      * @param arrayDimension the array dimension (≤ 0 means not an array)
      */
     public JavaType(String name, int arrayDimension) {
@@ -249,7 +252,8 @@ public class JavaType {
     /**
      * Define if this is an array. This method updates the dimension size.
      *
-     * @param array if true sets the arrayDimension to 1 else sets the arrayDimension to 0
+     * @param array if true sets the arrayDimension to 1 else sets the
+     *              arrayDimension to 0
      */
     public void setArray(boolean array) {
         this.array = array;
@@ -274,7 +278,8 @@ public class JavaType {
     /**
      * Sets the dimension of the array. This method updates the array field.
      *
-     * @param arrayDimension if arrayDimension > 0 then array is set to true; otherwise it is set to false
+     * @param arrayDimension if arrayDimension > 0 then array is set to true;
+     *                       otherwise it is set to false
      */
     public void setArrayDimension(int arrayDimension) {
         this.arrayDimension = arrayDimension;
@@ -291,7 +296,8 @@ public class JavaType {
     }
 
     /**
-     * This method returns the simple representation of this type, i.e., does not include the package.
+     * This method returns the simple representation of this type, i.e., does not
+     * include the package.
      *
      * @return the simple type representation
      */
@@ -304,7 +310,8 @@ public class JavaType {
     }
 
     /**
-     * This method returns the canonical representation of this type, i.e., includes the package.
+     * This method returns the canonical representation of this type, i.e., includes
+     * the package.
      *
      * @return the canonical type representation
      */
@@ -421,9 +428,11 @@ public class JavaType {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
         JavaType javaType = (JavaType) obj;
 
         return this.hashCode() == javaType.hashCode();

@@ -19,7 +19,9 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 /**
  * Simple implementation of a DataStore.
  *
- * <p>This class provides a basic DataStore backed by a map, supporting construction from a name, another DataStore, or a StoreDefinition.
+ * <p>
+ * This class provides a basic DataStore backed by a map, supporting
+ * construction from a name, another DataStore, or a StoreDefinition.
  */
 public class SimpleDataStore extends ADataStore {
 
@@ -33,9 +35,10 @@ public class SimpleDataStore extends ADataStore {
     }
 
     /**
-     * Constructs a SimpleDataStore with the given name and another DataStore as source.
+     * Constructs a SimpleDataStore with the given name and another DataStore as
+     * source.
      *
-     * @param name the name of the DataStore
+     * @param name      the name of the DataStore
      * @param dataStore the source DataStore
      */
     public SimpleDataStore(String name, DataStore dataStore) {

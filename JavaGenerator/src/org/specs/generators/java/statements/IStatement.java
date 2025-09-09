@@ -17,7 +17,8 @@ import org.specs.generators.java.IGenerate;
 
 /**
  * Interface representing a Java statement for code generation.
- * Extends {@link IGenerate} to provide code generation capabilities for statements.
+ * Extends {@link IGenerate} to provide code generation capabilities for
+ * statements.
  */
 public interface IStatement extends IGenerate {
 

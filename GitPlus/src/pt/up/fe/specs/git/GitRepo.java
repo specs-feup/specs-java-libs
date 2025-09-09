@@ -29,7 +29,8 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Represents a local clone of a remote Git repository, with support for options such as commit and folder selection.
+ * Represents a local clone of a remote Git repository, with support for options
+ * such as commit and folder selection.
  * Provides methods for preparing, cloning, and updating the repository.
  */
 public class GitRepo {
@@ -135,8 +136,8 @@ public class GitRepo {
     }
 
     /**
-     * @return if option FOLDER was specified, returns the corresponding folder inside the repository. Otherwise,
-     *         returns the repo root folder.
+     * @return if option FOLDER was specified, returns the corresponding folder
+     *         inside the repository. Otherwise, returns the repo root folder.
      */
     public File getWorkFolder() {
         return workFolder;
@@ -180,11 +181,14 @@ public class GitRepo {
     }
 
     /**
-     * Prepares the repository. If folder already exists but a problem is detected, deletes the folder.<br>
-     * If there is no folder, a clone is performed, otherwise open the repo using the existing folder.<br>
-     * If a clone was performed and the option COMMIT has a value, checkouts the commit.<br>
-     * A pull is performed if no clone was performed and, there is no COMMIT value, or the COMMIT value corresponds to a
-     * branch name.
+     * Prepares the repository. If folder already exists but a problem is detected,
+     * deletes the folder.<br>
+     * If there is no folder, a clone is performed, otherwise open the repo using
+     * the existing folder.<br>
+     * If a clone was performed and the option COMMIT has a value, checkouts the
+     * commit.<br>
+     * A pull is performed if no clone was performed and, there is no COMMIT value,
+     * or the COMMIT value corresponds to a branch name.
      */
     private void prepareRepo() {
 
@@ -303,7 +307,8 @@ public class GitRepo {
      */
     private void checkRepoProblems() {
 
-        // If folder only contains a single .git folder, something might have gone wrong, delete folder
+        // If folder only contains a single .git folder, something might have gone
+        // wrong, delete folder
         if (repoFolder.isDirectory()) {
             var files = repoFolder.listFiles();
             if (files.length == 1 && files[0].getName().equals(".git")) {
@@ -316,7 +321,7 @@ public class GitRepo {
     /**
      * Pulls the latest changes from the remote repository.
      *
-     * @param repo the Git repository
+     * @param repo   the Git repository
      * @param branch the branch to pull, or null for the default branch
      */
     private void pull(Git repo, String branch) {

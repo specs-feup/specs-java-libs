@@ -30,7 +30,7 @@ public class SymjaSymbol extends SymjaNode {
     /**
      * Constructs a SymjaSymbol node.
      *
-     * @param data the data store
+     * @param data     the data store
      * @param children the child nodes
      */
     public SymjaSymbol(DataStore data, Collection<? extends SymjaNode> children) {

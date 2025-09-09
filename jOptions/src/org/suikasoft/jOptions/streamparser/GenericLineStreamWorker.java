@@ -34,8 +34,8 @@ class GenericLineStreamWorker<T extends DataClass<T>> implements LineStreamWorke
     /**
      * Creates a new worker with the given id, initializer, and apply function.
      *
-     * @param id the worker id
-     * @param init the initializer
+     * @param id    the worker id
+     * @param init  the initializer
      * @param apply the apply function
      */
     public GenericLineStreamWorker(String id, Consumer<T> init, BiConsumer<LineStream, T> apply) {
@@ -68,7 +68,7 @@ class GenericLineStreamWorker<T extends DataClass<T>> implements LineStreamWorke
      * Applies the worker logic to the given line stream and data.
      *
      * @param lineStream the line stream
-     * @param data the data
+     * @param data       the data
      */
     @Override
     public void apply(LineStream lineStream, T data) {

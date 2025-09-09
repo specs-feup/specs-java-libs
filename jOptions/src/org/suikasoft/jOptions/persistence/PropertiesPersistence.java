@@ -39,8 +39,11 @@ public class PropertiesPersistence implements AppPersistence {
         definition = storeDefinition;
     }
 
-    /* (non-Javadoc)
-     * @see org.suikasoft.SuikaApp.Utils.AppPersistence#loadData(java.io.File, java.lang.String, java.util.List)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.suikasoft.SuikaApp.Utils.AppPersistence#loadData(java.io.File,
+     * java.lang.String, java.util.List)
      */
     @Override
     public DataStore loadData(File file) {
@@ -67,17 +70,14 @@ public class PropertiesPersistence implements AppPersistence {
         return dataStore;
     }
 
-    /* (non-Javadoc)
-     * @see org.suikasoft.SuikaApp.Utils.AppPersistence#saveData(java.io.File, org.suikasoft.jOptions.OptionSetup, boolean)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.suikasoft.SuikaApp.Utils.AppPersistence#saveData(java.io.File,
+     * org.suikasoft.jOptions.OptionSetup, boolean)
      */
     @Override
     public boolean saveData(File file, DataStore data, boolean keepConfigFile) {
-
-        // Reset setup file
-        // if (!keepConfigFile) {
-        // data.setSetupFile((SetupFile) null);
-        // }
-
         // When saving, set config file and use relative paths
         data.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
         data.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
@@ -95,7 +95,6 @@ public class PropertiesPersistence implements AppPersistence {
         data.remove(JOptionKeys.USE_RELATIVE_PATHS);
 
         return result;
-
     }
 
     private boolean write(File file, DataStore data) {
@@ -125,11 +124,10 @@ public class PropertiesPersistence implements AppPersistence {
 
         DataStore storeToSave = data.getStoreDefinitionTry().map(DataStore::newInstance)
                 .orElse(DataStore.newInstance(data.getName()));
-        // DataStore storeToSave = DataStore.newInstance();
 
         for (DataKey<?> key : def.get().getKeys()) {
-            // Before it was not being check if key existed or not, and added default values.
-            // Will it break stuff not putting the default values?
+            // Before it was not being check if key existed or not, and added default
+            // values. Will it break stuff not putting the default values?
             if (data.hasValue(key)) {
                 storeToSave.setRaw(key, data.get(key));
             }

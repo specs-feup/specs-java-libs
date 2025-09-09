@@ -42,7 +42,9 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * Panel for editing and managing multiple choice setup panels.
  *
- * <p>This panel provides controls for adding and managing multiple setup elements for a MultipleSetup instance.
+ * <p>
+ * This panel provides controls for adding and managing multiple setup elements
+ * for a MultipleSetup instance.
  */
 public class MultipleChoiceSetup extends FieldPanel {
 
@@ -66,11 +68,12 @@ public class MultipleChoiceSetup extends FieldPanel {
     private List<BaseSetupPanel> elementsOptionPanels;
 
     /**
-     * Constructs a MultipleChoiceSetup for the given enum option, label, and MultipleSetup.
+     * Constructs a MultipleChoiceSetup for the given enum option, label, and
+     * MultipleSetup.
      *
      * @param enumOption the SetupFieldEnum
-     * @param labelName the label for the panel
-     * @param setup the MultipleSetup instance
+     * @param labelName  the label for the panel
+     * @param setup      the MultipleSetup instance
      */
     public MultipleChoiceSetup(SetupFieldEnum enumOption, String labelName, MultipleSetup setup) {
         // Initialize objects

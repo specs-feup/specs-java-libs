@@ -35,7 +35,6 @@ public class DataStoreXml extends ObjectXml<DataStore> {
         LIBRARY_CLASSES.put("SimpleDataStore", SimpleDataStore.class);
     }
 
-
     public DataStoreXml(StoreDefinition storeDefinition) {
         if (storeDefinition == null) {
             throw new NullPointerException("StoreDefinition cannot be null");

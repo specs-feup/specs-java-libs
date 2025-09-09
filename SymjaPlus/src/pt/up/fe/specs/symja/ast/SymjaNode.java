@@ -31,7 +31,7 @@ public class SymjaNode extends DataNode<SymjaNode> {
      * Creates a new node of the given class with no children.
      *
      * @param nodeClass the class of the node
-     * @param <T> the node type
+     * @param <T>       the node type
      * @return a new node instance
      */
     public static <T extends SymjaNode> T newNode(Class<T> nodeClass) {
@@ -42,8 +42,8 @@ public class SymjaNode extends DataNode<SymjaNode> {
      * Creates a new node of the given class with the specified children.
      *
      * @param nodeClass the class of the node
-     * @param children the child nodes
-     * @param <T> the node type
+     * @param children  the child nodes
+     * @param <T>       the node type
      * @return a new node instance
      */
     public static <T extends SymjaNode> T newNode(Class<T> nodeClass, Collection<? extends SymjaNode> children) {
@@ -54,7 +54,7 @@ public class SymjaNode extends DataNode<SymjaNode> {
     /**
      * Constructs a SymjaNode with the given data and children.
      *
-     * @param data the data store
+     * @param data     the data store
      * @param children the child nodes
      */
     public SymjaNode(DataStore data, Collection<? extends SymjaNode> children) {

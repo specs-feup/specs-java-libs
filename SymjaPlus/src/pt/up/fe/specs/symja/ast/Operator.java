@@ -34,7 +34,7 @@ public enum Operator {
     /**
      * Constructs an Operator enum.
      *
-     * @param symbol the operator symbol
+     * @param symbol   the operator symbol
      * @param priority the operator precedence
      */
     private Operator(String symbol, int priority) {

@@ -18,8 +18,9 @@ import java.util.Map;
 /**
  * Interface for providing alias mappings for names.
  * <p>
- * This interface defines a contract for classes that need to provide mappings between alias names and their
- * corresponding original names. Implementing classes should ensure that the mappings are accurate and up-to-date.
+ * This interface defines a contract for classes that need to provide mappings
+ * between alias names and their corresponding original names. Implementing
+ * classes should ensure that the mappings are accurate and up-to-date.
  * </p>
  */
 public interface AliasProvider {
@@ -27,7 +28,8 @@ public interface AliasProvider {
     /**
      * Maps alias names to the corresponding original name.
      * <p>
-     * This method returns a map where the keys are alias names and the values are the original names they represent.
+     * This method returns a map where the keys are alias names and the values are
+     * the original names they represent.
      * The map should not contain null keys or values.
      * </p>
      *

@@ -29,9 +29,13 @@ import pt.up.fe.specs.util.providers.KeyProvider;
 import pt.up.fe.specs.util.utilities.StringLines;
 
 /**
- * Keys for values with an associated type. DataKey equality is based only on the string name.
+ * Keys for values with an associated type. DataKey equality is based only on
+ * the string name.
  *
- * <p>This interface defines the contract for keys that are associated with a value type, including methods for retrieving the key name, value class, decoder, and for copying or setting properties.
+ * <p>
+ * This interface defines the contract for keys that are associated with a value
+ * type, including methods for retrieving the key name, value class, decoder,
+ * and for copying or setting properties.
  *
  * @param <T> the type of value associated with this key
  * @see KeyFactory
@@ -71,7 +75,8 @@ public interface DataKey<T> extends KeyProvider<String> {
     String getName();
 
     /**
-     * Retrieves the simple name of the class type of the value associated with this key.
+     * Retrieves the simple name of the class type of the value associated with this
+     * key.
      *
      * @return the simple name of the class type
      */
@@ -385,7 +390,8 @@ public interface DataKey<T> extends KeyProvider<String> {
     }
 
     /**
-     * Checks if the class of a value being set is compatible with the value class of the key.
+     * Checks if the class of a value being set is compatible with the value class
+     * of the key.
      *
      * @return true if the class is compatible, false otherwise
      */

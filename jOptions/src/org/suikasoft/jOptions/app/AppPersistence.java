@@ -36,21 +36,23 @@ public interface AppPersistence {
     /**
      * Saves data to the specified file.
      * 
-     * @param file the file to save data to
-     * @param data the data to be saved
-     * @param keepConfigFile whether to keep the configuration file path in the persistent format
+     * @param file           the file to save data to
+     * @param data           the data to be saved
+     * @param keepConfigFile whether to keep the configuration file path in the
+     *                       persistent format
      * @return true if the data was successfully saved, false otherwise
      */
     public boolean saveData(File file, DataStore data, boolean keepConfigFile);
 
     /**
-     * Helper method which does not save the config file path in the persistent format.
+     * Helper method which does not save the config file path in the persistent
+     * format.
      * 
      * @param file the file to save data to
      * @param data the data to be saved
      * @return true if the data was successfully saved, false otherwise
      */
     default boolean saveData(File file, DataStore data) {
-	return saveData(file, data, false);
+        return saveData(file, data, false);
     }
 }

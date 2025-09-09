@@ -25,7 +25,9 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 /**
  * A GUI panel that returns a value of a type for a DataKey.
  *
- * <p>This abstract class provides the base for panels that interact with DataKeys and DataStores in the GUI.
+ * <p>
+ * This abstract class provides the base for panels that interact with DataKeys
+ * and DataStores in the GUI.
  *
  * @param <T> the type of value handled by the panel
  */
@@ -43,7 +45,7 @@ public abstract class KeyPanel<T> extends JPanel {
     /**
      * Constructs a KeyPanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     protected KeyPanel(DataKey<T> key, DataStore data) {
@@ -77,7 +79,8 @@ public abstract class KeyPanel<T> extends JPanel {
     }
 
     /**
-     * Stores the value in the panel in the given DataStore, using the corresponding key.
+     * Stores the value in the panel in the given DataStore, using the corresponding
+     * key.
      *
      * @param data the DataStore to store the value in
      */
@@ -89,7 +92,7 @@ public abstract class KeyPanel<T> extends JPanel {
      * Updates the panel with the given value.
      *
      * @param value the value to set
-     * @param <ET> the type of value (extends T)
+     * @param <ET>  the type of value (extends T)
      */
     public abstract <ET extends T> void setValue(ET value);
 

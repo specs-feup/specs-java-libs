@@ -22,7 +22,8 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 /**
  * Dummy implementation of AppPersistence for testing purposes.
  * <p>
- * This implementation keeps the DataStore in memory and does not persist to disk.
+ * This implementation keeps the DataStore in memory and does not persist to
+ * disk.
  *
  * @author Joao Bispo
  */
@@ -44,7 +45,8 @@ public class DummyPersistence implements AppPersistence {
     }
 
     /**
-     * Constructs a DummyPersistence with a new DataStore from the given StoreDefinition.
+     * Constructs a DummyPersistence with a new DataStore from the given
+     * StoreDefinition.
      *
      * @param setupDefinition the StoreDefinition to use
      */
@@ -66,8 +68,8 @@ public class DummyPersistence implements AppPersistence {
     /**
      * Saves the DataStore. Ignores the file and keeps the DataStore in memory.
      *
-     * @param file the file to save (ignored)
-     * @param setup the DataStore to save
+     * @param file          the file to save (ignored)
+     * @param setup         the DataStore to save
      * @param keepSetupFile whether to keep the setup file (ignored)
      * @return true always
      * @throws NullPointerException if setup is null

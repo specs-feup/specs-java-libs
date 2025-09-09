@@ -41,14 +41,15 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * A key-value store for arbitrary objects, with type-safe keys.
  *
- * <p>Implements {@link DataClass} for DataStore-specific operations.
+ * <p>
+ * Implements {@link DataClass} for DataStore-specific operations.
  */
 public interface DataStore extends DataClass<DataStore> {
 
     /**
      * Sets the value for the given key.
      *
-     * @param key the key
+     * @param key   the key
      * @param value the value to set
      * @return this DataStore
      */
@@ -58,7 +59,7 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Helper method for setting a value, returns this DataStore.
      *
-     * @param key the key
+     * @param key   the key
      * @param value the value to set
      * @return this DataStore
      */
@@ -70,7 +71,7 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Only sets the value if there is not a value yet for the given key.
      *
-     * @param key the key
+     * @param key   the key
      * @param value the value to set if not present
      */
     default <T, E extends T> void setIfNotPresent(DataKey<T> key, E value) {
@@ -83,7 +84,7 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Sets a value for a key by its string id.
      *
-     * @param key the key id
+     * @param key   the key id
      * @param value the value
      * @return an Optional containing the previous value, if any
      */
@@ -92,7 +93,7 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Sets a value for a DataKey when the type is unknown.
      *
-     * @param key the DataKey
+     * @param key   the DataKey
      * @param value the value
      * @return this DataStore
      */
@@ -108,7 +109,7 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Sets a value for a DataKey using its decoder to decode a string.
      *
-     * @param key the DataKey
+     * @param key   the DataKey
      * @param value the string value to decode and set
      * @return this DataStore
      */
@@ -143,7 +144,8 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Configures the current DataStore to behave strictly.
      *
-     * <p>Strict mode means that only keys that have been added before can be accessed.
+     * <p>
+     * Strict mode means that only keys that have been added before can be accessed.
      *
      * @param value true to enable strict mode, false to disable
      */
@@ -152,7 +154,9 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Sets a StoreDefinition for this DataStore.
      *
-     * <p>Can only set a StoreDefinition once, subsequent calls to this function will throw an exception.
+     * <p>
+     * Can only set a StoreDefinition once, subsequent calls to this function will
+     * throw an exception.
      *
      * @param definition the StoreDefinition to set
      */
@@ -170,9 +174,10 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Adds a new key and value to the DataStore.
      *
-     * <p>Throws an exception if there already is a value for the given key.
+     * <p>
+     * Throws an exception if there already is a value for the given key.
      *
-     * @param key the key
+     * @param key   the key
      * @param value the value to add
      * @return this DataStore
      */
@@ -224,9 +229,10 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Replaces the value of an existing key.
      *
-     * <p>Throws an exception if there is no value for the given key.
+     * <p>
+     * Throws an exception if there is no value for the given key.
      *
-     * @param key the key
+     * @param key   the key
      * @param value the new value to set
      */
     default <T, E extends T> void replace(DataKey<T> key, E value) {
@@ -250,7 +256,9 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Returns the value associated with the given key.
      *
-     * <p>If there is no value for the key, returns the default value defined by the key.
+     * <p>
+     * If there is no value for the key, returns the default value defined by the
+     * key.
      *
      * @param key the key
      * @return the value associated with the key
@@ -270,7 +278,8 @@ public interface DataStore extends DataClass<DataStore> {
      * Checks if the DataStore contains a non-null value for the given key.
      *
      * @param key the key
-     * @return true if the DataStore contains a non-null value for the key, false otherwise
+     * @return true if the DataStore contains a non-null value for the key, false
+     *         otherwise
      */
     @Override
     <T> boolean hasValue(DataKey<T> key);
@@ -278,8 +287,9 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Tries to return a value from the DataStore.
      *
-     * <p>Does not use default values. If the key is not in the map, or there is no value mapped to the given key,
-     * returns an empty Optional.
+     * <p>
+     * Does not use default values. If the key is not in the map, or there is no
+     * value mapped to the given key, returns an empty Optional.
      *
      * @param key the key
      * @return an Optional containing the value, if present
@@ -309,7 +319,9 @@ public interface DataStore extends DataClass<DataStore> {
     /**
      * Creates a copy of this DataStore.
      *
-     * <p>If the DataStore has a StoreDefinition, uses the copy function defined in the DataKeys.
+     * <p>
+     * If the DataStore has a StoreDefinition, uses the copy function defined in the
+     * DataKeys.
      *
      * @return a copy of this DataStore
      */
@@ -354,10 +366,12 @@ public interface DataStore extends DataClass<DataStore> {
     }
 
     /**
-     * Creates a new DataStore instance with the given StoreDefinition and closed state.
+     * Creates a new DataStore instance with the given StoreDefinition and closed
+     * state.
      *
      * @param storeDefinition the StoreDefinition
-     * @param closed if true, no other keys besides the ones defined in the StoreDefinition can be added
+     * @param closed          if true, no other keys besides the ones defined in the
+     *                        StoreDefinition can be added
      * @return a new DataStore instance
      */
     public static DataStore newInstance(StoreDefinition storeDefinition, boolean closed) {
@@ -392,9 +406,10 @@ public interface DataStore extends DataClass<DataStore> {
     }
 
     /**
-     * Creates a new DataStore instance with the given name and values from another DataStore.
+     * Creates a new DataStore instance with the given name and values from another
+     * DataStore.
      *
-     * @param name the name of the DataStore
+     * @param name      the name of the DataStore
      * @param dataStore the DataStore to copy values from
      * @return a new DataStore instance
      */
@@ -403,7 +418,8 @@ public interface DataStore extends DataClass<DataStore> {
     }
 
     /**
-     * Creates a DataStore from all the public static DataKeys that can be found in the class.
+     * Creates a DataStore from all the public static DataKeys that can be found in
+     * the class.
      *
      * @param aClass the class to derive the DataStore from
      * @return a new DataStore instance
@@ -445,7 +461,8 @@ public interface DataStore extends DataClass<DataStore> {
     }
 
     /**
-     * Returns the AppPersistence instance that was used to load this DataStore, if any.
+     * Returns the AppPersistence instance that was used to load this DataStore, if
+     * any.
      *
      * @return an Optional containing the AppPersistence instance, if present
      */

@@ -28,9 +28,12 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.App;
 
 /**
- * Panel which contains the principal panels of the program and coordinates updates between panels.
+ * Panel which contains the principal panels of the program and coordinates
+ * updates between panels.
  *
- * <p>This panel manages the main tabs of the application, including program and options panels.
+ * <p>
+ * This panel manages the main tabs of the application, including program and
+ * options panels.
  * 
  * @author Joao Bispo
  */

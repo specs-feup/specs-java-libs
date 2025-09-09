@@ -99,22 +99,27 @@ public interface DataView {
             public <T> T getValue(DataKey<T> key) {
                 return null;
             }
+
             @Override
             public String getName() {
                 return "<empty>";
             }
+
             @Override
             public <T> boolean hasValue(DataKey<T> key) {
                 return false;
             }
+
             @Override
             public Object getValueRaw(String id) {
                 return null;
             }
+
             @Override
             public Collection<DataKey<?>> getDataKeysWithValues() {
                 return Collections.emptyList();
             }
+
             @Override
             public Collection<String> getKeysWithValues() {
                 return Collections.emptyList();

@@ -37,9 +37,12 @@ import org.suikasoft.jOptions.gui.panels.app.AppKeys;
 import pt.up.fe.specs.util.SpecsIo;
 
 /**
- * Panel for selecting and displaying file or directory paths using a text field and browse button.
+ * Panel for selecting and displaying file or directory paths using a text field
+ * and browse button.
  *
- * <p>This panel provides a file chooser dialog and text field for DataKey values of type File.
+ * <p>
+ * This panel provides a file chooser dialog and text field for DataKey values
+ * of type File.
  */
 public class FilePanel extends KeyPanel<File> {
 
@@ -56,9 +59,10 @@ public class FilePanel extends KeyPanel<File> {
     private FileOpener fileOpener;
 
     /**
-     * Helper constructor for a FilePanel that has a browse button for files and folders.
+     * Helper constructor for a FilePanel that has a browse button for files and
+     * folders.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public FilePanel(DataKey<File> key, DataStore data) {
@@ -68,10 +72,10 @@ public class FilePanel extends KeyPanel<File> {
     /**
      * Constructs a FilePanel with a specific file chooser mode and file extensions.
      *
-     * @param key the DataKey
-     * @param data the DataStore
+     * @param key             the DataKey
+     * @param data            the DataStore
      * @param fileChooserMode JFileChooser option
-     * @param extensions the allowed file extensions
+     * @param extensions      the allowed file extensions
      */
     public FilePanel(DataKey<File> key, DataStore data, int fileChooserMode, Collection<String> extensions) {
         super(key, data);

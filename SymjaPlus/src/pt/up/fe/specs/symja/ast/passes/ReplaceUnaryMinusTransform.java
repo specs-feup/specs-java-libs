@@ -24,14 +24,16 @@ import pt.up.fe.specs.util.treenode.transform.TransformQueue;
 import pt.up.fe.specs.util.treenode.transform.util.TraversalStrategy;
 
 /**
- * Transform that replaces unary minus operations in the Symja AST with equivalent binary operations.
+ * Transform that replaces unary minus operations in the Symja AST with
+ * equivalent binary operations.
  */
 public class ReplaceUnaryMinusTransform implements VisitAllTransform {
 
     /**
-     * Applies the transform to all children of the given node, replacing unary minus where appropriate.
+     * Applies the transform to all children of the given node, replacing unary
+     * minus where appropriate.
      *
-     * @param node the node to transform
+     * @param node  the node to transform
      * @param queue the transform queue
      */
     @Override

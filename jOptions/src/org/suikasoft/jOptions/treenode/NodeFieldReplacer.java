@@ -23,7 +23,8 @@ import org.suikasoft.jOptions.Datakey.DataKey;
 import pt.up.fe.specs.util.exceptions.CaseNotDefinedException;
 
 /**
- * Utility for replacing fields in DataNode trees based on a replacement detector function.
+ * Utility for replacing fields in DataNode trees based on a replacement
+ * detector function.
  *
  * @param <B> the type of DataNode
  */
@@ -40,7 +41,8 @@ public class NodeFieldReplacer<B extends DataNode<B>> {
     /**
      * Constructs a NodeFieldReplacer with the given replacement detector function.
      *
-     * @param replacementProvider if the node needs to be replaced, returns a different node wrapped by the optional,
+     * @param replacementProvider if the node needs to be replaced, returns a
+     *                            different node wrapped by the optional,
      *                            otherwise returns empty
      */
     public NodeFieldReplacer(Function<B, Optional<B>> replacementProvider) {
@@ -67,19 +69,19 @@ public class NodeFieldReplacer<B extends DataNode<B>> {
             var propertyType = PropertyWithNodeType.getKeyType(node, key);
 
             switch (propertyType) {
-            case DATA_NODE:
-                replaceDataNode(node, key);
-                break;
-            case OPTIONAL:
-                replaceOptional(node, key);
-                break;
-            case LIST:
-                replaceList(node, key);
-                break;
-            case NOT_FOUND:
-                break;
-            default:
-                throw new CaseNotDefinedException(propertyType);
+                case DATA_NODE:
+                    replaceDataNode(node, key);
+                    break;
+                case OPTIONAL:
+                    replaceOptional(node, key);
+                    break;
+                case LIST:
+                    replaceList(node, key);
+                    break;
+                case NOT_FOUND:
+                    break;
+                default:
+                    throw new CaseNotDefinedException(propertyType);
             }
 
         }

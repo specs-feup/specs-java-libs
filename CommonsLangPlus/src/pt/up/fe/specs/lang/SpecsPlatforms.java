@@ -16,7 +16,8 @@ package pt.up.fe.specs.lang;
 import org.apache.commons.lang3.SystemUtils;
 
 /**
- * Utility class providing wrappers around Apache commons-lang methods for system platform identification.
+ * Utility class providing wrappers around Apache commons-lang methods for
+ * system platform identification.
  * <p>
  * Includes methods to check the current operating system and platform details.
  *

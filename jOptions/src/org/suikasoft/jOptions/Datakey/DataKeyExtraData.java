@@ -16,9 +16,12 @@ package org.suikasoft.jOptions.Datakey;
 import org.suikasoft.jOptions.DataStore.ADataClass;
 
 /**
- * Extra data container for {@link org.suikasoft.jOptions.Datakey.DataKey} instances.
+ * Extra data container for {@link org.suikasoft.jOptions.Datakey.DataKey}
+ * instances.
  *
- * <p>This class can be used to store additional metadata or configuration for a DataKey.
+ * <p>
+ * This class can be used to store additional metadata or configuration for a
+ * DataKey.
  */
 public class DataKeyExtraData extends ADataClass<DataKeyExtraData> {
 

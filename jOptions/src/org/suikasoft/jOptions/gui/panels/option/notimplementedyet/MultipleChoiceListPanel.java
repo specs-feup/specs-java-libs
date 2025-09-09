@@ -34,7 +34,8 @@ import pt.up.fe.specs.util.utilities.StringList;
 /**
  * Deprecated panel for editing multiple choice lists.
  *
- * <p>This panel was replaced with EnumMultipleChoicePanel.
+ * <p>
+ * This panel was replaced with EnumMultipleChoicePanel.
  *
  * @deprecated replaced with EnumMultipleChoicePanel
  */
@@ -63,7 +64,7 @@ public class MultipleChoiceListPanel extends FieldPanel {
      * Constructs a MultipleChoiceListPanel for the given label and choices.
      *
      * @param labelName the label for the panel
-     * @param choices the available choices
+     * @param choices   the available choices
      */
     public MultipleChoiceListPanel(String labelName, Collection<String> choices) {
         label = new JLabel(labelName + ":");
@@ -108,7 +109,8 @@ public class MultipleChoiceListPanel extends FieldPanel {
     }
 
     /**
-     * Moves one value from possibleValues to selectedValues. This method is not thread-safe.
+     * Moves one value from possibleValues to selectedValues. This method is not
+     * thread-safe.
      * 
      * @param valueName the name of the value to add
      * @return true if the value was successfully added, false otherwise
@@ -134,7 +136,8 @@ public class MultipleChoiceListPanel extends FieldPanel {
     }
 
     /**
-     * Moves one value from selectedValues to possibleValues. This method is not thread-safe.
+     * Moves one value from selectedValues to possibleValues. This method is not
+     * thread-safe.
      * 
      * @param valueName the name of the value to remove
      * @return true if the value was successfully removed, false otherwise

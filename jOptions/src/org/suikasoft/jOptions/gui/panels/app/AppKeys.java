@@ -21,7 +21,8 @@ import org.suikasoft.jOptions.Datakey.KeyFactory;
 /**
  * Common DataKeys for application configuration.
  *
- * <p>This interface defines standard DataKeys used in application panels.
+ * <p>
+ * This interface defines standard DataKeys used in application panels.
  */
 public interface AppKeys {
 

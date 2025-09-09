@@ -23,51 +23,51 @@ import java.util.ArrayList;
  */
 public class PairList<K, V> extends ArrayList<Pair<K, V>> {
 
-	/**
-	 * Serial version UID for serialization.
-	 */
-	private static final long serialVersionUID = 327775886389736L;
+    /**
+     * Serial version UID for serialization.
+     */
+    private static final long serialVersionUID = 327775886389736L;
 
-	/**
-	 * Creates and adds a new Pair to the list.
-	 * 
-	 * @param left the key of the pair
-	 * @param right the value of the pair
-	 * @return the newly created pair, or null if the pair could not be added
-	 */
-	public Pair<K, V> add(K left, V right) {
-		final Pair<K, V> pair = new Pair<>(left, right);
-		if (super.add(pair)) {
-			return pair;
-		}
-		return null;
-	}
+    /**
+     * Creates and adds a new Pair to the list.
+     * 
+     * @param left  the key of the pair
+     * @param right the value of the pair
+     * @return the newly created pair, or null if the pair could not be added
+     */
+    public Pair<K, V> add(K left, V right) {
+        final Pair<K, V> pair = new Pair<>(left, right);
+        if (super.add(pair)) {
+            return pair;
+        }
+        return null;
+    }
 
-	/**
-	 * Retrieves the last Pair in the list.
-	 * 
-	 * @return the last pair in the list
-	 * @throws IndexOutOfBoundsException if the list is empty
-	 */
-	public Pair<K, V> last() {
-		if (isEmpty()) {
-			throw new IndexOutOfBoundsException("The list of pairs is empty");
-		}
+    /**
+     * Retrieves the last Pair in the list.
+     * 
+     * @return the last pair in the list
+     * @throws IndexOutOfBoundsException if the list is empty
+     */
+    public Pair<K, V> last() {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException("The list of pairs is empty");
+        }
 
-		return get(size() - 1);
-	}
+        return get(size() - 1);
+    }
 
-	/**
-	 * Retrieves the first Pair in the list.
-	 * 
-	 * @return the first pair in the list
-	 * @throws IndexOutOfBoundsException if the list is empty
-	 */
-	public Pair<K, V> first() {
-		if (isEmpty()) {
-			throw new IndexOutOfBoundsException("The list of pairs is empty");
-		}
+    /**
+     * Retrieves the first Pair in the list.
+     * 
+     * @return the first pair in the list
+     * @throws IndexOutOfBoundsException if the list is empty
+     */
+    public Pair<K, V> first() {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException("The list of pairs is empty");
+        }
 
-		return get(0);
-	}
+        return get(0);
+    }
 }

@@ -23,12 +23,15 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinitionProvider;
 /**
  * Interface for enums that provide a DataKey and a StoreDefinition.
  *
- * <p>This interface is designed for enums that need to provide data keys and store definitions in a type-safe manner. It combines the functionality of {@link DataKeyProvider} and {@link StoreDefinitionProvider}.
+ * <p>
+ * This interface is designed for enums that need to provide data keys and store
+ * definitions in a type-safe manner. It combines the functionality of
+ * {@link DataKeyProvider} and {@link StoreDefinitionProvider}.
  *
  * @param <T> the type of the enum implementing this interface
  */
 public interface EnumDataKeyProvider<T extends Enum<T> & EnumDataKeyProvider<T>>
-	extends DataKeyProvider, StoreDefinitionProvider {
+        extends DataKeyProvider, StoreDefinitionProvider {
 
     /**
      * Returns the DataKey associated with this enum constant.
@@ -48,7 +51,10 @@ public interface EnumDataKeyProvider<T extends Enum<T> & EnumDataKeyProvider<T>>
     /**
      * Returns the StoreDefinition for the enum implementing this interface.
      *
-     * <p>The StoreDefinition contains all {@link DataKey}s provided by the enum constants. This method aggregates all data keys from the enum constants into a single store definition.
+     * <p>
+     * The StoreDefinition contains all {@link DataKey}s provided by the enum
+     * constants. This method aggregates all data keys from the enum constants into
+     * a single store definition.
      *
      * @return the StoreDefinition for the enum
      */

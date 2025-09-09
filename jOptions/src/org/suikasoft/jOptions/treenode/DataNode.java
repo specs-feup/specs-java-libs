@@ -31,7 +31,8 @@ import pt.up.fe.specs.util.system.Copyable;
 import pt.up.fe.specs.util.treenode.ATreeNode;
 
 /**
- * Abstract base class for tree nodes that hold a DataStore and support DataClass and Copyable interfaces.
+ * Abstract base class for tree nodes that hold a DataStore and support
+ * DataClass and Copyable interfaces.
  *
  * @param <K> the type of DataNode
  */
@@ -44,7 +45,7 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
     /**
      * Constructs a DataNode with the given data and children.
      *
-     * @param data the DataStore associated with this node
+     * @param data     the DataStore associated with this node
      * @param children the child nodes of this node
      */
     public DataNode(DataStore data, Collection<? extends K> children) {
@@ -90,7 +91,7 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
      * <p>
      * If null is passed as value, removes current value associated with given key.
      *
-     * @param key the key to set
+     * @param key   the key to set
      * @param value the value to set
      * @return the current instance
      */
@@ -136,7 +137,7 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
         // Create a new DataStore that can hold the same types of keys as the original
         String dataStoreName = data.getName() != null ? data.getName() : "CopiedDataStore";
         DataStore newDataStore = DataStore.newInstance(dataStoreName, data);
-        
+
         return newInstanceWithDataStore((Class<K>) getClass(), newDataStore, Collections.emptyList());
 
     }
@@ -144,7 +145,8 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
     /**
      * Creates a new node instance with the given DataStore.
      */
-    private static <K extends DataNode<K>, T extends K> K newInstanceWithDataStore(Class<T> nodeClass, DataStore dataStore, List<K> children) {
+    private static <K extends DataNode<K>, T extends K> K newInstanceWithDataStore(Class<T> nodeClass,
+            DataStore dataStore, List<K> children) {
         try {
             Constructor<T> constructorMethod = nodeClass.getConstructor(DataStore.class, Collection.class);
             try {
@@ -174,7 +176,7 @@ public abstract class DataNode<K extends DataNode<K>> extends ATreeNode<K>
      * Creates a new node using the same data as this node.
      *
      * @param nodeClass the class of the node
-     * @param children the child nodes
+     * @param children  the child nodes
      * @return a new instance of the node
      */
     public static <K extends DataNode<K>, T extends K> K newInstance(Class<T> nodeClass, List<K> children) {

@@ -16,9 +16,13 @@ package org.specs.generators.java.units;
 import org.specs.generators.java.IGenerate;
 
 /**
- * Represents a Java compilation unit, containing package, imports, main class, and possibly subclasses.
+ * Represents a Java compilation unit, containing package, imports, main class,
+ * and possibly subclasses.
  *
- * <p>This class implements {@link IGenerate} to provide code generation for a Java compilation unit structure.</p>
+ * <p>
+ * This class implements {@link IGenerate} to provide code generation for a Java
+ * compilation unit structure.
+ * </p>
  *
  * @author Tiago
  */

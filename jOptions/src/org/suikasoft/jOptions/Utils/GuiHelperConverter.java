@@ -150,15 +150,9 @@ public class GuiHelperConverter {
             var taskKeys = getSetupFields(taskList);
             tasksKeys.put(setupName, taskKeys);
         }
-        // System.out.println("TASK LIST: " + tasksKeys);
 
         var listOfSetups = new ArrayList<SetupData>();
         for (var dataStore : setupList.getDataStores()) {
-            // System.out.println("DATASTORE: " + dataStore);
-
-            // Get setup name
-            // String setupName = aClass.getEnumConstants()[0].getSetupName();
-
             var setupName = SetupListPanel.toOriginalEnum(dataStore.getName());
 
             var setupDataMapping = tasksKeys.get(setupName);

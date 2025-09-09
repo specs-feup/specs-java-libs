@@ -44,7 +44,7 @@ public class ClassesService<T extends DataNode<T>> {
     /**
      * Creates a new ClassesService instance.
      *
-     * @param baseClass the base class for DataNode
+     * @param baseClass        the base class for DataNode
      * @param astNodesPackages the collection of packages to search for AST nodes
      */
     public ClassesService(Class<T> baseClass, Collection<String> astNodesPackages) {
@@ -58,7 +58,7 @@ public class ClassesService<T extends DataNode<T>> {
     /**
      * Creates a new ClassesService instance.
      *
-     * @param baseClass the base class for DataNode
+     * @param baseClass        the base class for DataNode
      * @param astNodesPackages the packages to search for AST nodes
      */
     public ClassesService(Class<T> baseClass, String... astNodesPackages) {
@@ -153,7 +153,8 @@ public class ClassesService<T extends DataNode<T>> {
     }
 
     /**
-     * Override this method to define custom rules for mapping simple names to full names.
+     * Override this method to define custom rules for mapping simple names to full
+     * names.
      *
      * @param nodeClassname the simple name of the node class
      * @return the full name of the node class, or null if no custom mapping exists
@@ -163,7 +164,8 @@ public class ClassesService<T extends DataNode<T>> {
     }
 
     /**
-     * Retrieves a builder function for creating instances of the given DataNode class.
+     * Retrieves a builder function for creating instances of the given DataNode
+     * class.
      *
      * @param dataNodeClass the class of the DataNode
      * @return a function that builds DataNode instances

@@ -35,10 +35,11 @@ public interface JOptionKeys {
     DataKey<Boolean> USE_RELATIVE_PATHS = KeyFactory.bool("joptions_use_relative_paths");
 
     /**
-     * If the path is not absolute and CURRENT_FOLDER_PATH is set, returns a path relative to that set folder.
+     * If the path is not absolute and CURRENT_FOLDER_PATH is set, returns a path
+     * relative to that set folder.
      *
      * @param currentFile the file whose context path is to be resolved
-     * @param dataStore the DataStore containing context information
+     * @param dataStore   the DataStore containing context information
      * @return a File object representing the resolved path
      */
     public static File getContextPath(File currentFile, DataStore dataStore) {
@@ -60,7 +61,7 @@ public interface JOptionKeys {
      * Overload that accepts a String instead of a File.
      *
      * @param currentPath the path as a String
-     * @param dataStore the DataStore containing context information
+     * @param dataStore   the DataStore containing context information
      * @return a File object representing the resolved path
      */
     public static File getContextPath(String currentPath, DataStore dataStore) {

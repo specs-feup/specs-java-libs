@@ -26,11 +26,12 @@ public enum PropertyWithNodeType {
     OPTIONAL,
     LIST,
     NOT_FOUND;
+
     /**
      * Determines the type of a DataKey for a given DataNode.
      *
      * @param node the DataNode
-     * @param key the DataKey
+     * @param key  the DataKey
      * @return the property type
      */
     public static PropertyWithNodeType getKeyType(DataNode<?> node, DataKey<?> key) {
@@ -38,7 +39,7 @@ public enum PropertyWithNodeType {
         if (node == null) {
             return NOT_FOUND;
         }
-        
+
         // DataNode keys
         if (node.getBaseClass().isAssignableFrom(key.getValueClass())) {
             return DATA_NODE;

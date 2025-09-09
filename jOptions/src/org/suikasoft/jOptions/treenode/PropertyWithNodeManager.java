@@ -27,20 +27,22 @@ import pt.up.fe.specs.util.exceptions.CaseNotDefinedException;
 /**
  * Manages DataKey properties that return an instance of DataNode.
  *
- * Provides methods to retrieve DataKeys associated with DataNode properties for a given node.
+ * Provides methods to retrieve DataKeys associated with DataNode properties for
+ * a given node.
  *
  * @author JBispo
  */
 public class PropertyWithNodeManager {
 
     /**
-     * Cache key that includes both the node class and DataStore configuration to ensure
-     * correct cache behavior when different DataStore configurations are used with the same node class.
+     * Cache key that includes both the node class and DataStore configuration to
+     * ensure correct cache behavior when different DataStore configurations are
+     * used with the same node class.
      */
     private static class CacheKey {
         private final Class<?> nodeClass;
         private final String storeDefinitionId; // unique identifier for the DataStore configuration
-        
+
         public CacheKey(DataNode<?> node) {
             this.nodeClass = node.getClass();
             // Create a unique identifier based on StoreDefinition presence and identity
@@ -54,21 +56,23 @@ public class PropertyWithNodeManager {
                 this.storeDefinitionId = "NO_STORE_DEFINITION";
             }
         }
-        
+
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
+            if (this == obj)
+                return true;
+            if (obj == null || getClass() != obj.getClass())
+                return false;
             CacheKey cacheKey = (CacheKey) obj;
             return Objects.equals(nodeClass, cacheKey.nodeClass) &&
-                   Objects.equals(storeDefinitionId, cacheKey.storeDefinitionId);
+                    Objects.equals(storeDefinitionId, cacheKey.storeDefinitionId);
         }
-        
+
         @Override
         public int hashCode() {
             return Objects.hash(nodeClass, storeDefinitionId);
         }
-        
+
         @Override
         public String toString() {
             return "CacheKey{" + nodeClass.getSimpleName() + ":" + storeDefinitionId + "}";
@@ -76,7 +80,8 @@ public class PropertyWithNodeManager {
     }
 
     /**
-     * Maps cache keys to a List of DataKeys corresponding to the properties of that class and configuration 
+     * Maps cache keys to a List of DataKeys corresponding to the properties of that
+     * class and configuration
      * that return DataNode instances.
      */
     private static final Map<CacheKey, List<DataKey<?>>> POSSIBLE_KEYS_WITH_NODES = new ConcurrentHashMap<>();
@@ -149,46 +154,46 @@ public class PropertyWithNodeManager {
             var keyType = PropertyWithNodeType.getKeyType(node, key);
 
             switch (keyType) {
-            case DATA_NODE:
-                keys.add(key);
-                break;
-            case OPTIONAL:
-                DataKey<Optional<?>> optionalKey = (DataKey<Optional<?>>) key;
-                Optional<?> value = node.get(optionalKey);
-                if (value.isEmpty()) {
+                case DATA_NODE:
+                    keys.add(key);
                     break;
-                }
+                case OPTIONAL:
+                    DataKey<Optional<?>> optionalKey = (DataKey<Optional<?>>) key;
+                    Optional<?> value = node.get(optionalKey);
+                    if (value.isEmpty()) {
+                        break;
+                    }
 
-                Object possibleNode = value.get();
+                    Object possibleNode = value.get();
 
-                if (!(baseClass.isInstance(possibleNode))) {
+                    if (!(baseClass.isInstance(possibleNode))) {
+                        break;
+                    }
+
+                    keys.add(key);
                     break;
-                }
+                case LIST:
+                    DataKey<List<?>> listKey = (DataKey<List<?>>) key;
+                    List<?> list = node.get(listKey);
+                    if (list == null || list.isEmpty()) {
+                        break;
+                    }
 
-                keys.add(key);
-                break;
-            case LIST:
-                DataKey<List<?>> listKey = (DataKey<List<?>>) key;
-                List<?> list = node.get(listKey);
-                if (list == null || list.isEmpty()) {
+                    // Check if elements of the list are instances of the base class
+                    boolean dataNodeList = list.stream()
+                            .filter(baseClass::isInstance)
+                            .count() == list.size();
+
+                    if (!dataNodeList) {
+                        break;
+                    }
+
+                    keys.add(key);
                     break;
-                }
-
-                // Check if elements of the list are instances of the base class
-                boolean dataNodeList = list.stream()
-                        .filter(baseClass::isInstance)
-                        .count() == list.size();
-
-                if (!dataNodeList) {
+                case NOT_FOUND:
                     break;
-                }
-
-                keys.add(key);
-                break;
-            case NOT_FOUND:
-                break;
-            default:
-                throw new CaseNotDefinedException(keyType);
+                default:
+                    throw new CaseNotDefinedException(keyType);
             }
 
         }
