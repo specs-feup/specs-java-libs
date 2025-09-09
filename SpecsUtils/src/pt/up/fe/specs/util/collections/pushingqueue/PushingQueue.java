@@ -15,7 +15,6 @@ package pt.up.fe.specs.util.collections.pushingqueue;
 
 import java.util.Iterator;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -67,8 +66,27 @@ public interface PushingQueue<T> {
     Stream<T> stream();
 
     default String toString(Function<T, String> mapper) {
-        return stream()
-                .map(mapper)
-                .collect(Collectors.joining(", ", "[", "]"));
+        if (this.size() == 0) {
+            return "[]";
+        }
+
+        // Use a base mapper (avoid reassigning the method parameter so it remains
+        // effectively final)
+        final Function<T, String> baseMapper = mapper == null ? Object::toString : mapper;
+
+        // Use a null-safe mapper so null elements don't cause a NullPointerException
+        Function<T, String> safeMapper = t -> t == null ? "null" : baseMapper.apply(t);
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("[").append(safeMapper.apply(getElement(0)));
+
+        for (int i = 1; i < this.size(); i++) {
+            builder.append(", ").append(safeMapper.apply(getElement(i)));
+        }
+        builder.append("]");
+
+        return builder.toString();
+
     }
 }

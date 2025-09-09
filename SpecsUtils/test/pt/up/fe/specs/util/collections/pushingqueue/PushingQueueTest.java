@@ -340,7 +340,7 @@ class PushingQueueTest {
             Function<String, String> upperMapper = String::toUpperCase;
             String result = queue.toString(upperMapper);
 
-            assertThat(result).isEqualTo("[BANANA, APPLE]");
+            assertThat(result).isEqualTo("[BANANA, APPLE, null]");
         }
     }
 

@@ -116,20 +116,7 @@ public class ArrayPushingQueue<T> implements PushingQueue<T> {
 
     @Override
     public String toString() {
-        if (this.maxSize == 0) {
-            return "[]";
-        }
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("[").append(getElement(0));
-
-        for (int i = 1; i < this.maxSize; i++) {
-            builder.append(", ").append(getElement(i));
-        }
-        builder.append("]");
-
-        return builder.toString();
+        return toString(Object::toString);
     }
 
 }
