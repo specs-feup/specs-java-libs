@@ -86,12 +86,14 @@ class SpecsCheckTest {
             Supplier<String> errorMessage = () -> "Should not be called";
 
             // Execute
+            @SuppressWarnings("deprecation")
             String result = SpecsCheck.checkNotNull(value, errorMessage);
 
             // Verify
             assertThat(result).isSameAs(value);
         }
 
+        @SuppressWarnings("deprecation")
         @Test
         @DisplayName("checkNotNull should throw NullPointerException for null reference")
         void testCheckNotNullWithNull() {
@@ -113,6 +115,7 @@ class SpecsCheckTest {
             Supplier<String> errorMessage = () -> "List is null";
 
             // Execute
+            @SuppressWarnings("deprecation")
             List<String> result = SpecsCheck.checkNotNull(list, errorMessage);
 
             // Verify type and content preservation

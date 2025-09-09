@@ -15,9 +15,9 @@ package pt.up.fe.specs.util.classmap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
@@ -80,7 +80,7 @@ public class BiConsumerClassMap<T, U> {
 
         var function = this.map.get(mappedClass.get());
 
-        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
+        Objects.requireNonNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
         return (BiConsumer<T, U>) function;
     }

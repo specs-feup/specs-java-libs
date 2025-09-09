@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -176,7 +177,7 @@ public interface DataStore extends DataClass<DataStore> {
      * @return this DataStore
      */
     default <T, E extends T> DataStore add(DataKey<T> key, E value) {
-        Preconditions.checkArgument(key != null);
+        Objects.requireNonNull(key);
         SpecsCheck.checkArgument(!hasValue(key), () -> "Attempting to add value already in PassData: " + key);
         set(key, value);
         return this;
@@ -229,7 +230,7 @@ public interface DataStore extends DataClass<DataStore> {
      * @param value the new value to set
      */
     default <T, E extends T> void replace(DataKey<T> key, E value) {
-        Preconditions.checkArgument(key != null);
+        Objects.requireNonNull(key);
         Preconditions.checkArgument(hasValue(key), "Attempting to replace value for key not yet in PassData: " + key);
         set(key, value);
     }

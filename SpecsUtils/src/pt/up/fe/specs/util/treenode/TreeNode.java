@@ -22,11 +22,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public interface TreeNode<K extends TreeNode<K>> {
@@ -410,7 +410,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
         K childNode = getChild(index);
 
-        SpecsCheck.checkNotNull(childNode, () -> "No child at index " + index + " of node '" + getClass()
+        Objects.requireNonNull(childNode, () -> "No child at index " + index + " of node '" + getClass()
                 + "' (children: " + getNumChildren() + "):\n" + this);
 
         if (!nodeClass.isInstance(childNode)) {

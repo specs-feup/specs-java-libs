@@ -15,9 +15,9 @@ package pt.up.fe.specs.util.providers;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.prefs.Preferences;
 
-import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSystem;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
@@ -74,7 +74,7 @@ public interface FileResourceProvider {
          * @param newFile     whether the file is new
          */
         public ResourceWriteData(File writtenFile, boolean newFile) {
-            Preconditions.checkNotNull(writtenFile, "writtenFile should not be null");
+            Objects.requireNonNull(writtenFile, () -> "writtenFile should not be null");
             this.writtenFile = writtenFile;
             this.newFile = newFile;
         }

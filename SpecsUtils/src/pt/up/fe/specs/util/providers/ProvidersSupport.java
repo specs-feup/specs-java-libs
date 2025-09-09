@@ -16,8 +16,7 @@ package pt.up.fe.specs.util.providers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import pt.up.fe.specs.util.Preconditions;
+import java.util.Objects;
 
 /**
  * Utility class for supporting provider interfaces.
@@ -39,7 +38,7 @@ public class ProvidersSupport {
     static List<ResourceProvider> getResourcesFromEnumSingle(Class<? extends ResourceProvider> enumClass) {
         ResourceProvider[] enums = enumClass.getEnumConstants();
 
-        Preconditions.checkNotNull(enums, "Class must be an enum");
+        Objects.requireNonNull(enums, () -> "Class must be an enum");
 
         List<ResourceProvider> resources = new ArrayList<>(enums.length);
 

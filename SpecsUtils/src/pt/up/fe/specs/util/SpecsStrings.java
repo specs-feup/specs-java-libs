@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
@@ -1220,7 +1221,7 @@ public class SpecsStrings {
     }
 
     public static int parseIntegerRelaxed(String constant) {
-        Preconditions.checkArgument(constant != null);
+        Objects.requireNonNull(constant);
 
         double doubleConstant = Double.parseDouble(constant);
 
@@ -1470,7 +1471,7 @@ public class SpecsStrings {
 
     public static String escapeJson(String string, boolean ignoreNewlines) {
 
-        SpecsCheck.checkNotNull(string, () -> "Cannot escape a null string");
+        Objects.requireNonNull(string, () -> "Cannot escape a null string");
 
         StringBuilder escapedString = new StringBuilder();
 
@@ -1607,7 +1608,7 @@ public class SpecsStrings {
      * @return The parsed integer, or empty if the string is not an integer.
      */
     public static Optional<Integer> tryGetDecimalInteger(String value) {
-        Preconditions.checkArgument(value != null, "value must not be null");
+        Objects.requireNonNull(value, () -> "value must not be null");
 
         if (INTEGER_PATTERN.matcher(value).matches()) {
             try {

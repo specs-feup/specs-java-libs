@@ -15,6 +15,7 @@ package pt.up.fe.specs.symja;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.matheclipse.core.eval.ExprEvaluator;
 
@@ -23,7 +24,6 @@ import pt.up.fe.specs.symja.ast.SymjaToC;
 import pt.up.fe.specs.symja.ast.passes.RemoveMinusMultTransform;
 import pt.up.fe.specs.symja.ast.passes.RemoveRedundantParenthesisTransform;
 import pt.up.fe.specs.symja.ast.passes.ReplaceUnaryMinusTransform;
-import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * Utility class for SymjaPlus operations, including expression simplification and conversion to C code.
@@ -66,7 +66,7 @@ public class SymjaPlusUtils {
      * @throws NullPointerException if constants is null
      */
     public static String simplify(String expression, Map<String, String> constants) {
-        SpecsCheck.checkNotNull(constants, () -> "Argument 'constants' cannot be null");
+        Objects.requireNonNull(constants, () -> "Argument 'constants' cannot be null");
         
         // Enhanced thread safety: Clear variables before evaluation
         var evaluator = evaluator();

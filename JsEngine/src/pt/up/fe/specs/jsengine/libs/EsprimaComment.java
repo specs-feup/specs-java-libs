@@ -15,10 +15,9 @@ package pt.up.fe.specs.jsengine.libs;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.NotImplementedException;
-
-import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * Represents a comment node in an Esprima AST.
@@ -94,7 +93,7 @@ public class EsprimaComment {
      */
     public String getType() {
         var type = (String) comment.get("type");
-        SpecsCheck.checkNotNull(type, () -> "Comment should have type");
+        Objects.requireNonNull(type, () -> "Comment should have type");
         return type;
     }
 

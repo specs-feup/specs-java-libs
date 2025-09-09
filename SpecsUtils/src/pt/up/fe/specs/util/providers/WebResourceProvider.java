@@ -18,8 +18,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.impl.GenericWebResourceProvider;
 
@@ -146,7 +146,7 @@ public interface WebResourceProvider extends FileResourceProvider {
     default File write(File folder) {
         File downloadedFile = SpecsIo.download(getUrlString(), folder);
 
-        SpecsCheck.checkNotNull(downloadedFile, () -> "Could not download file from URL '" + getUrlString() + "'");
+        Objects.requireNonNull(downloadedFile, () -> "Could not download file from URL '" + getUrlString() + "'");
 
         return downloadedFile;
     }

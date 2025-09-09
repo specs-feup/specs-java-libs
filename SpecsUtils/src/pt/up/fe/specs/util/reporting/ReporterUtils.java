@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.util.reporting;
 
-import pt.up.fe.specs.util.Preconditions;
+import java.util.Objects;
 
 /**
  * Utility methods for working with Reporter interfaces and reporting utilities.
@@ -35,8 +35,8 @@ public class ReporterUtils {
     public static String formatMessage(String messageType,
             String message) {
 
-        Preconditions.checkArgument(messageType != null);
-        Preconditions.checkArgument(message != null);
+        Objects.requireNonNull(messageType);
+        Objects.requireNonNull(message);
 
         return messageType + ": " + message;
     }
@@ -51,8 +51,8 @@ public class ReporterUtils {
      * @return a formatted stack line string
      */
     public static String formatFileStackLine(String fileName, int lineNumber, String codeLine) {
-        Preconditions.checkArgument(fileName != null);
-        Preconditions.checkArgument(codeLine != null);
+        Objects.requireNonNull(fileName);
+        Objects.requireNonNull(codeLine);
 
         return "At " + fileName + ":" + lineNumber + ":\n   > " + codeLine.trim();
     }
@@ -69,8 +69,8 @@ public class ReporterUtils {
      */
     public static String formatFunctionStackLine(String functionName, String fileName, int lineNumber,
             String codeLine) {
-        Preconditions.checkArgument(fileName != null);
-        Preconditions.checkArgument(codeLine != null);
+        Objects.requireNonNull(fileName);
+        Objects.requireNonNull(codeLine);
 
         return "At function " + functionName + " (" + fileName + ":" + lineNumber + "):\n   > " + codeLine.trim();
     }

@@ -55,6 +55,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -1224,7 +1225,7 @@ public class SpecsIo {
     public static <T extends Enum<T> & ResourceProvider> void resourceCopy(Class<T> resources, File destinationFolder,
             boolean useResourcePath) {
 
-        Preconditions.checkArgument(destinationFolder != null, "destinationFolder must not be null");
+        Objects.requireNonNull(destinationFolder, () -> "destinationFolder must not be null");
 
         if (resources == null) {
             throw new RuntimeException("resources must not be null");
@@ -1334,8 +1335,8 @@ public class SpecsIo {
     public static File resourceCopy(String resource, File destinationFolder, boolean useResourcePath,
             boolean overwrite) {
 
-        Preconditions.checkArgument(resource != null, "resource must not be null");
-        Preconditions.checkArgument(destinationFolder != null, "destinationFolder must not be null");
+        Objects.requireNonNull(resource, () -> "resource must not be null");
+        Objects.requireNonNull(destinationFolder, () -> "destinationFolder must not be null");
 
         // Disabled option, is not good idea not to overwrite
         // overwrite = true;

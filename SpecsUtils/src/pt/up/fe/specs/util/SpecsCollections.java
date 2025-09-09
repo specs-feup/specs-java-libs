@@ -630,7 +630,7 @@ public class SpecsCollections {
      * Returns the first non-empty element of the stream.
      */
     public static <T> Optional<T> findFirstNonEmpty(Stream<Optional<T>> stream) {
-        Preconditions.checkArgument(stream != null, "stream must not be null");
+        Objects.requireNonNull(stream, () -> "stream must not be null");
 
         final Iterator<Optional<T>> iterator = stream.iterator();
 

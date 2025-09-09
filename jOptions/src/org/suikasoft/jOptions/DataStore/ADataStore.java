@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.Datakey.CustomGetter;
@@ -24,8 +25,6 @@ import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.AppPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
-
-import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * Abstract base class for DataStore implementations.
@@ -150,7 +149,7 @@ public abstract class ADataStore implements DataStore {
 
     @Override
     public <T, E extends T> ADataStore set(DataKey<T> key, E value) {
-        SpecsCheck.checkNotNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
+        Objects.requireNonNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
 
         T realValue = value;
 

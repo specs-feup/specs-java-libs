@@ -13,7 +13,6 @@
 
 package pt.up.fe.specs.util.enums;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;

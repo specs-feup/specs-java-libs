@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.Datakey.CustomGetter;
@@ -25,8 +26,6 @@ import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionIndexes;
-
-import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * Implementation of DataStore that uses a List to store the data.
@@ -136,7 +135,7 @@ public class ListDataStore implements DataStore {
      */
     @Override
     public <T, E extends T> DataStore set(DataKey<T> key, E value) {
-        SpecsCheck.checkNotNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
+        Objects.requireNonNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
 
         // Stop if value is not compatible with class of key
         if (key.verifyValueClass() && !key.getValueClass().isInstance(value)) {

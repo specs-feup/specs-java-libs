@@ -15,12 +15,11 @@ package pt.up.fe.specs.binarytranslation.asm.parsing;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.suikasoft.jOptions.DataStore.ADataClass;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
-
-import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * Raw field data as extracted by an {@link IsaParser}
@@ -98,7 +97,7 @@ public class AsmFieldData extends ADataClass<AsmFieldData> {
 
     public int getFieldAsBinaryInteger(String fieldName) {
         var valueString = get(AsmFieldData.FIELDS).get(fieldName);
-        SpecsCheck.checkNotNull(valueString, () -> "No value found for field " + fieldName);
+        Objects.requireNonNull(valueString, () -> "No value found for field " + fieldName);
         return Integer.parseInt(valueString, 2);
     }
 

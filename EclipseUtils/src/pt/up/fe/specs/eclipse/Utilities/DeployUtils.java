@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,6 @@ import pt.up.fe.specs.eclipse.Classpath.ClasspathParser;
 import pt.up.fe.specs.eclipse.Classpath.Dependency;
 import pt.up.fe.specs.eclipse.builder.BuildResource;
 import pt.up.fe.specs.eclipse.builder.BuildUtils;
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
@@ -636,13 +636,13 @@ public class DeployUtils {
         String groupId = data.pomInfo.get(() -> "groupId");
         String artifactId = data.pomInfo.get(() -> "artifactId");
 
-        SpecsCheck.checkNotNull(data.version,
+        Objects.requireNonNull(data.version,
                 () -> "No version supplied, use for instance %BUILD% in name of output JAR");
 
         Set<License> licenses = parser.getLicenses(data.projetName);
         String licensesXml = licenses.stream().map(License::getXmlInfo).collect(Collectors.joining("\n"));
 
-        SpecsCheck.checkNotNull(data.developersXml,
+        Objects.requireNonNull(data.developersXml,
                 () -> "No developers XML file supplied");
         String developers = SpecsIo.read(data.developersXml);
 

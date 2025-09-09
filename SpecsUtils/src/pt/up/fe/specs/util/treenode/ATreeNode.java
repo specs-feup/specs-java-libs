@@ -17,9 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-import pt.up.fe.specs.util.Preconditions;
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -41,7 +40,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
         // Add children
         for (K child : children) {
-            Preconditions.checkNotNull(child, "Cannot use 'null' as children.");
+            Objects.requireNonNull(child, () -> "Cannot use 'null' as children.");
             addChild(child);
         }
 
@@ -49,12 +48,12 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     private void addChildPrivate(K child) {
-        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        Objects.requireNonNull(child, () -> "Cannot use 'null' as children.");
         this.children.add(child);
     }
 
     private void addChildPrivate(int index, K child) {
-        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        Objects.requireNonNull(child, () -> "Cannot use 'null' as children.");
         this.children.add(index, child);
     }
 
@@ -133,7 +132,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
             throw new RuntimeException("Token does not have children, cannot set a child.");
         }
 
-        SpecsCheck.checkNotNull(sanitizedToken, () -> "Sanitized token is null");
+        Objects.requireNonNull(sanitizedToken, () -> "Sanitized token is null");
 
         // Insert child
         K previousChild = this.children.set(index, sanitizedToken);

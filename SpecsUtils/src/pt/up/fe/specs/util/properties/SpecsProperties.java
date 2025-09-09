@@ -20,11 +20,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.enums.EnumHelperWithValue;
@@ -63,7 +63,7 @@ public class SpecsProperties {
     }
 
     public static SpecsProperties newInstance(File propertiesFile) {
-        Preconditions.checkNotNull(propertiesFile, "Input file must not be null");
+        Objects.requireNonNull(propertiesFile, () -> "Input file must not be null");
 
         try (InputStream inputStream = new FileInputStream(propertiesFile)) {
             return load(inputStream);
