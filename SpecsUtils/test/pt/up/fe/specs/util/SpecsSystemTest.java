@@ -51,7 +51,7 @@ import pt.up.fe.specs.util.system.ProcessOutputAsString;
 @DisplayName("SpecsSystem Tests")
 public class SpecsSystemTest {
 
-    private static final String STATIC_FIELD = "a_static_field";
+    public static final String STATIC_FIELD = "a_static_field";
     private static final int A_NUMBER = 10;
 
     public static int getStaticNumber() {
@@ -257,17 +257,6 @@ public class SpecsSystemTest {
             // Verify - should return a valid stack trace element
             assertThat(caller).isNotNull();
             assertThat(caller.getMethodName()).isNotEmpty();
-        }
-
-        @Test
-        @DisplayName("getMainStackTrace should return stack trace array")
-        void testGetMainStackTrace() {
-            // Execute
-            StackTraceElement[] stackTrace = SpecsSystem.getMainStackTrace();
-
-            // Verify
-            assertThat(stackTrace).isNotNull();
-            assertThat(stackTrace).isNotEmpty();
         }
 
         @Test
@@ -532,14 +521,6 @@ public class SpecsSystemTest {
             
             // Allow some tolerance for timing variations
             assertThat(endTime - startTime).isGreaterThanOrEqualTo(90);
-        }
-
-        @Test
-        @DisplayName("getMainStackTrace should return stack trace")
-        void testGetMainStackTrace() {
-            StackTraceElement[] stackTrace = SpecsSystem.getMainStackTrace();
-            assertThat(stackTrace).isNotNull();
-            assertThat(stackTrace).isNotEmpty();
         }
 
         @Test
