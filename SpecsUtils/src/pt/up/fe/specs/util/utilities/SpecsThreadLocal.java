@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.utilities;
 
 import java.util.Objects;
 
+import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public class SpecsThreadLocal<T> {
@@ -28,8 +29,8 @@ public class SpecsThreadLocal<T> {
     }
 
     public void set(T value) {
-        Objects.requireNonNull(threadLocal.get(),
-                () -> "Tried to set " + aClass.getName() + " but there is already a value present in this thread");
+        Preconditions.checkArgument(threadLocal.get() == null,
+                "Tried to set " + aClass.getName() + " but there is already a value present in this thread");
         threadLocal.set(value);
     }
 
