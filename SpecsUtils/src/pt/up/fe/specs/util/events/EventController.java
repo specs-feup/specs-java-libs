@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.ArrayList;
 
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.collections.AccumulatorMap;
@@ -123,15 +124,22 @@ public class EventController implements EventNotifier, EventRegister {
 
     @Override
     public void notifyEvent(Event event) {
-
         Collection<EventReceiver> listeners = this.registeredListeners.get(event.getId());
 
         if (listeners == null) {
             return;
         }
 
-        for (EventReceiver listener : listeners) {
-            listener.acceptEvent(event);
+        // Iterate over a snapshot to avoid concurrent modification issues
+        for (EventReceiver listener : new ArrayList<>(listeners)) {
+            try {
+                listener.acceptEvent(event);
+            } catch (Throwable t) {
+                // Do not propagate exceptions from receivers; log and continue notifying others
+                SpecsLogs.warn(
+                        "Exception while notifying listener '" + listener + "' for event '" + event.getId() + "'",
+                        t);
+            }
         }
 
     }

@@ -195,7 +195,12 @@ class EventNotifierTest {
                 }
             };
 
-            EventNotifier unsafeNotifier = events::add;
+            // Example of an unsafe implementation that does not accept null
+            EventNotifier unsafeNotifier = event -> {
+                // Will throw NullPointerException if event is null
+                event.getId();
+                events.add(event);
+            };
 
             // Safe notifier should handle null gracefully
             assertThatCode(() -> safeNotifier.notifyEvent(null))
