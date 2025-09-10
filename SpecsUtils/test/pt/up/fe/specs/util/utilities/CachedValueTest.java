@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.RetryingTest;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.*;
@@ -20,14 +21,14 @@ class CachedValueTest {
 
     private Supplier<String> supplier;
     private CachedValue<String> cachedValue;
-    private int supplierCallCount;
+    private AtomicInteger supplierCallCount;
 
     @BeforeEach
     void setUp() {
-        supplierCallCount = 0;
+        supplierCallCount = new AtomicInteger(0);
         supplier = () -> {
-            supplierCallCount++;
-            return "value_" + supplierCallCount;
+            int n = supplierCallCount.incrementAndGet();
+            return "value_" + n;
         };
         cachedValue = new CachedValue<>(supplier);
     }
@@ -39,7 +40,7 @@ class CachedValueTest {
         @Test
         @DisplayName("Should create cached value with initial supplier call")
         void testConstructorCallsSupplier() {
-            assertThat(supplierCallCount).isEqualTo(1);
+            assertThat(supplierCallCount.get()).isEqualTo(1);
             assertThat(cachedValue).isNotNull();
         }
 
@@ -74,7 +75,7 @@ class CachedValueTest {
             assertThat(firstCall).isEqualTo("value_1");
             assertThat(secondCall).isEqualTo("value_1");
             assertThat(thirdCall).isEqualTo("value_1");
-            assertThat(supplierCallCount).isEqualTo(1); // Only constructor call
+            assertThat(supplierCallCount.get()).isEqualTo(1); // Only constructor call
         }
 
         @Test
@@ -83,7 +84,7 @@ class CachedValueTest {
             // Get initial value
             String initialValue = cachedValue.getValue();
             assertThat(initialValue).isEqualTo("value_1");
-            assertThat(supplierCallCount).isEqualTo(1);
+            assertThat(supplierCallCount.get()).isEqualTo(1);
 
             // Force garbage collection multiple times to try to clear soft reference
             for (int i = 0; i < 10; i++) {
@@ -129,43 +130,43 @@ class CachedValueTest {
         void testStaleRefreshesValue() {
             String initialValue = cachedValue.getValue();
             assertThat(initialValue).isEqualTo("value_1");
-            assertThat(supplierCallCount).isEqualTo(1);
+            assertThat(supplierCallCount.get()).isEqualTo(1);
 
             cachedValue.stale();
 
             String refreshedValue = cachedValue.getValue();
             assertThat(refreshedValue).isEqualTo("value_2");
-            assertThat(supplierCallCount).isEqualTo(2);
+            assertThat(supplierCallCount.get()).isEqualTo(2);
         }
 
         @Test
         @DisplayName("Should call supplier immediately when marked as stale")
         void testStaleCallsSupplierImmediately() {
-            assertThat(supplierCallCount).isEqualTo(1);
+            assertThat(supplierCallCount.get()).isEqualTo(1);
 
             cachedValue.stale();
 
-            assertThat(supplierCallCount).isEqualTo(2);
+            assertThat(supplierCallCount.get()).isEqualTo(2);
         }
 
         @Test
         @DisplayName("Should allow multiple stale calls")
         void testMultipleStaleOperations() {
-            assertThat(supplierCallCount).isEqualTo(1);
+            assertThat(supplierCallCount.get()).isEqualTo(1);
 
             cachedValue.stale();
-            assertThat(supplierCallCount).isEqualTo(2);
+            assertThat(supplierCallCount.get()).isEqualTo(2);
 
             cachedValue.stale();
-            assertThat(supplierCallCount).isEqualTo(3);
+            assertThat(supplierCallCount.get()).isEqualTo(3);
 
             cachedValue.stale();
-            assertThat(supplierCallCount).isEqualTo(4);
+            assertThat(supplierCallCount.get()).isEqualTo(4);
 
             // Getting value after stale doesn't trigger additional supplier calls
             String value = cachedValue.getValue();
             assertThat(value).isEqualTo("value_4");
-            assertThat(supplierCallCount).isEqualTo(4);
+            assertThat(supplierCallCount.get()).isEqualTo(4);
         }
 
         @Test
@@ -226,7 +227,7 @@ class CachedValueTest {
             }
 
             // Supplier should only be called once (in constructor)
-            assertThat(supplierCallCount).isEqualTo(1);
+            assertThat(supplierCallCount.get()).isEqualTo(1);
         }
 
         @Test
@@ -252,7 +253,7 @@ class CachedValueTest {
             }
 
             // Each stale call triggers supplier, plus initial constructor call
-            assertThat(supplierCallCount).isEqualTo(1 + NUM_THREADS);
+            assertThat(supplierCallCount.get()).isEqualTo(1 + NUM_THREADS);
         }
     }
 
@@ -269,7 +270,7 @@ class CachedValueTest {
             }
 
             // Supplier should only be called once (in constructor)
-            assertThat(supplierCallCount).isEqualTo(1);
+            assertThat(supplierCallCount.get()).isEqualTo(1);
         }
 
         @RetryingTest(5)

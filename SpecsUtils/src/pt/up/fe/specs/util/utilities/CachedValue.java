@@ -19,28 +19,43 @@ import java.util.function.Supplier;
 public class CachedValue<T> {
 
     private final Supplier<T> supplier;
-    private SoftReference<T> value;
+    private volatile SoftReference<T> value;
 
     public CachedValue(Supplier<T> supplier) {
         this.supplier = supplier;
+        // Initialize value eagerly to keep previous behaviour
         value = new SoftReference<>(supplier.get());
     }
 
     public T getValue() {
 
-        // Recreate value
-        if (value.get() == null) {
-            value = new SoftReference<>(supplier.get());
+        // Fast path: try without synchronization
+        SoftReference<T> ref = value;
+        T val = (ref == null) ? null : ref.get();
+        if (val != null) {
+            return val;
         }
 
-        return value.get();
+        // Slow path: synchronize and double-check
+        synchronized (this) {
+            ref = value;
+            val = (ref == null) ? null : ref.get();
+            if (val == null) {
+                val = supplier.get();
+                value = new SoftReference<>(val);
+            }
+            return val;
+        }
     }
 
     /**
      * Mark cache as stale
      */
     public void stale() {
-        value = new SoftReference<>(supplier.get());
+        // Refresh the cached value atomically
+        synchronized (this) {
+            value = new SoftReference<>(supplier.get());
+        }
     }
 
 }
