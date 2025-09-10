@@ -194,11 +194,10 @@ class JarPathTest {
 
             JarPath jarPath = new JarPath(String.class, "TestProgram", TEST_PROPERTY, false); // Non-verbose
 
-            // This test expects RuntimeException due to bug #16 - should handle gracefully
-            // but doesn't
-            assertThatThrownBy(() -> jarPath.buildJarPath())
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessageContaining("Could not open folder");
+            // Invalid system property should be handled gracefully and return a fallback
+            assertThatCode(() -> jarPath.buildJarPath()).doesNotThrowAnyException();
+            String path = jarPath.buildJarPath();
+            assertThat(path).isNotNull().isNotEmpty().endsWith("/");
         }
 
         @Test
@@ -208,11 +207,10 @@ class JarPathTest {
 
             JarPath jarPath = new JarPath(String.class, TEST_PROPERTY);
 
-            // This test expects RuntimeException due to bug #16 - should handle gracefully
-            // but doesn't
-            assertThatThrownBy(() -> jarPath.buildJarPath())
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessageContaining("Could not open folder");
+            // Empty system property should be handled gracefully and return a fallback
+            assertThatCode(() -> jarPath.buildJarPath()).doesNotThrowAnyException();
+            String path = jarPath.buildJarPath();
+            assertThat(path).isNotNull().isNotEmpty().endsWith("/");
         }
     }
 
@@ -254,11 +252,10 @@ class JarPathTest {
 
             JarPath jarPath = new JarPath(String.class, "TestApp", TEST_PROPERTY, true);
 
-            // This test expects RuntimeException due to bug #16 - verbose mode doesn't
-            // prevent the crash
-            assertThatThrownBy(() -> jarPath.buildJarPath())
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessageContaining("Could not open folder");
+            // Invalid property in verbose mode should still be handled gracefully
+            assertThatCode(() -> jarPath.buildJarPath()).doesNotThrowAnyException();
+            String path = jarPath.buildJarPath();
+            assertThat(path).isNotNull().isNotEmpty().endsWith("/");
         }
 
         @Test
@@ -268,11 +265,10 @@ class JarPathTest {
 
             JarPath jarPath = new JarPath(String.class, "TestApp", TEST_PROPERTY, false);
 
-            // This test expects RuntimeException due to bug #16 - non-verbose mode doesn't
-            // prevent the crash
-            assertThatThrownBy(() -> jarPath.buildJarPath())
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessageContaining("Could not open folder");
+            // Invalid property in non-verbose mode should be handled gracefully
+            assertThatCode(() -> jarPath.buildJarPath()).doesNotThrowAnyException();
+            String path = jarPath.buildJarPath();
+            assertThat(path).isNotNull().isNotEmpty().endsWith("/");
         }
     }
 
