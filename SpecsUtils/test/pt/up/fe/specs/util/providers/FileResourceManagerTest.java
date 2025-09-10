@@ -290,8 +290,8 @@ class FileResourceManagerTest {
      * Test enum for FileResourceManager testing.
      */
     public enum TestResourceEnum implements Supplier<FileResourceProvider> {
-        RESOURCE_A("test/resource/a.txt"),
-        RESOURCE_B("test/resource/b.txt");
+        RESOURCE_A("test-resources/a.txt"),
+        RESOURCE_B("test-resources/b.txt");
 
         private final String resourcePath;
 

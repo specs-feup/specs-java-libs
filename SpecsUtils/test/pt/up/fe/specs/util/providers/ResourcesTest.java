@@ -353,7 +353,7 @@ class ResourcesTest {
         @DisplayName("should work with real resource paths")
         void shouldWorkWithRealResourcePaths() {
             // Given - using test resources that actually exist
-            Resources resources = new Resources("test/resource", "a.txt", "b.txt", "c.txt");
+            Resources resources = new Resources("test-resources", "a.txt", "b.txt", "c.txt");
 
             // When
             List<ResourceProvider> providers = resources.getResources();
@@ -364,7 +364,7 @@ class ResourcesTest {
             // Verify that the providers can actually access resources
             for (ResourceProvider provider : providers) {
                 assertThat(provider.getResource()).isNotNull();
-                assertThat(provider.getResource()).contains("test/resource/");
+                assertThat(provider.getResource()).contains("test-resources/");
             }
         }
 

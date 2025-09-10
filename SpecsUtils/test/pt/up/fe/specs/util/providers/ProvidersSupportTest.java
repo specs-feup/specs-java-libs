@@ -23,9 +23,9 @@ class ProvidersSupportTest {
     class GetResourcesFromEnumSingle {
 
         enum TestResourceEnum implements ResourceProvider {
-            RESOURCE_A("test/resource/a.txt"),
-            RESOURCE_B("test/resource/b.txt"),
-            RESOURCE_C("test/resource/c.txt");
+            RESOURCE_A("test-resources/a.txt"),
+            RESOURCE_B("test-resources/b.txt"),
+            RESOURCE_C("test-resources/c.txt");
 
             private final String resourcePath;
 
@@ -126,9 +126,9 @@ class ProvidersSupportTest {
 
             // Then
             assertThat(result).hasSize(3);
-            assertThat(result.get(0).getResource()).isEqualTo("test/resource/a.txt");
-            assertThat(result.get(1).getResource()).isEqualTo("test/resource/b.txt");
-            assertThat(result.get(2).getResource()).isEqualTo("test/resource/c.txt");
+            assertThat(result.get(0).getResource()).isEqualTo("test-resources/a.txt");
+            assertThat(result.get(1).getResource()).isEqualTo("test-resources/b.txt");
+            assertThat(result.get(2).getResource()).isEqualTo("test-resources/c.txt");
         }
 
         @Test

@@ -102,7 +102,7 @@ public interface WebResourceProvider extends FileResourceProvider {
     default URL getUrl() {
         try {
             return new URI(getUrlString()).toURL();
-        } catch (URISyntaxException | MalformedURLException e) {
+        } catch (URISyntaxException | MalformedURLException | IllegalArgumentException e) {
             throw new RuntimeException("Could not transform url String into URL", e);
         }
     }
@@ -112,9 +112,7 @@ public interface WebResourceProvider extends FileResourceProvider {
      *
      * @return the version string
      */
-    default String version() {
-        return "v1.0";
-    }
+    String version();
 
     /**
      * Gets the filename of the web resource, which is the last part of the URL
