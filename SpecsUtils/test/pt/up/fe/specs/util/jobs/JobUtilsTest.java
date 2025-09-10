@@ -401,19 +401,24 @@ class JobUtilsTest {
         }
 
         @Test
-        @DisplayName("Should handle empty extensions collection")
-        void testGetSourcesFilesMode_EmptyExtensions_ReturnsEmpty() throws Exception {
+        @DisplayName("Should handle empty extensions by selecting all files")
+        void testGetSourcesFilesMode_EmptyExtensions_SelectsAll() throws Exception {
             // Arrange
             File sourceFolder = tempDir.toFile();
-            new File(sourceFolder, "test.java").createNewFile();
+            File created = new File(sourceFolder, "test.java");
+            created.createNewFile();
             Collection<String> emptyExtensions = new HashSet<>();
 
             // Act
             List<FileSet> result = JobUtils.getSourcesFilesMode(sourceFolder, emptyExtensions);
 
             // Assert
-            // SpecsIo.getFilesRecursive with empty extensions returns empty list
-            assertThat(result).isEmpty();
+            // Empty extensions => no filtering in SpecsIo.getFilesRecursive
+            assertThat(result).hasSize(1);
+            FileSet fileSet = result.get(0);
+            assertThat(fileSet.outputName()).isEqualTo("test");
+            assertThat(fileSet.getSourceFilenames()).hasSize(1);
+            assertThat(fileSet.getSourceFilenames().get(0)).endsWith("test.java");
         }
 
         @Test
