@@ -170,7 +170,16 @@ public class StreamCatcherTest {
             String output = catcher.getOutput();
             assertThat(output).contains("Line 0");
             assertThat(output).contains("Line 9999");
-            assertThat(output.length()).isGreaterThan(100000);
+
+            // Compute expected length: for each line "Line " + digits(i) + "\n"
+            int expectedLength = 0;
+            for (int i = 0; i < 10000; i++) {
+                expectedLength += "Line ".length();
+                expectedLength += Integer.toString(i).length();
+                expectedLength += 1; // newline
+            }
+
+            assertThat(output.length()).isEqualTo(expectedLength);
         }
 
         @Test
