@@ -21,7 +21,6 @@ import java.io.OutputStreamWriter;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import pt.up.fe.specs.util.SpecsIo;
@@ -41,6 +40,10 @@ public class MemoryProfiler {
     private final long period;
     private final TimeUnit timeUnit;
     private final File outputFile;
+    
+    // Lifecycle management
+    private volatile boolean running = false;
+    private Thread workerThread;
 
     public MemoryProfiler(long period, TimeUnit timeUnit, File outputFile) {
         this.period = period;
@@ -56,18 +59,29 @@ public class MemoryProfiler {
         this(500, TimeUnit.MILLISECONDS, new File("memory_profile.csv"));
     }
 
-    public void execute() {
+    public synchronized void execute() {
+        // Backwards-compatible alias for start()
+        start();
+    }
+
+    /**
+     * Starts the memory profiling in a dedicated daemon thread. If the profiler is already running this call is a
+     * no-op.
+     */
+    public synchronized void start() {
+        if (running) {
+            return; // already running
+        }
+
         if (outputFile != null) {
             try {
                 var parent = outputFile.getParentFile();
                 if (parent == null || parent.exists()) {
-                    // Attempt to create the file. If this fails (e.g., permission
-                    // error), log and abort start to keep behavior consistent
-                    // with the profile() method.
                     boolean created = outputFile.createNewFile();
                     if (!created && !outputFile.exists()) {
-                        SpecsLogs.info("Could not create memory profile output file before starting: "
-                                + SpecsIo.getCanonicalPath(outputFile));
+                        SpecsLogs.info(
+                                "Could not create memory profile output file before starting: "
+                                        + SpecsIo.getCanonicalPath(outputFile));
                         return;
                     }
                 }
@@ -77,13 +91,43 @@ public class MemoryProfiler {
             }
         }
 
-        // Launch thread
-        var threadExecutor = Executors.newSingleThreadExecutor();
-        threadExecutor.execute(this::profile);
-        threadExecutor.shutdown();
+        running = true;
+        workerThread = new Thread(this::profile, "MemoryProfiler");
+        workerThread.setDaemon(true); // Do not prevent JVM shutdown
+        workerThread.start();
+    }
+
+    /**
+     * Stops the profiling thread, if it is running. This method is idempotent.
+     */
+    public synchronized void stop() {
+        running = false;
+        if (workerThread != null) {
+            workerThread.interrupt();
+        }
+    }
+
+    /**
+     * Returns true if the profiling worker thread is currently alive.
+     */
+    public boolean isRunning() {
+        return running && workerThread != null && workerThread.isAlive();
+    }
+
+    /**
+     * Exposes the underlying worker thread mainly for testing purposes.
+     */
+    public Thread getWorkerThread() {
+        return workerThread;
     }
 
     private void profile() {
+        if (outputFile == null) {
+            SpecsLogs.info("MemoryProfiler started with a null output file, aborting.");
+            running = false;
+            return;
+        }
+
         long totalMillis = TimeUnit.MILLISECONDS.convert(period, timeUnit);
         long totalNanos = TimeUnit.NANOSECONDS.convert(period, timeUnit);
         long totalNanosTruncated = totalMillis * 1_000_000L;
@@ -114,15 +158,7 @@ public class MemoryProfiler {
                 }
             }));
 
-            while (true) {
-                // Sleep
-                try {
-                    Thread.sleep(totalMillis, (int) partialNanos);
-                } catch (InterruptedException e) {
-                    SpecsLogs.info("Interrupting memory profile");
-                    break;
-                }
-
+            while (running && !Thread.currentThread().isInterrupted()) {
                 // Get used memory, in Mb, calling the garbage collector before
                 var usedMemory = SpecsSystem.getUsedMemoryMb(true);
 
@@ -138,10 +174,22 @@ public class MemoryProfiler {
 
                 // Ensure data is flushed so other threads can read it
                 writer.flush();
+
+                // Sleep
+                try {
+                    Thread.sleep(totalMillis, (int) partialNanos);
+                } catch (InterruptedException e) {
+                    // Respect interruption
+                    SpecsLogs.info("Interrupting memory profile");
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
 
         } catch (Exception e) {
             SpecsLogs.info("Interrupting memory profile, " + e.getMessage());
+        } finally {
+            running = false;
         }
     }
 }

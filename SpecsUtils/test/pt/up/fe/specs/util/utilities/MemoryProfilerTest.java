@@ -71,16 +71,18 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(50, TimeUnit.MILLISECONDS, outputFile);
 
-            // Start profiling in a separate thread
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            // Start profiling
+            profiler.start();
 
             // Wait a short time for file creation
             Thread.sleep(200);
 
             // Stop the profiling thread
-            profilingThread.interrupt();
-            profilingThread.join(1000); // Wait up to 1 second
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             // File should have been created
             assertThat(outputFile).exists();
@@ -95,13 +97,14 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(50, TimeUnit.MILLISECONDS, outputFile);
 
-            // Start profiling briefly
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             Thread.sleep(200);
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             // File should still exist and have content
             assertThat(outputFile).exists();
@@ -122,14 +125,16 @@ class MemoryProfilerTest {
             MemoryProfiler profiler = new MemoryProfiler(100, TimeUnit.MILLISECONDS, outputFile);
 
             // Start profiling
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             // Let it run for enough time to capture multiple measurements
             Thread.sleep(350); // Should capture at least 2-3 measurements
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             // File should have measurement data
             assertThat(outputFile).exists();
@@ -162,13 +167,15 @@ class MemoryProfilerTest {
             // Test with nanoseconds (very frequent)
             MemoryProfiler profiler = new MemoryProfiler(100_000_000, TimeUnit.NANOSECONDS, outputFile); // 100ms
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             Thread.sleep(250);
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             assertThat(outputFile).exists();
         }
@@ -185,16 +192,16 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(1000, TimeUnit.MILLISECONDS, outputFile);
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
-            // Interrupt immediately
+            // Interrupt almost immediately
             Thread.sleep(50);
-            profilingThread.interrupt();
-
-            // Should terminate gracefully
-            profilingThread.join(2000);
-            assertThat(profilingThread.isAlive()).isFalse();
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(2000);
+                assertThat(worker.isAlive()).isFalse();
+            }
         }
 
         @Test
@@ -208,7 +215,7 @@ class MemoryProfilerTest {
 
             // Execute should return immediately, not block
             long startTime = System.currentTimeMillis();
-            profiler.execute();
+            profiler.start();
             long endTime = System.currentTimeMillis();
 
             // Should return quickly (not wait for profiling to complete)
@@ -232,15 +239,15 @@ class MemoryProfilerTest {
             MemoryProfiler profiler = new MemoryProfiler(100, TimeUnit.MILLISECONDS, invalidFile);
 
             // Should not throw exception, but handle gracefully
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             Thread.sleep(200);
-            profilingThread.interrupt();
-            profilingThread.join(1000);
-
-            // Should terminate without hanging
-            assertThat(profilingThread.isAlive()).isFalse();
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+                assertThat(worker.isAlive()).isFalse();
+            }
         }
     }
 
@@ -256,14 +263,16 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(500, TimeUnit.MILLISECONDS, outputFile);
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             // Let it run briefly
             Thread.sleep(100);
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             // Ensure temp file exists
             assertThat(outputFile).exists();
@@ -276,13 +285,15 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(1, TimeUnit.MILLISECONDS, outputFile);
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             Thread.sleep(50); // Let it run briefly
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             assertThat(outputFile).exists();
         }
@@ -294,14 +305,16 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(10, TimeUnit.SECONDS, outputFile);
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             // Don't wait for the period, just verify it starts properly
             Thread.sleep(100);
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             assertThat(outputFile).exists();
         }
