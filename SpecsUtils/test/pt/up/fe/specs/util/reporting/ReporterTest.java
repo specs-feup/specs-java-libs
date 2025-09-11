@@ -3,6 +3,7 @@ package pt.up.fe.specs.util.reporting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -10,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import java.io.PrintStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -378,12 +380,38 @@ class ReporterTest {
             // Then
             assertThat(reporter.getMessages()).hasSize(numThreads * 3);
         }
+
+        @RepeatedTest(50)
+        @DisplayName("Stress test concurrent access to default methods")
+        void stressTestConcurrentAccessToDefaultMethods() throws InterruptedException {
+            // Run the concurrency scenario multiple times to expose flakiness
+            TestReporter reporter = new TestReporter();
+            final int numThreads = 20;
+            Thread[] threads = new Thread[numThreads];
+
+            for (int i = 0; i < numThreads; i++) {
+                final int index = i;
+                threads[i] = new Thread(() -> {
+                    reporter.warn("Warning " + index);
+                    reporter.info("Info " + index);
+                    reporter.error("Error " + index);
+                });
+                threads[i].start();
+            }
+
+            for (Thread thread : threads) {
+                thread.join();
+            }
+
+            // Expect exactly numThreads * 3 messages
+            assertThat(reporter.getMessages()).hasSize(numThreads * 3);
+        }
     }
 
     // Test implementation of Reporter interface
     private static class TestReporter implements Reporter {
-        private final List<MessageType> messageTypes = new ArrayList<>();
-        private final List<String> messages = new ArrayList<>();
+        private final List<MessageType> messageTypes = Collections.synchronizedList(new ArrayList<>());
+        private final List<String> messages = Collections.synchronizedList(new ArrayList<>());
         private final PrintStream reportStream;
         private boolean stackTracePrinted = false;
         private PrintStream stackTracePrintStream;
