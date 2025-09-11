@@ -279,7 +279,7 @@ public class SerializeUtilsTest {
 
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
-            // The ClassCastException should now be wrapped in RuntimeException (bug fix)
+            // The ClassCastException should be wrapped in RuntimeException
             assertThatThrownBy(() -> SerializeUtils.fromStream(bais, String.class))
                     .isInstanceOf(RuntimeException.class)
                     .hasMessageContaining("Problem during deserialization")

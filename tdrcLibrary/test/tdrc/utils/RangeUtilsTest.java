@@ -252,7 +252,7 @@ class RangeUtilsTest {
             m.put(6.5, 'C');
             m.put(10.0, null);
 
-            // Test all scenarios - after bug fix, nulls should be skipped
+            // Test all scenarios - nulls should be skipped
             assertThat(RangeUtils.getValueByRangedKey(m, 5.0)).isEqualTo('B');
             assertThat(RangeUtils.getValueByRangedKey(m, 1.0)).isEqualTo('A');
             assertThat(RangeUtils.getValueByRangedKey(m, 2.9)).isEqualTo('A'); // Should skip null and find 'A'

@@ -236,7 +236,7 @@ public interface XmlNode {
         SpecsIo.mkdir(outputFile.getParent());
         SpecsLogs.debug(() -> "Writing XML document " + outputFile);
         StreamResult result = new StreamResult(outputFile);
-        // Handle permission and IO errors gracefully at the file level (Bug 2 fix)
+        // Handle permission and IO errors gracefully at the file level
         try {
             write(result);
         } catch (RuntimeException e) {

@@ -112,7 +112,7 @@ class ATreeNodeTest {
         @Test
         @DisplayName("setChildren() with null should handle gracefully")
         void testSetChildren_WithNull_HandlesGracefully() {
-            // Bug #1 is now fixed - setChildren() handles null gracefully by treating it as empty collection
+            // setChildren() handles null gracefully by treating it as empty collection
             root.setChildren(null);
             
             // Should clear all children

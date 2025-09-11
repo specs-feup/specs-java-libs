@@ -36,7 +36,7 @@ public class RegisterUtils {
      *         null
      */
     public static Integer decodeFlagBit(String registerFlagName) {
-        // Bug 1 fix: Handle null input gracefully
+        // Handle null input gracefully
         if (registerFlagName == null) {
             SpecsLogs.getLogger().warning("Cannot decode flag bit from null input");
             return null;

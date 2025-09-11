@@ -347,10 +347,12 @@ class LineStreamTest {
                 }
 
                 List<String> lastLines = lineStream.getLastLines();
-                // Bug #17: Last lines tracking includes null end-of-stream marker
-                // The actual result includes null due to the bug
+                // Last lines tracking should contain the last 3 lines (oldest -> newest)
+                // The implementation does not store a null end-of-stream marker.
                 assertThat(lastLines).hasSize(3)
-                        .containsExactly("", "line5", null);
+                        .containsExactly("line3", "", "line5");
+                // Ensure no null markers are present
+                assertThat(lastLines).doesNotContainNull();
             }
         }
 
@@ -366,10 +368,12 @@ class LineStreamTest {
                 }
 
                 List<String> lastLines = lineStream.getLastLines();
-                // Bug #17: Last lines tracking includes null end-of-stream marker
-                // The actual result includes null due to the bug
+                // Buffer overflow should return the last 2 lines (oldest -> newest)
+                // The implementation does not store a null end-of-stream marker.
                 assertThat(lastLines).hasSize(2)
-                        .containsExactly("line5", null); // Last actual line + null marker
+                        .containsExactly("", "line5");
+                // Ensure no null markers are present
+                assertThat(lastLines).doesNotContainNull(); // Last actual lines, no null marker
             }
         }
 

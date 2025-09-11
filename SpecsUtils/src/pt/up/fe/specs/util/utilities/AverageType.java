@@ -63,7 +63,7 @@ public enum AverageType {
                 if (hasZeros) {
                     return 0.0; // Geometric mean is 0 if any value is 0
                 }
-                // Fixed: Handle large datasets that could cause overflow (Bug 13)
+                // Handle large datasets that could cause overflow
                 if (values.size() > 1000) {
                     return calculateGeometricMeanSafe(values, false);
                 }
@@ -73,7 +73,7 @@ public enum AverageType {
                 if (allZeros) {
                     return 0.0; // No non-zero values to calculate
                 }
-                // Fixed: Handle large datasets that could cause overflow (Bug 13)
+                // Handle large datasets that could cause overflow
                 if (values.size() > 1000) {
                     return calculateGeometricMeanSafe(values, true);
                 }

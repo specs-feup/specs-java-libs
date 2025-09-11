@@ -212,7 +212,6 @@ public class RangeMapTest {
 	public void testNullKeyLookups() {
 		map.put(10.0, 20.0, "range");
 
-		// RangeMap now handles null keys gracefully (bug fix)
 		String result = map.get(null);
 		assertThat(result).isNull();
 	}
