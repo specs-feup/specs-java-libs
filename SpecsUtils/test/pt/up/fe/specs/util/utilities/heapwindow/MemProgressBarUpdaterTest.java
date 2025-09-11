@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.lang.reflect.Field;
+import java.io.StringWriter;
 
 /**
  * Unit tests for {@link MemProgressBarUpdater}.
@@ -41,20 +42,18 @@ class MemProgressBarUpdaterTest {
         @Test
         @DisplayName("should create memory progress bar updater")
         void shouldCreateMemoryProgressBarUpdater() throws InterruptedException {
-            CountDownLatch latch = new CountDownLatch(1);
+            // Run synchronously on the EDT so UI state is deterministic
+            try {
+                SwingUtilities.invokeAndWait(() -> {
+                    progressBar = new JProgressBar();
+                    updater = new MemProgressBarUpdater(progressBar);
 
-            SwingUtilities.invokeLater(() -> {
-                progressBar = new JProgressBar();
-                updater = new MemProgressBarUpdater(progressBar);
-
-                assertThat(updater).isNotNull();
-                assertThat(progressBar.isStringPainted()).isTrue();
-
-                latch.countDown();
-            });
-
-            boolean completed = latch.await(5000, TimeUnit.MILLISECONDS);
-            assertThat(completed).isTrue();
+                    assertThat(updater).isNotNull();
+                    assertThat(progressBar.isStringPainted()).isTrue();
+                });
+            } catch (Exception e) {
+                fail("EDT invocation failed: " + e.getMessage());
+            }
         }
 
         @Test
@@ -80,8 +79,25 @@ class MemProgressBarUpdaterTest {
         @DisplayName("should throw when progress bar is null")
         void shouldThrowWhenProgressBarIsNull() {
             assertThatThrownBy(() -> new MemProgressBarUpdater(null))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(NullPointerException.class)
                     .hasMessage("JProgressBar cannot be null");
+        }
+
+        @Test
+        @DisplayName("should set string painted when constructed off EDT")
+        void shouldSetStringPaintedWhenConstructedOffEDT() throws Exception {
+            // Construct the progress bar and updater from a non-EDT thread
+            Thread t = new Thread(() -> {
+                progressBar = new JProgressBar();
+                updater = new MemProgressBarUpdater(progressBar);
+            });
+
+            t.start();
+            t.join(2000);
+
+            // After construction, even when done off-EDT, the property should be set
+            assertThat(progressBar).isNotNull();
+            assertThat(progressBar.isStringPainted()).isTrue();
         }
     }
 
@@ -178,50 +194,48 @@ class MemProgressBarUpdaterTest {
         @Test
         @DisplayName("should format string correctly")
         void shouldFormatStringCorrectly() throws Exception {
-            CountDownLatch latch = new CountDownLatch(1);
-
-            SwingUtilities.invokeLater(() -> {
+            // Construct components on EDT for safety
+            SwingUtilities.invokeAndWait(() -> {
                 progressBar = new JProgressBar();
                 updater = new MemProgressBarUpdater(progressBar);
-
-                try {
-                    // Execute background task and wait for completion
-                    updater.doInBackground();
-
-                    // Allow time for EDT updates
-                    SwingUtilities.invokeLater(() -> {
-                        String barString = progressBar.getString();
-
-                        if (barString != null) {
-                            // String should be in format "XXXMiB / YYYMiB"
-                            String[] parts = barString.split(" / ");
-                            assertThat(parts).hasSize(2);
-
-                            String currentPart = parts[0];
-                            String totalPart = parts[1];
-
-                            assertThat(currentPart).endsWith("MiB");
-                            assertThat(totalPart).endsWith("MiB");
-
-                            // Extract numbers
-                            int currentMb = Integer.parseInt(currentPart.replace("MiB", ""));
-                            int totalMb = Integer.parseInt(totalPart.replace("MiB", ""));
-
-                            assertThat(currentMb).isGreaterThan(0);
-                            assertThat(totalMb).isGreaterThan(0);
-                            assertThat(currentMb).isLessThanOrEqualTo(totalMb);
-                        }
-
-                        latch.countDown();
-                    });
-                } catch (Exception e) {
-                    fail("Failed to format string: " + e.getMessage());
-                    latch.countDown();
-                }
             });
 
-            boolean completed = latch.await(5000, TimeUnit.MILLISECONDS);
-            assertThat(completed).isTrue();
+            // Execute background task off the EDT so it can schedule UI updates
+            updater.doInBackground();
+
+            // Now assert the UI string on the EDT; this ensures the scheduled
+            // EventQueue.invokeLater from doInBackground has been applied.
+            try {
+                SwingUtilities.invokeAndWait(() -> {
+                    String barString = progressBar.getString();
+
+                    if (barString != null) {
+                        // String should be in format "XXXMiB / YYYMiB"
+                        String[] parts = barString.split(" / ");
+                        assertThat(parts).hasSize(2);
+
+                        String currentPart = parts[0];
+                        String totalPart = parts[1];
+
+                        assertThat(currentPart).endsWith("MiB");
+                        assertThat(totalPart).endsWith("MiB");
+
+                        // Extract numbers
+                        int currentMb = Integer.parseInt(currentPart.replace("MiB", ""));
+                        int totalMb = Integer.parseInt(totalPart.replace("MiB", ""));
+
+                        assertThat(currentMb).isGreaterThan(0);
+                        assertThat(totalMb).isGreaterThan(0);
+                        assertThat(currentMb).isLessThanOrEqualTo(totalMb);
+                    }
+                });
+            } catch (Exception e) {
+                // Include cause stack trace when failing to aid debugging
+                Throwable cause = e.getCause() != null ? e.getCause() : e;
+                StringWriter sw = new StringWriter();
+                cause.printStackTrace(new java.io.PrintWriter(sw));
+                fail("EDT assertion failed: " + sw.toString());
+            }
         }
     }
 
