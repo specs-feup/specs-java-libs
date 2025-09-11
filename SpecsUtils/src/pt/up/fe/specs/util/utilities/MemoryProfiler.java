@@ -57,6 +57,26 @@ public class MemoryProfiler {
     }
 
     public void execute() {
+        if (outputFile != null) {
+            try {
+                var parent = outputFile.getParentFile();
+                if (parent == null || parent.exists()) {
+                    // Attempt to create the file. If this fails (e.g., permission
+                    // error), log and abort start to keep behavior consistent
+                    // with the profile() method.
+                    boolean created = outputFile.createNewFile();
+                    if (!created && !outputFile.exists()) {
+                        SpecsLogs.info("Could not create memory profile output file before starting: "
+                                + SpecsIo.getCanonicalPath(outputFile));
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                SpecsLogs.info("Could not create memory profile output file before starting: " + e.getMessage());
+                return;
+            }
+        }
+
         // Launch thread
         var threadExecutor = Executors.newSingleThreadExecutor();
         threadExecutor.execute(this::profile);
@@ -115,6 +135,9 @@ public class MemoryProfiler {
 
                 // Write to file
                 writer.write(line, 0, line.length());
+
+                // Ensure data is flushed so other threads can read it
+                writer.flush();
             }
 
         } catch (Exception e) {

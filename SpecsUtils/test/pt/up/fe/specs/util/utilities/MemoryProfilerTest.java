@@ -30,9 +30,11 @@ class MemoryProfilerTest {
     class Construction {
 
         @Test
-        @DisplayName("should create with default constructor")
-        void shouldCreateWithDefaultConstructor() {
-            MemoryProfiler profiler = new MemoryProfiler();
+        @DisplayName("should create with default-like constructor (use temp file)")
+        void shouldCreateWithDefaultConstructor(@TempDir Path tempDir) {
+            File outputFile = tempDir.resolve("test_memory_default.csv").toFile();
+
+            MemoryProfiler profiler = new MemoryProfiler(500, TimeUnit.MILLISECONDS, outputFile);
 
             assertThat(profiler).isNotNull();
         }
@@ -247,9 +249,12 @@ class MemoryProfilerTest {
     class Integration {
 
         @Test
-        @DisplayName("should work with default constructor values")
-        void shouldWorkWithDefaultConstructorValues() throws InterruptedException {
-            MemoryProfiler profiler = new MemoryProfiler();
+        @DisplayName("should work with default constructor values (use temp file)")
+        void shouldWorkWithDefaultConstructorValues(@TempDir Path tempDir) throws InterruptedException {
+            // Use a temp file instead of the default working-directory file
+            File outputFile = tempDir.resolve("memory_profile.csv").toFile();
+
+            MemoryProfiler profiler = new MemoryProfiler(500, TimeUnit.MILLISECONDS, outputFile);
 
             Thread profilingThread = new Thread(() -> profiler.execute());
             profilingThread.start();
@@ -260,9 +265,8 @@ class MemoryProfilerTest {
             profilingThread.interrupt();
             profilingThread.join(1000);
 
-            // Should create default file (memory_profile.csv in working directory)
-            // Note: We can't easily clean this up in a unit test
-            // In a real scenario, the application would manage this file
+            // Ensure temp file exists
+            assertThat(outputFile).exists();
         }
 
         @Test
