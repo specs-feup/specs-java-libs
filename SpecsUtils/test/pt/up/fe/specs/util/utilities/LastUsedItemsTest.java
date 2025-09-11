@@ -221,7 +221,7 @@ class LastUsedItemsTest {
 
             assertThat(changed).isTrue();
             assertThat(items.getItems()).containsExactly((String) null);
-            assertThat(items.getHead()).contains((String) null);
+            assertThat(items.getHead()).isEmpty();
         }
 
         @Test
@@ -235,7 +235,7 @@ class LastUsedItemsTest {
 
             assertThat(changed).isTrue();
             assertThat(items.getItems()).containsExactly(null, "other");
-            assertThat(items.getHead()).contains((String) null);
+            assertThat(items.getHead()).isEmpty();
         }
 
         @Test

@@ -33,7 +33,7 @@ import javax.swing.JFileChooser;
 
 import pt.up.fe.specs.guihelper.App;
 import pt.up.fe.specs.guihelper.AppDefaultConfig;
-import pt.up.fe.specs.guihelper.Utils.LastUsedItems;
+import pt.up.fe.specs.util.utilities.LastUsedItems;
 import pt.up.fe.specs.guihelper.gui.ApplicationWorker;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.logging.TextAreaHandler;

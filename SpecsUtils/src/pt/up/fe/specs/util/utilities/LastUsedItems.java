@@ -107,6 +107,6 @@ public class LastUsedItems<T> {
             return Optional.empty();
         }
 
-        return Optional.of(currentItemsList.getFirst());
+        return Optional.ofNullable(currentItemsList.getFirst());
     }
 }
