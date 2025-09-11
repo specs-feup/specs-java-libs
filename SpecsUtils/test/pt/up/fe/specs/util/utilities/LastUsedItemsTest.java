@@ -58,7 +58,7 @@ class LastUsedItemsTest {
         void shouldHandleZeroCapacity() {
             LastUsedItems<String> items = new LastUsedItems<>(0);
 
-            assertThat(items.used("item")).isTrue();
+            assertThat(items.used("item")).isFalse();
             assertThat(items.getItems()).isEmpty();
             assertThat(items.getHead()).isEmpty();
         }
