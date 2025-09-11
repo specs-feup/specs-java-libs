@@ -29,4 +29,9 @@ class NullStringBuilder extends BufferedStringBuilder {
     public void save() {
         // Do nothing
     }
+
+    @Override
+    public String toString() {
+        return "";
+    }
 }

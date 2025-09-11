@@ -319,6 +319,54 @@ public class BufferedStringBuilderTest {
     }
 
     @Nested
+    @DisplayName("ToString Method Tests")
+    class BufferedStringBuilderToStringTest {
+
+        @Test
+        void nullStringBuilderToStringIsEmpty() {
+            try (NullStringBuilder builder = new NullStringBuilder()) {
+                assertThat(builder.toString()).isEmpty();
+
+                builder.append("test");
+                assertThat(builder.toString()).isEmpty();
+
+                builder.save();
+                assertThat(builder.toString()).isEmpty();
+            }
+        }
+
+        @Test
+        void bufferOnlyToStringShowsBuffer(@TempDir Path tempDir) {
+            File out = tempDir.resolve("out.txt").toFile();
+
+            BufferedStringBuilder builder = new BufferedStringBuilder(out);
+            try {
+                builder.append("hello");
+                // Not saved yet
+                assertThat(builder.toString()).isEqualTo("hello");
+            } finally {
+                builder.close();
+            }
+        }
+
+        @Test
+        void persistedAndBufferToString(@TempDir Path tempDir) {
+            File out = tempDir.resolve("out2.txt").toFile();
+
+            BufferedStringBuilder builder = new BufferedStringBuilder(out);
+            try {
+                builder.append("first");
+                builder.save(); // persisted
+                builder.append("second");
+
+                assertThat(builder.toString()).isEqualTo("firstsecond");
+            } finally {
+                builder.close();
+            }
+        }
+    }
+
+    @Nested
     @DisplayName("Edge Cases and Error Handling")
     class EdgeCaseTests {
 

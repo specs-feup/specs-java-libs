@@ -30,6 +30,13 @@ public class BufferedStringBuilder implements AutoCloseable {
     private StringBuilder builder;
     private final int bufferCapacity;
 
+    /**
+     * Cache of persisted content written via save() so toString() doesn't need to
+     * re-read the file from disk. This keeps a consistent snapshot of persisted
+     * content and improves performance for repeated toString() calls.
+     */
+    private final StringBuilder persistedContent = new StringBuilder();
+
     public final static int DEFAULT_BUFFER_CAPACITY = 800000;
     private static final String newline = System.lineSeparator();
 
@@ -123,7 +130,16 @@ public class BufferedStringBuilder implements AutoCloseable {
 
     public void save() {
         if (this.writeFile != null && this.builder != null) {
-            SpecsIo.append(this.writeFile, this.builder.toString());
+            String toPersist = this.builder.toString();
+
+            // Append to file
+            SpecsIo.append(this.writeFile, toPersist);
+
+            // Update persisted content cache
+            if (!toPersist.isEmpty()) {
+                this.persistedContent.append(toPersist);
+            }
+
             this.builder = newStringBuilder();
         }
     }
@@ -134,6 +150,26 @@ public class BufferedStringBuilder implements AutoCloseable {
         }
 
         return new StringBuilder((int) (this.bufferCapacity * 1.10));
+    }
+
+    @Override
+    public String toString() {
+        // If this is a NullStringBuilder (no write file and no builder), return empty
+        if (this.writeFile == null && this.builder == null) {
+            return "";
+        }
+
+        // Compose persisted content (from saves) + current in-memory buffer
+        StringBuilder result = new StringBuilder();
+        if (this.persistedContent.length() > 0) {
+            result.append(this.persistedContent);
+        }
+
+        if (this.builder != null && this.builder.length() > 0) {
+            result.append(this.builder);
+        }
+
+        return result.toString();
     }
 
 }
