@@ -92,6 +92,11 @@ public class SpecsSwing {
      * @param r the Runnable to execute
      */
     public static void runOnSwing(Runnable r) {
+        // Gracefully handle null runnables
+        if (r == null) {
+            return;
+        }
+
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
         } else {

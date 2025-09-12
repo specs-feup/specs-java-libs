@@ -1,13 +1,15 @@
 package pt.up.fe.specs.util;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.File;
 import java.awt.Desktop;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,16 +22,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import pt.up.fe.specs.util.SpecsSystem;
 
 /**
  * Comprehensive test suite for SpecsSwing utility class.
@@ -145,8 +146,13 @@ class SpecsSwingTest {
 
     @Nested
     @DisplayName("Look and Feel Tests")
-    @DisabledIfSystemProperty(named = "java.awt.headless", matches = "true")
     class LookAndFeelTests {
+
+        @BeforeEach
+        void assumeNotHeadless() {
+            // Additional guard for CI environments that are effectively headless but may not set the system property
+            Assumptions.assumeFalse(SpecsSwing.isHeadless(), "Skipping LookAndFeelTests in headless environment");
+        }
 
         @BeforeEach
         void setUp() {
@@ -230,8 +236,12 @@ class SpecsSwingTest {
 
     @Nested
     @DisplayName("Swing Event Dispatch Tests")
-    @DisabledIfSystemProperty(named = "java.awt.headless", matches = "true")
     class SwingEventDispatchTests {
+
+        @BeforeEach
+        void assumeNotHeadless() {
+            Assumptions.assumeFalse(SpecsSwing.isHeadless(), "Skipping SwingEventDispatchTests in headless environment");
+        }
 
         @Test
         @DisplayName("runOnSwing should execute immediately on EDT")
@@ -383,8 +393,12 @@ class SpecsSwingTest {
 
     @Nested
     @DisplayName("Panel and Window Tests")
-    @DisabledIfSystemProperty(named = "java.awt.headless", matches = "true")
     class PanelWindowTests {
+
+        @BeforeEach
+        void assumeNotHeadless() {
+            Assumptions.assumeFalse(SpecsSwing.isHeadless(), "Skipping PanelWindowTests in headless environment");
+        }
 
         @Test
         @DisplayName("newWindow should create JFrame with panel")
