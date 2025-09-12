@@ -19,13 +19,22 @@
 
 package pt.up.fe.specs.util.utilities.heapwindow;
 
+import java.awt.EventQueue;
 import java.io.Serial;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.GroupLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.LayoutStyle;
+import javax.swing.WindowConstants;
+
 import pt.up.fe.specs.util.SpecsSystem;
+import pt.up.fe.specs.util.SpecsSwing;
 
 /**
  * Shows a Swing frame with information about the current and maximum memory of
@@ -33,15 +42,30 @@ import pt.up.fe.specs.util.SpecsSystem;
  *
  * @author Ancora Group <ancora.codigo@gmail.com>
  */
-public class HeapWindow extends javax.swing.JFrame {
+public class HeapWindow extends JFrame {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private static final long UPDATE_PERIOD_MS = 500;
 
+    /**
+     * If true, UI components and timer were initialized. False when running in a
+     * headless environment where Swing windows cannot be displayed.
+     */
+    private final boolean enabled;
+
     /** Creates new form HeapWindow */
     public HeapWindow() {
+        boolean headless = SpecsSwing.isHeadless();
+        this.enabled = !headless;
+
+        if (headless) {
+            // Headless - do not initialize Swing components or timers
+            this.timer = null;
+            return;
+        }
+
         initComponents();
         long heapMaxSize = Runtime.getRuntime().maxMemory();
 
@@ -71,76 +95,84 @@ public class HeapWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        this.jProgressBar1 = new javax.swing.JProgressBar();
-        this.jLabel1 = new javax.swing.JLabel();
-        this.jLabel2 = new javax.swing.JLabel();
+        this.jProgressBar1 = new JProgressBar();
+        this.jLabel1 = new JLabel();
+        this.jLabel2 = new JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.jLabel1.setText("Heap Use/Size");
 
         this.jLabel2.setText("Max. Size:");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(
                                 layout.createSequentialGroup()
                                         .addContainerGap()
                                         .addGroup(
-                                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addGroup(
                                                                 layout.createSequentialGroup()
                                                                         .addComponent(this.jProgressBar1,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                 172, Short.MAX_VALUE)
                                                                         .addContainerGap())
                                                         .addGroup(
                                                                 layout.createSequentialGroup()
                                                                         .addComponent(this.jLabel1)
                                                                         .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                                                LayoutStyle.ComponentPlacement.RELATED,
                                                                                 19, Short.MAX_VALUE)
                                                                         .addComponent(this.jLabel2)
                                                                         .addContainerGap(44, Short.MAX_VALUE)))));
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(
                                 layout.createSequentialGroup()
                                         .addContainerGap()
                                         .addGroup(
-                                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(this.jLabel1)
                                                         .addComponent(this.jLabel2))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(this.jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(this.jProgressBar1, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     public void run() {
+        if (!enabled) {
+            return; // No-op in headless environments
+        }
 
-        java.awt.EventQueue.invokeLater(() -> {
+        EventQueue.invokeLater(() -> {
             setTitle("Heap - " + SpecsSystem.getProgramName());
             setVisible(true);
         });
     }
 
     public void close() {
-        java.awt.EventQueue.invokeLater(() -> {
-            HeapWindow.this.timer.cancel();
+        if (!enabled) {
+            return; // Nothing to close
+        }
+        EventQueue.invokeLater(() -> {
+            if (HeapWindow.this.timer != null) {
+                HeapWindow.this.timer.cancel();
+            }
             dispose();
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JProgressBar jProgressBar1;
+    private JLabel jLabel1;
+    private JLabel jLabel2;
+    private JProgressBar jProgressBar1;
     // End of variables declaration//GEN-END:variables
     private final String jLabel2Prefix = "Max. Size: ";
     private final Timer timer;

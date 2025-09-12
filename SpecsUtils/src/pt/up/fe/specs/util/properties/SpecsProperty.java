@@ -160,7 +160,7 @@ public enum SpecsProperty {
                 return;
             }
 
-            boolean apply = bool && SpecsSwing.isSwingAvailable();
+            boolean apply = bool && SpecsSwing.isSwingAvailable() && !SpecsSwing.isHeadless();
             if (!apply) {
                 return;
             }
