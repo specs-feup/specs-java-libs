@@ -220,7 +220,7 @@ public class ConsumerThreadTest {
                 throw new RuntimeException("Consumption failed");
             };
 
-            var consumerThread = new TestableConsumerThread<>(consumeFunction);
+            var consumerThread = new TestableConsumerThread<>(consumeFunction, true);
             var mockStream = createMockStreamWithItems("item");
             consumerThread.provide(mockStream);
 
@@ -240,6 +240,10 @@ public class ConsumerThreadTest {
             assertThat(thread.isAlive()).isFalse();
             // Consumer result should be null since exception occurred
             assertThat(consumerThread.getConsumeResult()).isNull();
+            assertThat(consumerThread.hasFailed()).isTrue();
+            assertThat(consumerThread.getConsumeError())
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Consumption failed");
         }
     }
 
@@ -323,24 +327,39 @@ public class ConsumerThreadTest {
 
     // Testable version that exposes protected methods
     private static class TestableConsumerThread<T, K> extends ConsumerThread<T, K> {
+        private volatile Throwable error;
+        private final boolean suppressExceptionsOnRun;
 
         public TestableConsumerThread(Function<ObjectStream<T>, K> consumeFunction) {
+            this(consumeFunction, false);
+        }
+
+        public TestableConsumerThread(Function<ObjectStream<T>, K> consumeFunction, boolean suppressExceptionsOnRun) {
             super(consumeFunction);
+            this.suppressExceptionsOnRun = suppressExceptionsOnRun;
         }
 
         @Override
-        public void provide(ObjectStream<T> ostream) {
-            super.provide(ostream);
+        public void run() {
+            if (!suppressExceptionsOnRun) {
+                super.run();
+                return;
+            } else {
+                try {
+                    super.run();
+                } catch (Throwable t) {
+                    // Suppress stack trace noise but record it for assertions
+                    this.error = t;
+                }
+            }
         }
 
-        @Override
-        public ObjectStream<T> getOstream() {
-            return super.getOstream();
+        public boolean hasFailed() {
+            return error != null;
         }
 
-        @Override
-        public K getConsumeResult() {
-            return super.getConsumeResult();
+        public Throwable getConsumeError() {
+            return error;
         }
     }
 }

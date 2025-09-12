@@ -245,7 +245,7 @@ public class ProducerThreadTest {
             Function<ExceptionThrowingProducer, String> produceFunction = p -> {
                 throw new RuntimeException("Production failed");
             };
-            var producerThread = new TestableProducerThread<>(producer, produceFunction);
+            var producerThread = new TestableProducerThread<>(producer, produceFunction, true);
 
             try {
                 var stream = producerThread.newChannel();
@@ -256,6 +256,13 @@ public class ProducerThreadTest {
 
                 // Then - should handle exception and terminate
                 assertThatCode(() -> thread.join(2000)).doesNotThrowAnyException();
+
+                // Thread should have terminated and error should be recorded
+                assertThat(thread.isAlive()).isFalse();
+                assertThat(producerThread.hasFailed()).isTrue();
+                assertThat(producerThread.getProduceError())
+                    .isInstanceOf(RuntimeException.class)
+                    .hasMessage("Production failed");
 
                 stream.close();
             } catch (Exception e) {
@@ -317,14 +324,28 @@ public class ProducerThreadTest {
 
     // Testable version that exposes protected methods
     private static class TestableProducerThread<T, K extends ObjectProducer<T>> extends ProducerThread<T, K> {
+        private volatile Throwable error;
+        private final boolean suppressExceptionsOnRun;
 
         public TestableProducerThread(K producer, Function<K, T> produceFunction) {
+            this(producer, produceFunction, false);
+        }
+
+        public TestableProducerThread(K producer, Function<K, T> produceFunction, boolean suppressExceptionsOnRun) {
             super(producer, produceFunction);
+            this.suppressExceptionsOnRun = suppressExceptionsOnRun;
         }
 
         public TestableProducerThread(K producer, Function<K, T> produceFunction,
                 Function<pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer<T>, ObjectStream<T>> cons) {
+            this(producer, produceFunction, cons, false);
+        }
+
+        public TestableProducerThread(K producer, Function<K, T> produceFunction,
+                Function<pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer<T>, ObjectStream<T>> cons,
+                boolean suppressExceptionsOnRun) {
             super(producer, produceFunction, cons);
+            this.suppressExceptionsOnRun = suppressExceptionsOnRun;
         }
 
         @Override
@@ -335,6 +356,28 @@ public class ProducerThreadTest {
         @Override
         public ObjectStream<T> newChannel(int depth) {
             return super.newChannel(depth);
+        }
+
+        @Override
+        public void run() {
+            if (!suppressExceptionsOnRun) {
+                super.run();
+                return;
+            } else {
+                try {
+                    super.run();
+                } catch (Throwable t) {
+                    this.error = t;
+                }
+            }
+        }
+
+        public boolean hasFailed() {
+            return error != null;
+        }
+
+        public Throwable getProduceError() {
+            return error;
         }
     }
 }
