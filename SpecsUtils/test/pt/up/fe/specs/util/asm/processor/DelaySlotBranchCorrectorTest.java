@@ -283,9 +283,10 @@ class DelaySlotBranchCorrectorTest {
             corrector.giveInstruction(false, 0);
             assertThat(corrector.isJumpPoint()).isTrue(); // First jump executes
 
-            // Fourth instruction (delay slot of second jump completes)
+            // Fourth instruction: second jump was ignored (no queuing). Only previous was a jump.
             corrector.giveInstruction(false, 0);
-            assertThat(corrector.isJumpPoint()).isTrue(); // Second jump executes
+            assertThat(corrector.isJumpPoint()).isFalse();
+            assertThat(corrector.wasJumpPoint()).isTrue();
         }
 
         @Test
@@ -389,21 +390,17 @@ class DelaySlotBranchCorrectorTest {
         @Test
         @DisplayName("Should handle alternating jump patterns")
         void testEdgeCase_AlternatingPatterns_HandlesCorrectly() {
-            // Pattern: jump with delay, non-jump, jump immediate, non-jump, etc.
-            boolean[] jumpPattern = { true, false, true, false, true, false };
-            int[] delayPattern = { 1, 0, 0, 0, 2, 0 };
+            // Pattern: jump with delay, non-jump, immediate jump, non-jump, delayed jump (2 slots), delay slot 1, delay slot 2 (fires)
+            boolean[] jumpPattern = { true, false, true, false, true, false, false };
+            int[] delayPattern = { 1, 0, 0, 0, 2, 0, 0 };
 
             for (int i = 0; i < jumpPattern.length; i++) {
                 corrector.giveInstruction(jumpPattern[i], delayPattern[i]);
 
-                // Verify state consistency
-                boolean shouldJump = false;
-                if (i == 1)
-                    shouldJump = true; // Delay slot of first jump
-                if (i == 2)
-                    shouldJump = true; // Immediate jump
-                if (i == 5)
-                    shouldJump = true; // Delay slots of fifth jump complete
+                // Determine expected jump firing points under single pending jump model
+                boolean shouldJump = (i == 1) // Delay slot completion of first (delay=1) jump
+                        || (i == 2) // Immediate jump
+                        || (i == 6); // Completion of 2-slot delayed jump started at i=4 (slots at i=5, i=6)
 
                 if (shouldJump) {
                     assertThat(corrector.isJumpPoint()).isTrue();
@@ -411,6 +408,32 @@ class DelaySlotBranchCorrectorTest {
                     assertThat(corrector.isJumpPoint()).isFalse();
                 }
             }
+        }
+
+        @Test
+        @DisplayName("Should ignore nested jump appearing inside delay slots (no queuing)")
+        void testEdgeCase_NestedJumpIgnored_NoQueuing() {
+            DelaySlotBranchCorrector corrector = new DelaySlotBranchCorrector();
+
+            // Jump with 3 delay slots
+            corrector.giveInstruction(true, 3);
+            assertThat(corrector.isJumpPoint()).isFalse();
+
+            // Another jump appears inside delay slots (would have 1 delay slot)
+            corrector.giveInstruction(true, 1);
+            // Still serving original delay sequence, nested jump ignored
+            assertThat(corrector.isJumpPoint()).isFalse();
+
+            // Consume remaining delay slots
+            corrector.giveInstruction(false, 0); // now 1 left
+            assertThat(corrector.isJumpPoint()).isFalse();
+            corrector.giveInstruction(false, 0); // original jump fires
+            assertThat(corrector.isJumpPoint()).isTrue();
+
+            // Next instruction: no second jump pending
+            corrector.giveInstruction(false, 0);
+            assertThat(corrector.isJumpPoint()).isFalse();
+            assertThat(corrector.wasJumpPoint()).isTrue();
         }
     }
 

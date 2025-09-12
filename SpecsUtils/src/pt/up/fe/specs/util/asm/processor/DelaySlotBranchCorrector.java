@@ -13,8 +13,22 @@
 package pt.up.fe.specs.util.asm.processor;
 
 /**
- * Indicates instructions where the control flow may change in architectures
- * with delay slots.
+ * Indicates instructions where the control flow may change in architectures with delay slots.
+ * <p>
+ * <strong>Semantic model:</strong> This helper tracks at most <em>one</em> pending jump at a time. When a jump
+ * instruction with N (&gt;0) delay slots is seen, the next N instructions are treated as delay slot instructions; the
+ * last of those delay slot instructions (i.e. when the internal counter reaches 1) is reported as a jump point
+ * ( {@link #isJumpPoint()} returns {@code true}). If the jump has zero delay slots it is reported immediately.
+ * <p>
+ * <strong>Nested / overlapping jumps:</strong> If another jump instruction appears while there is still an outstanding
+ * (unresolved) delay slot sequence in progress, the new jump is <em>ignored</em>. No queuing or stacking of multiple
+ * future jump events is performed. This mirrors a simplified single in-flight branch model (sufficient for consumers
+ * such as basic block detection and consistent with common single delay-slot architectures like MicroBlaze, where a
+ * branch in the delay slot does not create a second deferred branch resolution event).
+ * <p>
+ * Rationale: Supporting multiple overlapping delayed jumps would require a queue of pending delay-slot counts and a
+ * richer API (e.g., multiple jump flags or an event list). Current use cases only require identifying basic block
+ * boundaries under a single pending jump assumption.
  *
  * @author Joao Bispo
  */
