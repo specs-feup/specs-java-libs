@@ -206,7 +206,7 @@ class MemoryProfilerTest {
 
         @Test
         @DisplayName("should execute in separate thread")
-        void shouldExecuteInSeparateThread(@TempDir Path tempDir) {
+        void shouldExecuteInSeparateThread(@TempDir Path tempDir) throws InterruptedException {
             File outputFile = tempDir.resolve("memory_thread.csv").toFile();
 
             MemoryProfiler profiler = new MemoryProfiler(100, TimeUnit.MILLISECONDS, outputFile);
@@ -223,6 +223,14 @@ class MemoryProfilerTest {
 
             // Main thread should continue normally
             assertThat(Thread.currentThread().getName()).isEqualTo(mainThreadName);
+
+            // Cleanup to release file handle and allow @TempDir deletion
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+                assertThat(worker.isAlive()).isFalse();
+            }
         }
     }
 
