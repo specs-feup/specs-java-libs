@@ -168,26 +168,40 @@ class SpecsTimerTaskTest {
         @Test
         @DisplayName("should be cancellable")
         void shouldBeCancellable() throws InterruptedException {
+            // Use a latch to deterministically wait for a known number of executions
             AtomicInteger counter = new AtomicInteger(0);
-            Runnable runnable = counter::incrementAndGet;
+            CountDownLatch initialRuns = new CountDownLatch(3); // wait for 3 executions
+            Runnable runnable = () -> {
+                counter.incrementAndGet();
+                initialRuns.countDown();
+            };
+
             SpecsTimerTask task = new SpecsTimerTask(runnable);
             Timer timer = new Timer();
 
+            final int periodMs = 50;
+
             try {
-                timer.scheduleAtFixedRate(task, 0, 50);
+                timer.scheduleAtFixedRate(task, 0, periodMs);
 
-                // Let it run briefly
-                Thread.sleep(150);
+                // Wait (with timeout) for the first N executions instead of relying on arbitrary sleeps
+                boolean gotInitialExecutions = initialRuns.await(1000, TimeUnit.MILLISECONDS);
+                assertThat(gotInitialExecutions)
+                        .as("Timer did not execute the expected initial runs in time")
+                        .isTrue();
 
-                // Cancel the task
+                // Cancel further executions. According to TimerTask semantics, an in-flight execution may still finish.
                 task.cancel();
+
+                // Allow any in-flight execution (that started before cancel) to complete and be counted.
+                Thread.sleep(periodMs + 20);
                 int countAfterCancel = counter.get();
 
-                // Wait a bit more
-                Thread.sleep(150);
-
-                // Counter should not have increased after cancellation
-                assertThat(counter.get()).isEqualTo(countAfterCancel);
+                // Wait longer than multiple periods; count should remain stable after cancellation grace window.
+                Thread.sleep(periodMs * 3L);
+                assertThat(counter.get())
+                        .as("Counter changed after cancellation (expected stable value)")
+                        .isEqualTo(countAfterCancel);
             } finally {
                 timer.cancel();
             }
