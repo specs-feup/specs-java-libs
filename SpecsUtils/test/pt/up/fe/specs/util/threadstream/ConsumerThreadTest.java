@@ -191,7 +191,8 @@ public class ConsumerThreadTest {
         @DisplayName("Should handle missing stream without propagating exception")
         void testMissingStream() {
             // Given
-            var consumerThread = new TestableConsumerThread<String, Integer>(stream -> 0);
+            // Use a variant that suppresses exceptions during run to avoid stack traces
+            var consumerThread = new TestableConsumerThread<String, Integer>(stream -> 0, true);
 
             // When - run without providing stream
             var thread = new Thread(consumerThread);
@@ -209,6 +210,8 @@ public class ConsumerThreadTest {
             assertThat(thread.isAlive()).isFalse();
             // Consumer result should be null since exception occurred
             assertThat(consumerThread.getConsumeResult()).isNull();
+            // And the consumer captured a failure internally
+            assertThat(consumerThread.hasFailed()).isTrue();
         }
 
         @Test
@@ -242,8 +245,8 @@ public class ConsumerThreadTest {
             assertThat(consumerThread.getConsumeResult()).isNull();
             assertThat(consumerThread.hasFailed()).isTrue();
             assertThat(consumerThread.getConsumeError())
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Consumption failed");
+                    .isInstanceOf(RuntimeException.class)
+                    .hasMessage("Consumption failed");
         }
     }
 
