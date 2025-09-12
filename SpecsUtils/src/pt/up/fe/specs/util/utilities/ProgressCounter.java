@@ -28,22 +28,24 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class ProgressCounter {
 
-    private final int max_count;
+    private final int maxCount;
     private int currentCount;
 
     /**
      * Creates a new ProgressCounter with the specified maximum count.
      *
      * The counter starts at 0. Each call to {@link #next()} or {@link #nextInt()}
-     * increments the internal current count. The {@link #hasNext()} method returns
-     * true while the current count is strictly less than the maximum count.
+     * increments the internal current count only while it is below the maximum
+     * count. Once the counter reaches the configured maximum, further calls to
+     * {@link #next()} or {@link #nextInt()} will not increase the counter but
+     * will return the capped value and emit a warning.
      *
      * @param maxCount the maximum number of steps (must be non-negative)
      * @throws IllegalArgumentException if {@code maxCount} is negative
      */
     public ProgressCounter(int maxCount) {
         Preconditions.checkArgument(maxCount >= 0, "maxCount should be non-negative");
-        this.max_count = maxCount;
+        this.maxCount = maxCount;
         this.currentCount = 0;
     }
 
@@ -62,16 +64,16 @@ public class ProgressCounter {
     public String next() {
         int currentCount = nextInt();
 
-        return "(" + currentCount + "/" + this.max_count + ")";
+        return "(" + currentCount + "/" + this.maxCount + ")";
     }
 
     public int nextInt() {
-        if (this.currentCount <= this.max_count) {
+        if (this.currentCount < this.maxCount) {
             this.currentCount += 1;
-        } else {
-            SpecsLogs.warn("Already reached the maximum count (" + this.max_count + ")");
+            return this.currentCount;
         }
 
+        SpecsLogs.warn("Already reached the maximum count (" + this.maxCount + ")");
         return this.currentCount;
     }
 
@@ -80,10 +82,10 @@ public class ProgressCounter {
     }
 
     public int getMaxCount() {
-        return this.max_count;
+        return this.maxCount;
     }
 
     public boolean hasNext() {
-        return this.currentCount < this.max_count;
+        return this.currentCount < this.maxCount;
     }
 }
