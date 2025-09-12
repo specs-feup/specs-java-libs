@@ -617,6 +617,15 @@ class JumpDetectorTest {
         }
 
         private boolean isBranchTakenInstruction(String instruction) {
+            // Consider instructions ending with *_TAKEN as taken, but distinguish *_NOT_TAKEN
+            // Previous implementation used contains("_TAKEN"), which incorrectly classified
+            // "BEQ_NOT_TAKEN" as taken because the substring "_TAKEN" is present.
+            if (instruction == null) {
+                return false;
+            }
+            if (instruction.contains("_NOT_TAKEN")) {
+                return false;
+            }
             return instruction.contains("_TAKEN");
         }
     }
