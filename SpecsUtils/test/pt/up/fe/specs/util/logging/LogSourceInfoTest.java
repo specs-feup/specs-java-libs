@@ -25,27 +25,29 @@ import org.junitpioneer.jupiter.RetryingTest;
 @DisplayName("LogSourceInfo Tests")
 class LogSourceInfoTest {
 
-    private Map<Level, LogSourceInfo> originalMapping;
-
     @BeforeEach
     void setUp() throws Exception {
-        // Save original state of LOGGER_SOURCE_INFO map
-        Field mapField = LogSourceInfo.class.getDeclaredField("LOGGER_SOURCE_INFO");
-        mapField.setAccessible(true);
-        @SuppressWarnings("unchecked")
-        Map<Level, LogSourceInfo> sourceInfoMap = (Map<Level, LogSourceInfo>) mapField.get(null);
-        originalMapping = new ConcurrentHashMap<>(sourceInfoMap);
+        // Ensure a deterministic baseline for every test (WARNING -> STACK_TRACE only)
+        resetLogSourceInfoDefaults();
     }
 
     @AfterEach
     void tearDown() throws Exception {
-        // Restore original state
+        // Always restore factory defaults to avoid cross-test pollution
+        resetLogSourceInfoDefaults();
+    }
+
+    /**
+     * Resets the internal LOGGER_SOURCE_INFO map to the factory defaults expected by the production code.
+     */
+    private void resetLogSourceInfoDefaults() throws Exception {
         Field mapField = LogSourceInfo.class.getDeclaredField("LOGGER_SOURCE_INFO");
         mapField.setAccessible(true);
         @SuppressWarnings("unchecked")
         Map<Level, LogSourceInfo> sourceInfoMap = (Map<Level, LogSourceInfo>) mapField.get(null);
         sourceInfoMap.clear();
-        sourceInfoMap.putAll(originalMapping);
+        // Factory default: WARNING -> STACK_TRACE
+        sourceInfoMap.put(Level.WARNING, LogSourceInfo.STACK_TRACE);
     }
 
     @Nested

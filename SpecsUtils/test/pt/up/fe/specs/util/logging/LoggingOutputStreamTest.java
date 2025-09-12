@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -34,7 +35,8 @@ class LoggingOutputStreamTest {
 
     // Test handler to capture log records
     private static class TestHandler extends Handler {
-        private final List<LogRecord> records = new ArrayList<>();
+        // Use a thread-safe list since several tests perform concurrent logging
+        private final List<LogRecord> records = new CopyOnWriteArrayList<>();
 
         @Override
         public void publish(LogRecord record) {
@@ -52,6 +54,7 @@ class LoggingOutputStreamTest {
         }
 
         public List<LogRecord> getRecords() {
+            // Return a snapshot copy to keep original ordering stable for assertions
             return new ArrayList<>(records);
         }
     }
