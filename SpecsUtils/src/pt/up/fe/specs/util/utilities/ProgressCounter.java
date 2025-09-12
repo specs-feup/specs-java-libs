@@ -13,16 +13,50 @@
 
 package pt.up.fe.specs.util.utilities;
 
+import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 
+/**
+ * Utility for tracking progress through a fixed number of steps.
+ *
+ * Behavior notes:
+ * - The constructor enforces a non-negative max count. Passing a negative value
+ * will throw an IllegalArgumentException (via
+ * {@link pt.up.fe.specs.util.Preconditions}).
+ * - The default constructor creates a counter with a very large maximum value
+ * (Integer.MAX_VALUE).
+ */
 public class ProgressCounter {
 
     private final int max_count;
     private int currentCount;
 
+    /**
+     * Creates a new ProgressCounter with the specified maximum count.
+     *
+     * The counter starts at 0. Each call to {@link #next()} or {@link #nextInt()}
+     * increments the internal current count. The {@link #hasNext()} method returns
+     * true while the current count is strictly less than the maximum count.
+     *
+     * @param maxCount the maximum number of steps (must be non-negative)
+     * @throws IllegalArgumentException if {@code maxCount} is negative
+     */
     public ProgressCounter(int maxCount) {
+        Preconditions.checkArgument(maxCount >= 0, "maxCount should be non-negative");
         this.max_count = maxCount;
         this.currentCount = 0;
+    }
+
+    /**
+     * Creates a new ProgressCounter with a default (very large) maximum value.
+     *
+     * The default maximum is {@link Integer#MAX_VALUE}, which effectively behaves
+     * as an unbounded counter for most practical use-cases. The same contract for
+     * incrementing and {@link #hasNext()} applies as with the parameterized
+     * constructor.
+     */
+    public ProgressCounter() {
+        this(Integer.MAX_VALUE);
     }
 
     public String next() {

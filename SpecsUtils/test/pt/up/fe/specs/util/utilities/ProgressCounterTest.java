@@ -326,11 +326,10 @@ class ProgressCounterTest {
         @Test
         @DisplayName("Should handle negative max count")
         void testNegativeMaxCount() {
-            ProgressCounter negativeCounter = new ProgressCounter(-5);
-
-            assertThat(negativeCounter.getMaxCount()).isEqualTo(-5);
-            assertThat(negativeCounter.getCurrentCount()).isEqualTo(0);
-            assertThat(negativeCounter.hasNext()).isTrue(); // Always true when current < max
+            // Constructor should reject negative maxCount
+            assertThatThrownBy(() -> new ProgressCounter(-5))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("maxCount should be non-negative");
         }
 
         @Test
