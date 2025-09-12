@@ -16,6 +16,7 @@ package pt.up.fe.specs.util.utilities;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Iterator;
+import java.util.Objects;
 
 import pt.up.fe.specs.util.collections.pushingqueue.MixedPushingQueue;
 import pt.up.fe.specs.util.collections.pushingqueue.PushingQueue;
@@ -85,8 +86,9 @@ public class PatternDetector {
 
         for (int i = 0; i < this.maxPatternSize; i++) {
 
-            // Check if there is a match
-            if (hashValue.equals(iterator.next())) {
+            // Check if there is a match (null-safe)
+            Integer other = iterator.next();
+            if (Objects.equals(hashValue, other)) {
                 // We have a match.
                 // Shift match queue to the left
                 this.matchQueues[i] = this.matchQueues[i].get(1, i + 1);
