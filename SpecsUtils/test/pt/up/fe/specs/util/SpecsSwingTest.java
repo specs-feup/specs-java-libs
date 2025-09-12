@@ -3,9 +3,11 @@ package pt.up.fe.specs.util;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
+import java.awt.Desktop;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,6 +27,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import pt.up.fe.specs.util.SpecsSystem;
 
 /**
  * Comprehensive test suite for SpecsSwing utility class.
@@ -464,6 +470,49 @@ class SpecsSwingTest {
     @DisplayName("File Browser Tests")
     class FileBrowserTests {
 
+        private MockedStatic<Runtime> runtimeStaticMock;
+        private Runtime runtimeMock;
+        private Process processMock;
+        private List<String[]> execCalls;
+    private MockedStatic<Desktop> desktopStaticMock;
+    private Desktop desktopMock;
+    private List<File> desktopBrowseCalls;
+
+        @BeforeEach
+        void setupMocks() throws Exception {
+            execCalls = new ArrayList<>();
+            desktopBrowseCalls = new ArrayList<>();
+            runtimeMock = Mockito.mock(Runtime.class);
+            processMock = Mockito.mock(Process.class);
+            Mockito.when(runtimeMock.exec(Mockito.any(String[].class))).thenAnswer(inv -> {
+                String[] cmd = inv.getArgument(0);
+                execCalls.add(cmd);
+                return processMock; // do nothing
+            });
+            runtimeStaticMock = Mockito.mockStatic(Runtime.class);
+            runtimeStaticMock.when(Runtime::getRuntime).thenReturn(runtimeMock);
+
+            // Mock Desktop fallback path
+            desktopMock = Mockito.mock(Desktop.class);
+            Mockito.doAnswer(inv -> {
+                File f = inv.getArgument(0);
+                desktopBrowseCalls.add(f);
+                return null;
+            }).when(desktopMock).browseFileDirectory(Mockito.any(File.class));
+            desktopStaticMock = Mockito.mockStatic(Desktop.class);
+            desktopStaticMock.when(Desktop::getDesktop).thenReturn(desktopMock);
+        }
+
+        @AfterEach
+        void tearDownMocks() {
+            if (runtimeStaticMock != null) {
+                runtimeStaticMock.close();
+            }
+            if (desktopStaticMock != null) {
+                desktopStaticMock.close();
+            }
+        }
+
         @Test
         @DisplayName("browseFileDirectory should handle non-existent file")
         void testBrowseFileDirectoryNonExistent() {
@@ -471,10 +520,30 @@ class SpecsSwingTest {
             File nonExistentFile = new File("this_file_does_not_exist.txt");
 
             // Execute - should not throw exception
-            assertThatCode(() -> {
-                boolean result = SpecsSwing.browseFileDirectory(nonExistentFile);
-                assertThat(result).isInstanceOf(Boolean.class);
-            }).doesNotThrowAnyException();
+            boolean result = SpecsSwing.browseFileDirectory(nonExistentFile);
+            assertThat(result).isTrue();
+            boolean isLinux = SpecsSystem.isLinux();
+            boolean isWindows = SpecsSystem.isWindows();
+            boolean isFallback = !isLinux && !isWindows; // macOS or others
+            if (isLinux || isWindows) {
+                assertThat(execCalls).hasSize(1);
+                var cmd = execCalls.get(0);
+                if (isLinux) {
+                    assertThat(cmd).containsExactly("gio", "open", nonExistentFile.getAbsolutePath());
+                } else { // Windows
+                    assertThat(cmd).hasSize(3);
+                    assertThat(cmd[0]).isEqualTo("explorer.exe");
+                    assertThat(cmd[1]).isEqualTo("/select,");
+                    assertThat(cmd[2]).isEqualTo(nonExistentFile.getAbsolutePath());
+                }
+                assertThat(desktopBrowseCalls).isEmpty();
+            } else {
+                // Fallback path must use Desktop browse
+                assertThat(isFallback).isTrue();
+                assertThat(execCalls).isEmpty();
+                assertThat(desktopBrowseCalls).hasSize(1);
+                assertThat(desktopBrowseCalls.get(0)).isEqualTo(nonExistentFile);
+            }
         }
 
         @Test
@@ -495,12 +564,32 @@ class SpecsSwingTest {
 
             try {
                 // Execute - should not throw exception
-                assertThatCode(() -> {
-                    boolean result = SpecsSwing.browseFileDirectory(tempFile);
-                    assertThat(result).isInstanceOf(Boolean.class);
-                }).doesNotThrowAnyException();
+                boolean success = SpecsSwing.browseFileDirectory(tempFile);
+                assertThat(success).isTrue();
             } finally {
                 tempFile.delete();
+            }
+            boolean isLinux = SpecsSystem.isLinux();
+            boolean isWindows = SpecsSystem.isWindows();
+            boolean isFallback = !isLinux && !isWindows;
+            if (isLinux || isWindows) {
+                assertThat(execCalls).hasSize(1);
+                var cmd = execCalls.get(0);
+                if (isLinux) {
+                    assertThat(cmd).containsExactly("gio", "open", tempFile.getParentFile().getAbsolutePath());
+                } else { // Windows
+                    assertThat(cmd).hasSize(3);
+                    assertThat(cmd[0]).isEqualTo("explorer.exe");
+                    assertThat(cmd[1]).isEqualTo("/select,");
+                    assertThat(cmd[2]).isEqualTo(tempFile.getAbsolutePath());
+                }
+                assertThat(desktopBrowseCalls).isEmpty();
+            } else {
+                assertThat(isFallback).isTrue();
+                assertThat(execCalls).isEmpty();
+                // Fallback passes the file itself (not parent) to Desktop
+                assertThat(desktopBrowseCalls).hasSize(1);
+                assertThat(desktopBrowseCalls.get(0)).isEqualTo(tempFile);
             }
         }
 
@@ -511,10 +600,31 @@ class SpecsSwingTest {
             File tempDir = new File(System.getProperty("java.io.tmpdir"));
 
             // Execute - should not throw exception
-            assertThatCode(() -> {
-                boolean result = SpecsSwing.browseFileDirectory(tempDir);
-                assertThat(result).isInstanceOf(Boolean.class);
-            }).doesNotThrowAnyException();
+            boolean success = SpecsSwing.browseFileDirectory(tempDir);
+            assertThat(success).isTrue();
+            boolean isLinux = SpecsSystem.isLinux();
+            boolean isWindows = SpecsSystem.isWindows();
+            boolean isFallback = !isLinux && !isWindows;
+            if (isLinux || isWindows) {
+                assertThat(execCalls).hasSize(1);
+                var cmd = execCalls.get(0);
+                if (isLinux) {
+                    assertThat(cmd).containsExactly("gio", "open", tempDir.getAbsolutePath());
+                } else { // Windows
+                    assertThat(cmd).hasSize(3);
+                    assertThat(cmd[0]).isEqualTo("explorer.exe");
+                    assertThat(cmd[1]).isEqualTo("/select,");
+                    // For directory case, Windows command still uses the path directly
+                    assertThat(cmd[2]).isEqualTo(tempDir.getAbsolutePath());
+                }
+                assertThat(desktopBrowseCalls).isEmpty();
+            } else {
+                assertThat(isFallback).isTrue();
+                assertThat(execCalls).isEmpty();
+                assertThat(desktopBrowseCalls).hasSize(1);
+                assertThat(desktopBrowseCalls.get(0)).isEqualTo(tempDir);
+            }
+            assertThat(tempDir.isDirectory()).isTrue();
         }
     }
 

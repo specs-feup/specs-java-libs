@@ -337,9 +337,7 @@ public class SpecsSwing {
                 return false;
             }
             return true;
-        }
-
-        if (SpecsSystem.isLinux()) {
+        } else if (SpecsSystem.isLinux()) {
             try {
                 var folderToOpen = file.isFile() ? file.getParentFile() : file;
                 Runtime.getRuntime()
@@ -349,9 +347,9 @@ public class SpecsSwing {
                 return false;
             }
             return true;
+        } else {
+            Desktop.getDesktop().browseFileDirectory(file);
+            return true;
         }
-
-        Desktop.getDesktop().browseFileDirectory(file);
-        return true;
     }
 }
