@@ -65,7 +65,7 @@ jobs:
           for project in "${projects[@]}"; do
             echo "\n===== Building and testing $project ====="
             cd "$project"
-            if ! gradle build test; then
+            if ! gradle build; then
               echo "[ERROR] $project failed to build or test"
               failed+=("$project")
             fi
