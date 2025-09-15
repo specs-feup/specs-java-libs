@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import pt.up.fe.specs.util.providers.FileResourceProvider;
 
@@ -24,24 +24,14 @@ import pt.up.fe.specs.util.providers.FileResourceProvider;
 @DisplayName("GenericFileResourceProvider")
 class GenericFileResourceProviderTest {
 
+    @TempDir
     private Path tempDir;
     private File testFile;
 
     @BeforeEach
     void setUp() throws IOException {
-        tempDir = Files.createTempDirectory("generic-file-resource-test");
         testFile = tempDir.resolve("test.txt").toFile();
         Files.writeString(testFile.toPath(), "Test content");
-    }
-
-    @AfterEach
-    void tearDown() throws IOException {
-        if (tempDir != null) {
-            Files.walk(tempDir)
-                    .map(Path::toFile)
-                    .sorted((f1, f2) -> f2.compareTo(f1)) // Delete files before directories
-                    .forEach(File::delete);
-        }
     }
 
     @Nested

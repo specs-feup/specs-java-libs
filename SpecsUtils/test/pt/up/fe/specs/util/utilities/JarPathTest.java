@@ -1,6 +1,8 @@
 package pt.up.fe.specs.util.utilities;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.io.IOException;
@@ -176,9 +178,9 @@ class JarPathTest {
 
         @Test
         @DisplayName("Should use system property when available and valid")
-        void testValidSystemProperty() throws IOException {
+        void testValidSystemProperty(@TempDir Path methodTemp) throws IOException {
             // Create a valid temporary directory
-            Path validDir = Files.createTempDirectory(tempDir, "jar_test");
+            Path validDir = Files.createDirectory(methodTemp.resolve("jar_test"));
             System.setProperty(TEST_PROPERTY, validDir.toString());
 
             JarPath jarPath = new JarPath(String.class, TEST_PROPERTY);
@@ -303,10 +305,10 @@ class JarPathTest {
 
         @Test
         @DisplayName("Should handle IO exceptions in canonical path resolution")
-        void testIOExceptionHandling() {
+        void testIOExceptionHandling(@TempDir Path methodTemp) {
             // Create a valid directory that we can reference
             try {
-                Path validDir = Files.createTempDirectory(tempDir, "jar_test");
+                Path validDir = Files.createDirectory(methodTemp.resolve("jar_test"));
                 System.setProperty(TEST_PROPERTY, validDir.toString());
 
                 JarPath jarPath = new JarPath(String.class, TEST_PROPERTY);
@@ -328,8 +330,8 @@ class JarPathTest {
 
         @Test
         @DisplayName("Should work with real file system paths")
-        void testRealFileSystem() throws IOException {
-            Path jarDir = Files.createTempDirectory(tempDir, "jar_location");
+        void testRealFileSystem(@TempDir Path methodTemp) throws IOException {
+            Path jarDir = Files.createDirectory(methodTemp.resolve("jar_location"));
             System.setProperty(TEST_PROPERTY, jarDir.toString());
 
             JarPath jarPath = new JarPath(String.class, "MyApp", TEST_PROPERTY);
