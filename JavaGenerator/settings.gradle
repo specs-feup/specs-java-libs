@@ -1,4 +1,4 @@
 rootProject.name = 'JavaGenerator'
 
-includeBuild("../../specs-java-libs/SpecsUtils")
-includeBuild("../../specs-java-libs/tdrcLibrary")
+includeBuild("../SpecsUtils")
+includeBuild("../tdrcLibrary")
