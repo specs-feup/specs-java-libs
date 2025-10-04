@@ -41,7 +41,6 @@ jobs:
             AsmParser
             CommonsCompressPlus
             CommonsLangPlus
-            GearmanPlus
             GitlabPlus
             GitPlus
             Gprofer
