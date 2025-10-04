@@ -37,6 +37,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1818,10 +1819,36 @@ public class SpecsIo {
             File outputFile = new File(outputFolder, escapedFilename);
 
             SpecsLogs.msgInfo("Downloading '" + escapedFilename + "' to '" + outputFolder + "'...");
-            try (FileOutputStream os = new FileOutputStream(outputFile);
-                    InputStream in = con.getInputStream()) {
-                while ((read = in.read(buffer)) > 0) {
-                    os.write(buffer, 0, read);
+
+            Path tempPath = null;
+            try {
+                tempPath = Files.createTempFile(outputFolder.toPath(), "download_", ".tmp");
+                File tempFile = tempPath.toFile();
+
+                try (FileOutputStream os = new FileOutputStream(tempFile);
+                        InputStream in = con.getInputStream()) {
+                    while ((read = in.read(buffer)) > 0) {
+                        os.write(buffer, 0, read);
+                    }
+                }
+
+                try {
+                    Files.move(tempPath, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING,
+                            StandardCopyOption.ATOMIC_MOVE);
+                } catch (AtomicMoveNotSupportedException atomicMoveException) {
+                    SpecsLogs.debug(() -> "Atomic move not supported when downloading '" + escapedFilename
+                            + "': " + atomicMoveException.getMessage());
+                    Files.move(tempPath, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
+            } finally {
+                final Path pathToDelete = tempPath;
+                if (pathToDelete != null) {
+                    try {
+                        Files.deleteIfExists(pathToDelete);
+                    } catch (IOException cleanupException) {
+                        SpecsLogs.debug(() -> "Could not delete temporary download file '" + pathToDelete + "': "
+                                + cleanupException.getMessage());
+                    }
                 }
             }
 
