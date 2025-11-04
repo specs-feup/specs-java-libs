@@ -277,15 +277,4 @@ public class SpecsAsm {
         input2 = SpecsBits.mask(input2, input3);
         return input1 >>> input2;
     }
-
-    /**
-     * Neutral carry value for addition operations.
-     */
-    public static final int CARRY_NEUTRAL_ADD = 0;
-
-    /**
-     * Neutral carry value for subtraction operations.
-     */
-    public static final int CARRY_NEUTRAL_SUB = 1;
-
 }

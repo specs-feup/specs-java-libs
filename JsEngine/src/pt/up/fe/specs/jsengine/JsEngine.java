@@ -27,8 +27,6 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
  * Main class for JavaScript engine integration and execution.
  * Represents the JavaScript engine used by LARA.
  * 
- * TODO: Replace 'Bindings' with 'Object'. Only JsEngine should manipulate JS objects
- * 
  * @author JoaoBispo
  *
  */

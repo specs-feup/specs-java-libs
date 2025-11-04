@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Utility class for supporting provider interfaces.
+ * Utility class for supporting ResourceProvider interfaces.
  * <p>
  * Provides helper methods for working with resource and key providers.
  * </p>
