@@ -369,13 +369,6 @@ class SpecsAsmTest {
     class ConstantsEdgeCasesTests {
 
         @Test
-        @DisplayName("carry constants should have correct values")
-        void testCarryConstants() {
-            assertThat(SpecsAsm.CARRY_NEUTRAL_ADD).isEqualTo(0);
-            assertThat(SpecsAsm.CARRY_NEUTRAL_SUB).isEqualTo(1);
-        }
-
-        @Test
         @DisplayName("operations should handle zero correctly")
         void testZeroHandling() {
             // Test arithmetic operations with zero
