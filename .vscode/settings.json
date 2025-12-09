@@ -1,7 +1,4 @@
 {
-    "jest.runMode": {
-        "type": "on-demand"
-    },
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic"
 }
