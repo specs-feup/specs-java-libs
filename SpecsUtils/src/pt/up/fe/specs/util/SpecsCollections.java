@@ -427,14 +427,9 @@ public class SpecsCollections {
     /**
      * Turns an Optional<T> into a Stream<T> of length zero or one depending upon
      * whether a value is present.
-     *
-     * <p>
-     * Source:
-     * <a href="http://stackoverflow.com/questions/22725537/using-java-8s-optional-with-streamflatmap">...</a>
      */
     public static <T> Stream<T> toStream(Optional<T> opt) {
         return opt.stream();
-
     }
 
     /**

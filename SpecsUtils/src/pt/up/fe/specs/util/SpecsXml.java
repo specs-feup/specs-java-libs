@@ -31,6 +31,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -65,13 +66,16 @@ public class SpecsXml {
         return getXmlRoot(xmlDocument, null);
     }
 
-    public static Document getXmlRoot(InputStream xmlDocument, InputStream schemaDocument) {
-
+    /**
+     * Parses an XML document from an InputSource, optionally validating against a schema.
+     * Supports InputSource from String, InputStream, or Reader.
+     */
+    public static Document getXmlRoot(InputSource in, InputStream schemaDocument) {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(xmlDocument);
+            Document doc = dBuilder.parse(in);
 
             // If schema present, validate document
             if (schemaDocument != null) {
@@ -81,9 +85,7 @@ public class SpecsXml {
                 validator.validate(new DOMSource(doc));
             }
 
-            // optional, but recommended
-            // read this -
-            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+            // Normalize the document (recommended)
             doc.getDocumentElement().normalize();
 
             return doc;
@@ -96,27 +98,32 @@ public class SpecsXml {
         return null;
     }
 
+    /**
+     * Parses an XML document from a String, optionally validating against a schema.
+     */
+    public static Document getXmlRoot(String xmlContents, InputStream schemaDocument) {
+        return getXmlRoot(new InputSource(SpecsIo.toInputStream(xmlContents)), schemaDocument);
+    }
+
+    /**
+     * Parses an XML document from an InputStream, optionally validating against a schema.
+     */
+    public static Document getXmlRoot(InputStream xmlDocument, InputStream schemaDocument) {
+        return getXmlRoot(new InputSource(xmlDocument), schemaDocument);
+    }
+
+    /**
+     * Parses an XML document from a file path (URI), optionally validating against a schema.
+     */
+    public static Document getXmlRootFromUri(String uri, InputStream schemaDocument) {
+        return getXmlRoot(new InputSource(uri), schemaDocument);
+    }
+
     public static Document getXmlRootFromUri(String uri) {
-        try {
-
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder;
-
-            dBuilder = dbFactory.newDocumentBuilder();
-
-            Document doc = dBuilder.parse(uri);
-
-            // optional, but recommended
-            // read this -
-            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-            doc.getDocumentElement().normalize();
-
-            return doc;
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            SpecsLogs.warn("Error message:\n", e);
+        if (uri == null) {
+            throw new IllegalArgumentException("URI cannot be null");
         }
-
-        return null;
+        return getXmlRoot(new InputSource(uri), null);
     }
 
     /**
