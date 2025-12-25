@@ -138,7 +138,7 @@ public class ProcessExecutionTest {
         @DisplayName("Should generate correct command string for single command")
         void testGetCommandString_SingleCommand_GeneratesCorrectly() {
             // Arrange
-            List<String> singleCommand = Collections.singletonList("ls");
+            List<String> singleCommand = List.of("ls");
             ProcessExecution execution = new ProcessExecution(singleCommand, workingDirectory);
 
             // Act
@@ -247,7 +247,7 @@ public class ProcessExecutionTest {
         @DisplayName("Should handle non-existent command")
         void testRun_NonExistentCommand_HandlesFailure() {
             // Arrange
-            List<String> invalidCommand = Collections.singletonList("nonexistentcommand12345");
+            List<String> invalidCommand = List.of("nonexistentcommand12345");
             ProcessExecution execution = new ProcessExecution(invalidCommand, workingDirectory);
 
             // Act
@@ -307,7 +307,7 @@ public class ProcessExecutionTest {
         @DisplayName("Should handle single command in description")
         void testGetDescription_SingleCommand_HandlesCorrectly() {
             // Arrange
-            List<String> singleCommand = Collections.singletonList("make");
+            List<String> singleCommand = List.of("make");
             ProcessExecution execution = new ProcessExecution(singleCommand, workingDirectory);
 
             // Act

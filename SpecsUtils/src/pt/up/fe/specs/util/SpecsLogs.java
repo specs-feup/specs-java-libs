@@ -16,7 +16,6 @@ package pt.up.fe.specs.util;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.FileHandler;
@@ -139,7 +138,7 @@ public class SpecsLogs {
      *
      */
     public static void addHandler(Handler handler) {
-        addHandlers(Collections.singletonList(handler));
+        addHandlers(List.of(handler));
     }
 
     public static void removeHandler(Handler handler) {

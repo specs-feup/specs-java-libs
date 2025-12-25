@@ -27,7 +27,7 @@ class TreeNodeUtilsTest {
         //  /
         // grandchild1
         grandchild1 = new TestTreeNode("grandchild1");
-        child1 = new TestTreeNode("child1", Collections.singletonList(grandchild1));
+        child1 = new TestTreeNode("child1", List.of(grandchild1));
         child2 = new TestTreeNode("child2");
         root = new TestTreeNode("root", Arrays.asList(child1, child2));
     }
@@ -75,7 +75,7 @@ class TreeNodeUtilsTest {
         @DisplayName("getDescendants() should return descendants of specified type")
         void testGetDescendants_ReturnsCorrectType() {
             List<TestTreeNode> descendants = TreeNodeUtils.getDescendants(TestTreeNode.class,
-                    Collections.singletonList(root));
+                    List.of(root));
 
             // Should return all descendants but not root itself
             assertThat(descendants).containsExactlyInAnyOrder(child1, child2, grandchild1);
@@ -85,7 +85,7 @@ class TreeNodeUtilsTest {
         @DisplayName("getDescendantsAndSelves() should include input nodes")
         void testGetDescendantsAndSelves_IncludesSelf() {
             List<TestTreeNode> descendantsAndSelf = TreeNodeUtils.getDescendantsAndSelves(TestTreeNode.class,
-                    Collections.singletonList(root));
+                    List.of(root));
 
             // Should return all descendants and the root itself
             assertThat(descendantsAndSelf).containsExactlyInAnyOrder(root, child1, child2, grandchild1);
@@ -169,11 +169,11 @@ class TreeNodeUtilsTest {
             TestTreeNode emptyNode = new TestTreeNode("empty");
 
             List<TestTreeNode> descendants = TreeNodeUtils.getDescendants(TestTreeNode.class,
-                    Collections.singletonList(emptyNode));
+                    List.of(emptyNode));
             assertThat(descendants).isEmpty();
 
             List<TestTreeNode> descendantsAndSelf = TreeNodeUtils.getDescendantsAndSelves(TestTreeNode.class,
-                    Collections.singletonList(emptyNode));
+                    List.of(emptyNode));
             assertThat(descendantsAndSelf).containsExactly(emptyNode);
         }
     }

@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.enums;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -86,7 +87,7 @@ public class EnumHelper<T extends Enum<T>> {
 
     public static <T extends Enum<T>> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum,
             T exclude) {
-        return newLazyHelper(anEnum, Collections.singletonList(exclude));
+        return newLazyHelper(anEnum, List.of(exclude));
     }
 
     public static <T extends Enum<T>> Lazy<EnumHelper<T>> newLazyHelper(Class<T> anEnum,

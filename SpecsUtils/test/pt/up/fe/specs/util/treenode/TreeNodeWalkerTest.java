@@ -27,7 +27,7 @@ class TreeNodeWalkerTest {
         //  /
         // grandchild1
         grandchild1 = new TestTreeNode("grandchild1");
-        child1 = new TestTreeNode("child1", Collections.singletonList(grandchild1));
+        child1 = new TestTreeNode("child1", List.of(grandchild1));
         child2 = new TestTreeNode("child2");
         root = new TestTreeNode("root", Arrays.asList(child1, child2));
     }

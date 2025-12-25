@@ -625,7 +625,7 @@ public class SpecsIo {
      *         have a certain extension.
      */
     public static List<File> getFilesRecursive(File folder, String extension) {
-        return getFilesRecursive(folder, Collections.singletonList(extension), true, path -> false);
+        return getFilesRecursive(folder, List.of(extension), true, path -> false);
     }
 
     /**
@@ -2265,7 +2265,7 @@ public class SpecsIo {
         for (File source : sources) {
             // Convert source to absolute path
             File canonicalSource = SpecsIo.getCanonicalFile(source);
-            getFiles(Collections.singletonList(canonicalSource), recursive, extensions, cutoffFolders)
+            getFiles(List.of(canonicalSource), recursive, extensions, cutoffFolders)
                     .forEach(file -> fileMap.put(SpecsIo.getCanonicalPath(file), canonicalSource));
         }
 

@@ -16,7 +16,6 @@ package pt.up.fe.specs.util.jobs;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class JobUtils {
             Collection<String> extensions, int folderLevel) {
 
         int currentLevel = folderLevel;
-        List<File> currentFolderList = Collections.singletonList(sourceFolder);
+        List<File> currentFolderList = List.of(sourceFolder);
         while (currentLevel > 0) {
             currentLevel--;
 

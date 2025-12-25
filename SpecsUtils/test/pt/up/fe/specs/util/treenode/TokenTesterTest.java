@@ -29,7 +29,7 @@ class TokenTesterTest {
         //  /
         // grandchild1
         grandchild1 = new TestTreeNode("grandchild1", "leaf");
-        child1 = new TestTreeNode("child1", "parent", Collections.singletonList(grandchild1));
+        child1 = new TestTreeNode("child1", "parent", List.of(grandchild1));
         child2 = new TestTreeNode("child2", "leaf");
         root = new TestTreeNode("root", "root", Arrays.asList(child1, child2));
     }
@@ -282,8 +282,8 @@ class TokenTesterTest {
         void testTokenTester_HandlesComplexTreeStructures() {
             // Create a more complex tree
             TestTreeNode deepChild = new TestTreeNode("deep", "deep");
-            TestTreeNode mediumChild = new TestTreeNode("medium", "medium", Collections.singletonList(deepChild));
-            TestTreeNode complexRoot = new TestTreeNode("complexRoot", "root", Collections.singletonList(mediumChild));
+            TestTreeNode mediumChild = new TestTreeNode("medium", "medium", List.of(deepChild));
+            TestTreeNode complexRoot = new TestTreeNode("complexRoot", "root", List.of(mediumChild));
 
             // Test for nodes at depth >= 2
             TokenTester deepNodeTester = node -> node.getDepth() >= 2;

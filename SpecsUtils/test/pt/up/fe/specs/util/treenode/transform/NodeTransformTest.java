@@ -68,7 +68,7 @@ class NodeTransformTest {
         @Test
         @DisplayName("Should support different transform type names")
         void testDifferentTransformTypes() {
-            TestNodeTransform deleteTransform = new TestNodeTransform("DELETE", Collections.singletonList(operand1));
+            TestNodeTransform deleteTransform = new TestNodeTransform("DELETE", List.of(operand1));
             TestNodeTransform replaceTransform = new TestNodeTransform("REPLACE", operands);
             TestNodeTransform moveTransform = new TestNodeTransform("MOVE", operands);
 
@@ -159,7 +159,7 @@ class NodeTransformTest {
         @Test
         @DisplayName("execute() should work with different operand configurations")
         void testExecute_WithDifferentOperandConfigurations() {
-            TestNodeTransform singleOpTransform = new TestNodeTransform("SINGLE", Collections.singletonList(operand1));
+            TestNodeTransform singleOpTransform = new TestNodeTransform("SINGLE", List.of(operand1));
             TestNodeTransform noOpTransform = new TestNodeTransform("NO_OP", Collections.emptyList());
             TestNodeTransform multiOpTransform = new TestNodeTransform("MULTI", operands);
 

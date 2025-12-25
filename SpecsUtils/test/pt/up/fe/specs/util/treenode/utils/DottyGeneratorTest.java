@@ -29,7 +29,7 @@ class DottyGeneratorTest {
         //  /
         // grandchild1
         grandchild1 = new TestTreeNode("grandchild1");
-        child1 = new TestTreeNode("child1", Collections.singletonList(grandchild1));
+        child1 = new TestTreeNode("child1", List.of(grandchild1));
         child2 = new TestTreeNode("child2");
         root = new TestTreeNode("root", Arrays.asList(child1, child2));
     }
@@ -209,9 +209,9 @@ class DottyGeneratorTest {
             // Create a deeper tree: root -> child -> grandchild -> greatgrandchild
             TestTreeNode greatGrandchild = new TestTreeNode("greatgrandchild");
             TestTreeNode deepGrandchild = new TestTreeNode("deepgrandchild",
-                    Collections.singletonList(greatGrandchild));
-            TestTreeNode deepChild = new TestTreeNode("deepchild", Collections.singletonList(deepGrandchild));
-            TestTreeNode deepRoot = new TestTreeNode("deeproot", Collections.singletonList(deepChild));
+                    List.of(greatGrandchild));
+            TestTreeNode deepChild = new TestTreeNode("deepchild", List.of(deepGrandchild));
+            TestTreeNode deepRoot = new TestTreeNode("deeproot", List.of(deepChild));
 
             String dotty = DottyGenerator.buildDotty(deepRoot);
 

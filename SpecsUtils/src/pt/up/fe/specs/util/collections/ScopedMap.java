@@ -15,7 +15,6 @@ package pt.up.fe.specs.util.collections;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,7 +156,7 @@ public class ScopedMap<V> {
      *
      */
     public void addSymbol(String key, V symbol) {
-        this.rootNode.addSymbol(Collections.singletonList(key), symbol);
+        this.rootNode.addSymbol(List.of(key), symbol);
     }
 
     /**

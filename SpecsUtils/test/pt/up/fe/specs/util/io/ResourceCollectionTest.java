@@ -66,7 +66,7 @@ class ResourceCollectionTest {
             // Given
             String id = "unique-collection";
             boolean isIdUnique = true;
-            Collection<ResourceProvider> resources = Collections.singletonList(mockProvider1);
+            Collection<ResourceProvider> resources = List.of(mockProvider1);
 
             // When
             ResourceCollection collection = new ResourceCollection(id, isIdUnique, resources);
@@ -118,7 +118,7 @@ class ResourceCollectionTest {
             // Given
             String id = null;
             boolean isIdUnique = true;
-            Collection<ResourceProvider> resources = Collections.singletonList(mockProvider1);
+            Collection<ResourceProvider> resources = List.of(mockProvider1);
 
             // When
             ResourceCollection collection = new ResourceCollection(id, isIdUnique, resources);
@@ -222,7 +222,7 @@ class ResourceCollectionTest {
         @DisplayName("Should handle single resource provider")
         void testSingleResourceProvider() {
             // Given
-            Collection<ResourceProvider> resources = Collections.singletonList(mockProvider1);
+            Collection<ResourceProvider> resources = List.of(mockProvider1);
             ResourceCollection collection = new ResourceCollection("single", true, resources);
 
             // When/Then
@@ -341,7 +341,7 @@ class ResourceCollectionTest {
             // Given
             String emptyId = "";
             ResourceCollection collection = new ResourceCollection(emptyId, true,
-                    Collections.singletonList(mockProvider1));
+                    List.of(mockProvider1));
 
             // When/Then
             assertThat(collection.id()).isEmpty();
@@ -420,7 +420,7 @@ class ResourceCollectionTest {
                     Arrays.asList(mockProvider1, mockProvider2));
 
             ResourceCollection dynamicResources = new ResourceCollection("dynamic-content", false,
-                    Collections.singletonList(mockProvider3));
+                    List.of(mockProvider3));
 
             // When/Then
             assertThat(configResources.id()).isEqualTo("config-files");
@@ -437,7 +437,7 @@ class ResourceCollectionTest {
         void testResourceProviderHierarchies() {
             // Given
             Collection<ResourceProvider> primaryResources = Arrays.asList(mockProvider1, mockProvider2);
-            Collection<ResourceProvider> fallbackResources = Collections.singletonList(mockProvider3);
+            Collection<ResourceProvider> fallbackResources = List.of(mockProvider3);
 
             ResourceCollection primaryCollection = new ResourceCollection("primary", true, primaryResources);
             ResourceCollection fallbackCollection = new ResourceCollection("fallback", true, fallbackResources);

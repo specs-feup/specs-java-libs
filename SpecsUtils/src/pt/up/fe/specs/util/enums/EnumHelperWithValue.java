@@ -112,7 +112,7 @@ public class EnumHelperWithValue<T extends Enum<T> & StringProvider> extends Enu
         if (anEnum == null) {
             throw new NullPointerException("Enum class cannot be null");
         }
-        return newLazyHelperWithValue(anEnum, Collections.singletonList(exclude));
+        return newLazyHelperWithValue(anEnum, List.of(exclude));
     }
 
     public static <T extends Enum<T> & StringProvider> Lazy<EnumHelperWithValue<T>> newLazyHelperWithValue(

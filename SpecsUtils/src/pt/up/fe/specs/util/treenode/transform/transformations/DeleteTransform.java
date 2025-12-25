@@ -13,7 +13,7 @@
 
 package pt.up.fe.specs.util.treenode.transform.transformations;
 
-import java.util.Collections;
+import java.util.List;
 
 import pt.up.fe.specs.util.treenode.NodeInsertUtils;
 import pt.up.fe.specs.util.treenode.TreeNode;
@@ -22,7 +22,7 @@ import pt.up.fe.specs.util.treenode.transform.ANodeTransform;
 public class DeleteTransform<K extends TreeNode<K>> extends ANodeTransform<K> {
 
     public DeleteTransform(K node) {
-        super("delete", Collections.singletonList(node));
+        super("delete", List.of(node));
     }
 
     public K getNode() {
