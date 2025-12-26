@@ -53,7 +53,7 @@ public class XStreamUtils {
     public static <T> boolean write(File file, Object object, ObjectXml<T> stream) {
         String xmlContents = stream.toXml(object);
         if (xmlContents == null) {
-            SpecsLogs.getLogger().warning("Could not generate XML.");
+            SpecsLogs.warn("Could not generate XML.");
             return false;
         }
 

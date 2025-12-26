@@ -114,7 +114,7 @@ public class BufferedStringBuilder implements AutoCloseable {
     public BufferedStringBuilder append(String string) {
 
         if (this.builder == null) {
-            SpecsLogs.getLogger().warning("Object has already been closed.");
+            SpecsLogs.warn("Object has already been closed.");
             return null;
         }
 

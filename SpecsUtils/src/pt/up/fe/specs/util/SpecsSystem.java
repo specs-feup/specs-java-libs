@@ -442,14 +442,14 @@ public class SpecsSystem {
             return map.get(thread);
         }
 
-        SpecsLogs.getLogger().warning("Could not find thread '" + mainThread + "'.");
+        SpecsLogs.warn("Could not find thread '" + mainThread + "'.");
         return null;
     }
 
     public static String getProgramName() {
         StackTraceElement[] stack = getMainStackTrace();
         if (stack == null) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Could not get stack of main thread. Returning empty string.");
             return "";
         }

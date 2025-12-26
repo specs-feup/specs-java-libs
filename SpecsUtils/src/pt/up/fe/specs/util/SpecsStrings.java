@@ -253,7 +253,7 @@ public class SpecsStrings {
         } else if (booleanString.equals("false")) {
             return false;
         } else {
-            SpecsLogs.getLogger().warning("Couldn''t parse '" + booleanString + "' into an Boolean.");
+            SpecsLogs.warn("Couldn''t parse '" + booleanString + "' into an Boolean.");
             return null;
         }
     }
@@ -459,7 +459,7 @@ public class SpecsStrings {
     public static List<Integer> instructionRangeHexDecode(String encodedRange) {
         String[] nums = encodedRange.split(SpecsStrings.RANGE_SEPARATOR);
         if (nums.length != 2) {
-            SpecsLogs.getLogger().warning("Could not decode string '" + encodedRange + "'.");
+            SpecsLogs.warn("Could not decode string '" + encodedRange + "'.");
             return null;
         }
 
@@ -589,7 +589,7 @@ public class SpecsStrings {
             }
         } catch (PatternSyntaxException ex) {
             // Syntax error in the regular expression
-            SpecsLogs.getLogger().warning(ex.getMessage());
+            SpecsLogs.warn(ex.getMessage());
         }
 
         return tester;
@@ -614,7 +614,7 @@ public class SpecsStrings {
             }
         } catch (PatternSyntaxException ex) {
             // Syntax error in the regular expression
-            SpecsLogs.getLogger().warning(ex.getMessage());
+            SpecsLogs.warn(ex.getMessage());
         }
 
         return results;
@@ -687,7 +687,7 @@ public class SpecsStrings {
             case HOURS -> "h";
             case DAYS -> "d";
             default -> {
-                SpecsLogs.getLogger().warning("Case not defined:" + timeUnit);
+                SpecsLogs.warn("Case not defined:" + timeUnit);
                 yield "";
             }
         };

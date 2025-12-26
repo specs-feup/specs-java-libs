@@ -61,7 +61,7 @@ public class SpecsAsm {
      */
     public static ArithmeticResult32 add32(int input1, int input2, int carry) {
         if (carry != 0 && carry != 1) {
-            SpecsLogs.getLogger().warning("Carry is different than 0 or 1 (" +
+            SpecsLogs.warn("Carry is different than 0 or 1 (" +
                     carry + ")");
         }
 
@@ -91,7 +91,7 @@ public class SpecsAsm {
      */
     public static ArithmeticResult32 rsub32(int input1, int input2, int carry) {
         if (carry != 0 && carry != 1) {
-            SpecsLogs.getLogger().warning("Carry is different than 0 or 1 (" +
+            SpecsLogs.warn("Carry is different than 0 or 1 (" +
                     carry + ")");
         }
 

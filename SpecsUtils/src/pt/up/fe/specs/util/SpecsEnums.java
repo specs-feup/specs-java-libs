@@ -190,7 +190,7 @@ public class SpecsEnums {
      */
     public static <K extends Enum<K>> Class<?> getClass(K[] values) {
         if (values.length == 0) {
-            SpecsLogs.getLogger().warning("Given array is empty");
+            SpecsLogs.warn("Given array is empty");
             return null;
         }
 
@@ -212,7 +212,7 @@ public class SpecsEnums {
     public static <T> List<T> extractValues(Class<? extends T> anEnumClass) {
         // Check class
         if (!anEnumClass.isEnum()) {
-            SpecsLogs.getLogger().warning("Class '" + anEnumClass.getName() + "' does not represent an enum.");
+            SpecsLogs.warn("Class '" + anEnumClass.getName() + "' does not represent an enum.");
             return null;
         }
 
@@ -257,7 +257,7 @@ public class SpecsEnums {
         Set<Class<?>> interfaces = new HashSet<>(interfacesList);
 
         if (!interfaces.contains(interfaceClass)) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Class '" + enumImplementingInterface.getName() + "' does not implement " + interfaceClass + "'.");
             return null;
         }

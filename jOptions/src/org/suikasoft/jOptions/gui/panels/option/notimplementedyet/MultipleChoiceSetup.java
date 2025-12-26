@@ -215,7 +215,7 @@ public class MultipleChoiceSetup extends FieldPanel {
         int setupIndex = choicesBoxNames.indexOf(enumName);
 
         if (setupIndex == -1) {
-            SpecsLogs.getLogger().warning("Could not find enum '" + enumName + "'. Available enums:" + setups);
+            SpecsLogs.warn("Could not find enum '" + enumName + "'. Available enums:" + setups);
             return;
         }
 
@@ -260,7 +260,7 @@ public class MultipleChoiceSetup extends FieldPanel {
 
         int choice = choicesBox.getSelectedIndex();
         if (choice == -1) {
-            SpecsLogs.getLogger().warning("Could not get index of selected setup.");
+            SpecsLogs.warn("Could not get index of selected setup.");
             return null;
         }
         currentSetups.setPreferredIndex(choice);

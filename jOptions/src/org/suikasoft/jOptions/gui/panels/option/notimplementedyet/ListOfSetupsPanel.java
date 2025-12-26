@@ -249,7 +249,7 @@ public class ListOfSetupsPanel extends FieldPanel {
         int setupIndex = choicesBoxShadow.indexOf(enumName);
 
         if (setupIndex == -1) {
-            SpecsLogs.getLogger().warning("Could not find enum '" + enumName + "'. Available enums:" + setups);
+            SpecsLogs.warn("Could not find enum '" + enumName + "'. Available enums:" + setups);
             return;
         }
 
@@ -301,7 +301,7 @@ public class ListOfSetupsPanel extends FieldPanel {
      */
     public void removeElement(int index) {
         if (elementsBox.getItemCount() <= index) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Given index ('" + index + "')is too big. Elements size: " + elementsBox.getItemCount());
             return;
         }
@@ -339,7 +339,7 @@ public class ListOfSetupsPanel extends FieldPanel {
             return index - 1;
         }
 
-        SpecsLogs.getLogger().warning("Invalid index '" + index + "' for list with '" + numElements + "' elements.");
+        SpecsLogs.warn("Invalid index '" + index + "' for list with '" + numElements + "' elements.");
         return -1;
     }
 

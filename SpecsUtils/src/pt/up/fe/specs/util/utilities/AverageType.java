@@ -86,7 +86,7 @@ public enum AverageType {
                 return SpecsMath.harmonicMean(values, true);
 
             default:
-                SpecsLogs.getLogger().warning("Case not implemented: '" + this + "'");
+                SpecsLogs.warn("Case not implemented: '" + this + "'");
                 return 0.0;
         }
     }

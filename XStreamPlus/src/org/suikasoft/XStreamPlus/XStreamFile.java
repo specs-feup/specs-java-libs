@@ -94,7 +94,7 @@ public class XStreamFile<T> {
             return getXstream().toXML(null);
         }
         if (!(config.getTargetClass().isInstance(object))) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Given object of class '" + object.getClass() + "' is not "
                             + "compatible with class '" + config.getTargetClass() + "'.");
             return null;
@@ -139,7 +139,7 @@ public class XStreamFile<T> {
         for (String key : mappings.keySet()) {
             // Check if key is not a reserved alias
             if (reservedAlias.contains(key)) {
-                SpecsLogs.getLogger().warning(
+                SpecsLogs.warn(
                         "'" + key + "' is a reserved alias. Skipping this mapping.");
                 continue;
             }

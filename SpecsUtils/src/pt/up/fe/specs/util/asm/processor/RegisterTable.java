@@ -35,7 +35,7 @@ public class RegisterTable {
 
     public Integer put(RegisterId regId, Integer registerValue) {
         if (registerValue == null) {
-            SpecsLogs.getLogger().warning("Null input not accepted.");
+            SpecsLogs.warn("Null input not accepted.");
             return null;
         }
         return this.registerValues.put(regId.getName(), registerValue);
@@ -53,25 +53,25 @@ public class RegisterTable {
             return value;
         }
 
-        SpecsLogs.getLogger().warning("Could not find register '" + registerName + "' in table.");
+        SpecsLogs.warn("Could not find register '" + registerName + "' in table.");
         return null;
     }
 
     private Integer getFlagValue(String registerName) {
         if (registerName == null) {
-            SpecsLogs.getLogger().warning("Register name '" + registerName + "' does not represent a valid flag.");
+            SpecsLogs.warn("Register name '" + registerName + "' does not represent a valid flag.");
             return null;
         }
         Integer bitPosition = RegisterUtils.decodeFlagBit(registerName);
         if (bitPosition == null) {
-            SpecsLogs.getLogger().warning("Could not recognize key: " + registerName);
+            SpecsLogs.warn("Could not recognize key: " + registerName);
             return null;
         }
 
         String regName = RegisterUtils.decodeFlagName(registerName);
         Integer value = this.registerValues.get(regName);
         if (value == null) {
-            SpecsLogs.getLogger().warning("Register '" + regName + "' not found.");
+            SpecsLogs.warn("Register '" + regName + "' not found.");
             return null;
         }
 

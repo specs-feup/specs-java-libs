@@ -243,7 +243,7 @@ public class OptionsPanel extends GuiTab {
 
         File file = new File(optionsFilename);
         if (!file.isFile()) {
-            SpecsLogs.getLogger().warning("Could not open file '" + optionsFilename + "'");
+            SpecsLogs.warn("Could not open file '" + optionsFilename + "'");
             outputFile = null;
             saveButton.setEnabled(false);
             updateFileInfoString();

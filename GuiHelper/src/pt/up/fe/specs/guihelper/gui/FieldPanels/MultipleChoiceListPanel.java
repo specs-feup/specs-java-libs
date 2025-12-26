@@ -137,7 +137,7 @@ public class MultipleChoiceListPanel extends FieldPanel {
 	}
 	// Check if value is selected
 	if (!selectedValuesShadow.contains(valueName)) {
-	    SpecsLogs.getLogger().warning(
+	    SpecsLogs.warn(
 		    "Could not find value '" + valueName + "' in already "
 			    + "selected choices. Currently selected choices:" + selectedValuesShadow);
 	    return false;

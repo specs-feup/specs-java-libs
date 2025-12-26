@@ -132,7 +132,7 @@ public class JobUtils {
     public static int runJob(Job job) {
         int returnValue = job.run();
         if (returnValue != 0) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Problems while running job: returned value '" + returnValue + "'.\n" + "Job:"
                             + job + "\n");
         }
@@ -157,7 +157,7 @@ public class JobUtils {
 
             // Check if we cancel other jobs.
             if (job.isInterrupted()) {
-                SpecsLogs.getLogger().info("Cancelling remaining jobs.");
+                SpecsLogs.info("Cancelling remaining jobs.");
                 return false;
             }
         }

@@ -38,14 +38,14 @@ public class RegisterUtils {
     public static Integer decodeFlagBit(String registerFlagName) {
         // Handle null input gracefully
         if (registerFlagName == null) {
-            SpecsLogs.getLogger().warning("Cannot decode flag bit from null input");
+            SpecsLogs.warn("Cannot decode flag bit from null input");
             return null;
         }
 
         int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
 
         if (beginIndex == -1) {
-            SpecsLogs.getLogger().warning("Flag '" + registerFlagName + "' does not represent "
+            SpecsLogs.warn("Flag '" + registerFlagName + "' does not represent "
                     + "a valid flag.");
             return null;
         }
@@ -68,13 +68,13 @@ public class RegisterUtils {
      */
     public static String decodeFlagName(String registerFlagName) {
         if (registerFlagName == null) {
-            SpecsLogs.getLogger().warning("Cannot decode flag name from null input");
+            SpecsLogs.warn("Cannot decode flag name from null input");
             return null;
         }
 
         int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
         if (beginIndex == -1) {
-            SpecsLogs.getLogger().warning("Flag '" + registerFlagName + "' does not represent "
+            SpecsLogs.warn("Flag '" + registerFlagName + "' does not represent "
                     + "a valid flag.");
             return null;
         }
@@ -83,7 +83,7 @@ public class RegisterUtils {
         String bitPortion = registerFlagName.substring(beginIndex + 1);
         Integer bitValue = SpecsStrings.parseInteger(bitPortion);
         if (bitValue == null) {
-            SpecsLogs.getLogger().warning("Flag '" + registerFlagName + "' has invalid bit portion: '"
+            SpecsLogs.warn("Flag '" + registerFlagName + "' has invalid bit portion: '"
                     + bitPortion + "' is not a valid integer.");
             return null;
         }

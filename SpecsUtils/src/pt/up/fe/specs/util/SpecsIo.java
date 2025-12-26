@@ -440,13 +440,13 @@ public class SpecsIo {
             if (!file.exists()) {
                 boolean success = file.createNewFile();
                 if (!success) {
-                    SpecsLogs.getLogger().warning("Could not create file '" + file + "'");
+                    SpecsLogs.warn("Could not create file '" + file + "'");
                     return false;
                 }
             }
 
             if (!file.isFile()) {
-                SpecsLogs.getLogger().warning("Path '" + file + "' is not a file.");
+                SpecsLogs.warn("Path '" + file + "' is not a file.");
                 return false;
             }
 
@@ -939,7 +939,7 @@ public class SpecsIo {
     public static String getResource(String resourceName) {
         try (InputStream inputStream = SpecsIo.resourceToStream(resourceName)) {
             if (inputStream == null) {
-                SpecsLogs.getLogger().warning("Could not get InputStream.");
+                SpecsLogs.warn("Could not get InputStream.");
                 return null;
             }
 
@@ -1101,7 +1101,7 @@ public class SpecsIo {
         try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
             return ois.readObject();
         } catch (ClassNotFoundException | IOException ex) {
-            SpecsLogs.getLogger().warning(ex.toString());
+            SpecsLogs.warn(ex.toString());
             return null;
         }
 

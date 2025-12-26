@@ -73,7 +73,7 @@ public class PanelUtils {
 	if (type == FieldType.multipleChoice) {
 	    MultipleChoice multipleChoice = SetupFieldUtils.getMultipleChoices(setupField);
 	    if (multipleChoice == null) {
-		SpecsLogs.getLogger().warning(messageCannotLoadPanel(type));
+		SpecsLogs.warn(messageCannotLoadPanel(type));
 		return null;
 	    }
 
@@ -90,13 +90,13 @@ public class PanelUtils {
 	if (type == FieldType.multipleChoiceStringList) {
 	    MultipleChoice multipleChoice = SetupFieldUtils.getMultipleChoices(setupField);
 	    if (multipleChoice == null) {
-		SpecsLogs.getLogger().warning(messageCannotLoadPanel(type));
+		SpecsLogs.warn(messageCannotLoadPanel(type));
 		return null;
 	    }
 
 	    StringList stringList = multipleChoice.getChoices();
 	    if (stringList == null) {
-		SpecsLogs.getLogger().warning("Choices not defined for option '" + setupField + "'.");
+		SpecsLogs.warn("Choices not defined for option '" + setupField + "'.");
 		return null;
 	    }
 
@@ -115,7 +115,7 @@ public class PanelUtils {
 	if (type == FieldType.setupList) {
 	    MultipleSetup choices = SetupFieldUtils.getMultipleSetup(setupField);
 	    if (choices == null) {
-		SpecsLogs.getLogger().warning("Cannot load setup list panel.");
+		SpecsLogs.warn("Cannot load setup list panel.");
 		return null;
 	    }
 
@@ -125,7 +125,7 @@ public class PanelUtils {
 	if (type == FieldType.multipleChoiceSetup) {
 	    MultipleSetup choices = SetupFieldUtils.getMultipleSetup(setupField);
 	    if (choices == null) {
-		SpecsLogs.getLogger().warning("Cannot load multiple choice setup panel.");
+		SpecsLogs.warn("Cannot load multiple choice setup panel.");
 		return null;
 	    }
 
@@ -135,7 +135,7 @@ public class PanelUtils {
 	if (type == FieldType.setup) {
 	    SingleSetup choices = SetupFieldUtils.getSingleSetup(setupField);
 	    if (choices == null) {
-		SpecsLogs.getLogger().warning("Cannot load single setup panel.");
+		SpecsLogs.warn("Cannot load single setup panel.");
 		return null;
 	    }
 
@@ -145,14 +145,14 @@ public class PanelUtils {
 	if (type == FieldType.integratedSetup) {
 	    SingleSetup choices = SetupFieldUtils.getSingleSetup(setupField);
 	    if (choices == null) {
-		SpecsLogs.getLogger().warning("Cannot load integrated setup panel.");
+		SpecsLogs.warn("Cannot load integrated setup panel.");
 		return null;
 	    }
 
 	    return new IntegratedSetupPanel(choices);
 	}
 
-	SpecsLogs.getLogger().warning(
+	SpecsLogs.warn(
 		"Option type '" + type + "' in option '" + setupField.name() + "' not implemented yet.");
 	return null;
     }

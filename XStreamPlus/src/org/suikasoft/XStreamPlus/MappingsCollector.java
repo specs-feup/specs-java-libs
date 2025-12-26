@@ -116,7 +116,7 @@ public class MappingsCollector {
             Class<?> childClass = newMappings.get(key);
             if (totalMappings.containsKey(key)) {
                 Class<?> definedClass = totalMappings.get(key);
-                SpecsLogs.getLogger().warning(
+                SpecsLogs.warn(
                         "Alias '" + key + "' is already defined for class '"
                                 + definedClass
                                 + "'. Skipping this mapping for class '"

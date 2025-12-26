@@ -129,7 +129,7 @@ public class BaseSetupPanel extends JPanel implements ComponentListener {
 	    // Get panel
 	    FieldPanel panel = panels.get(key);
 	    if (panel == null) {
-		SpecsLogs.getLogger().warning("Could not find panel for option '" + key + "'.");
+		SpecsLogs.warn("Could not find panel for option '" + key + "'.");
 		continue;
 	    }
 
@@ -151,7 +151,7 @@ public class BaseSetupPanel extends JPanel implements ComponentListener {
 	    FieldPanel panel = panels.get(key);
 	    FieldValue value = panel.getOption();
 	    if (value == null) {
-		SpecsLogs.getLogger().warning("value is null.");
+		SpecsLogs.warn("value is null.");
 		// No valid value for the table
 		continue;
 	    }

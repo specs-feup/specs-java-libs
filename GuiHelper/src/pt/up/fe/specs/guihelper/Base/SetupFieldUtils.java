@@ -106,7 +106,7 @@ public class SetupFieldUtils {
 	    rawData = new StringList();
 	    break;
 	default:
-	    SpecsLogs.getLogger().warning("Case '" + valueType + "' not defined.");
+	    SpecsLogs.warn("Case '" + valueType + "' not defined.");
 	    return null;
 	}
 
@@ -126,7 +126,7 @@ public class SetupFieldUtils {
 	// Check if implements SetupFieldEnum interface
 	Object setupFieldInstance = SpecsEnums.getInterfaceFromEnum(enumSetupField, SetupFieldEnum.class);
 	if (setupFieldInstance == null) {
-	    SpecsLogs.getLogger().warning("Could not get SetupField instance.");
+	    SpecsLogs.warn("Could not get SetupField instance.");
 	    return null;
 	}
 
@@ -163,7 +163,7 @@ public class SetupFieldUtils {
 	try {
 	    choices = (SingleSetup) enumOption;
 	} catch (ClassCastException ex) {
-	    SpecsLogs.getLogger().warning(
+	    SpecsLogs.warn(
 		    "Class '" + enumOption.getClass() + "' does not implement " + SingleSetup.class);
 	}
 
@@ -182,7 +182,7 @@ public class SetupFieldUtils {
 	try {
 	    choices = (MultipleSetup) enumOption;
 	} catch (ClassCastException ex) {
-	    SpecsLogs.getLogger().warning(
+	    SpecsLogs.warn(
 		    "Class '" + enumOption.getClass() + "' does not implement " + MultipleSetup.class);
 	}
 
@@ -201,7 +201,7 @@ public class SetupFieldUtils {
 	try {
 	    choices = (MultipleChoice) enumOption;
 	} catch (ClassCastException ex) {
-	    SpecsLogs.getLogger().warning(
+	    SpecsLogs.warn(
 		    "Class '" + enumOption.getClass() + "' does not implement " + MultipleChoice.class);
 	}
 
