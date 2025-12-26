@@ -1,15 +1,14 @@
 plugins {
- 	id 'distribution'
+    id 'distribution'
+    id 'java'
 }
 
-// Java project
-apply plugin: 'java'
-
 java {
+    withSourcesJar()
+
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
-
 
 // Repositories providers
 repositories {
@@ -17,44 +16,34 @@ repositories {
 }
 
 dependencies {
-	testImplementation "junit:junit:4.13.1"     
-	
-	implementation ':CommonsLangPlus'	
-	implementation ':jOptions'		
-	implementation ':SpecsUtils'
-	
-	implementation group: 'org.graalvm.js', name: 'js-scriptengine', version: '23.0.7'
-	implementation group: 'org.graalvm.js', name: 'js', version: '23.0.7'
-	implementation group: 'com.google.code.gson', name: 'gson', version: '2.12.1'
-	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
-}
+    testImplementation "junit:junit:4.13.1"
 
-java {
-	withSourcesJar()
-}
+    implementation ':CommonsLangPlus'
+    implementation ':jOptions'
+    implementation ':SpecsUtils'
 
+    implementation group: 'org.graalvm.js', name: 'js-scriptengine', version: '23.0.7'
+    implementation group: 'org.graalvm.js', name: 'js', version: '23.0.7'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.12.1'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
+}
 
 // Project sources
 sourceSets {
-   main {
-      java {
-         srcDir 'src'
-      }
-
-	  resources {
-		srcDir 'resources'
-	  }      
-   }
-	
-   
-   test {
-      java {
-         srcDir 'test'
-      }
-	  
-	  resources {
-		srcDir 'resources'
-	  }
-   }
-   
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
 }

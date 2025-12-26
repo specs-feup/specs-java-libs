@@ -43,9 +43,6 @@ sourceSets {
         java {
             srcDir 'test'
         }
-        resources {
-            srcDir 'test-resources'
-        }
     }
 }
 
@@ -77,4 +74,3 @@ test {
 
     finalizedBy jacocoTestReport
 }
-
