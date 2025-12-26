@@ -1,4 +1,0 @@
-rootProject.name = 'Z3Helper'
-
-includeBuild("../CommonsLangPlus")
-includeBuild("../SpecsUtils")

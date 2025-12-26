@@ -37,19 +37,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -644,37 +637,6 @@ public class SpecsSystem {
     }
 
     /**
-     * Taken from
-     * <a href="http://stackoverflow.com/questions/4748673/how-can-i-check-the-bitness-of-my-os-using-java-j2se-not-os-">...</a>
-     * arch/5940770#5940770
-     *
-     * @return true if the system is 64-bit, false otherwise.
-     */
-    public static boolean is64Bit() {
-        String arch = System.getenv("PROCESSOR_ARCHITECTURE");
-        String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
-
-        if (arch == null) {
-            String osArch = System.getProperty("os.arch");
-
-            if (osArch.endsWith("amd64")) {
-                return true;
-            } else if (osArch.equals("i386") || osArch.equals("x86")) {
-                return false;
-            } else {
-                throw new RuntimeException("Could not determine the bitness of the operating system");
-            }
-        }
-
-        String realArch = arch.endsWith("64")
-                || wow64Arch != null && wow64Arch.endsWith("64")
-                        ? "64"
-                        : "32";
-
-        return !realArch.equals("32");
-    }
-
-    /**
      * Launches the callable in another thread and waits termination.
      *
      */
@@ -737,52 +699,6 @@ public class SpecsSystem {
     }
 
     /**
-     * Runs the given supplier in a separate thread, encapsulating the result in a
-     * Future.
-     *
-     * <p>
-     * Taken from here:
-     * <a href="https://stackoverflow.com/questions/5715235/java-set-timeout-on-a-certain-block-of-code">...</a>
-     *
-     */
-    public static <T> Future<T> getFuture(Supplier<T> supplier) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        var future = executor.submit(supplier::get);
-        executor.shutdown(); // This does not cancel the already-scheduled task.
-
-        return future;
-    }
-
-    public static int executeOnProcessAndWait(Class<?> aClass, String... args) {
-        return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), Arrays.asList(args));
-    }
-
-    /**
-     * Taken from here:
-     * <a href="https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process">...</a>
-     *
-     */
-    public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
-            List<String> args) {
-
-        String classpath = System.getProperty("java.class.path");
-
-        String className = aClass.getCanonicalName();
-
-        List<String> command = new ArrayList<>();
-        command.addAll(
-                Arrays.asList("java", "-cp", classpath, className));
-
-        command.addAll(args);
-
-        ProcessBuilder process = new ProcessBuilder(command);
-        process.directory(workingDir);
-
-        ProcessOutputAsString output = runProcess(process, false, true);
-        return output.getReturnValue();
-    }
-
-    /**
      * Returns a double based on the major (feature) and minor (interim) segments of
      * the runtime version.
      * <p>
@@ -823,70 +739,6 @@ public class SpecsSystem {
         var version = Runtime.version();
         return major > version.feature() || (major == version.feature() && minor >= version.interim());
     }
-
-    /***** Methods for dynamically extending the classpath *****/
-    /***** Taken from <a href="https://stackoverflow.com/a/42052857/1189808">...</a> *****/
-    private static class SpclClassLoader extends URLClassLoader {
-        static {
-            ClassLoader.registerAsParallelCapable();
-        }
-
-        private final Set<Path> userLibPaths = new CopyOnWriteArraySet<>();
-
-        private SpclClassLoader() {
-            super(new URL[0]);
-        }
-
-        @Override
-        protected void addURL(URL url) {
-            super.addURL(url);
-        }
-
-        protected void addLibPath(String newpath) {
-            userLibPaths.add(Paths.get(newpath).toAbsolutePath());
-        }
-
-        @Override
-        protected String findLibrary(String libname) {
-            String nativeName = System.mapLibraryName(libname);
-            return userLibPaths.stream().map(tpath -> tpath.resolve(nativeName)).filter(Files::exists)
-                    .map(Path::toString).findFirst().orElse(super.findLibrary(libname));
-        }
-    }
-
-    private final static SpclClassLoader ucl = new SpclClassLoader();
-
-    /**
-     * Adds a jar file or directory to the classpath. From Utils4J.
-     *
-     * @param newpaths JAR filename(s) or directory(s) to add
-     * @return URLClassLoader after newpaths added if newpaths != null
-     */
-    public static ClassLoader addToClasspath(String... newpaths) {
-        if (newpaths != null)
-            try {
-                for (String newpath : newpaths)
-                    if (newpath != null && !newpath.trim().isEmpty())
-                        ucl.addURL(Paths.get(newpath.trim()).toUri().toURL());
-            } catch (IllegalArgumentException | MalformedURLException e) {
-                RuntimeException re = new RuntimeException(e);
-                re.setStackTrace(e.getStackTrace());
-                throw re;
-            }
-        return ucl;
-    }
-
-    /**
-     * Adds to library path in ClassLoader returned by addToClassPath
-     *
-     * @param newpaths Path(s) to directory(s) holding OS library files
-     */
-    public static void addToLibraryPath(String... newpaths) {
-        for (String newpath : Objects.requireNonNull(newpaths))
-            ucl.addLibPath(newpath);
-    }
-
-    /***** ENDS methods for dynamically extending the classpath *****/
 
     public static boolean isDebug() {
         return IS_DEBUG.get();
@@ -1005,50 +857,6 @@ public class SpecsSystem {
         }
 
         return null;
-    }
-
-    /**
-     * Taken from here:
-     * <a href="https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689">...</a>
-     *
-     */
-    private static Set<Class<?>> getClassesBfs(Class<?> clazz) {
-        Set<Class<?>> classes = new LinkedHashSet<>();
-        Set<Class<?>> nextLevel = new LinkedHashSet<>();
-        nextLevel.add(clazz);
-        do {
-            classes.addAll(nextLevel);
-            Set<Class<?>> thisLevel = new LinkedHashSet<>(nextLevel);
-            nextLevel.clear();
-            for (Class<?> each : thisLevel) {
-                Class<?> superClass = each.getSuperclass();
-                if (superClass != null && superClass != Object.class) {
-                    nextLevel.add(superClass);
-                }
-                nextLevel.addAll(Arrays.asList(each.getInterfaces()));
-            }
-        } while (!nextLevel.isEmpty());
-        return classes;
-    }
-
-    /**
-     * Taken from here:
-     * <a href="https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689">...</a>
-     *
-     */
-    public static List<Class<?>> getCommonSuperClasses(Class<?>... classes) {
-        return getCommonSuperClasses(Arrays.asList(classes));
-    }
-
-    public static List<Class<?>> getCommonSuperClasses(List<Class<?>> classes) {
-        // start off with set from first hierarchy
-        Set<Class<?>> rollingIntersect = new LinkedHashSet<>(
-                getClassesBfs(classes.get(0)));
-        // intersect with next
-        for (int i = 1; i < classes.size(); i++) {
-            rollingIntersect.retainAll(getClassesBfs(classes.get(i)));
-        }
-        return new LinkedList<>(rollingIntersect);
     }
 
     /**

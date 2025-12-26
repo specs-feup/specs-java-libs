@@ -19,9 +19,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -206,13 +204,6 @@ public class SpecsSystemTest {
     class SystemProperties {
 
         @Test
-        @DisplayName("is64Bit should return boolean value")
-        void testIs64Bit() {
-            // Execute and verify it returns a boolean without exception
-            assertThatCode(() -> SpecsSystem.is64Bit()).doesNotThrowAnyException();
-        }
-
-        @Test
         @DisplayName("isDebug should return boolean value")
         void testIsDebug() {
             // Execute
@@ -306,34 +297,6 @@ public class SpecsSystemTest {
 
             // Verify
             assertThat(result).isEqualTo("test result");
-        }
-
-        @Test
-        @DisplayName("getFuture should create future from supplier")
-        void testGetFuture() {
-            // Arrange
-            var supplier = (java.util.function.Supplier<String>) () -> "future result";
-
-            // Execute
-            Future<String> future = SpecsSystem.getFuture(supplier);
-            String result = SpecsSystem.get(future);
-
-            // Verify
-            assertThat(result).isEqualTo("future result");
-        }
-
-        @Test
-        @DisplayName("get with timeout should handle future completion")
-        void testGetWithTimeout() {
-            // Arrange
-            var supplier = (java.util.function.Supplier<String>) () -> "timeout result";
-            Future<String> future = SpecsSystem.getFuture(supplier);
-
-            // Execute
-            String result = SpecsSystem.get(future, 5, TimeUnit.SECONDS);
-
-            // Verify
-            assertThat(result).isEqualTo("timeout result");
         }
 
         @Test

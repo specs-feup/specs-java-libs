@@ -58,7 +58,6 @@ jobs:
             SymjaPlus
             tdrcLibrary
             XStreamPlus
-            Z3Helper
           )
           failed=()
           for project in "${projects[@]}"; do

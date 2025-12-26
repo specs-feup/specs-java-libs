@@ -41,11 +41,7 @@ import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,7 +67,6 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import pt.up.fe.specs.util.collections.SpecsList;
-import pt.up.fe.specs.util.io.PathFilter;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 
@@ -1458,56 +1453,6 @@ public class SpecsIo {
     }
 
     /**
-     * Taken from here:
-     * <a href="https://stackoverflow.com/a/31685610/1189808">...</a>
-     *
-     */
-    private static List<File> getFilesWithPattern(File folder, String pattern) {
-        List<File> files = new ArrayList<>();
-
-        if (!folder.isDirectory()) {
-            SpecsLogs.info("Given folder for getting files with pattern does not exist: '" + folder + "'");
-            return files;
-        }
-
-        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
-                Paths.get(folder.getAbsolutePath()), pattern)) {
-
-            dirStream.forEach(path -> files.add(new File(path.toString())));
-        } catch (IOException e) {
-            SpecsLogs.info("Exception while getting files with pattern , returning empty list: " + e.getMessage());
-        }
-
-        return files;
-    }
-
-    public static List<File> getPathsWithPattern(File folder, String pattern, boolean recursive, String filter) {
-        return getPathsWithPattern(folder, pattern, recursive, Enum.valueOf(PathFilter.class, filter));
-    }
-
-    public static List<File> getPathsWithPattern(File folder, String pattern, boolean recursive, PathFilter filter) {
-        List<File> files = new ArrayList<>();
-
-        // Treat recursion separately
-        if (recursive) {
-            List<File> subFolders = getFolders(folder);
-            for (File subFolder : subFolders) {
-                files.addAll(getPathsWithPattern(subFolder, pattern, recursive, filter));
-            }
-        }
-
-        List<File> patternPaths = getFilesWithPattern(folder, pattern);
-
-        for (File currentPatternPath : patternPaths) {
-            if (filter.isAllowed(currentPatternPath)) {
-                files.add(currentPatternPath);
-            }
-        }
-
-        return files;
-    }
-
-    /**
      * Returns the relative path of the file given in parameter, relative to the
      * working folder.
      *
@@ -2396,49 +2341,6 @@ public class SpecsIo {
         }
 
         return false;
-    }
-
-    /**
-     * Based on
-     * <a href=
-     * "https://stackoverflow.com/questions/304268/getting-a-files-md5-checksum-in-java">...</a>
-     *
-     */
-    public static String getMd5(File file) {
-        try (InputStream is = Files.newInputStream(Paths.get(file.getAbsolutePath()))) {
-            return getMd5(is);
-        } catch (IOException e) {
-            throw new RuntimeException("Problems while using file '" + file + "'", e);
-        }
-
-    }
-
-    public static String getMd5(String contents) {
-        return getMd5(new ByteArrayInputStream(contents.getBytes()));
-    }
-
-    public static String getMd5(InputStream is) {
-
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Could not find MD5 algorithm", e);
-        }
-
-        try (
-                BufferedInputStream bis = new BufferedInputStream(is);
-                DigestInputStream dis = new DigestInputStream(bis, md)) {
-            while (dis.read() != -1) {
-            }
-            /* Read decorated stream (dis) to EOF as normal... */
-        } catch (IOException e) {
-            throw new RuntimeException("Could not calculate MD5", e);
-        }
-
-        byte[] digest = md.digest();
-
-        return SpecsStrings.bytesToHex(digest);
     }
 
     public static void closeStreamAfterError(OutputStream stream) {

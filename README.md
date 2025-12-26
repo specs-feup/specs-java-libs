@@ -91,7 +91,6 @@ The repository includes the following libraries:
 - **SymjaPlus** - Extended Symja symbolic math
 - **tdrcLibrary** - TDRC's library utilities
 - **XStreamPlus** - Extended XStream XML processing
-- **Z3Helper** - Z3 theorem prover integration
 
 ## Contributing
 

@@ -88,8 +88,6 @@ public class SpecsStrings {
                 block != Character.UnicodeBlock.SPECIALS;
     }
 
-    private final static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-
     /**
      * Tries to parse a String into a integer. If an exception happens, warns the
      * user and returns a 0.
@@ -1370,34 +1368,6 @@ public class SpecsStrings {
     }
 
     /**
-     * Counts the number of lines in the given String.
-     *
-     * <p>
-     * Taken from here:
-     * <a href=
-     * "https://stackoverflow.com/questions/2850203/count-the-number-of-lines-in-a-java-string#2850259">...</a>
-     *
-     */
-    public static int countLines(String string, boolean trim) {
-
-        if (trim) {
-            string = string.trim();
-        }
-
-        if (string.isEmpty()) {
-            return 0;
-        }
-
-        Matcher m = LINE_COUNTER_PATTERN.matcher(string);
-        int lines = 1;
-        while (m.find()) {
-            lines++;
-        }
-
-        return lines;
-    }
-
-    /**
      * Remove all occurrences of 'match' from 'string'.
      *
      */
@@ -1622,46 +1592,11 @@ public class SpecsStrings {
         return Optional.empty();
     }
 
-    /**
-     * Basen on
-     * <a href=
-     * "https://stackoverflow.com/questions/9655181/how-to-convert-a-byte-array-to-a-hex-string-in-java">...</a>
-     *
-     */
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-
     public static String toPercentage(double fraction) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setDecimalSeparator(',');
         DecimalFormat df = new DecimalFormat("##0.00", symbols);
         return df.format(fraction * 100) + "%";
-    }
-
-    /**
-     * Taken from here:
-     * <a href=
-     * "https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java#3758880">...</a>
-     *
-     */
-    public static String toBytes(long bytes, boolean si) {
-        int unit = si ? 1000 : 1024;
-        if (bytes < unit)
-            return bytes + " B";
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
-    }
-
-    public static String toBytes(long bytes) {
-        return toBytes(bytes, false);
     }
 
     public static String removeWhitespace(String string) {

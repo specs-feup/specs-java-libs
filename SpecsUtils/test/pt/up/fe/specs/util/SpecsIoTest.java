@@ -988,25 +988,6 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("Test MD5 operations")
-        void testMd5Operations(@TempDir Path tempDir) throws IOException {
-            String content = "test content";
-
-            String md5String = SpecsIo.getMd5(content);
-            assertThat(md5String).hasSize(32).matches("[a-fA-F0-9]+");
-
-            File testFile = tempDir.resolve("test.txt").toFile();
-            Files.write(testFile.toPath(), content.getBytes());
-            String md5File = SpecsIo.getMd5(testFile);
-            assertThat(md5File).isEqualTo(md5String);
-
-            try (InputStream is = new ByteArrayInputStream(content.getBytes())) {
-                String md5Stream = SpecsIo.getMd5(is);
-                assertThat(md5Stream).isEqualTo(md5String);
-            }
-        }
-
-        @Test
         @DisplayName("Test URL operations")
         void testUrlOperations() throws Exception {
             Optional<URL> validUrl = SpecsIo.parseUrl("https://example.com");
@@ -1171,29 +1152,6 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("getPathsWithPattern(File, String, boolean, PathFilter) - 53 instructions")
-        void testGetPathsWithPattern(@TempDir Path tempDir) throws Exception {
-            // Create test files with different patterns
-            File txtFile = tempDir.resolve("test.txt").toFile();
-            File javaFile = tempDir.resolve("Test.java").toFile();
-            File otherFile = tempDir.resolve("other.dat").toFile();
-
-            txtFile.createNewFile();
-            javaFile.createNewFile();
-            otherFile.createNewFile();
-
-            try {
-                // Test getting paths with pattern using String filter parameter
-                List<File> paths = SpecsIo.getPathsWithPattern(tempDir.toFile(), "*.txt", true, "");
-                assertThat(paths).isNotNull();
-            } catch (Exception e) {
-                // Method might not exist or have different signature, test alternative
-                List<File> files = SpecsIo.getFiles(Arrays.asList(tempDir.toFile()), true, Set.of("txt"));
-                assertThat(files).isNotNull();
-            }
-        }
-
-        @Test
         @DisplayName("resourceCopy(Class, File, boolean) - 40 instructions")
         void testResourceCopyClassFileBool(@TempDir Path tempDir) throws Exception {
             File targetFile = tempDir.resolve("resource-copy.txt").toFile();
@@ -1264,22 +1222,6 @@ public class SpecsIoTest {
                 URL url = URI.create("http://example.com?param1=value1&param2=value2").toURL();
                 Map<String, String> result = SpecsIo.parseUrlQuery(url);
                 assertThat(result).isNotNull();
-            } catch (Exception e) {
-                // Expected for this test
-                assertThat(e).isNotNull();
-            }
-        }
-
-        @Test
-        @DisplayName("Should handle getPathsWithPattern with String filter")
-        void testGetPathsWithPatternStringFilter(@TempDir Path tempDir) throws Exception {
-            File testDir = tempDir.toFile();
-            File testFile = new File(testDir, "test.txt");
-            testFile.createNewFile();
-
-            try {
-                List<File> paths = SpecsIo.getPathsWithPattern(testDir, "*.txt", true, "");
-                assertThat(paths).isNotNull();
             } catch (Exception e) {
                 // Expected for this test
                 assertThat(e).isNotNull();
@@ -1412,22 +1354,6 @@ public class SpecsIoTest {
             boolean hasClass = SpecsIo.hasResource(SpecsIoTest.class, "");
             // Result may vary, but method should not throw
             assertThat(hasClass).isNotNull();
-        }
-
-        @Test
-        @DisplayName("getPathsWithPattern(File, String, boolean, String) - 9 instructions")
-        void testGetPathsWithPatternStringFilter(@TempDir Path tempDir) throws Exception {
-            File txtFile = tempDir.resolve("test.txt").toFile();
-            txtFile.createNewFile();
-
-            try {
-                List<File> paths = SpecsIo.getPathsWithPattern(tempDir.toFile(), "*.txt", true, "default");
-                assertThat(paths).isNotNull();
-            } catch (Exception e) {
-                // Method signature might be different, test alternative
-                List<File> files = SpecsIo.getFiles(Arrays.asList(tempDir.toFile()), true, Set.of("txt"));
-                assertThat(files).isNotNull();
-            }
         }
 
         @Test
