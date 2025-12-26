@@ -163,9 +163,9 @@ public class JavaType {
                         + name + " vs dimension of " + arrayDimension);
             }
 
-            final Pair<String, Integer> splittedType = JavaTypeFactory.splitTypeFromArrayDimension(name);
-            name = splittedType.left();
-            arrayDimension = splittedType.right();
+            final Pair<String, Integer> splitType = JavaTypeFactory.splitTypeFromArrayDimension(name);
+            name = splitType.left();
+            arrayDimension = splitType.right();
         }
         setEnum(false);
         setName(name);
