@@ -245,6 +245,11 @@ public class SpecsArrayTest {
                 public boolean equals(Object obj) {
                     return obj instanceof Person p && name.equals(p.name);
                 }
+
+                @Override
+                public int hashCode() {
+                    return name.hashCode();
+                }
             }
 
             Person[] people = { new Person("Alice"), new Person("Bob"), new Person("Charlie") };
