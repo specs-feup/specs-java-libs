@@ -72,8 +72,11 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      */
     @Override
     public List<K> getChildren() {
-        // FIXME: Should be 'Collections.unmodifiableList(this.children);'
-        // but the current implementation breaks when you do.
+        return Collections.unmodifiableList(this.children);
+    }
+
+    @Override
+    public List<K> getChildrenMutable() {
         return this.children;
     }
 

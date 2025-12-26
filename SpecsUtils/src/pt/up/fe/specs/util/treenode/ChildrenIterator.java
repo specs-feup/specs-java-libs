@@ -25,8 +25,8 @@ public class ChildrenIterator<N extends TreeNode<N>> implements ListIterator<N> 
     public ChildrenIterator(TreeNode<N> parent) {
 
         this.parent = parent;
-        // Currently cannot enforce immutable children view due to MATISSE passes
-        this.iterator = parent.getChildren().listIterator();
+        // Access internal mutable list for modification operations
+        this.iterator = parent.getChildrenMutable().listIterator();
 
         this.lastReturned = null;
     }

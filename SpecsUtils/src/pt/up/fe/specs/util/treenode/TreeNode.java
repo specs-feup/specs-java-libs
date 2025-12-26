@@ -170,6 +170,14 @@ public interface TreeNode<K extends TreeNode<K>> {
     List<K> getChildren();
 
     /**
+     * Returns a mutable list of children for internal use only.
+     * Should only be used by ChildrenIterator and internal tree operations.
+     *
+     * @return the mutable children list
+     */
+    List<K> getChildrenMutable();
+
+    /**
      * TODO: Rename to castChildren.
      *
      */
