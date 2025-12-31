@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import pt.up.fe.specs.util.SpecsIo;
 
 @DisplayName("Classmap Tests")
-public class ClassmapTest {
+public class ClassmapV1Test {
 
     @Nested
     @DisplayName("ClassSet Tests")
