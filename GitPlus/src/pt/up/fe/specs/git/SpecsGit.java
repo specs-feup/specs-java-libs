@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
@@ -46,6 +48,133 @@ import pt.up.fe.specs.util.SpecsLogs;
 public class SpecsGit {
 
     private static final String SPECS_GIT_REPOS_FOLDER = "specs_git_repos";
+
+    private static final String URL_PARAM_BRANCH = "branch";
+
+    /**
+     * Parses a repository URL and returns the folder where the repository is
+     * located.
+     * If the repository does not exist locally, it will be cloned.
+     *
+     * @param repositoryPath the URL of the repository
+     * @return the folder where the repository is located
+     */
+    public static File parseRepositoryUrl(String repositoryPath) {
+        var repoFolder = parseRepositoryUrl(repositoryPath, true);
+
+        // Check if the git repo is working
+        Git git = null;
+        try {
+            git = Git.open(repoFolder);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not open git repository in folder '" + repoFolder + "'", e);
+        }
+
+        // Get url options
+        var urlOptions = SpecsIo.parseUrl(repositoryPath)
+                .map(url -> SpecsIo.parseUrlQuery(url))
+                .orElse(new HashMap<>());
+
+        // Check if correct branch
+        var branch = urlOptions.get(URL_PARAM_BRANCH);
+        if (branch != null) {
+            checkout(git, branch);
+        }
+
+        return repoFolder;
+    }
+
+    /**
+     * Checks out the specified branch in the given Git repository.
+     *
+     * @param git        the Git repository
+     * @param branchName the name of the branch to check out
+     */
+    public static void checkout(Git git, String branchName) {
+        try {
+            var currentBranch = git.getRepository().getBranch();
+
+            // Checkout branch
+            if (!branchName.equals(currentBranch)) {
+
+                // Taken from here: https://stackoverflow.com/a/57365145
+
+                var createBranch = !git.branchList()
+                        .call()
+                        .stream()
+                        .map(Ref::getName)
+                        .collect(Collectors.toList())
+                        .contains("refs/heads/" + branchName);
+
+                git.checkout().setCreateBranch(createBranch)
+                        .setName(branchName)
+                        .call();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Could not checkout repository '" + git + "' to branch '" + branchName + "'", e);
+        }
+    }
+
+    /**
+     * Parses a repository URL and returns the folder where the repository is
+     * located.
+     * If the repository does not exist locally, it will be cloned.
+     *
+     * @param repositoryPath the URL of the repository
+     * @param firstTime      whether this is the first attempt to parse the
+     *                       repository URL
+     * @return the folder where the repository is located
+     */
+    private static File parseRepositoryUrl(String repositoryPath, boolean firstTime) {
+        String repoName = getRepoName(repositoryPath);
+
+        // Get repo folder
+        File eclipseBuildFolder = getRepositoriesFolder();
+        File repoFolder = new File(eclipseBuildFolder, repoName);
+
+        // If folder does not exist, or if it exists and is empty, clone repository
+        if (!repoFolder.exists() || SpecsIo.isEmptyFolder(repoFolder)) {
+            try {
+                SpecsLogs.msgInfo("Cloning repo '" + repositoryPath + "' to folder '" + repoFolder + "'");
+
+                Git.cloneRepository()
+                        .setURI(repositoryPath)
+                        .setDirectory(repoFolder)
+                        .setCredentialsProvider(getCredentials(repositoryPath))
+                        .call();
+
+                return repoFolder;
+            } catch (GitAPIException e) {
+                throw new RuntimeException("Could not clone repository '" + repositoryPath + "'", e);
+            }
+        }
+
+        // Repository already exists, pull
+        try {
+            SpecsLogs.msgInfo("Pulling repo '" + repositoryPath + "' in folder '" + repoFolder + "'");
+            Git gitRepo = Git.open(repoFolder);
+            PullCommand pullCmd = gitRepo
+                    .pull()
+                    .setCredentialsProvider(getCredentials(repositoryPath));
+            pullCmd.call();
+        } catch (GitAPIException | IOException e) {
+            // Sometimes this is a problem that can be solved by deleting the folder and
+            // cloning again, try that
+            if (firstTime) {
+                SpecsLogs.info("Could not pull to folder '" + repoFolder + "', deleting folder and trying again");
+                var success = SpecsIo.deleteFolder(repoFolder);
+                if (!success) {
+                    throw new RuntimeException("Could not delete existing repo folder " + repoFolder.getAbsolutePath());
+                }
+                return parseRepositoryUrl(repositoryPath, false);
+            }
+
+            throw new RuntimeException("Could not pull repository '" + repositoryPath + "'", e);
+        }
+
+        return repoFolder;
+    }
 
     /**
      * Retrieves the credentials provider for the given repository URL.
