@@ -5,7 +5,7 @@
 This repository contains 24 Java libraries developed by the SPeCS research group, organized as independent Gradle projects. Each library extends or enhances existing Java libraries (indicated by the "-Plus" suffix) or provides custom utilities. The repository uses Java 17, Gradle for builds, and follows a multi-project structure without a root Gradle configuration.
 
 **Repository Statistics:**
-- 24 main Java libraries + 3 legacy projects (RuntimeMutators, SpecsHWUtils, SupportJavaLibs)
+- 24 main Java libraries + 1 legacy project (SpecsHWUtils)
 - ~200K+ lines of Java code across all projects
 - Mixed testing frameworks: JUnit 5 (modern projects) and JUnit 4 (legacy projects)
 - Inter-project dependencies centered around SpecsUtils as the core utility library
@@ -101,13 +101,10 @@ ProjectName/
 
 **Development Tools:**
 - **JavaGenerator** - Java code generation utilities
-- **EclipseUtils** - Eclipse IDE integration tools
 - **AntTasks** - Custom Ant build tasks
 
 ### Legacy Projects (No Gradle builds)
-- **RuntimeMutators** - Runtime code mutation (Eclipse project only)
 - **SpecsHWUtils** - Hardware utilities (Eclipse project only)  
-- **SupportJavaLibs** - Supporting libraries and tools
 
 ## Continuous Integration
 

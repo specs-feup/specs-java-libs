@@ -1,3 +1,0 @@
- <delete includeemptydirs="true">
-    <fileset dir="<FOLDER>" includes="**/*"/>
- </delete>

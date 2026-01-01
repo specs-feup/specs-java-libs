@@ -1,7 +1,0 @@
-rootProject.name = 'EclipseUtils'
-
-includeBuild("../CommonsLangPlus")
-includeBuild("../GuiHelper")
-includeBuild("../SpecsUtils")
-includeBuild("../XStreamPlus")
-includeBuild("../jOptions")
