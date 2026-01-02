@@ -18,7 +18,7 @@ repositories {
 dependencies {
     implementation ':SpecsUtils'
 
-    implementation group: 'org.mvel', name: 'mvel2', version: '2.4.13.Final'
+    implementation 'org.mvel:mvel2:2.4.13.Final'
 }
 
 // Project sources

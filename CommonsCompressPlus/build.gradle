@@ -18,7 +18,7 @@ repositories {
 dependencies {
     implementation ':SpecsUtils'
 
-    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.27.1'
+    implementation 'org.apache.commons:commons-compress:1.27.1'
 }
 
 // Project sources

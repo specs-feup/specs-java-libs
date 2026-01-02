@@ -22,10 +22,10 @@ dependencies {
     implementation ':jOptions'
     implementation ':SpecsUtils'
 
-    implementation group: 'org.graalvm.js', name: 'js-scriptengine', version: '23.0.7'
-    implementation group: 'org.graalvm.js', name: 'js', version: '23.0.7'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.12.1'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
+    implementation 'org.graalvm.js:js-scriptengine:23.0.7'
+    implementation 'org.graalvm.js:js:23.0.7'
+    implementation 'com.google.code.gson:gson:2.12.1'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
 }
 
 // Project sources
