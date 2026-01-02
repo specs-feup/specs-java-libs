@@ -32,20 +32,11 @@ public class CustomConsoleHandler extends StreamHandler {
         setOutputStream(printStream);
     }
 
-    /**
-     * 
-     * @return
-     */
-
     // Opening output stream, it is supposed to remain open
     public static CustomConsoleHandler newStdout() {
         return new CustomConsoleHandler(new PrintStream(new FileOutputStream(FileDescriptor.out)));
     }
 
-    /**
-     * 
-     * @return
-     */
     // Opening output stream, it is supposed to remain open
     public static CustomConsoleHandler newStderr() {
         return new CustomConsoleHandler(new PrintStream(new FileOutputStream(FileDescriptor.err)));

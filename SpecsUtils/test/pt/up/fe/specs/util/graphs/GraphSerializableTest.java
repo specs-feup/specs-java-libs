@@ -64,11 +64,11 @@ class GraphSerializableTest {
         void testSerializeEmptyGraph() {
             GraphSerializable<String, String> serializable = GraphSerializable.toSerializable(graph);
 
-            assertThat(serializable.operationIds).isEmpty();
-            assertThat(serializable.nodeInfos).isEmpty();
-            assertThat(serializable.inputIds).isEmpty();
-            assertThat(serializable.outputIds).isEmpty();
-            assertThat(serializable.connInfos).isEmpty();
+            assertThat(serializable.operationIds()).isEmpty();
+            assertThat(serializable.nodeInfos()).isEmpty();
+            assertThat(serializable.inputIds()).isEmpty();
+            assertThat(serializable.outputIds()).isEmpty();
+            assertThat(serializable.connInfos()).isEmpty();
         }
 
         @Test
@@ -78,11 +78,11 @@ class GraphSerializableTest {
 
             GraphSerializable<String, String> serializable = GraphSerializable.toSerializable(graph);
 
-            assertThat(serializable.operationIds).containsExactly("singleNode");
-            assertThat(serializable.nodeInfos).containsExactly("Single Node Info");
-            assertThat(serializable.inputIds).isEmpty();
-            assertThat(serializable.outputIds).isEmpty();
-            assertThat(serializable.connInfos).isEmpty();
+            assertThat(serializable.operationIds()).containsExactly("singleNode");
+            assertThat(serializable.nodeInfos()).containsExactly("Single Node Info");
+            assertThat(serializable.inputIds()).isEmpty();
+            assertThat(serializable.outputIds()).isEmpty();
+            assertThat(serializable.connInfos()).isEmpty();
         }
 
         @Test
@@ -94,11 +94,11 @@ class GraphSerializableTest {
 
             GraphSerializable<String, String> serializable = GraphSerializable.toSerializable(graph);
 
-            assertThat(serializable.operationIds).containsExactly("nodeA", "nodeB");
-            assertThat(serializable.nodeInfos).containsExactly("Node A Info", "Node B Info");
-            assertThat(serializable.inputIds).containsExactly("nodeA");
-            assertThat(serializable.outputIds).containsExactly("nodeB");
-            assertThat(serializable.connInfos).containsExactly("A to B");
+            assertThat(serializable.operationIds()).containsExactly("nodeA", "nodeB");
+            assertThat(serializable.nodeInfos()).containsExactly("Node A Info", "Node B Info");
+            assertThat(serializable.inputIds()).containsExactly("nodeA");
+            assertThat(serializable.outputIds()).containsExactly("nodeB");
+            assertThat(serializable.connInfos()).containsExactly("A to B");
         }
 
         @Test
@@ -116,11 +116,11 @@ class GraphSerializableTest {
 
             GraphSerializable<String, String> serializable = GraphSerializable.toSerializable(graph);
 
-            assertThat(serializable.operationIds).containsExactly("A", "B", "C", "D");
-            assertThat(serializable.nodeInfos).containsExactly("Node A", "Node B", "Node C", "Node D");
-            assertThat(serializable.inputIds).containsExactly("A", "A", "B", "C");
-            assertThat(serializable.outputIds).containsExactly("B", "C", "D", "D");
-            assertThat(serializable.connInfos).containsExactly("A->B", "A->C", "B->D", "C->D");
+            assertThat(serializable.operationIds()).containsExactly("A", "B", "C", "D");
+            assertThat(serializable.nodeInfos()).containsExactly("Node A", "Node B", "Node C", "Node D");
+            assertThat(serializable.inputIds()).containsExactly("A", "A", "B", "C");
+            assertThat(serializable.outputIds()).containsExactly("B", "C", "D", "D");
+            assertThat(serializable.connInfos()).containsExactly("A->B", "A->C", "B->D", "C->D");
         }
 
         @Test
@@ -132,11 +132,11 @@ class GraphSerializableTest {
 
             GraphSerializable<String, String> serializable = GraphSerializable.toSerializable(graph);
 
-            assertThat(serializable.operationIds).containsExactly(null, "nodeWithNullInfo");
-            assertThat(serializable.nodeInfos).containsExactly("Null ID Node", null);
-            assertThat(serializable.inputIds).containsExactly((String) null);
-            assertThat(serializable.outputIds).containsExactly("nodeWithNullInfo");
-            assertThat(serializable.connInfos).containsExactly("null connection");
+            assertThat(serializable.operationIds()).containsExactly(null, "nodeWithNullInfo");
+            assertThat(serializable.nodeInfos()).containsExactly("Null ID Node", null);
+            assertThat(serializable.inputIds()).containsExactly((String) null);
+            assertThat(serializable.outputIds()).containsExactly("nodeWithNullInfo");
+            assertThat(serializable.connInfos()).containsExactly("null connection");
         }
     }
 
@@ -380,8 +380,8 @@ class GraphSerializableTest {
                     Arrays.asList());
 
             // Constructor succeeds but usage might be problematic
-            assertThat(serializable.operationIds).hasSize(1);
-            assertThat(serializable.nodeInfos).hasSize(2);
+            assertThat(serializable.operationIds()).hasSize(1);
+            assertThat(serializable.nodeInfos()).hasSize(2);
         }
 
         @Test
@@ -429,9 +429,9 @@ class GraphSerializableTest {
 
             GraphSerializable<String, String> serializable = GraphSerializable.toSerializable(graph);
 
-            assertThat(serializable.inputIds).containsExactly("parent", "parent", "parent");
-            assertThat(serializable.outputIds).containsExactly("child1", "child2", "child3");
-            assertThat(serializable.connInfos).containsExactly("first", "second", "third");
+            assertThat(serializable.inputIds()).containsExactly("parent", "parent", "parent");
+            assertThat(serializable.outputIds()).containsExactly("child1", "child2", "child3");
+            assertThat(serializable.connInfos()).containsExactly("first", "second", "third");
         }
 
         @Test
@@ -444,8 +444,8 @@ class GraphSerializableTest {
             GraphSerializable<String, String> serializable = GraphSerializable.toSerializable(graph);
 
             // Order should be preserved based on insertion order in graph
-            assertThat(serializable.operationIds).containsExactly("third", "first", "second");
-            assertThat(serializable.nodeInfos).containsExactly("Third Node", "First Node", "Second Node");
+            assertThat(serializable.operationIds()).containsExactly("third", "first", "second");
+            assertThat(serializable.nodeInfos()).containsExactly("Third Node", "First Node", "Second Node");
         }
     }
 }

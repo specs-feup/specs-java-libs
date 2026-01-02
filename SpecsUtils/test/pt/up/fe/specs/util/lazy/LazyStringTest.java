@@ -47,11 +47,11 @@ class LazyStringTest {
         }
 
         @Test
-        @DisplayName("Should throw exception for null supplier - BUG: No validation implemented")
+        @DisplayName("Should throw exception for null supplier")
         void testConstructorWithNullSupplier() {
-            // BUG: Constructor doesn't validate null supplier
-            assertThatCode(() -> new LazyString(null))
-                    .doesNotThrowAnyException();
+            assertThatThrownBy(() -> new LazyString(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Supplier cannot be null");
         }
     }
 
@@ -111,12 +111,11 @@ class LazyStringTest {
     class ValueTypes {
 
         @Test
-        @DisplayName("Should handle null values - BUG: toString() returns null instead of 'null' string")
+        @DisplayName("Should handle null values")
         void testNullValue() {
             LazyString nullLazy = new LazyString(() -> null);
 
-            // BUG: toString() returns null instead of "null" string
-            assertThat(nullLazy.toString()).isNull();
+            assertThat(nullLazy.toString()).isEqualTo("null");
         }
 
         @Test

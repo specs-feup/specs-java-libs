@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="java" deleted="false" description="DataKeys preamble comment" enabled="true" name="datakeys">/// DATAKEYS BEGIN&#13;
-&#13;
-${cursor}&#13;
-&#13;
-/// DATAKEYS END</template><template autoinsert="true" context="java" deleted="false" description="Throws an exception" enabled="true" name="deprecated">throw new RuntimeException("deprecated");</template><template autoinsert="true" context="java" deleted="false" description="Stops Execution" enabled="true" name="stop">if(true) {&#13;
-	throw new RuntimeException("deprecated");&#13;
-}</template></templates>

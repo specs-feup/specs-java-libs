@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.LayoutManager;
+import java.io.Serial;
 import java.util.Collection;
 
 import javax.swing.BoxLayout;
@@ -28,12 +29,15 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 /**
  * Panel for editing and displaying a DataStore using a nested BaseSetupPanel.
  *
- * <p>This panel provides controls for loading and displaying values for a DataKey of type DataStore.
+ * <p>
+ * This panel provides controls for loading and displaying values for a DataKey
+ * of type DataStore.
  *
  * @author Joao Bispo
  */
 public class SetupPanel extends KeyPanel<DataStore> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -44,10 +48,11 @@ public class SetupPanel extends KeyPanel<DataStore> {
     private final BaseSetupPanel setupOptionsPanel;
 
     /**
-     * Constructs a SetupPanel for the given DataKey, DataStore, and StoreDefinition.
+     * Constructs a SetupPanel for the given DataKey, DataStore, and
+     * StoreDefinition.
      *
-     * @param key the DataKey
-     * @param data the DataStore
+     * @param key        the DataKey
+     * @param data       the DataStore
      * @param definition the StoreDefinition
      */
     public SetupPanel(DataKey<DataStore> key, DataStore data, StoreDefinition definition) {
@@ -67,7 +72,7 @@ public class SetupPanel extends KeyPanel<DataStore> {
      * Loads the several elements from a DataStore.
      *
      * @param value the DataStore to load
-     * @param <ET> the type of DataStore
+     * @param <ET>  the type of DataStore
      */
     @Override
     public <ET extends DataStore> void setValue(ET value) {
@@ -81,7 +86,6 @@ public class SetupPanel extends KeyPanel<DataStore> {
     private void updateSetupOptions() {
         if (currentOptionsPanel != null) {
             remove(currentOptionsPanel);
-            currentOptionsPanel = null;
         }
 
         currentOptionsPanel = setupOptionsPanel;

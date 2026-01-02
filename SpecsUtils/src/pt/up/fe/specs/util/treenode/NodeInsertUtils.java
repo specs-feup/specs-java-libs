@@ -32,8 +32,6 @@ public class NodeInsertUtils {
     /**
      * Helper method which sets 'move' to false.
      *
-     * @param baseToken
-     * @param newToken
      */
     public static <K extends TreeNode<K>> void insertBefore(K baseToken, K newToken) {
         insertBefore(baseToken, newToken, false);
@@ -43,11 +41,6 @@ public class NodeInsertUtils {
      * Inserts 'newNode' before the 'baseToken'.
      *
      *
-     * @param baseToken
-     * @param newToken
-     * @param move      if true, makes sure parent of newToken is null, removing it
-     *                  from the parent if necessary. Otherwise,
-     *                  if parent is not null, inserts a copy.
      */
     public static <K extends TreeNode<K>> void insertBefore(K baseToken, K newToken, boolean move) {
 
@@ -74,7 +67,6 @@ public class NodeInsertUtils {
     /**
      * Ensures the node has a null parent.
      *
-     * @param newToken
      */
     private static <K extends TreeNode<K>> void processNewToken(K newToken) {
         if (!newToken.hasParent()) {
@@ -87,8 +79,6 @@ public class NodeInsertUtils {
     /**
      * Inserts 'newNode' after the 'baseToken'.
      *
-     * @param baseToken
-     * @param newToken
      */
     public static <K extends TreeNode<K>> void insertAfter(K baseToken, K newToken) {
         insertAfter(baseToken, newToken, false);
@@ -119,8 +109,6 @@ public class NodeInsertUtils {
     /**
      * Replaces 'baseToken' with 'newToken'.
      *
-     * @param baseToken
-     * @param newToken
      * @return The new inserted token (same as newToken if newToken.getParent() was
      *         null, and a copy of newToken
      *         otherwise).
@@ -132,10 +120,6 @@ public class NodeInsertUtils {
     /**
      * If move is true, detaches newToken before setting.
      *
-     * @param baseToken
-     * @param newToken
-     * @param move
-     * @return
      */
     public static <K extends TreeNode<K>> K replace(K baseToken, K newToken, boolean move) {
 
@@ -185,8 +169,6 @@ public class NodeInsertUtils {
     /**
      * Removes 'baseToken'.
      *
-     * @param baseToken
-     * @param newToken
      */
     public static <K extends TreeNode<K>> void delete(K baseToken) {
 
@@ -206,8 +188,6 @@ public class NodeInsertUtils {
      * Replaces 'baseToken' with 'newNode'. Uses the children of 'baseToken' instead
      * of 'newNode'.
      *
-     * @param baseToken
-     * @param newToken
      */
     public static <K extends TreeNode<K>> void set(K baseToken, K newToken) {
 
@@ -243,14 +223,11 @@ public class NodeInsertUtils {
     /**
      * Calculates the rank of a given token, according to the provided test.
      *
-     * @param token
-     * @param test
-     * @return
      */
     public static <K extends TreeNode<K>> List<Integer> getRank(K token, TokenTester test) {
 
         K currentToken = token;
-        K parent = null;
+        K parent;
 
         List<Integer> rank = new LinkedList<>();
 
@@ -273,9 +250,6 @@ public class NodeInsertUtils {
     /**
      * Goes to the parent, and checks in which position is the current node.
      *
-     * @param token
-     * @param test
-     * @return
      */
     private static <K extends TreeNode<K>> Integer getSelfRank(K parent, K token,
             TokenTester test) {
@@ -295,8 +269,6 @@ public class NodeInsertUtils {
 
     /**
      *
-     * @param token
-     * @param test
      * @return the first parent that passes the test, or null if no parent passes it
      */
     public static <K extends TreeNode<K>> K getParent(K token, TokenTester test) {
@@ -320,10 +292,6 @@ public class NodeInsertUtils {
      * If 'swapSubtrees' is enabled, this transformation is not allowed if any of
      * the nodes is a part of the subtree of the other.
      *
-     * @param node1
-     * @param node2
-     * @param swapSubtrees if true, swaps the complete subtrees. Otherwise, swaps
-     *                     only the nodes, and children are kept in place.
      */
     public static <K extends TreeNode<K>> void swap(K node1, K node2, boolean swapSubtrees) {
         // If swap subtrees is enable, check if a node is an ancestor of the other

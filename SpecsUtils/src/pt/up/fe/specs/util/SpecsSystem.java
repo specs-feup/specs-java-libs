@@ -37,19 +37,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -84,24 +77,15 @@ public class SpecsSystem {
         }
 
         // Test if file debug exists in JAR directory
-        if (JarPath.getJarFolder()
+        return JarPath.getJarFolder()
                 .map(jarFolder -> new File(jarFolder, "debug").isFile())
-                .orElse(false)) {
-            return true;
-        }
-
-        return false;
+                .orElse(false);
     }
 
     /**
      * Helper method which receives the command and the working directory instead of
      * the builder.
      *
-     * @param command
-     * @param workingDir
-     * @param storeOutput
-     * @param printOutput
-     * @return
      */
     public static ProcessOutputAsString runProcess(List<String> command, File workingDir,
             boolean storeOutput, boolean printOutput) {
@@ -129,10 +113,6 @@ public class SpecsSystem {
      * the process in the current
      * directory.
      *
-     * @param command
-     * @param storeOutput
-     * @param printOutput
-     * @return
      */
     public static ProcessOutputAsString runProcess(List<String> command,
             boolean storeOutput, boolean printOutput) {
@@ -146,10 +126,6 @@ public class SpecsSystem {
      * <p>
      * If there is any problem with the process, throws an exception.
      *
-     * @param builder
-     * @param storeOutput
-     * @param printOutput
-     * @return
      */
     public static ProcessOutputAsString runProcess(ProcessBuilder builder, boolean storeOutput, boolean printOutput) {
 
@@ -165,10 +141,6 @@ public class SpecsSystem {
      * the process in the current
      * directory.
      *
-     * @param command
-     * @param storeOutput
-     * @param printOutput
-     * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
@@ -180,11 +152,6 @@ public class SpecsSystem {
      * Helper method which receives the command and the working directory instead of
      * the builder.
      *
-     * @param command
-     * @param workingDir
-     * @param storeOutput
-     * @param printOutput
-     * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(List<String> command, File workingDir,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
@@ -200,10 +167,6 @@ public class SpecsSystem {
      * <p>
      * If there is any problem with the process, throws an exception.
      *
-     * @param builder
-     * @param storeOutput
-     * @param printOutput
-     * @return
      */
     public static <O, E> ProcessOutput<O, E> runProcess(ProcessBuilder builder,
             Function<InputStream, O> outputProcessor, Function<InputStream, E> errorProcessor) {
@@ -223,9 +186,9 @@ public class SpecsSystem {
         // The command in the builder might need processing (e.g., Windows system
         // commands)
         processCommand(builder);
-        SpecsLogs.debug(() -> "Launching Process: " + builder.command().stream().collect(Collectors.joining(" ")));
+        SpecsLogs.debug(() -> "Launching Process: " + String.join(" ", builder.command()));
 
-        Process process = null;
+        Process process;
         try {
             // Experiment: Calling Garbage Collector before starting process in order to
             // reduce memory required to fork VM
@@ -268,7 +231,6 @@ public class SpecsSystem {
      * Performs several fixes on the builder command (e.g., adapts command for
      * Windows platforms)
      *
-     * @param builder
      */
     private static void processCommand(ProcessBuilder builder) {
         // Do nothing if no command
@@ -429,8 +391,6 @@ public class SpecsSystem {
     }
 
     /**
-     * @param aClass
-     * @param anInterface
      * @return true if the given class implements the given interface. False
      *         otherwise.
      */
@@ -482,14 +442,14 @@ public class SpecsSystem {
             return map.get(thread);
         }
 
-        SpecsLogs.getLogger().warning("Could not find thread '" + mainThread + "'.");
+        SpecsLogs.warn("Could not find thread '" + mainThread + "'.");
         return null;
     }
 
     public static String getProgramName() {
         StackTraceElement[] stack = getMainStackTrace();
         if (stack == null) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Could not get stack of main thread. Returning empty string.");
             return "";
         }
@@ -499,7 +459,7 @@ public class SpecsSystem {
         String programName = main.getClassName();
         int dotIndex = programName.lastIndexOf(".");
         if (dotIndex != -1) {
-            programName = programName.substring(dotIndex + 1, programName.length());
+            programName = programName.substring(dotIndex + 1);
         }
 
         return programName;
@@ -510,21 +470,16 @@ public class SpecsSystem {
      *
      * <p>
      * Code taken from: <br>
-     * http://www.rgagnon.com/javadetails/java-0422.html
+     * <a href="http://www.rgagnon.com/javadetails/java-0422.html">...</a>
      *
-     * @param className
-     * @return
      */
     public static boolean isAvailable(String className) {
-        boolean isFound = false;
         try {
             Class.forName(className, false, null);
-            isFound = true;
+            return true;
         } catch (ClassNotFoundException e) {
-            isFound = false;
+            return false;
         }
-
-        return isFound;
     }
 
     public static void sleep(long millis) {
@@ -542,9 +497,6 @@ public class SpecsSystem {
      * <p>
      * Prints the output, but does not store it to a String.
      *
-     * @param command
-     * @param workingDir
-     * @return
      */
     public static int run(List<String> command, File workingDir) {
         ProcessOutputAsString output = runProcess(command, workingDir, false, true);
@@ -573,7 +525,6 @@ public class SpecsSystem {
     }
 
     /**
-     * @param callGc
      * @return the current amount of memory, in bytes
      */
     public static long getUsedMemory(boolean callGc) {
@@ -596,22 +547,22 @@ public class SpecsSystem {
 
     /**
      * Taken from here:
-     * http://www.inoneo.com/en/blog/9/java/get-the-jvm-peak-memory-usage
+     * <a href="http://www.inoneo.com/en/blog/9/java/get-the-jvm-peak-memory-usage">...</a>
      */
     public static void printPeakMemoryUsage() {
         // Place this code just before the end of the program
         try {
-            String memoryUsage = new String();
+            StringBuilder memoryUsage = new StringBuilder();
             List<MemoryPoolMXBean> pools = ManagementFactory.getMemoryPoolMXBeans();
             for (MemoryPoolMXBean pool : pools) {
                 MemoryUsage peak = pool.getPeakUsage();
 
-                memoryUsage += String.format("Peak %s memory used: %s\n", pool.getName(),
-                        SpecsStrings.parseSize(peak.getUsed()));
+                memoryUsage.append(String.format("Peak %s memory used: %s\n", pool.getName(),
+                        SpecsStrings.parseSize(peak.getUsed())));
             }
 
             // we print the result in the console
-            SpecsLogs.msgInfo(memoryUsage);
+            SpecsLogs.msgInfo(memoryUsage.toString());
 
         } catch (Throwable t) {
             SpecsLogs.warn("Exception in agent", t);
@@ -627,8 +578,6 @@ public class SpecsSystem {
     }
 
     /**
-     * @param command
-     * @param workingdir
      * @return true if the program worked, false if it could not be started
      */
     public static boolean isCommandAvailable(List<String> command, File workingdir) {
@@ -688,45 +637,8 @@ public class SpecsSystem {
     }
 
     /**
-     * Taken from
-     * http://stackoverflow.com/questions/4748673/how-can-i-check-the-bitness-of-my-os-using-java-j2se-not-os-
-     * arch/5940770#5940770
-     *
-     * @return true if the system is 64-bit, false otherwise.
-     */
-    public static boolean is64Bit() {
-        String arch = System.getenv("PROCESSOR_ARCHITECTURE");
-        String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
-
-        if (arch == null) {
-            String osArch = System.getProperty("os.arch");
-
-            if (osArch.endsWith("amd64")) {
-                return true;
-            } else if (osArch.equals("i386") || osArch.equals("x86")) {
-                return false;
-            } else {
-                throw new RuntimeException("Could not determine the bitness of the operating system");
-            }
-        }
-
-        String realArch = arch.endsWith("64")
-                || wow64Arch != null && wow64Arch.endsWith("64")
-                        ? "64"
-                        : "32";
-
-        if (realArch.equals("32")) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Launches the callable in another thread and waits termination.
      *
-     * @param args
-     * @return
      */
     public static <T> T executeOnThreadAndWait(Callable<T> callable) {
         // Launch weaver in another thread
@@ -761,11 +673,6 @@ public class SpecsSystem {
     /**
      * The contents of the Future, or null if there was a timeout.
      *
-     * @param <T>
-     * @param future
-     * @param timeout
-     * @param unit
-     * @return
      */
     public static <T> T get(Future<T> future, long timeout, TimeUnit unit) {
         try {
@@ -789,62 +696,6 @@ public class SpecsSystem {
         } finally {
             future.cancel(true);
         }
-    }
-
-    /**
-     * Runs the given supplier in a separate thread, encapsulating the result in a
-     * Future.
-     *
-     * <p>
-     * Taken from here:
-     * https://stackoverflow.com/questions/5715235/java-set-timeout-on-a-certain-block-of-code
-     *
-     * @param <T>
-     * @param supplier
-     * @param timeout
-     * @param unit
-     * @return
-     */
-    public static <T> Future<T> getFuture(Supplier<T> supplier) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        var future = executor.submit(() -> supplier.get());
-        executor.shutdown(); // This does not cancel the already-scheduled task.
-
-        return future;
-    }
-
-    public static int executeOnProcessAndWait(Class<?> aClass, String... args) {
-        return executeOnProcessAndWait(aClass, SpecsIo.getWorkingDir(), Arrays.asList(args));
-    }
-
-    /**
-     * Taken from here:
-     * https://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process
-     *
-     * @param aClass
-     * @param javaExecutable
-     * @param workingDir
-     * @param args
-     * @return
-     */
-    public static int executeOnProcessAndWait(Class<?> aClass, File workingDir,
-            List<String> args) {
-
-        String classpath = System.getProperty("java.class.path");
-
-        String className = aClass.getCanonicalName();
-
-        List<String> command = new ArrayList<>();
-        command.addAll(
-                Arrays.asList("java", "-cp", classpath, className));
-
-        command.addAll(args);
-
-        ProcessBuilder process = new ProcessBuilder(command);
-        process.directory(workingDir);
-
-        ProcessOutputAsString output = runProcess(process, false, true);
-        return output.getReturnValue();
     }
 
     /**
@@ -889,70 +740,6 @@ public class SpecsSystem {
         return major > version.feature() || (major == version.feature() && minor >= version.interim());
     }
 
-    /***** Methods for dynamically extending the classpath *****/
-    /***** Taken from https://stackoverflow.com/a/42052857/1189808 *****/
-    private static class SpclClassLoader extends URLClassLoader {
-        static {
-            ClassLoader.registerAsParallelCapable();
-        }
-
-        private final Set<Path> userLibPaths = new CopyOnWriteArraySet<>();
-
-        private SpclClassLoader() {
-            super(new URL[0]);
-        }
-
-        @Override
-        protected void addURL(URL url) {
-            super.addURL(url);
-        }
-
-        protected void addLibPath(String newpath) {
-            userLibPaths.add(Paths.get(newpath).toAbsolutePath());
-        }
-
-        @Override
-        protected String findLibrary(String libname) {
-            String nativeName = System.mapLibraryName(libname);
-            return userLibPaths.stream().map(tpath -> tpath.resolve(nativeName)).filter(Files::exists)
-                    .map(Path::toString).findFirst().orElse(super.findLibrary(libname));
-        }
-    }
-
-    private final static SpclClassLoader ucl = new SpclClassLoader();
-
-    /**
-     * Adds a jar file or directory to the classpath. From Utils4J.
-     *
-     * @param newpaths JAR filename(s) or directory(s) to add
-     * @return URLClassLoader after newpaths added if newpaths != null
-     */
-    public static ClassLoader addToClasspath(String... newpaths) {
-        if (newpaths != null)
-            try {
-                for (String newpath : newpaths)
-                    if (newpath != null && !newpath.trim().isEmpty())
-                        ucl.addURL(Paths.get(newpath.trim()).toUri().toURL());
-            } catch (IllegalArgumentException | MalformedURLException e) {
-                RuntimeException re = new RuntimeException(e);
-                re.setStackTrace(e.getStackTrace());
-                throw re;
-            }
-        return ucl;
-    }
-
-    /**
-     * Adds to library path in ClassLoader returned by addToClassPath
-     *
-     * @param newpaths Path(s) to directory(s) holding OS library files
-     */
-    public static void addToLibraryPath(String... newpaths) {
-        for (String newpath : Objects.requireNonNull(newpaths))
-            ucl.addLibPath(newpath);
-    }
-
-    /***** ENDS methods for dynamically extending the classpath *****/
-
     public static boolean isDebug() {
         return IS_DEBUG.get();
     }
@@ -962,8 +749,6 @@ public class SpecsSystem {
      * exception if the class does not have a
      * copy constructor.
      *
-     * @param object
-     * @return
      */
     public static <T> T copy(T object) {
 
@@ -1047,9 +832,6 @@ public class SpecsSystem {
     }
 
     /**
-     * @param <T>
-     * @param aClass
-     * @param arguments
      * @return the first constructor that is compatible with the given arguments, or
      *         null if none is found
      */
@@ -1078,60 +860,6 @@ public class SpecsSystem {
     }
 
     /**
-     * Taken from here:
-     * https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689
-     *
-     * @param clazz
-     * @return
-     */
-    private static Set<Class<?>> getClassesBfs(Class<?> clazz) {
-        Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
-        Set<Class<?>> nextLevel = new LinkedHashSet<Class<?>>();
-        nextLevel.add(clazz);
-        do {
-            classes.addAll(nextLevel);
-            Set<Class<?>> thisLevel = new LinkedHashSet<Class<?>>(nextLevel);
-            nextLevel.clear();
-            for (Class<?> each : thisLevel) {
-                Class<?> superClass = each.getSuperclass();
-                if (superClass != null && superClass != Object.class) {
-                    nextLevel.add(superClass);
-                }
-                for (Class<?> eachInt : each.getInterfaces()) {
-                    nextLevel.add(eachInt);
-                }
-            }
-        } while (!nextLevel.isEmpty());
-        return classes;
-    }
-
-    /**
-     * Taken from here:
-     * https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla#9797689
-     *
-     * @param classes
-     * @return
-     */
-    public static List<Class<?>> getCommonSuperClasses(Class<?>... classes) {
-        return getCommonSuperClasses(Arrays.asList(classes));
-    }
-
-    /**
-     * @param classes
-     * @return
-     */
-    public static List<Class<?>> getCommonSuperClasses(List<Class<?>> classes) {
-        // start off with set from first hierarchy
-        Set<Class<?>> rollingIntersect = new LinkedHashSet<Class<?>>(
-                getClassesBfs(classes.get(0)));
-        // intersect with next
-        for (int i = 1; i < classes.size(); i++) {
-            rollingIntersect.retainAll(getClassesBfs(classes.get(i)));
-        }
-        return new LinkedList<Class<?>>(rollingIntersect);
-    }
-
-    /**
      * @return true if the JVM is currently executing in a Linux system, false
      *         otherwise
      */
@@ -1153,8 +881,6 @@ public class SpecsSystem {
      * <p>
      * Used when direct access to .class is not allowed.
      *
-     * @param classpath
-     * @param value
      * @return true, if the value is an instance of the given classpath
      */
     public static boolean isInstance(String className, Object value) {
@@ -1199,10 +925,6 @@ public class SpecsSystem {
      * Similar to findMethod(), but caches results. Be careful, can lead to
      * unintended errors.
      *
-     * @param invokingClass
-     * @param methodName
-     * @param types
-     * @return
      */
     public static Method getMethod(Class<?> invokingClass, String methodName, Class<?>... types) {
         // Use methodId to cache results
@@ -1249,11 +971,7 @@ public class SpecsSystem {
     }
 
     private static String getFieldId(Class<?> invokingClass, String fieldName) {
-        StringBuilder fieldId = new StringBuilder();
-
-        fieldId.append(invokingClass.getName()).append("::").append(fieldName);
-
-        return fieldId.toString();
+        return invokingClass.getName() + "::" + fieldName;
     }
 
     public static Optional<Field> getField(Class<?> invokingClass, String fieldName) {
@@ -1279,9 +997,6 @@ public class SpecsSystem {
      * not be found, looks for a .getFoo()
      * method.
      *
-     * @param object
-     * @param methodName
-     * @return
      */
     public static Object invokeAsGetter(Object object, String methodName) {
         Class<?> invokingClass = object instanceof Class ? (Class<?>) object : object.getClass();
@@ -1318,7 +1033,7 @@ public class SpecsSystem {
 
         // Try camelCase getter
         String getterName = "get" + methodName.substring(0, 1).toUpperCase()
-                + methodName.substring(1, methodName.length());
+                + methodName.substring(1);
 
         invokingMethod = getMethod(invokingClass, getterName);
         if (invokingMethod != null) {
@@ -1369,7 +1084,6 @@ public class SpecsSystem {
      * Reads the implementation version that is in the manifest file. Reads property
      * Implementation-Version.
      *
-     * @return
      */
     public static String getBuildNumber() {
         // Check if manifest file exists
@@ -1401,7 +1115,6 @@ public class SpecsSystem {
     }
 
     /**
-     * @param e
      * @return the fundamental cause of the exception
      */
     public static Throwable getLastCause(Throwable e) {

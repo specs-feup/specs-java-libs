@@ -98,7 +98,7 @@ public class MultipleChoicePanel extends FieldPanel {
 	boolean foundChoice = availableChoices.contains(currentChoice);
 
 	if (!foundChoice) {
-	    SpecsLogs.getLogger().warning(
+	    SpecsLogs.warn(
 		    "Could not find choice '" + currentChoice + "'. Available " + "choices: " + availableChoices);
 	    return;
 	}

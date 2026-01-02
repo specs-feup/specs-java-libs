@@ -19,7 +19,8 @@ import pt.up.fe.specs.util.SpecsIo;
 import java.io.File;
 
 /**
- * Utility class for Java code generation tasks, such as indentation, file output, and string manipulation.
+ * Utility class for Java code generation tasks, such as indentation, file
+ * output, and string manipulation.
  */
 public class Utils {
 
@@ -33,18 +34,17 @@ public class Utils {
      */
     public static StringBuilder indent(int indentation) {
         final StringBuilder indentationBuffer = new StringBuilder();
-        for (int i = 0; i < indentation; i++) {
-            indentationBuffer.append(Utils.INDENTER);
-        }
+        indentationBuffer.append(Utils.INDENTER.repeat(Math.max(0, indentation)));
         return indentationBuffer;
     }
 
     /**
-     * Generates the Java class/enum/interface into the requested folder, according to the class' package.
+     * Generates the Java class/enum/interface into the requested folder, according
+     * to the class' package.
      *
      * @param outputDir the output directory
-     * @param java the class to generate and write in the output folder
-     * @param replace whether to replace existing file
+     * @param java      the class to generate and write in the output folder
+     * @param replace   whether to replace existing file
      * @return true if the file was written or replaced, false otherwise
      */
     public static boolean generateToFile(File outputDir, ClassType java, boolean replace) {
@@ -61,8 +61,8 @@ public class Utils {
      * Creates the file path according to the package of the class/interface.
      *
      * @param outputDir the output directory
-     * @param pack the class/interface package
-     * @param name the class/interface name
+     * @param pack      the class/interface package
+     * @param name      the class/interface name
      * @return {@link File} containing the new file path
      */
     private static File getFilePath(File outputDir, String pack, String name) {
@@ -74,16 +74,15 @@ public class Utils {
         }
         makeDirs(new File(filePath));
         filePath += name + ".java";
-        final File outputClass = new File(filePath);
-        return outputClass;
+        return new File(filePath);
     }
 
     /**
      * Writes the Java code to an output file.
      *
      * @param outputFile the file destination of the code
-     * @param java the code to generate and write
-     * @param replace whether to replace existing file
+     * @param java       the code to generate and write
+     * @param replace    whether to replace existing file
      * @return true if the file was written or replaced, false otherwise
      */
     private static boolean writeToFile(File outputFile, IGenerate java, boolean replace) {

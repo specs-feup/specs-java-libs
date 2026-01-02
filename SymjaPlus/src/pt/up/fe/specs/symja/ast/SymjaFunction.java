@@ -31,7 +31,7 @@ public class SymjaFunction extends SymjaNode {
     /**
      * Constructs a SymjaFunction node.
      *
-     * @param data the data store
+     * @param data     the data store
      * @param children the child nodes
      */
     public SymjaFunction(DataStore data, Collection<? extends SymjaNode> children) {

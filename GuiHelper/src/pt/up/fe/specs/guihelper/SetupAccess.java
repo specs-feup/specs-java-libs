@@ -52,7 +52,7 @@ public class SetupAccess {
 
     private static boolean testTypes(FieldType thisType, RawType supposedType) {
         if (thisType.getRawType() != supposedType) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "The given value of type '" + thisType + "' has internal " + "type '" + thisType.getRawType()
                             + "', instead of '" + supposedType + "'");
             return false;
@@ -110,7 +110,7 @@ public class SetupAccess {
 
         Boolean newValue = SpecsStrings.parseBoolean(value.toString());
         if (newValue == null) {
-            SpecsLogs.getLogger().info("Could not parse '" + value + "' into an boolean.");
+            SpecsLogs.info("Could not parse '" + value + "' into an boolean.");
             newValue = SpecsStrings.parseBoolean(RawType.getEmptyValueBoolean());
         }
 
@@ -204,7 +204,7 @@ public class SetupAccess {
         // }
         Integer chosenSetup = ((ListOfSetups) value).getPreferredIndex();
         if (chosenSetup == null) {
-            SpecsLogs.getLogger().warning("Given " + ListOfSetups.class + " did not have a preferred index.");
+            SpecsLogs.warn("Given " + ListOfSetups.class + " did not have a preferred index.");
             chosenSetup = 0;
         }
         return ((ListOfSetups) value).getMapOfSetups().get(chosenSetup);
@@ -220,7 +220,7 @@ public class SetupAccess {
         if (!listOfSetups.getMapOfSetups().contains(index)) {
             // Integer chosenSetup = index;
             // if(chosenSetup == null) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Given " + ListOfSetups.class + " does not have index '" + index + "'. Returning index 0.");
             // chosenSetup = 0;
             index = 0;

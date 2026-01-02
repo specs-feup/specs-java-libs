@@ -35,10 +35,6 @@ public abstract class Graph<GN extends GraphNode<GN, N, C>, N, C> {
         this.graphNodes = new HashMap<>();
     }
 
-    /**
-     * @param nodeList
-     * @param graphNodes
-     */
     protected Graph(List<GN> nodeList, Map<String, GN> graphNodes) {
         this.nodeList = nodeList;
         this.graphNodes = graphNodes;
@@ -46,8 +42,7 @@ public abstract class Graph<GN extends GraphNode<GN, N, C>, N, C> {
 
     /**
      * Returns an unmodifiable view of this graph.
-     * 
-     * @return
+     *
      */
     public abstract Graph<GN, N, C> getUnmodifiableGraph();
 
@@ -56,7 +51,7 @@ public abstract class Graph<GN extends GraphNode<GN, N, C>, N, C> {
     public synchronized GN addNode(String operationId, N nodeInfo) {
         GN oldNode = getNode(operationId);
         if (oldNode != null) {
-            SpecsLogs.getLogger().warning("Node with id '" + operationId + "' already in the graph.");
+            SpecsLogs.warn("Node with id '" + operationId + "' already in the graph.");
             return oldNode;
         }
 
@@ -73,14 +68,14 @@ public abstract class Graph<GN extends GraphNode<GN, N, C>, N, C> {
         // Get source node
         GN sourceNode = this.graphNodes.get(sourceId);
         if (sourceNode == null) {
-            SpecsLogs.getLogger().warning("Could not find node with id '" + sourceId + "'.");
+            SpecsLogs.warn("Could not find node with id '" + sourceId + "'.");
             return;
         }
 
         // Get destination node
         GN sinkNode = this.graphNodes.get(sinkId);
         if (sinkNode == null) {
-            SpecsLogs.getLogger().warning("Could not find node with id '" + sinkId + "'.");
+            SpecsLogs.warn("Could not find node with id '" + sinkId + "'.");
             return;
         }
 
@@ -88,12 +83,8 @@ public abstract class Graph<GN extends GraphNode<GN, N, C>, N, C> {
     }
 
     public GN getNode(String nodeId) {
-        GN node = this.graphNodes.get(nodeId);
-        if (node == null) {
-            return null;
-        }
 
-        return node;
+        return this.graphNodes.get(nodeId);
     }
 
     public List<GN> getNodeList() {
@@ -111,13 +102,12 @@ public abstract class Graph<GN extends GraphNode<GN, N, C>, N, C> {
 
     /**
      * Removes a node from the graph.
-     * 
-     * @param node
+     *
      */
     public void remove(String nodeId) {
         GN node = this.graphNodes.get(nodeId);
         if (node == null) {
-            SpecsLogs.getLogger().warning("Given node does not belong to the graph:" + node);
+            SpecsLogs.warn("Given node does not belong to the graph:" + node);
             return;
         }
 
@@ -126,13 +116,12 @@ public abstract class Graph<GN extends GraphNode<GN, N, C>, N, C> {
 
     /**
      * Removes a node from the graph.
-     * 
-     * @param node
+     *
      */
     public void remove(GN node) {
         // Check if node is part of the graph
         if (this.graphNodes.get(node.getId()) != node) {
-            SpecsLogs.getLogger().warning("Given node does not belong to the graph:" + node);
+            SpecsLogs.warn("Given node does not belong to the graph:" + node);
             return;
         }
 

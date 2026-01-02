@@ -130,14 +130,12 @@ class ResourcesTest {
         }
 
         @Test
-        @DisplayName("should handle null resource list")
-        void shouldHandleNullResourceList() {
-            // Given/When - Constructor accepts null but NPE occurs on getResources()
-            Resources resources = new Resources("base", (List<String>) null);
-
-            // Then - NPE should occur when trying to use the resources
-            assertThatThrownBy(() -> resources.getResources())
-                    .isInstanceOf(NullPointerException.class);
+        @DisplayName("should reject null resource list")
+        void shouldRejectNullResourceList() {
+            // Given/When/Then - Constructor should reject null resource list
+            assertThatThrownBy(() -> new Resources("base", (List<String>) null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessageContaining("Resources list cannot be null");
         }
 
         @Test
@@ -355,7 +353,7 @@ class ResourcesTest {
         @DisplayName("should work with real resource paths")
         void shouldWorkWithRealResourcePaths() {
             // Given - using test resources that actually exist
-            Resources resources = new Resources("test/resource", "a.txt", "b.txt", "c.txt");
+            Resources resources = new Resources("test-resources", "a.txt", "b.txt", "c.txt");
 
             // When
             List<ResourceProvider> providers = resources.getResources();
@@ -366,7 +364,7 @@ class ResourcesTest {
             // Verify that the providers can actually access resources
             for (ResourceProvider provider : providers) {
                 assertThat(provider.getResource()).isNotNull();
-                assertThat(provider.getResource()).contains("test/resource/");
+                assertThat(provider.getResource()).contains("test-resources/");
             }
         }
 

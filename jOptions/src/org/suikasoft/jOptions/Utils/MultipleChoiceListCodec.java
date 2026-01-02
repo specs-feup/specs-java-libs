@@ -56,7 +56,8 @@ public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
             return decodedValues;
         }
 
-        // Use Pattern.quote to escape regex metacharacters and preserve trailing empty elements with limit -1
+        // Use Pattern.quote to escape regex metacharacters and preserve trailing empty
+        // elements with limit -1
         String escapedSeparator = Pattern.quote(SEPARATOR);
         for (var singleValue : value.split(escapedSeparator, -1)) {
             decodedValues.add(decodeSingle(singleValue));
@@ -78,7 +79,7 @@ public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
     @Override
     public String encode(List<T> value) {
         return value.stream()
-                .map(element -> elementCodec.encode(element))
+                .map(elementCodec::encode)
                 .collect(Collectors.joining(SEPARATOR));
     }
 

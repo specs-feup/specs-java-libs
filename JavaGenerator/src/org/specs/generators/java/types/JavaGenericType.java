@@ -20,7 +20,8 @@ import org.specs.generators.java.utils.UniqueList;
 import tdrc.utils.StringUtils;
 
 /**
- * Represents a Java generic type for code generation, including the base type and any extending types.
+ * Represents a Java generic type for code generation, including the base type
+ * and any extending types.
  */
 public class JavaGenericType {
 
@@ -84,18 +85,19 @@ public class JavaGenericType {
     }
 
     /**
-     * Returns the string representation of this generic type, including canonical type information.
+     * Returns the string representation of this generic type, including canonical
+     * type information.
      *
      * @return the string representation
      */
     @Override
     public String toString() {
-        final String toString = "<" + getCanonicalType() + ">";
-        return toString;
+        return "<" + getCanonicalType() + ">";
     }
 
     /**
-     * Returns a simple representation of this type, excluding package names and angle brackets.
+     * Returns a simple representation of this type, excluding package names and
+     * angle brackets.
      *
      * @return the simple type string
      */
@@ -109,7 +111,8 @@ public class JavaGenericType {
     }
 
     /**
-     * Returns the canonical representation of this type, including package names but excluding angle brackets.
+     * Returns the canonical representation of this type, including package names
+     * but excluding angle brackets.
      *
      * @return the canonical type string
      */

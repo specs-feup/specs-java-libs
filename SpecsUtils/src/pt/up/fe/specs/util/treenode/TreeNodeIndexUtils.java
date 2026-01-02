@@ -30,10 +30,7 @@ public class TreeNodeIndexUtils {
     /**
      * Returns all indexes where the MatlabToken of the given type appears. If no
      * token of that type is found returns an empty list.
-     * 
-     * @param tokenType
-     * @param tokens
-     * @return
+     *
      */
     public static <K extends TreeNode<K>> List<Integer> indexesOf(
             List<K> tokens, Class<? extends K> type) {
@@ -50,10 +47,7 @@ public class TreeNodeIndexUtils {
 
     /**
      * Helper method with variadic inputs.
-     * 
-     * @param root
-     * @param indexes
-     * @return
+     *
      */
     public static <K extends TreeNode<K>> K getChild(K root, Integer... indexes) {
         return getChild(root, Arrays.asList(indexes));
@@ -70,9 +64,7 @@ public class TreeNodeIndexUtils {
      * <p>
      * If any problem happens (e.g., trying to access a child that does not exist)
      * an exception is thrown.
-     * 
-     * @param indexes
-     * @return
+     *
      */
     public static <K extends TreeNode<K>> K getChild(K root,
             List<Integer> indexes) {
@@ -107,10 +99,7 @@ public class TreeNodeIndexUtils {
      * @param nodeToInsert   the MatlabToken object to insert
      * @param indexInsertion an array representing the indexes of the children to
      *                       select until getting the child to replace.
-     * 
-     * @return root once the insertion of the object childToInsert has been done. If
-     *         indexInsertion is empty or null,
-     *         returns root.
+     *
      */
     public static <K extends TreeNode<K>> void replaceChild(K root,
             K nodeToInsert, List<Integer> indexInsertion) {
@@ -125,7 +114,7 @@ public class TreeNodeIndexUtils {
         }
 
         // Node where the child will be replaced
-        K parentNode = null;
+        K parentNode;
         if (indexInsertion.size() == 1) {
             parentNode = root;
         } else {
@@ -142,10 +131,7 @@ public class TreeNodeIndexUtils {
     /**
      * Returns the last index of the TreeNode of the given type.
      * 
-     * 
-     * @param tokenType
-     * @param tokens
-     * @return
+     *
      */
     public static <K extends TreeNode<K>> Optional<Integer> lastIndexOf(List<K> nodes, Class<? extends K> type) {
         for (int i = nodes.size() - 1; i >= 0; i--) {
@@ -159,12 +145,8 @@ public class TreeNodeIndexUtils {
 
     /**
      * Returns the index of the last token that is not of the given types.
-     * 
-     * @param currentTokens
-     * @param space
-     * @return
+     *
      */
-
     public static <K extends TreeNode<K>> Optional<Integer> lastIndexExcept(List<K> nodes,
             Collection<Class<? extends K>> exceptions) {
 
@@ -176,6 +158,7 @@ public class TreeNodeIndexUtils {
             for (Class<?> exception : exceptions) {
                 if (exception.isInstance(token)) {
                     isException = true;
+                    break;
                 }
             }
 

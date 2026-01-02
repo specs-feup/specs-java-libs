@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.logging;
 
+import java.io.Serial;
 import java.util.logging.Level;
 
 public class LogLevel extends Level {
@@ -25,6 +26,7 @@ public class LogLevel extends Level {
         super(name, value, resourceBundleName);
     }
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private static final String defaultBundle = "sun.util.logging.resources.logging";
 

@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,10 +38,13 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * Panel for editing and managing lists of SetupList values.
  *
- * <p>This panel provides controls for adding, removing, and selecting setup elements for a DataKey of type SetupList.
+ * <p>
+ * This panel provides controls for adding, removing, and selecting setup
+ * elements for a DataKey of type SetupList.
  */
 public class SetupListPanel extends KeyPanel<SetupList> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final List<StoreDefinition> definitions;
@@ -63,10 +67,11 @@ public class SetupListPanel extends KeyPanel<SetupList> {
     private List<SetupPanel> elementsOptionPanels;
 
     /**
-     * Constructs a SetupListPanel for the given DataKey, DataStore, and collection of StoreDefinitions.
+     * Constructs a SetupListPanel for the given DataKey, DataStore, and collection
+     * of StoreDefinitions.
      *
-     * @param key the DataKey
-     * @param data the DataStore
+     * @param key         the DataKey
+     * @param data        the DataStore
      * @param definitions the collection of StoreDefinitions
      */
     public SetupListPanel(DataKey<SetupList> key, DataStore data, Collection<StoreDefinition> definitions) {
@@ -206,7 +211,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
      * Builds a label for a DataStore based on its definition name and number.
      *
      * @param definitionName the name of the definition
-     * @param number the number of the DataStore
+     * @param number         the number of the DataStore
      * @return the constructed label
      */
     private String buildDataStoreLabel(String definitionName, int number) {
@@ -237,7 +242,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
 
         // Check if the index is valid
         if (elementsBox.getItemCount() <= index) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Given index ('" + index + "')is too big. Elements size: " + elementsBox.getItemCount());
             return;
         }
@@ -281,7 +286,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
             return index - 1;
         }
 
-        SpecsLogs.getLogger().warning("Invalid index '" + index + "' for list with '" + numElements + "' elements.");
+        SpecsLogs.warn("Invalid index '" + index + "' for list with '" + numElements + "' elements.");
         return -1;
     }
 
@@ -330,8 +335,7 @@ public class SetupListPanel extends KeyPanel<SetupList> {
             dataStores.add(adaptedDataStore);
         }
 
-        var value = new SetupList(getKey().getName(), dataStores);
-        return value;
+        return new SetupList(getKey().getName(), dataStores);
     }
 
     @Override

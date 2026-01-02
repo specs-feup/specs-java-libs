@@ -40,8 +40,8 @@ public class OptionalConverter implements Converter {
     /**
      * Serializes an Optional value to XML.
      *
-     * @param source the source object
-     * @param writer the XML writer
+     * @param source  the source object
+     * @param writer  the XML writer
      * @param context the marshalling context
      */
     @Override
@@ -60,7 +60,7 @@ public class OptionalConverter implements Converter {
     /**
      * Deserializes an Optional value from XML.
      *
-     * @param reader the XML reader
+     * @param reader  the XML reader
      * @param context the unmarshalling context
      * @return the deserialized Optional value
      */

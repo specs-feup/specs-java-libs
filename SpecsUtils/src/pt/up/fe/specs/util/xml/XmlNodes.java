@@ -33,10 +33,16 @@ public class XmlNodes {
     }
 
     public static XmlNode create(Node node) {
+        if (node == null) {
+            return null;
+        }
         return XML_NODE_MAPPER.apply(node);
     }
 
     public static List<XmlNode> toList(NodeList nodeList) {
+        if (nodeList == null) {
+            return new ArrayList<>();
+        }
         var children = new ArrayList<XmlNode>(nodeList.getLength());
 
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -47,6 +53,9 @@ public class XmlNodes {
     }
 
     public static List<XmlNode> getDescendants(XmlNode node) {
+        if (node == null) {
+            return new ArrayList<>();
+        }
         List<XmlNode> descendants = new ArrayList<>();
 
         getDescendants(node, descendants);

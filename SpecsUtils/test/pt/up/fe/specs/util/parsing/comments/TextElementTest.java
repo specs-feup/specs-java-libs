@@ -27,8 +27,8 @@ public class TextElementTest {
 
             // Check method signatures exist
             assertThatCode(() -> {
-                TextElement.class.getMethod("getType");
-                TextElement.class.getMethod("getText");
+                TextElement.class.getMethod("type");
+                TextElement.class.getMethod("text");
                 TextElement.class.getMethod("newInstance", TextElementType.class, String.class);
             }).doesNotThrowAnyException();
         }
@@ -37,8 +37,8 @@ public class TextElementTest {
         @DisplayName("Should have correct method return types")
         void testTextElement_MethodReturnTypes_AreCorrect() throws NoSuchMethodException {
             // Act & Assert
-            assertThat(TextElement.class.getMethod("getType").getReturnType()).isEqualTo(TextElementType.class);
-            assertThat(TextElement.class.getMethod("getText").getReturnType()).isEqualTo(String.class);
+            assertThat(TextElement.class.getMethod("type").getReturnType()).isEqualTo(TextElementType.class);
+            assertThat(TextElement.class.getMethod("text").getReturnType()).isEqualTo(String.class);
             assertThat(TextElement.class.getMethod("newInstance", TextElementType.class, String.class).getReturnType())
                     .isEqualTo(TextElement.class);
         }
@@ -47,8 +47,8 @@ public class TextElementTest {
         @DisplayName("Should have methods with correct parameter counts")
         void testTextElement_MethodParameters_AreCorrect() throws NoSuchMethodException {
             // Act & Assert
-            assertThat(TextElement.class.getMethod("getType").getParameterCount()).isEqualTo(0);
-            assertThat(TextElement.class.getMethod("getText").getParameterCount()).isEqualTo(0);
+            assertThat(TextElement.class.getMethod("type").getParameterCount()).isEqualTo(0);
+            assertThat(TextElement.class.getMethod("text").getParameterCount()).isEqualTo(0);
             assertThat(
                     TextElement.class.getMethod("newInstance", TextElementType.class, String.class).getParameterCount())
                     .isEqualTo(2);
@@ -71,8 +71,8 @@ public class TextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isEqualTo(type);
-            assertThat(element.getText()).isEqualTo(text);
+            assertThat(element.type()).isEqualTo(type);
+            assertThat(element.text()).isEqualTo(text);
         }
 
         @Test
@@ -85,8 +85,8 @@ public class TextElementTest {
             for (TextElementType type : TextElementType.values()) {
                 TextElement element = TextElement.newInstance(type, testText);
                 assertThat(element).isNotNull();
-                assertThat(element.getType()).isEqualTo(type);
-                assertThat(element.getText()).isEqualTo(testText);
+                assertThat(element.type()).isEqualTo(type);
+                assertThat(element.text()).isEqualTo(testText);
             }
         }
 
@@ -98,8 +98,8 @@ public class TextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(element.getText()).isNull();
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).isNull();
         }
 
         @Test
@@ -110,8 +110,8 @@ public class TextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(element.getText()).isEmpty();
+            assertThat(element.type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(element.text()).isEmpty();
         }
 
         @Test
@@ -122,8 +122,8 @@ public class TextElementTest {
 
             // Assert
             assertThat(element).isNotNull();
-            assertThat(element.getType()).isNull();
-            assertThat(element.getText()).isEqualTo("Test text");
+            assertThat(element.type()).isNull();
+            assertThat(element.text()).isEqualTo("Test text");
         }
 
         @Test
@@ -135,8 +135,8 @@ public class TextElementTest {
 
             // Assert
             assertThat(element1).isNotSameAs(element2);
-            assertThat(element1.getType()).isEqualTo(element2.getType());
-            assertThat(element1.getText()).isEqualTo(element2.getText());
+            assertThat(element1.type()).isEqualTo(element2.type());
+            assertThat(element1.text()).isEqualTo(element2.text());
         }
     }
 
@@ -151,10 +151,10 @@ public class TextElementTest {
             TextElement element = TextElement.newInstance(TextElementType.MULTILINE_COMMENT, "/* comment */");
 
             // Act - Multiple calls should return consistent results
-            TextElementType type1 = element.getType();
-            TextElementType type2 = element.getType();
-            String text1 = element.getText();
-            String text2 = element.getText();
+            TextElementType type1 = element.type();
+            TextElementType type2 = element.type();
+            String text1 = element.text();
+            String text2 = element.text();
 
             // Assert - Results should be consistent
             assertThat(type1).isEqualTo(type2);
@@ -172,8 +172,8 @@ public class TextElementTest {
             TextElement element = TextElement.newInstance(TextElementType.PRAGMA_MACRO, originalText);
 
             // Assert
-            assertThat(element.getText()).isEqualTo(originalText);
-            assertThat(element.getText()).isSameAs(originalText); // Same reference
+            assertThat(element.text()).isEqualTo(originalText);
+            assertThat(element.text()).isSameAs(originalText); // Same reference
         }
 
         @Test
@@ -188,8 +188,8 @@ public class TextElementTest {
 
             testCases.forEach((text, type) -> {
                 TextElement element = TextElement.newInstance(type, text);
-                assertThat(element.getText()).isEqualTo(text);
-                assertThat(element.getType()).isEqualTo(type);
+                assertThat(element.text()).isEqualTo(text);
+                assertThat(element.type()).isEqualTo(type);
             });
         }
     }
@@ -209,8 +209,8 @@ public class TextElementTest {
             // Act & Assert
             commentTypes.forEach(type -> {
                 TextElement element = TextElement.newInstance(type, "Comment text");
-                assertThat(element.getType()).isEqualTo(type);
-                assertThat(element.getText()).isEqualTo("Comment text");
+                assertThat(element.type()).isEqualTo(type);
+                assertThat(element.text()).isEqualTo("Comment text");
             });
         }
 
@@ -225,8 +225,8 @@ public class TextElementTest {
             // Act & Assert
             pragmaTypes.forEach(type -> {
                 TextElement element = TextElement.newInstance(type, "#pragma once");
-                assertThat(element.getType()).isEqualTo(type);
-                assertThat(element.getText()).isEqualTo("#pragma once");
+                assertThat(element.type()).isEqualTo(type);
+                assertThat(element.text()).isEqualTo("#pragma once");
             });
         }
 
@@ -242,8 +242,8 @@ public class TextElementTest {
 
             scenarios.forEach(scenario -> {
                 TextElement element = TextElement.newInstance(scenario.type, scenario.text);
-                assertThat(element.getType()).isEqualTo(scenario.type);
-                assertThat(element.getText()).isEqualTo(scenario.text);
+                assertThat(element.type()).isEqualTo(scenario.type);
+                assertThat(element.text()).isEqualTo(scenario.text);
             });
         }
 
@@ -265,8 +265,8 @@ public class TextElementTest {
             TextElement element = TextElement.newInstance(TextElementType.MULTILINE_COMMENT, longText);
 
             // Assert
-            assertThat(element.getText()).isEqualTo(longText);
-            assertThat(element.getText().length()).isEqualTo(longText.length());
+            assertThat(element.text()).isEqualTo(longText);
+            assertThat(element.text().length()).isEqualTo(longText.length());
         }
 
         @Test
@@ -279,7 +279,7 @@ public class TextElementTest {
             TextElement element = TextElement.newInstance(TextElementType.PRAGMA, unicodeText);
 
             // Assert
-            assertThat(element.getText()).isEqualTo(unicodeText);
+            assertThat(element.text()).isEqualTo(unicodeText);
         }
 
         @Test
@@ -292,7 +292,7 @@ public class TextElementTest {
             TextElement element = TextElement.newInstance(TextElementType.INLINE_COMMENT, whitespaceText);
 
             // Assert
-            assertThat(element.getText()).isEqualTo(whitespaceText);
+            assertThat(element.text()).isEqualTo(whitespaceText);
         }
 
         @Test
@@ -306,8 +306,8 @@ public class TextElementTest {
                 var threads = java.util.stream.IntStream.range(0, 10)
                         .mapToObj(i -> new Thread(() -> {
                             for (int j = 0; j < 100; j++) {
-                                assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA_MACRO);
-                                assertThat(element.getText()).isEqualTo("Thread test");
+                                assertThat(element.type()).isEqualTo(TextElementType.PRAGMA_MACRO);
+                                assertThat(element.text()).isEqualTo("Thread test");
                             }
                         }))
                         .toList();
@@ -330,19 +330,19 @@ public class TextElementTest {
             // Arrange
             TextElement customElement = new TextElement() {
                 @Override
-                public TextElementType getType() {
+                public TextElementType type() {
                     return TextElementType.INLINE_COMMENT;
                 }
 
                 @Override
-                public String getText() {
+                public String text() {
                     return "Custom implementation";
                 }
             };
 
             // Act & Assert
-            assertThat(customElement.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(customElement.getText()).isEqualTo("Custom implementation");
+            assertThat(customElement.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(customElement.text()).isEqualTo("Custom implementation");
         }
 
         @Test
@@ -354,19 +354,19 @@ public class TextElementTest {
                 private final String text = "Lambda-style element";
 
                 @Override
-                public TextElementType getType() {
+                public TextElementType type() {
                     return type;
                 }
 
                 @Override
-                public String getText() {
+                public String text() {
                     return text;
                 }
             };
 
             // Act & Assert
-            assertThat(lambdaElement.getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(lambdaElement.getText()).isEqualTo("Lambda-style element");
+            assertThat(lambdaElement.type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(lambdaElement.text()).isEqualTo("Lambda-style element");
         }
     }
 }

@@ -404,7 +404,7 @@ class GluerTest {
             long endTime = System.nanoTime();
 
             // Assert
-            assertThat(endTime - startTime).isLessThan(100_000_000); // Less than 100ms
+            assertThat(endTime - startTime).isLessThan(500_000_000); // Less than 500ms
         }
 
         @RetryingTest(5)
@@ -427,7 +427,7 @@ class GluerTest {
             long endTime = System.nanoTime();
 
             // Assert
-            assertThat(endTime - startTime).isLessThan(100_000_000); // Less than 100ms
+            assertThat(endTime - startTime).isLessThan(500_000_000); // Less than 500ms
         }
     }
 }

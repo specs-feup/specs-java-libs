@@ -1,8 +1,7 @@
 package pt.up.fe.specs.util.threadstream;
 
+import java.util.Objects;
 import java.util.function.Function;
-
-import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * 
@@ -34,7 +33,7 @@ public class ConsumerThread<T, K> implements Runnable {
      */
     @Override
     public void run() {
-        SpecsCheck.checkNotNull(this.ostream, () -> "Channel for this consumer object has not been provided!");
+        Objects.requireNonNull(this.ostream, () -> "Channel for this consumer object has not been provided!");
         this.consumeResult = this.consumeFunction.apply(this.ostream);
     }
 

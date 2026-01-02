@@ -14,6 +14,7 @@
 package pt.up.fe.specs.util.providers;
 
 import java.io.File;
+import java.util.Objects;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.impl.CachedStringProvider;
@@ -63,6 +64,7 @@ public interface StringProvider extends KeyProvider<String> {
      * @return a new StringProvider instance
      */
     static StringProvider newInstance(File file) {
+        Objects.requireNonNull(file, "File cannot be null");
         return new CachedStringProvider(() -> SpecsIo.read(file));
     }
 
@@ -74,6 +76,7 @@ public interface StringProvider extends KeyProvider<String> {
      * @return a new StringProvider instance
      */
     static StringProvider newInstance(ResourceProvider resource) {
+        Objects.requireNonNull(resource, "Resource cannot be null");
         return new CachedStringProvider(() -> SpecsIo.getResource(resource));
     }
 

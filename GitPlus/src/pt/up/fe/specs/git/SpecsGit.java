@@ -52,7 +52,8 @@ public class SpecsGit {
     private static final String URL_PARAM_BRANCH = "branch";
 
     /**
-     * Parses a repository URL and returns the folder where the repository is located.
+     * Parses a repository URL and returns the folder where the repository is
+     * located.
      * If the repository does not exist locally, it will be cloned.
      *
      * @param repositoryPath the URL of the repository
@@ -86,7 +87,7 @@ public class SpecsGit {
     /**
      * Checks out the specified branch in the given Git repository.
      *
-     * @param git the Git repository
+     * @param git        the Git repository
      * @param branchName the name of the branch to check out
      */
     public static void checkout(Git git, String branchName) {
@@ -116,11 +117,13 @@ public class SpecsGit {
     }
 
     /**
-     * Parses a repository URL and returns the folder where the repository is located.
+     * Parses a repository URL and returns the folder where the repository is
+     * located.
      * If the repository does not exist locally, it will be cloned.
      *
      * @param repositoryPath the URL of the repository
-     * @param firstTime whether this is the first attempt to parse the repository URL
+     * @param firstTime      whether this is the first attempt to parse the
+     *                       repository URL
      * @return the folder where the repository is located
      */
     private static File parseRepositoryUrl(String repositoryPath, boolean firstTime) {
@@ -156,7 +159,8 @@ public class SpecsGit {
                     .setCredentialsProvider(getCredentials(repositoryPath));
             pullCmd.call();
         } catch (GitAPIException | IOException e) {
-            // Sometimes this is a problem that can be solved by deleting the folder and cloning again, try that
+            // Sometimes this is a problem that can be solved by deleting the folder and
+            // cloning again, try that
             if (firstTime) {
                 SpecsLogs.info("Could not pull to folder '" + repoFolder + "', deleting folder and trying again");
                 var success = SpecsIo.deleteFolder(repoFolder);
@@ -232,7 +236,8 @@ public class SpecsGit {
     }
 
     /**
-     * Pulls the latest changes from the remote repository into the local repository.
+     * Pulls the latest changes from the remote repository into the local
+     * repository.
      *
      * @param repoFolder the folder of the local repository
      * @return the result of the pull operation
@@ -242,10 +247,11 @@ public class SpecsGit {
     }
 
     /**
-     * Pulls the latest changes from the remote repository into the local repository.
+     * Pulls the latest changes from the remote repository into the local
+     * repository.
      *
      * @param repoFolder the folder of the local repository
-     * @param cp the credentials provider
+     * @param cp         the credentials provider
      * @return the result of the pull operation
      */
     public static PullResult pull(File repoFolder, CredentialsProvider cp) {
@@ -266,7 +272,8 @@ public class SpecsGit {
     }
 
     /**
-     * Computes the differences between the working directory and the index of the repository.
+     * Computes the differences between the working directory and the index of the
+     * repository.
      *
      * @param repoFolder the folder of the local repository
      * @return a list of differences
@@ -286,8 +293,8 @@ public class SpecsGit {
      * Clones a repository into the specified folder.
      *
      * @param repositoryPath the URL of the repository
-     * @param outputFolder the folder where the repository will be cloned
-     * @param cp the credentials provider
+     * @param outputFolder   the folder where the repository will be cloned
+     * @param cp             the credentials provider
      * @return the Git object representing the cloned repository
      */
     public static Git clone(String repositoryPath, File outputFolder, CredentialsProvider cp) {
@@ -295,12 +302,13 @@ public class SpecsGit {
     }
 
     /**
-     * Clones a repository into the specified folder and checks out the specified branch.
+     * Clones a repository into the specified folder and checks out the specified
+     * branch.
      *
      * @param repositoryPath the URL of the repository
-     * @param outputFolder the folder where the repository will be cloned
-     * @param cp the credentials provider
-     * @param branch the branch to check out
+     * @param outputFolder   the folder where the repository will be cloned
+     * @param cp             the credentials provider
+     * @param branch         the branch to check out
      * @return the Git object representing the cloned repository
      */
     public static Git clone(String repositoryPath, File outputFolder, CredentialsProvider cp, String branch) {
@@ -336,7 +344,8 @@ public class SpecsGit {
     }
 
     /**
-     * Normalizes a tag name by adding the "refs/tags/" prefix if it is not already present.
+     * Normalizes a tag name by adding the "refs/tags/" prefix if it is not already
+     * present.
      *
      * @param tag the tag name
      * @return the normalized tag name
@@ -350,7 +359,7 @@ public class SpecsGit {
      * Checks if the specified tag exists in the remote repository.
      *
      * @param repositoryPath the URL of the repository
-     * @param tag the tag name
+     * @param tag            the tag name
      * @return true if the tag exists, false otherwise
      */
     public static boolean hasTag(String repositoryPath, String tag) {
@@ -360,8 +369,8 @@ public class SpecsGit {
     /**
      * Checks if the specified tag exists in the remote repository.
      *
-     * @param repositoryPath the URL of the repository
-     * @param tag the tag name
+     * @param repositoryPath      the URL of the repository
+     * @param tag                 the tag name
      * @param credentialsProvider the credentials provider
      * @return true if the tag exists, false otherwise
      */
@@ -428,9 +437,10 @@ public class SpecsGit {
      * Clones or pulls a repository into the specified folder.
      *
      * @param repositoryPath the URL of the repository
-     * @param outputFolder the folder where the repository will be cloned or pulled
-     * @param user the username for authentication
-     * @param password the password for authentication
+     * @param outputFolder   the folder where the repository will be cloned or
+     *                       pulled
+     * @param user           the username for authentication
+     * @param password       the password for authentication
      * @return the folder where the repository is located
      */
     public static File cloneOrPull(String repositoryPath, File outputFolder, String user, String password) {
@@ -513,7 +523,7 @@ public class SpecsGit {
      * Commits and pushes the changes in the repository.
      *
      * @param repoFolder the folder of the local repository
-     * @param cp the credentials provider
+     * @param cp         the credentials provider
      */
     public static void commitAndPush(File repoFolder, CredentialsProvider cp) {
         System.out.println("Commiting and pushing " + repoFolder);
@@ -528,9 +538,10 @@ public class SpecsGit {
     }
 
     /**
-     * Checks if the specified commit value is the name of a branch in the repository.
+     * Checks if the specified commit value is the name of a branch in the
+     * repository.
      *
-     * @param repo the Git repository
+     * @param repo   the Git repository
      * @param commit the commit value
      * @return true if the commit value is the name of a branch, false otherwise
      */

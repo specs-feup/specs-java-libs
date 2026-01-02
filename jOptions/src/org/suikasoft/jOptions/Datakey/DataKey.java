@@ -29,9 +29,13 @@ import pt.up.fe.specs.util.providers.KeyProvider;
 import pt.up.fe.specs.util.utilities.StringLines;
 
 /**
- * Keys for values with an associated type. DataKey equality is based only on the string name.
+ * Keys for values with an associated type. DataKey equality is based only on
+ * the string name.
  *
- * <p>This interface defines the contract for keys that are associated with a value type, including methods for retrieving the key name, value class, decoder, and for copying or setting properties.
+ * <p>
+ * This interface defines the contract for keys that are associated with a value
+ * type, including methods for retrieving the key name, value class, decoder,
+ * and for copying or setting properties.
  *
  * @param <T> the type of value associated with this key
  * @see KeyFactory
@@ -71,7 +75,8 @@ public interface DataKey<T> extends KeyProvider<String> {
     String getName();
 
     /**
-     * Retrieves the simple name of the class type of the value associated with this key.
+     * Retrieves the simple name of the class type of the value associated with this
+     * key.
      *
      * @return the simple name of the class type
      */
@@ -158,7 +163,7 @@ public interface DataKey<T> extends KeyProvider<String> {
      * @throws RuntimeException if no decoder is set
      */
     default DataKey<T> setDefaultString(String stringValue) {
-        if (!getDecoder().isPresent()) {
+        if (getDecoder().isEmpty()) {
             throw new RuntimeException("Can only use this method if a decoder was set before");
         }
 
@@ -285,8 +290,7 @@ public interface DataKey<T> extends KeyProvider<String> {
         if (defaultValue.isPresent()) {
             Object value = defaultValue.get();
 
-            if (value instanceof DataStore) {
-                DataStore dataStoreValue = (DataStore) value;
+            if (value instanceof DataStore dataStoreValue) {
                 if (dataStoreValue.getStoreDefinitionTry().isPresent()) {
                     builder.append(")");
 
@@ -382,11 +386,12 @@ public interface DataKey<T> extends KeyProvider<String> {
      * @return the updated DataKey instance
      */
     default DataKey<T> setCopyConstructor() {
-        return setCopyFunction(object -> SpecsSystem.copy(object));
+        return setCopyFunction(SpecsSystem::copy);
     }
 
     /**
-     * Checks if the class of a value being set is compatible with the value class of the key.
+     * Checks if the class of a value being set is compatible with the value class
+     * of the key.
      *
      * @return true if the class is compatible, false otherwise
      */

@@ -75,11 +75,6 @@ public class SpecsGraphviz {
     /**
      * Shape and Color can be null.
      *
-     * @param id
-     * @param label
-     * @param shape
-     * @param color
-     * @return
      */
     public static String declaration(String id, String label, String shape,
             String color) {
@@ -114,12 +109,7 @@ public class SpecsGraphviz {
 
     /**
      * Label can be null.
-     * 
-     * @param id
-     * @param label
-     * @param shape
-     * @param color
-     * @return
+     *
      */
     public static String connection(String inputId, String outputId, String label) {
 
@@ -147,20 +137,15 @@ public class SpecsGraphviz {
 
     /**
      * Reads each character, looking for new lines and subtituting them for \n
-     * 
-     * @param label
-     * @return
+     *
      */
     public static String parseLabel(String label) {
-        String newLabel = label.replaceAll("\n", "\\\\n");
-        return newLabel;
+        return label.replaceAll("\n", "\\\\n");
     }
 
     /**
      * Removes [ and ] charatect and replaces it by round parenthesis
-     * 
-     * @param label
-     * @return
+     *
      */
     public static String formatId(String label) {
         return formatId(label, '0', '0');

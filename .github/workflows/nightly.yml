@@ -41,7 +41,6 @@ jobs:
             AsmParser
             CommonsCompressPlus
             CommonsLangPlus
-            GearmanPlus
             GitlabPlus
             GitPlus
             Gprofer
@@ -59,13 +58,12 @@ jobs:
             SymjaPlus
             tdrcLibrary
             XStreamPlus
-            Z3Helper
           )
           failed=()
           for project in "${projects[@]}"; do
             echo "\n===== Building and testing $project ====="
             cd "$project"
-            if ! gradle build test; then
+            if ! gradle build; then
               echo "[ERROR] $project failed to build or test"
               failed+=("$project")
             fi

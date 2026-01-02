@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
@@ -50,11 +49,12 @@ public class ArgumentsParser {
     private final Set<String> ignoreFlags;
 
     /**
-     * Constructs an ArgumentsParser instance and initializes default parsers and flags.
+     * Constructs an ArgumentsParser instance and initializes default parsers and
+     * flags.
      */
     public ArgumentsParser() {
         parsers = new LinkedHashMap<>();
-        datakeys = new MultiMap<>(() -> new LinkedHashMap<>());
+        datakeys = new MultiMap<>(LinkedHashMap::new);
         consumedArgs = new HashMap<>();
         ignoreFlags = new HashSet<>();
 
@@ -83,12 +83,13 @@ public class ArgumentsParser {
     }
 
     /**
-     * Prints the help message for the command-line arguments, listing all supported flags and their descriptions.
+     * Prints the help message for the command-line arguments, listing all supported
+     * flags and their descriptions.
      */
     private void printHelpMessage() {
         StringBuilder message = new StringBuilder();
         for (DataKey<?> key : datakeys.keySet()) {
-            String flags = datakeys.get(key).stream().collect(Collectors.joining(", "));
+            String flags = String.join(", ", datakeys.get(key));
             message.append(" ").append(flags);
 
             Integer consumedArgs = this.consumedArgs.get(key);
@@ -156,18 +157,20 @@ public class ArgumentsParser {
     }
 
     /**
-     * Adds a key that uses the next argument as a value, associating it with the given flags.
+     * Adds a key that uses the next argument as a value, associating it with the
+     * given flags.
      *
      * @param key   the DataKey representing the string value
      * @param flags the flags associated with the key
      * @return the updated ArgumentsParser instance
      */
     public ArgumentsParser addString(DataKey<String> key, String... flags) {
-        return add(key, list -> list.popSingle(), 1, flags);
+        return add(key, ListParser::popSingle, 1, flags);
     }
 
     /**
-     * Uses the key's decoder to parse the next argument, associating it with the given flags.
+     * Uses the key's decoder to parse the next argument, associating it with the
+     * given flags.
      *
      * @param key   the DataKey representing the value
      * @param flags the flags associated with the key
@@ -190,7 +193,8 @@ public class ArgumentsParser {
     }
 
     /**
-     * Accepts a custom parser for the next argument, associating it with the given flags.
+     * Accepts a custom parser for the next argument, associating it with the given
+     * flags.
      *
      * @param key          the DataKey representing the value
      * @param parser       the custom parser function
@@ -223,9 +227,7 @@ public class ArgumentsParser {
      * @return the updated ArgumentsParser instance
      */
     public ArgumentsParser addIgnore(String... ignoreFlags) {
-        for (String ignoreFlag : ignoreFlags) {
-            this.ignoreFlags.add(ignoreFlag);
-        }
+        this.ignoreFlags.addAll(Arrays.asList(ignoreFlags));
 
         return this;
     }

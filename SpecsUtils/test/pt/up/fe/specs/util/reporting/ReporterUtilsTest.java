@@ -122,7 +122,7 @@ class ReporterUtilsTest {
         void shouldThrowExceptionForNullMessageType() {
             // When/Then
             assertThatThrownBy(() -> ReporterUtils.formatMessage(null, "message"))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -130,7 +130,7 @@ class ReporterUtilsTest {
         void shouldThrowExceptionForNullMessage() {
             // When/Then
             assertThatThrownBy(() -> ReporterUtils.formatMessage("Error", null))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -138,7 +138,7 @@ class ReporterUtilsTest {
         void shouldThrowExceptionForBothNullParameters() {
             // When/Then
             assertThatThrownBy(() -> ReporterUtils.formatMessage(null, null))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
     }
 
@@ -248,7 +248,7 @@ class ReporterUtilsTest {
         void shouldThrowExceptionForNullFileName() {
             // When/Then
             assertThatThrownBy(() -> ReporterUtils.formatFileStackLine(null, 1, "code"))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -256,7 +256,7 @@ class ReporterUtilsTest {
         void shouldThrowExceptionForNullCodeLine() {
             // When/Then
             assertThatThrownBy(() -> ReporterUtils.formatFileStackLine("file.c", 1, null))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
     }
 
@@ -356,7 +356,7 @@ class ReporterUtilsTest {
         void shouldThrowExceptionForNullFileName() {
             // When/Then
             assertThatThrownBy(() -> ReporterUtils.formatFunctionStackLine("func", null, 1, "code"))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -364,7 +364,7 @@ class ReporterUtilsTest {
         void shouldThrowExceptionForNullCodeLine() {
             // When/Then
             assertThatThrownBy(() -> ReporterUtils.formatFunctionStackLine("func", "file.c", 1, null))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
     }
 

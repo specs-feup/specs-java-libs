@@ -82,8 +82,8 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo("This is a comment");
+            assertThat(result.get().type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo("This is a comment");
 
             // Verify iterator not used for single line comment
             verifyNoInteractions(mockIterator);
@@ -97,8 +97,8 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo("variable declaration");
+            assertThat(result.get().type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo("variable declaration");
         }
 
         @Test
@@ -109,8 +109,8 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(result.get().getText()).isEmpty();
+            assertThat(result.get().type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(result.get().text()).isEmpty();
         }
 
         @Test
@@ -121,7 +121,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("spaced content");
+            assertThat(result.get().text()).isEqualTo("spaced content");
         }
 
         @Test
@@ -132,7 +132,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("comment with /* nested markers");
+            assertThat(result.get().text()).isEqualTo("comment with /* nested markers");
         }
     }
 
@@ -152,8 +152,8 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo("First line\n* Second line");
+            assertThat(result.get().type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo("First line\n* Second line");
 
             verify(mockIterator).hasNext();
             verify(mockIterator).next();
@@ -171,8 +171,8 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo("First line\n* Middle line\n* Last line");
+            assertThat(result.get().type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo("First line\n* Middle line\n* Last line");
 
             verify(mockIterator, times(2)).hasNext();
             verify(mockIterator, times(2)).next();
@@ -190,7 +190,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("comment start\ncontinuation line");
+            assertThat(result.get().text()).isEqualTo("comment start\ncontinuation line");
         }
 
         @Test
@@ -205,7 +205,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("\n\n* Content line\n");
+            assertThat(result.get().text()).isEqualTo("\n\n* Content line\n");
         }
 
         @Test
@@ -224,7 +224,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText())
+            assertThat(result.get().text())
                     .isEqualTo("*\n* This is a JavaDoc comment\n* @param x the parameter\n* @return the result\n");
         }
     }
@@ -330,7 +330,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("Single line comment");
+            assertThat(result.get().text()).isEqualTo("Single line comment");
         }
 
         @Test
@@ -371,7 +371,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("first line\ntrimmed content");
+            assertThat(result.get().text()).isEqualTo("first line\ntrimmed content");
         }
 
         @Test
@@ -386,7 +386,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText())
+            assertThat(result.get().text())
                     .isEqualTo("Unicode: \u2603 \u03B1\u03B2\n* Special: @#$%^&*()+={}[]|\\:;\"'<>?");
         }
 
@@ -403,8 +403,8 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).contains("Start of long comment");
-            assertThat(result.get().getText()).contains("Very long line");
+            assertThat(result.get().text()).contains("Start of long comment");
+            assertThat(result.get().text()).contains("Very long line");
         }
 
         @Test
@@ -419,7 +419,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("line1\nline2\nline3");
+            assertThat(result.get().text()).isEqualTo("line1\nline2\nline3");
         }
     }
 
@@ -439,7 +439,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("\n");
+            assertThat(result.get().text()).isEqualTo("\n");
         }
 
         @Test
@@ -450,7 +450,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("first /* second");
+            assertThat(result.get().text()).isEqualTo("first /* second");
         }
 
         @Test
@@ -461,7 +461,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("comment content");
+            assertThat(result.get().text()).isEqualTo("comment content");
         }
 
         @Test
@@ -476,7 +476,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("\n");
+            assertThat(result.get().text()).isEqualTo("\n");
         }
 
         @Test
@@ -487,7 +487,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("***");
+            assertThat(result.get().text()).isEqualTo("***");
         }
     }
 
@@ -510,7 +510,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("\n* Function: calculateSum\n* Purpose: Adds two integers\n");
+            assertThat(result.get().text()).isEqualTo("\n* Function: calculateSum\n* Purpose: Adds two integers\n");
         }
 
         @Test
@@ -528,8 +528,8 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).contains("Copyright 2023 Company");
-            assertThat(result.get().getText()).contains("Licensed under Apache 2.0");
+            assertThat(result.get().text()).contains("Copyright 2023 Company");
+            assertThat(result.get().text()).contains("Licensed under Apache 2.0");
         }
 
         @Test
@@ -548,7 +548,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            String text = result.get().getText();
+            String text = result.get().text();
             assertThat(text).contains("Calculates the factorial");
             assertThat(text).contains("@param n");
             assertThat(text).contains("@return The factorial");
@@ -568,7 +568,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).contains("Example: int x = func(5, 10);");
+            assertThat(result.get().text()).contains("Example: int x = func(5, 10);");
         }
     }
 
@@ -585,7 +585,7 @@ public class MultiLineCommentRuleTest {
                     String line = "/* Comment " + i + " */";
                     Optional<TextElement> result = rule.apply(line, mockIterator);
                     assertThat(result).isPresent();
-                    assertThat(result.get().getText()).isEqualTo("Comment " + i);
+                    assertThat(result.get().text()).isEqualTo("Comment " + i);
                 }
             }).doesNotThrowAnyException();
         }
@@ -601,7 +601,7 @@ public class MultiLineCommentRuleTest {
                                 String line = "/* Thread " + i + " comment " + j + " */";
                                 Optional<TextElement> result = rule.apply(line, mockIterator);
                                 assertThat(result).isPresent();
-                                assertThat(result.get().getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+                                assertThat(result.get().type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
                             }
                         }))
                         .toList();
@@ -629,8 +629,8 @@ public class MultiLineCommentRuleTest {
             TextElement element = result.get();
 
             // Should work through TextElement interface
-            assertThat(element.getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(element.getText()).isEqualTo("Integration test");
+            assertThat(element.type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(element.text()).isEqualTo("Integration test");
 
             // Should be a GenericTextElement instance (from factory method)
             assertThat(element).isInstanceOf(GenericTextElement.class);
@@ -651,7 +651,7 @@ public class MultiLineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("\n* Line 1 of comment\n* Line 2 of comment\n");
+            assertThat(result.get().text()).isEqualTo("\n* Line 1 of comment\n* Line 2 of comment\n");
 
             // Iterator should be properly consumed
             assertThat(realIterator.hasNext()).isFalse();

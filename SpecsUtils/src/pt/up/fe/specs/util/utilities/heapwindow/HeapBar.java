@@ -20,8 +20,10 @@
 package pt.up.fe.specs.util.utilities.heapwindow;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -39,6 +41,7 @@ import pt.up.fe.specs.util.swing.GenericMouseListener;
  */
 public class HeapBar extends JPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private static final long UPDATE_PERIOD_MS = 500;
@@ -92,7 +95,7 @@ public class HeapBar extends JPanel {
 
     public void run() {
 
-        java.awt.EventQueue.invokeLater(() -> {
+        EventQueue.invokeLater(() -> {
             timer = new Timer();
             timer.scheduleAtFixedRate(buildTimerTask(memProgressBar), 0, HeapBar.UPDATE_PERIOD_MS);
             setVisible(true);
@@ -100,8 +103,11 @@ public class HeapBar extends JPanel {
     }
 
     public void close() {
-        java.awt.EventQueue.invokeLater(() -> {
-            HeapBar.this.timer.cancel();
+        EventQueue.invokeLater(() -> {
+            if (HeapBar.this.timer != null) {
+                HeapBar.this.timer.cancel();
+                HeapBar.this.timer = null;
+            }
             setVisible(false);
         });
     }

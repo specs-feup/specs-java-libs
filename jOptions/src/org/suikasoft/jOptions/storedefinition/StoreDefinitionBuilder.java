@@ -26,7 +26,8 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Builder for creating {@link StoreDefinition} instances, supporting sections and default data.
+ * Builder for creating {@link StoreDefinition} instances, supporting sections
+ * and default data.
  */
 public class StoreDefinitionBuilder {
 
@@ -169,7 +170,7 @@ public class StoreDefinitionBuilder {
     /**
      * Adds a named store definition to this builder.
      *
-     * @param name the name of the store definition
+     * @param name            the name of the store definition
      * @param storeDefinition the store definition to add
      * @return this builder
      */
@@ -190,10 +191,12 @@ public class StoreDefinitionBuilder {
     }
 
     /**
-     * Adds a store definition to this builder, optionally using its name as a section name.
+     * Adds a store definition to this builder, optionally using its name as a
+     * section name.
      *
      * @param storeDefinition the store definition to add
-     * @param useName whether to use the store definition's name as a section name
+     * @param useName         whether to use the store definition's name as a
+     *                        section name
      */
     private void addDefinitionPrivate(StoreDefinition storeDefinition, boolean useName) {
         if (useName) {

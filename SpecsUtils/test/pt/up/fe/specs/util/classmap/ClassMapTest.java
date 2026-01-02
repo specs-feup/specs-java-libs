@@ -325,8 +325,8 @@ public class ClassMapTest {
         @DisplayName("Should handle null class gracefully")
         void testNullClass() {
             assertThatThrownBy(() -> numberMap.get((Class<? extends Number>) null))
-                    .isInstanceOf(NotImplementedException.class)
-                    .hasMessageContaining("Function not defined for class");
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Key cannot be null");
         }
 
         @Test
@@ -341,16 +341,8 @@ public class ClassMapTest {
         void testNullValues() {
             numberMap.put(Integer.class, null);
 
-            // BUG: ClassMap incorrectly throws NullPointerException for explicit null
-            // values
-            // This is a bug in the implementation - it should allow null values
-            assertThatThrownBy(() -> numberMap.get(Integer.class))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Expected map to contain");
-
-            assertThatThrownBy(() -> numberMap.tryGet(Integer.class))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Expected map to contain");
+            assertThat(numberMap.get(Integer.class)).isNull();
+            assertThat(numberMap.tryGet(Integer.class)).isEmpty();
         }
 
         @Test

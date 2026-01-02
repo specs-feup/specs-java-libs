@@ -16,9 +16,13 @@ package org.specs.generators.java.enums;
  * Enum representing object types for Java primitives for code generation.
  */
 public enum ObjectOfPrimitives {
-    INTEGER(Integer.class.getSimpleName()), DOUBLE(Double.class.getSimpleName()), FLOAT(
-            Float.class.getSimpleName()), LONG(Long.class.getSimpleName()), SHORT(Short.class.getSimpleName()), BYTE(
-                    Byte.class.getSimpleName()), BOOLEAN(Boolean.class.getSimpleName());
+    INTEGER(Integer.class.getSimpleName()),
+    DOUBLE(Double.class.getSimpleName()),
+    FLOAT(Float.class.getSimpleName()),
+    LONG(Long.class.getSimpleName()),
+    SHORT(Short.class.getSimpleName()),
+    BYTE(Byte.class.getSimpleName()),
+    BOOLEAN(Boolean.class.getSimpleName());
 
     ObjectOfPrimitives(String type) {
         this.type = type;

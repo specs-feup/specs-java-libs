@@ -30,7 +30,7 @@ public interface ParserWorkerWithParam4<T, U, V, W, Y> {
     /**
      * Applies this function to the given arguments.
      *
-     * @param t the first function argument
+     * @param s the first function argument
      * @param u the second function argument
      * @param w the third function argument
      * @param y the fourth function argument

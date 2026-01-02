@@ -15,7 +15,7 @@ package org.suikasoft.jOptions.gui.panels.option.notimplementedyet;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,13 +34,15 @@ import pt.up.fe.specs.util.utilities.StringList;
 /**
  * Deprecated panel for editing multiple choice lists.
  *
- * <p>This panel was replaced with EnumMultipleChoicePanel.
+ * <p>
+ * This panel was replaced with EnumMultipleChoicePanel.
  *
  * @deprecated replaced with EnumMultipleChoicePanel
  */
 @Deprecated
 public class MultipleChoiceListPanel extends FieldPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -62,7 +64,7 @@ public class MultipleChoiceListPanel extends FieldPanel {
      * Constructs a MultipleChoiceListPanel for the given label and choices.
      *
      * @param labelName the label for the panel
-     * @param choices the available choices
+     * @param choices   the available choices
      */
     public MultipleChoiceListPanel(String labelName, Collection<String> choices) {
         label = new JLabel(labelName + ":");
@@ -75,20 +77,9 @@ public class MultipleChoiceListPanel extends FieldPanel {
         possibleValues = new JComboBox<>();
         resetChoiceLists();
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
+        addButton.addActionListener(this::addButtonActionPerformed);
 
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                removeButtonActionPerformed(evt);
-            }
-
-        });
+        removeButton.addActionListener(this::removeButtonActionPerformed);
 
         add(label);
         add(selectedValues);
@@ -118,7 +109,8 @@ public class MultipleChoiceListPanel extends FieldPanel {
     }
 
     /**
-     * Moves one value from possibleValues to selectedValues. This method is not thread-safe.
+     * Moves one value from possibleValues to selectedValues. This method is not
+     * thread-safe.
      * 
      * @param valueName the name of the value to add
      * @return true if the value was successfully added, false otherwise
@@ -144,7 +136,8 @@ public class MultipleChoiceListPanel extends FieldPanel {
     }
 
     /**
-     * Moves one value from selectedValues to possibleValues. This method is not thread-safe.
+     * Moves one value from selectedValues to possibleValues. This method is not
+     * thread-safe.
      * 
      * @param valueName the name of the value to remove
      * @return true if the value was successfully removed, false otherwise
@@ -155,7 +148,7 @@ public class MultipleChoiceListPanel extends FieldPanel {
         }
         // Check if value is selected
         if (!selectedValuesShadow.contains(valueName)) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Could not find value '" + valueName + "' in already "
                             + "selected choices. Currently selected choices:" + selectedValuesShadow);
             return false;

@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.Options;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.StringList;
 
 /**
- * Utility class for managing a list of files and their associated folder in a DataStore.
+ * Utility class for managing a list of files and their associated folder in a
+ * DataStore.
  *
  * @author Joao Bispo
  */
@@ -117,10 +119,7 @@ public class FileList {
 
         fileList.data.set(FileList.KEY_FOLDER, new File(values[0]));
 
-        List<String> filenames = new ArrayList<>();
-        for (int i = 1; i < values.length; i++) {
-            filenames.add(values[i]);
-        }
+        List<String> filenames = new ArrayList<>(Arrays.asList(values).subList(1, values.length));
         fileList.data.set(FileList.KEY_FILENAMES, new StringList(filenames));
 
         return fileList;

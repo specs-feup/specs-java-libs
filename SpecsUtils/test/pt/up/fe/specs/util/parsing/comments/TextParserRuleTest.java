@@ -80,8 +80,8 @@ public class TextParserRuleTest {
 
             // Assert
             assertThat(result1).isPresent();
-            assertThat(result1.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(result1.get().getText()).isEqualTo("// Comment");
+            assertThat(result1.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(result1.get().text()).isEqualTo("// Comment");
             assertThat(result2).isEmpty();
         }
     }
@@ -106,8 +106,8 @@ public class TextParserRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(result.get().getText()).isEqualTo("#pragma once");
+            assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(result.get().text()).isEqualTo("#pragma once");
 
             // Verify iterator was not used for single line rule
             verifyNoInteractions(mockIterator);
@@ -153,8 +153,8 @@ public class TextParserRuleTest {
             testCases.forEach(testLine -> {
                 Optional<TextElement> result = inlineCommentRule.apply(testLine, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-                assertThat(result.get().getText()).isEqualTo(testLine);
+                assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
+                assertThat(result.get().text()).isEqualTo(testLine);
             });
         }
     }
@@ -192,8 +192,8 @@ public class TextParserRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.MULTILINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo("/* Comment line 1\n * Comment line 2\n */");
+            assertThat(result.get().type()).isEqualTo(TextElementType.MULTILINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo("/* Comment line 1\n * Comment line 2\n */");
 
             // Verify iterator was used correctly
             verify(mockIterator, times(2)).hasNext();
@@ -225,7 +225,7 @@ public class TextParserRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("START macro\ncontinuation line");
+            assertThat(result.get().text()).isEqualTo("START macro\ncontinuation line");
 
             // Verify iterator was consumed correctly
             verify(mockIterator).hasNext();
@@ -258,7 +258,7 @@ public class TextParserRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("#define SIMPLE_MACRO");
+            assertThat(result.get().text()).isEqualTo("#define SIMPLE_MACRO");
             verify(mockIterator).hasNext();
             verify(mockIterator, never()).next();
         }
@@ -291,11 +291,11 @@ public class TextParserRuleTest {
             // Act & Assert
             Optional<TextElement> commentResult = combinedRule.apply("// Comment", mockIterator);
             assertThat(commentResult).isPresent();
-            assertThat(commentResult.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(commentResult.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
 
             Optional<TextElement> pragmaResult = combinedRule.apply("#pragma once", mockIterator);
             assertThat(pragmaResult).isPresent();
-            assertThat(pragmaResult.get().getType()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(pragmaResult.get().type()).isEqualTo(TextElementType.PRAGMA);
 
             Optional<TextElement> nothingResult = combinedRule.apply("regular code", mockIterator);
             assertThat(nothingResult).isEmpty();
@@ -317,8 +317,8 @@ public class TextParserRuleTest {
                 Optional<TextElement> baseResult = baseRule.apply(line, iterator);
                 if (baseResult.isPresent()) {
                     // Enhance the result
-                    String enhancedText = baseResult.get().getText() + " [enhanced]";
-                    return Optional.of(new GenericTextElement(baseResult.get().getType(), enhancedText));
+                    String enhancedText = baseResult.get().text() + " [enhanced]";
+                    return Optional.of(new GenericTextElement(baseResult.get().type(), enhancedText));
                 }
                 return Optional.empty();
             };
@@ -328,7 +328,7 @@ public class TextParserRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("processed: test line [enhanced]");
+            assertThat(result.get().text()).isEqualTo("processed: test line [enhanced]");
         }
     }
 
@@ -421,7 +421,7 @@ public class TextParserRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("MULTI line [error]");
+            assertThat(result.get().text()).isEqualTo("MULTI line [error]");
         }
     }
 
@@ -445,7 +445,7 @@ public class TextParserRuleTest {
             assertThatCode(() -> {
                 Optional<TextElement> result = rule.apply(longLine, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getText()).hasSize(longLine.length());
+                assertThat(result.get().text()).hasSize(longLine.length());
             }).doesNotThrowAnyException();
         }
 
@@ -487,7 +487,7 @@ public class TextParserRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(specialLine);
+            assertThat(result.get().text()).isEqualTo(specialLine);
         }
 
         @Test

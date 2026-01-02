@@ -140,19 +140,21 @@ class StringProviderTest {
         }
 
         @Test
-        @DisplayName("should accept null file during creation")
-        void shouldAcceptNullFileDuringCreation() {
-            // Factory method accepts null but defers error to getString()
-            assertThatCode(() -> StringProvider.newInstance((File) null))
-                    .doesNotThrowAnyException();
+        @DisplayName("should reject null file during creation")
+        void shouldRejectNullFileDuringCreation() {
+            // Factory method should reject null file immediately
+            assertThatThrownBy(() -> StringProvider.newInstance((File) null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessageContaining("File cannot be null");
         }
 
         @Test
-        @DisplayName("should accept null resource provider during creation")
-        void shouldAcceptNullResourceProviderDuringCreation() {
-            // Factory method accepts null but defers error to getString()
-            assertThatCode(() -> StringProvider.newInstance((ResourceProvider) null))
-                    .doesNotThrowAnyException();
+        @DisplayName("should reject null resource provider during creation")
+        void shouldRejectNullResourceProviderDuringCreation() {
+            // Factory method should reject null resource immediately
+            assertThatThrownBy(() -> StringProvider.newInstance((ResourceProvider) null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessageContaining("Resource cannot be null");
         }
     }
 
@@ -270,15 +272,14 @@ class StringProviderTest {
         }
 
         @Test
-        @DisplayName("should handle resource loading failures")
-        void shouldHandleResourceLoadingFailures() {
+        @DisplayName("should handle resource loading failures gracefully")
+        void shouldHandleResourceLoadingFailuresGracefully() {
             ResourceProvider resourceProvider = () -> "non/existent/resource.txt";
             StringProvider provider = StringProvider.newInstance(resourceProvider);
 
-            // Resource loading failure causes NPE in CachedStringProvider due to null
-            // handling bug
-            assertThatThrownBy(() -> provider.getString())
-                    .isInstanceOf(NullPointerException.class);
+            // Resource loading failure should return null gracefully
+            String result = provider.getString();
+            assertThat(result).isNull();
         }
     }
 

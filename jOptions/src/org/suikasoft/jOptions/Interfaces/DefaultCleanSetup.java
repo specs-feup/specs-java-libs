@@ -85,7 +85,8 @@ public class DefaultCleanSetup implements DataView, DataStoreContainer {
      *
      * @param key the DataKey to check
      * @param <T> the type of the value
-     * @return {@code true} if the DataKey has an associated value, {@code false} otherwise
+     * @return {@code true} if the DataKey has an associated value, {@code false}
+     *         otherwise
      */
     @Override
     public <T> boolean hasValue(DataKey<T> key) {

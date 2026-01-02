@@ -35,8 +35,5 @@ List<String> sublist = SpecsCollections.subList(myList, 2);
 - `src/pt/up/fe/specs/util/xml/` - XML utilities
 - ...and more
 
-## License
-SpecsUtils is licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
-
 ## Authors
 Developed and maintained by the SPeCS Research Group at FEUP.

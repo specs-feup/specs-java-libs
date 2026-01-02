@@ -179,7 +179,7 @@ public class OptionsPanel extends GuiTab {
         // Check if filename is a valid optionsfile
         File file = new File(optionsFilename);
         if (!file.isFile()) {
-            SpecsLogs.getLogger().warning("Could not open file '" + optionsFilename + "'");
+            SpecsLogs.warn("Could not open file '" + optionsFilename + "'");
             outputFile = null;
             saveButton.setEnabled(false);
             updateFileInfoString();
@@ -188,7 +188,7 @@ public class OptionsPanel extends GuiTab {
 
         SetupData newMap = GuiHelperUtils.loadData(file);
         if (newMap == null) {
-            SpecsLogs.getLogger().warning("Given file '" + optionsFilename + "' is not a compatible options file.");
+            SpecsLogs.warn("Given file '" + optionsFilename + "' is not a compatible options file.");
             outputFile = null;
             saveButton.setEnabled(false);
             updateFileInfoString();

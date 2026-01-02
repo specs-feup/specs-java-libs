@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.BorderLayout;
+import java.io.Serial;
 
 import javax.swing.JTextField;
 
@@ -24,10 +25,12 @@ import org.suikasoft.jOptions.gui.KeyPanel;
 /**
  * Panel for editing string values using a JTextField.
  *
- * <p>This panel provides a text field for string DataKey values in the GUI.
+ * <p>
+ * This panel provides a text field for string DataKey values in the GUI.
  */
 public class StringPanel extends KeyPanel<String> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -38,7 +41,7 @@ public class StringPanel extends KeyPanel<String> {
     /**
      * Constructs a StringPanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public StringPanel(DataKey<String> key, DataStore data) {

@@ -92,6 +92,11 @@ public class SpecsSwing {
      * @param r the Runnable to execute
      */
     public static void runOnSwing(Runnable r) {
+        // Gracefully handle null runnables
+        if (r == null) {
+            return;
+        }
+
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
         } else {
@@ -182,13 +187,12 @@ public class SpecsSwing {
             int maxElementsPerTable, boolean rowWise, Class<V> valueClass) {
         List<TableModel> tableModels = new ArrayList<>();
 
-        List<K> keys = new ArrayList<>();
-        keys.addAll(map.keySet());
+        List<K> keys = new ArrayList<>(map.keySet());
         Collections.sort(keys);
 
         List<K> currentKeys = new ArrayList<>();
-        for (int i = 0; i < keys.size(); i++) {
-            currentKeys.add(keys.get(i));
+        for (K k : keys) {
+            currentKeys.add(k);
 
             if (currentKeys.size() < maxElementsPerTable) {
                 continue;
@@ -227,14 +231,11 @@ public class SpecsSwing {
     public static <K extends Comparable<? super K>, V> TableModel getTable(Map<K, V> map,
             boolean rowWise, Class<V> valueClass) {
 
-        List<K> keys = new ArrayList<>();
-        keys.addAll(map.keySet());
+        List<K> keys = new ArrayList<>(map.keySet());
         Collections.sort(keys);
 
         List<K> currentKeys = new ArrayList<>();
-        for (int i = 0; i < keys.size(); i++) {
-            currentKeys.add(keys.get(i));
-        }
+        currentKeys.addAll(keys);
 
         // Build map
         Map<K, V> newMap = new LinkedHashMap<>();
@@ -341,9 +342,7 @@ public class SpecsSwing {
                 return false;
             }
             return true;
-        }
-
-        if (SpecsSystem.isLinux()) {
+        } else if (SpecsSystem.isLinux()) {
             try {
                 var folderToOpen = file.isFile() ? file.getParentFile() : file;
                 Runtime.getRuntime()
@@ -353,9 +352,9 @@ public class SpecsSwing {
                 return false;
             }
             return true;
+        } else {
+            Desktop.getDesktop().browseFileDirectory(file);
+            return true;
         }
-
-        Desktop.getDesktop().browseFileDirectory(file);
-        return true;
     }
 }

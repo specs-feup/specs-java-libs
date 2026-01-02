@@ -80,10 +80,9 @@ class ActionsMapTest {
         @Test
         @DisplayName("should handle null action registration")
         void shouldHandleNullActionRegistration() {
-            EventAction result = actionsMap.putAction(testEventId1, null);
-
-            assertThat(result).isNull();
-            assertThat(actionsMap.getSupportedEvents()).containsExactly(testEventId1);
+            assertThatCode(() -> actionsMap.putAction(testEventId1, null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("EventAction cannot be null");
         }
 
         @Test
@@ -143,13 +142,14 @@ class ActionsMapTest {
         }
 
         @Test
-        @DisplayName("should handle null action gracefully during execution")
-        void shouldHandleNullActionGracefullyDuringExecution() {
-            actionsMap.putAction(testEventId1, null);
+        @DisplayName("should not allow null actions to be registered")
+        void shouldNotAllowNullActionsToBeRegistered() {
+            assertThatCode(() -> actionsMap.putAction(testEventId1, null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("EventAction cannot be null");
 
-            // Should not throw exception, just log warning and return
-            assertThatCode(() -> actionsMap.performAction(testEvent1))
-                    .doesNotThrowAnyException();
+            // Event should not be in supported events since registration failed
+            assertThat(actionsMap.getSupportedEvents()).isEmpty();
         }
     }
 

@@ -1,3 +1,0 @@
-mvn gpg:sign-and-deploy-file "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DrepositoryId=ossrh" "-DpomFile=%POM_FILE%" "-Dfile=%JAR_FILE%"
-mvn gpg:sign-and-deploy-file "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DrepositoryId=ossrh" "-DpomFile=%POM_FILE%" "-Dfile=%SOURCE_FILE%" "-Dclassifier=sources" 
-mvn gpg:sign-and-deploy-file "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DrepositoryId=ossrh" "-DpomFile=%POM_FILE%" "-Dfile=%JAVADOC_FILE%" "-Dclassifier=javadoc"

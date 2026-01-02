@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.lazy;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -28,7 +29,7 @@ public final class ThreadSafeLazy<T> implements Lazy<T> {
     private volatile boolean isInitialized;
 
     public ThreadSafeLazy(Supplier<T> provider) {
-        this.provider = provider;
+        this.provider = Objects.requireNonNull(provider, () -> "Supplier cannot be null");
         this.value = null;
         this.isInitialized = false;
     }
@@ -40,8 +41,7 @@ public final class ThreadSafeLazy<T> implements Lazy<T> {
 
     /**
      * The same as the method get().
-     * 
-     * @return
+     *
      */
     public T getValue() {
         return get();

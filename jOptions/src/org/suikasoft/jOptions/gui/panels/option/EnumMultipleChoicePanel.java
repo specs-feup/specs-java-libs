@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.BorderLayout;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,12 +32,14 @@ import pt.up.fe.specs.util.SpecsSwing;
 /**
  * Panel for selecting enum values from a combo box.
  *
- * <p>This panel provides a combo box for selecting enum DataKey values in the GUI.
+ * <p>
+ * This panel provides a combo box for selecting enum DataKey values in the GUI.
  *
  * @param <T> the enum type
  */
 public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -48,7 +51,7 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
     /**
      * Constructs an EnumMultipleChoicePanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public EnumMultipleChoicePanel(DataKey<T> key, DataStore data) {
@@ -66,7 +69,7 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
 
         // Check if there is a default value
         getKey().getDefault()
-                .map(defaultValue -> valueToString(defaultValue))
+                .map(this::valueToString)
                 .ifPresent(comboBoxValues::setSelectedItem);
 
         setLayout(new BorderLayout());
@@ -74,7 +77,8 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
     }
 
     /**
-     * Converts an enum value to its string representation using the key's decoder if present.
+     * Converts an enum value to its string representation using the key's decoder
+     * if present.
      *
      * @param value the enum value
      * @return the string representation
@@ -112,7 +116,7 @@ public class EnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<T> {
      * Sets the selected value in the combo box.
      *
      * @param value the value to set
-     * @param <ET> the enum type
+     * @param <ET>  the enum type
      */
     @Override
     public <ET extends T> void setValue(ET value) {

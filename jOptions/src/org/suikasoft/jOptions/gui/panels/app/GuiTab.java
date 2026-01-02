@@ -17,10 +17,14 @@ import javax.swing.JPanel;
 
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
+import java.io.Serial;
+
 /**
  * Abstract base class for tabs in the application GUI.
  *
- * <p>This class provides a contract for tabs that interact with a DataStore and require enter/exit lifecycle methods.
+ * <p>
+ * This class provides a contract for tabs that interact with a DataStore and
+ * require enter/exit lifecycle methods.
  *
  * @author Joao Bispo
  */
@@ -46,6 +50,7 @@ public abstract class GuiTab extends JPanel {
         return data;
     }
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

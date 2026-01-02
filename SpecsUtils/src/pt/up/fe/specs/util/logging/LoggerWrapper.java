@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class LoggerWrapper {
 
-    private final static String NEWLINE = System.getProperty("line.separator");
+    private final static String NEWLINE = System.lineSeparator();
 
     // Keeping a reference to a Logger so that it does not get garbage collected.
     private final Logger logger;
@@ -51,9 +51,7 @@ public class LoggerWrapper {
      * 
      * <p>
      * Use this level to show messages to the user of a program.
-     * 
-     * @param logger
-     * @param msg
+     *
      */
     public void info(String msg) {
         msg = parseMessage(msg);
@@ -64,8 +62,6 @@ public class LoggerWrapper {
     /**
      * Adds a newline to the end of the message, if it does not have one.
      *
-     * @param msg
-     * @return
      */
     private String parseMessage(String msg) {
         // Handle null messages

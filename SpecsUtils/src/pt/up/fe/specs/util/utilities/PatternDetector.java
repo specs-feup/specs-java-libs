@@ -16,6 +16,7 @@ package pt.up.fe.specs.util.utilities;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Iterator;
+import java.util.Objects;
 
 import pt.up.fe.specs.util.collections.pushingqueue.MixedPushingQueue;
 import pt.up.fe.specs.util.collections.pushingqueue.PushingQueue;
@@ -41,8 +42,7 @@ public class PatternDetector {
     /**
      * Creates a new PatternFinder which will try to find patterns of maximum size
      * 'maxPatternSize', in the given integer values.
-     * 
-     * @param maxPatternSize
+     *
      */
     public PatternDetector(int maxPatternSize, boolean priorityToBiggerPatterns) {
         this.currentPatternSize = 0;
@@ -71,8 +71,7 @@ public class PatternDetector {
 
     /**
      * Gives another value to check for pattern.
-     * 
-     * @param value
+     *
      */
     public PatternState step(Integer hashValue) {
         // Insert new element
@@ -87,8 +86,9 @@ public class PatternDetector {
 
         for (int i = 0; i < this.maxPatternSize; i++) {
 
-            // Check if there is a match
-            if (hashValue.equals(iterator.next())) {
+            // Check if there is a match (null-safe)
+            Integer other = iterator.next();
+            if (Objects.equals(hashValue, other)) {
                 // We have a match.
                 // Shift match queue to the left
                 this.matchQueues[i] = this.matchQueues[i].get(1, i + 1);
@@ -145,7 +145,7 @@ public class PatternDetector {
     }
 
     public static PatternState calculateState(int previousPatternSize, int patternSize) {
-        PatternState newState = null;
+        PatternState newState;
         // Check if pattern state has changed
         if (previousPatternSize != patternSize) {
             // If previous pattern size was 0, a new pattern started

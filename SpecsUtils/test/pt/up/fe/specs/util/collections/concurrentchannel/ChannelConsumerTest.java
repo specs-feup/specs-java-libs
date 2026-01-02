@@ -514,20 +514,17 @@ class ChannelConsumerTest {
             assertThat(consumer.take()).isEqualTo("item3");
         }
 
-        /*
-         * @Test
-         * 
-         * @DisplayName("Should handle timeout edge cases")
-         * void testTimeoutEdgeCases() throws InterruptedException {
-         * // Test not working. Tag as TODO in BUGS and disable test
-         * // Test with maximum timeout values
-         * assertThat(consumer.poll(Long.MAX_VALUE, TimeUnit.NANOSECONDS)).isNull();
-         * 
-         * // Test with negative timeout (should behave like zero timeout)
-         * producer.offer("item1");
-         * assertThat(consumer.poll(-1, TimeUnit.MILLISECONDS)).isEqualTo("item1");
-         * }
-         */
+        @Test
+        @DisplayName("Should handle timeout edge cases")
+        void testTimeoutEdgeCases() throws InterruptedException {
+            // Test with maximum timeout values - should return null from empty channel
+            // without waiting excessively long
+            assertThat(consumer.poll(Long.MAX_VALUE, TimeUnit.NANOSECONDS)).isNull();
+
+            // Test with negative timeout (should behave like zero timeout)
+            producer.offer("item1");
+            assertThat(consumer.poll(-1, TimeUnit.MILLISECONDS)).isEqualTo("item1");
+        }
     }
 
     @Nested

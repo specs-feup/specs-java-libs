@@ -23,7 +23,7 @@ public class GenericObjectStream<T> extends AObjectStream<T> {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         // TODO: how to implement here??
     }
 }

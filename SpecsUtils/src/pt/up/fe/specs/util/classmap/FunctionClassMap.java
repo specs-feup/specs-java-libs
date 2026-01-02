@@ -15,11 +15,11 @@ package pt.up.fe.specs.util.classmap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 import pt.up.fe.specs.util.Preconditions;
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
@@ -68,7 +68,7 @@ public class FunctionClassMap<T, R> {
     public <ER extends R> FunctionClassMap(FunctionClassMap<T, ER> functionClassMap) {
         this.map = new HashMap<>();
         for (var keyPair : functionClassMap.map.entrySet()) {
-            this.map.put((Class<? extends T>) keyPair.getKey(), (Function<T, R>) keyPair.getValue());
+            this.map.put(keyPair.getKey(), (Function<T, R>) keyPair.getValue());
         }
 
         this.defaultValue = functionClassMap.defaultValue;
@@ -100,9 +100,7 @@ public class FunctionClassMap<T, R> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <ET extends T, K extends ET> void put(Class<K> aClass,
             Function<ET, R> value) {
@@ -121,22 +119,21 @@ public class FunctionClassMap<T, R> {
 
         var function = this.map.get(mappedClass.get());
 
-        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
+        Objects.requireNonNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
         return Optional.of((Function<T, R>) function);
     }
 
     @SuppressWarnings("unchecked")
     private <TK extends T> Optional<Function<T, R>> get(TK key) {
-        SpecsCheck.checkNotNull(key, () -> "Used a null key in " + FunctionClassMap.class.getSimpleName());
+        Objects.requireNonNull(key, () -> "Used a null key in " + FunctionClassMap.class.getSimpleName());
         return get((Class<TK>) key.getClass());
     }
 
     /**
      * Calls the Function.apply associated with class of the value t, or
      * Optional.empty if no mapping could be found.
-     * 
-     * @param t
+     *
      */
     public Optional<R> applyTry(T t) {
         Optional<Function<T, R>> function = get(t);
@@ -147,14 +144,21 @@ public class FunctionClassMap<T, R> {
         }
 
         // Try getting a default value
-        return defaultValue(t);
+        if (this.defaultValue != null) {
+            return Optional.of(this.defaultValue);
+        }
+
+        if (this.defaultFunction != null) {
+            return Optional.ofNullable(this.defaultFunction.apply(t));
+        }
+
+        return Optional.empty();
     }
 
     /**
      * Calls the Function.apply associated with class of the value t, or throws an
      * Exception if no mapping could be found.
-     * 
-     * @param t
+     *
      */
     public R apply(T t) {
         Optional<Function<T, R>> function = get(t);
@@ -165,34 +169,21 @@ public class FunctionClassMap<T, R> {
         }
 
         // Try getting a default value
-        Optional<R> result = defaultValue(t);
-        if (result.isPresent()) {
-            return result.get();
+        if (this.defaultValue != null) {
+            return this.defaultValue;
+        }
+
+        if (this.defaultFunction != null) {
+            return this.defaultFunction.apply(t);
         }
 
         throw new NotImplementedException("Function not defined for class '"
                 + t.getClass() + "'");
     }
 
-    private Optional<R> defaultValue(T t) {
-        // Both defaults cannot be set at the same time, order does not matter
-
-        if (this.defaultValue != null) {
-            return Optional.of(this.defaultValue);
-        }
-
-        if (this.defaultFunction != null) {
-            return Optional.of(this.defaultFunction.apply(t));
-        }
-
-        return Optional.empty();
-    }
-
     /**
      * Sets the default value, backed up by the same map.
-     * 
-     * @param defaultValue
-     * @return
+     *
      */
     public void setDefaultValue(R defaultValue) {
         this.defaultFunction = null;

@@ -39,6 +39,9 @@ public class BuilderWithIndentation {
     }
 
     public BuilderWithIndentation(int startIdentation, String tab) {
+        if (tab == null) {
+            throw new IllegalArgumentException("Tab string cannot be null");
+        }
         builder = new StringBuilder();
 
         currentIdentation = startIdentation;
@@ -70,9 +73,11 @@ public class BuilderWithIndentation {
     /**
      * Appends the current indentation and the string to the current buffer.
      *
-     * @param string
      */
     public BuilderWithIndentation add(String string) {
+        if (string == null) {
+            throw new IllegalArgumentException("String cannot be null");
+        }
         // Add identation
         addIndentation();
         builder.append(string);
@@ -83,11 +88,20 @@ public class BuilderWithIndentation {
     /**
      * Splits the given string around the newlines and a adds each line.
      *
-     * @param lines
      */
     public BuilderWithIndentation addLines(String lines) {
+        if (lines == null) {
+            throw new IllegalArgumentException("Lines cannot be null");
+        }
+
+        // Special case: empty string should produce one empty line with indentation
+        if (lines.isEmpty()) {
+            addLine("");
+            return this;
+        }
+
         StringLines.newInstance(lines).stream()
-                .forEach(line -> addLine(line));
+                .forEach(this::addLine);
 
         return this;
     }
@@ -101,7 +115,6 @@ public class BuilderWithIndentation {
      * Appends the current indentation, the string and a newline to the current
      * buffer.
      *
-     * @param line
      */
     public BuilderWithIndentation addLine(String line) {
         // Add identation
@@ -113,9 +126,7 @@ public class BuilderWithIndentation {
     }
 
     private void addIndentation() {
-        for (int i = 0; i < currentIdentation; i++) {
-            builder.append(tab);
-        }
+        builder.append(String.valueOf(tab).repeat(Math.max(0, currentIdentation)));
     }
 
 }

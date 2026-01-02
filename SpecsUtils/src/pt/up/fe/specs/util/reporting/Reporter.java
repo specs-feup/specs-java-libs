@@ -75,7 +75,11 @@ public interface Reporter {
     public default RuntimeException emitError(MessageType type, String message) {
         Preconditions.checkArgument(type.getMessageCategory() == ReportCategory.ERROR);
 
-        emitMessage(type, message);
+        // Ensure default emitError is thread-safe for implementations that rely on
+        // default methods to serialize access to their internal state.
+        synchronized (this) {
+            emitMessage(type, message);
+        }
 
         return new RuntimeException(message);
     }
@@ -86,7 +90,9 @@ public interface Reporter {
      * @param message The warning message to be emitted.
      */
     public default void warn(String message) {
-        emitMessage(MessageType.WARNING_TYPE, message);
+        synchronized (this) {
+            emitMessage(MessageType.WARNING_TYPE, message);
+        }
     }
 
     /**
@@ -95,7 +101,9 @@ public interface Reporter {
      * @param message The info message to be emitted.
      */
     public default void info(String message) {
-        emitMessage(MessageType.INFO_TYPE, message);
+        synchronized (this) {
+            emitMessage(MessageType.INFO_TYPE, message);
+        }
     }
 
     /**
@@ -105,6 +113,7 @@ public interface Reporter {
      * @return A RuntimeException containing the error message.
      */
     public default RuntimeException error(String message) {
+        // defer to emitError (which is synchronized)
         return emitError(MessageType.ERROR_TYPE, message);
     }
 }

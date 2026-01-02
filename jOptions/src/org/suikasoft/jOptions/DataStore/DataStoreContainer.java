@@ -18,7 +18,9 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 /**
  * Interface for classes that contain a DataStore.
  *
- * <p>This interface provides a method to retrieve the contained DataStore instance.
+ * <p>
+ * This interface provides a method to retrieve the contained DataStore
+ * instance.
  */
 public interface DataStoreContainer {
     /**

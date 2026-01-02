@@ -37,20 +37,28 @@ public enum InputMode {
     singleFile,
     singleFolder;
 
-    /**
-     * @param folderLevel
-     * @param sourcePathname
-     * @return
-     */
     public List<FileSet> getPrograms(File sourcePath, Collection<String> extensions, Integer folderLevel) {
         switch (this) {
             case folders:
+                if (folderLevel == null) {
+                    throw new IllegalArgumentException("FolderLevel cannot be null for folders mode");
+                }
+                if (extensions == null) {
+                    throw new IllegalArgumentException("Extensions collection cannot be null");
+                }
                 return JobUtils.getSourcesFoldersMode(sourcePath, extensions, folderLevel);
             case files:
+                if (extensions == null) {
+                    throw new IllegalArgumentException("Extensions collection cannot be null");
+                }
                 return JobUtils.getSourcesFilesMode(sourcePath, extensions);
             case singleFile:
+                // singleFile mode doesn't use extensions parameter, so null is allowed
                 return JobUtils.getSourcesSingleFileMode(sourcePath, extensions);
             case singleFolder:
+                if (extensions == null) {
+                    throw new IllegalArgumentException("Extensions collection cannot be null");
+                }
                 return JobUtils.getSourcesSingleFolderMode(sourcePath, extensions);
             default:
                 throw new RuntimeException("Case not supported:" + this);
@@ -60,8 +68,7 @@ public enum InputMode {
     /**
      * Returns true if the path mode represents a folder. False, if it represents a
      * file.
-     * 
-     * @return
+     *
      */
     public boolean isFolder() {
         return (this != singleFile);

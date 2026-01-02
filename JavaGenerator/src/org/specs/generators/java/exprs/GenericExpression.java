@@ -16,7 +16,8 @@ package org.specs.generators.java.exprs;
 import org.specs.generators.java.utils.Utils;
 
 /**
- * Generic implementation of a Java expression that outputs the provided string as-is.
+ * Generic implementation of a Java expression that outputs the provided string
+ * as-is.
  *
  * @author Tiago
  */

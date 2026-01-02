@@ -411,9 +411,9 @@ class ResourceProviderTest {
      * Test enum implementation of ResourceProvider for enum testing.
      */
     private enum TestResourceEnum implements ResourceProvider {
-        RESOURCE_A("test/resource/a.txt"),
-        RESOURCE_B("test/resource/b.txt"),
-        RESOURCE_C("test/resource/c.txt");
+        RESOURCE_A("test-resources/a.txt"),
+        RESOURCE_B("test-resources/b.txt"),
+        RESOURCE_C("test-resources/c.txt");
 
         private final String resource;
 

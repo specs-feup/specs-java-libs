@@ -62,7 +62,7 @@ public class MixedPushingQueue<T> implements PushingQueue<T> {
 
     @Override
     public String toString() {
-        return toString(element -> element.toString());
+        return toString(Object::toString);
     }
 
 }

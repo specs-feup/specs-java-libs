@@ -81,8 +81,8 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo(" This is a comment");
+            assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo(" This is a comment");
 
             // Verify iterator not used for single line rule
             verifyNoInteractions(mockIterator);
@@ -96,8 +96,8 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo("Comment without space");
+            assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo("Comment without space");
         }
 
         @Test
@@ -108,8 +108,8 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo(" Indented comment");
+            assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo(" Indented comment");
         }
 
         @Test
@@ -120,8 +120,8 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(result.get().getText()).isEqualTo(" Variable declaration");
+            assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(result.get().text()).isEqualTo(" Variable declaration");
         }
 
         @Test
@@ -132,8 +132,8 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(result.get().getText()).isEmpty();
+            assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(result.get().text()).isEmpty();
         }
     }
 
@@ -180,7 +180,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent(); // It will detect the // in the string
-            assertThat(result.get().getText()).isEqualTo(" a comment\";");
+            assertThat(result.get().text()).isEqualTo(" a comment\";");
         }
 
         @Test
@@ -210,7 +210,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(commentContent);
+            assertThat(result.get().text()).isEqualTo(commentContent);
         }
 
         @Test
@@ -221,7 +221,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(" Special chars: @#$%^&*()+={}[]|\\:;\"'<>?");
+            assertThat(result.get().text()).isEqualTo(" Special chars: @#$%^&*()+={}[]|\\:;\"'<>?");
         }
 
         @Test
@@ -233,7 +233,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(" Unicode: \u2603 \u03B1\u03B2\u03B3 \uD83D\uDE00");
+            assertThat(result.get().text()).isEqualTo(" Unicode: \u2603 \u03B1\u03B2\u03B3 \uD83D\uDE00");
         }
 
         @Test
@@ -248,8 +248,8 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(longComment);
-            assertThat(result.get().getText().length()).isEqualTo(longComment.length());
+            assertThat(result.get().text()).isEqualTo(longComment);
+            assertThat(result.get().text().length()).isEqualTo(longComment.length());
         }
 
         @Test
@@ -260,7 +260,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("/ Triple slash comment");
+            assertThat(result.get().text()).isEqualTo("/ Triple slash comment");
         }
 
         @Test
@@ -271,7 +271,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(" Comment with // embedded slashes");
+            assertThat(result.get().text()).isEqualTo(" Comment with // embedded slashes");
         }
     }
 
@@ -295,7 +295,7 @@ public class InlineCommentRuleTest {
 
             // Assert - Should work fine since iterator is not used
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(" Comment");
+            assertThat(result.get().text()).isEqualTo(" Comment");
         }
 
         @Test
@@ -306,7 +306,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(" first comment // second comment");
+            assertThat(result.get().text()).isEqualTo(" first comment // second comment");
         }
 
         @Test
@@ -317,7 +317,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEmpty();
+            assertThat(result.get().text()).isEmpty();
         }
 
         @Test
@@ -328,7 +328,7 @@ public class InlineCommentRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(" Comment with trailing spaces   ");
+            assertThat(result.get().text()).isEqualTo(" Comment with trailing spaces   ");
         }
     }
 
@@ -352,11 +352,11 @@ public class InlineCommentRuleTest {
             testCases.forEach(testCase -> {
                 Optional<TextElement> result = rule.apply(testCase, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
+                assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
 
                 // Extract expected comment text
                 String expectedText = testCase.substring(testCase.indexOf("//") + 2);
-                assertThat(result.get().getText()).isEqualTo(expectedText);
+                assertThat(result.get().text()).isEqualTo(expectedText);
             });
         }
 
@@ -374,7 +374,7 @@ public class InlineCommentRuleTest {
             scenarios.forEach((line, expectedComment) -> {
                 Optional<TextElement> result = rule.apply(line, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getText()).isEqualTo(expectedComment);
+                assertThat(result.get().text()).isEqualTo(expectedComment);
             });
         }
 
@@ -392,11 +392,11 @@ public class InlineCommentRuleTest {
             docComments.forEach(comment -> {
                 Optional<TextElement> result = rule.apply(comment, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
+                assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
 
                 // Should capture everything after the first //
                 String expectedText = comment.substring(2); // Remove first "//"
-                assertThat(result.get().getText()).isEqualTo(expectedText);
+                assertThat(result.get().text()).isEqualTo(expectedText);
             });
         }
     }
@@ -414,7 +414,7 @@ public class InlineCommentRuleTest {
                     String line = "// Comment number " + i;
                     Optional<TextElement> result = rule.apply(line, mockIterator);
                     assertThat(result).isPresent();
-                    assertThat(result.get().getText()).isEqualTo(" Comment number " + i);
+                    assertThat(result.get().text()).isEqualTo(" Comment number " + i);
                 }
             }).doesNotThrowAnyException();
         }
@@ -430,7 +430,7 @@ public class InlineCommentRuleTest {
                                 String line = "// Thread " + i + " comment " + j;
                                 Optional<TextElement> result = rule.apply(line, mockIterator);
                                 assertThat(result).isPresent();
-                                assertThat(result.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
+                                assertThat(result.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
                             }
                         }))
                         .toList();
@@ -452,7 +452,7 @@ public class InlineCommentRuleTest {
             assertThatCode(() -> {
                 Optional<TextElement> result = rule.apply(longCodeLine, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getText()).isEqualTo(" Comment at end");
+                assertThat(result.get().text()).isEqualTo(" Comment at end");
             }).doesNotThrowAnyException();
         }
     }
@@ -479,7 +479,7 @@ public class InlineCommentRuleTest {
             // Test line with inline comment
             Optional<TextElement> inlineResult = inlineRule.apply("int x = 5; // Variable", mockIterator);
             assertThat(inlineResult).isPresent();
-            assertThat(inlineResult.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(inlineResult.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
 
             // Test pragma line (should not be detected by inline rule)
             Optional<TextElement> pragmaResult = inlineRule.apply("#pragma once", mockIterator);
@@ -488,7 +488,7 @@ public class InlineCommentRuleTest {
             // Pragma rule should detect pragma
             Optional<TextElement> pragmaDetected = pragmaRule.apply("#pragma once", mockIterator);
             assertThat(pragmaDetected).isPresent();
-            assertThat(pragmaDetected.get().getType()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(pragmaDetected.get().type()).isEqualTo(TextElementType.PRAGMA);
         }
 
         @Test
@@ -502,8 +502,8 @@ public class InlineCommentRuleTest {
             TextElement element = result.get();
 
             // Should work through TextElement interface
-            assertThat(element.getType()).isEqualTo(TextElementType.INLINE_COMMENT);
-            assertThat(element.getText()).isEqualTo(" Test comment");
+            assertThat(element.type()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(element.text()).isEqualTo(" Test comment");
 
             // Should be a GenericTextElement instance (from factory method)
             assertThat(element).isInstanceOf(GenericTextElement.class);

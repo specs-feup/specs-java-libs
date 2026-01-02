@@ -32,14 +32,6 @@ public abstract class GraphNode<T extends GraphNode<T, N, C>, N, C> {
     private final List<C> childrenConnections;
     protected final List<C> parentConnections;
 
-    /**
-     * @param id
-     * @param nodeInfo
-     * @param children
-     * @param parents
-     * @param childrenConnections
-     * @param parentConnections
-     */
     private GraphNode(String id, N nodeInfo, List<T> children,
             List<T> parents, List<C> childrenConnections,
             List<C> parentConnections) {
@@ -61,7 +53,7 @@ public abstract class GraphNode<T extends GraphNode<T, N, C>, N, C> {
             return new ArrayList<>();
         }
 
-        return new ArrayList<K>(list);
+        return new ArrayList<>(list);
     }
 
     public String getId() {
@@ -155,12 +147,9 @@ public abstract class GraphNode<T extends GraphNode<T, N, C>, N, C> {
         }
         GraphNode<?, ?, ?> other = (GraphNode<?, ?, ?>) obj;
         if (this.id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        } else if (!this.id.equals(other.id)) {
-            return false;
+            return other.id == null;
+        } else {
+            return this.id.equals(other.id);
         }
-        return true;
     }
 }

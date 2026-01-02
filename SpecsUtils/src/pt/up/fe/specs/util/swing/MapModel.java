@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.swing;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import javax.swing.table.TableModel;
  */
 public class MapModel<K extends Comparable<? super K>, V> extends AbstractTableModel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private final Map<K, V> map;
     private final boolean rowWise;
@@ -92,6 +94,17 @@ public class MapModel<K extends Comparable<? super K>, V> extends AbstractTableM
      */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        // Validate bounds
+        if (rowIndex < 0 || columnIndex < 0) {
+            throw new IndexOutOfBoundsException(
+                    "Negative indices not allowed: row=" + rowIndex + ", column=" + columnIndex);
+        }
+        if (rowIndex >= getRowCount() || columnIndex >= getColumnCount()) {
+            throw new IndexOutOfBoundsException(
+                    "Index out of bounds: row=" + rowIndex + " (max=" + (getRowCount() - 1) +
+                            "), column=" + columnIndex + " (max=" + (getColumnCount() - 1) + ")");
+        }
+
         int shortIndex, longIndex;
         if (this.rowWise) {
             shortIndex = rowIndex;
@@ -129,8 +142,21 @@ public class MapModel<K extends Comparable<? super K>, V> extends AbstractTableM
     @SuppressWarnings("unchecked") // It is being checked using valueClass
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        // Check if operation is supported first
+        int shortIndex;
+        if (this.rowWise) {
+            shortIndex = rowIndex;
+        } else {
+            shortIndex = columnIndex;
+        }
 
-        if (!this.valueClass.isInstance(aValue)) {
+        // If trying to update key (shortIndex == 0), check if supported
+        if (shortIndex == 0) {
+            throw new UnsupportedOperationException("Not yet implemented");
+        }
+
+        // Then check type compatibility
+        if (this.valueClass != null && !this.valueClass.isInstance(aValue)) {
             throw new RuntimeException("Gave an object to type '" + aValue.getClass().getName() + "', expected type '"
                     + this.valueClass.getName() + "' ");
         }
@@ -164,10 +190,12 @@ public class MapModel<K extends Comparable<? super K>, V> extends AbstractTableM
 
             // If row index is 1, set value
             if (rowIndex == 1) {
-                throw new UnsupportedOperationException("Not yet implemented");
+                K key = this.keys.get(columnIndex);
+                this.map.put(key, aValue);
+                return;
             }
 
-            throw new RuntimeException("Unsupported column index:" + columnIndex);
+            throw new RuntimeException("Unsupported row index:" + rowIndex);
         }
     }
 }

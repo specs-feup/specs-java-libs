@@ -136,7 +136,7 @@ class ANodeTransformTest {
         @DisplayName("toString() should handle single operand")
         void testToString_WithSingleOperand() {
             TestANodeTransform singleTransform = new TestANodeTransform("SINGLE",
-                    Collections.singletonList(operand1));
+                    List.of(operand1));
 
             String result = singleTransform.toString();
 
@@ -170,7 +170,7 @@ class ANodeTransformTest {
         @DisplayName("Should allow different transform types")
         void testDifferentTransformTypes() {
             TestANodeTransform deleteTransform = new TestANodeTransform("DELETE",
-                    Collections.singletonList(operand1));
+                    List.of(operand1));
             TestANodeTransform replaceTransform = new TestANodeTransform("REPLACE",
                     Arrays.asList(operand1, operand2));
 

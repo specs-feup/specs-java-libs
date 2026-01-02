@@ -70,7 +70,6 @@ The repository includes the following libraries:
 - **AsmParser** - Assembly parsing utilities  
 - **CommonsCompressPlus** - Extended Apache Commons Compress
 - **CommonsLangPlus** - Extended Apache Commons Lang
-- **EclipseUtils** - Eclipse integration utilities
 - **GearmanPlus** - Extended Gearman client
 - **GitlabPlus** - GitLab API integration
 - **GitPlus** - Git utilities
@@ -84,14 +83,12 @@ The repository includes the following libraries:
 - **JsEngine** - JavaScript engine integration (GraalVM)
 - **LogbackPlus** - Extended Logback logging
 - **MvelPlus** - Extended MVEL expression language
-- **RuntimeMutators** - Runtime code mutation utilities
 - **SlackPlus** - Slack API integration
 - **SpecsHWUtils** - Hardware utilities
 - **SpecsUtils** - Core utilities library
 - **SymjaPlus** - Extended Symja symbolic math
 - **tdrcLibrary** - TDRC's library utilities
 - **XStreamPlus** - Extended XStream XML processing
-- **Z3Helper** - Z3 theorem prover integration
 
 ## Contributing
 

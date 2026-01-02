@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.Datakey.CustomGetter;
@@ -26,12 +27,12 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionIndexes;
 
-import pt.up.fe.specs.util.SpecsCheck;
-
 /**
  * Implementation of DataStore that uses a List to store the data.
  *
- * <p>This implementation requires a StoreDefinition and stores values in a list indexed by the definition.
+ * <p>
+ * This implementation requires a StoreDefinition and stores values in a list
+ * indexed by the definition.
  *
  * @author JoaoBispo
  */
@@ -119,25 +120,24 @@ public class ListDataStore implements DataStore {
         } else if (!keys.getName().equals(other.keys.getName()))
             return false;
         if (values == null) {
-            if (other.values != null)
-                return false;
-        } else if (!values.equals(other.values))
-            return false;
-        return true;
+            return other.values == null;
+        } else {
+            return values.equals(other.values);
+        }
     }
 
     /**
      * Sets the value for the given DataKey.
      *
-     * @param <T> the type of the value
-     * @param <E> the type of the value to set
-     * @param key the DataKey to set the value for
+     * @param <T>   the type of the value
+     * @param <E>   the type of the value to set
+     * @param key   the DataKey to set the value for
      * @param value the value to set
      * @return the current DataStore instance
      */
     @Override
     public <T, E extends T> DataStore set(DataKey<T> key, E value) {
-        SpecsCheck.checkNotNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
+        Objects.requireNonNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
 
         // Stop if value is not compatible with class of key
         if (key.verifyValueClass() && !key.getValueClass().isInstance(value)) {
@@ -153,9 +153,10 @@ public class ListDataStore implements DataStore {
     /**
      * Sets the raw value for the given key.
      *
-     * @param key the key to set the value for
+     * @param key   the key to set the value for
      * @param value the value to set
-     * @return an Optional containing the previous value, or empty if the key does not exist
+     * @return an Optional containing the previous value, or empty if the key does
+     *         not exist
      */
     @Override
     public Optional<Object> setRaw(String key, Object value) {
@@ -192,7 +193,8 @@ public class ListDataStore implements DataStore {
      * Sets the StoreDefinition for this DataStore.
      *
      * @param definition the StoreDefinition to set
-     * @throws RuntimeException if called, as this implementation does not support setting the StoreDefinition after instantiation
+     * @throws RuntimeException if called, as this implementation does not support
+     *                          setting the StoreDefinition after instantiation
      */
     @Override
     public void setStoreDefinition(StoreDefinition definition) {
@@ -259,14 +261,15 @@ public class ListDataStore implements DataStore {
      *
      * @param <T> the type of the value
      * @param key the DataKey to remove the value for
-     * @return an Optional containing the removed value, or empty if no value was present
+     * @return an Optional containing the removed value, or empty if no value was
+     *         present
      */
     @Override
     public <T> Optional<T> remove(DataKey<T> key) {
         Optional<T> value = getTry(key);
 
         // If not present, there was already no value there
-        if (!value.isPresent()) {
+        if (value.isEmpty()) {
             return Optional.empty();
         }
 

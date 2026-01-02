@@ -50,7 +50,8 @@ public class MappingsCollector {
     }
 
     /**
-     * Recursively collects alias mappings from the given ObjectXml and its nested ObjectXmls.
+     * Recursively collects alias mappings from the given ObjectXml and its nested
+     * ObjectXmls.
      *
      * @param object the ObjectXml to process
      * @return a map of alias to class for the given object and its nested objects
@@ -84,6 +85,16 @@ public class MappingsCollector {
             Map<String, Class<?>> childrenMappings = collectMappingsInternal(nestedXml);
             addMappings(mappings, childrenMappings);
         }
+
+        // Also process any nested XML objects that don't correspond to XmlSerializable
+        // fields
+        for (ObjectXml<?> nestedXml : object.getNestedXml().values()) {
+            if (!collectedClasses.contains(nestedXml.getClass())) {
+                Map<String, Class<?>> nestedMappings = collectMappingsInternal(nestedXml);
+                addMappings(mappings, nestedMappings);
+            }
+        }
+
         Map<String, Class<?>> ownMappings = object.getMappings();
         if (ownMappings == null) {
             ownMappings = new HashMap<>();
@@ -93,10 +104,11 @@ public class MappingsCollector {
     }
 
     /**
-     * Adds mappings from newMappings into totalMappings, warning if an alias is already present.
+     * Adds mappings from newMappings into totalMappings, warning if an alias is
+     * already present.
      *
      * @param totalMappings the map to add to
-     * @param newMappings the map of new mappings to add
+     * @param newMappings   the map of new mappings to add
      */
     private static void addMappings(Map<String, Class<?>> totalMappings,
             Map<String, Class<?>> newMappings) {
@@ -104,7 +116,7 @@ public class MappingsCollector {
             Class<?> childClass = newMappings.get(key);
             if (totalMappings.containsKey(key)) {
                 Class<?> definedClass = totalMappings.get(key);
-                SpecsLogs.getLogger().warning(
+                SpecsLogs.warn(
                         "Alias '" + key + "' is already defined for class '"
                                 + definedClass
                                 + "'. Skipping this mapping for class '"

@@ -19,7 +19,7 @@ dependencies {
     implementation ':GsonPlus'
     implementation ':SpecsUtils'
 
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.4'
+    implementation 'com.google.code.gson:gson:2.4'
 }
 
 // Project sources

@@ -24,19 +24,12 @@ import pt.up.fe.specs.util.SpecsLogs;
  *
  * @author Joao Bispo
  */
-public class InputFiles {
-
-    public InputFiles(boolean isSingleFile, File inputPath, List<File> inputFiles) {
-        this.isSingleFile = isSingleFile;
-        this.inputPath = inputPath;
-        this.inputFiles = inputFiles;
-    }
+public record InputFiles(boolean isSingleFile, File inputPath, List<File> inputFiles) {
 
     /**
      * Collects the file or files of the input path.
      *
      * @param inputPath can be the path to a single file or to a folder
-     * @return
      */
     public static InputFiles newInstance(String inputPath) {
         File inputPathFile = new File(inputPath);
@@ -46,10 +39,7 @@ public class InputFiles {
         }
 
         // Determine if it is a file or a folder
-        boolean isSingleFile = false;
-        if (inputPathFile.isFile()) {
-            isSingleFile = true;
-        }
+        boolean isSingleFile = inputPathFile.isFile();
 
         List<File> inputFiles = InputFiles.getFiles(inputPath, isSingleFile);
 
@@ -78,7 +68,4 @@ public class InputFiles {
 
     }
 
-    public final boolean isSingleFile;
-    public final File inputPath;
-    public final List<File> inputFiles;
 }

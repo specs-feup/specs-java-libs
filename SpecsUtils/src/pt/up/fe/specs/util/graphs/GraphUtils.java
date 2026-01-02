@@ -21,9 +21,6 @@ public class GraphUtils {
 
     /**
      * 
-     * @param graph
-     * @param parentId
-     * @param childId
      * @return true if parentId is a parent of childId. False otherwise
      */
     public static <T extends GraphNode<T, N, C>, N, C> boolean isParent(Graph<T, N, C> graph,

@@ -28,7 +28,8 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
 /**
- * Generic implementation of the {@link App} interface for jOptions-based applications.
+ * Generic implementation of the {@link App} interface for jOptions-based
+ * applications.
  */
 public class GenericApp implements App {
 
@@ -78,7 +79,8 @@ public class GenericApp implements App {
     }
 
     /**
-     * Constructs a GenericApp instance with the specified parameters, using default values for otherTabs, nodeClass, and icon.
+     * Constructs a GenericApp instance with the specified parameters, using default
+     * values for otherTabs, nodeClass, and icon.
      *
      * @param name        the name of the application
      * @param definition  the store definition for the application
@@ -92,7 +94,8 @@ public class GenericApp implements App {
     }
 
     /**
-     * Constructs a GenericApp instance with the specified parameters, using XmlPersistence as the default persistence mechanism.
+     * Constructs a GenericApp instance with the specified parameters, using
+     * XmlPersistence as the default persistence mechanism.
      *
      * @param name       the name of the application
      * @param definition the store definition for the application

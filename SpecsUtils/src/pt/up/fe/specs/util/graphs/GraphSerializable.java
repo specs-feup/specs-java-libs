@@ -17,28 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Joao Bispo
  */
-public class GraphSerializable<N, C> {
-
-    // Nodes
-    public final List<String> operationIds;
-    public final List<N> nodeInfos;
-
-    // Connections
-    public final List<String> inputIds;
-    public final List<String> outputIds;
-    public final List<C> connInfos;
-
-    public GraphSerializable(List<String> operationIds, List<N> nodeInfos, List<String> inputIds,
-            List<String> outputIds, List<C> connInfos) {
-        this.operationIds = operationIds;
-        this.nodeInfos = nodeInfos;
-        this.inputIds = inputIds;
-        this.outputIds = outputIds;
-        this.connInfos = connInfos;
-    }
+public record GraphSerializable<N, C>(List<String> operationIds, List<N> nodeInfos, List<String> inputIds,
+                                      List<String> outputIds, List<C> connInfos) {
 
     public static <T extends GraphNode<T, N, C>, N, C> GraphSerializable<N, C> toSerializable(
             Graph<T, N, C> graph) {

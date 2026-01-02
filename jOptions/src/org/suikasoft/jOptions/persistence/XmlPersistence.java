@@ -39,7 +39,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 /**
- * XML-based implementation of AppPersistence for loading and saving DataStore objects.
+ * XML-based implementation of AppPersistence for loading and saving DataStore
+ * objects.
  *
  * @author Joao Bispo
  */
@@ -51,7 +52,6 @@ public class XmlPersistence implements AppPersistence {
     private final StoreDefinition definition;
 
     /**
-     * @param options
      * @deprecated Can only use constructor that receives storeDefinition
      */
     @Deprecated
@@ -90,7 +90,7 @@ public class XmlPersistence implements AppPersistence {
     /**
      * Adds a single class mapping to the XML serializer.
      *
-     * @param name the mapping name
+     * @param name   the mapping name
      * @param aClass the class to map
      */
     public void addMapping(String name, Class<?> aClass) {
@@ -172,16 +172,15 @@ public class XmlPersistence implements AppPersistence {
                     + "', expected '" + dataStore.getName() + "'");
         }
 
-        // ParsedObject is not a properly constructed DataStore, it only has its name and the values
+        // ParsedObject is not a properly constructed DataStore, it only has its name
+        // and the values
         // Do not use it as a normal DataStore
 
         // Set values
         for (DataKey<?> dataKey : definition.getKeys()) {
             Optional<?> value = parsedObject.getTry(dataKey);
 
-            if (value.isPresent()) {
-                dataStore.setRaw(dataKey, value.get());
-            }
+            value.ifPresent(o -> dataStore.setRaw(dataKey, o));
         }
 
         // Set configuration file information
@@ -214,15 +213,15 @@ public class XmlPersistence implements AppPersistence {
                     CustomProperty baseProp = CustomProperty.parse(line);
 
                     // Check if there is a filename
-                    if (!baseProp.getValue().isEmpty()) {
-                        File baseFile = new File(baseProp.getValue());
+                    if (!baseProp.value().isEmpty()) {
+                        File baseFile = new File(baseProp.value());
                         // If absolute path, just load the file
                         if (baseFile.isAbsolute()) {
                             baseData = loadData(baseFile);
                         }
                         // Otherwise, load relative to the current file
                         else {
-                            baseData = loadData(new File(file.getParentFile(), baseProp.getValue()));
+                            baseData = loadData(new File(file.getParentFile(), baseProp.value()));
                         }
 
                     }
@@ -244,22 +243,7 @@ public class XmlPersistence implements AppPersistence {
     /**
      * Represents a custom property with a name and value.
      */
-    static class CustomProperty {
-        private final String name;
-        private final String value;
-
-        public CustomProperty(String name, String value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue() {
-            return value;
-        }
+    record CustomProperty(String name, String value) {
 
         /**
          * Parses a custom property from a line of text.
@@ -278,7 +262,7 @@ public class XmlPersistence implements AppPersistence {
     /**
      * Parses a line of custom properties and updates the given DataStore.
      *
-     * @param line the line to parse
+     * @param line     the line to parse
      * @param baseData the DataStore to update
      */
     private void parseCustomPropertiesLine(String line, DataStore baseData) {
@@ -288,9 +272,9 @@ public class XmlPersistence implements AppPersistence {
 
         CustomProperty prop = CustomProperty.parse(line);
 
-        DataKey<?> key = definition.getKey(prop.getName());
+        DataKey<?> key = definition.getKey(prop.name());
 
-        baseData.setString(key, prop.getValue());
+        baseData.setString(key, prop.value());
     }
 
     /**
@@ -340,8 +324,8 @@ public class XmlPersistence implements AppPersistence {
     /**
      * Saves the given DataStore to the specified file.
      *
-     * @param file the file to save to
-     * @param data the DataStore to save
+     * @param file           the file to save to
+     * @param data           the DataStore to save
      * @param keepConfigFile whether to keep the configuration file
      * @return true if the save was successful, false otherwise
      */
@@ -376,7 +360,7 @@ public class XmlPersistence implements AppPersistence {
     public static DataStore getDataStoreToSave(DataStore data) {
         Optional<StoreDefinition> def = data.getStoreDefinitionTry();
 
-        if (!def.isPresent()) {
+        if (def.isEmpty()) {
             return DataStore.newInstance(data.getName(), data);
         }
 

@@ -29,8 +29,8 @@ class IteratorUtilsTest {
         // grandchild1  specialChild
         grandchild1 = new TestTreeNode("grandchild1");
         specialChild = new SpecialTestTreeNode("special");
-        child1 = new TestTreeNode("child1", Collections.singletonList(grandchild1));
-        child2 = new TestTreeNode("child2", Collections.singletonList(specialChild));
+        child1 = new TestTreeNode("child1", List.of(grandchild1));
+        child2 = new TestTreeNode("child2", List.of(specialChild));
         root = new TestTreeNode("root", Arrays.asList(child1, child2));
     }
 

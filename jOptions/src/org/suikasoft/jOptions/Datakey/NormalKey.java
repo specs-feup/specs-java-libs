@@ -33,7 +33,7 @@ public class NormalKey<T> extends ADataKey<T> {
     /**
      * Constructs a NormalKey with the given id and value class.
      *
-     * @param id the key id
+     * @param id     the key id
      * @param aClass the value class
      */
     public NormalKey(String id, Class<T> aClass) {
@@ -41,10 +41,11 @@ public class NormalKey<T> extends ADataKey<T> {
     }
 
     /**
-     * Constructs a NormalKey with the given id, value class, and default value provider.
+     * Constructs a NormalKey with the given id, value class, and default value
+     * provider.
      *
-     * @param id the key id
-     * @param aClass the value class
+     * @param id           the key id
+     * @param aClass       the value class
      * @param defaultValue the default value provider
      */
     public NormalKey(String id, Class<T> aClass, Supplier<T> defaultValue) {
@@ -54,17 +55,17 @@ public class NormalKey<T> extends ADataKey<T> {
     /**
      * Full constructor for NormalKey with all options.
      *
-     * @param id the key id
-     * @param aClass the value class
+     * @param id                   the key id
+     * @param aClass               the value class
      * @param defaultValueProvider the default value provider
-     * @param decoder the string decoder for the value
-     * @param customGetter the custom getter for the value
-     * @param panelProvider the panel provider for the key
-     * @param label the label for the key
-     * @param definition the store definition
-     * @param copyFunction the function to copy the value
-     * @param customSetter the custom setter for the value
-     * @param extraData additional data for the key
+     * @param decoder              the string decoder for the value
+     * @param customGetter         the custom getter for the value
+     * @param panelProvider        the panel provider for the key
+     * @param label                the label for the key
+     * @param definition           the store definition
+     * @param copyFunction         the function to copy the value
+     * @param customSetter         the custom setter for the value
+     * @param extraData            additional data for the key
      */
     protected NormalKey(String id, Class<T> aClass, Supplier<? extends T> defaultValueProvider,
             StringCodec<T> decoder, CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
@@ -78,16 +79,16 @@ public class NormalKey<T> extends ADataKey<T> {
     /**
      * Creates a copy of this NormalKey with the specified parameters.
      *
-     * @param id the key id
+     * @param id                   the key id
      * @param defaultValueProvider the default value provider
-     * @param decoder the string decoder for the value
-     * @param customGetter the custom getter for the value
-     * @param panelProvider the panel provider for the key
-     * @param label the label for the key
-     * @param definition the store definition
-     * @param copyFunction the function to copy the value
-     * @param customSetter the custom setter for the value
-     * @param extraData additional data for the key
+     * @param decoder              the string decoder for the value
+     * @param customGetter         the custom getter for the value
+     * @param panelProvider        the panel provider for the key
+     * @param label                the label for the key
+     * @param definition           the store definition
+     * @param copyFunction         the function to copy the value
+     * @param customSetter         the custom setter for the value
+     * @param extraData            additional data for the key
      * @return a new NormalKey instance
      */
     @Override

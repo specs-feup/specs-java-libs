@@ -15,7 +15,6 @@ package pt.up.fe.specs.util.jobs;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -33,16 +32,12 @@ public class JobUtils {
      * The given path represents a folder that contains several folders, and each
      * folder is a project.
      *
-     * @param sourceFolder
-     * @param extensions
-     * @param folderLevel
-     * @return
      */
     public static List<FileSet> getSourcesFoldersMode(File sourceFolder,
             Collection<String> extensions, int folderLevel) {
 
         int currentLevel = folderLevel;
-        List<File> currentFolderList = Arrays.asList(sourceFolder);
+        List<File> currentFolderList = List.of(sourceFolder);
         while (currentLevel > 0) {
             currentLevel--;
 
@@ -69,26 +64,23 @@ public class JobUtils {
 
     private static String createOutputName(File folder, int folderLevel) {
 
-        String currentName = folder.getName();
+        StringBuilder currentName = new StringBuilder(folder.getName());
 
         File currentFolder = folder;
         for (int i = 1; i < folderLevel; i++) {
             File parent = currentFolder.getParentFile();
 
-            currentName = parent.getName() + "_" + currentName;
+            currentName.insert(0, parent.getName() + "_");
             currentFolder = parent;
         }
 
-        return currentName;
+        return currentName.toString();
     }
 
     /**
      * The given path represents a folder that contains several files, each file is
      * a project.
      *
-     * @param jobOptions
-     * @param targetOptions
-     * @return
      */
     public static List<FileSet> getSourcesFilesMode(File sourceFolder, Collection<String> extensions) {
 
@@ -110,9 +102,6 @@ public class JobUtils {
     /**
      * The source is a single .c file which is a program.
      *
-     * @param jobOptions
-     * @param targetOptions
-     * @return
      */
     public static List<FileSet> getSourcesSingleFileMode(File sourceFile,
             Collection<String> extensions) {
@@ -139,15 +128,13 @@ public class JobUtils {
     /**
      * Runs a job, returns the return value of the job after completing.
      *
-     * @param job
-     * @return
      */
     public static int runJob(Job job) {
         int returnValue = job.run();
         if (returnValue != 0) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Problems while running job: returned value '" + returnValue + "'.\n" + "Job:"
-                            + job.toString() + "\n");
+                            + job + "\n");
         }
 
         return returnValue;
@@ -157,7 +144,6 @@ public class JobUtils {
      * Runs a batch of jobs. If any job terminated abruptly (a job has flag
      * 'isInterruped' active), remaning jobs are cancelled.
      *
-     * @param jobs
      * @return true if all jobs completed successfully, false otherwise
      */
     public static boolean runJobs(List<Job> jobs) {
@@ -171,7 +157,7 @@ public class JobUtils {
 
             // Check if we cancel other jobs.
             if (job.isInterrupted()) {
-                SpecsLogs.getLogger().info("Cancelling remaining jobs.");
+                SpecsLogs.info("Cancelling remaining jobs.");
                 return false;
             }
         }
@@ -185,10 +171,6 @@ public class JobUtils {
      * <p>
      * Collects all files in the given folder with the given extension.
      *
-     * @param sourceFolder
-     * @param extensions
-     * @param sourceFoldername
-     * @return
      */
     private static FileSet singleFolderProgramSource(File sourceFolder,
             Collection<String> extensions) {

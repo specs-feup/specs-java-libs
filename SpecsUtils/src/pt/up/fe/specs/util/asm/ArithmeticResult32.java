@@ -17,13 +17,6 @@ package pt.up.fe.specs.util.asm;
  *
  * @author Joao Bispo
  */
-public class ArithmeticResult32 {
+public record ArithmeticResult32(int result, int carryOut) {
 
-    public ArithmeticResult32(int result, int carryOut) {
-        this.result = result;
-        this.carryOut = carryOut;
-    }
-
-    public final int result;
-    public final int carryOut;
 }

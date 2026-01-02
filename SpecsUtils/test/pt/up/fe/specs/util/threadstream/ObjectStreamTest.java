@@ -1,20 +1,25 @@
 package pt.up.fe.specs.util.threadstream;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.Resources;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 import pt.up.fe.specs.util.collections.concurrentchannel.ConcurrentChannel;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Comprehensive test suite for the ObjectStream interface and its
@@ -327,7 +332,12 @@ public class ObjectStreamTest {
 
         @Test
         @DisplayName("Should handle InterruptedException in consumeFromProvider")
+        @ResourceLock(Resources.SYSTEM_ERR)
         void testInterruptedExceptionHandling() throws InterruptedException {
+            // Suppress stack trace printed by GenericObjectStream.consumeFromProvider()
+            PrintStream originalErr = System.err;
+            var sink = new ByteArrayOutputStream();
+            System.setErr(new PrintStream(sink));
             try {
                 // Given
                 when(mockConsumer.take()).thenThrow(new InterruptedException("Test interruption"));
@@ -339,6 +349,9 @@ public class ObjectStreamTest {
                 stream.close();
             } catch (Exception e) {
                 // Close might not be fully implemented, ignore
+            } finally {
+                // Restore stderr to avoid affecting other tests
+                System.setErr(originalErr);
             }
         }
     }

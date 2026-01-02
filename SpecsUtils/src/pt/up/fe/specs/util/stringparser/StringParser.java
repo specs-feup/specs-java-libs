@@ -56,21 +56,21 @@ public class StringParser {
     }
 
     public <T> T applyPrivate(ParserResult<T> result) {
-        int originalLength = currentString.length();
+        StringSlice originalString = currentString;
 
-        currentString = result.getModifiedString();
+        currentString = result.modifiedString();
 
-        // Apply trim if there where modifications
-        if (trimAfterApply && currentString.length() != originalLength) {
+        // Apply trim if there were modifications (string object changed)
+        if (trimAfterApply && currentString != originalString) {
             currentString = currentString.trim();
         }
 
-        return result.getResult();
+        return result.result();
     }
 
     public <T> T applyFunction(Function<StringParser, T> worker) {
         T result = worker.apply(this);
-        ParserResult<T> parserResult = new ParserResult<T>(currentString, result);
+        ParserResult<T> parserResult = new ParserResult<>(currentString, result);
         return applyPrivate(parserResult);
     }
 

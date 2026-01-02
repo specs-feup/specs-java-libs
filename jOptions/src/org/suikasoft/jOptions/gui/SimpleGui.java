@@ -20,7 +20,9 @@ import org.suikasoft.jOptions.app.App;
 /**
  * Wrapper around AppFrame for launching and managing the application GUI.
  *
- * <p>This class provides a simple interface to start and control the main application window.
+ * <p>
+ * This class provides a simple interface to start and control the main
+ * application window.
  */
 public class SimpleGui {
 
@@ -49,12 +51,7 @@ public class SimpleGui {
      */
     public void execute() {
         // Set SecurityManager to catch potential System.exit() calls
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                frame.launchGui();
-            }
-        });
+        java.awt.EventQueue.invokeLater(frame::launchGui);
     }
 
     /**

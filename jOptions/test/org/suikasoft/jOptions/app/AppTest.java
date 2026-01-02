@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -234,7 +234,7 @@ class AppTest {
         @DisplayName("Should return custom tabs when overridden")
         void testGetOtherTabs_CustomImplementation_ReturnsCustomTabs() {
             // given
-            Collection<TabProvider> customTabs = Collections.singletonList(mockTabProvider);
+            Collection<TabProvider> customTabs = List.of(mockTabProvider);
             TestApp customApp = new TestApp(mockKernel, null, null, null, customTabs, null, null);
 
             // when
@@ -421,7 +421,7 @@ class AppTest {
         void testCompleteCustomConfiguration_AllMethodsWorkTogether() {
             // given
             String customName = "IntegrationTestApp";
-            Collection<TabProvider> customTabs = Collections.singletonList(mockTabProvider);
+            Collection<TabProvider> customTabs = List.of(mockTabProvider);
             Class<?> customNodeClass = Integer.class;
             Optional<ResourceProvider> customIcon = Optional.of(mockResourceProvider);
 

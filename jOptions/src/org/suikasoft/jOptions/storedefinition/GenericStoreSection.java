@@ -45,7 +45,8 @@ class GenericStoreSection implements StoreSection {
     /**
      * Retrieves the name of the section.
      *
-     * @return an {@link Optional} containing the section name, or empty if the name is null
+     * @return an {@link Optional} containing the section name, or empty if the name
+     *         is null
      */
     @Override
     public Optional<String> getName() {
@@ -55,7 +56,8 @@ class GenericStoreSection implements StoreSection {
     /**
      * Retrieves the keys of the section.
      *
-     * @return a list of {@link DataKey} objects representing the keys in the section
+     * @return a list of {@link DataKey} objects representing the keys in the
+     *         section
      */
     @Override
     public List<DataKey<?>> getKeys() {

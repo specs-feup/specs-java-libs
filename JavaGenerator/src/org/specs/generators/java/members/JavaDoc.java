@@ -20,7 +20,8 @@ import org.specs.generators.java.enums.JDocTag;
 import org.specs.generators.java.utils.Utils;
 
 /**
- * Represents a JavaDoc comment for code generation, including tags and descriptions.
+ * Represents a JavaDoc comment for code generation, including tags and
+ * descriptions.
  *
  * @author Tiago
  */
@@ -79,7 +80,7 @@ public class JavaDoc implements IGenerate {
     /**
      * Adds a tag with a string description.
      *
-     * @param tag the new tag for the comment
+     * @param tag            the new tag for the comment
      * @param descriptionStr the description string
      */
     public void addTag(JDocTag tag, String descriptionStr) {
@@ -89,7 +90,7 @@ public class JavaDoc implements IGenerate {
     /**
      * Adds a tag with a StringBuilder description.
      *
-     * @param tag the new tag for the comment
+     * @param tag         the new tag for the comment
      * @param description the description as a StringBuilder
      */
     public void addTag(JDocTag tag, StringBuilder description) {

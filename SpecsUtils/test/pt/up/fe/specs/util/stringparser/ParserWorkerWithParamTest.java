@@ -28,15 +28,15 @@ public class ParserWorkerWithParamTest {
             // Create a parser that prepends the parameter to the parsed word
             ParserWorkerWithParam<String, String> parser = (slice, prefix) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String result = prefix + wordResult.getResult();
-                return new ParserResult<>(wordResult.getModifiedString(), result);
+                String result = prefix + wordResult.result();
+                return new ParserResult<>(wordResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("hello world");
             ParserResult<String> result = parser.apply(input, "PREFIX_");
 
-            assertThat(result.getResult()).isEqualTo("PREFIX_hello");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" world");
+            assertThat(result.result()).isEqualTo("PREFIX_hello");
+            assertThat(result.modifiedString().toString()).isEqualTo(" world");
         }
 
         @Test
@@ -45,15 +45,15 @@ public class ParserWorkerWithParamTest {
             // Create a parser that multiplies parsed integer by parameter
             ParserWorkerWithParam<Integer, Integer> parser = (slice, multiplier) -> {
                 ParserResult<Integer> intResult = StringParsersLegacy.parseInt(slice);
-                Integer result = intResult.getResult() * multiplier;
-                return new ParserResult<>(intResult.getModifiedString(), result);
+                Integer result = intResult.result() * multiplier;
+                return new ParserResult<>(intResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("5 remainder");
             ParserResult<Integer> result = parser.apply(input, 3);
 
-            assertThat(result.getResult()).isEqualTo(15);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(15);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -62,16 +62,16 @@ public class ParserWorkerWithParamTest {
             // ParserWorkerWithParam extends BiFunction, so we can use it as such
             ParserWorkerWithParam<String, String> parser = (slice, suffix) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String result = wordResult.getResult() + suffix;
-                return new ParserResult<>(wordResult.getModifiedString(), result);
+                String result = wordResult.result() + suffix;
+                return new ParserResult<>(wordResult.modifiedString(), result);
             };
 
             // Use as BiFunction
             StringSlice input = new StringSlice("test content");
             ParserResult<String> result = parser.apply(input, "_SUFFIX");
 
-            assertThat(result.getResult()).isEqualTo("test_SUFFIX");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" content");
+            assertThat(result.result()).isEqualTo("test_SUFFIX");
+            assertThat(result.modifiedString().toString()).isEqualTo(" content");
         }
 
         @Test
@@ -79,15 +79,15 @@ public class ParserWorkerWithParamTest {
         void testEmptyParameter() {
             ParserWorkerWithParam<String, String> parser = (slice, param) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String result = param.isEmpty() ? wordResult.getResult() : param + ":" + wordResult.getResult();
-                return new ParserResult<>(wordResult.getModifiedString(), result);
+                String result = param.isEmpty() ? wordResult.result() : param + ":" + wordResult.result();
+                return new ParserResult<>(wordResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("word remainder");
             ParserResult<String> result = parser.apply(input, "");
 
-            assertThat(result.getResult()).isEqualTo("word");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("word");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
     }
 
@@ -101,15 +101,15 @@ public class ParserWorkerWithParamTest {
             // Create a parser that formats the parsed word with two parameters
             ParserWorkerWithParam2<String, String, String> parser = (slice, prefix, suffix) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String result = prefix + wordResult.getResult() + suffix;
-                return new ParserResult<>(wordResult.getModifiedString(), result);
+                String result = prefix + wordResult.result() + suffix;
+                return new ParserResult<>(wordResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("middle remainder");
             ParserResult<String> result = parser.apply(input, "<<", ">>");
 
-            assertThat(result.getResult()).isEqualTo("<<middle>>");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("<<middle>>");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -122,16 +122,16 @@ public class ParserWorkerWithParamTest {
                 for (int i = 0; i < count; i++) {
                     if (i > 0)
                         result.append(delimiter);
-                    result.append(wordResult.getResult());
+                    result.append(wordResult.result());
                 }
-                return new ParserResult<>(wordResult.getModifiedString(), result.toString());
+                return new ParserResult<>(wordResult.modifiedString(), result.toString());
             };
 
             StringSlice input = new StringSlice("test remainder");
             ParserResult<String> result = parser.apply(input, 3, "-");
 
-            assertThat(result.getResult()).isEqualTo("test-test-test");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("test-test-test");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -139,16 +139,16 @@ public class ParserWorkerWithParamTest {
         void testNullParameters() {
             ParserWorkerWithParam2<String, String, String> parser = (slice, param1, param2) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String result = (param1 != null ? param1 : "") + wordResult.getResult()
+                String result = (param1 != null ? param1 : "") + wordResult.result()
                         + (param2 != null ? param2 : "");
-                return new ParserResult<>(wordResult.getModifiedString(), result);
+                return new ParserResult<>(wordResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("word remainder");
             ParserResult<String> result = parser.apply(input, null, "_end");
 
-            assertThat(result.getResult()).isEqualTo("word_end");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("word_end");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
     }
 
@@ -162,16 +162,16 @@ public class ParserWorkerWithParamTest {
             // Create a parser that formats with three parameters
             ParserWorkerWithParam3<String, String, String, String> parser = (slice, prefix, suffix, separator) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String word = wordResult.getResult();
+                String word = wordResult.result();
                 String result = prefix + separator + word + separator + suffix;
-                return new ParserResult<>(wordResult.getModifiedString(), result);
+                return new ParserResult<>(wordResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("content remainder");
             ParserResult<String> result = parser.apply(input, "START", "END", "|");
 
-            assertThat(result.getResult()).isEqualTo("START|content|END");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("START|content|END");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -180,7 +180,7 @@ public class ParserWorkerWithParamTest {
             // Create a parser that uses boolean, integer, and string parameters
             ParserWorkerWithParam3<String, Boolean, Integer, String> parser = (slice, uppercase, repeat, prefix) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String word = wordResult.getResult();
+                String word = wordResult.result();
 
                 if (uppercase) {
                     word = word.toUpperCase();
@@ -191,14 +191,14 @@ public class ParserWorkerWithParamTest {
                     result.append(prefix).append(word);
                 }
 
-                return new ParserResult<>(wordResult.getModifiedString(), result.toString());
+                return new ParserResult<>(wordResult.modifiedString(), result.toString());
             };
 
             StringSlice input = new StringSlice("hello remainder");
             ParserResult<String> result = parser.apply(input, true, 2, ">");
 
-            assertThat(result.getResult()).isEqualTo(">HELLO>HELLO");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(">HELLO>HELLO");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -206,15 +206,15 @@ public class ParserWorkerWithParamTest {
         void testAllStringParameters() {
             ParserWorkerWithParam3<String, String, String, String> parser = (slice, param1, param2, param3) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String result = String.join(":", param1, param2, param3, wordResult.getResult());
-                return new ParserResult<>(wordResult.getModifiedString(), result);
+                String result = String.join(":", param1, param2, param3, wordResult.result());
+                return new ParserResult<>(wordResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("word remainder");
             ParserResult<String> result = parser.apply(input, "A", "B", "C");
 
-            assertThat(result.getResult()).isEqualTo("A:B:C:word");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("A:B:C:word");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
     }
 
@@ -228,16 +228,16 @@ public class ParserWorkerWithParamTest {
             // Create a parser that formats with four parameters
             ParserWorkerWithParam4<String, String, String, String, String> parser = (slice, p1, p2, p3, p4) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String word = wordResult.getResult();
+                String word = wordResult.result();
                 String result = String.format("%s[%s|%s|%s]%s", p1, p2, word, p3, p4);
-                return new ParserResult<>(wordResult.getModifiedString(), result);
+                return new ParserResult<>(wordResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("center remainder");
             ParserResult<String> result = parser.apply(input, "START", "LEFT", "RIGHT", "END");
 
-            assertThat(result.getResult()).isEqualTo("START[LEFT|center|RIGHT]END");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("START[LEFT|center|RIGHT]END");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -247,7 +247,7 @@ public class ParserWorkerWithParamTest {
             ParserWorkerWithParam4<String, Integer, Boolean, String, Character> parser = (slice, num, flag, prefix,
                     separator) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String word = wordResult.getResult();
+                String word = wordResult.result();
 
                 StringBuilder result = new StringBuilder();
                 for (int i = 0; i < num; i++) {
@@ -257,14 +257,14 @@ public class ParserWorkerWithParamTest {
                     result.append(flag ? word.toUpperCase() : word);
                 }
 
-                return new ParserResult<>(wordResult.getModifiedString(), result.toString());
+                return new ParserResult<>(wordResult.modifiedString(), result.toString());
             };
 
             StringSlice input = new StringSlice("test remainder");
             ParserResult<String> result = parser.apply(input, 3, true, ">>", '-');
 
-            assertThat(result.getResult()).isEqualTo(">>TEST->>TEST->>TEST");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(">>TEST->>TEST->>TEST");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -274,7 +274,7 @@ public class ParserWorkerWithParamTest {
             ParserWorkerWithParam4<Integer, Integer, Integer, String, Boolean> parser = (slice, base, multiplier,
                     operation, addLength) -> {
                 ParserResult<Integer> intResult = StringParsersLegacy.parseInt(slice);
-                int value = intResult.getResult();
+                int value = intResult.result();
 
                 int result = switch (operation) {
                     case "add" -> base + value * multiplier;
@@ -287,14 +287,14 @@ public class ParserWorkerWithParamTest {
                     result += slice.toString().length();
                 }
 
-                return new ParserResult<>(intResult.getModifiedString(), result);
+                return new ParserResult<>(intResult.modifiedString(), result);
             };
 
             StringSlice input = new StringSlice("5 remainder");
             ParserResult<Integer> result = parser.apply(input, 10, 3, "add", false);
 
-            assertThat(result.getResult()).isEqualTo(25); // 10 + (5 * 3)
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(25); // 10 + (5 * 3)
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
     }
 
@@ -310,29 +310,29 @@ public class ParserWorkerWithParamTest {
             // Use single parameter parser
             ParserWorkerWithParam<String, String> parser1 = (slice, prefix) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                return new ParserResult<>(wordResult.getModifiedString(), prefix + wordResult.getResult());
+                return new ParserResult<>(wordResult.modifiedString(), prefix + wordResult.result());
             };
 
             ParserResult<String> result1 = parser1.apply(input, "1:");
-            assertThat(result1.getResult()).isEqualTo("1:hello");
+            assertThat(result1.result()).isEqualTo("1:hello");
 
             // Use two parameter parser on remaining
             ParserWorkerWithParam2<String, String, String> parser2 = (slice, prefix, suffix) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice.trim());
-                return new ParserResult<>(wordResult.getModifiedString(), prefix + wordResult.getResult() + suffix);
+                return new ParserResult<>(wordResult.modifiedString(), prefix + wordResult.result() + suffix);
             };
 
-            ParserResult<String> result2 = parser2.apply(result1.getModifiedString(), "2[", "]");
-            assertThat(result2.getResult()).isEqualTo("2[world]");
+            ParserResult<String> result2 = parser2.apply(result1.modifiedString(), "2[", "]");
+            assertThat(result2.result()).isEqualTo("2[world]");
 
             // Use three parameter parser on remaining
             ParserWorkerWithParam3<String, String, String, String> parser3 = (slice, p1, p2, p3) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice.trim());
-                return new ParserResult<>(wordResult.getModifiedString(), p1 + p2 + wordResult.getResult() + p3);
+                return new ParserResult<>(wordResult.modifiedString(), p1 + p2 + wordResult.result() + p3);
             };
 
-            ParserResult<String> result3 = parser3.apply(result2.getModifiedString(), "3", "(", ")");
-            assertThat(result3.getResult()).isEqualTo("3(test)");
+            ParserResult<String> result3 = parser3.apply(result2.modifiedString(), "3", "(", ")");
+            assertThat(result3.result()).isEqualTo("3(test)");
         }
 
         @Test
@@ -343,13 +343,13 @@ public class ParserWorkerWithParamTest {
             // Parser that converts string to integer with parameters
             ParserWorkerWithParam2<Integer, String, Integer> parser = (slice, prefix, multiplier) -> {
                 ParserResult<Integer> intResult = StringParsersLegacy.parseInt(slice);
-                Integer result = Integer.parseInt(prefix + intResult.getResult()) * multiplier;
-                return new ParserResult<>(intResult.getModifiedString(), result);
+                Integer result = Integer.parseInt(prefix + intResult.result()) * multiplier;
+                return new ParserResult<>(intResult.modifiedString(), result);
             };
 
             ParserResult<Integer> result = parser.apply(input, "1", 2);
-            assertThat(result.getResult()).isEqualTo(284); // (1 + 42) * 2 = 86, but string concat: "142" * 2 = 284
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(284); // (1 + 42) * 2 = 86, but string concat: "142" * 2 = 284
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
     }
 
@@ -365,14 +365,14 @@ public class ParserWorkerWithParamTest {
                     return new ParserResult<>(slice, param + "EMPTY");
                 }
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                return new ParserResult<>(wordResult.getModifiedString(), param + wordResult.getResult());
+                return new ParserResult<>(wordResult.modifiedString(), param + wordResult.result());
             };
 
             StringSlice input = new StringSlice("");
             ParserResult<String> result = parser.apply(input, "PREFIX_");
 
-            assertThat(result.getResult()).isEqualTo("PREFIX_EMPTY");
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo("PREFIX_EMPTY");
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -381,8 +381,8 @@ public class ParserWorkerWithParamTest {
             ParserWorkerWithParam2<String, Integer, String> parser = (slice, divider, fallback) -> {
                 try {
                     ParserResult<Integer> intResult = StringParsersLegacy.parseInt(slice);
-                    String result = String.valueOf(intResult.getResult() / divider);
-                    return new ParserResult<>(intResult.getModifiedString(), result);
+                    String result = String.valueOf(intResult.result() / divider);
+                    return new ParserResult<>(intResult.modifiedString(), result);
                 } catch (Exception e) {
                     return new ParserResult<>(slice, fallback);
                 }
@@ -392,7 +392,7 @@ public class ParserWorkerWithParamTest {
             StringSlice input = new StringSlice("10 remainder");
             ParserResult<String> result = parser.apply(input, 0, "ERROR");
 
-            assertThat(result.getResult()).isEqualTo("ERROR");
+            assertThat(result.result()).isEqualTo("ERROR");
         }
 
         @Test
@@ -405,15 +405,15 @@ public class ParserWorkerWithParamTest {
 
             ParserWorkerWithParam<String, String> parser = (slice, param) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                return new ParserResult<>(wordResult.getModifiedString(), param + ":" + wordResult.getResult());
+                return new ParserResult<>(wordResult.modifiedString(), param + ":" + wordResult.result());
             };
 
             StringSlice input = new StringSlice("word remainder");
             ParserResult<String> result = parser.apply(input, longParam.toString());
 
-            assertThat(result.getResult()).startsWith("AAAA");
-            assertThat(result.getResult()).endsWith(":word");
-            assertThat(result.getResult()).hasSize(1005); // 1000 A's + ":" + "word"
+            assertThat(result.result()).startsWith("AAAA");
+            assertThat(result.result()).endsWith(":word");
+            assertThat(result.result()).hasSize(1005); // 1000 A's + ":" + "word"
         }
     }
 
@@ -426,7 +426,7 @@ public class ParserWorkerWithParamTest {
         void testRepeatedParsingPerformance() {
             ParserWorkerWithParam<String, String> parser = (slice, prefix) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                return new ParserResult<>(wordResult.getModifiedString(), prefix + wordResult.getResult());
+                return new ParserResult<>(wordResult.modifiedString(), prefix + wordResult.result());
             };
 
             StringSlice input = new StringSlice("word remainder");
@@ -447,7 +447,7 @@ public class ParserWorkerWithParamTest {
             ParserWorkerWithParam4<String, String, Integer, Boolean, Character> parser = (slice, prefix, repeat,
                     uppercase, separator) -> {
                 ParserResult<String> wordResult = StringParsers.parseWord(slice);
-                String word = uppercase ? wordResult.getResult().toUpperCase() : wordResult.getResult();
+                String word = uppercase ? wordResult.result().toUpperCase() : wordResult.result();
 
                 StringBuilder result = new StringBuilder();
                 for (int i = 0; i < repeat; i++) {
@@ -456,7 +456,7 @@ public class ParserWorkerWithParamTest {
                     result.append(prefix).append(word);
                 }
 
-                return new ParserResult<>(wordResult.getModifiedString(), result.toString());
+                return new ParserResult<>(wordResult.modifiedString(), result.toString());
             };
 
             StringSlice input = new StringSlice("test remainder");

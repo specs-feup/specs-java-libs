@@ -14,12 +14,12 @@
 package pt.up.fe.specs.util.providers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import pt.up.fe.specs.util.Preconditions;
+import java.util.Objects;
 
 /**
- * Utility class for supporting provider interfaces.
+ * Utility class for supporting ResourceProvider interfaces.
  * <p>
  * Provides helper methods for working with resource and key providers.
  * </p>
@@ -38,13 +38,11 @@ public class ProvidersSupport {
     static List<ResourceProvider> getResourcesFromEnumSingle(Class<? extends ResourceProvider> enumClass) {
         ResourceProvider[] enums = enumClass.getEnumConstants();
 
-        Preconditions.checkNotNull(enums, "Class must be an enum");
+        Objects.requireNonNull(enums, () -> "Class must be an enum");
 
         List<ResourceProvider> resources = new ArrayList<>(enums.length);
 
-        for (ResourceProvider anEnum : enums) {
-            resources.add(anEnum);
-        }
+        resources.addAll(Arrays.asList(enums));
 
         return resources;
     }

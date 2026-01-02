@@ -13,8 +13,11 @@
 
 package pt.up.fe.specs.util.exceptions;
 
+import java.io.Serial;
+
 public class CaseNotDefinedException extends UnsupportedOperationException {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public CaseNotDefinedException(Class<?> undefinedCase) {

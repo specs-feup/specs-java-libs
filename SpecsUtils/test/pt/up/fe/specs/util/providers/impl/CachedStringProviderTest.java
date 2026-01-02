@@ -134,16 +134,15 @@ class CachedStringProviderTest {
     class NullHandling {
 
         @Test
-        @DisplayName("Should throw NPE when underlying provider returns null")
-        void shouldThrowNPEWhenUnderlyingProviderReturnsNull() {
+        @DisplayName("Should handle null values from underlying provider")
+        void shouldHandleNullValuesFromUnderlyingProvider() {
             // Given
             when(mockProvider.getString()).thenReturn(null);
             CachedStringProvider cachedProvider = new CachedStringProvider(mockProvider);
 
-            // When/Then - Implementation uses Optional.of() which throws NPE for null
-            // values
-            assertThatThrownBy(() -> cachedProvider.getString())
-                    .isInstanceOf(NullPointerException.class);
+            // When/Then - Should handle null values gracefully
+            String result = cachedProvider.getString();
+            assertThat(result).isNull();
 
             // Should still only call provider once
             verify(mockProvider, times(1)).getString();

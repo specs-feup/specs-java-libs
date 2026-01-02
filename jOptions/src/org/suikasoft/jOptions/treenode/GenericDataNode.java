@@ -18,24 +18,27 @@ import java.util.Collection;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 /**
- * Generic implementation of a DataNode for use when a specific node type is not required.
+ * Generic implementation of a DataNode for use when a specific node type is not
+ * required.
  */
 public class GenericDataNode extends DataNode<GenericDataNode> {
     /**
      * Constructs a GenericDataNode with the given DataStore and children.
      *
-     * @param data the DataStore for this node
+     * @param data     the DataStore for this node
      * @param children the child nodes
      */
     public GenericDataNode(DataStore data, Collection<? extends GenericDataNode> children) {
         super(data, children);
     }
+
     /**
      * Constructs a GenericDataNode with a default DataStore and no children.
      */
     public GenericDataNode() {
         this(DataStore.newInstance("GenericDataNode"), null);
     }
+
     /**
      * Returns this node instance.
      *
@@ -45,6 +48,7 @@ public class GenericDataNode extends DataNode<GenericDataNode> {
     protected GenericDataNode getThis() {
         return this;
     }
+
     /**
      * Returns the base class for this node type.
      *

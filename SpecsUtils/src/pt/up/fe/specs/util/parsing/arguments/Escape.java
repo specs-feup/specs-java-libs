@@ -30,8 +30,7 @@ public class Escape {
 
     /**
      * An escape that happens when a '\' appears, and escapes the next character.
-     * 
-     * @return
+     *
      */
     public static Escape newSlashChar() {
         String escapeStart = "\\";

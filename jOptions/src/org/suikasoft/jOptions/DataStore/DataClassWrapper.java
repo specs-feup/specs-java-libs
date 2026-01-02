@@ -22,7 +22,9 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 /**
  * Abstract wrapper for DataClass implementations.
  *
- * <p>This class wraps another DataClass and delegates all operations to it, allowing extension or adaptation.
+ * <p>
+ * This class wraps another DataClass and delegates all operations to it,
+ * allowing extension or adaptation.
  *
  * @param <T> the type of the DataClass
  */
@@ -71,9 +73,9 @@ public abstract class DataClassWrapper<T extends DataClass<T>> implements DataCl
     /**
      * Sets the value for the given key in the wrapped DataClass.
      *
-     * @param <K> the type of the value
-     * @param <E> the type of the value to set
-     * @param key the key to set the value for
+     * @param <K>   the type of the value
+     * @param <E>   the type of the value to set
+     * @param key   the key to set the value for
      * @param value the value to set
      * @return the current instance
      */
@@ -103,8 +105,9 @@ public abstract class DataClassWrapper<T extends DataClass<T>> implements DataCl
      * Checks if the wrapped DataClass has a value for the given key.
      *
      * @param <VT> the type of the value
-     * @param key the key to check
-     * @return true if the wrapped DataClass has a value for the key, false otherwise
+     * @param key  the key to check
+     * @return true if the wrapped DataClass has a value for the key, false
+     *         otherwise
      */
     @Override
     public <VT> boolean hasValue(DataKey<VT> key) {
@@ -124,7 +127,8 @@ public abstract class DataClassWrapper<T extends DataClass<T>> implements DataCl
     /**
      * Attempts to retrieve the store definition of the wrapped DataClass.
      *
-     * @return an optional containing the store definition, or empty if not available
+     * @return an optional containing the store definition, or empty if not
+     *         available
      */
     @Override
     public Optional<StoreDefinition> getStoreDefinitionTry() {

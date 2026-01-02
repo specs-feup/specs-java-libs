@@ -37,7 +37,7 @@ public class MultipleChoiceListKey<T> extends GenericKey<List<T>> {
     /**
      * Constructs a MultipleChoiceListKey with the given id and available choices.
      *
-     * @param id the key id
+     * @param id               the key id
      * @param availableChoices the list of available choices
      */
     public MultipleChoiceListKey(String id, List<T> availableChoices) {

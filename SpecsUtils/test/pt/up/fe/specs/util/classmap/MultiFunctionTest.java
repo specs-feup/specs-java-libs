@@ -201,17 +201,17 @@ public class MultiFunctionTest {
         @Test
         @DisplayName("Should use default value when no mapping found")
         void testDefaultValue() {
-            MultiFunction<Number, String> func = numberFunction.setDefaultValue("default");
+            numberFunction.setDefaultValue("default");
 
-            assertThat(func.apply(42)).isEqualTo("default");
+            assertThat(numberFunction.apply(42)).isEqualTo("default");
         }
 
         @Test
         @DisplayName("Should use default function when no mapping found")
         void testDefaultFunction() {
-            MultiFunction<Number, String> func = numberFunction.setDefaultFunction(n -> "Default: " + n);
+            numberFunction.setDefaultFunction(n -> "Default: " + n);
 
-            assertThat(func.apply(42)).isEqualTo("Default: 42");
+            assertThat(numberFunction.apply(42)).isEqualTo("Default: 42");
         }
 
         @Test
@@ -220,33 +220,32 @@ public class MultiFunctionTest {
             BiFunction<MultiFunction<Number, String>, Number, String> defaultMF = (mf, n) -> "DefaultMF: " + n
                     + " from " + mf.getClass().getSimpleName();
 
-            MultiFunction<Number, String> func = numberFunction.setDefaultFunction(defaultMF);
+            numberFunction.setDefaultFunction(defaultMF);
 
-            assertThat(func.apply(42)).contains("DefaultMF: 42 from MultiFunction");
+            assertThat(numberFunction.apply(42)).contains("DefaultMF: 42 from MultiFunction");
         }
 
         @Test
-        @DisplayName("Should prefer specific mapping over defaults - BUG: Defaults don't work")
+        @DisplayName("Should prefer specific mapping over defaults")
         void testMappingOverDefault() {
             numberFunction.setDefaultValue("default");
             numberFunction.put(Integer.class, i -> "Specific: " + i);
 
             assertThat(numberFunction.apply(42)).isEqualTo("Specific: 42");
 
-            // BUG: Default value doesn't work, throws exception instead
-            assertThatThrownBy(() -> numberFunction.apply(3.14))
-                    .hasMessageContaining("Function not defined for class");
+            // Default value should work for unmapped types
+            assertThat(numberFunction.apply(3.14)).isEqualTo("default");
         }
 
         @Test
-        @DisplayName("Should return same instance from setters for chaining - BUG: Fluent interface broken")
+        @DisplayName("Should return same instance from setters for chaining")
         void testFluentInterface() {
-            // BUG: Fluent interface returns new instances instead of 'this'
             MultiFunction<Number, String> result = numberFunction
                     .setDefaultValue("default")
                     .setDefaultFunction(n -> "func: " + n);
 
-            assertThat(result).isNotSameAs(numberFunction);
+            assertThat(result).isSameAs(numberFunction);
+            assertThat(numberFunction.apply(42)).isEqualTo("func: 42");
         }
     }
 
@@ -366,7 +365,7 @@ public class MultiFunctionTest {
         }
 
         @Test
-        @DisplayName("Should work with mixed function types and defaults - BUG: Default function doesn't work")
+        @DisplayName("Should work with mixed function types and defaults")
         void testMixedFunctionTypes() {
             numberFunction.setDefaultFunction(n -> "Default: " + n.getClass().getSimpleName());
             numberFunction.put(Integer.class, i -> "Simple: " + i);
@@ -378,9 +377,8 @@ public class MultiFunctionTest {
             assertThat(numberFunction.apply(42)).isEqualTo("Simple: 42");
             assertThat(numberFunction.apply(3.14)).isEqualTo("Complex: 3.14 with precision decimal");
 
-            // BUG: Default function doesn't work, throws exception instead
-            assertThatThrownBy(() -> numberFunction.apply(42L))
-                    .hasMessageContaining("Function not defined for class");
+            // Default function should work for unmapped types
+            assertThat(numberFunction.apply(42L)).isEqualTo("Default: Long");
         }
     }
 }

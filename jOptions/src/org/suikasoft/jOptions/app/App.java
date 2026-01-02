@@ -52,7 +52,8 @@ public interface App {
     /**
      * The options available for this app.
      * <p>
-     * By default, creates a StoreDefinition from the DataKeys in the AppKernel class.
+     * By default, creates a StoreDefinition from the DataKeys in the AppKernel
+     * class.
      *
      * @return the store definition
      */
@@ -99,10 +100,10 @@ public interface App {
     /**
      * Creates a new App.
      *
-     * @param name the name of the app
-     * @param definition the store definition
+     * @param name        the name of the app
+     * @param definition  the store definition
      * @param persistence the persistence mechanism
-     * @param kernel the app kernel
+     * @param kernel      the app kernel
      * @return a new GenericApp instance
      */
     static GenericApp newInstance(String name, StoreDefinition definition,
@@ -114,9 +115,9 @@ public interface App {
     /**
      * Creates a new App using the store definition name.
      *
-     * @param definition the store definition
+     * @param definition  the store definition
      * @param persistence the persistence mechanism
-     * @param kernel the app kernel
+     * @param kernel      the app kernel
      * @return a new GenericApp instance
      */
     static GenericApp newInstance(StoreDefinition definition,

@@ -85,19 +85,19 @@ public class CsvWriterTest {
 
             String expectedCsv = "sep=;\n" +
                     "name;1;2;Average;Std. Dev. (Sample)\n" +
-                    "line1;4;7;=AVERAGE(B2:C2);=STDEV.S(B2:C2)\n";
+                    "line1;4;7;=AVERAGE(B2:D2);=STDEV.S(B2:D2)\n";
 
             assertThat(csvWriter.buildCsv()).isEqualTo(expectedCsv);
         }
 
         @Test
-        @DisplayName("Should handle empty initialization gracefully - throws exception due to bug")
+        @DisplayName("Should handle empty initialization gracefully")
         void testCsvWriter_EmptyInitialization_ShouldHandleGracefully() {
             CsvWriter csvWriter = new CsvWriter();
-            // Known bug: buildCsv() throws ArrayIndexOutOfBoundsException with empty header
-            assertThatThrownBy(() -> {
-                csvWriter.buildCsv();
-            }).isInstanceOf(ArrayIndexOutOfBoundsException.class);
+            csvWriter.setNewline("\n");
+
+            String result = csvWriter.buildCsv();
+            assertThat(result).isEqualTo("sep=;\n\n");
         }
 
         @Test
@@ -259,7 +259,7 @@ public class CsvWriterTest {
     class FieldManagement {
 
         @Test
-        @DisplayName("Should add single field - with range calculation bug")
+        @DisplayName("Should add single field")
         void testAddSingleField() {
             CsvWriter writer = new CsvWriter("data1", "data2");
             writer.addField(CsvField.AVERAGE);
@@ -267,12 +267,12 @@ public class CsvWriterTest {
 
             String csv = writer.buildCsv();
             assertThat(csv).contains("Average");
-            // Known bug: should be =AVERAGE(B2:C2) but is =AVERAGE(B2:B2)
-            assertThat(csv).contains("=AVERAGE(B2:B2)");
+            // Correctly calculates range for both data columns
+            assertThat(csv).contains("=AVERAGE(B2:C2)");
         }
 
         @Test
-        @DisplayName("Should add multiple fields using varargs - with range calculation bug")
+        @DisplayName("Should add multiple fields using varargs")
         void testAddMultipleFieldsVarargs() {
             CsvWriter writer = new CsvWriter("data1", "data2");
             writer.addField(CsvField.AVERAGE, CsvField.STANDARD_DEVIATION_SAMPLE);
@@ -281,9 +281,9 @@ public class CsvWriterTest {
             String csv = writer.buildCsv();
             assertThat(csv).contains("Average");
             assertThat(csv).contains("Std. Dev. (Sample)");
-            // Known bug: should be =AVERAGE(B2:C2) but is =AVERAGE(B2:B2)
-            assertThat(csv).contains("=AVERAGE(B2:B2)");
-            assertThat(csv).contains("=STDEV.S(B2:B2)");
+            // Correctly calculates range for both data columns
+            assertThat(csv).contains("=AVERAGE(B2:C2)");
+            assertThat(csv).contains("=STDEV.S(B2:C2)");
         }
 
         @Test
@@ -309,15 +309,15 @@ public class CsvWriterTest {
         }
 
         @Test
-        @DisplayName("Should calculate range for multiple data columns - demonstrates bug")
+        @DisplayName("Should calculate range for multiple data columns")
         void testRangeCalculationMultipleColumns() {
             CsvWriter writer = new CsvWriter("id", "val1", "val2", "val3", "val4");
             writer.addField(CsvField.AVERAGE);
             writer.addLine("1", "10", "20", "30", "40");
 
             String csv = writer.buildCsv();
-            // Known bug: should calculate range from B2 to F2 but calculates B2 to E2
-            assertThat(csv).contains("=AVERAGE(B2:E2)");
+            // Correctly calculates range from B2 to F2 (all data columns)
+            assertThat(csv).contains("=AVERAGE(B2:F2)");
         }
 
         @Test
@@ -327,10 +327,12 @@ public class CsvWriterTest {
             writer.addField(CsvField.AVERAGE);
             writer.addLine("Alice", "85", "90");
             writer.addLine("Bob", "75", "80");
-
             String csv = writer.buildCsv();
-            assertThat(csv).contains("=AVERAGE(B2:C2)"); // First data line
-            assertThat(csv).contains("=AVERAGE(B3:C3)"); // Second data line
+
+            // Layout with dataOffset=1: A=empty, B=name, C=score1, D=score2, E=Average
+            // formula
+            assertThat(csv).contains("=AVERAGE(B2:D2)"); // First data line
+            assertThat(csv).contains("=AVERAGE(B3:D3)"); // Second data line
         }
     }
 

@@ -238,22 +238,17 @@ public class ClassSetTest {
         @Test
         @DisplayName("Should handle null class in add")
         void testAddNullClass() {
-            // BUG: ClassSet accepts null as a valid addition, returning true
-            boolean result = numberSet.add(null);
-            // Implementation accepts null and returns true, unlike standard Java
-            // collections
-            assertThat(result).isTrue();
+            assertThatThrownBy(() -> numberSet.add(null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Class cannot be null");
         }
 
         @Test
         @DisplayName("Should handle null class in contains")
         void testContainsNullClass() {
-            // BUG: ClassSet does not throw exception for null, unlike standard Java
-            // collections
-            boolean result = numberSet.contains((Class<? extends Number>) null);
-            // Implementation silently returns false instead of throwing
-            // NullPointerException
-            assertThat(result).isFalse();
+            assertThatThrownBy(() -> numberSet.contains((Class<? extends Number>) null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("Class cannot be null");
         }
 
         @Test
@@ -281,13 +276,12 @@ public class ClassSetTest {
         }
 
         @Test
-        @DisplayName("Should handle interface hierarchies - BUG: Interface hierarchy doesn't work")
+        @DisplayName("Should handle interface hierarchies")
         void testInterfaceHierarchies() {
             collectionSet.add(Collection.class);
 
-            // BUG: Interface hierarchy support is broken
-            assertThat(collectionSet.contains(List.class)).isFalse(); // Should be true but is false
-            assertThat(collectionSet.contains(new ArrayList<>())).isFalse(); // Should be true but is false
+            assertThat(collectionSet.contains(List.class)).isTrue();
+            assertThat(collectionSet.contains(new ArrayList<>())).isTrue();
         }
     }
 
@@ -324,7 +318,7 @@ public class ClassSetTest {
         }
 
         @Test
-        @DisplayName("Should handle multiple distinct hierarchies - BUG: Interface hierarchy broken")
+        @DisplayName("Should handle multiple distinct hierarchies")
         void testMultipleHierarchies() {
             ClassSet<Object> mixedSet = new ClassSet<>();
             mixedSet.add(Number.class);
@@ -334,9 +328,9 @@ public class ClassSetTest {
             assertThat(mixedSet.contains(Integer.class)).isTrue();
             assertThat(mixedSet.contains(42)).isTrue();
 
-            // Collection hierarchy - BUG: Interface hierarchy broken
-            assertThat(mixedSet.contains(List.class)).isFalse(); // Should be true but is false
-            assertThat(mixedSet.contains(new ArrayList<>())).isFalse(); // Should be true but is false
+            // Collection hierarchy
+            assertThat(mixedSet.contains(List.class)).isTrue();
+            assertThat(mixedSet.contains(new ArrayList<>())).isTrue();
 
             // Unrelated classes
             assertThat(mixedSet.contains(String.class)).isFalse();

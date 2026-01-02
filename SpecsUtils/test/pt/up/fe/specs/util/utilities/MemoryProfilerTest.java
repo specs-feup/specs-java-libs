@@ -30,9 +30,11 @@ class MemoryProfilerTest {
     class Construction {
 
         @Test
-        @DisplayName("should create with default constructor")
-        void shouldCreateWithDefaultConstructor() {
-            MemoryProfiler profiler = new MemoryProfiler();
+        @DisplayName("should create with default-like constructor (use temp file)")
+        void shouldCreateWithDefaultConstructor(@TempDir Path tempDir) {
+            File outputFile = tempDir.resolve("test_memory_default.csv").toFile();
+
+            MemoryProfiler profiler = new MemoryProfiler(500, TimeUnit.MILLISECONDS, outputFile);
 
             assertThat(profiler).isNotNull();
         }
@@ -69,16 +71,18 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(50, TimeUnit.MILLISECONDS, outputFile);
 
-            // Start profiling in a separate thread
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            // Start profiling
+            profiler.start();
 
             // Wait a short time for file creation
             Thread.sleep(200);
 
             // Stop the profiling thread
-            profilingThread.interrupt();
-            profilingThread.join(1000); // Wait up to 1 second
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             // File should have been created
             assertThat(outputFile).exists();
@@ -93,13 +97,14 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(50, TimeUnit.MILLISECONDS, outputFile);
 
-            // Start profiling briefly
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             Thread.sleep(200);
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             // File should still exist and have content
             assertThat(outputFile).exists();
@@ -120,14 +125,16 @@ class MemoryProfilerTest {
             MemoryProfiler profiler = new MemoryProfiler(100, TimeUnit.MILLISECONDS, outputFile);
 
             // Start profiling
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             // Let it run for enough time to capture multiple measurements
             Thread.sleep(350); // Should capture at least 2-3 measurements
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             // File should have measurement data
             assertThat(outputFile).exists();
@@ -160,13 +167,15 @@ class MemoryProfilerTest {
             // Test with nanoseconds (very frequent)
             MemoryProfiler profiler = new MemoryProfiler(100_000_000, TimeUnit.NANOSECONDS, outputFile); // 100ms
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             Thread.sleep(250);
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             assertThat(outputFile).exists();
         }
@@ -183,21 +192,21 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(1000, TimeUnit.MILLISECONDS, outputFile);
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
-            // Interrupt immediately
+            // Interrupt almost immediately
             Thread.sleep(50);
-            profilingThread.interrupt();
-
-            // Should terminate gracefully
-            profilingThread.join(2000);
-            assertThat(profilingThread.isAlive()).isFalse();
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(2000);
+                assertThat(worker.isAlive()).isFalse();
+            }
         }
 
         @Test
         @DisplayName("should execute in separate thread")
-        void shouldExecuteInSeparateThread(@TempDir Path tempDir) {
+        void shouldExecuteInSeparateThread(@TempDir Path tempDir) throws InterruptedException {
             File outputFile = tempDir.resolve("memory_thread.csv").toFile();
 
             MemoryProfiler profiler = new MemoryProfiler(100, TimeUnit.MILLISECONDS, outputFile);
@@ -206,7 +215,7 @@ class MemoryProfilerTest {
 
             // Execute should return immediately, not block
             long startTime = System.currentTimeMillis();
-            profiler.execute();
+            profiler.start();
             long endTime = System.currentTimeMillis();
 
             // Should return quickly (not wait for profiling to complete)
@@ -214,6 +223,14 @@ class MemoryProfilerTest {
 
             // Main thread should continue normally
             assertThat(Thread.currentThread().getName()).isEqualTo(mainThreadName);
+
+            // Cleanup to release file handle and allow @TempDir deletion
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+                assertThat(worker.isAlive()).isFalse();
+            }
         }
     }
 
@@ -230,15 +247,15 @@ class MemoryProfilerTest {
             MemoryProfiler profiler = new MemoryProfiler(100, TimeUnit.MILLISECONDS, invalidFile);
 
             // Should not throw exception, but handle gracefully
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             Thread.sleep(200);
-            profilingThread.interrupt();
-            profilingThread.join(1000);
-
-            // Should terminate without hanging
-            assertThat(profilingThread.isAlive()).isFalse();
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+                assertThat(worker.isAlive()).isFalse();
+            }
         }
     }
 
@@ -247,22 +264,26 @@ class MemoryProfilerTest {
     class Integration {
 
         @Test
-        @DisplayName("should work with default constructor values")
-        void shouldWorkWithDefaultConstructorValues() throws InterruptedException {
-            MemoryProfiler profiler = new MemoryProfiler();
+        @DisplayName("should work with default constructor values (use temp file)")
+        void shouldWorkWithDefaultConstructorValues(@TempDir Path tempDir) throws InterruptedException {
+            // Use a temp file instead of the default working-directory file
+            File outputFile = tempDir.resolve("memory_profile.csv").toFile();
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            MemoryProfiler profiler = new MemoryProfiler(500, TimeUnit.MILLISECONDS, outputFile);
+
+            profiler.start();
 
             // Let it run briefly
             Thread.sleep(100);
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
-            // Should create default file (memory_profile.csv in working directory)
-            // Note: We can't easily clean this up in a unit test
-            // In a real scenario, the application would manage this file
+            // Ensure temp file exists
+            assertThat(outputFile).exists();
         }
 
         @Test
@@ -272,13 +293,15 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(1, TimeUnit.MILLISECONDS, outputFile);
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             Thread.sleep(50); // Let it run briefly
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             assertThat(outputFile).exists();
         }
@@ -290,14 +313,16 @@ class MemoryProfilerTest {
 
             MemoryProfiler profiler = new MemoryProfiler(10, TimeUnit.SECONDS, outputFile);
 
-            Thread profilingThread = new Thread(() -> profiler.execute());
-            profilingThread.start();
+            profiler.start();
 
             // Don't wait for the period, just verify it starts properly
             Thread.sleep(100);
 
-            profilingThread.interrupt();
-            profilingThread.join(1000);
+            profiler.stop();
+            Thread worker = profiler.getWorkerThread();
+            if (worker != null) {
+                worker.join(1000);
+            }
 
             assertThat(outputFile).exists();
         }

@@ -23,7 +23,8 @@ import org.specs.generators.java.utils.Utils;
 import tdrc.utils.StringUtils;
 
 /**
- * Represents a Java interface for code generation. Provides methods to manage fields, methods, and extended interfaces.
+ * Represents a Java interface for code generation. Provides methods to manage
+ * fields, methods, and extended interfaces.
  *
  * @author Tiago @
  */
@@ -37,7 +38,7 @@ public class Interface extends ClassType {
     /**
      * Create a public interface with name and package.
      *
-     * @param name the name for the interface
+     * @param name             the name for the interface
      * @param interfacePackage the interface package
      */
     public Interface(String name, String interfacePackage) {
@@ -55,7 +56,8 @@ public class Interface extends ClassType {
     }
 
     /**
-     * Generate the corresponding java interface code, containing the package, imports, fields, methods, etc.
+     * Generate the corresponding java interface code, containing the package,
+     * imports, fields, methods, etc.
      *
      * @param indentation level of indentation
      * @return the generated java interface code
@@ -94,8 +96,8 @@ public class Interface extends ClassType {
     }
 
     /**
-     * Add a new extended interface to the interface. This method automatically adds the required import for the added
-     * interface.
+     * Add a new extended interface to the interface. This method automatically adds
+     * the required import for the added interface.
      *
      * @param interfaceinterface the new interface
      * @return true if the interface was successfully added
@@ -109,8 +111,8 @@ public class Interface extends ClassType {
     }
 
     /**
-     * Removes an interface from the interface. This does not remove automatically the required import related to the
-     * removed interface.
+     * Removes an interface from the interface. This does not remove automatically
+     * the required import related to the removed interface.
      *
      * @param interfaceinterface the interface to remove
      * @return true if the interface was successfully removed
@@ -145,8 +147,9 @@ public class Interface extends ClassType {
     }
 
     /**
-     * Add a new method to the interface. This method automatically adds the imports required for the return type and
-     * the arguments. Note that if the method is updated (e.g.: change return type or add arguments) the imports are not
+     * Add a new method to the interface. This method automatically adds the imports
+     * required for the return type and the arguments. Note that if the method is
+     * updated (e.g.: change return type or add arguments) the imports are not
      * updated.
      *
      * @param method the new method

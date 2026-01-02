@@ -28,6 +28,9 @@ public class XmlDocument extends AXmlNode {
     private final Document document;
 
     public XmlDocument(Document document) {
+        if (document == null) {
+            throw new NullPointerException("XmlDocument requires a non-null Document");
+        }
         this.document = document;
     }
 
@@ -37,23 +40,58 @@ public class XmlDocument extends AXmlNode {
     }
 
     public static XmlDocument newInstance(File file) {
-        return new XmlDocument(SpecsXml.getXmlRoot(file));
+        if (file == null) {
+            throw new RuntimeException("XML file cannot be null");
+        }
+        var doc = SpecsXml.getXmlRoot(file);
+        // SpecsXml may throw for schema violations and return null for IO/config errors
+        if (doc == null) {
+            throw new RuntimeException("Could not parse XML file: " + file);
+        }
+        return new XmlDocument(doc);
     }
 
     public static XmlDocument newInstance(String contents) {
-        return new XmlDocument(SpecsXml.getXmlRoot(contents));
+        if (contents == null) {
+            throw new NullPointerException("XML contents cannot be null");
+        }
+        if (contents.isEmpty()) {
+            throw new RuntimeException("XML document not according to schema");
+        }
+        var doc = SpecsXml.getXmlRoot(contents);
+        if (doc == null) {
+            throw new RuntimeException("Could not parse XML contents (string)");
+        }
+        return new XmlDocument(doc);
     }
 
     public static XmlDocument newInstance(InputStream inputStream) {
+        if (inputStream == null) {
+            throw new RuntimeException("XML input stream cannot be null");
+        }
         return newInstance(inputStream, null);
     }
 
     public static XmlDocument newInstance(InputStream inputStream, InputStream schema) {
-        return new XmlDocument(SpecsXml.getXmlRoot(inputStream, schema));
+        if (inputStream == null && schema == null) {
+            throw new RuntimeException("XML input stream and schema cannot both be null");
+        }
+        var doc = SpecsXml.getXmlRoot(inputStream, schema);
+        if (doc == null) {
+            throw new RuntimeException("Could not parse XML from input streams");
+        }
+        return new XmlDocument(doc);
     }
 
     public static XmlDocument newInstanceFromUri(String uri) {
-        return new XmlDocument(SpecsXml.getXmlRootFromUri(uri));
+        if (uri == null || uri.isEmpty()) {
+            throw new RuntimeException("XML URI cannot be null or empty");
+        }
+        var doc = SpecsXml.getXmlRootFromUri(uri);
+        if (doc == null) {
+            throw new RuntimeException("Could not parse XML from URI: " + uri);
+        }
+        return new XmlDocument(doc);
     }
 
 }

@@ -38,16 +38,16 @@ public class CachedStringProvider implements StringProvider {
     @Override
     public String getString() {
         // Load file, if not loaded yet
-        if (!this.contents.isPresent()) {
+        if (this.contents.isEmpty()) {
             String string = this.provider.getString();
             if (string == null) {
                 SpecsLogs.warn("Could not get contents from provider");
             }
 
-            this.contents = Optional.of(string);
+            this.contents = Optional.ofNullable(string);
         }
 
-        return this.contents.get();
+        return this.contents.orElse(null);
     }
 
 }

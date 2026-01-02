@@ -132,7 +132,7 @@ class ChildrenIteratorTest {
         @DisplayName("Iterator should handle single child correctly")
         void testIterator_SingleChild_HandlesCorrectly() {
             TestTreeNode singleChild = new TestTreeNode("single");
-            TestTreeNode parent = new TestTreeNode("parent", Collections.singletonList(singleChild));
+            TestTreeNode parent = new TestTreeNode("parent", List.of(singleChild));
 
             ChildrenIterator<TestTreeNode> iterator = parent.getChildrenIterator();
 

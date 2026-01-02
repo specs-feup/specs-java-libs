@@ -3,6 +3,7 @@ package pt.up.fe.specs.util.logging;
 import static org.assertj.core.api.Assertions.*;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -421,11 +422,21 @@ class TextAreaHandlerTest {
                 }
             });
             LogRecord record = new LogRecord(Level.INFO, "Exception formatter test");
+            // When - Run publish on the EDT and capture any exception locally to avoid uncaught EDT stack traces
+            AtomicReference<Throwable> thrown = new AtomicReference<>();
+            javax.swing.SwingUtilities.invokeAndWait(() -> {
+                try {
+                    handler.publish(record);
+                } catch (Throwable t) {
+                    // Record the throwable so we can assert on it without letting it become an uncaught EDT exception
+                    thrown.set(t);
+                }
+            });
 
-            // When/Then - Should not propagate formatter exceptions
-            assertThatCode(() -> {
-                handler.publish(record);
-            }).doesNotThrowAnyException();
+            // Then - The formatter threw, but we captured it (no uncaught stack trace). Ensure expected error and no appended message.
+            assertThat(thrown.get()).isInstanceOf(RuntimeException.class).hasMessage("Formatter error");
+            String content = getTextAreaContent();
+            assertThat(content).doesNotContain("Exception formatter test");
         }
     }
 

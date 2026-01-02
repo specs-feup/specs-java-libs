@@ -29,7 +29,7 @@ class ATreeNodeTest {
         //  /
         // grandchild1
         grandchild1 = new TestTreeNode("grandchild1");
-        child1 = new TestTreeNode("child1", Collections.singletonList(grandchild1));
+        child1 = new TestTreeNode("child1", List.of(grandchild1));
         child2 = new TestTreeNode("child2");
         root = new TestTreeNode("root", Arrays.asList(child1, child2));
     }
@@ -112,7 +112,7 @@ class ATreeNodeTest {
         @Test
         @DisplayName("setChildren() with null should handle gracefully")
         void testSetChildren_WithNull_HandlesGracefully() {
-            // Bug #1 is now fixed - setChildren() handles null gracefully by treating it as empty collection
+            // setChildren() handles null gracefully by treating it as empty collection
             root.setChildren(null);
             
             // Should clear all children
@@ -142,7 +142,7 @@ class ATreeNodeTest {
         void testSetChildren_WithSingleChild_SetsCorrectly() {
             TestTreeNode newChild = new TestTreeNode("onlyChild");
 
-            root.setChildren(Collections.singletonList(newChild));
+            root.setChildren(List.of(newChild));
 
             assertThat(root.getNumChildren()).isEqualTo(1);
             assertThat(root.getChild(0)).isSameAs(newChild);
@@ -161,7 +161,7 @@ class ATreeNodeTest {
             assertThat(otherParent.getNumChildren()).isEqualTo(1);
 
             // Move orphan to root - actually creates a copy
-            root.setChildren(Collections.singletonList(orphanChild));
+            root.setChildren(List.of(orphanChild));
 
             // Original orphan stays with otherParent (sanitizeNode behavior)
             assertThat(orphanChild.getParent()).isSameAs(otherParent);

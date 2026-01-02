@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import org.suikasoft.jOptions.gui.KeyPanel;
  */
 public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -54,7 +56,7 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
     /**
      * Constructs a MultipleChoiceListPanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public MultipleChoiceListPanel(DataKey<List<T>> key, DataStore data) {
@@ -74,7 +76,8 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         addAllButton.addActionListener(this::addAllButtonAction);
         removeAllButton.addActionListener(this::removeAllButtonAction);
 
-        // ExtraData must be defined, otherwise we are not able to populate the available choices
+        // ExtraData must be defined, otherwise we are not able to populate the
+        // available choices
         var extraData = key.getExtraData()
                 .orElseThrow(() -> new RuntimeException("Key '" + key.getName() + "' must define extra data"));
 
@@ -112,7 +115,7 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
      * Finds the index of the given element in the JComboBox.
      *
      * @param comboBox the JComboBox to search
-     * @param element the element to find
+     * @param element  the element to find
      * @return the index of the element, or -1 if not found
      */
     private int indexOf(JComboBox<T> comboBox, T element) {
@@ -127,8 +130,8 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
     /**
      * Moves an element from the source JComboBox to the destination JComboBox.
      *
-     * @param element the element to move
-     * @param source the source JComboBox
+     * @param element     the element to move
+     * @param source      the source JComboBox
      * @param destination the destination JComboBox
      */
     private void moveElement(T element, JComboBox<T> source, JComboBox<T> destination) {

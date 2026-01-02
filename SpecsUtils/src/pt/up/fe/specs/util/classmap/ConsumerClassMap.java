@@ -13,12 +13,12 @@
 
 package pt.up.fe.specs.util.classmap;
 
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -44,10 +44,6 @@ public class ConsumerClassMap<T> {
         this.classMapper = classMapper;
     }
 
-    /**
-     * @param ignoreNotFound
-     * @return
-     */
     public static <T> ConsumerClassMap<T> newInstance(boolean ignoreNotFound) {
         return new ConsumerClassMap<>(ignoreNotFound, new ClassMapper());
     }
@@ -64,8 +60,6 @@ public class ConsumerClassMap<T> {
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
      *
-     * @param aClass
-     * @param value
      */
     public <VS extends T, KS extends VS> void put(Class<KS> aClass,
             Consumer<VS> value) {
@@ -84,7 +78,7 @@ public class ConsumerClassMap<T> {
 
         var function = this.map.get(mappedClass.get());
 
-        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
+        Objects.requireNonNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
         return (Consumer<T>) function;
     }
@@ -98,7 +92,6 @@ public class ConsumerClassMap<T> {
      * Calls the Consumer.accept associated with class of the value t, or throws an
      * Exception if no Consumer could be found in the map.
      *
-     * @param t
      */
     public void accept(T t) {
         Consumer<T> result = get(t);

@@ -47,8 +47,8 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("hello world test");
             ParserResult<String> result = worker.apply(input);
 
-            assertThat(result.getResult()).isEqualTo("hello");
-            assertThat(result.getModifiedString().toString()).isEqualTo("world test");
+            assertThat(result.result()).isEqualTo("hello");
+            assertThat(result.modifiedString().toString()).isEqualTo("world test");
         }
 
         @Test
@@ -83,8 +83,8 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("123abc");
             ParserResult<Integer> result = worker.apply(input);
 
-            assertThat(result.getResult()).isEqualTo(123);
-            assertThat(result.getModifiedString().toString()).isEqualTo("abc");
+            assertThat(result.result()).isEqualTo(123);
+            assertThat(result.modifiedString().toString()).isEqualTo("abc");
         }
 
         @Test
@@ -135,8 +135,8 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("\"hello\\nworld\" remaining");
             ParserResult<String> result = worker.apply(input);
 
-            assertThat(result.getResult()).isEqualTo("hello\nworld");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result()).isEqualTo("hello\nworld");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -163,8 +163,8 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("[apple,banana,cherry] after");
             ParserResult<List<String>> result = worker.apply(input);
 
-            assertThat(result.getResult()).containsExactly("apple", "banana", "cherry");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" after");
+            assertThat(result.result()).containsExactly("apple", "banana", "cherry");
+            assertThat(result.modifiedString().toString()).isEqualTo(" after");
         }
     }
 
@@ -180,8 +180,8 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("lowercase");
             ParserResult<String> result = worker.apply(input);
 
-            assertThat(result.getResult()).isEqualTo("LOWERCASE");
-            assertThat(result.getModifiedString().isEmpty()).isTrue();
+            assertThat(result.result()).isEqualTo("LOWERCASE");
+            assertThat(result.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -203,7 +203,7 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("Hello World");
             ParserResult<Integer> result = worker.apply(input);
 
-            assertThat(result.getResult()).isEqualTo(3); // e, o, o
+            assertThat(result.result()).isEqualTo(3); // e, o, o
         }
 
         @Test
@@ -219,8 +219,8 @@ public class ParserWorkerTest {
             ParserResult<String> shortResult = worker.apply(new StringSlice("hi"));
             ParserResult<String> longResult = worker.apply(new StringSlice("hello world"));
 
-            assertThat(shortResult.getResult()).isEqualTo("short");
-            assertThat(longResult.getResult()).isEqualTo("long");
+            assertThat(shortResult.result()).isEqualTo("short");
+            assertThat(longResult.result()).isEqualTo("long");
         }
     }
 
@@ -252,8 +252,8 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("first second third");
             ParserResult<String> result = worker.apply(input);
 
-            assertThat(result.getResult()).isEqualTo("first");
-            assertThat(result.getModifiedString().toString()).isEqualTo("second third");
+            assertThat(result.result()).isEqualTo("first");
+            assertThat(result.modifiedString().toString()).isEqualTo("second third");
         }
 
         @Test
@@ -264,8 +264,8 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("count me");
             ParserResult<Integer> result = worker.apply(input);
 
-            assertThat(result.getResult()).isEqualTo(8);
-            assertThat(result.getModifiedString().isEmpty()).isTrue();
+            assertThat(result.result()).isEqualTo(8);
+            assertThat(result.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -276,8 +276,8 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("static test");
             ParserResult<String> result = worker.apply(input);
 
-            assertThat(result.getResult()).isEqualTo("STATIC");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" test");
+            assertThat(result.result()).isEqualTo("STATIC");
+            assertThat(result.modifiedString().toString()).isEqualTo(" test");
         }
 
         // Static helper method for testing
@@ -310,7 +310,7 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("test");
             ParserResult<String> result = function.apply(input);
 
-            assertThat(result.getResult()).isEqualTo("processed");
+            assertThat(result.result()).isEqualTo("processed");
         }
 
         @Test
@@ -318,7 +318,7 @@ public class ParserWorkerTest {
         void testFunctionComposition() {
             ParserWorker<String> baseWorker = slice -> new ParserResult<>(slice.clear(), slice.toString().trim());
 
-            Function<ParserResult<String>, String> extractor = result -> result.getResult().toUpperCase();
+            Function<ParserResult<String>, String> extractor = result -> result.result().toUpperCase();
 
             Function<StringSlice, String> composed = baseWorker.andThen(extractor);
 
@@ -338,7 +338,7 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("TEST");
             ParserResult<String> result = chained.apply(input);
 
-            assertThat(result.getResult()).isEqualTo("test");
+            assertThat(result.result()).isEqualTo("test");
         }
     }
 
@@ -376,8 +376,8 @@ public class ParserWorkerTest {
 
             ParserResult<String> result = worker.apply(new StringSlice(""));
 
-            assertThat(result.getResult()).isEqualTo("empty");
-            assertThat(result.getModifiedString().isEmpty()).isTrue();
+            assertThat(result.result()).isEqualTo("empty");
+            assertThat(result.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -387,8 +387,8 @@ public class ParserWorkerTest {
 
             ParserResult<String> result = worker.apply(new StringSlice("input"));
 
-            assertThat(result.getResult()).isNull();
-            assertThat(result.getModifiedString().isEmpty()).isTrue();
+            assertThat(result.result()).isNull();
+            assertThat(result.modifiedString().isEmpty()).isTrue();
         }
 
         @Test
@@ -407,7 +407,7 @@ public class ParserWorkerTest {
 
             // Should work normally with valid input
             ParserResult<String> result = worker.apply(new StringSlice("valid input"));
-            assertThat(result.getResult()).isEqualTo("success");
+            assertThat(result.result()).isEqualTo("success");
         }
     }
 
@@ -430,7 +430,7 @@ public class ParserWorkerTest {
             ParserResult<Integer> result = worker.apply(new StringSlice(largeInput));
             long duration = System.nanoTime() - startTime;
 
-            assertThat(result.getResult()).isEqualTo(10000);
+            assertThat(result.result()).isEqualTo(10000);
             assertThat(duration).isLessThan(50_000_000L); // 50ms
         }
 
@@ -453,7 +453,7 @@ public class ParserWorkerTest {
 
             for (int i = 0; i < 100 && !input.isEmpty(); i++) {
                 ParserResult<String> result = worker.apply(input);
-                input = result.getModifiedString();
+                input = result.modifiedString();
             }
 
             long duration = System.nanoTime() - startTime;
@@ -510,9 +510,9 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("Name:Alice,Age:25 remaining");
             ParserResult<Person> result = worker.apply(input);
 
-            assertThat(result.getResult().name()).isEqualTo("Alice");
-            assertThat(result.getResult().age()).isEqualTo(25);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remaining");
+            assertThat(result.result().name()).isEqualTo("Alice");
+            assertThat(result.result().age()).isEqualTo(25);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
         }
 
         @Test
@@ -535,7 +535,7 @@ public class ParserWorkerTest {
             StringSlice input = new StringSlice("10,20,30,40");
             ParserResult<List<Integer>> result = worker.apply(input);
 
-            assertThat(result.getResult()).containsExactly(10, 20, 30, 40);
+            assertThat(result.result()).containsExactly(10, 20, 30, 40);
         }
 
         @Test
@@ -563,15 +563,15 @@ public class ParserWorkerTest {
 
             // Test string parsing
             ParserResult<Object> stringResult = worker.apply(new StringSlice("\"hello\""));
-            assertThat(stringResult.getResult()).isEqualTo("hello");
+            assertThat(stringResult.result()).isEqualTo("hello");
 
             // Test integer parsing
             ParserResult<Object> intResult = worker.apply(new StringSlice("42"));
-            assertThat(intResult.getResult()).isEqualTo(42);
+            assertThat(intResult.result()).isEqualTo(42);
 
             // Test boolean parsing
             ParserResult<Object> boolResult = worker.apply(new StringSlice("true"));
-            assertThat(boolResult.getResult()).isEqualTo(true);
+            assertThat(boolResult.result()).isEqualTo(true);
         }
     }
 
@@ -627,10 +627,10 @@ public class ParserWorkerTest {
 
             // Chain workers manually
             ParserResult<String> firstResult = firstWorker.apply(input);
-            ParserResult<String> secondResult = secondWorker.apply(firstResult.getModifiedString());
+            ParserResult<String> secondResult = secondWorker.apply(firstResult.modifiedString());
 
-            assertThat(firstResult.getResult()).isEqualTo("hello");
-            assertThat(secondResult.getResult()).isEqualTo("WORLD");
+            assertThat(firstResult.result()).isEqualTo("hello");
+            assertThat(secondResult.result()).isEqualTo("WORLD");
         }
     }
 }

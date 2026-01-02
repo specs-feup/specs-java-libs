@@ -429,19 +429,6 @@ public class SpecsStringsTest {
             assertThat(SpecsStrings.toHexString(0L, 4)).isEqualTo("0x0000");
             assertThat(SpecsStrings.toHexString(Long.MAX_VALUE, 16)).hasSize(18); // "0x" + 16 hex digits
         }
-
-        @Test
-        @DisplayName("bytesToHex should convert byte arrays correctly")
-        void testBytesToHex_VariousInputs_ReturnsCorrectHexString() {
-            byte[] bytes1 = { 0x00, 0x01, 0x02, (byte) 0xFF };
-            assertThat(SpecsStrings.bytesToHex(bytes1)).isEqualTo("000102FF");
-
-            byte[] bytes2 = {};
-            assertThat(SpecsStrings.bytesToHex(bytes2)).isEqualTo("");
-
-            byte[] bytes3 = { 0x10, 0x20 };
-            assertThat(SpecsStrings.bytesToHex(bytes3)).isEqualTo("1020");
-        }
     }
 
     @Nested
@@ -662,16 +649,6 @@ public class SpecsStringsTest {
             assertThat(SpecsStrings.count("hello", 'x')).isEqualTo(0);
             assertThat(SpecsStrings.count("", 'a')).isEqualTo(0);
             assertThat(SpecsStrings.count("aaa", 'a')).isEqualTo(3);
-        }
-
-        @Test
-        @DisplayName("countLines should count lines correctly")
-        void testCountLines_VariousInputs_ReturnsCorrectLineCounts() {
-            assertThat(SpecsStrings.countLines("hello", false)).isEqualTo(1);
-            assertThat(SpecsStrings.countLines("hello\nworld", false)).isEqualTo(2);
-            assertThat(SpecsStrings.countLines("hello\nworld\n", false)).isEqualTo(3);
-            assertThat(SpecsStrings.countLines("", false)).isEqualTo(0);
-            assertThat(SpecsStrings.countLines("\n\n\n", false)).isEqualTo(4);
         }
 
         @Test

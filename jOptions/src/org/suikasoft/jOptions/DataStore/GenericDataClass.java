@@ -18,7 +18,9 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 /**
  * Generic implementation of a DataClass backed by a DataStore.
  *
- * <p>This class provides a generic DataClass implementation that delegates to a DataStore.
+ * <p>
+ * This class provides a generic DataClass implementation that delegates to a
+ * DataStore.
  *
  * @param <T> the type of the DataClass
  */

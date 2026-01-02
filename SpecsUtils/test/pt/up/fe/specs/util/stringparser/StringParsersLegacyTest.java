@@ -31,8 +31,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("test content to clear");
             ParserResult<String> result = StringParsersLegacy.clear(input);
 
-            assertThat(result.getResult()).isEqualTo("test content to clear");
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo("test content to clear");
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -41,8 +41,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("");
             ParserResult<String> result = StringParsersLegacy.clear(input);
 
-            assertThat(result.getResult()).isEqualTo("");
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo("");
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -51,8 +51,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("!@#$%^&*()_+{}[]|\\:\";<>?,./ ");
             ParserResult<String> result = StringParsersLegacy.clear(input);
 
-            assertThat(result.getResult()).isEqualTo("!@#$%^&*()_+{}[]|\\:\";<>?,./ ");
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo("!@#$%^&*()_+{}[]|\\:\";<>?,./ ");
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
     }
 
@@ -66,8 +66,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("(content) remainder");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo("content");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("content");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -76,8 +76,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("() remainder");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo("");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -86,8 +86,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("(outer (inner) content) remainder");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo("outer (inner) content");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("outer (inner) content");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -96,8 +96,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("(final content)");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo("final content");
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo("final content");
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -106,8 +106,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("(content with $pecial ch@rs!) remainder");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo("content with $pecial ch@rs!");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("content with $pecial ch@rs!");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
     }
 
@@ -121,8 +121,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("123 remainder");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(123);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(123);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -131,8 +131,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("-456 remainder");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(-456);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(-456);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -141,8 +141,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("0 remainder");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(0);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(0);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -151,8 +151,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("0xFF remainder");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(255);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(255);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -161,8 +161,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("0777 remainder");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(511);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(511);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -171,8 +171,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("789");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(789);
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo(789);
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -182,8 +182,8 @@ public class StringParsersLegacyTest {
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
             // Based on the implementation, parseInt returns 0 for empty strings
-            assertThat(result.getResult()).isEqualTo(0);
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo(0);
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -192,8 +192,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("2147483647 remainder");
             ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
 
-            assertThat(result.getResult()).isEqualTo(Integer.MAX_VALUE);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(Integer.MAX_VALUE);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -217,8 +217,8 @@ public class StringParsersLegacyTest {
             ParserResult<String> result = StringParsersLegacy.parseDecodedWord(input,
                     String::toUpperCase, "default");
 
-            assertThat(result.getResult()).isEqualTo("HELLO");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" world");
+            assertThat(result.result()).isEqualTo("HELLO");
+            assertThat(result.modifiedString().toString()).isEqualTo(" world");
         }
 
         @Test
@@ -228,8 +228,8 @@ public class StringParsersLegacyTest {
             ParserResult<String> result = StringParsersLegacy.parseDecodedWord(input,
                     String::toUpperCase, "DEFAULT");
 
-            assertThat(result.getResult()).isEqualTo("DEFAULT");
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo("DEFAULT");
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -239,8 +239,8 @@ public class StringParsersLegacyTest {
             ParserResult<Integer> result = StringParsersLegacy.parseDecodedWord(input,
                     Integer::parseInt, -1);
 
-            assertThat(result.getResult()).isEqualTo(42);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(42);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -270,8 +270,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("(" + longString + ") remainder");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo(longString);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(longString);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -280,8 +280,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("(héllo wörld 日本語) remainder");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo("héllo wörld 日本語");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("héllo wörld 日本語");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -290,8 +290,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("(content\t\n\r) remainder");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo("content\t\n\r");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("content\t\n\r");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -300,8 +300,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("(a(b(c(d(e)f)g)h)i) remainder");
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
 
-            assertThat(result.getResult()).isEqualTo("a(b(c(d(e)f)g)h)i");
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo("a(b(c(d(e)f)g)h)i");
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
     }
 
@@ -316,15 +316,15 @@ public class StringParsersLegacyTest {
 
             // Parse parentheses first
             ParserResult<String> parenthesesResult = StringParsersLegacy.parseParenthesis(input);
-            assertThat(parenthesesResult.getResult()).isEqualTo("123");
+            assertThat(parenthesesResult.result()).isEqualTo("123");
 
             // Parse integer from parentheses content
-            StringSlice intInput = new StringSlice(parenthesesResult.getResult());
+            StringSlice intInput = new StringSlice(parenthesesResult.result());
             ParserResult<Integer> intResult = StringParsersLegacy.parseInt(intInput);
-            assertThat(intResult.getResult()).isEqualTo(123);
+            assertThat(intResult.result()).isEqualTo(123);
 
             // Verify remaining content
-            assertThat(parenthesesResult.getModifiedString().toString()).isEqualTo(" remainder content");
+            assertThat(parenthesesResult.modifiedString().toString()).isEqualTo(" remainder content");
         }
 
         @Test
@@ -334,15 +334,15 @@ public class StringParsersLegacyTest {
 
             // Parse first parentheses (hex)
             ParserResult<String> hex = StringParsersLegacy.parseParenthesis(input);
-            assertThat(hex.getResult()).isEqualTo("0xFF");
+            assertThat(hex.result()).isEqualTo("0xFF");
 
             // Parse second parentheses (nested)
-            ParserResult<String> nested = StringParsersLegacy.parseParenthesis(hex.getModifiedString().trim());
-            assertThat(nested.getResult()).isEqualTo("nested (content)");
+            ParserResult<String> nested = StringParsersLegacy.parseParenthesis(hex.modifiedString().trim());
+            assertThat(nested.result()).isEqualTo("nested (content)");
 
             // Parse third parentheses (decimal)
-            ParserResult<String> decimal = StringParsersLegacy.parseParenthesis(nested.getModifiedString().trim());
-            assertThat(decimal.getResult()).isEqualTo("42");
+            ParserResult<String> decimal = StringParsersLegacy.parseParenthesis(nested.modifiedString().trim());
+            assertThat(decimal.result()).isEqualTo("42");
         }
 
         @Test
@@ -353,13 +353,13 @@ public class StringParsersLegacyTest {
             // Use StringParsers.parseWord to get prefix
             ParserResult<String> wordResult = StringParsers.parseWord(input);
             // parseWord only stops at spaces, so it takes "prefix"
-            assertThat(wordResult.getResult()).isEqualTo("prefix");
+            assertThat(wordResult.result()).isEqualTo("prefix");
 
             // Use StringParsersLegacy to parse parentheses from remaining
-            StringSlice remaining = wordResult.getModifiedString().trim();
+            StringSlice remaining = wordResult.modifiedString().trim();
             ParserResult<String> parenthesesResult = StringParsersLegacy.parseParenthesis(remaining);
-            assertThat(parenthesesResult.getResult()).isEqualTo("content");
-            assertThat(parenthesesResult.getModifiedString().toString()).isEqualTo(" suffix");
+            assertThat(parenthesesResult.result()).isEqualTo("content");
+            assertThat(parenthesesResult.modifiedString().toString()).isEqualTo(" suffix");
         }
     }
 
@@ -382,7 +382,7 @@ public class StringParsersLegacyTest {
             ParserResult<String> result = StringParsersLegacy.parseParenthesis(input);
             long duration = System.nanoTime() - startTime;
 
-            assertThat(result.getResult()).hasSize(350000); // 50000 * 7 chars
+            assertThat(result.result()).hasSize(350000); // 50000 * 7 chars
             assertThat(duration).isLessThan(100_000_000L); // 100ms
         }
 
@@ -429,8 +429,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("0xFF remainder");
             ParserResult<Long> result = StringParsersLegacy.parseHex(input);
 
-            assertThat(result.getResult()).isEqualTo(255L);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(255L);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -439,8 +439,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("FF remainder");
             ParserResult<Long> result = StringParsersLegacy.parseHex(input);
 
-            assertThat(result.getResult()).isEqualTo(-1L);
-            assertThat(result.getModifiedString().toString()).isEqualTo("FF remainder");
+            assertThat(result.result()).isEqualTo(-1L);
+            assertThat(result.modifiedString().toString()).isEqualTo("FF remainder");
         }
 
         @Test
@@ -449,8 +449,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("0x1ABCDEF remainder");
             ParserResult<Long> result = StringParsersLegacy.parseHex(input);
 
-            assertThat(result.getResult()).isEqualTo(0x1ABCDEFL);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(0x1ABCDEFL);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -459,8 +459,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("0x0 remainder");
             ParserResult<Long> result = StringParsersLegacy.parseHex(input);
 
-            assertThat(result.getResult()).isEqualTo(0L);
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isEqualTo(0L);
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -469,8 +469,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("some text 0xFF");
             ParserResult<Long> result = StringParsersLegacy.reverseHex(input);
 
-            assertThat(result.getResult()).isEqualTo(255L);
-            assertThat(result.getModifiedString().toString()).isEqualTo("some text");
+            assertThat(result.result()).isEqualTo(255L);
+            assertThat(result.modifiedString().toString()).isEqualTo("some text");
         }
 
         @Test
@@ -481,8 +481,8 @@ public class StringParsersLegacyTest {
 
             // This is buggy behavior - the method fails when there's no space
             // because it tries to extract from position 1, getting "x123" instead of "0x123"
-            assertThat(result.getResult()).isEqualTo(-1L);
-            assertThat(result.getModifiedString().toString()).isEqualTo("0x123"); // String unchanged on failure
+            assertThat(result.result()).isEqualTo(-1L);
+            assertThat(result.modifiedString().toString()).isEqualTo("0x123"); // String unchanged on failure
         }
     }
 
@@ -496,8 +496,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("prefix remainder");
             ParserResult<Boolean> result = StringParsersLegacy.checkStringStarts(input, "prefix");
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -506,8 +506,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("PREFIX remainder");
             ParserResult<Boolean> result = StringParsersLegacy.checkStringStarts(input, "prefix", false);
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -516,8 +516,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("different remainder");
             ParserResult<Boolean> result = StringParsersLegacy.checkStringStarts(input, "prefix");
 
-            assertThat(result.getResult()).isFalse();
-            assertThat(result.getModifiedString().toString()).isEqualTo("different remainder");
+            assertThat(result.result()).isFalse();
+            assertThat(result.modifiedString().toString()).isEqualTo("different remainder");
         }
 
         @Test
@@ -526,8 +526,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("beginning suffix");
             ParserResult<Boolean> result = StringParsersLegacy.checkStringEnds(input, "suffix");
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo("beginning ");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo("beginning ");
         }
 
         @Test
@@ -536,8 +536,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("beginning different");
             ParserResult<Boolean> result = StringParsersLegacy.checkStringEnds(input, "suffix");
 
-            assertThat(result.getResult()).isFalse();
-            assertThat(result.getModifiedString().toString()).isEqualTo("beginning different");
+            assertThat(result.result()).isFalse();
+            assertThat(result.modifiedString().toString()).isEqualTo("beginning different");
         }
 
         @Test
@@ -546,8 +546,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("prefix remainder");
             ParserResult<Boolean> result = StringParsersLegacy.ensureStringStarts(input, "prefix");
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -566,8 +566,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("word remainder");
             ParserResult<Boolean> result = StringParsersLegacy.checkWord(input, "word");
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -576,8 +576,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("word");
             ParserResult<Boolean> result = StringParsersLegacy.checkWord(input, "word");
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -586,8 +586,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("wordy remainder");
             ParserResult<Boolean> result = StringParsersLegacy.checkWord(input, "word");
 
-            assertThat(result.getResult()).isFalse();
-            assertThat(result.getModifiedString().toString()).isEqualTo("wordy remainder");
+            assertThat(result.result()).isFalse();
+            assertThat(result.modifiedString().toString()).isEqualTo("wordy remainder");
         }
 
         @Test
@@ -596,8 +596,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("beginning middle last");
             ParserResult<Boolean> result = StringParsersLegacy.checkLastString(input, "last");
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo("beginning middle ");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo("beginning middle ");
         }
 
         @Test
@@ -606,8 +606,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("word");
             ParserResult<Boolean> result = StringParsersLegacy.checkLastString(input, "word");
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
     }
 
@@ -621,8 +621,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("-> remainder");
             ParserResult<Boolean> result = StringParsersLegacy.checkArrow(input);
 
-            assertThat(result.getResult()).isTrue();
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isTrue();
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -631,8 +631,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice(". remainder");
             ParserResult<Boolean> result = StringParsersLegacy.checkArrow(input);
 
-            assertThat(result.getResult()).isFalse();
-            assertThat(result.getModifiedString().toString()).isEqualTo(" remainder");
+            assertThat(result.result()).isFalse();
+            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
 
         @Test
@@ -656,8 +656,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("prefix <content>");
             ParserResult<String> result = StringParsersLegacy.reverseNested(input, '<', '>');
 
-            assertThat(result.getResult()).isEqualTo("content");
-            assertThat(result.getModifiedString().toString()).isEqualTo("prefix ");
+            assertThat(result.result()).isEqualTo("content");
+            assertThat(result.modifiedString().toString()).isEqualTo("prefix ");
         }
 
         @Test
@@ -666,8 +666,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("prefix <outer <inner> content>");
             ParserResult<String> result = StringParsersLegacy.reverseNested(input, '<', '>');
 
-            assertThat(result.getResult()).isEqualTo("outer <inner> content");
-            assertThat(result.getModifiedString().toString()).isEqualTo("prefix ");
+            assertThat(result.result()).isEqualTo("outer <inner> content");
+            assertThat(result.modifiedString().toString()).isEqualTo("prefix ");
         }
 
         @Test
@@ -676,8 +676,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("prefix content");
             ParserResult<String> result = StringParsersLegacy.reverseNested(input, '<', '>');
 
-            assertThat(result.getResult()).isEqualTo("");
-            assertThat(result.getModifiedString().toString()).isEqualTo("prefix content");
+            assertThat(result.result()).isEqualTo("");
+            assertThat(result.modifiedString().toString()).isEqualTo("prefix content");
         }
 
         @Test
@@ -686,8 +686,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("prefix <x>");
             ParserResult<String> result = StringParsersLegacy.reverseNested(input, '<', '>');
 
-            assertThat(result.getResult()).isEqualTo("x");
-            assertThat(result.getModifiedString().toString()).isEqualTo("prefix ");
+            assertThat(result.result()).isEqualTo("x");
+            assertThat(result.modifiedString().toString()).isEqualTo("prefix ");
         }
     }
 
@@ -701,8 +701,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("'element' remainder");
             ParserResult<List<String>> result = StringParsersLegacy.parsePrimesSeparatedByString(input, ",");
 
-            assertThat(result.getResult()).containsExactly("element");
-            assertThat(result.getModifiedString().toString()).isEqualTo("remainder");
+            assertThat(result.result()).containsExactly("element");
+            assertThat(result.modifiedString().toString()).isEqualTo("remainder");
         }
 
         @Test
@@ -711,8 +711,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("'first','second','third' remainder");
             ParserResult<List<String>> result = StringParsersLegacy.parsePrimesSeparatedByString(input, ",");
 
-            assertThat(result.getResult()).containsExactly("first", "second", "third");
-            assertThat(result.getModifiedString().toString()).isEqualTo("remainder");
+            assertThat(result.result()).containsExactly("first", "second", "third");
+            assertThat(result.modifiedString().toString()).isEqualTo("remainder");
         }
 
         @Test
@@ -721,8 +721,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("");
             ParserResult<List<String>> result = StringParsersLegacy.parsePrimesSeparatedByString(input, ",");
 
-            assertThat(result.getResult()).isEmpty();
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEmpty();
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -741,8 +741,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("'a';'b';'c' remainder");
             ParserResult<List<String>> result = StringParsersLegacy.parsePrimesSeparatedByString(input, ";");
 
-            assertThat(result.getResult()).containsExactly("a", "b", "c");
-            assertThat(result.getModifiedString().toString()).isEqualTo("remainder");
+            assertThat(result.result()).containsExactly("a", "b", "c");
+            assertThat(result.modifiedString().toString()).isEqualTo("remainder");
         }
     }
 
@@ -756,8 +756,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("content to parse");
             ParserResult<String> result = StringParsersLegacy.parseRemaining(input);
 
-            assertThat(result.getResult()).isEqualTo("content to parse");
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo("content to parse");
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -766,8 +766,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice("");
             ParserResult<String> result = StringParsersLegacy.parseRemaining(input);
 
-            assertThat(result.getResult()).isEqualTo("");
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo("");
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
 
         @Test
@@ -782,8 +782,8 @@ public class StringParsersLegacyTest {
             StringSlice input = new StringSlice(longString);
             ParserResult<String> result = StringParsersLegacy.parseRemaining(input);
 
-            assertThat(result.getResult()).isEqualTo(longString);
-            assertThat(result.getModifiedString().toString()).isEqualTo("");
+            assertThat(result.result()).isEqualTo(longString);
+            assertThat(result.modifiedString().toString()).isEqualTo("");
         }
     }
 }

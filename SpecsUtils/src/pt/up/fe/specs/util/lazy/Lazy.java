@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.lazy;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import pt.up.fe.specs.util.function.SerializableSupplier;
@@ -34,10 +35,12 @@ public interface Lazy<T> extends Supplier<T> {
     boolean isInitialized();
 
     static <T> Lazy<T> newInstance(Supplier<T> supplier) {
+        Objects.requireNonNull(supplier, () -> "Supplier cannot be null");
         return new ThreadSafeLazy<>(supplier);
     }
 
     static <T> Lazy<T> newInstanceSerializable(SerializableSupplier<T> supplier) {
+        Objects.requireNonNull(supplier, () -> "SerializableSupplier cannot be null");
         return new ThreadSafeLazy<>(supplier);
     }
 }

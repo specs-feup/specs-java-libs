@@ -24,7 +24,9 @@ import pt.up.fe.specs.util.parsing.StringCodec;
 /**
  * Implementation of {@link DataKey} that supports types with generics.
  *
- * <p>This class allows the creation of data keys for values with generic types, using an example instance to infer the value class.
+ * <p>
+ * This class allows the creation of data keys for values with generic types,
+ * using an example instance to infer the value class.
  *
  * @param <T> the type of value associated with this key
  */
@@ -34,26 +36,30 @@ public class GenericKey<T> extends ADataKey<T> {
      * Example instance of the value type, used for class inference.
      */
     private final T exampleInstance;
+
     /**
-     * Cached value class, may be set explicitly or inferred from the example instance.
+     * Cached value class, may be set explicitly or inferred from the example
+     * instance.
      */
     private transient Class<T> valueClass = null;
 
     /**
-     * Constructs a GenericKey with the given id, example instance, and default value provider.
+     * Constructs a GenericKey with the given id, example instance, and default
+     * value provider.
      *
-     * @param id the key id
+     * @param id              the key id
      * @param exampleInstance an example instance of the value type
-     * @param defaultValue the default value provider
+     * @param defaultValue    the default value provider
      */
     public GenericKey(String id, T exampleInstance, Supplier<? extends T> defaultValue) {
         this(id, exampleInstance, defaultValue, null, null, null, null, null, null, null, null);
     }
 
     /**
-     * Constructs a GenericKey with the given id and example instance. The default value provider returns null.
+     * Constructs a GenericKey with the given id and example instance. The default
+     * value provider returns null.
      *
-     * @param id the key id
+     * @param id              the key id
      * @param exampleInstance an example instance of the value type
      */
     public GenericKey(String id, T exampleInstance) {
@@ -63,17 +69,17 @@ public class GenericKey<T> extends ADataKey<T> {
     /**
      * Full constructor for GenericKey with all options.
      *
-     * @param id the key id
-     * @param exampleInstance an example instance of the value type
+     * @param id                   the key id
+     * @param exampleInstance      an example instance of the value type
      * @param defaultValueProvider the default value provider
-     * @param decoder the string decoder/encoder for the value type
-     * @param customGetter a custom getter for the value
-     * @param panelProvider provider for UI panels
-     * @param label a label for the key
-     * @param definition the store definition
-     * @param copyFunction function to copy values
-     * @param customSetter a custom setter for the value
-     * @param extraData extra data for the key
+     * @param decoder              the string decoder/encoder for the value type
+     * @param customGetter         a custom getter for the value
+     * @param panelProvider        provider for UI panels
+     * @param label                a label for the key
+     * @param definition           the store definition
+     * @param copyFunction         function to copy values
+     * @param customSetter         a custom setter for the value
+     * @param extraData            extra data for the key
      */
     protected GenericKey(String id, T exampleInstance, Supplier<? extends T> defaultValueProvider,
             StringCodec<T> decoder, CustomGetter<T> customGetter, KeyPanelProvider<T> panelProvider, String label,
@@ -85,7 +91,8 @@ public class GenericKey<T> extends ADataKey<T> {
     }
 
     /**
-     * Returns the class of the value type. If not explicitly set, it is inferred from the example instance.
+     * Returns the class of the value type. If not explicitly set, it is inferred
+     * from the example instance.
      *
      * @return the value class
      */
@@ -111,16 +118,16 @@ public class GenericKey<T> extends ADataKey<T> {
     /**
      * Creates a copy of this key with the given parameters.
      *
-     * @param id the key id
+     * @param id                   the key id
      * @param defaultValueProvider the default value provider
-     * @param decoder the string decoder/encoder
-     * @param customGetter a custom getter
-     * @param panelProvider provider for UI panels
-     * @param label a label for the key
-     * @param definition the store definition
-     * @param copyFunction function to copy values
-     * @param customSetter a custom setter
-     * @param extraData extra data for the key
+     * @param decoder              the string decoder/encoder
+     * @param customGetter         a custom getter
+     * @param panelProvider        provider for UI panels
+     * @param label                a label for the key
+     * @param definition           the store definition
+     * @param copyFunction         function to copy values
+     * @param customSetter         a custom setter
+     * @param extraData            extra data for the key
      * @return a new GenericKey instance
      */
     @Override
@@ -133,8 +140,8 @@ public class GenericKey<T> extends ADataKey<T> {
     }
 
     /**
-     * Due to the way Java implements generics, it is not possible to verify if a value is compatible based only on the
-     * class of the example instance.
+     * Due to the way Java implements generics, it is not possible to verify if a
+     * value is compatible based only on the class of the example instance.
      *
      * @return false always, as generic type checking is not possible at runtime
      */

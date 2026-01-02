@@ -34,7 +34,7 @@ class GenericResourceTest {
             // Then
             assertThat(resource).isNotNull();
             assertThat(resource.getResource()).isEqualTo(TEST_RESOURCE);
-            assertThat(resource.getVersion()).isEqualTo(ResourceProvider.getDefaultVersion());
+            assertThat(resource.version()).isEqualTo(ResourceProvider.getDefaultVersion());
         }
 
         @Test
@@ -46,7 +46,7 @@ class GenericResourceTest {
             // Then
             assertThat(resource).isNotNull();
             assertThat(resource.getResource()).isNull();
-            assertThat(resource.getVersion()).isEqualTo(ResourceProvider.getDefaultVersion());
+            assertThat(resource.version()).isEqualTo(ResourceProvider.getDefaultVersion());
         }
 
         @Test
@@ -58,7 +58,7 @@ class GenericResourceTest {
             // Then
             assertThat(resource).isNotNull();
             assertThat(resource.getResource()).isEmpty();
-            assertThat(resource.getVersion()).isEqualTo(ResourceProvider.getDefaultVersion());
+            assertThat(resource.version()).isEqualTo(ResourceProvider.getDefaultVersion());
         }
     }
 
@@ -75,7 +75,7 @@ class GenericResourceTest {
             // Then
             assertThat(resource).isNotNull();
             assertThat(resource.getResource()).isEqualTo(TEST_RESOURCE);
-            assertThat(resource.getVersion()).isEqualTo(TEST_VERSION);
+            assertThat(resource.version()).isEqualTo(TEST_VERSION);
         }
 
         @Test
@@ -87,7 +87,7 @@ class GenericResourceTest {
             // Then
             assertThat(resource).isNotNull();
             assertThat(resource.getResource()).isNull();
-            assertThat(resource.getVersion()).isNull();
+            assertThat(resource.version()).isNull();
         }
 
         @Test
@@ -99,7 +99,7 @@ class GenericResourceTest {
             // Then
             assertThat(resource).isNotNull();
             assertThat(resource.getResource()).isEqualTo(TEST_RESOURCE);
-            assertThat(resource.getVersion()).isNull();
+            assertThat(resource.version()).isNull();
         }
 
         @Test
@@ -111,7 +111,7 @@ class GenericResourceTest {
             // Then
             assertThat(resource).isNotNull();
             assertThat(resource.getResource()).isEmpty();
-            assertThat(resource.getVersion()).isEmpty();
+            assertThat(resource.version()).isEmpty();
         }
     }
 
@@ -144,7 +144,7 @@ class GenericResourceTest {
         @DisplayName("getVersion should return constructor value")
         void getVersionShouldReturnConstructorValue() {
             // When/Then
-            assertThat(resource.getVersion()).isEqualTo(TEST_VERSION);
+            assertThat(resource.version()).isEqualTo(TEST_VERSION);
         }
     }
 
@@ -162,7 +162,7 @@ class GenericResourceTest {
             GenericResource resource = new GenericResource(TEST_RESOURCE);
 
             // Then
-            assertThat(resource.getVersion()).isEqualTo(defaultVersion);
+            assertThat(resource.version()).isEqualTo(defaultVersion);
         }
 
         @Test
@@ -175,8 +175,8 @@ class GenericResourceTest {
             GenericResource resource = new GenericResource(TEST_RESOURCE, customVersion);
 
             // Then
-            assertThat(resource.getVersion()).isEqualTo(customVersion);
-            assertThat(resource.getVersion()).isNotEqualTo(ResourceProvider.getDefaultVersion());
+            assertThat(resource.version()).isEqualTo(customVersion);
+            assertThat(resource.version()).isNotEqualTo(ResourceProvider.getDefaultVersion());
         }
     }
 
@@ -251,7 +251,7 @@ class GenericResourceTest {
             GenericResource resource = new GenericResource(TEST_RESOURCE, semanticVersion);
 
             // Then
-            assertThat(resource.getVersion()).isEqualTo(semanticVersion);
+            assertThat(resource.version()).isEqualTo(semanticVersion);
         }
 
         @Test
@@ -264,7 +264,7 @@ class GenericResourceTest {
             GenericResource resource = new GenericResource(TEST_RESOURCE, timestampVersion);
 
             // Then
-            assertThat(resource.getVersion()).isEqualTo(timestampVersion);
+            assertThat(resource.version()).isEqualTo(timestampVersion);
         }
 
         @Test
@@ -277,7 +277,7 @@ class GenericResourceTest {
             GenericResource resource = new GenericResource(TEST_RESOURCE, gitHashVersion);
 
             // Then
-            assertThat(resource.getVersion()).isEqualTo(gitHashVersion);
+            assertThat(resource.version()).isEqualTo(gitHashVersion);
         }
     }
 
@@ -294,8 +294,8 @@ class GenericResourceTest {
             // When - Get values multiple times
             String resource1 = resource.getResource();
             String resource2 = resource.getResource();
-            String version1 = resource.getVersion();
-            String version2 = resource.getVersion();
+            String version1 = resource.version();
+            String version2 = resource.version();
 
             // Then - Values should be consistent
             assertThat(resource1).isEqualTo(resource2);
@@ -320,7 +320,7 @@ class GenericResourceTest {
 
             // Then
             assertThat(resource1.getResource()).isEqualTo(resource2.getResource());
-            assertThat(resource1.getVersion()).isEqualTo(resource2.getVersion());
+            assertThat(resource1.version()).isEqualTo(resource2.version());
         }
 
         @Test
@@ -332,7 +332,7 @@ class GenericResourceTest {
 
             // Then
             assertThat(resource1.getResource()).isNotEqualTo(resource2.getResource());
-            assertThat(resource1.getVersion()).isNotEqualTo(resource2.getVersion());
+            assertThat(resource1.version()).isNotEqualTo(resource2.version());
         }
 
         @Test
@@ -344,8 +344,8 @@ class GenericResourceTest {
 
             // Then
             assertThat(resource1.getResource()).isEqualTo(resource2.getResource());
-            assertThat(resource1.getVersion()).isEqualTo(resource2.getVersion());
-            assertThat(resource1.getVersion()).isEqualTo(ResourceProvider.getDefaultVersion());
+            assertThat(resource1.version()).isEqualTo(resource2.version());
+            assertThat(resource1.version()).isEqualTo(ResourceProvider.getDefaultVersion());
         }
     }
 
@@ -376,7 +376,7 @@ class GenericResourceTest {
             GenericResource resource = new GenericResource(TEST_RESOURCE, whitespaceVersion);
 
             // Then
-            assertThat(resource.getVersion()).isEqualTo(whitespaceVersion);
+            assertThat(resource.version()).isEqualTo(whitespaceVersion);
         }
 
         @Test

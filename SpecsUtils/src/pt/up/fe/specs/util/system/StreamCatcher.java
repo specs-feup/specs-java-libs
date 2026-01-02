@@ -28,7 +28,7 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class StreamCatcher implements Runnable {
 
-    private static String NEW_LINE = System.getProperty("line.separator");
+    private static final String NEW_LINE = System.lineSeparator();
 
     /**
      * The types of output supported by this class.
@@ -81,7 +81,7 @@ public class StreamCatcher implements Runnable {
             // Reading individual characters instead of lines to prevent
             // blocking the execution due to the program filling the buffer before a newline
             // appears int character = -1;
-            String stdline = null;
+            String stdline;
             while ((stdline = reader.readLine()) != null) {
                 if (this.printOutput) {
                     this.type.print(stdline + StreamCatcher.NEW_LINE);

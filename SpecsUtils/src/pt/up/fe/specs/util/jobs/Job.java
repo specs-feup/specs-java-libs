@@ -39,21 +39,21 @@ public class Job {
 
     /**
      * Launches the compilation job in a separate process.
-     * 
-     * @return
+     *
      */
     public int run() {
 
         int result = this.execution.run();
 
-        if (result != 0) {
-            SpecsLogs.msgInfo("Execution returned with error value '" + result + "'");
-            return -1;
-        }
-
+        // Check for interruption regardless of return code
         if (this.execution.isInterrupted()) {
             this.interrupted = true;
             return 0;
+        }
+
+        if (result != 0) {
+            SpecsLogs.msgInfo("Execution returned with error value '" + result + "'");
+            return -1;
         }
 
         return 0;
@@ -63,11 +63,6 @@ public class Job {
         return this.interrupted;
     }
 
-    /**
-     * @param commandArgs
-     * @param workingDir
-     * @return
-     */
     public static Job singleProgram(List<String> commandArgs, String workingDir) {
         ProcessExecution exec = new ProcessExecution(commandArgs, workingDir);
         return new Job(exec);
@@ -77,11 +72,6 @@ public class Job {
         return singleJavaCall(runnable, null);
     }
 
-    /**
-     * @param commandArgs
-     * @param workingDir
-     * @return
-     */
     public static Job singleJavaCall(Runnable runnable, String description) {
         JavaExecution exec = new JavaExecution(runnable);
 
@@ -101,13 +91,12 @@ public class Job {
     }
 
     public String getCommandString() {
-        if (!(this.execution instanceof ProcessExecution)) {
+        if (!(this.execution instanceof ProcessExecution pExecution)) {
             SpecsLogs
                     .msgInfo("First job is not of class 'ProcessExecution', returning empty string");
             return "";
         }
 
-        ProcessExecution pExecution = (ProcessExecution) this.execution;
         return pExecution.getCommandString();
     }
 

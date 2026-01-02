@@ -18,8 +18,12 @@ package org.specs.generators.java.enums;
  */
 public enum Annotation {
 
-    OVERRIDE("Override"), DEPRECATED("Deprecated"), SUPPRESSWARNINGS("SuppressWarnings"), SAFEVARARGS(
-            "SafeVarargs"), FUNCTIONALINTERFACE("FunctionalInterface"), TARGET("Target");
+    OVERRIDE("Override"),
+    DEPRECATED("Deprecated"),
+    SUPPRESSWARNINGS("SuppressWarnings"),
+    SAFEVARARGS("SafeVarargs"),
+    FUNCTIONALINTERFACE("FunctionalInterface"),
+    TARGET("Target");
 
     private String tag;
     private final String AtSign = "@";

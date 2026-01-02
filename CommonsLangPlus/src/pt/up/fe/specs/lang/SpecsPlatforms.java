@@ -16,7 +16,8 @@ package pt.up.fe.specs.lang;
 import org.apache.commons.lang3.SystemUtils;
 
 /**
- * Utility class providing wrappers around Apache commons-lang methods for system platform identification.
+ * Utility class providing wrappers around Apache commons-lang methods for
+ * system platform identification.
  * <p>
  * Includes methods to check the current operating system and platform details.
  *
@@ -50,7 +51,7 @@ public class SpecsPlatforms {
      * @return true if Linux ARM, false otherwise
      */
     public static boolean isLinuxArm() {
-        return SystemUtils.IS_OS_LINUX && "arm".equals(System.getProperty("os.arch").toLowerCase());
+        return SystemUtils.IS_OS_LINUX && "arm".equalsIgnoreCase(System.getProperty("os.arch"));
     }
 
     /**

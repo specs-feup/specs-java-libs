@@ -28,12 +28,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GitRepos {
 
     /**
-     * Maps repo names to the folder where they are in the system. One instance per JVM.
+     * Maps repo names to the folder where they are in the system. One instance per
+     * JVM.
      */
     private static final Map<String, GitRepo> REPOS = new ConcurrentHashMap<>();
 
     /**
-     * Returns a {@link GitRepo} instance for the given repository path. If not cached, creates and caches a new instance.
+     * Returns a {@link GitRepo} instance for the given repository path. If not
+     * cached, creates and caches a new instance.
      *
      * @param repositoryPath the path to the repository
      * @return the GitRepo instance

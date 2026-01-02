@@ -34,11 +34,7 @@ public class Table<X, Y, V> {
     }
 
     public void put(X x, Y y, V value) {
-        Map<Y, V> yMap = this.bimap.get(x);
-        if (yMap == null) {
-            yMap = new HashMap<>();
-            this.bimap.put(x, yMap);
-        }
+        Map<Y, V> yMap = this.bimap.computeIfAbsent(x, k -> new HashMap<>());
 
         yMap.put(y, value);
         this.yKeys.add(y);

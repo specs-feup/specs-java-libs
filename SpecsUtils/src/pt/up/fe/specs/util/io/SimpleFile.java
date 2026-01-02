@@ -35,10 +35,7 @@ public interface SimpleFile {
 
     /**
      * Default constructor.
-     * 
-     * @param filename
-     * @param contents
-     * @return
+     *
      */
     static SimpleFile newInstance(String filename, String contents) {
         return new SimpleFile() {

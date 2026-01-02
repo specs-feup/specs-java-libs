@@ -26,9 +26,10 @@ import pt.up.fe.specs.util.treenode.transform.util.TraversalStrategy;
 public class RemoveRedundantParenthesisTransform implements VisitAllTransform {
 
     /**
-     * Applies the transform to all children of the given node, removing redundant parenthesis where appropriate.
+     * Applies the transform to all children of the given node, removing redundant
+     * parenthesis where appropriate.
      *
-     * @param node the node to transform
+     * @param node  the node to transform
      * @param queue the transform queue
      */
     @Override

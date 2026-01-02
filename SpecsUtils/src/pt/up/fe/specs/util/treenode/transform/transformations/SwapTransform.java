@@ -27,10 +27,7 @@ public class SwapTransform<K extends TreeNode<K>> extends TwoOperandTransform<K>
      * <p>
      * If 'swapSubtrees' is enabled, this transformation is not allowed if any of
      * the nodes is a part of the subtree of the other.
-     * 
-     * @param node1
-     * @param node2
-     * @param swapSubtrees
+     *
      */
     public SwapTransform(K node1, K node2, boolean swapSubtrees) {
         super("swap", node1, node2);

@@ -21,8 +21,7 @@ public interface NodeTransform<K extends TreeNode<K>> {
 
     /**
      * The name of the transformation.
-     * 
-     * @return
+     *
      */
     String getType();
 

@@ -30,7 +30,7 @@ public class SymjaInteger extends SymjaNode {
     /**
      * Constructs a SymjaInteger node.
      *
-     * @param data the data store
+     * @param data     the data store
      * @param children the child nodes
      */
     public SymjaInteger(DataStore data, Collection<? extends SymjaNode> children) {

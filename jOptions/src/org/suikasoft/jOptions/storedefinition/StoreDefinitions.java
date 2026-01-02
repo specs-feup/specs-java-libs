@@ -21,7 +21,8 @@ import org.suikasoft.jOptions.Datakey.DataKey;
 import pt.up.fe.specs.util.utilities.CachedItems;
 
 /**
- * Utility class for building {@link StoreDefinition} instances from Java interfaces.
+ * Utility class for building {@link StoreDefinition} instances from Java
+ * interfaces.
  */
 public class StoreDefinitions {
 
@@ -39,7 +40,8 @@ public class StoreDefinitions {
     }
 
     /**
-     * Collects all public static DataKey fields and builds a StoreDefinition with those fields.
+     * Collects all public static DataKey fields and builds a StoreDefinition with
+     * those fields.
      *
      * @param aClass the class to extract DataKeys from
      * @return a StoreDefinition with the DataKeys from the class
@@ -52,7 +54,8 @@ public class StoreDefinitions {
     }
 
     /**
-     * Private method to collect all public static DataKey fields and build a StoreDefinition.
+     * Private method to collect all public static DataKey fields and build a
+     * StoreDefinition.
      *
      * @param aClass the class to extract DataKeys from
      * @return a StoreDefinition with the DataKeys from the class

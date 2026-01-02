@@ -36,13 +36,13 @@ public class EnumCodec<T extends Enum<T>> implements StringCodec<T> {
      * @param anEnum the enum class
      */
     public EnumCodec(Class<T> anEnum) {
-        this(anEnum, value -> value.toString());
+        this(anEnum, Enum::toString);
     }
 
     /**
      * Creates an EnumCodec with a custom encoder function.
      *
-     * @param anEnum the enum class
+     * @param anEnum  the enum class
      * @param encoder function to encode enum values to string
      */
     public EnumCodec(Class<T> anEnum, Function<T, String> encoder) {

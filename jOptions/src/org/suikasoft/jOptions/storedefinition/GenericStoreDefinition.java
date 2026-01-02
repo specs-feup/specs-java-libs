@@ -34,10 +34,11 @@ public class GenericStoreDefinition extends AStoreDefinition {
     }
 
     /**
-     * Creates a new store definition with the given name, sections, and default values.
+     * Creates a new store definition with the given name, sections, and default
+     * values.
      *
-     * @param appName the name of the store
-     * @param sections the sections
+     * @param appName       the name of the store
+     * @param sections      the sections
      * @param defaultValues the default values
      */
     GenericStoreDefinition(String appName, List<StoreSection> sections, DataStore defaultValues) {

@@ -15,12 +15,12 @@ package pt.up.fe.specs.util.classmap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import pt.up.fe.specs.util.Preconditions;
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
@@ -47,11 +47,11 @@ public class MultiFunction<T, R> {
     private final Map<Class<? extends T>, BiFunction<? extends MultiFunction<T, R>, ? extends T, ? extends R>> map;
 
     // Can be null
-    private final R defaultValue;
+    private R defaultValue;
     private final ClassMapper classMapper;
 
     // Can be null
-    private final BiFunction<MultiFunction<T, R>, T, R> defaultFunction;
+    private BiFunction<MultiFunction<T, R>, T, R> defaultFunction;
 
     public MultiFunction() {
         this(new HashMap<>(), null, null, new ClassMapper());
@@ -91,9 +91,7 @@ public class MultiFunction<T, R> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <EM extends MultiFunction<T, R>, ET extends T, K extends ET> void put(Class<K> aClass,
             BiFunction<EM, ET, R> value) {
@@ -119,7 +117,7 @@ public class MultiFunction<T, R> {
 
         var function = this.map.get(mappedClass.get());
 
-        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
+        Objects.requireNonNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
         return Optional.of((BiFunction<MultiFunction<T, R>, T, R>) function);
     }
@@ -132,8 +130,7 @@ public class MultiFunction<T, R> {
     /**
      * Calls the Function.apply associated with class of the value t, or throws an
      * Exception if no mapping could be found.
-     * 
-     * @param t
+     *
      */
     public R apply(T t) {
         Optional<BiFunction<MultiFunction<T, R>, T, R>> function = get(t);
@@ -161,7 +158,7 @@ public class MultiFunction<T, R> {
         }
 
         if (this.defaultFunction != null) {
-            return Optional.of(this.defaultFunction.apply(this, t));
+            return Optional.ofNullable(this.defaultFunction.apply(this, t));
         }
 
         return Optional.empty();
@@ -169,22 +166,24 @@ public class MultiFunction<T, R> {
 
     /**
      * Sets the default value, backed up by the same map.
-     * 
-     * @param defaultValue
-     * @return
+     *
      */
     public MultiFunction<T, R> setDefaultValue(R defaultValue) {
-        return new MultiFunction<>(this.map, defaultValue, null, this.classMapper);
+        this.defaultValue = defaultValue;
+        this.defaultFunction = null;
+        return this;
     }
 
     public <ER extends R> MultiFunction<T, R> setDefaultFunction(Function<T, ER> defaultFunction) {
         return setDefaultFunction((bi, in) -> defaultFunction.apply(in));
     }
 
+    @SuppressWarnings("unchecked")
     public <EM extends MultiFunction<T, R>> MultiFunction<T, R> setDefaultFunction(
             BiFunction<EM, T, R> defaultFunction) {
-
-        return new MultiFunction<>(this.map, null, defaultFunction, this.classMapper);
+        this.defaultValue = null;
+        this.defaultFunction = (BiFunction<MultiFunction<T, R>, T, R>) defaultFunction;
+        return this;
     }
 
 }

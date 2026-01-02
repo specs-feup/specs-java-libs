@@ -13,11 +13,13 @@
 
 package pt.up.fe.specs.util.parsing;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.function.Function;
 
 class GenericCodec<T> implements StringCodec<T>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final Function<T, String> encoder;

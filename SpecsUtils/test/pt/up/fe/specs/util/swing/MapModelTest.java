@@ -289,22 +289,19 @@ class MapModelTest {
 
             // Then
             assertThat(model.getValueAt(0, 1)).isEqualTo(999);
-            // NOTE: Due to Bug 1, the original map is not updated as the model uses an
-            // internal copy
-            // assertThat(testMap.get("key1")).isEqualTo(999); // This would fail due to the
-            // bug
         }
 
         @Test
-        @DisplayName("Should throw exception for row-wise value updates")
-        void shouldThrowExceptionForRowWiseValueUpdates() {
+        @DisplayName("Should support row-wise value updates")
+        void shouldSupportRowWiseValueUpdates() {
             // Given
             MapModel<String, Integer> model = new MapModel<>(testMap, true, Integer.class);
 
-            // When/Then - Row-wise updates are not implemented (Bug 2)
-            assertThatThrownBy(() -> model.setValueAt(999, 1, 0))
-                    .isInstanceOf(UnsupportedOperationException.class)
-                    .hasMessage("Not yet implemented");
+            // When
+            model.setValueAt(999, 1, 0); // Update value at first column in row-wise model
+
+            // Then - row-wise updates should work
+            assertThat(model.getValueAt(1, 0)).isEqualTo(999);
         }
 
         @Test
@@ -320,16 +317,15 @@ class MapModelTest {
         }
 
         @Test
-        @DisplayName("Should throw exception for key updates with type mismatch first")
-        void shouldThrowExceptionForKeyUpdatesWithTypeMismatchFirst() {
+        @DisplayName("Should throw UnsupportedOperationException for key updates before type checking")
+        void shouldThrowUnsupportedOperationExceptionForKeyUpdatesBeforeTypeChecking() {
             // Given
             MapModel<String, Integer> model = new MapModel<>(testMap, false, Integer.class);
 
-            // When/Then - Due to Bug 4, type checking happens before operation support
-            // checking
+            // When/Then - operation support checking happens before type checking
             assertThatThrownBy(() -> model.setValueAt("newkey", 0, 0))
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessageContaining("expected type");
+                    .isInstanceOf(UnsupportedOperationException.class)
+                    .hasMessage("Not yet implemented");
         }
 
         @Test
@@ -345,14 +341,15 @@ class MapModelTest {
         }
 
         @Test
-        @DisplayName("Should handle null value class in type checking")
-        void shouldHandleNullValueClassInTypeChecking() {
+        @DisplayName("Should handle null value class gracefully")
+        void shouldHandleNullValueClassGracefully() {
             // Given
             MapModel<String, Integer> model = new MapModel<>(testMap, false, null);
 
-            // When/Then - Should throw NPE when trying to type check with null class
-            assertThatThrownBy(() -> model.setValueAt(999, 0, 1))
-                    .isInstanceOf(NullPointerException.class);
+            // When/Then - With null value class, type checking should be skipped and update
+            // should work
+            model.setValueAt(999, 0, 1);
+            assertThat(model.getValueAt(0, 1)).isEqualTo(999);
         }
     }
 
@@ -452,7 +449,7 @@ class MapModelTest {
             // When
             testMap.put("key1", 999);
 
-            // Then - Due to Bug 1, changes to original map are not reflected
+            // Then - Due to defensive copy, changes to original map are not reflected
             assertThat(model.getValueAt(0, 1)).isEqualTo(100); // Still original value
         }
 
@@ -484,7 +481,7 @@ class MapModelTest {
             // When
             model.setValueAt(777, 1, 1); // Update key2's value
 
-            // Then - Due to Bug 1, original map is not updated
+            // Then - Due to defensive copy, original map is not updated
             assertThat(testMap.get("key2")).isEqualTo(200); // Original value unchanged
             assertThat(testMap.size()).isEqualTo(3); // Size unchanged
             assertThat(testMap.containsKey("key1")).isTrue(); // Other entries intact

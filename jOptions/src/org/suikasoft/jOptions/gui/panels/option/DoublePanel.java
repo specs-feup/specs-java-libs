@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.FlowLayout;
+import java.io.Serial;
 
 import javax.swing.JTextField;
 
@@ -26,10 +27,12 @@ import pt.up.fe.specs.util.SpecsStrings;
 /**
  * Panel for editing double values using a JTextField.
  *
- * <p>This panel provides a text field for double DataKey values in the GUI.
+ * <p>
+ * This panel provides a text field for double DataKey values in the GUI.
  */
 public class DoublePanel extends KeyPanel<Double> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -40,7 +43,7 @@ public class DoublePanel extends KeyPanel<Double> {
     /**
      * Constructs a DoublePanel for the given DataKey and DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public DoublePanel(DataKey<Double> key, DataStore data) {

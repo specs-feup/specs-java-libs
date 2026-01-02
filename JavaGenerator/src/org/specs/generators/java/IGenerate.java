@@ -15,8 +15,8 @@ package org.specs.generators.java;
 import org.specs.generators.java.utils.Utils;
 
 /**
- * Interface for code generation in JavaGenerator. Implementing classes should provide a method to generate Java code
- * with a specified indentation level.
+ * Interface for code generation in JavaGenerator. Implementing classes should
+ * provide a method to generate Java code with a specified indentation level.
  *
  * @author Tiago
  */

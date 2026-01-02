@@ -45,7 +45,7 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
     /**
      * Creates a new instance of a tuple with the given elements.
      *
-     * @param <T> the type of the elements in the tuple
+     * @param <T>      the type of the elements in the tuple
      * @param elements the elements to include in the tuple
      * @return a new tuple containing the given elements
      */
@@ -56,7 +56,7 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
     /**
      * Creates a new instance of a tuple with the given elements.
      *
-     * @param <T> the type of the elements in the tuple
+     * @param <T>      the type of the elements in the tuple
      * @param elements the elements to include in the tuple
      * @return a new tuple containing the given elements
      */
@@ -109,7 +109,7 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
     /**
      * Replaces the element at the specified index with the given element.
      *
-     * @param index the index of the element to replace
+     * @param index   the index of the element to replace
      * @param element the new element
      * @return the previous element at the specified index
      */
@@ -121,7 +121,7 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
     /**
      * Adds an element at the specified index.
      *
-     * @param index the index at which to add the element
+     * @param index   the index at which to add the element
      * @param element the element to add
      */
     @Override
@@ -144,7 +144,8 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
      * Checks if this tuple is equal to another object.
      *
      * @param o the object to compare
-     * @return true if the object is a tuple and has the same elements, false otherwise
+     * @return true if the object is a tuple and has the same elements, false
+     *         otherwise
      */
     @Override
     public boolean equals(Object o) {
@@ -168,7 +169,8 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
      * Compares this tuple to another tuple.
      *
      * @param o the tuple to compare
-     * @return a negative integer, zero, or a positive integer as this tuple is less than, equal to, or greater than the specified tuple
+     * @return a negative integer, zero, or a positive integer as this tuple is less
+     *         than, equal to, or greater than the specified tuple
      */
     @Override
     public int compareTo(Tuple<T> o) {
@@ -178,10 +180,11 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
     /**
      * Default comparator for tuples.
      *
-     * @param tuple the first tuple
+     * @param tuple  the first tuple
      * @param tuple2 the second tuple
-     * @param <T> the type of the elements in the tuples
-     * @return a negative integer, zero, or a positive integer as the first tuple is less than, equal to, or greater than the second tuple
+     * @param <T>    the type of the elements in the tuples
+     * @return a negative integer, zero, or a positive integer as the first tuple is
+     *         less than, equal to, or greater than the second tuple
      */
     public static <T> Integer defaultComparator(Tuple<T> tuple, Tuple<T> tuple2) {
         CompareToBuilder compareToBuilder = new CompareToBuilder();
@@ -206,9 +209,9 @@ public class Tuple<T> extends AbstractList<T> implements Comparable<Tuple<T>> {
     /**
      * Default distance calculator for tuples.
      *
-     * @param tuple the first tuple
+     * @param tuple  the first tuple
      * @param tuple2 the second tuple
-     * @param <T> the type of the elements in the tuples
+     * @param <T>    the type of the elements in the tuples
      * @return the distance between the tuples
      */
     public static <T> Double defaultDistanceCalculator(Tuple<T> tuple, Tuple<T> tuple2) {

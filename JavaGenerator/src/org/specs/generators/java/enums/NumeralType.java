@@ -18,8 +18,12 @@ package org.specs.generators.java.enums;
  * @author Tiago @
  */
 public enum NumeralType {
-    INT(int.class.getName()), DOUBLE(double.class.getName()), FLOAT(float.class.getName()), LONG(
-            long.class.getName()), SHORT(short.class.getName()), BYTE(byte.class.getName());
+    INT(int.class.getName()),
+    DOUBLE(double.class.getName()),
+    FLOAT(float.class.getName()),
+    LONG(long.class.getName()),
+    SHORT(short.class.getName()),
+    BYTE(byte.class.getName());
 
     NumeralType(String type) {
         this.type = type;

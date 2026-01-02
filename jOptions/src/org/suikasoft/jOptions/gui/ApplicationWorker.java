@@ -26,9 +26,12 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSwing;
 
 /**
- * Launches an App object from the ProgramPanel, managing execution in a separate thread.
+ * Launches an App object from the ProgramPanel, managing execution in a
+ * separate thread.
  *
- * <p>This class provides methods to execute an application asynchronously and handle its lifecycle in the GUI.
+ * <p>
+ * This class provides methods to execute an application asynchronously and
+ * handle its lifecycle in the GUI.
  *
  * TODO: Extract Runnable ApplicationRunner from this class.
  *
@@ -60,7 +63,8 @@ public class ApplicationWorker {
     }
 
     /**
-     * To be run on Monitor thread, so the GUI is not waiting for the result of task.
+     * To be run on Monitor thread, so the GUI is not waiting for the result of
+     * task.
      *
      * @param setup the DataStore setup
      */
@@ -105,13 +109,7 @@ public class ApplicationWorker {
      * @param enable true to enable buttons, false to disable
      */
     private void setButtons(final boolean enable) {
-        SpecsSwing.runOnSwing(new Runnable() {
-
-            @Override
-            public void run() {
-                mainWindow.setButtonsEnable(enable);
-            }
-        });
+        SpecsSwing.runOnSwing(() -> mainWindow.setButtonsEnable(enable));
 
     }
 
@@ -130,7 +128,7 @@ public class ApplicationWorker {
      */
     public void shutdown() {
         if (workerExecutor == null) {
-            SpecsLogs.getLogger().warning("Application is not running.");
+            SpecsLogs.warn("Application is not running.");
             return;
         }
 

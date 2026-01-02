@@ -21,7 +21,8 @@ import java.util.Map;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Utility class for managing a set of multiple choices, with support for aliases and current selection.
+ * Utility class for managing a set of multiple choices, with support for
+ * aliases and current selection.
  *
  * @author Joao Bispo
  */
@@ -38,7 +39,7 @@ public class MultipleChoice {
      * Constructs a MultipleChoice with the given choices and aliases.
      *
      * @param choices the list of valid choices
-     * @param alias a map of alias names to choice names
+     * @param alias   a map of alias names to choice names
      */
     private MultipleChoice(List<String> choices, Map<String, String> alias) {
         this.choices = choices;
@@ -74,7 +75,7 @@ public class MultipleChoice {
      * Creates a new MultipleChoice instance with the given choices and aliases.
      *
      * @param choices the list of valid choices
-     * @param alias a map of alias names to choice names
+     * @param alias   a map of alias names to choice names
      * @return a new MultipleChoice instance
      */
     public static MultipleChoice newInstance(List<String> choices, Map<String, String> alias) {

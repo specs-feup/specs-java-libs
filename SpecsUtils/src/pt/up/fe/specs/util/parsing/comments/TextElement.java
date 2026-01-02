@@ -15,9 +15,9 @@ package pt.up.fe.specs.util.parsing.comments;
 
 public interface TextElement {
 
-    TextElementType getType();
+    TextElementType type();
 
-    String getText();
+    String text();
 
     static TextElement newInstance(TextElementType type, String text) {
         return new GenericTextElement(type, text);

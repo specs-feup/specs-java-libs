@@ -18,8 +18,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.providers.impl.GenericWebResourceProvider;
 
@@ -63,14 +63,14 @@ public interface WebResourceProvider extends FileResourceProvider {
      *
      * @return the resource URL
      */
-    String getResourceUrl();
+    String resourceUrl();
 
     /**
      * Gets the root URL of the web resource.
      *
      * @return the root URL
      */
-    String getRootUrl();
+    String rootUrl();
 
     /**
      * Constructs the full URL string using the root URL.
@@ -78,7 +78,7 @@ public interface WebResourceProvider extends FileResourceProvider {
      * @return the full URL string
      */
     default String getUrlString() {
-        return getUrlString(getRootUrl());
+        return getUrlString(rootUrl());
     }
 
     /**
@@ -90,7 +90,7 @@ public interface WebResourceProvider extends FileResourceProvider {
     default String getUrlString(String rootUrl) {
         String sanitizedRootUrl = rootUrl.endsWith("/") ? rootUrl : rootUrl + "/";
 
-        return sanitizedRootUrl + getResourceUrl();
+        return sanitizedRootUrl + resourceUrl();
     }
 
     /**
@@ -102,7 +102,7 @@ public interface WebResourceProvider extends FileResourceProvider {
     default URL getUrl() {
         try {
             return new URI(getUrlString()).toURL();
-        } catch (URISyntaxException | MalformedURLException e) {
+        } catch (URISyntaxException | MalformedURLException | IllegalArgumentException e) {
             throw new RuntimeException("Could not transform url String into URL", e);
         }
     }
@@ -112,10 +112,7 @@ public interface WebResourceProvider extends FileResourceProvider {
      *
      * @return the version string
      */
-    @Override
-    default String getVersion() {
-        return "v1.0";
-    }
+    String version();
 
     /**
      * Gets the filename of the web resource, which is the last part of the URL
@@ -147,7 +144,7 @@ public interface WebResourceProvider extends FileResourceProvider {
     default File write(File folder) {
         File downloadedFile = SpecsIo.download(getUrlString(), folder);
 
-        SpecsCheck.checkNotNull(downloadedFile, () -> "Could not download file from URL '" + getUrlString() + "'");
+        Objects.requireNonNull(downloadedFile, () -> "Could not download file from URL '" + getUrlString() + "'");
 
         return downloadedFile;
     }
@@ -167,12 +164,12 @@ public interface WebResourceProvider extends FileResourceProvider {
     @Override
     default WebResourceProvider createResourceVersion(String version) {
         // Create new resourceUrl
-        String resourceUrlNoExt = SpecsIo.removeExtension(getResourceUrl());
-        String extension = SpecsIo.getExtension(getResourceUrl());
+        String resourceUrlNoExt = SpecsIo.removeExtension(resourceUrl());
+        String extension = SpecsIo.getExtension(resourceUrl());
         extension = extension.isEmpty() ? extension : "." + extension;
 
         String newResourceUrl = resourceUrlNoExt + version + extension;
 
-        return newInstance(getRootUrl(), newResourceUrl, version);
+        return newInstance(rootUrl(), newResourceUrl, version);
     }
 }

@@ -35,7 +35,7 @@ public enum Primitive {
     private String type;
 
     Primitive(String type) {
-	this.type = type;
+        this.type = type;
     }
 
     /**
@@ -44,7 +44,7 @@ public enum Primitive {
      * @return the type string
      */
     public String getType() {
-	return type;
+        return type;
     }
 
     /**
@@ -55,14 +55,12 @@ public enum Primitive {
      * @throws RuntimeException if the type is not a primitive
      */
     public static Primitive getPrimitive(String name) {
-
-	for (final Primitive primitive : values()) {
-
-	    if (primitive.type.equals(name)) {
-		return primitive;
-	    }
-	}
-	throw new RuntimeException("The type '" + name + "' is not a primitive.");
+        for (final Primitive primitive : values()) {
+            if (primitive.type.equals(name)) {
+                return primitive;
+            }
+        }
+        throw new RuntimeException("The type '" + name + "' is not a primitive.");
     }
 
     /**
@@ -71,14 +69,12 @@ public enum Primitive {
      * @return the wrapper class name
      */
     public String getPrimitiveWrapper() {
-
-	if (equals(Primitive.INT)) {
-	    return "Integer";
-	} else if (equals(Primitive.CHAR)) {
-        return "Character";
-    }
-	return StringUtils.firstCharToUpper(type);
-
+        if (equals(Primitive.INT)) {
+            return "Integer";
+        } else if (equals(Primitive.CHAR)) {
+            return "Character";
+        }
+        return StringUtils.firstCharToUpper(type);
     }
 
     /**
@@ -88,13 +84,11 @@ public enum Primitive {
      * @return true if the name is a primitive type, false otherwise
      */
     public static boolean contains(String name) {
-
-	for (final Primitive primitive : values()) {
-
-	    if (primitive.type.equals(name)) {
-		return true;
-	    }
-	}
-	return false;
+        for (final Primitive primitive : values()) {
+            if (primitive.type.equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

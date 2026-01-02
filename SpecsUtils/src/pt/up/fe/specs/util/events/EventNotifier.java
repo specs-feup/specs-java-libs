@@ -23,8 +23,7 @@ public interface EventNotifier {
 
     /**
      * Sends the given event to all registered listeners.
-     * 
-     * @param event
+     *
      */
     public void notifyEvent(Event event);
 

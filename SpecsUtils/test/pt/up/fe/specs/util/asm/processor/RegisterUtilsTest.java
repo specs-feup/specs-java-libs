@@ -1,7 +1,6 @@
 package pt.up.fe.specs.util.asm.processor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -220,15 +219,12 @@ class RegisterUtilsTest {
 
         @Test
         @DisplayName("Should return null for null input")
-        void testDecodeFlagBit_NullInput_ThrowsNullPointerException() {
-            // When & Then: Should throw NPE due to bug
-            try {
-                RegisterUtils.decodeFlagBit(null);
-                fail("Expected NullPointerException");
-            } catch (NullPointerException e) {
-                // Expected due to Bug 1: Missing null input validation
-                assertThat(e.getMessage()).contains("registerFlagName");
-            }
+        void testDecodeFlagBit_NullInput_ReturnsNull() {
+            // When
+            Integer result = RegisterUtils.decodeFlagBit(null);
+
+            // Then: Should return null gracefully
+            assertThat(result).isNull();
         }
 
         @Test
@@ -243,7 +239,7 @@ class RegisterUtilsTest {
 
         @Test
         @DisplayName("Should handle multiple underscores")
-        void testDecodeFlagBit_MultipleUnderscores_ReturnsFirstOccurrence() {
+        void testDecodeFlagBit_MultipleUnderscores_ReturnsLastBitPortion() {
             // Given
             String flagName = "REG_NAME_15";
 
@@ -251,7 +247,7 @@ class RegisterUtilsTest {
             Integer result = RegisterUtils.decodeFlagBit(flagName);
 
             // Then
-            assertThat(result).isNull(); // NAME_15 is not a valid integer
+            assertThat(result).isEqualTo(15); // Should parse the bit from the last underscore
         }
 
         @Test
@@ -315,17 +311,16 @@ class RegisterUtilsTest {
         }
 
         @Test
-        @DisplayName("Should return register name portion for flag notation - Bug: doesn't validate bit portion")
-        void testDecodeFlagName_InvalidNotation_ReturnsPortion() {
+        @DisplayName("Should return null for invalid flag notation with non-numeric bit")
+        void testDecodeFlagName_InvalidNotation_ReturnsNull() {
             // Given: Invalid notation where "FLAG" is not a number
             String flagName = "INVALID_FLAG";
 
             // When
             String result = RegisterUtils.decodeFlagName(flagName);
 
-            // Then: Bug 3 - Returns "INVALID" instead of null (doesn't validate bit
-            // portion)
-            assertThat(result).isEqualTo("INVALID");
+            // Then: Returns null because bit portion is invalid
+            assertThat(result).isNull();
         }
 
         @Test
@@ -343,15 +338,12 @@ class RegisterUtilsTest {
 
         @Test
         @DisplayName("Should return null for null input")
-        void testDecodeFlagName_NullInput_ThrowsNullPointerException() {
-            // When & Then: Should throw NPE due to bug
-            try {
-                RegisterUtils.decodeFlagName(null);
-                fail("Expected NullPointerException");
-            } catch (NullPointerException e) {
-                // Expected due to Bug 2: Missing null input validation
-                assertThat(e.getMessage()).contains("registerFlagName");
-            }
+        void testDecodeFlagName_NullInput_ReturnsNull() {
+            // When
+            String result = RegisterUtils.decodeFlagName(null);
+
+            // Then: Should return null gracefully
+            assertThat(result).isNull();
         }
 
         @Test
@@ -366,7 +358,7 @@ class RegisterUtilsTest {
 
         @Test
         @DisplayName("Should handle multiple underscores")
-        void testDecodeFlagName_MultipleUnderscores_ReturnsPartBeforeFirst() {
+        void testDecodeFlagName_MultipleUnderscores_ReturnsPartBeforeLast() {
             // Given
             String flagName = "REG_NAME_15";
 
@@ -374,7 +366,7 @@ class RegisterUtilsTest {
             String result = RegisterUtils.decodeFlagName(flagName);
 
             // Then
-            assertThat(result).isEqualTo("REG");
+            assertThat(result).isEqualTo("REG_NAME");
         }
     }
 
@@ -444,15 +436,6 @@ class RegisterUtilsTest {
             assertThat(roundTripName).isEqualTo("MSR");
             assertThat(roundTripBit).isEqualTo(originalBitPos);
         }
-
-        // @Test
-        // @DisplayName("Should demonstrate round-trip limitation for complex register names")
-        // void testIntegration_RoundTrip_DemonstratesUnderscoreLimitation() {
-        //     // NOTE: This test demonstrates Bug 4 from BUGS_5.9.md but has some issues with test execution
-        //     // The bug is that decodeFlagName() only returns the part before the first underscore
-        //     // For "COMPLEX_REG_NAME_15", it returns "COMPLEX" instead of "COMPLEX_REG_NAME"
-        //     // This is documented in BUGS_5.9.md as Bug 4
-        // }
     }
 
     @Nested
@@ -525,9 +508,9 @@ class RegisterUtilsTest {
             String flagNotation = RegisterUtils.buildRegisterBit(registerId, bitPos);
             String decodedName = RegisterUtils.decodeFlagName(flagNotation);
 
-            // Then: Should decode only up to first underscore
+            // Then: Should decode the register name correctly for round-trip consistency
             assertThat(flagNotation).isEqualTo("REG_NAME_15");
-            assertThat(decodedName).isEqualTo("REG");
+            assertThat(decodedName).isEqualTo("REG_NAME");
         }
     }
 }

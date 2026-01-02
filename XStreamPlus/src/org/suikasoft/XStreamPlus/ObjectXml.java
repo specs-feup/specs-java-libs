@@ -25,8 +25,9 @@ import pt.up.fe.specs.util.parsing.StringCodec;
  * Base for transforming an object to and from XML.
  *
  * <p>
- * When implementing this class do not let the XStreamFile object escape to outside of the class, or you might not be
- * able to guarantee the correct behavior of custom toXml() and fromXml() implementations.
+ * When implementing this class do not let the XStreamFile object escape to
+ * outside of the class, or you might not be able to guarantee the correct
+ * behavior of custom toXml() and fromXml() implementations.
  *
  * @param <T> the type handled by this ObjectXml
  */
@@ -55,7 +56,7 @@ public abstract class ObjectXml<T> {
     /**
      * Adds a mapping from alias to class.
      *
-     * @param name the alias
+     * @param name   the alias
      * @param aClass the class
      */
     public void addMappings(String name, Class<?> aClass) {
@@ -150,7 +151,7 @@ public abstract class ObjectXml<T> {
      * Registers a custom converter for a specific class.
      *
      * @param supportedClass the class supported by the converter
-     * @param converter the converter implementation
+     * @param converter      the converter implementation
      */
     public <V> void registerConverter(Class<V> supportedClass, StringCodec<V> converter) {
         getXStreamFile().getXstream().registerConverter(new StringConverter<>(supportedClass, converter));

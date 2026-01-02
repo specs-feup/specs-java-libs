@@ -93,7 +93,7 @@ public class MultiEnumCodec<T extends Enum<T>> implements StringCodec<List<T>> {
     @Override
     public String encode(List<T> value) {
         return value.stream()
-                .map(enumValue -> enumValue.name())
+                .map(Enum::name)
                 .collect(Collectors.joining(SEPARATOR));
     }
 

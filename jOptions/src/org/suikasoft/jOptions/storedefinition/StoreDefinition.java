@@ -46,12 +46,13 @@ public interface StoreDefinition {
     List<DataKey<?>> getKeys();
 
     /**
-     * Returns the sections of the store definition. By default, returns a list with a single unnamed section.
+     * Returns the sections of the store definition. By default, returns a list with
+     * a single unnamed section.
      *
      * @return the sections
      */
     default List<StoreSection> getSections() {
-        return Arrays.asList(StoreSection.newInstance(getKeys()));
+        return List.of(StoreSection.newInstance(getKeys()));
     }
 
     /**
@@ -61,11 +62,12 @@ public interface StoreDefinition {
      */
     default Map<String, DataKey<?>> getKeyMap() {
         return getKeys().stream()
-                .collect(Collectors.toMap(key -> key.getName(), key -> key));
+                .collect(Collectors.toMap(DataKey::getName, key -> key));
     }
 
     /**
-     * Creates a new StoreDefinition from an enum class implementing DataKeyProvider.
+     * Creates a new StoreDefinition from an enum class implementing
+     * DataKeyProvider.
      *
      * @param aClass the enum class
      * @return a new StoreDefinition
@@ -93,7 +95,7 @@ public interface StoreDefinition {
      * Creates a new StoreDefinition with the given name and collection of keys.
      *
      * @param appName the name
-     * @param keys the keys
+     * @param keys    the keys
      * @return a new StoreDefinition
      */
     public static GenericStoreDefinition newInstance(String appName, Collection<DataKey<?>> keys) {
@@ -119,14 +121,15 @@ public interface StoreDefinition {
     default DataKey<?> getKey(String key) {
         DataKey<?> dataKey = getKeyMap().get(key);
         if (dataKey == null) {
-            throw new RuntimeException("Key '" + key + "' not found in store definition:" + toString());
+            throw new RuntimeException("Key '" + key + "' not found in store definition:" + this);
         }
 
         return dataKey;
     }
 
     /**
-     * Returns the raw DataKey with the given name. Throws an exception if not found.
+     * Returns the raw DataKey with the given name. Throws an exception if not
+     * found.
      *
      * @param key the key name
      * @return the raw DataKey

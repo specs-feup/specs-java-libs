@@ -1,7 +1,5 @@
 rootProject.name = 'jOptions'
 
-includeBuild("../../specs-java-libs/SpecsUtils")
-
-includeBuild("../../specs-java-libs/XStreamPlus")
-
-includeBuild("../../specs-java-libs/GuiHelper")
+includeBuild("../SpecsUtils")
+includeBuild("../XStreamPlus")
+includeBuild("../GuiHelper")

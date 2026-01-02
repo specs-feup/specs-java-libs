@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import pt.up.fe.specs.util.providers.FileResourceProvider;
 
@@ -24,24 +24,14 @@ import pt.up.fe.specs.util.providers.FileResourceProvider;
 @DisplayName("GenericFileResourceProvider")
 class GenericFileResourceProviderTest {
 
+    @TempDir
     private Path tempDir;
     private File testFile;
 
     @BeforeEach
     void setUp() throws IOException {
-        tempDir = Files.createTempDirectory("generic-file-resource-test");
         testFile = tempDir.resolve("test.txt").toFile();
         Files.writeString(testFile.toPath(), "Test content");
-    }
-
-    @AfterEach
-    void tearDown() throws IOException {
-        if (tempDir != null) {
-            Files.walk(tempDir)
-                    .map(Path::toFile)
-                    .sorted((f1, f2) -> f2.compareTo(f1)) // Delete files before directories
-                    .forEach(File::delete);
-        }
     }
 
     @Nested
@@ -58,7 +48,7 @@ class GenericFileResourceProviderTest {
             assertThat(provider).isNotNull();
             assertThat(provider.getFile()).isEqualTo(testFile);
             assertThat(provider.getFilename()).isEqualTo("test.txt");
-            assertThat(provider.getVersion()).isNull();
+            assertThat(provider.version()).isNull();
         }
 
         @Test
@@ -71,7 +61,7 @@ class GenericFileResourceProviderTest {
             assertThat(provider).isNotNull();
             assertThat(provider.getFile()).isEqualTo(testFile);
             assertThat(provider.getFilename()).isEqualTo("test.txt");
-            assertThat(provider.getVersion()).isEqualTo("1.0");
+            assertThat(provider.version()).isEqualTo("1.0");
         }
 
         @Test
@@ -83,7 +73,7 @@ class GenericFileResourceProviderTest {
             // Then
             assertThat(provider).isNotNull();
             assertThat(provider.getFile()).isEqualTo(testFile);
-            assertThat(provider.getVersion()).isNull();
+            assertThat(provider.version()).isNull();
         }
 
         @Test
@@ -212,7 +202,7 @@ class GenericFileResourceProviderTest {
             GenericFileResourceProvider provider = GenericFileResourceProvider.newInstance(testFile);
 
             // When/Then
-            assertThat(provider.getVersion()).isNull();
+            assertThat(provider.version()).isNull();
         }
 
         @Test
@@ -222,7 +212,7 @@ class GenericFileResourceProviderTest {
             GenericFileResourceProvider provider = GenericFileResourceProvider.newInstance(testFile, "2.1");
 
             // When/Then
-            assertThat(provider.getVersion()).isEqualTo("2.1");
+            assertThat(provider.version()).isEqualTo("2.1");
         }
 
         @Test
@@ -236,7 +226,7 @@ class GenericFileResourceProviderTest {
 
             // Then
             assertThat(versionedProvider).isNotSameAs(provider);
-            assertThat(versionedProvider.getVersion()).isEqualTo("1.0");
+            assertThat(versionedProvider.version()).isEqualTo("1.0");
             assertThat(versionedProvider.getFilename()).isEqualTo("test.txt");
         }
 
@@ -251,20 +241,18 @@ class GenericFileResourceProviderTest {
 
             // Then
             assertThat(versionedProvider).isNotSameAs(provider);
-            assertThat(versionedProvider.getVersion()).isNull();
+            assertThat(versionedProvider.version()).isNull();
         }
 
         @Test
-        @DisplayName("createResourceVersion should work even for already versioned provider due to implementation bug")
-        void createResourceVersionShouldWorkEvenForAlreadyVersionedProviderDueToImplementationBug() {
-            // Given - creating a provider with version, but implementation bug sets
-            // isVersioned to false
+        @DisplayName("createResourceVersion should throw NotImplementedException for versioned provider")
+        void createResourceVersionShouldThrowNotImplementedExceptionForVersionedProvider() {
+            // Given - creating a provider with version, sets isVersioned to true
             GenericFileResourceProvider versionedProvider = GenericFileResourceProvider.newInstance(testFile, "1.0");
 
-            // When/Then - Should succeed due to bug where isVersioned is always false
-            FileResourceProvider result = versionedProvider.createResourceVersion("2.0");
-            assertThat(result).isNotNull();
-            assertThat(result.getVersion()).isEqualTo("2.0");
+            // When/Then - Should throw NotImplementedException for versioned providers
+            assertThatThrownBy(() -> versionedProvider.createResourceVersion("2.0"))
+                    .isInstanceOf(pt.up.fe.specs.util.exceptions.NotImplementedException.class);
         }
 
         @Test
@@ -377,20 +365,15 @@ class GenericFileResourceProviderTest {
         }
 
         @Test
-        @DisplayName("write should handle null target folder")
-        void writeShouldHandleNullTargetFolder() {
+        @DisplayName("write should reject null target folder")
+        void writeShouldRejectNullTargetFolder() {
             // Given
             GenericFileResourceProvider provider = GenericFileResourceProvider.newInstance(testFile);
 
-            // When - Implementation actually allows null folder
-            // new File(null, name) doesn't throw NPE immediately but creates File with null
-            // parent
-            File result = provider.write(null);
-
-            // Then - File is created with null parent directory
-            assertThat(result).isNotNull();
-            assertThat(result.getParent()).isNull();
-            assertThat(result.getName()).isEqualTo(testFile.getName());
+            // When/Then - Should throw IllegalArgumentException for null folder
+            assertThatThrownBy(() -> provider.write(null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Target folder cannot be null");
         }
 
         @Test
@@ -404,7 +387,7 @@ class GenericFileResourceProviderTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.getVersion()).isNull();
+            assertThat(result.version()).isNull();
         }
     }
 
@@ -423,7 +406,7 @@ class GenericFileResourceProviderTest {
 
             // Then
             assertThat(fileProvider.getFilename()).isEqualTo("test.txt");
-            assertThat(fileProvider.getVersion()).isNull();
+            assertThat(fileProvider.version()).isNull();
         }
 
         @Test
@@ -437,9 +420,9 @@ class GenericFileResourceProviderTest {
             // Then
             assertThat(provider1).isNotSameAs(provider2).isNotSameAs(provider3);
             assertThat(provider1.getFile()).isEqualTo(provider2.getFile()).isEqualTo(provider3.getFile());
-            assertThat(provider1.getVersion()).isNull();
-            assertThat(provider2.getVersion()).isEqualTo("1.0");
-            assertThat(provider3.getVersion()).isEqualTo("2.0");
+            assertThat(provider1.version()).isNull();
+            assertThat(provider2.version()).isEqualTo("1.0");
+            assertThat(provider3.version()).isEqualTo("2.0");
         }
 
         @Test
@@ -453,9 +436,9 @@ class GenericFileResourceProviderTest {
             FileResourceProvider v2 = original.createResourceVersion("2.0");
 
             // Then
-            assertThat(original.getVersion()).isNull();
-            assertThat(v1.getVersion()).isEqualTo("1.0");
-            assertThat(v2.getVersion()).isEqualTo("2.0");
+            assertThat(original.version()).isNull();
+            assertThat(v1.version()).isEqualTo("1.0");
+            assertThat(v2.version()).isEqualTo("2.0");
 
             // All should reference the same underlying file
             assertThat(((GenericFileResourceProvider) v1).getFile()).isEqualTo(testFile);

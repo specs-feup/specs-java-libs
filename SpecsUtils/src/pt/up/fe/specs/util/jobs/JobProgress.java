@@ -45,9 +45,16 @@ public class JobProgress {
     public void nextMessage() {
         if (this.counter >= this.numJobs) {
             SpecsLogs.warn("Already showed the total number of steps.");
+            return;
         }
 
         this.counter++;
+
+        // Check bounds before accessing jobs list
+        if (this.counter - 1 >= this.jobs.size() || this.jobs.isEmpty()) {
+            SpecsLogs.warn("Job index out of bounds: " + (this.counter - 1) + " for " + this.jobs.size() + " jobs.");
+            return;
+        }
 
         String message = "Job " + this.counter + " of " + this.numJobs;
 

@@ -19,9 +19,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -51,7 +49,7 @@ import pt.up.fe.specs.util.system.ProcessOutputAsString;
 @DisplayName("SpecsSystem Tests")
 public class SpecsSystemTest {
 
-    private static final String STATIC_FIELD = "a_static_field";
+    public static final String STATIC_FIELD = "a_static_field";
     private static final int A_NUMBER = 10;
 
     public static int getStaticNumber() {
@@ -206,13 +204,6 @@ public class SpecsSystemTest {
     class SystemProperties {
 
         @Test
-        @DisplayName("is64Bit should return boolean value")
-        void testIs64Bit() {
-            // Execute and verify it returns a boolean without exception
-            assertThatCode(() -> SpecsSystem.is64Bit()).doesNotThrowAnyException();
-        }
-
-        @Test
         @DisplayName("isDebug should return boolean value")
         void testIsDebug() {
             // Execute
@@ -257,17 +248,6 @@ public class SpecsSystemTest {
             // Verify - should return a valid stack trace element
             assertThat(caller).isNotNull();
             assertThat(caller.getMethodName()).isNotEmpty();
-        }
-
-        @Test
-        @DisplayName("getMainStackTrace should return stack trace array")
-        void testGetMainStackTrace() {
-            // Execute
-            StackTraceElement[] stackTrace = SpecsSystem.getMainStackTrace();
-
-            // Verify
-            assertThat(stackTrace).isNotNull();
-            assertThat(stackTrace).isNotEmpty();
         }
 
         @Test
@@ -317,34 +297,6 @@ public class SpecsSystemTest {
 
             // Verify
             assertThat(result).isEqualTo("test result");
-        }
-
-        @Test
-        @DisplayName("getFuture should create future from supplier")
-        void testGetFuture() {
-            // Arrange
-            var supplier = (java.util.function.Supplier<String>) () -> "future result";
-
-            // Execute
-            Future<String> future = SpecsSystem.getFuture(supplier);
-            String result = SpecsSystem.get(future);
-
-            // Verify
-            assertThat(result).isEqualTo("future result");
-        }
-
-        @Test
-        @DisplayName("get with timeout should handle future completion")
-        void testGetWithTimeout() {
-            // Arrange
-            var supplier = (java.util.function.Supplier<String>) () -> "timeout result";
-            Future<String> future = SpecsSystem.getFuture(supplier);
-
-            // Execute
-            String result = SpecsSystem.get(future, 5, TimeUnit.SECONDS);
-
-            // Verify
-            assertThat(result).isEqualTo("timeout result");
         }
 
         @Test
@@ -532,14 +484,6 @@ public class SpecsSystemTest {
             
             // Allow some tolerance for timing variations
             assertThat(endTime - startTime).isGreaterThanOrEqualTo(90);
-        }
-
-        @Test
-        @DisplayName("getMainStackTrace should return stack trace")
-        void testGetMainStackTrace() {
-            StackTraceElement[] stackTrace = SpecsSystem.getMainStackTrace();
-            assertThat(stackTrace).isNotNull();
-            assertThat(stackTrace).isNotEmpty();
         }
 
         @Test

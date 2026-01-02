@@ -246,8 +246,7 @@ public class SpecsFactory {
      */
     public static InputStream getStream(File file) {
         try {
-            InputStream stream = new FileInputStream(file);
-            return stream;
+            return new FileInputStream(file);
         } catch (FileNotFoundException e) {
             SpecsLogs.warn("Could not find file '" + file + "'");
             return null;
@@ -299,8 +298,8 @@ public class SpecsFactory {
 
         List<Integer> intList = new ArrayList<>();
 
-        for (int index = 0; index < array.length; index++) {
-            intList.add(array[index]);
+        for (int i : array) {
+            intList.add(i);
         }
 
         return intList;

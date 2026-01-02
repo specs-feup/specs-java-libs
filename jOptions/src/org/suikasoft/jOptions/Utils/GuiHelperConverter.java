@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
@@ -30,7 +31,6 @@ import pt.up.fe.specs.guihelper.Base.SetupFieldEnum;
 import pt.up.fe.specs.guihelper.BaseTypes.ListOfSetups;
 import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
 import pt.up.fe.specs.guihelper.SetupFieldOptions.DefaultValue;
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
@@ -107,12 +107,11 @@ public class GuiHelperConverter {
         var key = getBaseDataKey(setupKey);
 
         // Set default value (must be immutable)
-        if (setupKey instanceof DefaultValue) {
-            var defaultValueProvider = (DefaultValue) setupKey;
+        if (setupKey instanceof DefaultValue defaultValueProvider) {
             var defaultValue = defaultValueProvider.getDefaultValue();
 
             if (defaultValue != null) {
-                Supplier<? extends Object> defaultSupplier = () -> defaultValue.getRawValue();
+                Supplier<?> defaultSupplier = defaultValue::getRawValue;
                 key.setDefaultRaw(defaultSupplier);
             }
         }
@@ -126,13 +125,11 @@ public class GuiHelperConverter {
      * @param setupKey the setup key
      * @return the base DataKey
      */
-    private <T extends Enum<?> & SetupFieldEnum> DataKey<? extends Object> getBaseDataKey(T setupKey) {
-        switch (setupKey.getType()) {
-        case string:
-            return KeyFactory.string(setupKey.name());
-        default:
-            throw new NotImplementedException(setupKey.getType());
-        }
+    private <T extends Enum<?> & SetupFieldEnum> DataKey<?> getBaseDataKey(T setupKey) {
+        return switch (setupKey.getType()) {
+            case string -> KeyFactory.string(setupKey.name());
+            default -> throw new NotImplementedException(setupKey.getType());
+        };
 
     }
 
@@ -153,19 +150,13 @@ public class GuiHelperConverter {
             var taskKeys = getSetupFields(taskList);
             tasksKeys.put(setupName, taskKeys);
         }
-        // System.out.println("TASK LIST: " + tasksKeys);
 
         var listOfSetups = new ArrayList<SetupData>();
         for (var dataStore : setupList.getDataStores()) {
-            // System.out.println("DATASTORE: " + dataStore);
-
-            // Get setup name
-            // String setupName = aClass.getEnumConstants()[0].getSetupName();
-
             var setupName = SetupListPanel.toOriginalEnum(dataStore.getName());
 
             var setupDataMapping = tasksKeys.get(setupName);
-            SpecsCheck.checkNotNull(setupDataMapping,
+            Objects.requireNonNull(setupDataMapping,
                     () -> "Could not find setup with name '" + setupName + "', available: " + tasksKeys.keySet());
 
             var oldSetupName = setupDataMapping.values().stream().findFirst()
@@ -176,7 +167,7 @@ public class GuiHelperConverter {
 
             for (var key : dataStore.getKeysWithValues()) {
                 var setupField = setupDataMapping.get(key);
-                SpecsCheck.checkNotNull(setupField,
+                Objects.requireNonNull(setupField,
                         () -> "Could not find key with name '" + key + "', available: " + setupDataMapping.keySet());
                 setupData.put(setupField, dataStore.get(key));
             }

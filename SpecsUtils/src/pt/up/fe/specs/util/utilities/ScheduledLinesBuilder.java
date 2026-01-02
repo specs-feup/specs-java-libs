@@ -12,6 +12,7 @@
  */
 package pt.up.fe.specs.util.utilities;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +50,10 @@ public class ScheduledLinesBuilder {
 
     @Override
     public String toString() {
-        int maxLevel = this.scheduledLines.size() - 1;
+        if (this.scheduledLines.isEmpty()) {
+            return "";
+        }
+        int maxLevel = Collections.max(this.scheduledLines.keySet());
         return toString(maxLevel);
     }
 

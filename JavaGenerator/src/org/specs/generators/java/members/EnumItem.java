@@ -114,17 +114,15 @@ public class EnumItem implements IGenerate {
         }
         final EnumItem other = (EnumItem) obj;
         if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
-            return false;
+            return other.name == null;
+        } else {
+            return name.equals(other.name);
         }
-        return true;
     }
 
     /**
-     * Generates the code representation of this enum item with the specified indentation.
+     * Generates the code representation of this enum item with the specified
+     * indentation.
      *
      * @param indentation the level of indentation
      * @return the generated code as a StringBuilder

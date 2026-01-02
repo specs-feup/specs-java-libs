@@ -14,7 +14,8 @@
 package org.suikasoft.jOptions.app;
 
 /**
- * Provides a default configuration file when preferences cannot be read at program launch (e.g., first execution).
+ * Provides a default configuration file when preferences cannot be read at
+ * program launch (e.g., first execution).
  *
  * @author Joao Bispo
  */

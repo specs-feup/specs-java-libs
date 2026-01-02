@@ -16,7 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option.notimplementedyet;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -43,12 +43,15 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * Panel for editing and managing a list of setup panels.
  *
- * <p>This panel provides controls for adding, removing, and selecting setup elements for a MultipleSetup instance.
+ * <p>
+ * This panel provides controls for adding, removing, and selecting setup
+ * elements for a MultipleSetup instance.
  * 
  * @author Joao Bispo
  */
 public class ListOfSetupsPanel extends FieldPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private JPanel currentOptionsPanel;
@@ -71,11 +74,12 @@ public class ListOfSetupsPanel extends FieldPanel {
     private static final String ENUM_NAME_SEPARATOR = "-";
 
     /**
-     * Constructs a ListOfSetupsPanel for the given enum option, label, and MultipleSetup.
+     * Constructs a ListOfSetupsPanel for the given enum option, label, and
+     * MultipleSetup.
      *
      * @param enumOption the SetupFieldEnum
-     * @param labelName the label for the panel
-     * @param setup the MultipleSetup instance
+     * @param labelName  the label for the panel
+     * @param setup      the MultipleSetup instance
      */
     public ListOfSetupsPanel(SetupFieldEnum enumOption, String labelName, MultipleSetup setup) {
         label = new JLabel(labelName + ":");
@@ -86,29 +90,11 @@ public class ListOfSetupsPanel extends FieldPanel {
         initElements();
 
         // Add actions
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
+        addButton.addActionListener(this::addButtonActionPerformed);
 
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                removeButtonActionPerformed(evt);
-            }
+        removeButton.addActionListener(this::removeButtonActionPerformed);
 
-        });
-
-        elementsBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                elementComboBoxActionPerformed(e);
-            }
-
-        });
+        elementsBox.addActionListener(this::elementComboBoxActionPerformed);
 
         // Build choice panel
         choicePanel = buildChoicePanel();
@@ -225,10 +211,6 @@ public class ListOfSetupsPanel extends FieldPanel {
 
         BaseSetupPanel newPanel = new BaseSetupPanel(setupKeys, identationLevel + 1);
 
-        if (!setupKeys.getSetupKeys().isEmpty()) {
-            // newPanel.add(new javax.swing.JSeparator(), 0);
-        }
-
         elementsOptionPanels.add(newPanel);
 
         updateElementsComboBox();
@@ -267,7 +249,7 @@ public class ListOfSetupsPanel extends FieldPanel {
         int setupIndex = choicesBoxShadow.indexOf(enumName);
 
         if (setupIndex == -1) {
-            SpecsLogs.getLogger().warning("Could not find enum '" + enumName + "'. Available enums:" + setups);
+            SpecsLogs.warn("Could not find enum '" + enumName + "'. Available enums:" + setups);
             return;
         }
 
@@ -319,7 +301,7 @@ public class ListOfSetupsPanel extends FieldPanel {
      */
     public void removeElement(int index) {
         if (elementsBox.getItemCount() <= index) {
-            SpecsLogs.getLogger().warning(
+            SpecsLogs.warn(
                     "Given index ('" + index + "')is too big. Elements size: " + elementsBox.getItemCount());
             return;
         }
@@ -357,7 +339,7 @@ public class ListOfSetupsPanel extends FieldPanel {
             return index - 1;
         }
 
-        SpecsLogs.getLogger().warning("Invalid index '" + index + "' for list with '" + numElements + "' elements.");
+        SpecsLogs.warn("Invalid index '" + index + "' for list with '" + numElements + "' elements.");
         return -1;
     }
 
@@ -370,8 +352,8 @@ public class ListOfSetupsPanel extends FieldPanel {
 
         List<SetupData> listOfSetups = new ArrayList<>();
 
-        for (int i = 0; i < elementsOptionPanels.size(); i++) {
-            listOfSetups.add(elementsOptionPanels.get(i).getMapWithValues());
+        for (BaseSetupPanel elementsOptionPanel : elementsOptionPanels) {
+            listOfSetups.add(elementsOptionPanel.getMapWithValues());
         }
 
         return new ListOfSetups(listOfSetups);
@@ -397,7 +379,7 @@ public class ListOfSetupsPanel extends FieldPanel {
      * Builds a string representation of a setup element.
      * 
      * @param enumName the name of the enum
-     * @param index the index of the element
+     * @param index    the index of the element
      * @return the string representation
      */
     private static String buildSetupString(String enumName, int index) {

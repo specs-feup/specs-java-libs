@@ -14,7 +14,6 @@
 package pt.up.fe.specs.util.parsing.arguments;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -41,16 +40,15 @@ public class ArgumentsParser {
     /**
      * Argument parser that delimits arguments by spaces (' '), glues them with
      * double quotes ('"') and escapes single characters with backslash ('\').
-     * 
-     * @return
+     *
      */
     public static ArgumentsParser newCommandLine() {
         return newCommandLine(true);
     }
 
     public static ArgumentsParser newCommandLine(boolean trimArgs) {
-        return new ArgumentsParser(Arrays.asList(" "), Arrays.asList(Gluer.newDoubleQuote()),
-                Arrays.asList(Escape.newSlashChar()), trimArgs);
+        return new ArgumentsParser(List.of(" "), List.of(Gluer.newDoubleQuote()),
+                List.of(Escape.newSlashChar()), trimArgs);
     }
 
     public static ArgumentsParser newPragmaText() {
@@ -58,7 +56,7 @@ public class ArgumentsParser {
     }
 
     public static ArgumentsParser newPragmaText(boolean trimArgs) {
-        return new ArgumentsParser(Arrays.asList(" "), Arrays.asList(Gluer.newParenthesis()),
+        return new ArgumentsParser(List.of(" "), List.of(Gluer.newParenthesis()),
                 Collections.emptyList(), trimArgs);
     }
 
@@ -151,7 +149,7 @@ public class ArgumentsParser {
         }
 
         // If current argument is not empty, add it to the list of args
-        if (currentArg.length() != 0) {
+        if (!currentArg.isEmpty()) {
             args.add(currentArg.toString());
         }
 

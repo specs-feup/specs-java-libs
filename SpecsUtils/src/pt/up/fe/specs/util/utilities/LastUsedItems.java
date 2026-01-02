@@ -16,6 +16,7 @@ package pt.up.fe.specs.util.utilities;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -56,14 +57,17 @@ public class LastUsedItems<T> {
     /**
      * Indicates that the given item was used.
      * 
-     * @param item
      * @return true if there were changes to the list of items
      */
     public boolean used(T item) {
+        if (capacity <= 0) {
+            return false;
+        }
+
         // Check if item is already in the list
         if (currentItemsSet.contains(item)) {
-            // If is already the first one, return
-            if (currentItemsList.getFirst().equals(item)) {
+            // If it is already the first one, return (use Objects.equals to allow nulls)
+            if (Objects.equals(currentItemsList.getFirst(), item)) {
                 return false;
             }
 
@@ -103,6 +107,6 @@ public class LastUsedItems<T> {
             return Optional.empty();
         }
 
-        return Optional.of(currentItemsList.getFirst());
+        return Optional.ofNullable(currentItemsList.getFirst());
     }
 }

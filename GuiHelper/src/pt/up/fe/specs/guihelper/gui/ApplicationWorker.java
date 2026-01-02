@@ -133,7 +133,7 @@ public class ApplicationWorker {
 
     public void shutdown() {
 	if (workerExecutor == null) {
-	    SpecsLogs.getLogger().warning("Application is not running.");
+	    SpecsLogs.warn("Application is not running.");
 	    return;
 	}
 

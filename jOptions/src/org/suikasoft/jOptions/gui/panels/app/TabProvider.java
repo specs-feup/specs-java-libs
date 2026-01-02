@@ -18,7 +18,9 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 /**
  * Provider interface for creating additional tabs in the application GUI.
  *
- * <p>This interface defines a contract for providing custom tabs to the main application window.
+ * <p>
+ * This interface defines a contract for providing custom tabs to the main
+ * application window.
  */
 public interface TabProvider {
     /**

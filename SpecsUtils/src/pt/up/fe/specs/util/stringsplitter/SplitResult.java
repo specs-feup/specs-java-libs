@@ -13,20 +13,5 @@
 
 package pt.up.fe.specs.util.stringsplitter;
 
-public class SplitResult<T> {
-    private final StringSliceWithSplit modifiedSlice;
-    private final T value;
-
-    public SplitResult(StringSliceWithSplit modifiedSlice, T value) {
-        this.modifiedSlice = modifiedSlice;
-        this.value = value;
-    }
-
-    public StringSliceWithSplit getModifiedSlice() {
-        return modifiedSlice;
-    }
-
-    public T getValue() {
-        return value;
-    }
+public record SplitResult<T>(StringSliceWithSplit modifiedSlice, T value) {
 }

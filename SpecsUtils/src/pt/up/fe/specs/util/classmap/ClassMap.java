@@ -19,7 +19,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
@@ -77,9 +76,7 @@ public class ClassMap<T, V> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <ET extends T, K extends ET> V put(Class<K> aClass,
             V value) {
@@ -88,13 +85,18 @@ public class ClassMap<T, V> {
     }
 
     public <TK extends T> Optional<V> tryGet(Class<TK> key) {
+        // Check for null key
+        if (key == null) {
+            throw new NullPointerException("Key cannot be null");
+        }
+
         // Map given class to a class supported by this instance
         var mappedClass = classMapper.map(key);
 
         if (mappedClass.isPresent()) {
             var result = this.map.get(mappedClass.get());
-            SpecsCheck.checkNotNull(result, () -> "Expected map to contain " + mappedClass.get());
-            return Optional.of(result);
+            // Allow null values to be stored and retrieved
+            return Optional.ofNullable(result);
         }
 
         // Return default value if present
@@ -107,11 +109,27 @@ public class ClassMap<T, V> {
     }
 
     public <TK extends T> V get(Class<TK> key) {
-        Optional<V> result = tryGet(key);
+        // Null check
+        if (key == null) {
+            throw new NullPointerException("Key cannot be null");
+        }
 
-        // Found value, return it
-        if (result.isPresent()) {
-            return result.get();
+        // Map given class to a class supported by this instance
+        var mappedClass = classMapper.map(key);
+
+        if (mappedClass.isPresent()) {
+            var mapped = mappedClass.get();
+            // If this instance has an explicit mapping (even if value is null), return it
+            if (this.map.containsKey(mapped)) {
+                return this.map.get(mapped);
+            }
+            // Mapping was found by the class mapper, but this map doesn't have the key
+            throw new NullPointerException("Expected map to contain " + mapped);
+        }
+
+        // Return default value if present
+        if (this.defaultValue != null) {
+            return this.defaultValue;
         }
 
         throw new NotImplementedException("Function not defined for class '"
@@ -125,9 +143,7 @@ public class ClassMap<T, V> {
 
     /**
      * Sets the default value, backed up by the same map.
-     * 
-     * @param defaultValue
-     * @return
+     *
      */
     public ClassMap<T, V> setDefaultValue(V defaultValue) {
         return new ClassMap<>(this.map, defaultValue, this.classMapper);

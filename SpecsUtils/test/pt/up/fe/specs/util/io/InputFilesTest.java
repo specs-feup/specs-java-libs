@@ -41,10 +41,10 @@ class InputFilesTest {
             InputFiles result = new InputFiles(isSingleFile, inputPath, inputFilesList);
 
             // Then
-            assertThat(result.isSingleFile).isTrue();
-            assertThat(result.inputPath).isEqualTo(inputPath);
-            assertThat(result.inputFiles).hasSize(2);
-            assertThat(result.inputFiles).containsExactly(new File("file1.txt"), new File("file2.txt"));
+            assertThat(result.isSingleFile()).isTrue();
+            assertThat(result.inputPath()).isEqualTo(inputPath);
+            assertThat(result.inputFiles()).hasSize(2);
+            assertThat(result.inputFiles()).containsExactly(new File("file1.txt"), new File("file2.txt"));
         }
 
         @Test
@@ -61,9 +61,9 @@ class InputFilesTest {
             InputFiles result = new InputFiles(isSingleFile, inputPath, inputFilesList);
 
             // Then
-            assertThat(result.isSingleFile).isFalse();
-            assertThat(result.inputPath).isEqualTo(inputPath);
-            assertThat(result.inputFiles).hasSize(2);
+            assertThat(result.isSingleFile()).isFalse();
+            assertThat(result.inputPath()).isEqualTo(inputPath);
+            assertThat(result.inputFiles()).hasSize(2);
         }
     }
 
@@ -83,10 +83,10 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.isSingleFile).isTrue();
-            assertThat(result.inputPath).isEqualTo(testFile.toFile());
-            assertThat(result.inputFiles).hasSize(1);
-            assertThat(result.inputFiles.get(0)).isEqualTo(testFile.toFile());
+            assertThat(result.isSingleFile()).isTrue();
+            assertThat(result.inputPath()).isEqualTo(testFile.toFile());
+            assertThat(result.inputFiles()).hasSize(1);
+            assertThat(result.inputFiles().get(0)).isEqualTo(testFile.toFile());
         }
 
         @Test
@@ -108,10 +108,10 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.isSingleFile).isFalse();
-            assertThat(result.inputPath).isEqualTo(tempDir.toFile());
-            assertThat(result.inputFiles).hasSize(3); // Recursive file collection
-            assertThat(result.inputFiles).extracting(File::getName)
+            assertThat(result.isSingleFile()).isFalse();
+            assertThat(result.inputPath()).isEqualTo(tempDir.toFile());
+            assertThat(result.inputFiles()).hasSize(3); // Recursive file collection
+            assertThat(result.inputFiles()).extracting(File::getName)
                     .containsExactlyInAnyOrder("file1.txt", "file2.txt", "file3.txt");
         }
 
@@ -123,9 +123,9 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.isSingleFile).isFalse();
-            assertThat(result.inputPath).isEqualTo(tempDir.toFile());
-            assertThat(result.inputFiles).isEmpty();
+            assertThat(result.isSingleFile()).isFalse();
+            assertThat(result.inputPath()).isEqualTo(tempDir.toFile());
+            assertThat(result.inputFiles()).isEmpty();
         }
 
         @Test
@@ -157,8 +157,8 @@ class InputFilesTest {
 
                 // Then
                 assertThat(result).isNotNull();
-                assertThat(result.isSingleFile).isTrue();
-                assertThat(result.inputFiles).hasSize(1);
+                assertThat(result.isSingleFile()).isTrue();
+                assertThat(result.inputFiles()).hasSize(1);
             } catch (UnsupportedOperationException e) {
                 // Skip test if symbolic links are not supported on this system
                 assumeThat(false).as("Symbolic links not supported on this system").isTrue();
@@ -196,7 +196,7 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.isSingleFile).isFalse();
+            assertThat(result.isSingleFile()).isFalse();
             assertThat(Files.exists(subFolder)).isTrue();
             assertThat(Files.isDirectory(subFolder)).isTrue();
         }
@@ -232,9 +232,9 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.isSingleFile).isFalse();
-            assertThat(result.inputFiles).hasSize(4);
-            assertThat(result.inputFiles).extracting(File::getName)
+            assertThat(result.isSingleFile()).isFalse();
+            assertThat(result.inputFiles()).hasSize(4);
+            assertThat(result.inputFiles()).extracting(File::getName)
                     .containsExactlyInAnyOrder("root.txt", "dir1_file.txt", "sub_file.txt", "dir2_file.txt");
         }
 
@@ -257,8 +257,8 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.inputFiles).hasSize(4);
-            assertThat(result.inputFiles).extracting(File::getName)
+            assertThat(result.inputFiles()).hasSize(4);
+            assertThat(result.inputFiles()).extracting(File::getName)
                     .containsExactlyInAnyOrder("document.txt", "Source.java", "config.xml", "README");
         }
 
@@ -277,9 +277,9 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.inputFiles).hasSize(fileCount);
-            assertThat(result.inputFiles).allMatch(file -> file.getName().startsWith("file_"));
-            assertThat(result.inputFiles).allMatch(file -> file.getName().endsWith(".txt"));
+            assertThat(result.inputFiles()).hasSize(fileCount);
+            assertThat(result.inputFiles()).allMatch(file -> file.getName().startsWith("file_"));
+            assertThat(result.inputFiles()).allMatch(file -> file.getName().endsWith(".txt"));
         }
     }
 
@@ -299,9 +299,9 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.isSingleFile).isTrue();
-            assertThat(result.inputFiles).hasSize(1);
-            assertThat(result.inputFiles.get(0)).isEqualTo(emptyFile.toFile());
+            assertThat(result.isSingleFile()).isTrue();
+            assertThat(result.inputFiles()).hasSize(1);
+            assertThat(result.inputFiles().get(0)).isEqualTo(emptyFile.toFile());
         }
 
         @Test
@@ -316,9 +316,9 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.isSingleFile).isTrue();
-            assertThat(result.inputFiles).hasSize(1);
-            assertThat(result.inputFiles.get(0).getName()).isEqualTo("file with spaces & symbols!@#.txt");
+            assertThat(result.isSingleFile()).isTrue();
+            assertThat(result.inputFiles()).hasSize(1);
+            assertThat(result.inputFiles().get(0).getName()).isEqualTo("file with spaces & symbols!@#.txt");
         }
 
         @Test
@@ -340,8 +340,8 @@ class InputFilesTest {
 
                 // Then
                 assertThat(result).isNotNull();
-                assertThat(result.isSingleFile).isTrue();
-                assertThat(result.inputFiles).hasSize(1);
+                assertThat(result.isSingleFile()).isTrue();
+                assertThat(result.inputFiles()).hasSize(1);
             } catch (IOException e) {
                 // Skip test if file system doesn't support very long names
                 assumeThat(false).as("File system doesn't support very long file names").isTrue();
@@ -362,8 +362,8 @@ class InputFilesTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.isSingleFile).isFalse();
-            assertThat(result.inputFiles).isEmpty(); // No files, only directories
+            assertThat(result.isSingleFile()).isFalse();
+            assertThat(result.inputFiles()).isEmpty(); // No files, only directories
         }
     }
 
@@ -407,7 +407,7 @@ class InputFilesTest {
                     // Then - behavior may vary by system
                     // On some systems, the file might still be readable by owner
                     if (result != null) {
-                        assertThat(result.isSingleFile).isTrue();
+                        assertThat(result.isSingleFile()).isTrue();
                     }
                 } finally {
                     // Restore permissions for cleanup

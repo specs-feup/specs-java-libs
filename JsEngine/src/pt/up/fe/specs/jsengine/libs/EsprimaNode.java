@@ -19,11 +19,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import pt.up.fe.specs.util.SpecsCheck;
 
 /**
  * Represents a node in an Esprima AST.
@@ -245,7 +244,7 @@ public class EsprimaNode {
      */
     private <T> T getExistingValue(String key, Class<T> valueClass) {
         var value = node.get(key);
-        SpecsCheck.checkNotNull(value, () -> "Expected value with key '" + key + "' to exist");
+        Objects.requireNonNull(value, () -> "Expected value with key '" + key + "' to exist");
         return valueClass.cast(value);
     }
 
@@ -268,7 +267,7 @@ public class EsprimaNode {
     public EsprimaLoc getLoc() {
         @SuppressWarnings("unchecked")
         var loc = (Map<String, Object>) node.get("loc");
-        SpecsCheck.checkNotNull(loc, () -> "Loc is null");
+        Objects.requireNonNull(loc, () -> "Loc is null");
         return EsprimaLoc.newInstance(loc);
     }
 

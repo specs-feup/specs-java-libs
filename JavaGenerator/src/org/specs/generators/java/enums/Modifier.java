@@ -18,7 +18,9 @@ package org.specs.generators.java.enums;
  * @author Tiago
  */
 public enum Modifier {
-    ABSTRACT("abstract"), STATIC("static"), FINAL("final");
+    ABSTRACT("abstract"),
+    STATIC("static"),
+    FINAL("final");
 
     /**
      * Constructor for the Modifier enum.

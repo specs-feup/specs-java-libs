@@ -111,8 +111,9 @@ class ProgressCounterTest {
             // Should warn but continue incrementing
             String overflowMessage = counter.next();
 
-            assertThat(overflowMessage).isEqualTo("(6/5)");
-            assertThat(counter.getCurrentCount()).isEqualTo(6);
+            // With capped behavior, the counter should not increase beyond max
+            assertThat(overflowMessage).isEqualTo("(5/5)");
+            assertThat(counter.getCurrentCount()).isEqualTo(5);
         }
 
         @Test
@@ -122,8 +123,9 @@ class ProgressCounterTest {
 
             String message = zeroCounter.next();
 
-            assertThat(message).isEqualTo("(1/0)");
-            assertThat(zeroCounter.getCurrentCount()).isEqualTo(1);
+            // With capped behavior at max=0, calling next should not increment
+            assertThat(message).isEqualTo("(0/0)");
+            assertThat(zeroCounter.getCurrentCount()).isEqualTo(0);
         }
 
         @Test
@@ -135,7 +137,8 @@ class ProgressCounterTest {
             String second = singleCounter.next(); // Should trigger warning
 
             assertThat(first).isEqualTo("(1/1)");
-            assertThat(second).isEqualTo("(2/1)");
+            // Should remain capped at 1
+            assertThat(second).isEqualTo("(1/1)");
         }
     }
 
@@ -170,11 +173,11 @@ class ProgressCounterTest {
                 counter.nextInt();
             }
 
-            // Should warn but continue incrementing
-            int overflowResult = counter.nextInt();
+            int result = counter.nextInt();
 
-            assertThat(overflowResult).isEqualTo(6);
-            assertThat(counter.getCurrentCount()).isEqualTo(6);
+            // With capped behavior, the counter should not increase beyond max
+            assertThat(result).isEqualTo(5);
+            assertThat(counter.getCurrentCount()).isEqualTo(5);
         }
 
         @Test
@@ -307,13 +310,13 @@ class ProgressCounterTest {
         void testCurrentCountAccuracy() {
             int expectedCount = 0;
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < DEFAULT_MAX_COUNT + 3; i++) {
                 if (i % 2 == 0) {
                     counter.next();
                 } else {
                     counter.nextInt();
                 }
-                expectedCount++;
+                expectedCount = Math.min(expectedCount + 1, DEFAULT_MAX_COUNT);
                 assertThat(counter.getCurrentCount()).isEqualTo(expectedCount);
             }
         }
@@ -326,11 +329,10 @@ class ProgressCounterTest {
         @Test
         @DisplayName("Should handle negative max count")
         void testNegativeMaxCount() {
-            ProgressCounter negativeCounter = new ProgressCounter(-5);
-
-            assertThat(negativeCounter.getMaxCount()).isEqualTo(-5);
-            assertThat(negativeCounter.getCurrentCount()).isEqualTo(0);
-            assertThat(negativeCounter.hasNext()).isTrue(); // Always true when current < max
+            // Constructor should reject negative maxCount
+            assertThatThrownBy(() -> new ProgressCounter(-5))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("maxCount should be non-negative");
         }
 
         @Test
@@ -347,7 +349,8 @@ class ProgressCounterTest {
 
             // One more increment
             largeCounter.nextInt();
-            assertThat(largeCounter.getCurrentCount()).isEqualTo(1001);
+            // With capped behavior, the counter remains at the max value
+            assertThat(largeCounter.getCurrentCount()).isEqualTo(1000);
             assertThat(largeCounter.hasNext()).isFalse();
         }
 
@@ -355,7 +358,7 @@ class ProgressCounterTest {
         @DisplayName("Should handle alternating operations correctly")
         void testAlternatingOperations() {
             String[] expectedMessages = { "(1/5)", "(3/5)", "(5/5)" };
-            int[] expectedInts = { 2, 4, 6 };
+            int[] expectedInts = { 2, 4, 5 };
 
             for (int i = 0; i < 3; i++) {
                 String message = counter.next();
@@ -365,7 +368,7 @@ class ProgressCounterTest {
                 assertThat(intResult).isEqualTo(expectedInts[i]);
             }
 
-            assertThat(counter.getCurrentCount()).isEqualTo(6);
+            assertThat(counter.getCurrentCount()).isEqualTo(5);
             assertThat(counter.hasNext()).isFalse();
         }
 

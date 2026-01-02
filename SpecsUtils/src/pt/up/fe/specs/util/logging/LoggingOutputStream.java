@@ -24,9 +24,9 @@ import java.util.logging.Logger;
  * <p>
  * This class is used by LoggingUtils methods to redirect the System.out and
  * System.err streams.
- * 
+ *
  * @author Joao Bispo
- * @author http://blogs.sun.com/nickstephen/entry/java_redirecting_system_out_and
+ * @author <a href="http://blogs.sun.com/nickstephen/entry/java_redirecting_system_out_and">...</a>
  */
 public class LoggingOutputStream extends ByteArrayOutputStream {
 
@@ -63,7 +63,7 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
             record = this.toString();
             super.reset();
 
-            if (record.length() == 0) {
+            if (record.isEmpty()) {
                 // avoid empty records
                 return;
             }

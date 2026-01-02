@@ -25,23 +25,18 @@ import java.util.function.Function;
  * @author JoaoBispo
  *
  * @param <T>
- * @FunctionalInterface
  */
 public interface StringCodec<T> {
 
     /**
      * Decodes a value from String to an instance of the value type.
-     * 
-     * @param value
-     * @return
+     *
      */
     T decode(String value);
 
     /**
      * As default, uses the .toString() method of the value.
-     * 
-     * @param value
-     * @return
+     *
      */
     default String encode(T value) {
         return value.toString();

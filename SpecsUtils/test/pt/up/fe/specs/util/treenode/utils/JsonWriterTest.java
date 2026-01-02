@@ -32,7 +32,7 @@ class JsonWriterTest {
         //  /
         // grandchild1
         grandchild1 = new TestTreeNode("grandchild1", "leaf");
-        child1 = new TestTreeNode("child1", "parent", Collections.singletonList(grandchild1));
+        child1 = new TestTreeNode("child1", "parent", List.of(grandchild1));
         child2 = new TestTreeNode("child2", "leaf");
         root = new TestTreeNode("root", "root", Arrays.asList(child1, child2));
 
@@ -303,9 +303,9 @@ class JsonWriterTest {
             // Create a deep chain: root -> child -> grandchild -> greatgrandchild
             TestTreeNode greatGrandchild = new TestTreeNode("greatgrandchild", "leaf");
             TestTreeNode deepGrandchild = new TestTreeNode("deepgrandchild", "parent",
-                    Collections.singletonList(greatGrandchild));
-            TestTreeNode deepChild = new TestTreeNode("deepchild", "parent", Collections.singletonList(deepGrandchild));
-            TestTreeNode deepRoot = new TestTreeNode("deeproot", "root", Collections.singletonList(deepChild));
+                    List.of(greatGrandchild));
+            TestTreeNode deepChild = new TestTreeNode("deepchild", "parent", List.of(deepGrandchild));
+            TestTreeNode deepRoot = new TestTreeNode("deeproot", "root", List.of(deepChild));
 
             String json = jsonWriter.toJson(deepRoot);
 

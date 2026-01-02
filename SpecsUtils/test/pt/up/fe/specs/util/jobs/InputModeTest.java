@@ -153,10 +153,10 @@ public class InputModeTest {
             assertThatCode(() -> InputMode.singleFile.getPrograms(sourceFile, null, null))
                     .doesNotThrowAnyException();
 
-            // Other modes that use extensions will throw NullPointerException
-            // This is documented behavior - null extensions are not handled gracefully
+            // Other modes properly validate null extensions with clear error messages
             assertThatThrownBy(() -> InputMode.files.getPrograms(sourceFolder, null, null))
-                    .isInstanceOf(NullPointerException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Extensions collection cannot be null");
         }
 
         @Test
@@ -240,9 +240,10 @@ public class InputModeTest {
                 InputMode.folders.getPrograms(sourceFolder, extensions, 5);
             }).doesNotThrowAnyException();
 
-            // Null folder level throws NullPointerException for folders mode
+            // Null folder level throws proper IllegalArgumentException for folders mode
             assertThatThrownBy(() -> InputMode.folders.getPrograms(sourceFolder, extensions, null))
-                    .isInstanceOf(NullPointerException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("FolderLevel cannot be null for folders mode");
         }
     }
 

@@ -21,7 +21,8 @@ import org.specs.generators.java.utils.UniqueList;
 import tdrc.utils.StringUtils;
 
 /**
- * Represents a Java enum for code generation. Provides methods to manage enum items and generate enum code.
+ * Represents a Java enum for code generation. Provides methods to manage enum
+ * items and generate enum code.
  *
  * @author Tiago
  */
@@ -32,7 +33,7 @@ public class JavaEnum extends JavaClass {
     /**
      * Create a public enum with name and package.
      *
-     * @param name the name for the enum
+     * @param name         the name for the enum
      * @param classPackage the class package
      */
     public JavaEnum(String name, String classPackage) {
@@ -58,7 +59,8 @@ public class JavaEnum extends JavaClass {
     }
 
     /**
-     * Generate the corresponding java enum code, containing the package, imports, items, fields, methods, etc.
+     * Generate the corresponding java enum code, containing the package, imports,
+     * items, fields, methods, etc.
      *
      * @param indentation level of indentation
      * @return the generated java enum code

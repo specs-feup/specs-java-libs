@@ -15,27 +15,10 @@ package pt.up.fe.specs.util.providers.impl;
 
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
-public class GenericResource implements ResourceProvider {
-
-    private final String resource;
-    private final String version;
+public record GenericResource(String getResource, String version) implements ResourceProvider {
 
     public GenericResource(String resource) {
         this(resource, ResourceProvider.getDefaultVersion());
     }
 
-    public GenericResource(String resource, String version) {
-        this.resource = resource;
-        this.version = version;
-    }
-
-    @Override
-    public String getResource() {
-        return resource;
-    }
-
-    @Override
-    public String getVersion() {
-        return version;
-    }
 }

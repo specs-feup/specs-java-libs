@@ -45,6 +45,7 @@ public class SpecsCheck {
     }
 
     /**
+     * @deprecated Use {@link Objects#requireNonNull(Object, Supplier)} instead.
      * Ensures that the given reference is not null. Throws a NullPointerException
      * if the reference is null.
      *
@@ -53,6 +54,7 @@ public class SpecsCheck {
      * @param <T>       the type of the reference
      * @return the non-null reference
      */
+    @Deprecated
     public static <T> T checkNotNull(T reference, Supplier<String> supplier) {
         if (reference == null) {
             throw new NullPointerException(supplier.get());
@@ -69,7 +71,7 @@ public class SpecsCheck {
      * @param expectedSize the expected size of the collection
      */
     public static void checkSize(Collection<?> collection, int expectedSize) {
-        checkSize(expectedSize, collection.size(), () -> collection.toString());
+        checkSize(expectedSize, collection.size(), collection::toString);
     }
 
     /**
@@ -108,7 +110,7 @@ public class SpecsCheck {
      * @param maxSize    the maximum size
      */
     public static void checkSizeRange(Collection<?> collection, int minSize, int maxSize) {
-        checkSizeRange(minSize, maxSize, collection.size(), () -> collection.toString());
+        checkSizeRange(minSize, maxSize, collection.size(), collection::toString);
     }
 
     /**

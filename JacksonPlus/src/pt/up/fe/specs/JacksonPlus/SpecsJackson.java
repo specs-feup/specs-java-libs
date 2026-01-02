@@ -25,7 +25,8 @@ import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 /**
- * Wrapper class with utility methods to use Jackson for JSON serialization and deserialization.
+ * Wrapper class with utility methods to use Jackson for JSON serialization and
+ * deserialization.
  */
 public class SpecsJackson {
 
@@ -33,8 +34,8 @@ public class SpecsJackson {
      * Reads an object from a JSON file at the given path.
      *
      * @param filePath the path to the JSON file
-     * @param clazz the class to deserialize to
-     * @param <T> the type of the object
+     * @param clazz    the class to deserialize to
+     * @param <T>      the type of the object
      * @return the deserialized object
      */
     public static <T> T fromFile(String filePath, Class<T> clazz) {
@@ -44,10 +45,10 @@ public class SpecsJackson {
     /**
      * Reads an object from a JSON file at the given path, with optional type info.
      *
-     * @param filePath the path to the JSON file
-     * @param clazz the class to deserialize to
+     * @param filePath    the path to the JSON file
+     * @param clazz       the class to deserialize to
      * @param hasTypeInfo whether to use type information
-     * @param <T> the type of the object
+     * @param <T>         the type of the object
      * @return the deserialized object
      */
     public static <T> T fromFile(String filePath, Class<T> clazz, boolean hasTypeInfo) {
@@ -58,9 +59,9 @@ public class SpecsJackson {
     /**
      * Reads an object from a JSON file.
      *
-     * @param file the JSON file
+     * @param file  the JSON file
      * @param clazz the class to deserialize to
-     * @param <T> the type of the object
+     * @param <T>   the type of the object
      * @return the deserialized object
      */
     public static <T> T fromFile(File file, Class<T> clazz) {
@@ -70,10 +71,10 @@ public class SpecsJackson {
     /**
      * Reads an object from a JSON file, with optional type info.
      *
-     * @param file the JSON file
-     * @param clazz the class to deserialize to
+     * @param file        the JSON file
+     * @param clazz       the class to deserialize to
      * @param hasTypeInfo whether to use type information
-     * @param <T> the type of the object
+     * @param <T>         the type of the object
      * @return the deserialized object
      */
     public static <T> T fromFile(File file, Class<T> clazz, boolean hasTypeInfo) {
@@ -87,8 +88,7 @@ public class SpecsJackson {
                         .build();
                 mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
             }
-            T object = mapper.readValue(br, clazz);
-            return object;
+            return mapper.readValue(br, clazz);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -98,8 +98,8 @@ public class SpecsJackson {
      * Reads an object from a JSON string.
      *
      * @param string the JSON string
-     * @param clazz the class to deserialize to
-     * @param <T> the type of the object
+     * @param clazz  the class to deserialize to
+     * @param <T>    the type of the object
      * @return the deserialized object
      */
     public static <T> T fromString(String string, Class<T> clazz) {
@@ -109,10 +109,10 @@ public class SpecsJackson {
     /**
      * Reads an object from a JSON string, with optional type info.
      *
-     * @param string the JSON string
-     * @param clazz the class to deserialize to
+     * @param string      the JSON string
+     * @param clazz       the class to deserialize to
      * @param hasTypeInfo whether to use type information
-     * @param <T> the type of the object
+     * @param <T>         the type of the object
      * @return the deserialized object
      */
     public static <T> T fromString(String string, Class<T> clazz, boolean hasTypeInfo) {
@@ -124,8 +124,7 @@ public class SpecsJackson {
                         .build();
                 mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
             }
-            T object = mapper.readValue(string, clazz);
-            return object;
+            return mapper.readValue(string, clazz);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -135,8 +134,8 @@ public class SpecsJackson {
      * Writes an object to a JSON file.
      *
      * @param object the object to serialize
-     * @param file the file to write to
-     * @param <T> the type of the object
+     * @param file   the file to write to
+     * @param <T>    the type of the object
      */
     public static <T> void toFile(T object, File file) {
         toFile(object, file, false);
@@ -145,10 +144,10 @@ public class SpecsJackson {
     /**
      * Writes an object to a JSON file, with optional type info.
      *
-     * @param object the object to serialize
-     * @param file the file to write to
+     * @param object        the object to serialize
+     * @param file          the file to write to
      * @param embedTypeInfo whether to embed type information
-     * @param <T> the type of the object
+     * @param <T>           the type of the object
      */
     public static <T> void toFile(T object, File file, boolean embedTypeInfo) {
         try {
@@ -171,7 +170,7 @@ public class SpecsJackson {
      * Serializes an object to a JSON string.
      *
      * @param object the object to serialize
-     * @param <T> the type of the object
+     * @param <T>    the type of the object
      * @return the JSON string
      */
     public static <T> String toString(T object) {
@@ -181,9 +180,9 @@ public class SpecsJackson {
     /**
      * Serializes an object to a JSON string, with optional type info.
      *
-     * @param object the object to serialize
+     * @param object        the object to serialize
      * @param embedTypeInfo whether to embed type information
-     * @param <T> the type of the object
+     * @param <T>           the type of the object
      * @return the JSON string
      */
     public static <T> String toString(T object, boolean embedTypeInfo) {

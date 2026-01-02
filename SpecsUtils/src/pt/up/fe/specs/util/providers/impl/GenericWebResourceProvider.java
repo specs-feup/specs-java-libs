@@ -15,31 +15,7 @@ package pt.up.fe.specs.util.providers.impl;
 
 import pt.up.fe.specs.util.providers.WebResourceProvider;
 
-public class GenericWebResourceProvider implements WebResourceProvider {
-
-    private final String rootUrl;
-    private final String resourceUrl;
-    private final String version;
-
-    public GenericWebResourceProvider(String rootUrl, String resourceUrl, String version) {
-        this.rootUrl = rootUrl;
-        this.resourceUrl = resourceUrl;
-        this.version = version;
-    }
-
-    @Override
-    public String getResourceUrl() {
-        return resourceUrl;
-    }
-
-    @Override
-    public String getRootUrl() {
-        return rootUrl;
-    }
-
-    @Override
-    public String getVersion() {
-        return version;
-    }
+public record GenericWebResourceProvider(String rootUrl, String resourceUrl,
+                                         String version) implements WebResourceProvider {
 
 }

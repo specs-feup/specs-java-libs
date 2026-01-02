@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.Serial;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,12 +41,15 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * Panel which loads and can edit the options file.
  *
- * <p>This panel provides controls for loading, editing, and saving application options.
+ * <p>
+ * This panel provides controls for loading, editing, and saving application
+ * options.
  * 
  * @author Joao Bispo
  */
 public class OptionsPanel extends GuiTab {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final App app;
@@ -61,7 +65,7 @@ public class OptionsPanel extends GuiTab {
     /**
      * Constructs an OptionsPanel for the given application and DataStore.
      *
-     * @param app the application instance
+     * @param app  the application instance
      * @param data the DataStore
      */
     public OptionsPanel(App app, DataStore data) {
@@ -86,9 +90,9 @@ public class OptionsPanel extends GuiTab {
         saveButton.setEnabled(false);
         saveAsButton = new JButton("Save as...");
 
-        saveButton.addActionListener(evt -> saveButtonActionPerformed(evt));
+        saveButton.addActionListener(this::saveButtonActionPerformed);
 
-        saveAsButton.addActionListener(evt -> saveAsButtonActionPerformed(evt));
+        saveAsButton.addActionListener(this::saveAsButtonActionPerformed);
 
         JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         savePanel.add(saveButton);
@@ -107,7 +111,7 @@ public class OptionsPanel extends GuiTab {
      *
      * @return a map of panel names to KeyPanel objects
      */
-    public Map<String, KeyPanel<? extends Object>> getPanels() {
+    public Map<String, KeyPanel<?>> getPanels() {
         return setupPanel.getPanels();
     }
 
@@ -199,7 +203,8 @@ public class OptionsPanel extends GuiTab {
     }
 
     /**
-     * Called when entering the tab. Updates the setup panel with the current configuration.
+     * Called when entering the tab. Updates the setup panel with the current
+     * configuration.
      */
     @Override
     public void enterTab() {
@@ -238,7 +243,7 @@ public class OptionsPanel extends GuiTab {
 
         File file = new File(optionsFilename);
         if (!file.isFile()) {
-            SpecsLogs.getLogger().warning("Could not open file '" + optionsFilename + "'");
+            SpecsLogs.warn("Could not open file '" + optionsFilename + "'");
             outputFile = null;
             saveButton.setEnabled(false);
             updateFileInfoString();
@@ -292,7 +297,7 @@ public class OptionsPanel extends GuiTab {
      * @param key the DataKey
      * @return the KeyPanel associated with the key
      */
-    public KeyPanel<? extends Object> getPanel(DataKey<?> key) {
+    public KeyPanel<?> getPanel(DataKey<?> key) {
         var panel = getPanels().get(key.getName());
 
         if (panel == null) {

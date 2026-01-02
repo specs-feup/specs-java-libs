@@ -17,6 +17,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,17 +34,21 @@ import org.suikasoft.jOptions.storedefinition.StoreSection;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Panel which contains the options for a setup, organizing KeyPanels for each DataKey.
+ * Panel which contains the options for a setup, organizing KeyPanels for each
+ * DataKey.
  *
- * <p>This panel arranges option panels for each DataKey in a StoreDefinition, supporting indentation and sectioning.
+ * <p>
+ * This panel arranges option panels for each DataKey in a StoreDefinition,
+ * supporting indentation and sectioning.
  *
  * @author Joao Bispo
  */
 public class BaseSetupPanel extends JPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    private final Map<String, KeyPanel<? extends Object>> panels;
+    private final Map<String, KeyPanel<?>> panels;
     private final StoreDefinition storeDefinition;
 
     /**
@@ -57,10 +62,11 @@ public class BaseSetupPanel extends JPanel {
     }
 
     /**
-     * Constructs a BaseSetupPanel for the given StoreDefinition, DataStore, and indentation level.
+     * Constructs a BaseSetupPanel for the given StoreDefinition, DataStore, and
+     * indentation level.
      *
-     * @param keys the StoreDefinition
-     * @param data the DataStore
+     * @param keys            the StoreDefinition
+     * @param data            the DataStore
      * @param identationLevel the indentation level
      */
     public BaseSetupPanel(StoreDefinition keys, DataStore data, int identationLevel) {
@@ -147,7 +153,7 @@ public class BaseSetupPanel extends JPanel {
      *
      * @return a map of KeyPanels
      */
-    public Map<String, KeyPanel<? extends Object>> getPanels() {
+    public Map<String, KeyPanel<?>> getPanels() {
         return panels;
     }
 
@@ -172,9 +178,9 @@ public class BaseSetupPanel extends JPanel {
     /**
      * Sets the value of a KeyPanel without type checking.
      *
-     * @param <T> the type of the KeyPanel
+     * @param <T>   the type of the KeyPanel
      * @param panel the KeyPanel
-     * @param o the value to set
+     * @param o     the value to set
      */
     @SuppressWarnings("unchecked")
     private static <T> void uncheckedSet(KeyPanel<T> panel, Object o) {
@@ -215,7 +221,8 @@ public class BaseSetupPanel extends JPanel {
     }
 
     /**
-     * Collects information in all the panels and returns a DataStore with the information.
+     * Collects information in all the panels and returns a DataStore with the
+     * information.
      *
      * @return a DataStore containing the collected information
      */

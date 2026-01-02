@@ -19,8 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a list of Tuple objects, providing utility methods for tuple management.
- * This class is an encapsulation of List<List<T>>. Does not guarantee that each tuple has to be of the same length.
+ * Represents a list of Tuple objects, providing utility methods for tuple
+ * management.
+ * This class is an encapsulation of List<List<T>>. Does not guarantee that each
+ * tuple has to be of the same length.
  * 
  * @author tiago
  *
@@ -46,7 +48,7 @@ public class TupleList<T> extends AbstractList<Tuple<T>> {
     /**
      * Creates a new instance of TupleList from multiple lists of elements.
      * 
-     * @param <T> the type of elements in the tuples
+     * @param <T>    the type of elements in the tuples
      * @param tuples the lists of elements to be converted into tuples
      * @return a new instance of TupleList containing the provided tuples
      */
@@ -62,7 +64,7 @@ public class TupleList<T> extends AbstractList<Tuple<T>> {
     /**
      * Creates a new instance of TupleList from multiple arrays of elements.
      * 
-     * @param <T> the type of elements in the tuples
+     * @param <T>    the type of elements in the tuples
      * @param tuples the arrays of elements to be converted into tuples
      * @return a new instance of TupleList containing the provided tuples
      */
@@ -116,9 +118,10 @@ public class TupleList<T> extends AbstractList<Tuple<T>> {
     }
 
     /**
-     * Adds a new tuple at the specified index, created from the provided list of elements.
+     * Adds a new tuple at the specified index, created from the provided list of
+     * elements.
      * 
-     * @param index the index at which to add the new tuple
+     * @param index    the index at which to add the new tuple
      * @param elements the list of elements to create the new tuple
      */
     public void add(int index, List<T> elements) {
@@ -126,7 +129,8 @@ public class TupleList<T> extends AbstractList<Tuple<T>> {
     }
 
     /**
-     * Adds a new tuple to the end of the list, created from the provided list of elements.
+     * Adds a new tuple to the end of the list, created from the provided list of
+     * elements.
      * 
      * @param elements the list of elements to create the new tuple
      */

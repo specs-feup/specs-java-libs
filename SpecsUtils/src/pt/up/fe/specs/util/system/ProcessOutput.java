@@ -81,13 +81,13 @@ public class ProcessOutput<O, E> {
     public String toString() {
         var output = new StringBuilder();
 
-        output.append("Return value: " + returnValue + "\n");
+        output.append("Return value: ").append(returnValue).append("\n");
 
-        output.append("StdOut: " + stdOut + "\n");
-        output.append("StdErr: " + stdErr + "\n");
+        output.append("StdOut: ").append(stdOut).append("\n");
+        output.append("StdErr: ").append(stdErr).append("\n");
 
         if (outputException != null) {
-            output.append("Exception: " + outputException);
+            output.append("Exception: ").append(outputException);
         }
 
         return output.toString();

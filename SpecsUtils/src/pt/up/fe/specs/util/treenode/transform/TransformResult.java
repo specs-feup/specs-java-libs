@@ -22,8 +22,7 @@ public interface TransformResult {
      * pre-order traversal strategy. <br>
      * 
      * By default returns true.
-     * 
-     * @return
+     *
      */
     boolean visitChildren();
 

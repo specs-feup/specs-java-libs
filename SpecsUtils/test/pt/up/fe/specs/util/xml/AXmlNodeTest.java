@@ -94,20 +94,13 @@ class AXmlNodeTest {
         }
 
         @Test
-        @DisplayName("Should provide abstract base for concrete implementations - BUG: Default methods with null node throw NPE")
+        @DisplayName("Should provide abstract base for concrete implementations")
         void testAbstractBasePattern() {
             TestXmlNode node = new TestXmlNode("test");
 
             // Test that we can call interface methods that have default implementations
-            // BUG: getText() throws NPE when getNode() returns null
-            assertThatThrownBy(() -> node.getText())
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Cannot invoke \"org.w3c.dom.Node.getTextContent()\"");
-
-            // BUG: getChildren() also throws NPE when getNode() returns null
-            assertThatThrownBy(() -> node.getChildren())
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("Cannot invoke \"org.w3c.dom.Node.getChildNodes()\"");
+            assertThat(node.getText()).isNull();
+            assertThat(node.getChildren()).isEmpty();
         }
 
         @Test

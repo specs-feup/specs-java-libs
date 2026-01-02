@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.suikasoft.jOptions.Datakey.CustomGetter;
@@ -25,12 +26,12 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.AppPersistence;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
-import pt.up.fe.specs.util.SpecsCheck;
-
 /**
  * Abstract base class for DataStore implementations.
  *
- * <p>This class provides a base implementation for DataStore, including value storage, definition management, and persistence support.
+ * <p>
+ * This class provides a base implementation for DataStore, including value
+ * storage, definition management, and persistence support.
  */
 public abstract class ADataStore implements DataStore {
 
@@ -44,8 +45,8 @@ public abstract class ADataStore implements DataStore {
     /**
      * Constructs an ADataStore with the given name, values, and store definition.
      *
-     * @param name the name of the DataStore
-     * @param values the map of values
+     * @param name       the name of the DataStore
+     * @param values     the map of values
      * @param definition the store definition
      */
     protected ADataStore(String name, Map<String, Object> values,
@@ -67,7 +68,7 @@ public abstract class ADataStore implements DataStore {
     /**
      * Constructs an ADataStore with the given name and another DataStore as source.
      *
-     * @param name the name of the DataStore
+     * @param name      the name of the DataStore
      * @param dataStore the source DataStore
      */
     public ADataStore(String name, DataStore dataStore) {
@@ -127,13 +128,10 @@ public abstract class ADataStore implements DataStore {
             return false;
         }
         if (values == null) {
-            if (other.values != null) {
-                return false;
-            }
-        } else if (!values.equals(other.values)) {
-            return false;
+            return other.values == null;
+        } else {
+            return values.equals(other.values);
         }
-        return true;
     }
 
     @Override
@@ -153,7 +151,7 @@ public abstract class ADataStore implements DataStore {
 
     @Override
     public <T, E extends T> ADataStore set(DataKey<T> key, E value) {
-        SpecsCheck.checkNotNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
+        Objects.requireNonNull(value, () -> "Tried to set a null value with key '" + key + "'. Use .remove() instead");
 
         T realValue = value;
 
@@ -184,7 +182,7 @@ public abstract class ADataStore implements DataStore {
         Optional<T> value = getTry(key);
 
         // If not present, there was already no value there
-        if (!value.isPresent()) {
+        if (value.isEmpty()) {
             return Optional.empty();
         }
 
@@ -197,7 +195,7 @@ public abstract class ADataStore implements DataStore {
 
     @Override
     public String getName() {
-        return getStoreDefinitionTry().map(def -> def.getName()).orElse(name);
+        return getStoreDefinitionTry().map(StoreDefinition::getName).orElse(name);
     }
 
     @Override
@@ -219,7 +217,7 @@ public abstract class ADataStore implements DataStore {
         // If value is null, use default value
         if (value == null) {
             Optional<T> defaultValue = key.getDefault();
-            if (!defaultValue.isPresent()) {
+            if (defaultValue.isEmpty()) {
                 throw new RuntimeException("No default value for key '" + key.getName() + "' in this object: " + this);
             }
 

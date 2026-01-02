@@ -34,8 +34,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(expectedResult, expectedCarryOut);
 
             // Then
-            assertThat(result.result).isEqualTo(expectedResult);
-            assertThat(result.carryOut).isEqualTo(expectedCarryOut);
+            assertThat(result.result()).isEqualTo(expectedResult);
+            assertThat(result.carryOut()).isEqualTo(expectedCarryOut);
         }
 
         @Test
@@ -49,8 +49,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(expectedResult, expectedCarryOut);
 
             // Then
-            assertThat(result.result).isEqualTo(expectedResult);
-            assertThat(result.carryOut).isEqualTo(expectedCarryOut);
+            assertThat(result.result()).isEqualTo(expectedResult);
+            assertThat(result.carryOut()).isEqualTo(expectedCarryOut);
         }
 
         @Test
@@ -64,8 +64,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(expectedResult, expectedCarryOut);
 
             // Then
-            assertThat(result.result).isEqualTo(expectedResult);
-            assertThat(result.carryOut).isEqualTo(expectedCarryOut);
+            assertThat(result.result()).isEqualTo(expectedResult);
+            assertThat(result.carryOut()).isEqualTo(expectedCarryOut);
         }
 
         @Test
@@ -79,8 +79,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(expectedResult, expectedCarryOut);
 
             // Then
-            assertThat(result.result).isEqualTo(expectedResult);
-            assertThat(result.carryOut).isEqualTo(expectedCarryOut);
+            assertThat(result.result()).isEqualTo(expectedResult);
+            assertThat(result.carryOut()).isEqualTo(expectedCarryOut);
         }
 
         @Test
@@ -94,8 +94,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(expectedResult, expectedCarryOut);
 
             // Then
-            assertThat(result.result).isEqualTo(expectedResult);
-            assertThat(result.carryOut).isEqualTo(expectedCarryOut);
+            assertThat(result.result()).isEqualTo(expectedResult);
+            assertThat(result.carryOut()).isEqualTo(expectedCarryOut);
         }
     }
 
@@ -111,7 +111,7 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(expectedResult, 0);
 
             // When & Then
-            assertThat(result.result).isEqualTo(expectedResult);
+            assertThat(result.result()).isEqualTo(expectedResult);
         }
 
         @Test
@@ -122,7 +122,7 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(0, expectedCarryOut);
 
             // When & Then
-            assertThat(result.carryOut).isEqualTo(expectedCarryOut);
+            assertThat(result.carryOut()).isEqualTo(expectedCarryOut);
         }
 
         @Test
@@ -134,10 +134,10 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(originalResult, originalCarryOut);
 
             // When accessing fields multiple times
-            int result1 = result.result;
-            int carry1 = result.carryOut;
-            int result2 = result.result;
-            int carry2 = result.carryOut;
+            int result1 = result.result();
+            int carry1 = result.carryOut();
+            int result2 = result.result();
+            int carry2 = result.carryOut();
 
             // Then values should remain consistent
             assertThat(result1).isEqualTo(result2).isEqualTo(originalResult);
@@ -160,8 +160,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(sum, carryOut);
 
             // Then
-            assertThat(result.result).isEqualTo(8);
-            assertThat(result.carryOut).isEqualTo(0);
+            assertThat(result.result()).isEqualTo(8);
+            assertThat(result.carryOut()).isEqualTo(0);
         }
 
         @Test
@@ -175,8 +175,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(sum, carryOut);
 
             // Then
-            assertThat(result.result).isEqualTo(0xFFFFFFFF);
-            assertThat(result.carryOut).isEqualTo(1);
+            assertThat(result.result()).isEqualTo(0xFFFFFFFF);
+            assertThat(result.carryOut()).isEqualTo(1);
         }
 
         @Test
@@ -190,8 +190,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(difference, carryOut);
 
             // Then
-            assertThat(result.result).isEqualTo(-1);
-            assertThat(result.carryOut).isEqualTo(1);
+            assertThat(result.result()).isEqualTo(-1);
+            assertThat(result.carryOut()).isEqualTo(1);
         }
 
         @Test
@@ -202,10 +202,10 @@ class ArithmeticResult32Test {
             ArithmeticResult32 minUnderflow = new ArithmeticResult32(Integer.MAX_VALUE, 0);
 
             // Then
-            assertThat(maxOverflow.result).isEqualTo(Integer.MIN_VALUE);
-            assertThat(maxOverflow.carryOut).isEqualTo(1);
-            assertThat(minUnderflow.result).isEqualTo(Integer.MAX_VALUE);
-            assertThat(minUnderflow.carryOut).isEqualTo(0);
+            assertThat(maxOverflow.result()).isEqualTo(Integer.MIN_VALUE);
+            assertThat(maxOverflow.carryOut()).isEqualTo(1);
+            assertThat(minUnderflow.result()).isEqualTo(Integer.MAX_VALUE);
+            assertThat(minUnderflow.carryOut()).isEqualTo(0);
         }
     }
 
@@ -222,12 +222,12 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result3 = new ArithmeticResult32(0b10101010, 1);
 
             // Then
-            assertThat(result1.result).isEqualTo(0b11110000);
-            assertThat(result1.carryOut).isEqualTo(1);
-            assertThat(result2.result).isEqualTo(0b00001111);
-            assertThat(result2.carryOut).isEqualTo(0);
-            assertThat(result3.result).isEqualTo(0b10101010);
-            assertThat(result3.carryOut).isEqualTo(1);
+            assertThat(result1.result()).isEqualTo(0b11110000);
+            assertThat(result1.carryOut()).isEqualTo(1);
+            assertThat(result2.result()).isEqualTo(0b00001111);
+            assertThat(result2.carryOut()).isEqualTo(0);
+            assertThat(result3.result()).isEqualTo(0b10101010);
+            assertThat(result3.carryOut()).isEqualTo(1);
         }
 
         @Test
@@ -239,12 +239,12 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result3 = new ArithmeticResult32(0x12345678, 1);
 
             // Then
-            assertThat(result1.result).isEqualTo(0xDEADBEEF);
-            assertThat(result1.carryOut).isEqualTo(1);
-            assertThat(result2.result).isEqualTo(0xCAFEBABE);
-            assertThat(result2.carryOut).isEqualTo(0);
-            assertThat(result3.result).isEqualTo(0x12345678);
-            assertThat(result3.carryOut).isEqualTo(1);
+            assertThat(result1.result()).isEqualTo(0xDEADBEEF);
+            assertThat(result1.carryOut()).isEqualTo(1);
+            assertThat(result2.result()).isEqualTo(0xCAFEBABE);
+            assertThat(result2.carryOut()).isEqualTo(0);
+            assertThat(result3.result()).isEqualTo(0x12345678);
+            assertThat(result3.carryOut()).isEqualTo(1);
         }
     }
 
@@ -262,8 +262,8 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result = new ArithmeticResult32(allOnes, 1);
 
             // Then
-            assertThat(result.result).isEqualTo(allOnes);
-            assertThat(result.carryOut).isEqualTo(1);
+            assertThat(result.result()).isEqualTo(allOnes);
+            assertThat(result.carryOut()).isEqualTo(1);
         }
 
         @Test
@@ -278,10 +278,10 @@ class ArithmeticResult32Test {
             ArithmeticResult32 result2 = new ArithmeticResult32(pattern2, 1);
 
             // Then
-            assertThat(result1.result).isEqualTo(pattern1);
-            assertThat(result1.carryOut).isEqualTo(0);
-            assertThat(result2.result).isEqualTo(pattern2);
-            assertThat(result2.carryOut).isEqualTo(1);
+            assertThat(result1.result()).isEqualTo(pattern1);
+            assertThat(result1.carryOut()).isEqualTo(0);
+            assertThat(result2.result()).isEqualTo(pattern2);
+            assertThat(result2.carryOut()).isEqualTo(1);
         }
 
         @Test
@@ -295,8 +295,8 @@ class ArithmeticResult32Test {
                 ArithmeticResult32 result = new ArithmeticResult32(power, power & 1);
 
                 // Then
-                assertThat(result.result).isEqualTo(power);
-                assertThat(result.carryOut).isEqualTo(power & 1);
+                assertThat(result.result()).isEqualTo(power);
+                assertThat(result.carryOut()).isEqualTo(power & 1);
             }
         }
     }
@@ -314,12 +314,12 @@ class ArithmeticResult32Test {
             ArithmeticResult32 mulResult = new ArithmeticResult32(0xABCDEF00, 0);
 
             // Then: Should store both result and carry/overflow information
-            assertThat(addResult.result).isEqualTo(0x12345678);
-            assertThat(addResult.carryOut).isEqualTo(0);
-            assertThat(subResult.result).isEqualTo(0x87654321);
-            assertThat(subResult.carryOut).isEqualTo(1);
-            assertThat(mulResult.result).isEqualTo(0xABCDEF00);
-            assertThat(mulResult.carryOut).isEqualTo(0);
+            assertThat(addResult.result()).isEqualTo(0x12345678);
+            assertThat(addResult.carryOut()).isEqualTo(0);
+            assertThat(subResult.result()).isEqualTo(0x87654321);
+            assertThat(subResult.carryOut()).isEqualTo(1);
+            assertThat(mulResult.result()).isEqualTo(0xABCDEF00);
+            assertThat(mulResult.carryOut()).isEqualTo(0);
         }
 
         @Test
@@ -331,12 +331,12 @@ class ArithmeticResult32Test {
             ArithmeticResult32 negativeFlag = new ArithmeticResult32(-1, 0);
 
             // Then: Should properly represent flag states
-            assertThat(zeroFlag.result).isEqualTo(0);
-            assertThat(zeroFlag.carryOut).isEqualTo(0);
-            assertThat(carryFlag.result).isEqualTo(42);
-            assertThat(carryFlag.carryOut).isEqualTo(1);
-            assertThat(negativeFlag.result).isEqualTo(-1);
-            assertThat(negativeFlag.carryOut).isEqualTo(0);
+            assertThat(zeroFlag.result()).isEqualTo(0);
+            assertThat(zeroFlag.carryOut()).isEqualTo(0);
+            assertThat(carryFlag.result()).isEqualTo(42);
+            assertThat(carryFlag.carryOut()).isEqualTo(1);
+            assertThat(negativeFlag.result()).isEqualTo(-1);
+            assertThat(negativeFlag.carryOut()).isEqualTo(0);
         }
     }
 }

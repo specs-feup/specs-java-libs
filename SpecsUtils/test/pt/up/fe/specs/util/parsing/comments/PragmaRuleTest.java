@@ -82,8 +82,8 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(result.get().getText()).isEqualTo("once");
+            assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(result.get().text()).isEqualTo("once");
 
             // Verify iterator not used for single line pragma
             verifyNoInteractions(mockIterator);
@@ -97,8 +97,8 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(result.get().getText()).isEqualTo("pack(push, 1)");
+            assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(result.get().text()).isEqualTo("pack(push, 1)");
         }
 
         @Test
@@ -109,8 +109,8 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(result.get().getText()).isEqualTo("warning(disable: 4996)");
+            assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(result.get().text()).isEqualTo("warning(disable: 4996)");
         }
 
         @Test
@@ -126,7 +126,7 @@ public class PragmaRuleTest {
             pragmaVariations.forEach(pragma -> {
                 Optional<TextElement> result = rule.apply(pragma, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
+                assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
             });
         }
 
@@ -138,8 +138,8 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(result.get().getText()).isEmpty();
+            assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(result.get().text()).isEmpty();
         }
 
         @Test
@@ -150,7 +150,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("pack   (1)");
+            assertThat(result.get().text()).isEqualTo("pack   (1)");
         }
     }
 
@@ -170,8 +170,8 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(result.get().getText()).isEqualTo("first_part \nsecond_part");
+            assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(result.get().text()).isEqualTo("first_part \nsecond_part");
 
             verify(mockIterator).hasNext();
             verify(mockIterator).next();
@@ -189,8 +189,8 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(result.get().getText()).isEqualTo("first_line \nsecond_line \nfinal_line");
+            assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(result.get().text()).isEqualTo("first_line \nsecond_line \nfinal_line");
 
             verify(mockIterator, times(2)).hasNext();
             verify(mockIterator, times(2)).next();
@@ -208,7 +208,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("start \n\nfinal_content");
+            assertThat(result.get().text()).isEqualTo("start \n\nfinal_content");
         }
 
         @Test
@@ -223,7 +223,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("start\ncontinuation");
+            assertThat(result.get().text()).isEqualTo("start\ncontinuation");
         }
 
         @Test
@@ -241,7 +241,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            String text = result.get().getText();
+            String text = result.get().text();
             assertThat(text).contains("warning(push)");
             assertThat(text).contains("warning(disable: 4996)");
             assertThat(text).contains("warning(disable: 4244)");
@@ -363,7 +363,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("once");
+            assertThat(result.get().text()).isEqualTo("once");
         }
 
         @Test
@@ -412,8 +412,8 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("pack(1)");
-            assertThat(result.get().getText()).doesNotContain("#pragma");
+            assertThat(result.get().text()).isEqualTo("pack(1)");
+            assertThat(result.get().text()).doesNotContain("#pragma");
         }
 
         @Test
@@ -424,7 +424,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("warning(disable: 4996, 4244)");
+            assertThat(result.get().text()).isEqualTo("warning(disable: 4996, 4244)");
         }
 
         @Test
@@ -436,7 +436,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("omp parallel for private(i) shared(array)");
+            assertThat(result.get().text()).isEqualTo("omp parallel for private(i) shared(array)");
         }
 
         @Test
@@ -451,7 +451,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("line1 \nline2 \nline3");
+            assertThat(result.get().text()).isEqualTo("line1 \nline2 \nline3");
         }
 
         @Test
@@ -466,8 +466,8 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("first_part \nfinal_part");
-            assertThat(result.get().getText()).doesNotContain("\\");
+            assertThat(result.get().text()).isEqualTo("first_part \nfinal_part");
+            assertThat(result.get().text()).doesNotContain("\\");
         }
     }
 
@@ -483,7 +483,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEmpty();
+            assertThat(result.get().text()).isEmpty();
         }
 
         @Test
@@ -498,7 +498,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("\ncontent");
+            assertThat(result.get().text()).isEqualTo("\ncontent");
         }
 
         @Test
@@ -513,7 +513,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("line1 \nline2 \nline3");
+            assertThat(result.get().text()).isEqualTo("line1 \nline2 \nline3");
         }
 
         @Test
@@ -525,7 +525,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).contains("Unicode: \u2603 \u03B1\u03B2\u03B3");
+            assertThat(result.get().text()).contains("Unicode: \u2603 \u03B1\u03B2\u03B3");
         }
 
         @Test
@@ -539,7 +539,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo(longContent.trim());
+            assertThat(result.get().text()).isEqualTo(longContent.trim());
         }
     }
 
@@ -561,9 +561,9 @@ public class PragmaRuleTest {
             openMPPragmas.forEach(pragma -> {
                 Optional<TextElement> result = rule.apply(pragma, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
+                assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
                 String expectedContent = pragma.substring("#pragma ".length());
-                assertThat(result.get().getText()).isEqualTo(expectedContent);
+                assertThat(result.get().text()).isEqualTo(expectedContent);
             });
         }
 
@@ -582,7 +582,7 @@ public class PragmaRuleTest {
             msvcPragmas.forEach(pragma -> {
                 Optional<TextElement> result = rule.apply(pragma, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
+                assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
             });
         }
 
@@ -600,7 +600,7 @@ public class PragmaRuleTest {
             gccPragmas.forEach(pragma -> {
                 Optional<TextElement> result = rule.apply(pragma, mockIterator);
                 assertThat(result).isPresent();
-                assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
+                assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
             });
         }
 
@@ -619,7 +619,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            String text = result.get().getText();
+            String text = result.get().text();
             assertThat(text).contains("define_loop");
             assertThat(text).contains("for (int i = 0; i < n; i++)");
             assertThat(text).contains("array[i] = i * 2;");
@@ -639,7 +639,7 @@ public class PragmaRuleTest {
                     String pragma = "#pragma directive_" + i;
                     Optional<TextElement> result = rule.apply(pragma, mockIterator);
                     assertThat(result).isPresent();
-                    assertThat(result.get().getText()).isEqualTo("directive_" + i);
+                    assertThat(result.get().text()).isEqualTo("directive_" + i);
                 }
             }).doesNotThrowAnyException();
         }
@@ -655,7 +655,7 @@ public class PragmaRuleTest {
                                 String pragma = "#pragma thread_" + i + "_directive_" + j;
                                 Optional<TextElement> result = rule.apply(pragma, mockIterator);
                                 assertThat(result).isPresent();
-                                assertThat(result.get().getType()).isEqualTo(TextElementType.PRAGMA);
+                                assertThat(result.get().type()).isEqualTo(TextElementType.PRAGMA);
                             }
                         }))
                         .toList();
@@ -683,8 +683,8 @@ public class PragmaRuleTest {
             TextElement element = result.get();
 
             // Should work through TextElement interface
-            assertThat(element.getType()).isEqualTo(TextElementType.PRAGMA);
-            assertThat(element.getText()).isEqualTo("integration_test");
+            assertThat(element.type()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(element.text()).isEqualTo("integration_test");
 
             // Should be a GenericTextElement instance (from factory method)
             assertThat(element).isInstanceOf(GenericTextElement.class);
@@ -704,7 +704,7 @@ public class PragmaRuleTest {
 
             // Assert
             assertThat(result).isPresent();
-            assertThat(result.get().getText()).isEqualTo("first_line \nsecond_line \nthird_line");
+            assertThat(result.get().text()).isEqualTo("first_line \nsecond_line \nthird_line");
 
             // Iterator should be properly consumed
             assertThat(realIterator.hasNext()).isFalse();
@@ -721,7 +721,7 @@ public class PragmaRuleTest {
             // Test pragma detection
             Optional<TextElement> pragmaResult = pragmaRule.apply("#pragma once", mockIterator);
             assertThat(pragmaResult).isPresent();
-            assertThat(pragmaResult.get().getType()).isEqualTo(TextElementType.PRAGMA);
+            assertThat(pragmaResult.get().type()).isEqualTo(TextElementType.PRAGMA);
 
             // Test that inline comment rule doesn't interfere
             Optional<TextElement> inlineResult = inlineRule.apply("#pragma once", mockIterator);
@@ -730,7 +730,7 @@ public class PragmaRuleTest {
             // Test inline comment with pragma content
             Optional<TextElement> commentResult = inlineRule.apply("// #pragma once", mockIterator);
             assertThat(commentResult).isPresent();
-            assertThat(commentResult.get().getType()).isEqualTo(TextElementType.INLINE_COMMENT);
+            assertThat(commentResult.get().type()).isEqualTo(TextElementType.INLINE_COMMENT);
         }
     }
 }

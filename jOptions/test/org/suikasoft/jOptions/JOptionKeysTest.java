@@ -1,6 +1,7 @@
 package org.suikasoft.jOptions;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -233,7 +234,7 @@ class JOptionKeysTest {
             // No need to stub since NPE is thrown before dataStore access
 
             // This should throw NPE as expected
-            org.junit.jupiter.api.Assertions.assertThrows(
+            assertThrows(
                     NullPointerException.class,
                     () -> JOptionKeys.getContextPath((File) null, mockDataStore));
         }
@@ -244,7 +245,7 @@ class JOptionKeysTest {
             // No need to stub since NPE is thrown before dataStore access
 
             // This should throw NPE as expected
-            org.junit.jupiter.api.Assertions.assertThrows(
+            assertThrows(
                     NullPointerException.class,
                     () -> JOptionKeys.getContextPath((String) null, mockDataStore));
         }
@@ -255,7 +256,7 @@ class JOptionKeysTest {
             File testFile = new File("test.txt");
 
             // This should throw NPE as expected
-            org.junit.jupiter.api.Assertions.assertThrows(
+            assertThrows(
                     NullPointerException.class,
                     () -> JOptionKeys.getContextPath(testFile, null));
         }

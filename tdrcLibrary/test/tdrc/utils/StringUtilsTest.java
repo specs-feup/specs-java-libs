@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.DisplayName;
@@ -236,7 +237,7 @@ class StringUtilsTest {
         @Test
         @DisplayName("Join single item collection")
         void testJoin_WithSingleItem_ReturnsItemAsString() {
-            Collection<String> single = Collections.singletonList("alone");
+            Collection<String> single = List.of("alone");
 
             assertThat(StringUtils.join(single, ", ")).isEqualTo("alone");
             assertThat(StringUtils.joinStrings(single, ", ")).isEqualTo("alone");

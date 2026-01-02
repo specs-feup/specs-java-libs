@@ -102,9 +102,7 @@ public interface ResourceProvider extends FileResourceProvider {
 
         List<ResourceProvider> resources = new ArrayList<>(resourcesArray.length);
 
-        for (ResourceProvider provider : resourcesArray) {
-            resources.add(provider);
-        }
+        Collections.addAll(resources, resourcesArray);
 
         return resources;
     }
@@ -152,9 +150,7 @@ public interface ResourceProvider extends FileResourceProvider {
 
         List<ResourceProvider> resources = new ArrayList<>(enums.length);
 
-        for (K anEnum : enums) {
-            resources.add(anEnum);
-        }
+        Collections.addAll(resources, enums);
 
         return resources;
     }
@@ -278,7 +274,7 @@ public interface ResourceProvider extends FileResourceProvider {
      * @return the version string
      */
     @Override
-    default String getVersion() {
+    default String version() {
         return getDefaultVersion();
     }
 

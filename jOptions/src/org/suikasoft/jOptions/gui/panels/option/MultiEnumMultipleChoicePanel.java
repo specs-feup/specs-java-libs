@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +31,15 @@ import pt.up.fe.specs.util.SpecsCheck;
 /**
  * Panel for selecting multiple enum values using combo boxes.
  *
- * <p>This panel provides controls for selecting and managing multiple enum values for a DataKey of type List<T>.
+ * <p>
+ * This panel provides controls for selecting and managing multiple enum values
+ * for a DataKey of type List<T>.
  *
  * @param <T> the enum type
  */
 public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<List<T>> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -47,9 +51,10 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
     private final JButton addButton;
 
     /**
-     * Constructs a MultiEnumMultipleChoicePanel for the given DataKey and DataStore.
+     * Constructs a MultiEnumMultipleChoicePanel for the given DataKey and
+     * DataStore.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public MultiEnumMultipleChoicePanel(DataKey<List<T>> key, DataStore data) {
@@ -65,7 +70,8 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
         addButton.addActionListener(this::addButtonAction);
         removeButton.addActionListener(this::removeButtonAction);
 
-        // Default must be defined, otherwise we are not able to populate the available choices
+        // Default must be defined, otherwise we are not able to populate the available
+        // choices
         var defaultValues = key.getDefault().orElseThrow(
                 () -> new RuntimeException("Must define a default value, otherwise we cannot obtain Enum class"));
         SpecsCheck.checkArgument(!defaultValues.isEmpty(),
@@ -100,7 +106,7 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
      * Returns the index of the given element in the combo box.
      *
      * @param comboBox the combo box
-     * @param element the element to find
+     * @param element  the element to find
      * @return the index of the element, or -1 if not found
      */
     private int indexOf(JComboBox<T> comboBox, T element) {
@@ -115,8 +121,8 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
     /**
      * Moves an element from the source combo box to the destination combo box.
      *
-     * @param element the element to move
-     * @param source the source combo box
+     * @param element     the element to move
+     * @param source      the source combo box
      * @param destination the destination combo box
      */
     private void moveElement(T element, JComboBox<T> source, JComboBox<T> destination) {
@@ -171,7 +177,7 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
      * Sets the value of the selected elements.
      *
      * @param value the list of elements to set
-     * @param <ET> the type of the list
+     * @param <ET>  the type of the list
      */
     @Override
     public <ET extends List<T>> void setValue(ET value) {

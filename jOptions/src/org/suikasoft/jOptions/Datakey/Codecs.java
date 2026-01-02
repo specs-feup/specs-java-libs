@@ -25,9 +25,12 @@ import pt.up.fe.specs.util.collections.MultiMap;
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
- * Utility class for common {@link pt.up.fe.specs.util.parsing.StringCodec} implementations for DataKey types.
+ * Utility class for common {@link pt.up.fe.specs.util.parsing.StringCodec}
+ * implementations for DataKey types.
  *
- * <p>This class provides static methods to create codecs for common types such as File and Map<File, File>.
+ * <p>
+ * This class provides static methods to create codecs for common types such as
+ * File and Map<File, File>.
  */
 public class Codecs {
 
@@ -54,7 +57,8 @@ public class Codecs {
     }
 
     /**
-     * Creates a {@link StringCodec} for mapping {@link File} objects to their base folders.
+     * Creates a {@link StringCodec} for mapping {@link File} objects to their base
+     * folders.
      *
      * @return a codec for encoding and decoding mappings of files to base folders
      */
@@ -63,7 +67,8 @@ public class Codecs {
     }
 
     /**
-     * Decodes a string representation of file-to-base-folder mappings into a {@link Map}.
+     * Decodes a string representation of file-to-base-folder mappings into a
+     * {@link Map}.
      *
      * @param value the string representation of the mappings
      * @return a map of files to their base folders
@@ -103,17 +108,16 @@ public class Codecs {
         }
 
         if (basesToPaths.size() == 1 && basesToPaths.containsKey("")) {
-            return basesToPaths.get("").stream().collect(Collectors.joining());
+            return String.join("", basesToPaths.get(""));
         }
 
         String pathsNoPrefix = basesToPaths.get("") == null ? ""
-                : basesToPaths.get("").stream()
-                        .collect(Collectors.joining(FILES_WITH_BASE_FOLDER_SEPARATOR));
+                : String.join(FILES_WITH_BASE_FOLDER_SEPARATOR, basesToPaths.get(""));
 
         String pathsWithPrefix = basesToPaths.entrySet().stream()
                 .filter(entry -> !entry.getKey().isEmpty())
                 .map(entry -> "$" + entry.getKey() + "$"
-                        + entry.getValue().stream().collect(Collectors.joining(FILES_WITH_BASE_FOLDER_SEPARATOR)))
+                        + String.join(FILES_WITH_BASE_FOLDER_SEPARATOR, entry.getValue()))
                 .collect(Collectors.joining());
 
         return pathsNoPrefix + pathsWithPrefix;

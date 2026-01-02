@@ -22,8 +22,7 @@ public interface JumpDetector {
 
     /**
      * Feeds an instruction to the detector.
-     * 
-     * @param instruction
+     *
      */
     public void giveInstruction(Object instruction);
 

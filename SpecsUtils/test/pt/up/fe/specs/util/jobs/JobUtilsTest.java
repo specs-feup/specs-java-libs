@@ -321,7 +321,8 @@ class JobUtilsTest {
             int result = JobUtils.runJob(job);
 
             // Assert
-            assertThat(result).isEqualTo(-1);
+            // Job returns 0 when interrupted due to exception
+            assertThat(result).isEqualTo(0);
         }
 
         @Test
@@ -364,13 +365,11 @@ class JobUtilsTest {
             boolean result = JobUtils.runJobs(jobs);
 
             // Assert
-            // BUG: Due to the documented bug in Job.run(), interruption is not properly
-            // detected
-            // Jobs with exceptions return -1 but Job.isInterrupted() stays false
-            // So runJobs continues executing remaining jobs
-            assertThat(result).isTrue(); // Current behavior - should be false
+            // Jobs with exceptions properly set interrupted flag, so runJobs stops
+            // execution
+            assertThat(result).isFalse();
             assertThat(job1Executed.get()).isTrue();
-            assertThat(job2Executed.get()).isTrue(); // Current behavior - should be false
+            assertThat(job2Executed.get()).isFalse();
         }
 
         @Test
@@ -402,22 +401,24 @@ class JobUtilsTest {
         }
 
         @Test
-        @DisplayName("Should handle empty extensions collection")
-        void testGetSourcesFilesMode_EmptyExtensions_ReturnsEmpty() throws Exception {
+        @DisplayName("Should handle empty extensions by selecting all files")
+        void testGetSourcesFilesMode_EmptyExtensions_SelectsAll() throws Exception {
             // Arrange
             File sourceFolder = tempDir.toFile();
-            new File(sourceFolder, "test.java").createNewFile();
+            File created = new File(sourceFolder, "test.java");
+            created.createNewFile();
             Collection<String> emptyExtensions = new HashSet<>();
 
             // Act
             List<FileSet> result = JobUtils.getSourcesFilesMode(sourceFolder, emptyExtensions);
 
             // Assert
-            // Note: Current implementation behavior - SpecsIo.getFilesRecursive with empty
-            // extensions
-            // appears to match all files, which may be a bug in SpecsIo
+            // Empty extensions => no filtering in SpecsIo.getFilesRecursive
             assertThat(result).hasSize(1);
-            assertThat(result.get(0).getSourceFilenames()).hasSize(1);
+            FileSet fileSet = result.get(0);
+            assertThat(fileSet.outputName()).isEqualTo("test");
+            assertThat(fileSet.getSourceFilenames()).hasSize(1);
+            assertThat(fileSet.getSourceFilenames().get(0)).endsWith("test.java");
         }
 
         @Test

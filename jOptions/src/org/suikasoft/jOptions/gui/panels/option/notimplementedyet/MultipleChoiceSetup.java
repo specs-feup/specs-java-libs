@@ -16,7 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option.notimplementedyet;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,10 +42,13 @@ import pt.up.fe.specs.util.SpecsLogs;
 /**
  * Panel for editing and managing multiple choice setup panels.
  *
- * <p>This panel provides controls for adding and managing multiple setup elements for a MultipleSetup instance.
+ * <p>
+ * This panel provides controls for adding and managing multiple setup elements
+ * for a MultipleSetup instance.
  */
 public class MultipleChoiceSetup extends FieldPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -65,11 +68,12 @@ public class MultipleChoiceSetup extends FieldPanel {
     private List<BaseSetupPanel> elementsOptionPanels;
 
     /**
-     * Constructs a MultipleChoiceSetup for the given enum option, label, and MultipleSetup.
+     * Constructs a MultipleChoiceSetup for the given enum option, label, and
+     * MultipleSetup.
      *
      * @param enumOption the SetupFieldEnum
-     * @param labelName the label for the panel
-     * @param setup the MultipleSetup instance
+     * @param labelName  the label for the panel
+     * @param setup      the MultipleSetup instance
      */
     public MultipleChoiceSetup(SetupFieldEnum enumOption, String labelName, MultipleSetup setup) {
         // Initialize objects
@@ -83,14 +87,7 @@ public class MultipleChoiceSetup extends FieldPanel {
         }
 
         // Add actions
-        choicesBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                choiceComboBoxActionPerformed(e);
-            }
-
-        });
+        choicesBox.addActionListener(this::choiceComboBoxActionPerformed);
 
         // Build choice panel
         choicePanel = buildChoicePanel();
@@ -179,9 +176,7 @@ public class MultipleChoiceSetup extends FieldPanel {
         BaseSetupPanel newPanel = new BaseSetupPanel(setupKeys);
         elementsOptionPanels.add(newPanel);
 
-        int elementIndex = elementsBoxShadow.size() - 1;
-
-        return elementIndex;
+        return elementsBoxShadow.size() - 1;
     }
 
     /**
@@ -220,7 +215,7 @@ public class MultipleChoiceSetup extends FieldPanel {
         int setupIndex = choicesBoxNames.indexOf(enumName);
 
         if (setupIndex == -1) {
-            SpecsLogs.getLogger().warning("Could not find enum '" + enumName + "'. Available enums:" + setups);
+            SpecsLogs.warn("Could not find enum '" + enumName + "'. Available enums:" + setups);
             return;
         }
 
@@ -257,15 +252,15 @@ public class MultipleChoiceSetup extends FieldPanel {
     public ListOfSetups getSetups() {
         List<SetupData> listOfSetups = new ArrayList<>();
 
-        for (int i = 0; i < elementsOptionPanels.size(); i++) {
-            listOfSetups.add(elementsOptionPanels.get(i).getMapWithValues());
+        for (BaseSetupPanel elementsOptionPanel : elementsOptionPanels) {
+            listOfSetups.add(elementsOptionPanel.getMapWithValues());
         }
 
         ListOfSetups currentSetups = new ListOfSetups(listOfSetups);
 
         int choice = choicesBox.getSelectedIndex();
         if (choice == -1) {
-            SpecsLogs.getLogger().warning("Could not get index of selected setup.");
+            SpecsLogs.warn("Could not get index of selected setup.");
             return null;
         }
         currentSetups.setPreferredIndex(choice);

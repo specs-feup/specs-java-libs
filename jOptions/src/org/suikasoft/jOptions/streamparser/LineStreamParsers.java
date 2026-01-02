@@ -27,7 +27,8 @@ import pt.up.fe.specs.util.providers.StringProvider;
 import pt.up.fe.specs.util.utilities.LineStream;
 
 /**
- * Utility methods for parsing general-purpose information from a {@link pt.up.fe.specs.util.utilities.LineStream}.
+ * Utility methods for parsing general-purpose information from a
+ * {@link pt.up.fe.specs.util.utilities.LineStream}.
  */
 public class LineStreamParsers {
 
@@ -49,7 +50,8 @@ public class LineStreamParsers {
     }
 
     /**
-     * Parses a boolean from the next line of the stream, accepting "1" as true and "0" as false.
+     * Parses a boolean from the next line of the stream, accepting "1" as true and
+     * "0" as false.
      *
      * @param lines the line stream
      * @return the boolean value
@@ -82,7 +84,7 @@ public class LineStreamParsers {
      * Parses an enum from its ordinal value in the next line of the stream.
      *
      * @param enumClass the class of the enum
-     * @param lines the line stream
+     * @param lines     the line stream
      * @return the enum value
      */
     public static <T extends Enum<T>> T enumFromOrdinal(Class<T> enumClass, LineStream lines) {
@@ -93,7 +95,7 @@ public class LineStreamParsers {
      * Parses an enum from its name in the next line of the stream.
      *
      * @param enumClass the class of the enum
-     * @param lines the line stream
+     * @param lines     the line stream
      * @return the enum value
      */
     public static <T extends Enum<T>> T enumFromName(Class<T> enumClass, LineStream lines) {
@@ -104,7 +106,7 @@ public class LineStreamParsers {
      * Parses an enum from its integer value in the next line of the stream.
      *
      * @param helper the enum helper
-     * @param lines the line stream
+     * @param lines  the line stream
      * @return the enum value
      */
     public static <T extends Enum<T> & StringProvider> T enumFromInt(EnumHelperWithValue<T> helper,
@@ -116,7 +118,7 @@ public class LineStreamParsers {
      * Parses an enum from its name in the next line of the stream.
      *
      * @param helper the enum helper
-     * @param lines the line stream
+     * @param lines  the line stream
      * @return the enum value
      */
     public static <T extends Enum<T> & StringProvider> T enumFromName(EnumHelperWithValue<T> helper,
@@ -128,7 +130,7 @@ public class LineStreamParsers {
      * Parses an enum from its value in the next line of the stream.
      *
      * @param helper the enum helper
-     * @param lines the line stream
+     * @param lines  the line stream
      * @return the enum value
      */
     public static <T extends Enum<T> & StringProvider> T enumFromValue(EnumHelperWithValue<T> helper,
@@ -138,10 +140,11 @@ public class LineStreamParsers {
     }
 
     /**
-     * Parses a list of enums from their names in the stream. The first line represents the number of enums to parse.
+     * Parses a list of enums from their names in the stream. The first line
+     * represents the number of enums to parse.
      *
      * @param helper the enum helper
-     * @param lines the line stream
+     * @param lines  the line stream
      * @return the list of enums
      */
     public static <T extends Enum<T> & StringProvider> List<T> enumListFromName(EnumHelperWithValue<T> helper,
@@ -155,13 +158,14 @@ public class LineStreamParsers {
     }
 
     /**
-     * Checks for duplicate keys in a map and throws an exception if a duplicate is found.
+     * Checks for duplicate keys in a map and throws an exception if a duplicate is
+     * found.
      *
-     * @param id the identifier
-     * @param key the key to check
+     * @param id    the identifier
+     * @param key   the key to check
      * @param value the value associated with the key
-     * @param map the map to check
-     * @param <K> the type of the key
+     * @param map   the map to check
+     * @param <K>   the type of the key
      */
     public static <K> void checkDuplicate(String id, K key, Object value, Map<K, ?> map) {
         Object currentObject = map.get(key);
@@ -172,9 +176,10 @@ public class LineStreamParsers {
     }
 
     /**
-     * Checks for duplicate keys in a set and throws an exception if a duplicate is found.
+     * Checks for duplicate keys in a set and throws an exception if a duplicate is
+     * found.
      *
-     * @param id the identifier
+     * @param id  the identifier
      * @param key the key to check
      * @param set the set to check
      * @param <K> the type of the key
@@ -188,9 +193,9 @@ public class LineStreamParsers {
     /**
      * Parses a key-value pair from the stream and adds it to the map.
      *
-     * @param id the identifier
+     * @param id         the identifier
      * @param linestream the line stream
-     * @param stringMap the map to add the key-value pair
+     * @param stringMap  the map to add the key-value pair
      */
     public static void stringMap(String id, LineStream linestream, Map<String, String> stringMap) {
         String key = linestream.nextLine();
@@ -200,11 +205,12 @@ public class LineStreamParsers {
     }
 
     /**
-     * Parses a string from the stream and adds it to the set, checking for duplicates.
+     * Parses a string from the stream and adds it to the set, checking for
+     * duplicates.
      *
-     * @param id the identifier
+     * @param id         the identifier
      * @param linestream the line stream
-     * @param stringSet the set to add the string
+     * @param stringSet  the set to add the string
      */
     public static void stringSet(String id, LineStream linestream, Set<String> stringSet) {
         stringSet(id, linestream, stringSet, true);
@@ -213,9 +219,9 @@ public class LineStreamParsers {
     /**
      * Parses a string from the stream and adds it to the set.
      *
-     * @param id the identifier
-     * @param linestream the line stream
-     * @param stringSet the set to add the string
+     * @param id             the identifier
+     * @param linestream     the line stream
+     * @param stringSet      the set to add the string
      * @param checkDuplicate whether to check for duplicates
      */
     public static void stringSet(String id, LineStream linestream, Set<String> stringSet, boolean checkDuplicate) {
@@ -230,19 +236,20 @@ public class LineStreamParsers {
      * Parses a key-value pair from the stream and adds it to the multi-map.
      *
      * @param lines the line stream
-     * @param map the multi-map to add the key-value pair
+     * @param map   the multi-map to add the key-value pair
      */
     public static void multiMap(LineStream lines, MultiMap<String, String> map) {
         multiMap(lines, map, string -> string);
     }
 
     /**
-     * Parses a key-value pair from the stream, applies a decoder to the value, and adds it to the multi-map.
+     * Parses a key-value pair from the stream, applies a decoder to the value, and
+     * adds it to the multi-map.
      *
-     * @param lines the line stream
-     * @param map the multi-map to add the key-value pair
+     * @param lines   the line stream
+     * @param map     the multi-map to add the key-value pair
      * @param decoder the decoder to apply to the value
-     * @param <T> the type of the value
+     * @param <T>     the type of the value
      */
     public static <T> void multiMap(LineStream lines, MultiMap<String, T> map, Function<String, T> decoder) {
         String key = lines.nextLine();
@@ -250,7 +257,8 @@ public class LineStreamParsers {
     }
 
     /**
-     * Parses a list of strings from the stream. The first line represents the number of elements in the list.
+     * Parses a list of strings from the stream. The first line represents the
+     * number of elements in the list.
      *
      * @param lines the line stream
      * @return the list of strings
@@ -260,10 +268,10 @@ public class LineStreamParsers {
     }
 
     /**
-     * Parses a list of strings from the stream using a custom parser. The first line represents the number of elements
-     * in the list.
+     * Parses a list of strings from the stream using a custom parser. The first
+     * line represents the number of elements in the list.
      *
-     * @param lines the line stream
+     * @param lines  the line stream
      * @param parser the custom parser
      * @return the list of strings
      */
@@ -277,12 +285,12 @@ public class LineStreamParsers {
     }
 
     /**
-     * Parses a list of values from the stream using a custom parser. The first line represents the number of elements
-     * in the list.
+     * Parses a list of values from the stream using a custom parser. The first line
+     * represents the number of elements in the list.
      *
-     * @param lines the line stream
+     * @param lines  the line stream
      * @param parser the custom parser
-     * @param <T> the type of the values
+     * @param <T>    the type of the values
      * @return the list of values
      */
     public static <T> List<T> list(LineStream lines, Function<LineStream, T> parser) {
@@ -295,7 +303,8 @@ public class LineStreamParsers {
     }
 
     /**
-     * Parses an optional string from the next line of the stream. If the line is empty, returns an empty optional.
+     * Parses an optional string from the next line of the stream. If the line is
+     * empty, returns an empty optional.
      *
      * @param lines the line stream
      * @return the optional string

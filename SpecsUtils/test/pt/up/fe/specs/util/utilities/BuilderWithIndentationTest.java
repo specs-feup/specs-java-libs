@@ -61,12 +61,12 @@ class BuilderWithIndentationTest {
         }
 
         @Test
-        @DisplayName("Should handle null tab string gracefully")
+        @DisplayName("Should reject null tab string")
         void testNullTabString() {
-            // Bug 9: Constructor accepts null tab string without validation
-            // This should throw NPE but doesn't
-            BuilderWithIndentation builder = new BuilderWithIndentation(0, null);
-            assertThat(builder).isNotNull();
+            // Constructor should validate null tab string
+            assertThatThrownBy(() -> new BuilderWithIndentation(0, null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Tab string cannot be null");
         }
 
         @Test
@@ -206,12 +206,12 @@ class BuilderWithIndentationTest {
         }
 
         @Test
-        @DisplayName("Should handle null strings gracefully")
+        @DisplayName("Should reject null strings")
         void testAddNullString() {
-            // Bug 10: add() method accepts null strings without validation
-            builder.add(null);
-            // No exception thrown, null handling is permissive
-            assertThat(builder.toString()).contains("null");
+            // add() method should validate null strings
+            assertThatThrownBy(() -> builder.add(null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("String cannot be null");
         }
     }
 
@@ -310,9 +310,8 @@ class BuilderWithIndentationTest {
             builder.increaseIndentation()
                     .addLines("");
 
-            // Bug 11: Empty strings don't produce expected indented newlines
-            // Expected "\t\n" but gets empty string
-            assertThat(builder.toString()).isEqualTo("");
+            // Empty strings should produce expected indented newlines
+            assertThat(builder.toString()).isEqualTo("\t\n");
         }
 
         @Test

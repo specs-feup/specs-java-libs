@@ -29,7 +29,7 @@ public class ListUtils {
      * Combine N arrays to create a list of N-tuples.
      * 
      * @param arraysToCombine Arrays to be combined into tuples.
-     * @param <T> The type of elements in the arrays.
+     * @param <T>             The type of elements in the arrays.
      * @return A TupleList containing the combined tuples.
      */
     @SafeVarargs
@@ -41,7 +41,7 @@ public class ListUtils {
      * Combine N lists to create a list of N-tuples.
      * 
      * @param arraysToCombine Lists to be combined into tuples.
-     * @param <T> The type of elements in the lists.
+     * @param <T>             The type of elements in the lists.
      * @return A TupleList containing the combined tuples.
      */
     public static <T> TupleList<T> createTuples(List<T[]> arraysToCombine) {
@@ -56,11 +56,11 @@ public class ListUtils {
      * Helper method for creating tuples from arrays.
      * 
      * @param arraysToCombine Lists to be combined into tuples.
-     * @param position Current position in the recursion.
-     * @param tuple Current tuple being constructed.
-     * @param tuples TupleList to store the resulting tuples.
-     * @param tupleSize Size of the tuples.
-     * @param <T> The type of elements in the lists.
+     * @param position        Current position in the recursion.
+     * @param tuple           Current tuple being constructed.
+     * @param tuples          TupleList to store the resulting tuples.
+     * @param tupleSize       Size of the tuples.
+     * @param <T>             The type of elements in the lists.
      */
     private static <T> void tuplesAux(List<T[]> arraysToCombine, int position, List<T> tuple, TupleList<T> tuples,
             int tupleSize) {
@@ -81,7 +81,7 @@ public class ListUtils {
      * Combine lists to create a list of tuples.
      * 
      * @param arraysToCombine Lists to be combined into tuples.
-     * @param <T> The type of elements in the lists.
+     * @param <T>             The type of elements in the lists.
      * @return A TupleList containing the combined tuples.
      */
     public static <T> TupleList<T> createTuplesFromList(List<List<T>> arraysToCombine) {
@@ -96,7 +96,7 @@ public class ListUtils {
      * Combine lists to create a list of tuples.
      * 
      * @param arraysToCombine Lists to be combined into tuples.
-     * @param <T> The type of elements in the lists.
+     * @param <T>             The type of elements in the lists.
      * @return A TupleList containing the combined tuples.
      */
     @SafeVarargs
@@ -112,11 +112,11 @@ public class ListUtils {
      * Helper method for creating tuples from lists.
      * 
      * @param arraysToCombine Lists to be combined into tuples.
-     * @param position Current position in the recursion.
-     * @param tuple Current tuple being constructed.
-     * @param tuples TupleList to store the resulting tuples.
-     * @param tupleSize Size of the tuples.
-     * @param <T> The type of elements in the lists.
+     * @param position        Current position in the recursion.
+     * @param tuple           Current tuple being constructed.
+     * @param tuples          TupleList to store the resulting tuples.
+     * @param tupleSize       Size of the tuples.
+     * @param <T>             The type of elements in the lists.
      */
     private static <T> void tuplesFromListAux(List<List<T>> arraysToCombine, int position, List<T> tuple,
             TupleList<T> tuples,
@@ -137,14 +137,13 @@ public class ListUtils {
     /**
      * Combine two arrays to create a list of pairs.
      * 
-     * @param left The first array.
+     * @param left  The first array.
      * @param right The second array.
-     * @param <T> The type of elements in the first array.
-     * @param <V> The type of elements in the second array.
+     * @param <T>   The type of elements in the first array.
+     * @param <V>   The type of elements in the second array.
      * @return A list of pairs combining elements from both arrays.
      */
     public static <T, V> List<Pair<T, V>> createPairs(T[] left, V[] right) {
-
         List<Pair<T, V>> pairs = new ArrayList<>(left.length * right.length);
         for (T t : left) {
             for (V v : right) {
@@ -157,14 +156,13 @@ public class ListUtils {
     /**
      * Combine two lists to create a list of pairs.
      * 
-     * @param left The first list.
+     * @param left  The first list.
      * @param right The second list.
-     * @param <T> The type of elements in the first list.
-     * @param <V> The type of elements in the second list.
+     * @param <T>   The type of elements in the first list.
+     * @param <V>   The type of elements in the second list.
      * @return A list of pairs combining elements from both lists.
      */
     public static <T, V> List<Pair<T, V>> createPairs(List<T> left, List<V> right) {
-
         List<Pair<T, V>> pairs = new ArrayList<>(left.size() * right.size());
         left.forEach(l -> right.forEach(r -> pairs.add(new Pair<>(l, r))));
         return pairs;
@@ -173,16 +171,15 @@ public class ListUtils {
     /**
      * Combine three arrays to create a list of triples.
      * 
-     * @param xs The first array.
-     * @param ys The second array.
-     * @param zs The third array.
+     * @param xs  The first array.
+     * @param ys  The second array.
+     * @param zs  The third array.
      * @param <X> The type of elements in the first array.
      * @param <Y> The type of elements in the second array.
      * @param <Z> The type of elements in the third array.
      * @return A list of triples combining elements from all three arrays.
      */
     public static <X, Y, Z> List<Triple<X, Y, Z>> createTriples(X[] xs, Y[] ys, Z[] zs) {
-
         List<Triple<X, Y, Z>> triples = new ArrayList<>(xs.length * ys.length * zs.length);
         for (X x : xs) {
             for (Y y : ys) {
@@ -197,16 +194,15 @@ public class ListUtils {
     /**
      * Combine three lists to create a list of triples.
      * 
-     * @param xs The first list.
-     * @param ys The second list.
-     * @param zs The third list.
+     * @param xs  The first list.
+     * @param ys  The second list.
+     * @param zs  The third list.
      * @param <X> The type of elements in the first list.
      * @param <Y> The type of elements in the second list.
      * @param <Z> The type of elements in the third list.
      * @return A list of triples combining elements from all three lists.
      */
     public static <X, Y, Z> List<Triple<X, Y, Z>> createTriples(List<X> xs, List<Y> ys, List<Z> zs) {
-
         List<Triple<X, Y, Z>> triples = new ArrayList<>(xs.size() * ys.size() * zs.size());
         xs.forEach(x -> ys.forEach(y -> zs.forEach(z -> triples.add(Triple.newInstance(x, y, z)))));
         return triples;

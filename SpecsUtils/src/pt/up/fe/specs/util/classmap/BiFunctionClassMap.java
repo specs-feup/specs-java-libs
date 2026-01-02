@@ -15,9 +15,9 @@ package pt.up.fe.specs.util.classmap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
@@ -52,9 +52,7 @@ public class BiFunctionClassMap<T, U, R> {
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <VS extends T, KS extends VS> void put(Class<KS> aClass,
             BiFunction<VS, U, R> value) {
@@ -73,7 +71,7 @@ public class BiFunctionClassMap<T, U, R> {
 
         var function = this.map.get(mappedClass.get());
 
-        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
+        Objects.requireNonNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
         return (BiFunction<T, U, R>) function;
     }
@@ -86,9 +84,7 @@ public class BiFunctionClassMap<T, U, R> {
     /**
      * Calls the BiFunction.accept associated with class of the value t, or throws
      * an Exception if no BiFunction could be found in the map.
-     * 
-     * @param t
-     * @param u
+     *
      */
     public R apply(T t, U u) {
         BiFunction<T, U, R> result = get(t);

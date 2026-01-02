@@ -30,7 +30,7 @@ public class SymjaOperator extends SymjaNode {
     /**
      * Constructs a SymjaOperator node.
      *
-     * @param data the data store
+     * @param data     the data store
      * @param children the child nodes
      */
     public SymjaOperator(DataStore data, Collection<? extends SymjaNode> children) {

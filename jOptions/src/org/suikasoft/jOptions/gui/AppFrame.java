@@ -29,7 +29,9 @@ import org.suikasoft.jOptions.gui.panels.app.TabbedPane;
 /**
  * Frame of the SimpleGui application.
  *
- * <p>This class manages the main application window, tabbed pane, and GUI launching for the application.
+ * <p>
+ * This class manages the main application window, tabbed pane, and GUI
+ * launching for the application.
  */
 public class AppFrame {
 
@@ -83,18 +85,16 @@ public class AppFrame {
      * Launches the GUI in the event dispatch thread.
      */
     public void launchGui() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // Turn off metal's use of bold fonts
-                UIManager.put("swing.boldMetal", Boolean.FALSE);
-                showGui();
-            }
+        SwingUtilities.invokeLater(() -> {
+            // Turn off metal's use of bold fonts
+            UIManager.put("swing.boldMetal", Boolean.FALSE);
+            showGui();
         });
     }
 
     /**
-     * Shows the GUI. For thread safety, this method should be invoked from the event dispatch thread.
+     * Shows the GUI. For thread safety, this method should be invoked from the
+     * event dispatch thread.
      */
     private void showGui() {
         mainWindow.pack();

@@ -28,14 +28,15 @@ public class RawValueUtils {
     private static final ClassMap<Object, StringCodec<?>> DEFAULT_CONVERTERS;
 
     static {
-	DEFAULT_CONVERTERS = new ClassMap<>();
+        DEFAULT_CONVERTERS = new ClassMap<>();
 
-	RawValueUtils.DEFAULT_CONVERTERS.put(String.class, value -> value);
-	RawValueUtils.DEFAULT_CONVERTERS.put(Boolean.class, value -> Boolean.valueOf(value));
+        RawValueUtils.DEFAULT_CONVERTERS.put(String.class, value -> value);
+        RawValueUtils.DEFAULT_CONVERTERS.put(Boolean.class, Boolean::valueOf);
     }
 
     /**
-     * Attempts to transform a value in String format to a value in the target object.
+     * Attempts to transform a value in String format to a value in the target
+     * object.
      * 
      * <p>
      * - Checks if OptionDefinition implements ValueConverter.<br>
@@ -43,31 +44,30 @@ public class RawValueUtils {
      * - Returns null.
      * 
      * @param optionDef the DataKey definition of the option
-     * @param rawValue the raw value in String format
+     * @param value     the raw value in String format
      * @return the converted value, or null if no valid converter is found
      */
     public static Object getRealValue(DataKey<?> optionDef, String value) {
 
-	// Check if it has a decoder
-	if (optionDef.getDecoder().isPresent()) {
-	    Object realValue = optionDef.getDecoder().get().decode(value);
+        // Check if it has a decoder
+        if (optionDef.getDecoder().isPresent()) {
+            Object realValue = optionDef.getDecoder().get().decode(value);
 
-	    // Check if value could be converted
-	    if (realValue != null) {
-		return realValue;
-	    }
-	}
+            // Check if value could be converted
+            if (realValue != null) {
+                return realValue;
+            }
+        }
 
-	// Check default decoders
-	StringCodec<?> decoder = RawValueUtils.DEFAULT_CONVERTERS.get(optionDef.getValueClass());
+        // Check default decoders
+        StringCodec<?> decoder = RawValueUtils.DEFAULT_CONVERTERS.get(optionDef.getValueClass());
 
-	if (decoder != null) {
-	    return decoder.decode(value);
-	}
+        if (decoder != null) {
+            return decoder.decode(value);
+        }
 
-	SpecsLogs.warn("Could not find a valid converter for option " + optionDef);
-	return null;
-
+        SpecsLogs.warn("Could not find a valid converter for option " + optionDef);
+        return null;
     }
 
 }

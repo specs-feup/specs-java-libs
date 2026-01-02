@@ -34,17 +34,14 @@ public class GenericFileResourceProvider implements FileResourceProvider {
      * 
      * <p>
      * Given file must exist, otherwhise an exception is thrown.
-     * 
-     * @param existingFile
-     * @param version
-     * @return
+     *
      */
     public static GenericFileResourceProvider newInstance(File existingFile, String version) {
         if (!existingFile.isFile()) {
             throw new RuntimeException("File '" + existingFile + "' does not exist");
         }
 
-        return new GenericFileResourceProvider(existingFile, version, false);
+        return new GenericFileResourceProvider(existingFile, version, version != null);
     }
 
     private GenericFileResourceProvider(File existingFile, String version, boolean isVersioned) {
@@ -55,6 +52,9 @@ public class GenericFileResourceProvider implements FileResourceProvider {
 
     @Override
     public File write(File folder) {
+        if (folder == null) {
+            throw new IllegalArgumentException("Target folder cannot be null");
+        }
 
         // Check if folder is the same where the file
         if (SpecsIo.getParent(existingFile).equals(folder)) {
@@ -69,7 +69,7 @@ public class GenericFileResourceProvider implements FileResourceProvider {
     }
 
     @Override
-    public String getVersion() {
+    public String version() {
         return version;
     }
 

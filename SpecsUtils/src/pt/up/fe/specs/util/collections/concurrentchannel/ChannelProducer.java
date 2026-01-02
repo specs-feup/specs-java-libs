@@ -24,13 +24,7 @@ import pt.up.fe.specs.util.SpecsLogs;
  *
  * @author Joao Bispo
  */
-public class ChannelProducer<T> {
-
-    private final BlockingQueue<T> channel;
-
-    ChannelProducer(BlockingQueue<T> channel) {
-        this.channel = channel;
-    }
+public record ChannelProducer<T>(BlockingQueue<T> channel) {
 
     /**
      * Inserts the specified element into this queue if it is possible to do so
@@ -41,7 +35,6 @@ public class ChannelProducer<T> {
      * exception.
      *
      * @param e the element to add
-     *
      * @return true if the element was added to this queue, else false
      */
     public boolean offer(T e) {
@@ -57,7 +50,6 @@ public class ChannelProducer<T> {
      * @param unit    a TimeUnit determining how to interpret the timeout parameter
      * @return true if successful, or false if the specified waiting time elapses
      *         before space is available
-     * @throws InterruptedException
      */
     public boolean offer(T e, long timeout, TimeUnit unit) throws InterruptedException {
         return this.channel.offer(e, timeout, unit);
@@ -66,8 +58,7 @@ public class ChannelProducer<T> {
     /**
      * Inserts the specified element into this queue, waiting if necessary for space
      * to become available.
-     * 
-     * @param e
+     *
      */
     public void put(T e) {
         try {

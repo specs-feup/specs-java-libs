@@ -92,9 +92,9 @@ public class SpecsNumbersTest {
         @Test
         @DisplayName("zero should handle null input")
         void testZero_NullInput() {
-            // Execute & Verify - should throw NotImplementedException for null input
+            // Execute & Verify - should throw NullPointerException for null input
             assertThatThrownBy(() -> SpecsNumbers.zero(null))
-                    .isInstanceOf(pt.up.fe.specs.util.exceptions.NotImplementedException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test

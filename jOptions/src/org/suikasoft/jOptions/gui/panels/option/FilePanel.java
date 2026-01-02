@@ -16,6 +16,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -36,12 +37,16 @@ import org.suikasoft.jOptions.gui.panels.app.AppKeys;
 import pt.up.fe.specs.util.SpecsIo;
 
 /**
- * Panel for selecting and displaying file or directory paths using a text field and browse button.
+ * Panel for selecting and displaying file or directory paths using a text field
+ * and browse button.
  *
- * <p>This panel provides a file chooser dialog and text field for DataKey values of type File.
+ * <p>
+ * This panel provides a file chooser dialog and text field for DataKey values
+ * of type File.
  */
 public class FilePanel extends KeyPanel<File> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -54,9 +59,10 @@ public class FilePanel extends KeyPanel<File> {
     private FileOpener fileOpener;
 
     /**
-     * Helper constructor for a FilePanel that has a browse button for files and folders.
+     * Helper constructor for a FilePanel that has a browse button for files and
+     * folders.
      *
-     * @param key the DataKey
+     * @param key  the DataKey
      * @param data the DataStore
      */
     public FilePanel(DataKey<File> key, DataStore data) {
@@ -66,10 +72,10 @@ public class FilePanel extends KeyPanel<File> {
     /**
      * Constructs a FilePanel with a specific file chooser mode and file extensions.
      *
-     * @param key the DataKey
-     * @param data the DataStore
+     * @param key             the DataKey
+     * @param data            the DataStore
      * @param fileChooserMode JFileChooser option
-     * @param extensions the allowed file extensions
+     * @param extensions      the allowed file extensions
      */
     public FilePanel(DataKey<File> key, DataStore data, int fileChooserMode, Collection<String> extensions) {
         super(key, data);
@@ -156,22 +162,20 @@ public class FilePanel extends KeyPanel<File> {
     private static File getFile(String fieldValue, DataKey<File> key, DataStore data) {
 
         Optional<String> currentFolderPath = data.get(JOptionKeys.CURRENT_FOLDER_PATH);
-        if (!currentFolderPath.isPresent()) {
+        if (currentFolderPath.isEmpty()) {
             return new File(fieldValue);
         }
 
         DataStore tempData = DataStore.newInstance("FilePanelTemp", data);
         // When reading a value from the GUI to the user DataStore, use absolute path
 
-        tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(currentFolderPath.get()));
+        tempData.set(JOptionKeys.CURRENT_FOLDER_PATH, currentFolderPath);
         tempData.set(JOptionKeys.USE_RELATIVE_PATHS, false);
         data.getTry(AppKeys.CONFIG_FILE).ifPresent(file -> tempData.set(AppKeys.CONFIG_FILE, file));
 
         tempData.setString(key, fieldValue);
 
-        File value = tempData.get(key);
-
-        return value;
+        return tempData.get(key);
 
     }
 

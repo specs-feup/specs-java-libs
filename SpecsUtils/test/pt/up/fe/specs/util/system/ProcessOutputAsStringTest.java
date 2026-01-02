@@ -132,7 +132,7 @@ public class ProcessOutputAsStringTest {
 
             String result = output.getOutput();
 
-            assertThat(result).isEqualTo("\nstderr content");
+            assertThat(result).isEqualTo("stderr content");
         }
 
         @Test
@@ -152,7 +152,7 @@ public class ProcessOutputAsStringTest {
 
             String result = output.getOutput();
 
-            assertThat(result).isEqualTo("\n");
+            assertThat(result).isEqualTo("");
         }
 
         @Test
@@ -192,7 +192,7 @@ public class ProcessOutputAsStringTest {
 
             String result = output.getOutput();
 
-            assertThat(result).isEqualTo("stdout\n\nstderr");
+            assertThat(result).isEqualTo("stdout\nstderr");
         }
 
         @Test
@@ -212,7 +212,7 @@ public class ProcessOutputAsStringTest {
 
             String result = output.getOutput();
 
-            assertThat(result).isEqualTo("stdout\n\nstderr\n");
+            assertThat(result).isEqualTo("stdout\nstderr\n");
         }
     }
 
@@ -329,7 +329,7 @@ public class ProcessOutputAsStringTest {
 
             assertThat(result).startsWith(largeStdout.toString());
             assertThat(result).endsWith("\nsmall stderr");
-            assertThat(result.length()).isEqualTo(largeStdout.length() + 1 + "small stderr".length());
+            assertThat(result.length()).isEqualTo(largeStdout.length() + "small stderr".length());
         }
 
         @Test
@@ -381,7 +381,7 @@ public class ProcessOutputAsStringTest {
 
             assertThat(spacesOut.getOutput()).isEqualTo("   \n   ");
             assertThat(tabsOut.getOutput()).isEqualTo("\t\t\n\t\t");
-            assertThat(newlinesOut.getOutput()).isEqualTo("\n\n\n\n\n");
+            assertThat(newlinesOut.getOutput()).isEqualTo("\n\n\n\n");
         }
 
         @Test
@@ -422,11 +422,11 @@ public class ProcessOutputAsStringTest {
 
             String result = output.getOutput();
 
-            assertThat(result).isEqualTo("\n\n\n\n\n\n\n");
+            assertThat(result).isEqualTo("\n\n\n\n\n\n");
 
             // Count newlines
             long newlineCount = result.chars().filter(ch -> ch == '\n').count();
-            assertThat(newlineCount).isEqualTo(7); // 3 + 1 (separator) + 3
+            assertThat(newlineCount).isEqualTo(6); // 3 + 3
         }
 
         @Test
@@ -459,9 +459,9 @@ public class ProcessOutputAsStringTest {
             ProcessOutputAsString case4 = new ProcessOutputAsString(0, "with_newline\n", "with_newline\n");
 
             assertThat(case1.getOutput()).isEqualTo("no_newline\nno_newline");
-            assertThat(case2.getOutput()).isEqualTo("with_newline\n\nno_newline");
+            assertThat(case2.getOutput()).isEqualTo("with_newline\nno_newline");
             assertThat(case3.getOutput()).isEqualTo("no_newline\nwith_newline\n");
-            assertThat(case4.getOutput()).isEqualTo("with_newline\n\nwith_newline\n");
+            assertThat(case4.getOutput()).isEqualTo("with_newline\nwith_newline\n");
         }
 
         @Test

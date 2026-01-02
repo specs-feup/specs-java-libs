@@ -27,7 +27,7 @@ public class Argument {
      * Creates an Argument with the specified type and name.
      *
      * @param classType the type of the argument
-     * @param name the name of the argument
+     * @param name      the name of the argument
      */
     public Argument(JavaType classType, String name) {
         setName(name);

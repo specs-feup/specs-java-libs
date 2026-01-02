@@ -162,23 +162,4 @@ public class IoUtilsTest {
             }).doesNotThrowAnyException();
         }
     }
-
-    @Nested
-    @DisplayName("File Operations")
-    class FileOperations {
-
-        @Test
-        @DisplayName("MD5 calculation should work without throwing exceptions")
-        void testMd5_ShouldNotThrowException() {
-            // This is more of a smoke test since we can't rely on specific files existing
-            assertThatCode(() -> {
-                // Create a temporary file or use a known file that exists
-                File tempFile = new File(System.getProperty("java.io.tmpdir"), "test.txt");
-                if (tempFile.exists()) {
-                    SpecsIo.getMd5(tempFile);
-                }
-            }).doesNotThrowAnyException();
-        }
-    }
-
 }
