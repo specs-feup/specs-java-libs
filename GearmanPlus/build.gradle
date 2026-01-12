@@ -13,16 +13,13 @@ java {
 // Repositories providers
 repositories {
     mavenCentral()
-
-    // Gearman
-    maven { url="https://oss.sonatype.org/content/repositories/snapshots"}
 }
 
 dependencies {
     implementation ':SpecsUtils'
 
     implementation 'com.google.code.gson:gson:2.12.1'
-    implementation 'org.gearman.jgs:java-gearman-service:0.7.0-SNAPSHOT'
+    implementation 'org.gearman:gearman-java:0.6'
 }
 
 // Project sources

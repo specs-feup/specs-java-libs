@@ -1,11 +1,11 @@
 /**
  * Copyright 2014 SPeCS Research Group.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import pt.up.fe.specs.util.SpecsCollections;
 import pt.up.fe.specs.util.SpecsLogs;
 
 public interface TreeNode<K extends TreeNode<K>> {
@@ -83,7 +84,7 @@ public interface TreeNode<K extends TreeNode<K>> {
         return getAscendantsAndSelfStream().skip(1);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     default Stream<K> getAscendantsAndSelfStream() {
         List ascendantsAndSelf = new ArrayList<>();
 
@@ -223,7 +224,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     *
      * @return a string representing the contents of the node
      */
     String toContentString();
@@ -234,7 +234,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     void setChildren(Collection<? extends K> children);
 
     /**
-     *
      * @return the number of children in the node
      */
     default int getNumChildren() {
@@ -250,7 +249,7 @@ public interface TreeNode<K extends TreeNode<K>> {
      *
      * <p>
      * Puts the parent of the child as null.
-     *
+     * <p>
      * TODO: should remove all it's children recursively?
      *
      */
@@ -305,7 +304,7 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Returns a deep copy of the current token.
-     *
+     * <p>
      * TODO: This should be abstract; Remove return empty instance
      *
      */
@@ -367,7 +366,6 @@ public interface TreeNode<K extends TreeNode<K>> {
     }
 
     /**
-     *
      * @return the uppermost parent of this node
      */
     public K getRoot();
@@ -408,6 +406,25 @@ public interface TreeNode<K extends TreeNode<K>> {
                 .orElseThrow(
                         () -> new RuntimeException("Wanted a '" + nodeClass.getSimpleName() + "' at index '" + index
                                 + "', but is was a '" + getChild(index).getClass().getSimpleName() + "':\n" + this));
+    }
+
+
+    /**
+     * Return the single child of the given class. If node has more than one child
+     * which the given class, an exception is thrown.
+     */
+    default <T extends K> Optional<T> getChildTry(Class<T> nodeClass) {
+        return SpecsCollections.toOptional(getChildrenOf(nodeClass));
+    }
+
+    /**
+     * Returns the single child of the given class. If node does not have a child of
+     * the given class, or has more than one child of the given class, throws
+     * exception.
+     */
+    default <T extends K> T getChild(Class<T> nodeClass) {
+        return getChildTry(nodeClass)
+                .orElseThrow(() -> new RuntimeException("Expected one child of type '" + nodeClass + "', found none"));
     }
 
     default <T extends K> Optional<T> getChildTry(Class<T> nodeClass, int index) {
@@ -453,7 +470,6 @@ public interface TreeNode<K extends TreeNode<K>> {
 
     /**
      * Removes the children in the given index range.
-     *
      *
      * @param startIndex (inclusive)
      * @param endIndex   (exclusive)
