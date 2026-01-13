@@ -1,0 +1,34 @@
+plugins {
+    id 'distribution'
+    id 'java'
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Repositories providers
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation ":SpecsUtils"
+    implementation ":jOptions"
+    implementation ":XStreamPlus"
+}
+
+// Project sources
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
