@@ -70,7 +70,6 @@ The repository includes the following libraries:
 - **AsmParser** - Assembly parsing utilities  
 - **CommonsCompressPlus** - Extended Apache Commons Compress
 - **CommonsLangPlus** - Extended Apache Commons Lang
-- **GearmanPlus** - Extended Gearman client
 - **GitlabPlus** - GitLab API integration
 - **GitPlus** - Git utilities
 - **Gprofer** - Profiling utilities
