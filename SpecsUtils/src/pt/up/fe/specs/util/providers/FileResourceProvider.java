@@ -173,35 +173,20 @@ public interface FileResourceProvider {
     default ResourceWriteData writeVersioned(File folder, Class<?> context, boolean writeIfNoVersionInfo) {
         // Create file
         String resourceOutput = getFilename();
-
         File destination = new File(folder, resourceOutput);
 
         Preferences prefs = Preferences.userNodeForPackage(context);
+        final String key = getClass().getSimpleName() + "." + getFilename();
 
-        // Check version information
-        String key = getClass().getSimpleName() + "." + getFilename();
+        final String NO_VERSION = "<NO VERSION>";
+        final String versionToDownload = version() != null ? version() : NO_VERSION;
+        final String storedVersion = prefs.get(key, null);
 
-        // If file does not exist, just write file, store version information and return
-        if (!destination.exists()) {
-            String versionToStore = version() != null ? version() : "1.0";
-            prefs.put(key, versionToStore);
-            File outputfile = write(folder);
-            return new ResourceWriteData(outputfile, true);
-        }
-
-        String NOT_FOUND = "<NOT FOUND>";
-        String version = prefs.get(key, NOT_FOUND);
-
-        // If current version is the same as the version of the resource just return the
-        // existing file
-        String currentVersion = version() != null ? version() : "1.0";
-        if (version.equals(currentVersion)) {
+        if (destination.exists() && versionToDownload.equals(storedVersion)) {
+            // File exists and version is the same, return existing file
             return new ResourceWriteData(destination, false);
-        }
-
-        // Warn when there is not version information available
-        if (version.equals(NOT_FOUND)) {
-            // Build message
+        } else if (destination.exists() && (storedVersion == null || NO_VERSION.equals(storedVersion))) {
+            // File exists, no version info available
             String message = "Resource '" + getFilename()
                     + "' already exists, but no versioning information is available.";
 
@@ -217,10 +202,10 @@ public interface FileResourceProvider {
             }
         }
 
-        // Copy resource and store version information
+        // Write file and store version info
         File writtenFile = write(folder);
-        String versionToStore = version() != null ? version() : "1.0";
-        prefs.put(key, versionToStore);
+
+        prefs.put(key, versionToDownload);
 
         assert writtenFile.equals(destination);
 
