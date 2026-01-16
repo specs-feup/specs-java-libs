@@ -436,23 +436,56 @@ public class SpecsStringsTest {
     class RegularExpressionOperations {
 
         @Test
-        @DisplayName("getRegex should find matches correctly")
-        void testGetRegex_VariousPatterns_ReturnsCorrectMatches() {
+        @DisplayName("getRegex should return capturing groups of the first match")
+        void testGetRegex_FirstMatch_ReturnsCapturingGroups() {
+            String text = "Dates: 2023-12-25, 2024-01-15";
+            List<String> groups = SpecsStrings.getRegex(text, "(\\d{4})-(\\d{2})-(\\d{2})");
+            assertThat(groups).containsExactly("2023", "12", "25");
+        }
+
+        @Test
+        @DisplayName("getRegex with Pattern should return capturing groups of the first match")
+        void testGetRegex_WithPattern_FirstMatch_ReturnsCapturingGroups() {
+            String text = "Dates: 2023-12-25, 2024-01-15";
+            Pattern pattern = Pattern.compile("(\\d{4})-(\\d{2})-(\\d{2})");
+            List<String> groups = SpecsStrings.getRegex(text, pattern);
+            assertThat(groups).containsExactly("2023", "12", "25");
+        }
+
+        @Test
+        @DisplayName("getRegex should return empty list when there is no match")
+        void testGetRegex_NoMatch_ReturnsEmpty() {
+            String text = "No dates here";
+            List<String> groups = SpecsStrings.getRegex(text, "(\\d{4})-(\\d{2})-(\\d{2})");
+            assertThat(groups).isEmpty();
+        }
+
+        @Test
+        @DisplayName("getRegex should return empty list when pattern has no capturing groups")
+        void testGetRegex_NoCapturingGroups_ReturnsEmpty() {
             String text = "The year 2023 and 2024 are important.";
-            List<String> years = SpecsStrings.getRegex(text, "\\d{4}");
+            List<String> groups = SpecsStrings.getRegex(text, "\\d{4}");
+            assertThat(groups).isEmpty();
+        }
+
+        @Test
+        @DisplayName("getRegexMatches should find matches correctly")
+        void testGetRegexMatches_VariousPatterns_ReturnsCorrectMatches() {
+            String text = "The year 2023 and 2024 are important.";
+            List<String> years = SpecsStrings.getRegexMatches(text, "\\d{4}");
             assertThat(years).containsExactly("2023", "2024");
 
             String emails = "Contact us at test@example.com or admin@test.org";
-            List<String> emailMatches = SpecsStrings.getRegex(emails, "\\w+@\\w+\\.\\w+");
+            List<String> emailMatches = SpecsStrings.getRegexMatches(emails, "\\w+@\\w+\\.\\w+");
             assertThat(emailMatches).containsExactly("test@example.com", "admin@test.org");
         }
 
         @Test
-        @DisplayName("getRegex with Pattern should work correctly")
-        void testGetRegex_WithPattern_ReturnsCorrectMatches() {
+        @DisplayName("getRegexMatches with Pattern should work correctly")
+        void testGetRegexMatches_WithPattern_ReturnsCorrectMatches() {
             String text = "Numbers: 123, 456, 789";
             Pattern pattern = Pattern.compile("\\d+");
-            List<String> numbers = SpecsStrings.getRegex(text, pattern);
+            List<String> numbers = SpecsStrings.getRegexMatches(text, pattern);
             assertThat(numbers).containsExactly("123", "456", "789");
         }
 
@@ -987,21 +1020,21 @@ public class SpecsStringsTest {
         }
 
         @Test
-        @DisplayName("getRegex with string pattern should extract matches")
-        void testGetRegexString() {
+        @DisplayName("getRegexMatches with string pattern should extract matches")
+        void testGetRegexMatchesString() {
             String content = "The numbers are 123 and 456";
-            List<String> matches = SpecsStrings.getRegex(content, "\\d+");
+            List<String> matches = SpecsStrings.getRegexMatches(content, "\\d+");
             
             assertThat(matches).hasSize(2);
             assertThat(matches).containsExactly("123", "456");
         }
 
         @Test
-        @DisplayName("getRegex with Pattern should extract matches")
-        void testGetRegexPattern() {
+        @DisplayName("getRegexMatches with Pattern should extract matches")
+        void testGetRegexMatchesPattern() {
             String content = "Email: john@example.com and jane@test.org";
             Pattern emailPattern = Pattern.compile("\\S+@\\S+\\.\\S+");
-            List<String> matches = SpecsStrings.getRegex(content, emailPattern);
+            List<String> matches = SpecsStrings.getRegexMatches(content, emailPattern);
             
             assertThat(matches).hasSize(2);
             assertThat(matches).containsExactly("john@example.com", "jane@test.org");

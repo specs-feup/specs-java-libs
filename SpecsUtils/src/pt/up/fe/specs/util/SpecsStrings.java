@@ -534,8 +534,8 @@ public class SpecsStrings {
     }
 
     /**
-     * Returns the first match of all capturing groups.
-     *
+     * Returns the capturing groups (1..N) of the first match.
+     * If there is no match, returns an empty list.
      */
     public static List<String> getRegex(String contents, String regex) {
         Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
@@ -543,7 +543,45 @@ public class SpecsStrings {
         return getRegex(contents, pattern);
     }
 
+    /**
+     * Returns the capturing groups (1..N) of the first match.
+     * If there is no match, returns an empty list.
+     */
     public static List<String> getRegex(String contents, Pattern pattern) {
+        try {
+            // Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
+            Matcher regexMatcher = pattern.matcher(contents);
+            if (regexMatcher.find()) {
+                int numGroups = regexMatcher.groupCount();
+                List<String> capturedGroups = new ArrayList<>();
+                for (int i = 0; i < numGroups; i++) {
+                    // Index 0 is always the whole string, first capturing group is always 1.
+                    int groupIndex = i + 1;
+                    capturedGroups.add(regexMatcher.group(groupIndex));
+                }
+
+                return capturedGroups;
+            }
+        } catch (PatternSyntaxException ex) {
+            SpecsLogs.warn(ex.getMessage());
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
+     * Returns the full match (group 0) for every occurrence of the pattern.
+     */
+    public static List<String> getRegexMatches(String contents, String regex) {
+        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
+
+        return getRegexMatches(contents, pattern);
+    }
+
+    /**
+     * Returns the full match (group 0) for every occurrence of the pattern.
+     */
+    public static List<String> getRegexMatches(String contents, Pattern pattern) {
         List<String> matches = new ArrayList<>();
         try {
             Matcher regexMatcher = pattern.matcher(contents);
