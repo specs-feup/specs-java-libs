@@ -30,21 +30,45 @@ public class BufferedStringBuilder implements AutoCloseable {
     private StringBuilder builder;
     private final int bufferCapacity;
 
+    /**
+     * Cache of persisted content written via save() so toString() doesn't need to
+     * re-read the file from disk. This keeps a consistent snapshot of persisted
+     * content and improves performance for repeated toString() calls.
+     */
+    private final StringBuilder persistedContent = new StringBuilder();
+
     public final static int DEFAULT_BUFFER_CAPACITY = 800000;
-    private static String newline = System.getProperty("line.separator");
+    private static final String newline = System.lineSeparator();
 
     private boolean isClosed;
 
     public BufferedStringBuilder(File outputFile) {
-        this(outputFile, BufferedStringBuilder.DEFAULT_BUFFER_CAPACITY);
+        this(validateOutputFile(outputFile), BufferedStringBuilder.DEFAULT_BUFFER_CAPACITY);
+    }
+
+    private static File validateOutputFile(File outputFile) {
+        if (outputFile == null) {
+            throw new IllegalArgumentException("Output file cannot be null");
+        }
+        return outputFile;
     }
 
     /**
-     * WARNING: The contents of the file given to this class will be erased when the object is created.
-     * 
-     * @param outputFile
+     * WARNING: The contents of the file given to this class will be erased when the
+     * object is created.
+     *
      */
     public BufferedStringBuilder(File outputFile, int bufferCapacity) {
+        this(outputFile, bufferCapacity, true);
+    }
+
+    /**
+     * Protected constructor for internal use (e.g., NullStringBuilder)
+     */
+    protected BufferedStringBuilder(File outputFile, int bufferCapacity, boolean validateFile) {
+        if (validateFile && outputFile == null) {
+            throw new IllegalArgumentException("Output file cannot be null");
+        }
         this.writeFile = outputFile;
         this.bufferCapacity = bufferCapacity;
 
@@ -64,7 +88,6 @@ public class BufferedStringBuilder implements AutoCloseable {
         }
 
         save();
-        // IoUtils.append(writeFile, builder.toString());
         this.builder = null;
         this.isClosed = true;
     }
@@ -74,13 +97,15 @@ public class BufferedStringBuilder implements AutoCloseable {
     }
 
     public BufferedStringBuilder append(Object object) {
+        if (object == null) {
+            return append("null");
+        }
         return append(object.toString());
     }
 
     /**
      * Appends the system-dependent newline.
-     * 
-     * @return
+     *
      */
     public BufferedStringBuilder appendNewline() {
         return append(BufferedStringBuilder.newline);
@@ -89,17 +114,14 @@ public class BufferedStringBuilder implements AutoCloseable {
     public BufferedStringBuilder append(String string) {
 
         if (this.builder == null) {
-            SpecsLogs.getLogger().warning("Object has already been closed.");
+            SpecsLogs.warn("Object has already been closed.");
             return null;
         }
 
         // Add to StringBuilder
         this.builder.append(string);
-        // System.out.println("BUILDER ("+this.hashCode()+"):\n"+builder.toString());
 
-        // if (builder.length() > DEFAULT_BUFFER_CAPACITY) {
         if (this.builder.length() >= this.bufferCapacity) {
-            // System.out.println("ADASDADADADASD BUILDER ("+this.hashCode()+"):\n"+builder.toString());
             save();
         }
 
@@ -107,8 +129,19 @@ public class BufferedStringBuilder implements AutoCloseable {
     }
 
     public void save() {
-        SpecsIo.append(this.writeFile, this.builder.toString());
-        this.builder = newStringBuilder();
+        if (this.writeFile != null && this.builder != null) {
+            String toPersist = this.builder.toString();
+
+            // Append to file
+            SpecsIo.append(this.writeFile, toPersist);
+
+            // Update persisted content cache
+            if (!toPersist.isEmpty()) {
+                this.persistedContent.append(toPersist);
+            }
+
+            this.builder = newStringBuilder();
+        }
     }
 
     private StringBuilder newStringBuilder() {
@@ -117,6 +150,26 @@ public class BufferedStringBuilder implements AutoCloseable {
         }
 
         return new StringBuilder((int) (this.bufferCapacity * 1.10));
+    }
+
+    @Override
+    public String toString() {
+        // If this is a NullStringBuilder (no write file and no builder), return empty
+        if (this.writeFile == null && this.builder == null) {
+            return "";
+        }
+
+        // Compose persisted content (from saves) + current in-memory buffer
+        StringBuilder result = new StringBuilder();
+        if (this.persistedContent.length() > 0) {
+            result.append(this.persistedContent);
+        }
+
+        if (this.builder != null && this.builder.length() > 0) {
+            result.append(this.builder);
+        }
+
+        return result.toString();
     }
 
 }

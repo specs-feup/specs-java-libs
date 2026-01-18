@@ -1,30 +1,104 @@
 # specs-java-libs
 Java libraries created or extended (-Plus suffix) by SPeCS research group
 
-# Configuring Eclipse
+## Project Structure
 
-  1. Create an Eclipse workspace on a folder outside of the repository. The workspace is local and should not be shared.
-  2. Import the configurations in the folder `SupportJavaLibs/configs/`
-      1. Go to Window > Preferences
-      2. Go to Java > Code Style > Code Templates, press "Import" and choose "codetemplates.xml"
-      3. Go to Java > Code Style > Formatter, press "Import" and choose "java_code_formatter.xml".
-      4. Still in Java > Code Style > Formatter, choose "Java Conventions [built-in] - SPeCS" from the "Active profile:" dropdown.
-      5. Go to Java > Code Style > Clean Up, choose "Import" and then select "cleanup.xml" and then click "Ok".
-      6. Go to Java > Build Path > User Libraries, choose "Import" and then press "Browse...". Select "repo.userlibraries" and then click "OK" (the file is in the root of the repository).
-      <!-- 6. Go to Ivy > Settings, choose "File System" in the "Ivy settings path" option and browse to "ivysettings.xml". Click "Ok" -->
-  3. Import the projects you want to.
-      1. For certain projects, you might need to install additional Eclipse plugins ([how to install Eclipse plugins using update site links](#installing-eclipse-plugins-using-update-site-links)), it is recommended that you install the plugins and restart Eclipse before importing the projects. Currently, the used plugins are:
-        * JavaCC - [http://eclipse-javacc.sourceforge.net/](http://eclipse-javacc.sourceforge.net/)
-        * IvyDE - [https://archive.apache.org/dist/ant/ivyde/updatesite/](https://archive.apache.org/dist/ant/ivyde/updatesite/): Install Apache Ivy (tested with 2.4) and Apache IvyDE (tested with 2.2). After installing IvyDE you have to define de ivy settings file:
-            *  Go to Window > Preferences > Ivy > Settings > Ivy Settings path > press "File System..." and choose "ivysettings.xml" that is in the root of this repository
-        * Antrl4IDE: Antrl4IDE: Follow the steps described [here](https://github.com/antlr4ide/antlr4ide#installation)
-      2. Import projects from Git. Select "Import...->Git->Projects from Git->Existing Local Repository. Here you add the repository, by selecting the folder where you cloned this repository. The default option is "Import Eclipse Projects", do next, and choose the projects you want to import.
+This repository contains multiple Java libraries organized as individual Gradle projects. Each library is self-contained with its own `build.gradle` and `settings.gradle` files.
 
-# Installing Eclipse plugins using update site links
+## Prerequisites
 
- 1. Go to Help > Install New Software...
- 2. Click "Add..."
- 3. Choose a name (e.g., JavaCC), add the location of the plugin (e.g., http://eclipse-javacc.sourceforge.net/) and click "Add"
- 4. The entry should now appear in the "Work with:" dropdown, choose the plugin
- 5. Check the boxes that appear in the area below "Work with", click "Next" and follow the instructions
+- **Java 17 or higher** - All projects are configured to use Java 17
+- **Gradle** - Build automation tool
 
+## Building Projects
+
+### Building a Single Project
+
+To build a specific library, navigate to its directory and run:
+
+```bash
+cd <project-name>
+./gradle build
+```
+
+For example, to build SpecsUtils:
+```bash
+cd SpecsUtils
+./gradle build
+```
+
+### Available Gradle Tasks
+
+Common tasks you can run for each project:
+
+- `./gradle build` - Compile, test, and package the project
+- `./gradle test` - Run unit tests
+- `./gradle jar` - Create JAR file
+- `./gradle sourcesJar` - Create sources JAR file
+- `./gradle clean` - Clean build artifacts
+- `./gradle tasks` - List all available tasks
+
+### Dependencies
+
+Projects use:
+- **Maven Central** for external dependencies
+- **JUnit 4** for testing
+- **Inter-project dependencies** where needed (e.g., `:SpecsUtils`, `:CommonsLangPlus`)
+
+## Development Setup
+
+### IDE Configuration
+
+While you can use any IDE that supports Gradle projects, here are some recommendations:
+
+1. **IntelliJ IDEA**: Import the repository root, and it will automatically detect all Gradle subprojects
+2. **VS Code**: Use the Java Extension Pack which includes Gradle support
+3. **Eclipse**: Use the Gradle integration plugin and import existing Gradle projects
+
+### Importing Projects
+
+1. Clone this repository
+2. Open your IDE
+3. Import the root directory as a Gradle project
+4. Your IDE should automatically detect and configure all subprojects
+
+## Project List
+
+The repository includes the following libraries:
+
+- **AntTasks** - Custom Ant tasks
+- **AsmParser** - Assembly parsing utilities  
+- **CommonsCompressPlus** - Extended Apache Commons Compress
+- **CommonsLangPlus** - Extended Apache Commons Lang
+- **GearmanPlus** - Extended Gearman client
+- **GitlabPlus** - GitLab API integration
+- **GitPlus** - Git utilities
+- **Gprofer** - Profiling utilities
+- **GsonPlus** - Extended Google Gson
+- **GuiHelper** - GUI utility classes
+- **JacksonPlus** - Extended Jackson JSON processing
+- **JadxPlus** - Extended JADX decompiler
+- **JavaGenerator** - Java code generation utilities
+- **jOptions** - Command-line options parser
+- **JsEngine** - JavaScript engine integration (GraalVM)
+- **LogbackPlus** - Extended Logback logging
+- **MvelPlus** - Extended MVEL expression language
+- **SlackPlus** - Slack API integration
+- **SpecsHWUtils** - Hardware utilities
+- **SpecsUtils** - Core utilities library
+- **SymjaPlus** - Extended Symja symbolic math
+- **tdrcLibrary** - TDRC's library utilities
+- **XStreamPlus** - Extended XStream XML processing
+
+## Contributing
+
+When adding new features or fixing bugs:
+
+1. Make your changes in the appropriate project directory
+2. Run `./gradle build` to ensure everything compiles and tests pass
+3. Follow the existing code style and conventions
+4. Add tests for new functionality
+
+## Legacy Information
+
+This project was previously built using Eclipse, Ivy, and Ant. All build configuration has been migrated to Gradle for better dependency management and build automation. There might be some old configuration files (`ivysettings.xml`, `.classpath`, `.project`). These may be kept for historical reference but are no longer used in the build process.

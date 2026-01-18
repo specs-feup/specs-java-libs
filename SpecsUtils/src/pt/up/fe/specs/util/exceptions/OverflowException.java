@@ -13,10 +13,13 @@
 
 package pt.up.fe.specs.util.exceptions;
 
+import java.io.Serial;
+
 public class OverflowException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public OverflowException(String message) {
-	super(message);
+        super(message);
     }
 }

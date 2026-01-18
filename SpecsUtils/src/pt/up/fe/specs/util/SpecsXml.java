@@ -31,6 +31,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -65,65 +66,32 @@ public class SpecsXml {
         return getXmlRoot(xmlDocument, null);
     }
 
-    public static Document getXmlRoot(InputStream xmlDocument, InputStream schemaDocument) {
-
+    /**
+     * Parses an XML document from an InputSource, optionally validating against a schema.
+     * Supports InputSource from String, InputStream, or Reader.
+     */
+    public static Document getXmlRoot(InputSource in, InputStream schemaDocument) {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(xmlDocument);
+            Document doc = dBuilder.parse(in);
 
             // If schema present, validate document
             if (schemaDocument != null) {
                 var schemaFactory = SchemaFactory.newDefaultInstance();
-                // schemaFactory.setErrorHandler(errorHandler);
                 var schema = schemaFactory.newSchema(new StreamSource(schemaDocument));
                 var validator = schema.newValidator();
                 validator.validate(new DOMSource(doc));
-                // dbFactory.setSchema(schema);
-                // dbFactory.setValidating(true);
             }
 
-            // optional, but recommended
-            // read this -
-            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+            // Normalize the document (recommended)
             doc.getDocumentElement().normalize();
 
             return doc;
         } catch (SAXParseException e) {
             throw new RuntimeException("XML document not according to schema", e);
-        } catch (ParserConfigurationException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        } catch (SAXException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        } catch (IOException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        }
-
-        return null;
-    }
-
-    public static Document getXmlRootFromUri(String uri) {
-        try {
-
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder;
-
-            dBuilder = dbFactory.newDocumentBuilder();
-
-            Document doc = dBuilder.parse(uri);
-
-            // optional, but recommended
-            // read this -
-            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-            doc.getDocumentElement().normalize();
-
-            return doc;
-        } catch (ParserConfigurationException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        } catch (SAXException e) {
-            SpecsLogs.warn("Error message:\n", e);
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | IOException | SAXException e) {
             SpecsLogs.warn("Error message:\n", e);
         }
 
@@ -131,12 +99,36 @@ public class SpecsXml {
     }
 
     /**
+     * Parses an XML document from a String, optionally validating against a schema.
+     */
+    public static Document getXmlRoot(String xmlContents, InputStream schemaDocument) {
+        return getXmlRoot(new InputSource(SpecsIo.toInputStream(xmlContents)), schemaDocument);
+    }
+
+    /**
+     * Parses an XML document from an InputStream, optionally validating against a schema.
+     */
+    public static Document getXmlRoot(InputStream xmlDocument, InputStream schemaDocument) {
+        return getXmlRoot(new InputSource(xmlDocument), schemaDocument);
+    }
+
+    /**
+     * Parses an XML document from a file path (URI), optionally validating against a schema.
+     */
+    public static Document getXmlRootFromUri(String uri, InputStream schemaDocument) {
+        return getXmlRoot(new InputSource(uri), schemaDocument);
+    }
+
+    public static Document getXmlRootFromUri(String uri) {
+        if (uri == null) {
+            throw new IllegalArgumentException("URI cannot be null");
+        }
+        return getXmlRoot(new InputSource(uri), null);
+    }
+
+    /**
      * Returns the value of the attribute inside the given tag.
      *
-     * @param doc
-     * @param tag
-     * @param attribute
-     * @return
      */
     public static String getAttribute(Document doc, String tag, String attribute) {
         NodeList nList = doc.getElementsByTagName(tag);
@@ -151,13 +143,6 @@ public class SpecsXml {
     }
 
     private static String getAttribute(NodeList nList, String tag, String attribute) {
-        // NodeList nList = doc.getElementsByTagName(section);
-        /*
-        	if (nList == null) {
-        	    LoggingUtils.msgInfo("Could not find section '" + section + "'");
-        	    return null;
-        	}
-         */
         if (nList.getLength() == 0) {
             SpecsLogs.msgInfo("Could not find section '" + tag + "'");
             return null;
@@ -201,9 +186,7 @@ public class SpecsXml {
             return null;
         }
 
-        Element eElement = (Element) nNode;
-
-        return eElement;
+        return (Element) nNode;
     }
 
     public static String getElementText(Element element, String tag) {
@@ -235,18 +218,6 @@ public class SpecsXml {
         return Optional.empty();
     }
 
-    /*
-    public static List<Node> getNodes(NodeList nodeList, String nodeTag) {
-    
-    List<Node> nodes = new ArrayList<>();
-    for (int i = 0; i < nodeList.getLength(); i++) {
-        nodes.add(nodeList.item(i));
-    }
-    
-    return nodes;
-    }
-     */
-
     public static Optional<String> getAttribute(Node node, String attrName) {
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             return Optional.of(((Element) node).getAttribute(attrName));
@@ -257,7 +228,8 @@ public class SpecsXml {
         Node attribute = node.getAttributes().getNamedItem(attrName);
         if (attribute == null) {
             return Optional.empty();
-            // throw new RuntimeException("No attribute with name '"+attrName+"' in node '"+node+"');
+            // throw new RuntimeException("No attribute with name '"+attrName+"' in node
+            // '"+node+"');
         }
 
         return Optional.of((attribute.getNodeValue()));
@@ -277,20 +249,6 @@ public class SpecsXml {
 
         return children;
     }
-
-    /*
-    public static String getValue(Document doc, String... tagChain) {
-    return getValue(doc.getChildNodes(), tagChain);
-    }
-     */
-
-    /**
-     * The value of the node found by walking the given tag-chain.
-     *
-     * @param doc
-     * @param tagChain
-     * @return
-     */
 
     public static String getText(NodeList nodes, String... tagChain) {
         NodeList currentNodes = nodes;
@@ -322,21 +280,13 @@ public class SpecsXml {
         List<Element> children = new ArrayList<>();
         for (int i = 0; i < entries.getLength(); i++) {
             Node currentNode = entries.item(i);
-            if (!(currentNode instanceof Element)) {
+            if (!(currentNode instanceof Element childElement)) {
                 continue;
             }
-
-            Element childElement = (Element) currentNode;
 
             if (tag.equals("*") || tag.equals(childElement.getTagName())) {
                 children.add(childElement);
             }
-
-            // if (!currentNode.getNodeName().equals(tag)) {
-            // continue;
-            // }
-            //
-            // children.add(((Element) currentNode).);
         }
 
         return children;

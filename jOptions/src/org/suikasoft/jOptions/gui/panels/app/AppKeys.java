@@ -18,7 +18,16 @@ import java.io.File;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
 
+/**
+ * Common DataKeys for application configuration.
+ *
+ * <p>
+ * This interface defines standard DataKeys used in application panels.
+ */
 public interface AppKeys {
 
+    /**
+     * DataKey for the application configuration file.
+     */
     DataKey<File> CONFIG_FILE = KeyFactory.file("app_config");
 }

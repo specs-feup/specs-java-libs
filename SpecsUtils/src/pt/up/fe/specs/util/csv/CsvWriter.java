@@ -1,11 +1,11 @@
 /*
  * Copyright 2011 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.lazy.Lazy;
@@ -25,7 +24,7 @@ import pt.up.fe.specs.util.lazy.ThreadSafeLazy;
 
 /**
  * Writes CSV files.
- * 
+ *
  * @author Joao Bispo
  */
 public class CsvWriter {
@@ -34,8 +33,7 @@ public class CsvWriter {
 
     /**
      * TODO: Check where this is used, probably replace with CsvWriter
-     * 
-     * @return
+     *
      */
     public static String getDefaultDelimiter() {
         return DEFAULT_DELIMITER;
@@ -45,12 +43,12 @@ public class CsvWriter {
     private String delimiter;
     private String newline;
     private final boolean excelSupport;
-    private int dataOffset; // The column where data starts. By default, is 1 (the second column)
+    private final int dataOffset; // The column where data starts. By default, is 1 (the second column)
     private final List<CsvField> extraFields; // Additional predefined fields that are applied over the data
 
     /* State */
     private final List<String> header;
-    private List<List<String>> lines;
+    private final List<List<String>> lines;
 
     private final Lazy<String> startColumn;
     private final Lazy<String> endColumn;
@@ -61,10 +59,9 @@ public class CsvWriter {
 
     public CsvWriter(List<String> header) {
         this.delimiter = CsvWriter.DEFAULT_DELIMITER;
-        // newline = System.lineSeparator();
-        this.newline = System.getProperty("line.separator");
+        this.newline = System.lineSeparator();
         this.header = header;
-        this.lines = SpecsFactory.newArrayList();
+        this.lines = new ArrayList<>();
         this.excelSupport = true;
         this.dataOffset = 1;
         this.extraFields = new ArrayList<>();
@@ -77,7 +74,7 @@ public class CsvWriter {
     }
 
     private String getDataEndColumn() {
-        return SpecsStrings.toExcelColumn(header.size());
+        return SpecsStrings.toExcelColumn(header.size() + dataOffset);
     }
 
     public CsvWriter addField(CsvField... fields) {
@@ -101,7 +98,7 @@ public class CsvWriter {
     }
 
     public CsvWriter addLineToString(List<Object> elements) {
-        List<String> stringElements = SpecsFactory.newArrayList(elements.size());
+        List<String> stringElements = new ArrayList<>(elements.size());
         for (Object object : elements) {
             if (object == null) {
                 stringElements.add("null");
@@ -136,6 +133,12 @@ public class CsvWriter {
         // Separator
         if (excelSupport) {
             csv.append("sep=").append(this.delimiter).append(newline);
+        }
+
+        // Handle empty header case
+        if (this.header.isEmpty()) {
+            csv.append(this.newline);
+            return csv.toString();
         }
 
         // Header
@@ -181,17 +184,6 @@ public class CsvWriter {
         csv.append(newline);
 
         return csv.toString();
-        /*
-        StringBuilder csvLine = new StringBuilder();
-        
-        csvLine.append(line.get(0));
-        for (int i = 1; i < line.size(); i++) {
-            csvLine.append(this.delimiter).append(line.get(i));
-        }
-        csvLine.append(this.newline);
-        
-        return csvLine.toString();
-        */
     }
 
     public String buildCsv() {
@@ -203,18 +195,6 @@ public class CsvWriter {
         StringBuilder builder = new StringBuilder();
 
         builder.append(buildHeader());
-        /*        
-        // Separator
-        builder.append("sep=").append(this.delimiter).append("\n");
-        
-        // Header
-        builder.append(this.header.get(0));
-        for (int i = 1; i < this.header.size(); i++) {
-            builder.append(this.delimiter).append(this.header.get(i));
-        }
-        
-        builder.append(this.newline);
-        */
 
         // First line is the header
         int lineCounter = 2;
@@ -223,13 +203,6 @@ public class CsvWriter {
         for (List<String> line : this.lines) {
             builder.append(buildLine(line, lineCounter));
             lineCounter++;
-            /*
-            builder.append(line.get(0));
-            for (int i = 1; i < line.size(); i++) {
-                builder.append(this.delimiter).append(line.get(i));
-            }
-            builder.append(this.newline);
-            */
         }
 
         return builder.toString();
@@ -244,11 +217,7 @@ public class CsvWriter {
     }
 
     public boolean isHeaderSet() {
-        if (this.header == null) {
-            return false;
-        }
-
-        return true;
+        return this.header != null;
     }
 
 }

@@ -13,7 +13,6 @@
 
 package tdrc.utils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -21,44 +20,44 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+/**
+ * Utility class for serialization operations in tdrcLibrary.
+ */
 public class SerializeUtils {
-	/**
-	 * Export a serializable object to a given output stream
-	 * 
-	 * @param obj
-	 * @param outStream
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public static <T extends Serializable> void toStream(T obj, OutputStream outStream) {
+    /**
+     * Exports a serializable object to a given output stream.
+     * 
+     * @param obj       the object to be serialized
+     * @param outStream the output stream where the object will be written
+     * @throws RuntimeException if a problem occurs during serialization
+     */
+    public static <T extends Serializable> void toStream(T obj, OutputStream outStream) {
 
-		// Write object with ObjectOutputStream
-		try (ObjectOutputStream obj_out = new ObjectOutputStream(outStream)) {
-			// Write object out to disk
-			obj_out.writeObject(obj);
-		} catch (final IOException e) {
-			throw new RuntimeException("Problem during serialization.", e);
-		}
-	}
+        // Write object with ObjectOutputStream
+        try (ObjectOutputStream obj_out = new ObjectOutputStream(outStream)) {
+            // Write object out to disk
+            obj_out.writeObject(obj);
+        } catch (final IOException e) {
+            throw new RuntimeException("Problem during serialization.", e);
+        }
+    }
 
-	/**
-	 * Import a serializable object from a given input stream
-	 * 
-	 * @param obj
-	 * @param outStream
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public static <T extends Serializable> T fromStream(InputStream inputStream, Class<T> targetClass) {
+    /**
+     * Imports a serializable object from a given input stream.
+     * 
+     * @param inputStream the input stream from which the object will be read
+     * @param targetClass the class type of the object to be deserialized
+     * @return the deserialized object
+     * @throws RuntimeException if a problem occurs during deserialization
+     */
+    public static <T extends Serializable> T fromStream(InputStream inputStream, Class<T> targetClass) {
 
-		// Write object with ObjectOutputStream
-		try (ObjectInputStream obj_in = new ObjectInputStream(inputStream)) {
-			// Write object out to disk
-
-			return targetClass.cast(obj_in.readObject());
-
-		} catch (IOException | ClassNotFoundException e) {
-			throw new RuntimeException("Problem during deserialization.", e);
-		}
-	}
+        // Read object with ObjectInputStream
+        try (ObjectInputStream obj_in = new ObjectInputStream(inputStream)) {
+            // Read object from stream
+            return targetClass.cast(obj_in.readObject());
+        } catch (IOException | ClassNotFoundException | ClassCastException e) {
+            throw new RuntimeException("Problem during deserialization.", e);
+        }
+    }
 }

@@ -27,11 +27,9 @@ public class StringSlice implements CharSequence {
     protected final int startIndex;
     protected final int endIndex;
 
-
     /**
      * Builds a new StringSlice, with 'whitespace' as the default separator.
-     * 
-     * @param value
+     *
      */
     public StringSlice(String value) {
         this(value, 0, value == null ? -1 : value.length());
@@ -39,8 +37,7 @@ public class StringSlice implements CharSequence {
 
     /**
      * Helper constructor which accepts a StringSlice.
-     * 
-     * @param value
+     *
      */
     public StringSlice(StringSlice value) {
         this(value.toString());
@@ -183,11 +180,10 @@ public class StringSlice implements CharSequence {
             SpecsLogs.warn("Using StringSlice.equals(String). Use equalsString instead.");
         }
 
-        if (!(other instanceof StringSlice)) {
+        if (!(other instanceof StringSlice otherSlice)) {
             return false;
         }
 
-        StringSlice otherSlice = (StringSlice) other;
         return equals(otherSlice);
     }
 
@@ -253,11 +249,6 @@ public class StringSlice implements CharSequence {
         return -1;
     }
 
-    /**
-     * 
-     * @param aChar
-     * @return
-     */
     public int lastIndexOf(char aChar) {
 
         // Look for character, starting from the end
@@ -270,7 +261,6 @@ public class StringSlice implements CharSequence {
         // Could not find character
         return -1;
     }
-
 
     /**
      * 

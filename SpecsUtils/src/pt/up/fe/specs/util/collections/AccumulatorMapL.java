@@ -41,7 +41,6 @@ public class AccumulatorMapL<T> {
     /**
      * Returns an unmodifiable view of this map.
      *
-     * @return
      */
     public AccumulatorMapL<T> getUnmodifiableMap() {
         AccumulatorMapL<T> unmodMap = new AccumulatorMapL<>();
@@ -55,8 +54,8 @@ public class AccumulatorMapL<T> {
     /**
      * Adds 1 to the count of this element.
      *
-     * @param element
-     * @return the current number of added elements. If it is the first time we are adding an element, returns 1
+     * @return the current number of added elements. If it is the first time we are
+     *         adding an element, returns 1
      */
     public Long add(T element) {
         return add(element, 1);
@@ -65,9 +64,6 @@ public class AccumulatorMapL<T> {
     /**
      * Adds a value to the count of this element.
      *
-     * @param element
-     * @param incrementValue
-     * @return
      */
     public Long add(T element, long incrementValue) {
         if (this.unmodifiable) {
@@ -77,10 +73,8 @@ public class AccumulatorMapL<T> {
 
         Long value = this.accMap.get(element);
         if (value == null) {
-            value = 0l;
+            value = 0L;
         }
-
-        // int incrementValue = 1;
 
         value += incrementValue;
         this.accMap.put(element, value);
@@ -105,8 +99,6 @@ public class AccumulatorMapL<T> {
             return false;
         }
 
-        // int incrementValue = 1;
-
         value -= incrementValue;
         this.accMap.put(element, value);
         this.accumulator -= incrementValue;
@@ -116,26 +108,24 @@ public class AccumulatorMapL<T> {
 
     /**
      *
-     * @param element
      * @return the number of times the given element was added to the table.
      */
     public long getCount(T element) {
         Long count = this.accMap.get(element);
         if (count == null) {
-            return 0l;
+            return 0L;
         }
 
-        // return accMap.get(element);
         return count;
     }
 
     /**
      *
-     * @param element
-     * @return the ratio of the given element in relation to the other elements of the table.
+     * @return the ratio of the given element in relation to the other elements of
+     *         the table.
      */
     public double getRatio(T element) {
-        Long count = getCount(element);
+        long count = getCount(element);
 
         return (double) count / (double) this.accumulator;
     }
@@ -143,20 +133,8 @@ public class AccumulatorMapL<T> {
     /**
      * Sums all the values in this map.
      *
-     * @param histogram
-     * @return
      */
-    // public int getSum() {
     public long getSum() {
-        /*
-        int accumulator = 0;
-        for(T key : accMap.keySet()) {
-           accumulator += accMap.get(key);
-        }
-        
-        return accumulator;
-         *
-         */
         return this.accumulator;
     }
 
@@ -171,11 +149,9 @@ public class AccumulatorMapL<T> {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof AccumulatorMapL)) {
+        if (!(obj instanceof AccumulatorMapL<?> anotherObj)) {
             return false;
         }
-
-        AccumulatorMapL<?> anotherObj = ((AccumulatorMapL<?>) obj);
 
         if (this.accumulator != anotherObj.accumulator) {
             return false;
@@ -188,7 +164,7 @@ public class AccumulatorMapL<T> {
     public int hashCode() {
         int hash = 7;
         hash = 47 * hash + (this.accMap != null ? this.accMap.hashCode() : 0);
-        hash = 47 * hash + (int) (this.accumulator ^ (this.accumulator >>> 32));
+        hash = 47 * hash + Long.hashCode(this.accumulator);
         return hash;
     }
 

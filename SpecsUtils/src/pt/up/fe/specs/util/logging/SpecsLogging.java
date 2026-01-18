@@ -30,7 +30,7 @@ import pt.up.fe.specs.util.exceptions.NotImplementedException;
  */
 public class SpecsLogging {
 
-    private final static String NEWLINE = System.getProperty("line.separator");
+    private final static String NEWLINE = System.lineSeparator();
 
     private final static Set<String> CLASS_NAME_IGNORE = new HashSet<>();
     static {
@@ -39,14 +39,10 @@ public class SpecsLogging {
         addClassToIgnore(TagLogger.class);
     }
 
-    // private final static Set<String> METHOD_NAME_IGNORE = new HashSet<>(
-    // Arrays.asList("log", "info", "warn", "debug", "deprecated", "warning"));
-
     /**
-     * Adds a class to the ignore list for determining what should appear when a stack trace or source code location is
-     * printed.
-     * 
-     * @param aClass
+     * Adds a class to the ignore list for determining what should appear when a
+     * stack trace or source code location is printed.
+     *
      */
     public static void addClassToIgnore(Class<?> aClass) {
         CLASS_NAME_IGNORE.add(aClass.getName());
@@ -57,20 +53,16 @@ public class SpecsLogging {
             return "";
         }
 
-        return "[" + tag.toString() + "] ";
+        return "[" + tag + "] ";
     }
 
     public static String getLogSuffix(LogSourceInfo logSuffix, StackTraceElement[] stackTrace) {
-        switch (logSuffix) {
-        case NONE:
-            return "";
-        case SOURCE:
-            return getSourceCodeLocation(stackTrace);
-        case STACK_TRACE:
-            return getStackTrace(stackTrace);
-        default:
-            throw new NotImplementedException(logSuffix);
-        }
+        return switch (logSuffix) {
+            case NONE -> "";
+            case SOURCE -> getSourceCodeLocation(stackTrace);
+            case STACK_TRACE -> getStackTrace(stackTrace);
+            default -> throw new NotImplementedException(logSuffix);
+        };
     }
 
     private static String getSourceCodeLocation(StackTraceElement[] stackTrace) {
@@ -126,38 +118,22 @@ public class SpecsLogging {
 
     private static boolean ignoreStackTraceElement(StackTraceElement stackTraceElement) {
         // Check if in class name ignore list
-        if (CLASS_NAME_IGNORE.contains(stackTraceElement.getClassName())) {
-            return true;
-        }
-
-        // Check if in method name ignore list
-        // if (METHOD_NAME_IGNORE.contains(stackTraceElement.getMethodName())) {
-        // return true;
-        // }
-
-        // System.out.println("File name:" + stackTraceElement.getFileName());
-        // System.out.println("Class name:" + stackTraceElement.getClassName());
-        // System.out.println("Method name:" + stackTraceElement.getMethodName());
-
-        return false;
+        return CLASS_NAME_IGNORE.contains(stackTraceElement.getClassName());
     }
 
     public static String getSourceCode(StackTraceElement s) {
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(" -> ");
-        // builder.append("[ ");
-        builder.append(s.getClassName());
-        builder.append(".");
-        builder.append(s.getMethodName());
-        builder.append("(");
-        builder.append(s.getFileName());
-        builder.append(":");
-        builder.append(s.getLineNumber());
-        builder.append(")");
-        // builder.append(" ]");
+        String builder = " -> " +
+                s.getClassName() +
+                "." +
+                s.getMethodName() +
+                "(" +
+                s.getFileName() +
+                ":" +
+                s.getLineNumber() +
+                ")";
 
-        return builder.toString();
+        return builder;
     }
 
     /**
@@ -167,8 +143,6 @@ public class SpecsLogging {
      * - Adds a prefix according to the tag; <br>
      * - Adds a newline to the end of the message; <br>
      *
-     * @param msg
-     * @return
      */
     public static String parseMessage(Object tag, String msg, LogSourceInfo logSuffix, StackTraceElement[] stackTrace) {
 
@@ -181,14 +155,11 @@ public class SpecsLogging {
         parsedMessage += getLogSuffix(logSuffix, stackTrace);
 
         // New line
-        if (!msg.isEmpty()) {
+        if (msg != null && !msg.isEmpty()) {
             parsedMessage += NEWLINE;
         }
 
         return parsedMessage;
     }
 
-    // public static String parseMessage(Object tag, String msg) {
-    // return parseMessage(tag, msg, Collections.emptyList());
-    // }
 }

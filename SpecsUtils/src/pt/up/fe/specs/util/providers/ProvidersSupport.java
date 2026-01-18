@@ -1,40 +1,48 @@
-/**
- * Copyright 2017 SPeCS.
- * 
+/*
+ * Copyright 2017 SPeCS Research Group.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package pt.up.fe.specs.util.providers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import pt.up.fe.specs.util.Preconditions;
-import pt.up.fe.specs.util.SpecsFactory;
+import java.util.Objects;
 
 /**
- * Package support class.
- * 
- * @author JoaoBispo
+ * Utility class for supporting ResourceProvider interfaces.
+ * <p>
+ * Provides helper methods for working with resource and key providers.
+ * </p>
  *
+ * @author Joao Bispo
  */
-class ProvidersSupport {
+public class ProvidersSupport {
+    /**
+     * Retrieves a list of resources from a single enum class implementing the
+     * ResourceProvider interface.
+     *
+     * @param enumClass the class of the enum implementing ResourceProvider
+     * @return a list of resources provided by the enum
+     * @throws NullPointerException if the provided class is not an enum
+     */
     static List<ResourceProvider> getResourcesFromEnumSingle(Class<? extends ResourceProvider> enumClass) {
         ResourceProvider[] enums = enumClass.getEnumConstants();
 
-        Preconditions.checkNotNull(enums, "Class must be an enum");
+        Objects.requireNonNull(enums, () -> "Class must be an enum");
 
-        List<ResourceProvider> resources = SpecsFactory.newArrayList(enums.length);
+        List<ResourceProvider> resources = new ArrayList<>(enums.length);
 
-        for (ResourceProvider anEnum : enums) {
-            resources.add(anEnum);
-        }
+        resources.addAll(Arrays.asList(enums));
 
         return resources;
     }

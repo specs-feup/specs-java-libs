@@ -1,7 +1,0 @@
-    <target name="<RESOLVE_TARGET_NAME>" description="retrieve dependencies with ivy">
-		
-    
-		<ivy:resolve file="<IVY_FILE_LOCATION>" conf="${ivy.configurations}" />
-    
-		<ivy:retrieve pattern="<IVY_FOLDER_LOCATION>\[artifact]-[type]-[revision].[ext]" conf="${ivy.configurations}" />
-    </target>

@@ -20,13 +20,12 @@ import pt.up.fe.specs.util.treenode.transform.TwoOperandTransform;
 public class ReplaceTransform<K extends TreeNode<K>> extends TwoOperandTransform<K> {
 
     public ReplaceTransform(K baseNode, K newNode) {
-	super("replace", baseNode, newNode);
-
+        super("replace", baseNode, newNode);
     }
 
     @Override
     public void execute() {
-	NodeInsertUtils.replace(getOperands().get(0), getOperands().get(1), true);
+        NodeInsertUtils.replace(getOperands().get(0), getOperands().get(1), true);
     }
 
 }

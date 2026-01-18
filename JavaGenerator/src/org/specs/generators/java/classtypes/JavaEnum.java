@@ -1,14 +1,14 @@
 /*
  * Copyright 2013 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 package org.specs.generators.java.classtypes;
 
@@ -21,28 +21,20 @@ import org.specs.generators.java.utils.UniqueList;
 import tdrc.utils.StringUtils;
 
 /**
- * Java class generation
- * 
+ * Represents a Java enum for code generation. Provides methods to manage enum
+ * items and generate enum code.
+ *
  * @author Tiago
- * 
  */
 public class JavaEnum extends JavaClass {
 
-    // private List<String> interfaces;
-
-    // Fields and methods pertaining to the java class
     private List<EnumItem> items;
-    // private List<Field> fields;
-    // private List<Method> methods;
-    // private List<Constructor> constructors;
 
     /**
-     * Create a public enum with name and package
-     * 
-     * @param name
-     *            the name for the enum
-     * @param classPackage
-     *            the class package
+     * Create a public enum with name and package.
+     *
+     * @param name         the name for the enum
+     * @param classPackage the class package
      */
     public JavaEnum(String name, String classPackage) {
         super(name, classPackage);
@@ -50,15 +42,10 @@ public class JavaEnum extends JavaClass {
     }
 
     /**
-     * Initialize the JavaEnum' lists
+     * Initialize the JavaEnum' lists.
      */
     private void init() {
-
-        // interfaces = new UniqueList<>();
         items = new UniqueList<>();
-        // fields = new UniqueList<>();
-        // methods = new UniqueList<>();
-        // constructors = new UniqueList<>();
     }
 
     @Override
@@ -72,10 +59,10 @@ public class JavaEnum extends JavaClass {
     }
 
     /**
-     * Generate the corresponding java enum code, containing the package, imports, items, fields, methods, etc.
-     * 
-     * @param indentaton
-     *            level of indentation
+     * Generate the corresponding java enum code, containing the package, imports,
+     * items, fields, methods, etc.
+     *
+     * @param indentation level of indentation
      * @return the generated java enum code
      */
     @Override
@@ -97,7 +84,6 @@ public class JavaEnum extends JavaClass {
 
         classGen.append(generateClassTail(indentation));
         return classGen;
-
     }
 
     private void addItems(int indentation, final StringBuilder classGen) {
@@ -109,20 +95,18 @@ public class JavaEnum extends JavaClass {
     }
 
     /**
-     * Add an enum item to the enum
-     * 
-     * @param item
-     *            the item to append
+     * Add an enum item to the enum.
+     *
+     * @param item the item to append
      */
     public void add(EnumItem item) {
         items.add(item);
     }
 
     /**
-     * Add an enum item by the item name
-     * 
-     * @param name
-     *            the name for the new Item
+     * Add an enum item by the item name.
+     *
+     * @param name the name for the new Item
      */
     public void addItem(String name) {
         items.add(new EnumItem(name));

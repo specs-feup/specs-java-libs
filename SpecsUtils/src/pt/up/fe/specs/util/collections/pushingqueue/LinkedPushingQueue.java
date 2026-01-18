@@ -36,48 +36,46 @@ public class LinkedPushingQueue<T> implements PushingQueue<T> {
      * Creates a PushingQueue with the specified size.
      *
      * @param capacity
-     *            the size of the queue
+     *                 the size of the queue
      */
     public LinkedPushingQueue(int capacity) {
-	this.maxSize = capacity;
-	this.queue = new LinkedList<>();
+        this.maxSize = capacity;
+        this.queue = new LinkedList<>();
     }
 
     /**
-     * Inserts an element at the head of the queue, pushing all other elements one position forward. If the queue is
-     * full, the last element is dropped.
+     * Inserts an element at the head of the queue, pushing all other elements one
+     * position forward. If the queue is full, the last element is dropped.
      *
-     * @param element
-     *            an element to insert in the queue
+     * @param element an element to insert in the queue
      */
     @Override
     public void insertElement(T element) {
-	// Insert element at the head
-	this.queue.add(0, element);
+        // Insert element at the head
+        this.queue.add(0, element);
 
-	// If size exceed capacity, remove last element
-	while (this.queue.size() > this.maxSize) {
-	    Iterator<T> iterator = this.queue.descendingIterator();
-	    iterator.next();
-	    iterator.remove();
-	}
+        // If size exceed capacity, remove last element
+        while (this.queue.size() > this.maxSize) {
+            Iterator<T> iterator = this.queue.descendingIterator();
+            iterator.next();
+            iterator.remove();
+        }
 
     }
 
     /**
      * Returns the element at the specified position in this queue.
      *
-     * @param index
-     *            index of the element to return
+     * @param index index of the element to return
      * @return the element at the specified position in this queue
      */
     @Override
     public T getElement(int index) {
-	if (index >= this.queue.size()) {
-	    return null;
-	}
+        if (index < 0 || index >= this.queue.size()) {
+            return null;
+        }
 
-	return this.queue.get(index);
+        return this.queue.get(index);
     }
 
     /**
@@ -87,7 +85,7 @@ public class LinkedPushingQueue<T> implements PushingQueue<T> {
      */
     @Override
     public int size() {
-	return this.maxSize;
+        return this.maxSize;
     }
 
     /**
@@ -96,36 +94,22 @@ public class LinkedPushingQueue<T> implements PushingQueue<T> {
      */
     @Override
     public int currentSize() {
-	return this.queue.size();
+        return this.queue.size();
     }
 
     @Override
     public Iterator<T> iterator() {
-	return this.queue.iterator();
+        return this.queue.iterator();
     }
 
     @Override
     public Stream<T> stream() {
-	return this.queue.stream();
+        return this.queue.stream();
     }
 
     @Override
     public String toString() {
-	if (this.maxSize == 0) {
-	    return "[]";
-	}
-
-	StringBuilder builder = new StringBuilder();
-
-	builder.append("[").append(getElement(0));
-
-	for (int i = 1; i < this.maxSize; i++) {
-	    builder.append(", ").append(getElement(i));
-	}
-	builder.append("]");
-
-	return builder.toString();
-
+        return toString(Object::toString);
     }
 
 }

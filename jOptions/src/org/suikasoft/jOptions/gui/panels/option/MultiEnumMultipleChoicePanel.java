@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,11 +29,17 @@ import org.suikasoft.jOptions.gui.KeyPanel;
 import pt.up.fe.specs.util.SpecsCheck;
 
 /**
- * 
- * @author Joao Bispo
+ * Panel for selecting multiple enum values using combo boxes.
+ *
+ * <p>
+ * This panel provides controls for selecting and managing multiple enum values
+ * for a DataKey of type List<T>.
+ *
+ * @param <T> the enum type
  */
 public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<List<T>> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -43,8 +50,13 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
     private final JButton removeButton;
     private final JButton addButton;
 
-    // private final Collection<T> availableChoices;
-
+    /**
+     * Constructs a MultiEnumMultipleChoicePanel for the given DataKey and
+     * DataStore.
+     *
+     * @param key  the DataKey
+     * @param data the DataStore
+     */
     public MultiEnumMultipleChoicePanel(DataKey<List<T>> key, DataStore data) {
         super(key, data);
 
@@ -52,36 +64,22 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
         removeButton = new JButton("X");
 
         selectedElements = new JComboBox<>();
-
-        // comboBoxValues = new JComboBox<String>();
         availableElements = new JComboBox<>();
 
         // Add actions
         addButton.addActionListener(this::addButtonAction);
         removeButton.addActionListener(this::removeButtonAction);
 
-        // Default must be defined, otherwise we are not able to populate the avaliable choices
+        // Default must be defined, otherwise we are not able to populate the available
+        // choices
         var defaultValues = key.getDefault().orElseThrow(
                 () -> new RuntimeException("Must define a default value, otherwise we cannot obtain Enum class"));
         SpecsCheck.checkArgument(!defaultValues.isEmpty(),
                 () -> "Default value must not be empty, otherwise we cannot obtain Enum class");
 
-        // @SuppressWarnings("unchecked")
-        // T[] enumConstants = ((Class<T>) defaultEnum.getClass()).getEnumConstants();
-
-        // availableChoices = new HashSet<>(Arrays.asList(enumConstants));
-
         for (T choice : defaultValues) {
             availableElements.addItem(choice);
         }
-
-        // Check if there is a default value
-        // if (getKey().getDefault().isPresent()) {
-        // for (var defaultElement : getKey().getDefault().get()) {
-        // System.out.println("ADDING DEFAULT: " + defaultElement);
-        // addElement(defaultElement);
-        // }
-        // }
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(selectedElements);
@@ -90,6 +88,12 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
         add(removeButton);
     }
 
+    /**
+     * Returns the elements in the given combo box as a list.
+     *
+     * @param comboBox the combo box
+     * @return the list of elements
+     */
     private List<T> getElements(JComboBox<T> comboBox) {
         List<T> elements = new ArrayList<>();
         for (int i = 0; i < comboBox.getItemCount(); i++) {
@@ -98,6 +102,13 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
         return elements;
     }
 
+    /**
+     * Returns the index of the given element in the combo box.
+     *
+     * @param comboBox the combo box
+     * @param element  the element to find
+     * @return the index of the element, or -1 if not found
+     */
     private int indexOf(JComboBox<T> comboBox, T element) {
         for (int i = 0; i < comboBox.getItemCount(); i++) {
             if (element.equals(comboBox.getItemAt(i))) {
@@ -107,29 +118,29 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
         return -1;
     }
 
+    /**
+     * Moves an element from the source combo box to the destination combo box.
+     *
+     * @param element     the element to move
+     * @param source      the source combo box
+     * @param destination the destination combo box
+     */
     private void moveElement(T element, JComboBox<T> source, JComboBox<T> destination) {
-        // Check if element is present is available choices
-        // var available = getElements(availableElements);
-        // int elementIndex = available.indexOf(element);
-
         int elementIndex = indexOf(source, element);
         if (elementIndex == -1) {
-            // SpecsLogs.warn("Could not find element: " + element);
             return;
         }
 
         destination.addItem(element);
         source.removeItemAt(elementIndex);
-        // availableElements.getIt
     }
 
     /**
-     * Adds the option from the avaliable list to selected list.
-     * 
-     * @param evt
+     * Adds the option from the available list to the selected list.
+     *
+     * @param evt the action event
      */
     private void addButtonAction(ActionEvent evt) {
-        // Determine what element is selected
         int choice = availableElements.getSelectedIndex();
         if (choice == -1) {
             return;
@@ -140,11 +151,10 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
 
     /**
      * Removes the option from the selected list to the available list.
-     * 
-     * @param evt
+     *
+     * @param evt the action event
      */
     private void removeButtonAction(ActionEvent evt) {
-        // Determine what element is selected
         int choice = selectedElements.getSelectedIndex();
         if (choice == -1) {
             return;
@@ -153,39 +163,26 @@ public class MultiEnumMultipleChoicePanel<T extends Enum<T>> extends KeyPanel<Li
         moveElement(selectedElements.getItemAt(choice), selectedElements, availableElements);
     }
 
-    // private JComboBox<T> getValues() {
-    // return availableElements;
-    // }
-
+    /**
+     * Returns the current value of the selected elements.
+     *
+     * @return the list of selected elements
+     */
     @Override
     public List<T> getValue() {
         return getElements(selectedElements);
     }
 
+    /**
+     * Sets the value of the selected elements.
+     *
+     * @param value the list of elements to set
+     * @param <ET>  the type of the list
+     */
     @Override
     public <ET extends List<T>> void setValue(ET value) {
         for (var element : value) {
             moveElement(element, availableElements, selectedElements);
         }
-
-        /*
-        // Choose first if value is null
-        T currentValue = value;
-        
-        if (currentValue == null) {
-            currentValue = getKey().getValueClass().getEnumConstants()[0];
-        }
-        
-        if (!availableChoices.contains(currentValue)) {
-            SpecsLogs.warn(
-                    "Could not find choice '" + currentValue + "'. Available " + "choices: " + availableChoices);
-            currentValue = getKey().getValueClass().getEnumConstants()[0];
-        }
-        
-        T finalValue = currentValue;
-        
-        SpecsSwing.runOnSwing(() -> comboBoxValues.setSelectedItem(finalValue));
-        */
     }
-
 }

@@ -17,10 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-import pt.up.fe.specs.util.Preconditions;
-import pt.up.fe.specs.util.SpecsCheck;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
@@ -29,11 +27,10 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
-    private List<K> children;
+    private final List<K> children;
     protected K parent;
 
     public ATreeNode(Collection<? extends K> children) {
-        // this.children = SpecsFactory.newLinkedList();
         this.children = initChildren(children);
 
         // In case given list is null
@@ -43,7 +40,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
         // Add children
         for (K child : children) {
-            Preconditions.checkNotNull(child, "Cannot use 'null' as children.");
+            Objects.requireNonNull(child, () -> "Cannot use 'null' as children.");
             addChild(child);
         }
 
@@ -51,12 +48,12 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     private void addChildPrivate(K child) {
-        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        Objects.requireNonNull(child, () -> "Cannot use 'null' as children.");
         this.children.add(child);
     }
 
     private void addChildPrivate(int index, K child) {
-        SpecsCheck.checkNotNull(child, () -> "Cannot use 'null' as children.");
+        Objects.requireNonNull(child, () -> "Cannot use 'null' as children.");
         this.children.add(index, child);
     }
 
@@ -68,47 +65,45 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         return new ArrayList<>(children.size());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pt.up.fe.specs.util.treenode.TreeNode#getChildren()
      */
     @Override
     public List<K> getChildren() {
-        return this.children;
-
-        // Currently cannot enforce immutable children view due to MATISSE passes that directly modify children
-        // return Collections.unmodifiableList(this.children);
+        return Collections.unmodifiableList(this.children);
     }
 
-    /**
-     * 
-     * 
-     * @return a mutable view of the children
-     */
-    // @Override
-    // public List<K> getChildrenMutable() {
-    // return this.children;
-    // }
+    @Override
+    public List<K> getChildrenMutable() {
+        return this.children;
+    }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pt.up.fe.specs.util.treenode.TreeNode#setChildren(java.util.Collection)
      */
     @Override
     public void setChildren(Collection<? extends K> children) {
         // Remove previous children in this node
-
         int numChildren = getNumChildren();
         for (int i = 0; i < numChildren; i++) {
             this.removeChild(0);
         }
 
-        // Add new children
-        for (K child : children) {
-            addChild(child);
+        // Add new children (handle null case)
+        if (children != null) {
+            for (K child : children) {
+                addChild(child);
+            }
         }
-
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pt.up.fe.specs.util.treenode.TreeNode#removeChild(int)
      */
     @Override
@@ -126,7 +121,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pt.up.fe.specs.util.treenode.TreeNode#setChild(int, K)
      */
     @Override
@@ -138,7 +135,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
             throw new RuntimeException("Token does not have children, cannot set a child.");
         }
 
-        SpecsCheck.checkNotNull(sanitizedToken, () -> "Sanitized token is null");
+        Objects.requireNonNull(sanitizedToken, () -> "Sanitized token is null");
 
         // Insert child
         K previousChild = this.children.set(index, sanitizedToken);
@@ -163,9 +160,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
     @Override
     public void detach() {
-        // Check if it has a parent
+        // Safe detach - do nothing if already detached
         if (!hasParent()) {
-            throw new RuntimeException("Does not have a parent");
+            return;
         }
 
         int indexOfSelf = indexOfSelf();
@@ -189,7 +186,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         this.parent = null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pt.up.fe.specs.util.treenode.TreeNode#addChild(K)
      */
     @Override
@@ -209,7 +208,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         // adding the list to itself
         if (!children.isEmpty() && children == this.children) {
             SpecsLogs.warn("Adding the list to itself");
-            children = SpecsFactory.newArrayList(children);
+            children = new ArrayList<>(children);
         }
 
         for (K child : children) {
@@ -217,7 +216,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pt.up.fe.specs.util.treenode.TreeNode#addChild(int, K)
      */
     @Override
@@ -232,9 +233,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * Returns a new copy of the node with the same content and type, but not children.
+     * Returns a new copy of the node with the same content and type, but not
+     * children.
      *
-     * @return
      */
     protected abstract K copyPrivate();
 
@@ -244,11 +245,13 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * Creates a deep copy of the node, including children. No guarantees are made regarding the contents of each node,
-     * they can be the same object as in the original node, and if mutable, changing the content in one node might be
+     * Creates a deep copy of the node, including children. No guarantees are made
+     * regarding the contents of each node, they can be the same object as in the
+     * original node, and if mutable, changing the content in one node might be
      * reflected in the copy.
-     */
-    /* (non-Javadoc)
+     * 
+     * (non-Javadoc)
+     * 
      * @see pt.up.fe.specs.util.treenode.TreeNode#copy()
      */
     @Override
@@ -274,10 +277,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
      * Returns a reference to the object that implements this interface.
      *
      * <p>
-     * This method is needed because of Java generics not having information about K.
+     * This method is needed because of Java generics not having information about
+     * K.
      *
-     * 
-     * @return
      */
     @SuppressWarnings("unchecked")
     protected K getThis() {
@@ -285,7 +287,7 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * 
+     *
      * @return a String with a tree-representation of this node
      */
     public String toTree() {
@@ -311,8 +313,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
 
         // If it has no parents, return self
         if (parent == null) {
-            // return (K) this;
-
             return getThis();
         }
 
@@ -331,8 +331,6 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     /**
      * Removes the children that are an instance of the given class.
      *
-     * @param token
-     * @param type
      */
     public void removeChildren(Class<? extends K> type) {
 
@@ -352,10 +350,9 @@ public abstract class ATreeNode<K extends ATreeNode<K>> implements TreeNode<K> {
     }
 
     /**
-     * Normalizes the token according to a given bypass set. The nodes in the bypass set can have only one child.
+     * Normalizes the token according to a given bypass set. The nodes in the bypass
+     * set can have only one child.
      *
-     * @param bypassSet
-     * @return
      */
     public K normalize(Collection<Class<? extends K>> bypassSet) {
 

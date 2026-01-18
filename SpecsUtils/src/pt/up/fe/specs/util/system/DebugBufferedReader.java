@@ -19,7 +19,7 @@ import java.io.IOException;
 public class DebugBufferedReader extends BufferedReader {
 
     public DebugBufferedReader(BufferedReader reader) {
-        super(reader);
+        super(reader == null ? new java.io.StringReader("") : reader);
     }
 
     @Override
@@ -40,8 +40,19 @@ public class DebugBufferedReader extends BufferedReader {
     @Override
     public String readLine() throws IOException {
         String line = super.readLine();
-        System.out.println("DebugReader: readLine() -> " + line);
+        printReadLineDebug(line);
+
         return line;
+    }
+
+    /**
+     * Helper to print a consistent debug representation for readLine().
+     * Non-null strings are wrapped in quotes so that the literal string
+     * "null" can be distinguished from a null return value.
+     */
+    private void printReadLineDebug(String line) {
+        String displayed = (line == null) ? "null" : ('\"' + line + '\"');
+        System.out.println("DebugReader: readLine() -> " + displayed);
     }
 
 }

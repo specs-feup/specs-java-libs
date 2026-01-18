@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.LayoutManager;
+import java.io.Serial;
 import java.util.Collection;
 
 import javax.swing.BoxLayout;
@@ -26,11 +27,17 @@ import org.suikasoft.jOptions.gui.panels.app.BaseSetupPanel;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 /**
+ * Panel for editing and displaying a DataStore using a nested BaseSetupPanel.
+ *
+ * <p>
+ * This panel provides controls for loading and displaying values for a DataKey
+ * of type DataStore.
  *
  * @author Joao Bispo
  */
 public class SetupPanel extends KeyPanel<DataStore> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -40,84 +47,70 @@ public class SetupPanel extends KeyPanel<DataStore> {
 
     private final BaseSetupPanel setupOptionsPanel;
 
+    /**
+     * Constructs a SetupPanel for the given DataKey, DataStore, and
+     * StoreDefinition.
+     *
+     * @param key        the DataKey
+     * @param data       the DataStore
+     * @param definition the StoreDefinition
+     */
     public SetupPanel(DataKey<DataStore> key, DataStore data, StoreDefinition definition) {
-	super(key, data);
+        super(key, data);
 
-	// Initiallize objects
-	// newPanel.add(new javax.swing.JSeparator(),0);
-	// newPanel.add(new javax.swing.JSeparator());
-	setupOptionsPanel = new BaseSetupPanel(definition, data);
+        // Initialize objects
+        setupOptionsPanel = new BaseSetupPanel(definition, data);
 
-	// Add actions
-	/*
-	checkBoxShow.addActionListener(new ActionListener() {
-	   @Override
-	   public void actionPerformed(ActionEvent e) {
-	      showButtonActionPerformed(e);
-	   }
-	
-	});
-	 *
-	 */
+        currentOptionsPanel = null;
 
-	// Build choice panel
-	// choicePanel = buildChoicePanel();
-
-	currentOptionsPanel = null;
-
-	// setLayout(new BorderLayout(5, 5));
-	// add(choicePanel, BorderLayout.PAGE_START);
-	LayoutManager layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-	setLayout(layout);
-	// add(choicePanel);
-	updateSetupOptions();
+        LayoutManager layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(layout);
+        updateSetupOptions();
     }
 
     /**
      * Loads the several elements from a DataStore.
+     *
+     * @param value the DataStore to load
+     * @param <ET>  the type of DataStore
      */
     @Override
     public <ET extends DataStore> void setValue(ET value) {
-	// Load values
-	setupOptionsPanel.loadValues(value);
+        // Load values
+        setupOptionsPanel.loadValues(value);
     }
 
+    /**
+     * Updates the setup options panel to reflect the current state.
+     */
     private void updateSetupOptions() {
-	/*
-	boolean show = checkBoxShow.isSelected();
-	
-	if(!show) {
-	   remove(currentOptionsPanel);
-	   currentOptionsPanel = null;
-	   revalidate();
-	   //repaint();
-	   return;
-	}
-	 *
-	 */
+        if (currentOptionsPanel != null) {
+            remove(currentOptionsPanel);
+        }
 
-	if (currentOptionsPanel != null) {
-	    remove(currentOptionsPanel);
-	    currentOptionsPanel = null;
-	}
-
-	currentOptionsPanel = setupOptionsPanel;
-	add(currentOptionsPanel);
-	currentOptionsPanel.revalidate();
-
-	// TODO: Is it repaint necessary here, or revalidate on panel solves it?
-	// repaint();
-	// System.out.println("SetupPanel Repainted");
+        currentOptionsPanel = setupOptionsPanel;
+        add(currentOptionsPanel);
+        currentOptionsPanel.revalidate();
     }
 
+    /**
+     * Retrieves the current value of the DataStore.
+     *
+     * @return the current DataStore
+     */
     @Override
     public DataStore getValue() {
-	return setupOptionsPanel.getData();
+        return setupOptionsPanel.getData();
     }
 
+    /**
+     * Retrieves the collection of KeyPanels contained in the setup options panel.
+     *
+     * @return a collection of KeyPanels
+     */
     @Override
     public Collection<KeyPanel<?>> getPanels() {
-	return setupOptionsPanel.getPanels().values();
+        return setupOptionsPanel.getPanels().values();
     }
 
 }

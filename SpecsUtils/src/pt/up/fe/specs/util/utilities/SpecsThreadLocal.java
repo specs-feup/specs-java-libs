@@ -13,6 +13,8 @@
 
 package pt.up.fe.specs.util.utilities;
 
+import java.util.Objects;
+
 import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -43,8 +45,8 @@ public class SpecsThreadLocal<T> {
     }
 
     public void remove() {
-        Preconditions.checkNotNull(threadLocal.get(),
-                "Tried to remove " + aClass.getName() + ", but there is no value set");
+        Objects.requireNonNull(threadLocal.get(),
+                () -> "Tried to remove " + aClass.getName() + ", but there is no value set");
         threadLocal.remove();
     }
 
@@ -60,7 +62,7 @@ public class SpecsThreadLocal<T> {
 
     public T get() {
         T value = threadLocal.get();
-        Preconditions.checkNotNull(value, "Tried to get " + aClass.getName() + ", but there is no value set");
+        Objects.requireNonNull(value, () -> "Tried to get " + aClass.getName() + ", but there is no value set");
         return value;
     }
 

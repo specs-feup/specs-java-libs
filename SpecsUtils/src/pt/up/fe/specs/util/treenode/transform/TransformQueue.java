@@ -44,11 +44,6 @@ public class TransformQueue<K extends TreeNode<K>> {
      * Applies the transformations in the queue, empties the queue.
      */
     public void apply() {
-        // for (NodeTransform<K> transform : getTransforms()) {
-        // transform.execute();
-        // }
-        //
-        // instructions.clear();
         applyPrivate(getTransforms());
     }
 
@@ -78,16 +73,6 @@ public class TransformQueue<K extends TreeNode<K>> {
         return instructions.toString();
     }
 
-    // public void replace(K originalNode, K newNode) {
-    // replace(originalNode, newNode, getClass());
-    // }
-
-    /**
-     *
-     *
-     * @param originalNode
-     * @param newNode
-     */
     public void replace(K originalNode, K newNode) {
         instructions.add(new ReplaceTransform<>(originalNode, newNode));
     }
@@ -114,9 +99,7 @@ public class TransformQueue<K extends TreeNode<K>> {
 
     /**
      * Helper method which sets 'swapSubtrees' to true, by default.
-     * 
-     * @param firstNode
-     * @param secondNode
+     *
      */
     public void swap(K firstNode, K secondNode) {
         instructions.add(new SwapTransform<>(firstNode, secondNode, true));

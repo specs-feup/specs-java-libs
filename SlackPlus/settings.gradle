@@ -1,0 +1,3 @@
+rootProject.name = 'SlackPlus'
+
+includeBuild("../SpecsUtils")

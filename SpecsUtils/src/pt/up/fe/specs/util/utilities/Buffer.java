@@ -45,10 +45,9 @@ public class Buffer<T> {
     }
 
     /**
-     * Returns the buffer according to the relative index. If index is 0, returns the current buffer.
-     * 
-     * @param index
-     * @return
+     * Returns the buffer according to the relative index. If index is 0, returns
+     * the current buffer.
+     *
      */
     public T get(int relativeIndex) {
         int absoluteIndex = translateIndex(relativeIndex);
@@ -64,17 +63,16 @@ public class Buffer<T> {
 
     /**
      * The same as get(0).
-     * 
-     * @return
+     *
      */
     public T getCurrent() {
         return get(0);
     }
 
     /**
-     * Moves the relative index of the current buffer to the next buffer, returns the next buffer.
-     * 
-     * @return
+     * Moves the relative index of the current buffer to the next buffer, returns
+     * the next buffer.
+     *
      */
     public T next() {
         currentBuffer++;
@@ -87,8 +85,7 @@ public class Buffer<T> {
 
     /**
      * Translates a relative index to the absolute index of the internal list.
-     * 
-     * @return
+     *
      */
     private int translateIndex(int relativeIndex) {
         if (currentBuffer == -1) {

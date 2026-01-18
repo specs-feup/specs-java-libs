@@ -23,12 +23,10 @@ import java.util.List;
 public interface JobBuilder {
 
     /**
-     * Builds Jobs according to the given ProgramSources, returns null if any problem happens.
-     * 
-     * @param outputFolder
-     * @param programs
-     * 
-     * @return
+     * Builds Jobs according to the given ProgramSources, returns null if any
+     * problem happens.
+     *
+     *
      */
     List<Job> buildJobs(List<FileSet> programs, File outputFolder);
 

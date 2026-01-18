@@ -15,6 +15,8 @@ package pt.up.fe.specs.util.jobs.execution;
 
 import pt.up.fe.specs.util.SpecsLogs;
 
+import java.util.Objects;
+
 public class JavaExecution implements Execution {
 
     private static final String DEFAULT_MESSAGE = "Java Execution";
@@ -24,41 +26,37 @@ public class JavaExecution implements Execution {
     private String description;
 
     public JavaExecution(Runnable runnable) {
-	this.runnable = runnable;
-	this.interrupted = false;
+        this.runnable = runnable;
+        this.interrupted = false;
 
-	this.description = null;
+        this.description = null;
     }
 
     @Override
     public int run() {
-	try {
-	    this.runnable.run();
-	} catch (Exception e) {
-	    SpecsLogs.warn(e.getMessage(), e);
-	    this.interrupted = true;
-	    return -1;
-	}
+        try {
+            this.runnable.run();
+        } catch (Exception e) {
+            SpecsLogs.warn(e.getMessage(), e);
+            this.interrupted = true;
+            return -1;
+        }
 
-	return 0;
+        return 0;
     }
 
     @Override
     public boolean isInterrupted() {
-	return this.interrupted;
+        return this.interrupted;
     }
 
     @Override
     public String getDescription() {
-	if (this.description == null) {
-	    return JavaExecution.DEFAULT_MESSAGE;
-	}
-
-	return this.description;
+        return Objects.requireNonNullElse(this.description, JavaExecution.DEFAULT_MESSAGE);
     }
 
     public void setDescription(String description) {
-	this.description = description;
+        this.description = description;
     }
 
 }

@@ -16,7 +16,7 @@ package pt.up.fe.specs.util.utilities;
 class NullStringBuilder extends BufferedStringBuilder {
 
     public NullStringBuilder() {
-        super(null);
+        super(null, DEFAULT_BUFFER_CAPACITY, false); // Don't validate file for null builder
     }
 
     @Override
@@ -28,5 +28,10 @@ class NullStringBuilder extends BufferedStringBuilder {
     @Override
     public void save() {
         // Do nothing
+    }
+
+    @Override
+    public String toString() {
+        return "";
     }
 }

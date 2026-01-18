@@ -16,17 +16,16 @@ package org.suikasoft.jOptions.DataStore;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 /**
- * Contains a DataStore.
- * <p>
- * TODO: Move DefaultCleanSetup to here, make this interface package-private
- * 
- * @author JoaoBispo
+ * Interface for classes that contain a DataStore.
  *
+ * <p>
+ * This interface provides a method to retrieve the contained DataStore
+ * instance.
  */
 public interface DataStoreContainer {
-
     /**
-     * 
+     * Returns the contained DataStore instance.
+     *
      * @return a DataStore
      */
     DataStore getDataStore();

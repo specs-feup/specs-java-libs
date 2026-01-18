@@ -1,14 +1,14 @@
 /**
  * Copyright 2013 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.cli;
@@ -27,8 +27,8 @@ import com.google.common.base.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * @author Joao Bispo
- * 
+ * Utility methods for parsing and handling command-line arguments for
+ * jOptions-based applications.
  */
 public class CommandLineUtils {
 
@@ -37,38 +37,33 @@ public class CommandLineUtils {
 
     private final StoreDefinition definition;
 
+    /**
+     * Constructs a CommandLineUtils instance with the given store definition.
+     *
+     * @param definition the store definition to be used for parsing command-line
+     *                   arguments
+     */
     public CommandLineUtils(StoreDefinition definition) {
         this.definition = definition;
     }
 
     /**
-     * @param arg
-     * @return
+     * Parses the value from a key-value argument string.
+     *
+     * @param arg the key-value argument string
+     * @return the parsed value
      */
     private static String parseValue(String arg) {
         int index = arg.indexOf("=");
-        String value = arg.substring(index + 1);
-        return value;
+        return arg.substring(index + 1);
     }
 
-    // /**
-    // * @param arg
-    // * @return
-    // */
-    // private static List<String> parseKey(String arg) {
-    // int index = arg.indexOf("=");
-    // if (index == -1) {
-    // LoggingUtils.msgInfo("Problem in key-value '" + arg
-    // + "'. Check if key-value is separated by a '='.");
-    // return null;
-    // }
-    //
-    // String keyString = arg.substring(0, index);
-    // List<String> key = Arrays.asList(keyString.split("/"));
-    //
-    // return key;
-    // }
-
+    /**
+     * Parses the key from a key-value argument string.
+     *
+     * @param arg the key-value argument string
+     * @return the parsed key, or null if the argument is invalid
+     */
     private static String parseSimpleKey(String arg) {
         int index = arg.indexOf("=");
         if (index == -1) {
@@ -81,24 +76,13 @@ public class CommandLineUtils {
     }
 
     /**
-     * @return
+     * Launches an application in command-line mode.
+     *
+     * @param app  the application to be launched
+     * @param args the command-line arguments
+     * @return true if the application was successfully launched or a special
+     *         command was processed, false otherwise
      */
-    /*
-    public static Map<Class<?>, Object> getDefaultValues() {
-    return CommandLineUtils.DEFAULT_VALUES;
-    }
-    **/
-
-    /**
-     * Launches an application on command-line mode.
-     * 
-     * @param app
-     * @param args
-     */
-    // public static boolean launch(App app, String... args) {
-    // return launch(app, Arrays.asList(args));
-    // }
-
     public static boolean launch(App app, List<String> args) {
 
         // Check for some special commands
@@ -108,7 +92,6 @@ public class CommandLineUtils {
         }
 
         // If at least one argument, launch application.
-        // if (args.length > 0) {
         if (!args.isEmpty()) {
             AppLauncher launcher = new AppLauncher(app);
             return launcher.launch(args);
@@ -122,22 +105,19 @@ public class CommandLineUtils {
     }
 
     /**
-     * @param app
-     * @param args
-     * @return
+     * Processes special commands such as "write" or "--help".
+     *
+     * @param app  the application instance
+     * @param args the command-line arguments
+     * @return true if a special command was processed, false otherwise
      */
-    // private static boolean processSpecialCommands(App app, String... args) {
-    // return processSpecialCommands(app, Arrays.asList(args));
-    // }
-
     private static boolean processSpecialCommands(App app, List<String> args) {
-        // if (args.length == 0) {
         if (args.isEmpty()) {
             return false;
         }
 
         // Check if first argument is WRITE
-        if (args.get(0).toLowerCase().equals(CommandLineUtils.ARG_WRITE)) {
+        if (args.get(0).equalsIgnoreCase(CommandLineUtils.ARG_WRITE)) {
             File config = new File("default.matisse");
 
             app.getPersistence().saveData(config, DataStore.newInstance(app.getDefinition()), false);
@@ -149,9 +129,7 @@ public class CommandLineUtils {
         }
 
         boolean hasHelp = args.stream()
-                .filter(arg -> arg.equals(CommandLineUtils.ARG_HELP))
-                .findFirst()
-                .map(arg -> true).orElse(false);
+                .anyMatch(arg -> arg.equals(CommandLineUtils.ARG_HELP));
 
         if (hasHelp) {
             // Show help message
@@ -163,6 +141,12 @@ public class CommandLineUtils {
         return false;
     }
 
+    /**
+     * Adds command-line arguments to the given DataStore.
+     *
+     * @param setupData the DataStore to be updated
+     * @param args      the command-line arguments
+     */
     public void addArgs(DataStore setupData, List<String> args) {
         // Iterate over each argument
         for (String arg : args) {
@@ -186,7 +170,7 @@ public class CommandLineUtils {
             }
 
             // Decode value
-            if (!key.getDecoder().isPresent()) {
+            if (key.getDecoder().isEmpty()) {
                 SpecsLogs.msgInfo("No decoder found for key '" + key + "'");
                 continue;
             }
@@ -195,47 +179,37 @@ public class CommandLineUtils {
 
             // Set value
             setupData.setRaw(key, value);
-
-            // setValue(setupData, keyString, stringValue, definition);
-
-            // // Discover type of key
-            // DataKey<?> key = OptionUtils.getKey(setupData, keyString);
-            // // Option option = OptionUtils.getOption(setupData, keyString);
-            // if (key == null) {
-            // LoggingUtils.msgInfo("Could not find option with key '" + keyString + "'");
-            // if (setupData.getStoreDefinition().isPresent()) {
-            // LoggingUtils.msgInfo("Base Keys:" + setupData.getStoreDefinition().get().getKeys());
-            // }
-            //
-            // continue;
-            // }
-            //
-            // // Get key to reach setup
-            // List<String> keyToSetup = keyString.subList(0, keyString.size() - 1);
-            //
-            // // Set option
-            // OptionUtils.setRawOption(setupData, keyToSetup, key, stringValue);
         }
-
     }
 
+    /**
+     * Generates a help message for the given store definition.
+     *
+     * @param setupDef the store definition
+     * @return the help message
+     */
     public static String getHelp(StoreDefinition setupDef) {
-        StringBuilder builder = new StringBuilder();
 
-        builder.append("Use: <OPTION>/<SUBOPTION1>/...=<VALUE> <OPTION>...\n\n");
-        builder.append("Available options:\n(Reference - <NAME> (<TYPE> [=<DEFAULT_VALUE>]) )\n\n"
-                + getHelpString(setupDef));
-
-        return builder.toString();
+        return "Use: <OPTION>/<SUBOPTION1>/...=<VALUE> <OPTION>...\n\n" +
+                "Available options:\n(Reference - <NAME> (<TYPE> [=<DEFAULT_VALUE>]) )\n\n"
+                + getHelpString(setupDef);
     }
 
+    /**
+     * Generates a help message for the given store definition.
+     *
+     * @param setupDefinition the store definition
+     * @return the help message
+     */
     private static String getHelpString(StoreDefinition setupDefinition) {
         return getHelp(setupDefinition.getKeys());
     }
 
     /**
-     * @param setupDef
-     * @return
+     * Generates a help message for the given collection of DataKeys.
+     *
+     * @param optionDefs the collection of DataKeys
+     * @return the help message
      */
     private static String getHelp(Collection<DataKey<?>> optionDefs) {
         StringBuilder builder = new StringBuilder();
@@ -252,65 +226,4 @@ public class CommandLineUtils {
 
         return builder.toString();
     }
-
-    // private static void setValue(DataStore setup, List<String> keyString, String stringValue,
-    // StoreDefinition definition) {
-    //
-    // Preconditions.checkArgument(!keyString.isEmpty(), "Passed empty key string");
-    //
-    // // Get key corresponding to the string
-    // DataKey<?> key = definition.getKeyMap().get(keyString.get(0));
-    // if (key == null) {
-    // LoggingUtils.msgInfo("Key '" + keyString.get(0) + "' not found in store definition '"
-    // + definition.getName() + "'. Keys: " + definition.getKeys());
-    // return;
-    // }
-    //
-    // // If only one string, set value
-    // if (keyString.size() == 1) {
-    //
-    // // Decode value
-    // if (!key.getDecoder().isPresent()) {
-    // LoggingUtils.msgInfo("No decoder found for key '" + key + "'");
-    // return;
-    // }
-    //
-    // Object value = key.getDecoder().get().decode(stringValue);
-    //
-    // setup.setRaw(key, value);
-    // return;
-    // }
-    //
-    // // If key has more than one string:
-    // // 1) Next key must return a StoreDefinition
-    // // 2) Key must store a DataStoreProvider
-    // if (!key.getStoreDefinition().isPresent()) {
-    // LoggingUtils.msgInfo("Key '" + key + "' is part of a chain, must define a StoreDefinition");
-    // return;
-    // }
-    //
-    // Optional<?> valueTry = setup.getTry(key);
-    //
-    // // If no value yet, invoke constructor from Definition and put back into setup
-    // if (!valueTry.isPresent()) {
-    // DataStoreProvider provider = key.getStoreDefinition().get().getStore();
-    // setup.setRaw(key, provider);
-    //
-    // valueTry = Optional.of(provider);
-    // }
-    //
-    // Object value = valueTry.get();
-    //
-    // if (!(value instanceof DataStoreProvider)) {
-    // LoggingUtils.msgInfo("Key '" + key + "' is part of a chain, corresponding value of class '"
-    // + key.getValueClass() + "' must implement DataStoreProvider");
-    // return;
-    // }
-    //
-    // StoreDefinition nextDefinition = key.getStoreDefinition().get();
-    // DataStore nextDataStore = ((DataStoreProvider) value).getDataStore();
-    // List<String> nextKeyString = keyString.subList(1, keyString.size());
-    //
-    // setValue(nextDataStore, nextKeyString, stringValue, nextDefinition);
-    // }
 }

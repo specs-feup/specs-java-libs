@@ -25,7 +25,7 @@ import pt.up.fe.specs.util.utilities.StringSlice;
  */
 public class StringSliceWithSplit extends StringSlice {
 
-    private static final Predicate<Character> DEFAULT_SEPARATOR = aChar -> Character.isWhitespace(aChar);
+    private static final Predicate<Character> DEFAULT_SEPARATOR = Character::isWhitespace;
 
     private final boolean trim;
     private final boolean reverse;
@@ -62,11 +62,11 @@ public class StringSliceWithSplit extends StringSlice {
     }
 
     /**
-     * Parses a word according to the current rules (i.e., trim, reverse and separator).
+     * Parses a word according to the current rules (i.e., trim, reverse and
+     * separator).
      * <p>
      * If no separator is found, the result contains the remaining string.
-     * 
-     * @return
+     *
      */
     public SplitResult<String> split() {
         int internalSeparatorIndex = indexOfInternal(separator, reverse);
@@ -75,7 +75,7 @@ public class StringSliceWithSplit extends StringSlice {
                 : nextRegular(internalSeparatorIndex);
 
         if (trim) {
-            return new SplitResult<>(result.getModifiedSlice().trim(), result.getValue().trim());
+            return new SplitResult<>(result.modifiedSlice().trim(), result.value().trim());
         }
 
         return result;
@@ -102,7 +102,6 @@ public class StringSliceWithSplit extends StringSlice {
                 separator);
 
         return new SplitResult<>(modifiedSlice, word);
-
     }
 
     private SplitResult<String> nextReverse(int internalSeparatorIndex) {
@@ -129,8 +128,6 @@ public class StringSliceWithSplit extends StringSlice {
 
     /**
      * 
-     * @param target
-     * @param reverse
      * @return an index relative to the internal String
      */
     private int indexOfInternal(Predicate<Character> target, boolean reverse) {
@@ -151,24 +148,6 @@ public class StringSliceWithSplit extends StringSlice {
                 }
             }
         }
-
-        // Using class methods
-        // // Test reverse order
-        // if (reverse) {
-        // for (int i = length() - 1; i >= 0; i--) {
-        // if (target.test(charAtUnchecked(i))) {
-        // return i;
-        // }
-        // }
-        // }
-        // // Test original order
-        // else {
-        // for (int i = 0; i < length(); i++) {
-        // if (target.test(charAtUnchecked(i))) {
-        // return i;
-        // }
-        // }
-        // }
 
         return -1;
     }

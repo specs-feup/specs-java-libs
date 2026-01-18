@@ -15,11 +15,13 @@ package pt.up.fe.specs.jsengine.libs;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.NotImplementedException;
 
-import pt.up.fe.specs.util.SpecsCheck;
-
+/**
+ * Represents a comment node in an Esprima AST.
+ */
 public class EsprimaComment {
 
     private static final EsprimaComment EMPTY = new EsprimaComment(new HashMap<>());
@@ -29,19 +31,39 @@ public class EsprimaComment {
 
     private final Map<String, Object> comment;
 
+    /**
+     * Constructs an EsprimaComment instance with the given comment data.
+     * 
+     * @param comments a map containing the comment data
+     */
     public EsprimaComment(Map<String, Object> comments) {
         this.comment = comments;
     }
 
+    /**
+     * Returns an empty EsprimaComment instance.
+     * 
+     * @return an empty EsprimaComment
+     */
     public static EsprimaComment empty() {
         return EMPTY;
     }
 
+    /**
+     * Returns a string representation of the comment.
+     * 
+     * @return the string representation of the comment
+     */
     @Override
     public String toString() {
         return comment.toString();
     }
 
+    /**
+     * Retrieves the location information of the comment.
+     * 
+     * @return an EsprimaLoc instance representing the location of the comment
+     */
     public EsprimaLoc getLoc() {
         @SuppressWarnings("unchecked")
         var loc = (Map<String, Object>) comment.get("loc");
@@ -53,18 +75,33 @@ public class EsprimaComment {
         return EsprimaLoc.newInstance(loc);
     }
 
+    /**
+     * Retrieves the contents of the comment.
+     * 
+     * @return the contents of the comment, or an empty string if not available
+     */
     public String getContents() {
         var content = (String) comment.get("value");
 
         return content != null ? content : "";
     }
 
+    /**
+     * Retrieves the type of the comment.
+     * 
+     * @return the type of the comment
+     */
     public String getType() {
         var type = (String) comment.get("type");
-        SpecsCheck.checkNotNull(type, () -> "Comment should have type");
+        Objects.requireNonNull(type, () -> "Comment should have type");
         return type;
     }
 
+    /**
+     * Generates the code representation of the comment based on its type and contents.
+     * 
+     * @return the code representation of the comment
+     */
     public String getCode() {
         if (this == EMPTY) {
             return "";

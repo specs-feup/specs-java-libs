@@ -19,6 +19,8 @@ RemoteSystemsTempFiles/
 # Custom ignores #
 ##################
 
+**/.settings/
+
 output/
 .idea/
 .gradle/

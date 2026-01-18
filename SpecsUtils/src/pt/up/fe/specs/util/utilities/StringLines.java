@@ -49,8 +49,7 @@ public class StringLines implements Iterable<String> {
 
     /**
      * Private constructor for static creator method.
-     * 
-     * @param reader
+     *
      */
     private StringLines(BufferedReader reader) {
         this.reader = reader;
@@ -62,10 +61,9 @@ public class StringLines implements Iterable<String> {
     }
 
     /**
-     * Builds a StringLines from the given String. If the object could not be created, throws an exception.
-     * 
-     * @param string
-     * @return
+     * Builds a StringLines from the given String. If the object could not be
+     * created, throws an exception.
+     *
      */
     public static StringLines newInstance(String string) {
         StringReader reader = new StringReader(string);
@@ -78,7 +76,8 @@ public class StringLines implements Iterable<String> {
     }
 
     /**
-     * @return the next line in the file, or null if the end of the stream has been reached.
+     * @return the next line in the file, or null if the end of the stream has been
+     *         reached.
      */
     public String nextLine() {
         if (nextLine != null) {
@@ -120,7 +119,8 @@ public class StringLines implements Iterable<String> {
     }
 
     /**
-     * @return the next line which is not empty, or null if the end of the stream has been reached.
+     * @return the next line which is not empty, or null if the end of the stream
+     *         has been reached.
      */
     public String nextNonEmptyLine() {
         boolean foundAnswer = false;
@@ -131,7 +131,7 @@ public class StringLines implements Iterable<String> {
                 return line;
             }
 
-            if (line.length() > 0) {
+            if (!line.isEmpty()) {
                 return line;
             }
 
@@ -155,7 +155,7 @@ public class StringLines implements Iterable<String> {
     private static List<String> getLines(StringLines lineReader) {
         List<String> lines = new ArrayList<>();
 
-        String line = null;
+        String line;
         while ((line = lineReader.nextLine()) != null) {
             lines.add(line);
         }
@@ -165,7 +165,7 @@ public class StringLines implements Iterable<String> {
 
     @Override
     public Iterator<String> iterator() {
-        return new Iterator<String>() {
+        return new Iterator<>() {
 
             @Override
             public boolean hasNext() {
@@ -186,9 +186,9 @@ public class StringLines implements Iterable<String> {
     }
 
     /**
-     * Creates a stream over the LineReader. LineReader has to be disposed after use.
-     * 
-     * @return
+     * Creates a stream over the LineReader. LineReader has to be disposed after
+     * use.
+     *
      */
     public Stream<String> stream() {
         return StreamSupport.stream(spliterator(), false);

@@ -47,7 +47,12 @@ public interface XmlNode {
      * @return the parent of this node
      */
     default public XmlNode getParent() {
-        return XmlNodes.create(getNode().getParentNode());
+        var node = getNode();
+        if (node == null) {
+            return null;
+        }
+        var parent = node.getParentNode();
+        return XmlNodes.create(parent);
     }
 
     /**
@@ -55,7 +60,11 @@ public interface XmlNode {
      * @return all the elements that a direct children of this node.
      */
     default public List<XmlNode> getChildren() {
-        return XmlNodes.toList(getNode().getChildNodes());
+        var node = getNode();
+        if (node == null) {
+            return List.of();
+        }
+        return XmlNodes.toList(node.getChildNodes());
     }
 
     /**
@@ -68,7 +77,6 @@ public interface XmlNode {
 
     /**
      * 
-     * @param tag
      * @return all the elements that have the given name
      */
     default public List<XmlElement> getElementsByName(String name) {
@@ -81,16 +89,14 @@ public interface XmlNode {
 
     /**
      * 
-     * @param name
-     * @return the element that has the given name, null if no element is found, and exception if more than one element
-     *         with that name is found
+     * @return the element that has the given name, null if no element is found, and
+     *         exception if more than one element with that name is found
      */
     default public XmlElement getElementByName(String name) {
         var elements = getElementsByName(name);
 
         if (elements.isEmpty()) {
             return null;
-            // throw new RuntimeException("No element with name '" + name + "'");
         }
 
         if (elements.size() > 1) {
@@ -105,17 +111,109 @@ public interface XmlNode {
      * @return the text set for this node, or null if no text is set
      */
     default public String getText() {
-        return getNode().getTextContent();
+        var node = getNode();
+        if (node == null) {
+            return null;
+        }
+
+        // For leaf-like nodes, return their direct value (can be empty string).
+        switch (node.getNodeType()) {
+            case org.w3c.dom.Node.TEXT_NODE:
+            case org.w3c.dom.Node.CDATA_SECTION_NODE:
+            case org.w3c.dom.Node.COMMENT_NODE:
+            case org.w3c.dom.Node.ATTRIBUTE_NODE:
+            case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                return node.getNodeValue();
+            case org.w3c.dom.Node.DOCUMENT_NODE:
+                // For documents, return the text content from the document element
+                org.w3c.dom.Document doc = (org.w3c.dom.Document) node;
+                org.w3c.dom.Element docElement = doc.getDocumentElement();
+                return docElement != null ? docElement.getTextContent() : null;
+            default:
+                // For element-like nodes, return null only if there are no text/CDATA nodes in
+                // the subtree
+                if (!hasTextOrCdata(node)) {
+                    return null;
+                }
+                return node.getTextContent();
+        }
+    }
+
+    // Helper to detect if a node subtree has any Text or CDATA nodes
+    private static boolean hasTextOrCdata(org.w3c.dom.Node node) {
+        if (node == null) {
+            return false;
+        }
+        short type = node.getNodeType();
+        if (type == org.w3c.dom.Node.TEXT_NODE || type == org.w3c.dom.Node.CDATA_SECTION_NODE) {
+            return true;
+        }
+
+        var children = node.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            if (hasTextOrCdata(children.item(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * 
-     * @param text
      * @return the previous text that was set, or null if no text was set
      */
     default public String setText(String text) {
         var previousText = getText();
-        getNode().setTextContent(text);
+        var node = getNode();
+        if (node == null) {
+            return previousText;
+        }
+
+        if (text == null) {
+            // Remove direct text and CDATA children to represent a null text value
+            var children = node.getChildNodes();
+            // Collect nodes to remove to avoid concurrent modification issues
+            java.util.List<org.w3c.dom.Node> toRemove = new java.util.ArrayList<>();
+            for (int i = 0; i < children.getLength(); i++) {
+                var child = children.item(i);
+                if (child != null && (child.getNodeType() == org.w3c.dom.Node.TEXT_NODE
+                        || child.getNodeType() == org.w3c.dom.Node.CDATA_SECTION_NODE)) {
+                    toRemove.add(child);
+                }
+            }
+            for (var child : toRemove) {
+                node.removeChild(child);
+            }
+            // Do not call setTextContent(null), as some DOM implementations convert it to
+            // empty string
+        } else {
+            // If empty string, ensure there is an explicit (empty) text node
+            if (text.isEmpty()) {
+                // First remove existing direct text/CDATA children to avoid duplicates
+                var children = node.getChildNodes();
+                java.util.List<org.w3c.dom.Node> toRemove = new java.util.ArrayList<>();
+                for (int i = 0; i < children.getLength(); i++) {
+                    var child = children.item(i);
+                    if (child != null && (child.getNodeType() == org.w3c.dom.Node.TEXT_NODE
+                            || child.getNodeType() == org.w3c.dom.Node.CDATA_SECTION_NODE)) {
+                        toRemove.add(child);
+                    }
+                }
+                for (var child : toRemove) {
+                    node.removeChild(child);
+                }
+                var owner = node.getOwnerDocument();
+                if (owner != null) {
+                    node.appendChild(owner.createTextNode(""));
+                } else {
+                    // If node is a Document or has no owner, fallback to setTextContent
+                    node.setTextContent("");
+                }
+            } else {
+                node.setTextContent(text);
+            }
+        }
+
         return previousText;
     }
 
@@ -126,7 +224,6 @@ public interface XmlNode {
             Transformer transformer = transformerFactory.newTransformer();
 
             DOMSource source = new DOMSource(getNode());
-            // System.out.println("CHILD NODE : " + document.getChildNodes().item(0).getChildNodes().getLength());
             transformer.transform(source, result);
 
         } catch (Exception e) {
@@ -139,7 +236,13 @@ public interface XmlNode {
         SpecsIo.mkdir(outputFile.getParent());
         SpecsLogs.debug(() -> "Writing XML document " + outputFile);
         StreamResult result = new StreamResult(outputFile);
-        write(result);
+        // Handle permission and IO errors gracefully at the file level
+        try {
+            write(result);
+        } catch (RuntimeException e) {
+            // Log and do not rethrow to keep behavior graceful when writing to files
+            SpecsLogs.warn("Could not write XML to file '" + outputFile + "': " + e.getMessage());
+        }
     }
 
     default public String getString() {
@@ -147,12 +250,7 @@ public interface XmlNode {
 
         StreamResult result = new StreamResult(stringWriter);
         write(result);
-        // stringWriter.flush();
-        // try {
-        // stringWriter.close();
-        // } catch (IOException e) {
-        // throw new RuntimeException("Could not ", e);
-        // }
+
         return stringWriter.toString();
     }
 }

@@ -17,7 +17,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Wrapper for a bounded Blocking Queue, which can only be accessed by ChannelProducer and ChannelConsumer objects.
+ * Wrapper for a bounded Blocking Queue, which can only be accessed by
+ * ChannelProducer and ChannelConsumer objects.
  * 
  * @author Joao Bispo
  */
@@ -28,8 +29,7 @@ public class ConcurrentChannel<T> {
     /**
      * Creates a bounded blocking queue with the specified capacity.
      *
-     * @param capacity
-     *            the capacity of this Concurrent Channel.
+     * @param capacity the capacity of this Concurrent Channel.
      */
     public ConcurrentChannel(int capacity) {
         this.channel = new ArrayBlockingQueue<>(capacity);

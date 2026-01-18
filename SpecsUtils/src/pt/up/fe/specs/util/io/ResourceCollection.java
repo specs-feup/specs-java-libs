@@ -17,47 +17,14 @@ import java.util.Collection;
 
 import pt.up.fe.specs.util.providers.ResourceProvider;
 
-public class ResourceCollection {
-
-    private final String id;
-    private final boolean isIdUnique;
-    private final Collection<ResourceProvider> resources;
-
-    /**
-     * 
-     * @param id
-     *            identifier for this collection of resources
-     * @param isIdUnique
-     *            true if this collection of resources have a unique mapping to this id, false if the resources can
-     *            change over time for this id
-     * @param resources
-     *            a collection of resources
-     */
-    public ResourceCollection(String id, boolean isIdUnique, Collection<ResourceProvider> resources) {
-        this.id = id;
-        this.isIdUnique = isIdUnique;
-        this.resources = resources;
-    }
-
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * @return the isIdUnique
-     */
-    public boolean isIdUnique() {
-        return isIdUnique;
-    }
-
-    /**
-     * @return the resources
-     */
-    public Collection<ResourceProvider> getResources() {
-        return resources;
-    }
+/**
+ *
+ * @param id         identifier for this collection of resources
+ * @param isIdUnique true if this collection of resources have a unique mapping
+ *                   to this id, false if the resources can change over time for
+ *                   this id
+ * @param resources  a collection of resources
+ */
+public record ResourceCollection(String id, boolean isIdUnique, Collection<ResourceProvider> resources) {
 
 }

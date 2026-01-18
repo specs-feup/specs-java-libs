@@ -14,8 +14,8 @@
 package pt.up.fe.specs.util.io;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import pt.up.fe.specs.util.utilities.LineStream;
 
@@ -63,7 +63,7 @@ public class LineStreamFileService implements FileService {
         }
 
         @Override
-        public void close() throws Exception {
+        public void close() {
             stream.close();
         }
 
@@ -72,40 +72,43 @@ public class LineStreamFileService implements FileService {
     private final Map<File, CachedInfo> cache;
 
     public LineStreamFileService() {
-        cache = new HashMap<>();
+        // Concurrent map so different files can be accessed concurrently
+        cache = new ConcurrentHashMap<>();
     }
 
     @Override
     public String getLine(File file, int line) {
-        // Check if file is already in the cache
-        CachedInfo cachedInfo = cache.get(file);
+        // Obtain or create the cached info atomically
+        CachedInfo cachedInfo = cache.computeIfAbsent(file, f -> CachedInfo.newInstance(f));
 
-        if (cachedInfo == null) {
-            cachedInfo = CachedInfo.newInstance(file);
-            cache.put(file, cachedInfo);
+        // Synchronize per-file CachedInfo to make operations on the underlying
+        // LineStream thread-safe while allowing parallel access to different files.
+        synchronized (cachedInfo) {
+            // If current line is before asked line, reload file
+            if (cachedInfo.getCurrentLineNumber() > line) {
+                // The method automatically closes the previous stream and updates the fields
+                cachedInfo.setFile(file);
+            }
+
+            // Advance as many lines up to the needed line
+            int linesToAdvance = line - cachedInfo.getCurrentLineNumber();
+            for (int i = 0; i < linesToAdvance; i++) {
+                cachedInfo.nextLine();
+            }
+
+            return cachedInfo.getCurrentLine();
         }
-
-        // If current line is before asked line, reload file
-        if (cachedInfo.getCurrentLineNumber() > line) {
-            // The method automatically closes the previous stream and updates the fields
-            cachedInfo.setFile(file);
-
-        }
-
-        // Advance as many lines up to the needed line
-        int linesToAdvance = line - cachedInfo.getCurrentLineNumber();
-        for (int i = 0; i < linesToAdvance; i++) {
-            cachedInfo.nextLine();
-        }
-
-        return cachedInfo.getCurrentLine();
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         for (CachedInfo cachedInfo : cache.values()) {
-            cachedInfo.close();
+            synchronized (cachedInfo) {
+                cachedInfo.close();
+            }
         }
+        // Release references to allow GC and avoid reusing closed CachedInfo
+        cache.clear();
     }
 
 }

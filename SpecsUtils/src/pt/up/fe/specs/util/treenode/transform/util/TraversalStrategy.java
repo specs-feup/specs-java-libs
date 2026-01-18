@@ -53,23 +53,22 @@ public enum TraversalStrategy {
     private <K extends TreeNode<K>, T extends TransformResult> void traverseTree(K node, TransformRule<K, T> rule,
             TransformQueue<K> queue) {
         switch (this) {
-        case POST_ORDER:
-            bottomUpTraversal(node, rule, queue);
-            return;
-        case PRE_ORDER:
-            topDownTraversal(node, rule, queue);
-            return;
-        default:
-            SpecsLogs.warn("Case not defined:" + this);
-            return;
+            case POST_ORDER:
+                bottomUpTraversal(node, rule, queue);
+                return;
+            case PRE_ORDER:
+                topDownTraversal(node, rule, queue);
+                return;
+            default:
+                SpecsLogs.warn("Case not defined:" + this);
+                return;
         }
     }
 
     /**
-     * Apply the rule to the given token and all children in the token tree, bottom up.
-     * 
-     * @param node
-     * @param rule
+     * Apply the rule to the given token and all children in the token tree, bottom
+     * up.
+     *
      */
     private <K extends TreeNode<K>, T extends TransformResult> void bottomUpTraversal(K node, TransformRule<K, T> rule,
             TransformQueue<K> queue) {
@@ -84,10 +83,9 @@ public enum TraversalStrategy {
     }
 
     /**
-     * Apply the rule to the given token and all children in the token tree, top down.
-     * 
-     * @param node
-     * @param rule
+     * Apply the rule to the given token and all children in the token tree, top
+     * down.
+     *
      */
     private <K extends TreeNode<K>, T extends TransformResult> void topDownTraversal(K node, TransformRule<K, T> rule,
             TransformQueue<K> queue) {

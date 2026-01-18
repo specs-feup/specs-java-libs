@@ -20,37 +20,46 @@ import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.providers.StringProvider;
 
+/**
+ * Utility class for DataClass-related operations.
+ *
+ * <p>
+ * This class provides static methods for safely converting DataClass values to
+ * strings, handling cycles and common types.
+ */
 public class DataClassUtils {
 
     /**
      * Properly converts to string the value of a DataClass.
-     * 
+     *
      * <p>
-     * Simply calling toString() on a DataClass value might cause infinite cycles, in case there are circular
-     * dependences.
-     * 
-     * @param dataClassValue
-     * @return
+     * Simply calling toString() on a DataClass value might cause infinite cycles,
+     * in case there are circular dependencies.
+     *
+     * @param dataClassValue the value to convert
+     * @return a string representation of the value
      */
     public static String toString(Object dataClassValue) {
+        if (dataClassValue == null) {
+            return "null";
+        }
+
         if (dataClassValue instanceof StringProvider) {
             return ((StringProvider) dataClassValue).getString();
         }
 
-        if (dataClassValue instanceof DataClass) {
-            DataClass<?> dataClass = (DataClass<?>) dataClassValue;
+        if (dataClassValue instanceof DataClass<?> dataClass) {
 
             return "'" + dataClass.getDataClassName() + "'";
         }
 
-        if (dataClassValue instanceof Optional) {
-            Optional<?> optional = (Optional<?>) dataClassValue;
-            return optional.map(value -> toString(value)).orElse("Optional.empty");
+        if (dataClassValue instanceof Optional<?> optional) {
+            return optional.map(DataClassUtils::toString).orElse("Optional.empty");
         }
 
         if (dataClassValue instanceof List) {
-            ((Collection<?>) dataClassValue).stream()
-                    .map(value -> toString(value))
+            return ((Collection<?>) dataClassValue).stream()
+                    .map(value -> value != null ? toString(value) : "null")
                     .collect(Collectors.joining(", ", "[", "]"));
         }
 

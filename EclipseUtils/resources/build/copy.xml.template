@@ -1,6 +1,0 @@
-<copy todir="<BIN_FOLDER>">
-	<fileset dir="<RESOURCE_FOLDER>">
-		<include name="**/*"/>
-  		<exclude name="**/*.java"/>
-	</fileset>
-</copy>

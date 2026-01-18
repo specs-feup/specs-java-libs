@@ -37,11 +37,8 @@ public class ListParser<T> {
     }
 
     /**
-     * 
-     * 
-     * @param aClass
-     * @return a list with the consecutive elements of the given class, starting at the head. These elements are removed
-     *         from this list
+     * @return a list with the consecutive elements of the given class, starting at
+     *         the head. These elements are removed from this list
      */
     public <K extends T> List<K> pop(Class<K> aClass) {
         if (currentList.isEmpty()) {
@@ -76,7 +73,7 @@ public class ListParser<T> {
                 + " elements, but list only has " + currentList.size());
 
         List<K> newList = currentList.subList(0, amount).stream()
-                .map(element -> mapper.apply(element))
+                .map(mapper)
                 .collect(Collectors.toList());
 
         // Update list
@@ -113,9 +110,8 @@ public class ListParser<T> {
         Preconditions.checkArgument(!currentList.isEmpty(), "Tried to peek an element from an empty list");
 
         // Get head of the list
-        T head = currentList.get(0);
 
-        return head;
+        return currentList.get(0);
     }
 
     public <K extends T> K popSingle(Function<T, K> mapper) {
@@ -128,8 +124,7 @@ public class ListParser<T> {
 
     /**
      * Adds the given elements to the head of the list.
-     * 
-     * @param elements
+     *
      */
     public void add(List<T> elements) {
         currentList = SpecsCollections.concat(elements, currentList);

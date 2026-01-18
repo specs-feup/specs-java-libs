@@ -22,8 +22,9 @@ import java.util.List;
  * 
  * <p>
  * Use this class if you want to:<br>
- * 1) Use classes as elements of a set and want the set to respect the hierarchy (e.g., contains will return true for an
- * Integer instance if the class Number is in the set)<br>
+ * 1) Use classes as elements of a set and want the set to respect the hierarchy
+ * (e.g., contains will return true for an Integer instance if the class Number
+ * is in the set)<br>
  * 
  * @author JoaoBispo
  *
@@ -38,7 +39,7 @@ public class ClassSet<E> {
     public static <E> ClassSet<E> newInstance(List<Class<? extends E>> classes) {
         ClassSet<E> classSet = new ClassSet<>();
 
-        classes.stream().forEach(aClass -> classSet.add(aClass));
+        classes.forEach(classSet::add);
 
         return classSet;
     }
@@ -52,11 +53,6 @@ public class ClassSet<E> {
         this.classMap = new ClassMap<>();
     }
 
-    /**
-     * 
-     * @param classes
-     * @return
-     */
     @SuppressWarnings("unchecked")
     public void addAll(Class<? extends E>... classes) {
         addAll(Arrays.asList(classes));
@@ -69,19 +65,25 @@ public class ClassSet<E> {
     }
 
     public boolean add(Class<? extends E> e) {
+        if (e == null) {
+            throw new NullPointerException("Class cannot be null");
+        }
         return classMap.put(e, ClassSet.PRESENT) == null;
     }
 
     /**
-     * Returns <tt>true</tt> if this set contains the specified element. More formally, returns <tt>true</tt> if and
-     * only if this set contains an element <tt>e</tt> such that
+     * Returns <tt>true</tt> if this set contains the specified element. More
+     * formally, returns <tt>true</tt> if and only if this set contains an element
+     * <tt>e</tt> such that
      * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>.
      *
-     * @param o
-     *            element whose presence in this set is to be tested
+     * @param aClass element whose presence in this set is to be tested
      * @return <tt>true</tt> if this set contains the specified element
      */
     public boolean contains(Class<? extends E> aClass) {
+        if (aClass == null) {
+            throw new NullPointerException("Class cannot be null");
+        }
         return classMap.tryGet(aClass).isPresent();
     }
 

@@ -1,11 +1,11 @@
 /*
  * Copyright 2011 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -14,17 +14,17 @@
 package pt.up.fe.specs.guihelper.BaseTypes;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import pt.up.fe.specs.guihelper.Base.ListOfSetupDefinitions;
 import pt.up.fe.specs.guihelper.Base.SetupDefinition;
-import pt.up.fe.specs.util.SpecsFactory;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * Represents a list of several SetupData objects.
- * 
+ *
  * @author Joao Bispo
  */
 // public class ListOfSetups implements Serializable {
@@ -36,11 +36,11 @@ public class ListOfSetups {
     private Integer preferredIndex;
 
     public ListOfSetups(List<SetupData> listOfSetups) {
-	this.mapOfSetups = SpecsFactory.newLinkedHashMap();
+	this.mapOfSetups = new LinkedHashMap<>();
 	for (SetupData setup : listOfSetups) {
 	    this.mapOfSetups.put(setup.getSetupName(), setup);
 	}
-	setupList = SpecsFactory.newArrayList(listOfSetups);
+	setupList = new ArrayList<>(listOfSetups);
 
 	// this.listOfSetups = listOfSetups;
 	preferredIndex = null;

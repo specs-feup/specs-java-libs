@@ -20,11 +20,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.enums.EnumHelperWithValue;
@@ -51,27 +51,19 @@ public class SpecsProperties {
     }
 
     /**
-     * Helper method which accepts a ResourceProvider and copies the file if it does not exist.
-     * 
-     * @param resource
-     * @return
+     * Helper method which accepts a ResourceProvider and copies the file if it does
+     * not exist.
+     *
      */
     public static SpecsProperties newInstance(ResourceProvider resource) {
 
         File propsFile = resource.writeVersioned(SpecsIo.getWorkingDir(), resource.getClass()).getFile();
-        /*
-        File propsFile = new File(resource.getResourceName());
-        
-        // If file does not exist, copy resource
-        if (!propsFile.isFile()) {
-        propsFile = IoUtils.resourceCopy(resource.getResource(), IoUtils.getWorkingDir(), false);
-        }
-        */
+
         return newInstance(propsFile);
     }
 
     public static SpecsProperties newInstance(File propertiesFile) {
-        Preconditions.checkNotNull(propertiesFile, "Input file must not be null");
+        Objects.requireNonNull(propertiesFile, () -> "Input file must not be null");
 
         try (InputStream inputStream = new FileInputStream(propertiesFile)) {
             return load(inputStream);
@@ -81,15 +73,15 @@ public class SpecsProperties {
     }
 
     /**
-     * Given a File object, loads the contents of the file into a Java Properties object.
+     * Given a File object, loads the contents of the file into a Java Properties
+     * object.
      *
      * <p>
-     * If an error occurs (ex.: the File argument does not represent a file, could not load the Properties object)
-     * returns null and logs the cause.
-     * 
-     * @param file
-     *            a File object representing a file.
-     * @return If successfull, a Properties objects with the contents of the file. Null otherwise.
+     * If an error occurs (ex.: the File argument does not represent a file, could
+     * not load the Properties object) returns null and logs the cause.
+     *
+     * @return If successfull, a Properties objects with the contents of the file.
+     *         Null otherwise.
      */
     private static SpecsProperties load(InputStream inputStream) {
 
@@ -107,7 +99,7 @@ public class SpecsProperties {
     }
 
     public boolean hasKey(KeyProvider<String> key) {
-        return props.keySet().contains(key.getKey());
+        return props.containsKey(key.getKey());
     }
 
     /**
@@ -115,12 +107,10 @@ public class SpecsProperties {
      * 
      * <p>
      * Trims the string before returning.
-     * 
-     * @param key
-     * @return
+     *
      */
     public String get(KeyProvider<String> key) {
-        if (!props.keySet().contains(key.getKey())) {
+        if (!props.containsKey(key.getKey())) {
             SpecsLogs.msgInfo("! Properties file is missing key '" + key.getKey() + "'");
             return "";
         }
@@ -150,7 +140,7 @@ public class SpecsProperties {
     public File getFolder(KeyProvider<String> key) {
         String folderName = get(key);
         File folder = null;
-        if (!folderName.equals("")) {
+        if (!folderName.isEmpty()) {
             folder = SpecsIo.mkdir(folderName);
         }
 
@@ -184,17 +174,12 @@ public class SpecsProperties {
     /**
      * Saves a properties object to a file.
      * 
-     * @param outputfile
-     * @param props
      * @return true if there was no problems. False otherwise
      */
     public boolean store(File outputfile) {
 
         try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(outputfile))) {
-
             props.store(outStream, "");
-            outStream.close();
-
         } catch (IOException ex) {
             SpecsLogs.warn("Could not save properties object to file '" + outputfile + "'", ex);
             return false;
@@ -218,8 +203,7 @@ public class SpecsProperties {
 
     /**
      * Creates a JSON string equivalent to this properties object.
-     * 
-     * @return
+     *
      */
     public String toJson() {
         StringBuilder json = new StringBuilder();

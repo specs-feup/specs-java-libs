@@ -19,26 +19,6 @@ package pt.up.fe.specs.util.events;
  * @author Joao Bispo
  * 
  */
-// public abstract class EventAction {
 public interface EventAction {
-    /*
-     * keleton class that performs an action related to a single event.
-     * 
-     * <p>
-     * Useful for creating anonymous classes that respond to single events.
-     * 
-        protected final Enum<?> eventId;
-
-        public EventAction(Event event) {
-    	this.event = event;
-        }
-
-        public Event getEvent() {
-    	return event;
-        }
-        
-        public abstract void performAction(Event event);
-        */
-
     void performAction(Event event);
 }

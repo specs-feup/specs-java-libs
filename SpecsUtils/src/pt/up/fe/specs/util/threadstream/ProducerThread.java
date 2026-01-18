@@ -24,9 +24,6 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
      */
     private final K producer;
 
-    /*
-     * 
-     */
     private final Function<K, T> produceFunction;
 
     /*
@@ -37,11 +34,11 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
     /*
      * Variable number of channels to feed consumers
      */
-    private List<ChannelProducer<T>> producers;
+    private final List<ChannelProducer<T>> producers;
 
     protected ProducerThread(K producer, Function<K, T> produceFunction) {
         this(producer, produceFunction,
-                cc -> new GenericObjectStream<T>(cc, producer.getPoison()));
+                cc -> new GenericObjectStream<>(cc, producer.getPoison()));
     }
 
     protected ProducerThread(K producer, Function<K, T> produceFunction,
@@ -49,11 +46,12 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
         this.producer = producer;
         this.produceFunction = produceFunction;
         this.cons = cons;
-        this.producers = new ArrayList<ChannelProducer<T>>();
+        this.producers = new ArrayList<>();
     }
 
     /*
-     * creates a new channel into which this runnable object will pump data, with depth 1
+     * creates a new channel into which this runnable object will pump data, with
+     * depth 1
      */
     protected ObjectStream<T> newChannel() {
         return this.newChannel(1);
@@ -93,7 +91,7 @@ public class ProducerThread<T, K extends ObjectProducer<T>> implements Runnable 
         /*
          * Warning: "null" cannot be inserted into a ChannelProducer / ConcurrentChannel
          */
-        T nextproduct = null;
+        T nextproduct;
         while ((nextproduct = this.produceFunction.apply(this.producer)) != null) {
             for (var producer : this.producers) {
                 this.insertToken(producer, nextproduct);

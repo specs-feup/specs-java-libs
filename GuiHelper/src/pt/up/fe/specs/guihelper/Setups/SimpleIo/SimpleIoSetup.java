@@ -104,7 +104,7 @@ public enum SimpleIoSetup implements SetupFieldEnum {
 	List<File> inputFiles = SimpleIoSetup.getFiles(inputPath, isSingleFile);
 
 	if (outputFolder == null) {
-	    SpecsLogs.getLogger().warning("Could not open folder '" + outputFolder + "'");
+	    SpecsLogs.warn("Could not open folder '" + outputFolder + "'");
 	    return null;
 	}
 
@@ -116,7 +116,7 @@ public enum SimpleIoSetup implements SetupFieldEnum {
 	if (isSingleFile) {
 	    File inputFile = SpecsIo.existingFile(inputPath);
 	    if (inputFile == null) {
-		SpecsLogs.getLogger().warning("Could not open file.");
+		SpecsLogs.warn("Could not open file.");
 		return null;
 	    }
 	    List<File> files = new ArrayList<>();
@@ -126,7 +126,7 @@ public enum SimpleIoSetup implements SetupFieldEnum {
 	// Is Folder mode
 	File inputFolder = SpecsIo.mkdir(inputPath);
 	if (inputFolder == null) {
-	    SpecsLogs.getLogger().warning("Could not open folder.");
+	    SpecsLogs.warn("Could not open folder.");
 	    return null;
 	}
 	return SpecsIo.getFilesRecursive(inputFolder);

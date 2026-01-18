@@ -1,12 +1,12 @@
 /**
  * Copyright 2012 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,14 +29,14 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 /**
  * @author Joao Bispo
- * 
+ *
  */
 public class GlobalOptionsUtils {
 
     /**
      * Reads the data corresponding to the given SetupFieldEnum from
      * Preferences. Returns null if any of the fields are not supported.
-     * 
+     *
      * @param setupFieldClass
      * @return
      */
@@ -56,7 +56,7 @@ public class GlobalOptionsUtils {
 	    boolean success = putPreferencesValue(prefs, setupAccess, field);
 	    if (!success) {
 		SpecsLogs
-			.msgWarn("Given SetupFieldEnum class contains fields not supported by global options.");
+			.warn("Given SetupFieldEnum class contains fields not supported by global options.");
 		return;
 	    }
 	}
@@ -67,7 +67,7 @@ public class GlobalOptionsUtils {
     /**
      * Reads the data corresponding to the given SetupFieldEnum from
      * Preferences. Returns null if any of the fields are not supported.
-     * 
+     *
      * @param setupFieldClass
      * @return
      */
@@ -83,7 +83,7 @@ public class GlobalOptionsUtils {
 	    Object value = getPreferencesValue(prefs, field);
 	    if (value == null) {
 		SpecsLogs
-			.msgWarn("Given SetupFieldEnum class contains fields not supported by global options.");
+			.warn("Given SetupFieldEnum class contains fields not supported by global options.");
 		return null;
 	    }
 	    dataSet.put(field.name(), FieldValue.create(value, field.getType()));
@@ -91,8 +91,8 @@ public class GlobalOptionsUtils {
 	/*
 	String baseInputFolderString = prefs.get(BaseInputFolder.name(), null);
 	String baseOutputFolderString = prefs.get(BaseOutputFolder.name(), null);
-	
-	
+
+
 	dataSet.put(BaseInputFolder.name(), FieldValue.create(baseInputFolderString, BaseInputFolder.getType()));
 	dataSet.put(BaseOutputFolder.name(), FieldValue.create(baseOutputFolderString, BaseOutputFolder.getType()));
 	*/

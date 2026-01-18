@@ -15,14 +15,15 @@ package pt.up.fe.specs.util.classmap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
-import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
 
 /**
- * Maps a class to a BiConsumer that receives an instance of that class being used as key and other object.
+ * Maps a class to a BiConsumer that receives an instance of that class being
+ * used as key and other object.
  * 
  * @author JoaoBispo
  *
@@ -32,11 +33,8 @@ import pt.up.fe.specs.util.utilities.ClassMapper;
 public class BiConsumerClassMap<T, U> {
 
     private final Map<Class<? extends T>, BiConsumer<? extends T, U>> map;
-    // private final boolean supportInterfaces;
     private final boolean ignoreNotFound;
     private final ClassMapper classMapper;
-
-    // private static final boolean DEFAULT_SUPPORT_INTERFACES = true;
 
     public BiConsumerClassMap() {
         this(false, new ClassMapper());
@@ -44,16 +42,10 @@ public class BiConsumerClassMap<T, U> {
 
     private BiConsumerClassMap(boolean ignoreNotFound, ClassMapper classMapper) {
         this.map = new HashMap<>();
-        // this.supportInterfaces = supportInterfaces;
         this.ignoreNotFound = ignoreNotFound;
         this.classMapper = classMapper;
     }
 
-    /**
-     * 
-     * @param ignoreNotFound
-     * @return
-     */
     public static <T, U> BiConsumerClassMap<T, U> newInstance(boolean ignoreNotFound) {
         return new BiConsumerClassMap<>(ignoreNotFound, new ClassMapper());
     }
@@ -62,26 +54,17 @@ public class BiConsumerClassMap<T, U> {
      * Associates the specified value with the specified key.
      * 
      * <p>
-     * The key is always a class of a type that is a subtype of the type in the value.
+     * The key is always a class of a type that is a subtype of the type in the
+     * value.
      * <p>
      * Example: <br>
      * - put(Subclass.class, usesSuperClass), ok<br>
      * - put(Subclass.class, usesSubClass), ok<br>
      * - put(Superclass.class, usesSubClass), error<br>
-     * 
-     * @param aClass
-     * @param value
+     *
      */
     public <VS extends T, KS extends VS> void put(Class<KS> aClass,
             BiConsumer<VS, U> value) {
-
-        // if (!this.supportInterfaces) {
-        // if (aClass.isInterface()) {
-        // SpecsLogs.warn("Support for interfaces is disabled, map is unchanged");
-        // return;
-        // }
-        // }
-
         this.map.put(aClass, value);
         this.classMapper.add(aClass);
     }
@@ -97,33 +80,9 @@ public class BiConsumerClassMap<T, U> {
 
         var function = this.map.get(mappedClass.get());
 
-        SpecsCheck.checkNotNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
+        Objects.requireNonNull(function, () -> "There should be a mapping for " + mappedClass.get() + ", verify");
 
         return (BiConsumer<T, U>) function;
-
-        // Class<?> currentKey = key;
-        //
-        // while (currentKey != null) {
-        // // Test key
-        // BiConsumer<? extends T, U> result = this.map.get(currentKey);
-        // if (result != null) {
-        // return (BiConsumer<T, U>) result;
-        // }
-        //
-        // if (this.supportInterfaces) {
-        // for (Class<?> interf : currentKey.getInterfaces()) {
-        // result = this.map.get(interf);
-        // if (result != null) {
-        // return (BiConsumer<T, U>) result;
-        // }
-        // }
-        // }
-        //
-        // currentKey = currentKey.getSuperclass();
-        // }
-        //
-        // return null;
-        //
     }
 
     @SuppressWarnings("unchecked")
@@ -132,11 +91,9 @@ public class BiConsumerClassMap<T, U> {
     }
 
     /**
-     * Calls the BiConsumer.accept associated with class of the value t, or throws an Exception if no BiConsumer could
-     * be found in the map.
-     * 
-     * @param t
-     * @param u
+     * Calls the BiConsumer.accept associated with class of the value t, or throws
+     * an Exception if no BiConsumer could be found in the map.
+     *
      */
     public void accept(T t, U u) {
         BiConsumer<T, U> result = get(t);

@@ -25,28 +25,29 @@ public abstract class PersistenceFormat {
 
     /**
      * Writes an object to a file.
-     * 
-     * @param outputFile
-     * @param anObject
-     * @param aux
-     * @return
+     *
      */
     public boolean write(File outputFile, Object anObject) {
-	String contents = to(anObject);
-	return SpecsIo.write(outputFile, contents);
+        if (outputFile == null) {
+            throw new IllegalArgumentException("Output file cannot be null");
+        }
+        String contents = to(anObject);
+        return SpecsIo.write(outputFile, contents);
     }
 
     /**
      * Reads an object from a file.
-     * 
-     * @param inputFile
-     * @param classOfObject
-     * @param aux
-     * @return
+     *
      */
     public <T> T read(File inputFile, Class<T> classOfObject) {
-	String contents = SpecsIo.read(inputFile);
-	return from(contents, classOfObject);
+        if (inputFile == null) {
+            throw new IllegalArgumentException("Input file cannot be null");
+        }
+        if (classOfObject == null) {
+            throw new IllegalArgumentException("Class cannot be null");
+        }
+        String contents = SpecsIo.read(inputFile);
+        return from(contents, classOfObject);
     }
 
     public abstract String to(Object anObject);

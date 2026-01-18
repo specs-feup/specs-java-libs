@@ -16,10 +16,9 @@ package pt.up.fe.specs.util.logging;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-// import pt.up.fe.specs.util.Utilities.LineReader;
-
 /**
- * Extension of Formatter class, used for presenting logging information on a screen.
+ * Extension of Formatter class, used for presenting logging information on a
+ * screen.
  * 
  * @author Joao Bispo
  */

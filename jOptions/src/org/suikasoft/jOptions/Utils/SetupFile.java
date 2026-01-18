@@ -18,6 +18,8 @@ import java.io.File;
 import pt.up.fe.specs.util.SpecsIo;
 
 /**
+ * Utility class for setup file operations in jOptions.
+ * 
  * TODO: Rename to ConfigFile
  * 
  * @author JoaoBispo
@@ -27,43 +29,58 @@ public class SetupFile {
 
     private File setupFile;
 
+    /**
+     * Default constructor. Initializes the setup file to null.
+     */
     public SetupFile() {
-	setupFile = null;
+        setupFile = null;
     }
 
+    /**
+     * Sets the setup file.
+     * 
+     * @param setupFile the file to set
+     * @return the current instance of SetupFile
+     */
     public SetupFile setFile(File setupFile) {
-	this.setupFile = setupFile;
-	return this;
+        this.setupFile = setupFile;
+        return this;
     }
 
+    /**
+     * Gets the setup file.
+     * 
+     * @return the setup file
+     */
     public File getFile() {
-	return setupFile;
+        return setupFile;
     }
 
     /**
      * If no setup file is defined, returns the current work folder.
      * 
-     * @return
+     * @return the parent folder of the setup file, or the current work folder if no
+     *         setup file is defined
      */
     public File getParentFolder() {
-	if (setupFile == null) {
-	    return SpecsIo.getWorkingDir();
-	}
+        if (setupFile == null) {
+            return SpecsIo.getWorkingDir();
+        }
 
-	File parent = setupFile.getParentFile();
+        File parent = setupFile.getParentFile();
 
-	if (parent == null) {
-	    return SpecsIo.getWorkingDir();
-	}
+        if (parent == null) {
+            return SpecsIo.getWorkingDir();
+        }
 
-	return parent;
+        return parent;
     }
 
     /**
-     * 
+     * Resets the setup file to null.
      */
     public void resetFile() {
-	setupFile = null;
+        setupFile = null;
     }
 
 }

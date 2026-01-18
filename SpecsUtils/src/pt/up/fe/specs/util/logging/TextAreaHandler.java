@@ -36,7 +36,18 @@ public class TextAreaHandler extends StreamHandler {
 
     @Override
     public synchronized void publish(LogRecord record) {
+        // Handle null records gracefully
+        if (record == null) {
+            return;
+        }
+
+        // Check level filtering
         if (record.getLevel().intValue() < this.getLevel().intValue()) {
+            return;
+        }
+
+        // Check filter if set
+        if (this.getFilter() != null && !this.getFilter().isLoggable(record)) {
             return;
         }
 
@@ -44,7 +55,7 @@ public class TextAreaHandler extends StreamHandler {
             if (this.getFormatter() == null) {
                 this.jTextArea.append(record.getMessage() + "\n");
             } else {
-                this.jTextArea.append(this.getFormatter().format(record));
+                this.jTextArea.append(this.getFormatter().format(record) + "\n");
             }
         });
 

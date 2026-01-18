@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.logging;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class StringLogger implements TagLogger<String> {
@@ -28,7 +29,7 @@ public class StringLogger implements TagLogger<String> {
 
     public StringLogger(String baseName, Set<String> tags) {
         this.baseName = baseName;
-        this.tags = tags;
+        this.tags = new HashSet<>(tags != null ? tags : Collections.emptySet());
     }
 
     @Override
@@ -40,19 +41,4 @@ public class StringLogger implements TagLogger<String> {
     public String getBaseName() {
         return baseName;
     }
-
-    // @Override
-    // public void info(String tag, String message) {
-    // Preconditions.checkArgument(tags.contains(tag));
-    // TagLogger.super.info(tag, message);
-    // }
-
-    // default void warn(T tag, String message) {
-    // LogsHelper.logMessage(getClass().getName(), tag, message, (logger, msg) -> logger.warn(msg));
-    // }
-    //
-    // default void warn(String message) {
-    // warn(null, message);
-    // }
-
 }

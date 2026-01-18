@@ -30,9 +30,7 @@ public class StringParsersLegacy {
 
     /**
      * Clears the StringSlice, for debugging/development purposes.
-     * 
-     * @param string
-     * @return
+     *
      */
     public static ParserResult<String> clear(StringSlice string) {
         return new ParserResult<>(new StringSlice(""), string.toString());
@@ -43,15 +41,12 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Receives a string starting with "'{element}'({separator}'{element}')*", returns a list with the elements, without
-     * the primes.
+     * Receives a string starting with "'{element}'({separator}'{element}')*",
+     * returns a list with the elements, without the primes.
      * 
      * <p>
      * Trims the string after processing.
-     * 
-     * @param string
-     * @param separator
-     * @return
+     *
      */
     public static ParserResult<List<String>> parsePrimesSeparatedByString(StringSlice string, String separator) {
         List<String> elements = new ArrayList<>();
@@ -65,21 +60,18 @@ public class StringParsersLegacy {
             throw new RuntimeException("Given string does not start with quote ('):" + string);
         }
 
-        // return new ParserResult<>(string, elements);
-
         // While string starts with a prime (')
         while (string.startsWith("'")) {
             // Get string between primes
             ParserResult<String> primeString = StringParsers.parseNested(string, '\'', '\'');
 
             // Update string
-            string = primeString.getModifiedString();
-            elements.add(primeString.getResult());
+            string = primeString.modifiedString();
+            elements.add(primeString.result());
 
             // If there is not a separator, with a prime following it, return
             if (!string.startsWith(separator + "'")) {
                 // Trim string
-                // string = string;
                 string = string.trim();
                 return new ParserResult<>(string, elements);
             }
@@ -89,39 +81,12 @@ public class StringParsersLegacy {
         }
 
         throw new RuntimeException("Should not arrive here, current string: '" + string + "'");
-        /*
-            ParserResult<List<String>> primesResult;
-            // While the result of parsing primes is not empty
-            while (!(primesResult = parsePrimes(string)).getResult().isEmpty()) {
-                // Update string
-                string = primesResult.getModifiedString();
-        
-                // System.out.println("NEW STRING:" + string);
-                // System.out.println("RESULTS:" + primesResult.getResult());
-        
-                // Add result
-                Preconditions.checkArgument(primesResult.getResult().size() == 1, "Expected only one element");
-                elements.add(primesResult.getResult().get(0));
-        
-                // Remove separator
-                if (string.startsWith(separator)) {
-                string = string.substring(separator.length());
-                }
-                // Check that there is no more primes
-                else {
-                Preconditions.checkArgument(!string.startsWith("'"), "Did not expect a prime here:" + string);
-                }
-            }
-        
-            return new ParserResult<>(string, elements);
-            */
     }
 
     /**
-     * Receives a string starting with "(line|col):{number}(:{number})? and ending with a whitespace
-     * 
-     * @param string
-     * @return
+     * Receives a string starting with "(line|col):{number}(:{number})? and ending
+     * with a whitespace
+     *
      */
     public static ParserResult<String> parseLocation(StringSlice string) {
         String location = "";
@@ -176,15 +141,12 @@ public class StringParsersLegacy {
 
     /**
      * Returns the index after any possible colons in the path.
-     * 
-     * @param string
-     * @return
+     *
      */
     private static Optional<Integer> testPath(StringSlice string) {
         // Linux path
         if (string.startsWith("/")) {
             return Optional.of(0);
-            // throw new RuntimeException("Parsing of Linux paths not done yet, current path:" + testString);
         }
 
         // Windows path
@@ -197,7 +159,6 @@ public class StringParsersLegacy {
 
     /**
      * 
-     * @param string
      * @return the remaining of the string in the parser
      */
     public static ParserResult<String> parseRemaining(StringSlice string) {
@@ -207,25 +168,9 @@ public class StringParsersLegacy {
         return new ParserResult<>(string, rem);
     }
 
-    /*
-    private static ParserResult<Optional<String>> parseWordTry(StringSlice string) {
-        // Check if first character is an alphabetic character
-        if (!string.isEmpty() && !Character.isLetter(string.charAt(0))) {
-            return new ParserResult<>(string, Optional.empty());
-        }
-    
-        ParserResult<String> result = StringParsers.parseWord(string);
-    
-        return new ParserResult<>(result.getModifiedString(), Optional.of(result.getResult()));
-    }
-    */
-
     /**
      * Makes sure the string has the given prefix at the beginning.
-     * 
-     * @param string
-     * @param prefix
-     * @return
+     *
      */
     public static ParserResult<Boolean> ensurePrefix(StringSlice string, String prefix) {
         // Save the string in case we need to throw an exception
@@ -233,7 +178,7 @@ public class StringParsersLegacy {
 
         ParserResult<Boolean> result = checkStringStarts(string, prefix);
 
-        if (result.getResult()) {
+        if (result.result()) {
             return result;
         }
 
@@ -242,12 +187,9 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Makes sure the string has the given string at the beginning, separated by a whitespace, or is the complete string
-     * if no whitespace is found.
-     * 
-     * @param string
-     * @param word
-     * @return
+     * Makes sure the string has the given string at the beginning, separated by a
+     * whitespace, or is the complete string if no whitespace is found.
+     *
      */
     public static ParserResult<Boolean> ensureWord(StringSlice string, String word) {
         // Save the string in case we need to throw an exception
@@ -255,7 +197,7 @@ public class StringParsersLegacy {
 
         ParserResult<Boolean> result = checkWord(string, word);
 
-        if (result.getResult()) {
+        if (result.result()) {
             return result;
         }
 
@@ -264,12 +206,9 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Checks if starts with the given string, separated by a whitespace or if there is no whitespace, until the end of
-     * the string.
-     * 
-     * @param string
-     * @param string
-     * @return
+     * Checks if starts with the given string, separated by a whitespace or if there
+     * is no whitespace, until the end of the string.
+     *
      */
     public static ParserResult<Boolean> checkWord(StringSlice string, String word) {
         int endIndex = string.indexOf(' ');
@@ -288,12 +227,9 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Checks if ends with the given string, separated by a whitespace or if there is no whitespace, considers the whole
-     * string.
-     * 
-     * @param string
-     * @param string
-     * @return
+     * Checks if ends with the given string, separated by a whitespace or if there
+     * is no whitespace, considers the whole string.
+     *
      */
     public static ParserResult<Boolean> checkLastString(StringSlice string, String word) {
         // TODO: Using String because StringSlice.lastIndexOf is not implemented
@@ -305,7 +241,7 @@ public class StringParsersLegacy {
             startIndex = startIndex + 1;
         }
 
-        boolean hasWord = workString.substring(startIndex, workString.length()).equals(word);
+        boolean hasWord = workString.substring(startIndex).equals(word);
         if (!hasWord) {
             return new ParserResult<>(string, false);
         }
@@ -316,39 +252,27 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Returns true if the string starts with the given prefix, removes it from parsing.
+     * Returns true if the string starts with the given prefix, removes it from
+     * parsing.
      * 
      * <p>
      * Helper method which enables case-sensitiveness by default.
-     * 
-     * @param string
-     * @param prefix
-     * @return
+     *
      */
     public static ParserResult<Boolean> checkStringStarts(StringSlice string, String prefix) {
         return checkStringStarts(string, prefix, true);
     }
 
     /**
-     * Returns true if the string starts with the given prefix, removes it from parsing.
-     * 
-     * @param string
-     * @param prefix
-     * @param caseSensitive
-     * @return
+     * Returns true if the string starts with the given prefix, removes it from
+     * parsing.
+     *
      */
     public static ParserResult<Boolean> checkStringStarts(StringSlice string, String prefix, boolean caseSensitive) {
 
         boolean startsWith = caseSensitive ? string.startsWith(prefix)
                 : string.toString().toLowerCase().startsWith(prefix.toLowerCase());
-        /*        
-        if(caseSensitive) {
-            string.startsWith(prefix)
-        } else {
-            string.toString().toLowerCase().startsWith(prefix.toLowerCase())
-        }
-         */
-        // if (string.startsWith(prefix)) {
+
         if (startsWith) {
             string = string.substring(prefix.length());
             return new ParserResult<>(string, true);
@@ -359,7 +283,7 @@ public class StringParsersLegacy {
 
     public static ParserResult<Boolean> ensureStringStarts(StringSlice string, String prefix) {
         ParserResult<Boolean> result = checkStringStarts(string, prefix);
-        if (result.getResult()) {
+        if (result.result()) {
             return result;
         }
 
@@ -367,18 +291,12 @@ public class StringParsersLegacy {
     }
 
     public static ParserResult<Boolean> checkStringEnds(StringSlice string, String suffix) {
-
-        if (string.endsWith(suffix)) {
-            string = string.substring(0, string.length() - suffix.length());
-            return new ParserResult<>(string, true);
-        }
-
-        return new ParserResult<>(string, false);
+        return StringParsers.checkStringEnds(string, suffix);
     }
 
     public static ParserResult<Boolean> checkStringEndsStrict(StringSlice string, String suffix) {
         ParserResult<Boolean> result = checkStringEnds(string, suffix);
-        if (result.getResult()) {
+        if (result.result()) {
             return result;
         }
 
@@ -387,8 +305,8 @@ public class StringParsersLegacy {
 
     /**
      * 
-     * @param string
-     * @return true if the string starts with '->', false if it starts with '.', throws an exception otherwise
+     * @return true if the string starts with '->', false if it starts with '.',
+     *         throws an exception otherwise
      */
     public static ParserResult<Boolean> checkArrow(StringSlice string) {
         if (string.startsWith("->")) {
@@ -405,15 +323,13 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Starts at the end of the string, looking for a delimited by possibly nested symbols 'start' and 'end'.
+     * Starts at the end of the string, looking for a delimited by possibly nested
+     * symbols 'start' and 'end'.
      * 
      * <p>
-     * Example: ("a string <another string>", '<', '>') should return "another string"
-     * 
-     * @param string
-     * @param start
-     * @param end
-     * @return
+     * Example: ("a string <another string>", '<', '>') should return "another
+     * string"
+     *
      */
     public static ParserResult<String> reverseNested(StringSlice string, char start, char end) {
         Preconditions.checkArgument(!string.isEmpty());
@@ -435,7 +351,6 @@ public class StringParsersLegacy {
 
             if (string.charAt(startIndex) == end) {
                 counter++;
-                continue;
             }
         }
 
@@ -448,25 +363,25 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Receives a string starting with '0x' and interprets the next characters as an hexadecimal number, until there is
-     * a whitespace or the string ends.
+     * Receives a string starting with '0x' and interprets the next characters as an
+     * hexadecimal number, until there is a whitespace or the string ends.
      * 
-     * @param string
-     * @return an Integer representing the decoded hexadecimal, or -1 if no hex was found
+     * @return an Integer representing the decoded hexadecimal, or -1 if no hex was
+     *         found
      */
     public static ParserResult<Long> parseHex(StringSlice string) {
         if (!string.startsWith("0x")) {
-            return new ParserResult<>(string, -1l);
+            return new ParserResult<>(string, -1L);
         }
 
         ParserResult<String> result = StringParsers.parseWord(string);
 
-        string = result.getModifiedString();
-        String hexString = result.getResult();
+        string = result.modifiedString();
+        String hexString = result.result();
 
         // CHECK: Does it ever enter here?
         if (hexString.isEmpty()) {
-            return new ParserResult<>(string, 0l);
+            return new ParserResult<>(string, 0L);
         }
 
         Long hexValue = Long.decode(hexString);
@@ -475,11 +390,11 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Receives a string ending with a 'word' starting with '0x' and interprets the next characters as an hexadecimal
-     * number, until the string ends.
+     * Receives a string ending with a 'word' starting with '0x' and interprets the
+     * next characters as an hexadecimal number, until the string ends.
      * 
-     * @param string
-     * @return an Integer representing the decoded hexadecimal, or -1 if no hex was found
+     * @return an Integer representing the decoded hexadecimal, or -1 if no hex was
+     *         found
      */
     public static ParserResult<Long> reverseHex(StringSlice string) {
         int startIndex = string.lastIndexOf(' ');
@@ -487,16 +402,15 @@ public class StringParsersLegacy {
             startIndex = 0;
         }
 
-        // StringSlice hexString = string.substring(startIndex + 1, string.length()).trim();
         StringSlice hexString = string.substring(startIndex + 1, string.length());
 
         if (!hexString.startsWith("0x")) {
-            return new ParserResult<>(string, -1l);
+            return new ParserResult<>(string, -1L);
         }
 
         // CHECK: Does it ever enter here?
         if (hexString.isEmpty()) {
-            return new ParserResult<>(string.substring(0, startIndex), 0l);
+            return new ParserResult<>(string.substring(0, startIndex), 0L);
         }
 
         Long hexValue = Long.decode(hexString.toString());
@@ -505,21 +419,21 @@ public class StringParsersLegacy {
     }
 
     /**
-     * Receives a string and interprets the next characters as an integer number, until there is a whitespace or the
-     * string ends.
+     * Receives a string and interprets the next characters as an integer number,
+     * until there is a whitespace or the string ends.
      * 
-     * @param string
-     * @return an Integer representing the decoded hexadecimal, or -1 if no hex was found
+     * @return an Integer representing the decoded hexadecimal, or -1 if no hex was
+     *         found
      */
     public static ParserResult<Integer> parseInt(StringSlice string) {
-        return parseDecodedWord(string, intString -> Integer.decode(intString), 0);
+        return parseDecodedWord(string, Integer::decode, 0);
     }
 
     public static <T> ParserResult<T> parseDecodedWord(StringSlice string, Function<String, T> decoder, T emptyValue) {
         ParserResult<String> result = StringParsers.parseWord(string);
 
-        string = result.getModifiedString();
-        String value = result.getResult();
+        string = result.modifiedString();
+        String value = result.result();
 
         // CHECK: Does it ever enter here?
         if (value.isEmpty()) {
@@ -531,24 +445,17 @@ public class StringParsersLegacy {
         return new ParserResult<>(string, decodedValue);
     }
 
-    // private static <K extends Enum<K>> ParserResult<K> checkEnum(StringSlice string, Class<K> enumClass, K
-    // defaultValue,
-    // Map<String, K> customMappings) {
-    //
-    // return checkEnum(string, enumClass, defaultValue, true, customMappings);
-    // }
-
     public static <K extends Enum<K> & StringProvider> ParserResult<List<K>> parseElements(StringSlice string,
             EnumHelperWithValue<K> enumHelper) {
 
         List<K> parsedElements = new ArrayList<>();
 
         ParserResult<Optional<K>> element = StringParsers.checkEnum(string, enumHelper);
-        while (element.getResult().isPresent()) {
-            parsedElements.add(element.getResult().get());
+        while (element.result().isPresent()) {
+            parsedElements.add(element.result().get());
 
             // Update string
-            string = element.getModifiedString();
+            string = element.modifiedString();
 
             // Parse again
             element = StringParsers.checkEnum(string, enumHelper);
@@ -559,7 +466,6 @@ public class StringParsersLegacy {
 
     /**
      * 
-     * @param string
      * @return a string with all the contents of the StringSlice
      */
     public static ParserResult<String> getString(StringSlice string) {
@@ -570,9 +476,7 @@ public class StringParsersLegacy {
 
     /**
      * Parses a string between primes (e.g., 'a string').
-     * 
-     * @param string
-     * @return
+     *
      */
     public static ParserResult<String> parsePrimes(StringSlice string) {
         return StringParsers.parseNested(string, '\'', '\'');

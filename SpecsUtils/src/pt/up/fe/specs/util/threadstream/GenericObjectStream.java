@@ -2,7 +2,7 @@ package pt.up.fe.specs.util.threadstream;
 
 import pt.up.fe.specs.util.collections.concurrentchannel.ChannelConsumer;
 
-public class GenericObjectStream<T> extends AObjectStream<T> implements ObjectStream<T> {
+public class GenericObjectStream<T> extends AObjectStream<T> {
 
     private final ChannelConsumer<T> consumer;
 
@@ -17,15 +17,13 @@ public class GenericObjectStream<T> extends AObjectStream<T> implements ObjectSt
         try {
             ret = this.consumer.take();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return ret;
     }
 
     @Override
-    public void close() throws Exception {
-        // TODO Auto-generated method stub
+    public void close() {
         // TODO: how to implement here??
     }
 }

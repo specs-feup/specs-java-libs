@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -69,8 +70,7 @@ public class LineStream implements AutoCloseable {
 
     /**
      * Private constructor for static creator method.
-     * 
-     * @param reader
+     *
      */
     private LineStream(BufferedReader reader, Optional<String> filename) {
         this.reader = reader;
@@ -102,10 +102,9 @@ public class LineStream implements AutoCloseable {
     }
 
     /**
-     * Helper method which uses the name of the resource as the name of the stream by default.
-     * 
-     * @param resource
-     * @return
+     * Helper method which uses the name of the resource as the name of the stream
+     * by default.
+     *
      */
     public static LineStream newInstance(ResourceProvider resource) {
         return newInstance(resource, true);
@@ -113,11 +112,7 @@ public class LineStream implements AutoCloseable {
 
     /**
      * Creates a new LineStream from a resource.
-     * 
-     * @param resource
-     * @param useResourceName
-     *            if true, uses the resource name as the name of the line reader. Otherwise, uses no name
-     * @return
+     *
      */
     public static LineStream newInstance(ResourceProvider resource, boolean useResourceName) {
         final Optional<String> resourceName = useResourceName ? Optional.of(resource.getResourceName())
@@ -136,12 +131,14 @@ public class LineStream implements AutoCloseable {
 
     /**
      * 
-     * @param file
-     * @return a new LineStream backed by the given file. If the object could not be created, throws a RuntimeException.
+     * @return a new LineStream backed by the given file. If the object could not be
+     *         created, throws a RuntimeException.
      */
-    // Cannot close resource, since the stream must remain open after LineStream is created.
-    // However, LineStream is a decorator of the FileInputStream, that will close it when the LineStream is closed
     public static LineStream newInstance(File file) {
+        // Cannot close resource, since the stream must remain open after LineStream is
+        // created.
+        // However, LineStream is a decorator of the FileInputStream, that will close it
+        // when the LineStream is closed
 
         try {
             final FileInputStream fileStream = new FileInputStream(file);
@@ -155,23 +152,7 @@ public class LineStream implements AutoCloseable {
     }
 
     public static LineStream newInstance(String string) {
-        try {
-            return newInstance(new ByteArrayInputStream(string.getBytes("UTF-8")), null);
-        } catch (final IOException e) {
-            throw new RuntimeException("Problem while using LineStream backed by a String", e);
-        }
-
-        /*        
-        try {
-            final InputStreamReader streamReader = new InputStreamReader(
-                    new ByteArrayInputStream(string.getBytes("UTF-8")));
-        
-            return newInstance(streamReader, Optional.empty());
-        
-        } catch (final IOException e) {
-            throw new RuntimeException("Problem while using LineStream backed by a String", e);
-        }
-        */
+        return newInstance(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)), null);
     }
 
     public static LineStream newInstance(InputStream inputStream, String name) {
@@ -181,10 +162,8 @@ public class LineStream implements AutoCloseable {
 
     /**
      * 
-     * @param reader
-     * @param name
-     * @return a new LineStream backed by the given Reader. If the object could not be created, throws a
-     *         RuntimeException.
+     * @return a new LineStream backed by the given Reader. If the object could not
+     *         be created, throws a RuntimeException.
      */
     public static LineStream newInstance(Reader reader, Optional<String> name) {
         final BufferedReader newReader = new BufferedReader(reader);
@@ -207,7 +186,8 @@ public class LineStream implements AutoCloseable {
     /**
      * TODO: Rename 'next'
      * 
-     * @return the next line in the file, or null if the end of the stream has been reached.
+     * @return the next line in the file, or null if the end of the stream has been
+     *         reached.
      */
     public String nextLine() {
         if (nextLine != null) {
@@ -233,8 +213,7 @@ public class LineStream implements AutoCloseable {
 
     /**
      * TODO: Rename hasNext
-     * 
-     * @return
+     *
      */
     public boolean hasNextLine() {
         return nextLine != null;
@@ -257,23 +236,19 @@ public class LineStream implements AutoCloseable {
             }
 
             // Store line, if active
-            if (lastLines != null) {
+            if (lastLines != null && line != null) {
                 lastLines.insertElement(line);
             }
 
             return line;
         } catch (final IOException ex) {
-            // SpecsLogs.warn("Could not read line.", ex);
-            // fileEnded = true;
-            // reader.close();
             throw new RuntimeException("Could not read line.", ex);
-            // LoggingUtils.msgWarn("Could not read line.", ex);
-            // return null;
         }
     }
 
     /**
-     * @return the next line which is not empty, or null if the end of the stream has been reached.
+     * @return the next line which is not empty, or null if the end of the stream
+     *         has been reached.
      */
     public String nextNonEmptyLine() {
         for (;;) {
@@ -299,7 +274,7 @@ public class LineStream implements AutoCloseable {
 
     private static List<String> readLines(LineStream lineReader) {
         final List<String> lines = new ArrayList<>();
-        String line = null;
+        String line;
         while ((line = lineReader.nextLine()) != null) {
             lines.add(line);
         }
@@ -308,9 +283,9 @@ public class LineStream implements AutoCloseable {
     }
 
     /**
-     * Creates an Iterable over the LineReader. LineReader has to be disposed after use.
-     * 
-     * @return
+     * Creates an Iterable over the LineReader. LineReader has to be disposed after
+     * use.
+     *
      */
     public Iterable<String> getIterable() {
         return new LineReaderIterator();
@@ -326,7 +301,7 @@ public class LineStream implements AutoCloseable {
 
         @Override
         public Iterator<String> iterator() {
-            return new Iterator<String>() {
+            return new Iterator<>() {
 
                 @Override
                 public boolean hasNext() {
@@ -349,9 +324,9 @@ public class LineStream implements AutoCloseable {
     }
 
     /**
-     * Creates a stream over the LineReader. LineReader has to be disposed after use.
-     * 
-     * @return
+     * Creates a stream over the LineReader. LineReader has to be disposed after
+     * use.
+     *
      */
     public Stream<String> stream() {
         return StreamSupport.stream(getIterable().spliterator(), false);
@@ -387,7 +362,7 @@ public class LineStream implements AutoCloseable {
             return Collections.emptyList();
         }
 
-        var lines = lastLines.stream().collect(Collectors.toCollection(() -> new ArrayList<>()));
+        var lines = lastLines.stream().collect(Collectors.toCollection(ArrayList::new));
 
         // Lines are stored in reversed order, last ones first
         Collections.reverse(lines);

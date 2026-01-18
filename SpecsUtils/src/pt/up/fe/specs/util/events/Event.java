@@ -18,16 +18,9 @@ package pt.up.fe.specs.util.events;
  * 
  * @author Joao Bispo
  *
- * @param <K>
  */
 public interface Event {
-    // public interface Event<K extends Enum<K>, E> {
-    // public interface Event<K extends Enum<K>> {
-
-    // <T> Class<T> getDataClass();
-    // Enum<?> getId();
     EventId getId();
 
     Object getData();
-
 }

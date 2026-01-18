@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import pt.up.fe.specs.util.Preconditions;
 
@@ -37,7 +36,7 @@ public class MultiLineCommentRule implements TextParserRule {
 
         String currentLine = line.substring(startIndex + "/*".length());
 
-        int endIndex = -1;
+        int endIndex;
         while (true) {
 
             // Check if current line end the multi-line comment
@@ -58,12 +57,8 @@ public class MultiLineCommentRule implements TextParserRule {
             currentLine = iterator.next();
         }
 
-        // If no endIndex found, comment is malformed
-        // Preconditions.checkArgument(endIndex != -1,
-        // "Could not find end of multi-line comment start at '" + filepath + "':" + lineNumber);
-
         return Optional.of(TextElement.newInstance(TextElementType.MULTILINE_COMMENT,
-                lines.stream().collect(Collectors.joining("\n"))));
+                String.join("\n", lines)));
     }
 
 }

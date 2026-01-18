@@ -1,14 +1,14 @@
 /**
  * Copyright 2015 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.Datakey;
@@ -20,63 +20,84 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 /**
- * Represents a class that uses DataKeys (for reading and/or setting values).
- * 
- * @author JoaoBispo
+ * Interface for classes that use {@link DataKey} instances for reading and/or
+ * setting values.
  *
+ * <p>
+ * This interface provides methods to retrieve the keys that are read or written
+ * by the implementing class, and to validate a {@link DataStore} against the
+ * keys required by the class.
  */
 public interface KeyUser {
 
     /**
-     * 
-     * @return a list of keys needed by the implementing class
+     * Retrieves a collection of keys that are read by the implementing class.
+     *
+     * <p>
+     * This method returns an empty collection by default, indicating that the class
+     * does not read any keys.
+     *
+     * @return a collection of {@link DataKey} instances that are read by the class
      */
     default Collection<DataKey<?>> getReadKeys() {
-	return Collections.emptyList();
+        return Collections.emptyList();
     }
 
     /**
-     * 
-     * @return a list of keys that will be written by the implementing class
+     * Retrieves a collection of keys that are written by the implementing class.
+     *
+     * <p>
+     * This method returns an empty collection by default, indicating that the class
+     * does not write any keys.
+     *
+     * @return a collection of {@link DataKey} instances that are written by the
+     *         class
      */
     default Collection<DataKey<?>> getWriteKeys() {
-	return Collections.emptyList();
+        return Collections.emptyList();
     }
 
     /**
-     * Checks if the given DataStore contains values for all the keys used by the implementing class. If there is no
-     * value for any given key, an exception is thrown.
-     * 
+     * Validates that the given {@link DataStore} contains values for all the keys
+     * required by the implementing class.
+     *
      * <p>
-     * This method can only be called for DataStores that have a {@link StoreDefinition}. If no definition is present,
-     * throws an exception.
+     * If any required key is missing, an exception is thrown. This method requires
+     * the {@link DataStore} to have a {@link StoreDefinition}. If no definition is
+     * present, an exception is thrown.
+     *
      * <p>
-     * If 'noDefaults' is true, it forces a value to exist in the table, even if the key has a default value.
-     * 
-     * @param data
-     * @param noDefaults
+     * If the {@code noDefaults} parameter is set to {@code true}, the validation
+     * will require explicit values for all keys, even if the keys have default
+     * values.
+     *
+     * @param data       the {@link DataStore} to validate
+     * @param noDefaults whether to enforce explicit values for all keys, ignoring
+     *                   default values
+     * @throws RuntimeException if the {@link DataStore} does not contain values for
+     *                          all required keys
      */
     default void check(DataStore data, boolean noDefaults) {
-	if (!data.getStoreDefinitionTry().isPresent()) {
-	    throw new RuntimeException("This method requires that the DataStore has a StoreDefinition");
-	}
+        if (data.getStoreDefinitionTry().isEmpty()) {
+            throw new RuntimeException("This method requires that the DataStore has a StoreDefinition");
+        }
 
-	for (DataKey<?> key : data.getStoreDefinitionTry().get().getKeys()) {
-	    // Check if the key is present
-	    if (data.hasValue(key)) {
-		continue;
-	    }
+        for (DataKey<?> key : data.getStoreDefinitionTry().get().getKeys()) {
+            // Check if the key is present
+            if (data.hasValue(key)) {
+                continue;
+            }
 
-	    // If defaults allowed, check if key has a default
-	    if (!noDefaults && key.hasDefaultValue()) {
-		continue;
-	    }
+            // If defaults allowed, check if key has a default
+            if (!noDefaults && key.hasDefaultValue()) {
+                continue;
+            }
 
-	    final String defaultStatus = noDefaults ? "disabled" : "enabled";
+            final String defaultStatus = noDefaults ? "disabled" : "enabled";
 
-	    // Check failed, throw exception
-	    throw new RuntimeException("DataStore check failed, class needs a definition for '" + key.getName()
-		    + "' that is not present in the StoreDefinition (defaults are " + defaultStatus + ")");
-	}
+            // Check failed, throw exception
+            throw new RuntimeException("DataStore check failed, class needs a definition for '" + key.getName()
+                    + "' that is not present in the StoreDefinition (defaults are " + defaultStatus + ")");
+        }
     }
 }

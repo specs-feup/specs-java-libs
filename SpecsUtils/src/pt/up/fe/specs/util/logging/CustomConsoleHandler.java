@@ -24,27 +24,19 @@ public class CustomConsoleHandler extends StreamHandler {
     /**
      * Create a <tt>ConsoleHandler</tt> for <tt>System.err</tt>.
      * <p>
-     * The <tt>ConsoleHandler</tt> is configured based on <tt>LogManager</tt> properties (or their default values).
+     * The <tt>ConsoleHandler</tt> is configured based on <tt>LogManager</tt>
+     * properties (or their default values).
      * 
      */
     private CustomConsoleHandler(PrintStream printStream) {
         setOutputStream(printStream);
     }
 
-    /**
-     * 
-     * @return
-     */
-
     // Opening output stream, it is supposed to remain open
     public static CustomConsoleHandler newStdout() {
         return new CustomConsoleHandler(new PrintStream(new FileOutputStream(FileDescriptor.out)));
     }
 
-    /**
-     * 
-     * @return
-     */
     // Opening output stream, it is supposed to remain open
     public static CustomConsoleHandler newStderr() {
         return new CustomConsoleHandler(new PrintStream(new FileOutputStream(FileDescriptor.err)));
@@ -53,12 +45,12 @@ public class CustomConsoleHandler extends StreamHandler {
     /**
      * Publish a <tt>LogRecord</tt>.
      * <p>
-     * The logging request was made initially to a <tt>Logger</tt> object, which initialized the <tt>LogRecord</tt> and
-     * forwarded it here.
+     * The logging request was made initially to a <tt>Logger</tt> object, which
+     * initialized the <tt>LogRecord</tt> and forwarded it here.
      * <p>
      * 
-     * @param record
-     *            description of the log event. A null record is silently ignored and is not published
+     * @param record description of the log event. A null record is silently ignored
+     *               and is not published
      */
     @Override
     public synchronized void publish(LogRecord record) {
@@ -68,8 +60,8 @@ public class CustomConsoleHandler extends StreamHandler {
     }
 
     /**
-     * Override <tt>StreamHandler.close</tt> to do a flush but not to close the output stream. That is, we do <b>not</b>
-     * close <tt>System.err</tt>.
+     * Override <tt>StreamHandler.close</tt> to do a flush but not to close the
+     * output stream. That is, we do <b>not</b> close <tt>System.err</tt>.
      */
     @Override
     public synchronized void close() {

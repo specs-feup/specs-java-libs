@@ -15,6 +15,7 @@ package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +28,19 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.gui.KeyPanel;
 
 /**
+ * Panel for selecting multiple values from a list of choices.
+ *
+ * <p>
+ * This panel provides controls for adding, removing, and managing multiple
+ * choices for a DataKey of type List<T>.
+ *
  * TODO: Keep order as given by the original elements.
  * 
- * @author Joao Bispo
+ * @param <T> the type of value handled by the panel
  */
 public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -45,8 +53,12 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
     private final JButton addAllButton;
     private final JButton removeAllButton;
 
-    // private final Collection<T> availableChoices;
-
+    /**
+     * Constructs a MultipleChoiceListPanel for the given DataKey and DataStore.
+     *
+     * @param key  the DataKey
+     * @param data the DataStore
+     */
     public MultipleChoiceListPanel(DataKey<List<T>> key, DataStore data) {
         super(key, data);
 
@@ -56,8 +68,6 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         removeAllButton = new JButton("X All");
 
         selectedElements = new JComboBox<>();
-
-        // comboBoxValues = new JComboBox<String>();
         availableElements = new JComboBox<>();
 
         // Add actions
@@ -66,35 +76,17 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         addAllButton.addActionListener(this::addAllButtonAction);
         removeAllButton.addActionListener(this::removeAllButtonAction);
 
-        // ExtraData must be defined, otherwise we are not able to populate the avaliable choices
+        // ExtraData must be defined, otherwise we are not able to populate the
+        // available choices
         var extraData = key.getExtraData()
                 .orElseThrow(() -> new RuntimeException("Key '" + key.getName() + "' must define extra data"));
 
         @SuppressWarnings("unchecked")
         List<T> defaultValues = extraData.get(MultipleChoiceListKey.AVAILABLE_CHOICES);
 
-        // var defaultValues = key.getAvailableChoices();
-        // var defaultValues = key.getDefault().orElseThrow(
-        // () -> new RuntimeException("Must define a default value, otherwise we cannot obtain Enum class"));
-        // SpecsCheck.checkArgument(!defaultValues.isEmpty(),
-        // () -> "Default value must not be empty, otherwise we cannot obtain Enum class");
-
-        // @SuppressWarnings("unchecked")
-        // T[] enumConstants = ((Class<T>) defaultEnum.getClass()).getEnumConstants();
-
-        // availableChoices = new HashSet<>(Arrays.asList(enumConstants));
-
         for (T choice : defaultValues) {
             availableElements.addItem(choice);
         }
-
-        // Check if there is a default value
-        // if (getKey().getDefault().isPresent()) {
-        // for (var defaultElement : getKey().getDefault().get()) {
-        // System.out.println("ADDING DEFAULT: " + defaultElement);
-        // addElement(defaultElement);
-        // }
-        // }
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(selectedElements);
@@ -105,6 +97,12 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         add(removeAllButton);
     }
 
+    /**
+     * Retrieves all elements from the given JComboBox.
+     *
+     * @param comboBox the JComboBox to retrieve elements from
+     * @return a list of elements in the JComboBox
+     */
     private List<T> getElements(JComboBox<T> comboBox) {
         List<T> elements = new ArrayList<>();
         for (int i = 0; i < comboBox.getItemCount(); i++) {
@@ -113,6 +111,13 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         return elements;
     }
 
+    /**
+     * Finds the index of the given element in the JComboBox.
+     *
+     * @param comboBox the JComboBox to search
+     * @param element  the element to find
+     * @return the index of the element, or -1 if not found
+     */
     private int indexOf(JComboBox<T> comboBox, T element) {
         for (int i = 0; i < comboBox.getItemCount(); i++) {
             if (element.equals(comboBox.getItemAt(i))) {
@@ -122,29 +127,29 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         return -1;
     }
 
+    /**
+     * Moves an element from the source JComboBox to the destination JComboBox.
+     *
+     * @param element     the element to move
+     * @param source      the source JComboBox
+     * @param destination the destination JComboBox
+     */
     private void moveElement(T element, JComboBox<T> source, JComboBox<T> destination) {
-        // Check if element is present is available choices
-        // var available = getElements(availableElements);
-        // int elementIndex = available.indexOf(element);
-
         int elementIndex = indexOf(source, element);
         if (elementIndex == -1) {
-            // SpecsLogs.warn("Could not find element: " + element);
             return;
         }
 
         destination.addItem(element);
         source.removeItemAt(elementIndex);
-        // availableElements.getIt
     }
 
     /**
-     * Adds the option from the avaliable list to selected list.
-     * 
-     * @param evt
+     * Adds the selected option from the available list to the selected list.
+     *
+     * @param evt the ActionEvent triggered by the button
      */
     private void addButtonAction(ActionEvent evt) {
-        // Determine what element is selected
         int choice = availableElements.getSelectedIndex();
         if (choice == -1) {
             return;
@@ -154,12 +159,11 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
     }
 
     /**
-     * Removes the option from the selected list to the available list.
-     * 
-     * @param evt
+     * Removes the selected option from the selected list to the available list.
+     *
+     * @param evt the ActionEvent triggered by the button
      */
     private void removeButtonAction(ActionEvent evt) {
-        // Determine what element is selected
         int choice = selectedElements.getSelectedIndex();
         if (choice == -1) {
             return;
@@ -169,9 +173,9 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
     }
 
     /**
-     * Moves all options from the avaliable list to selected list.
-     * 
-     * @param evt
+     * Moves all options from the available list to the selected list.
+     *
+     * @param evt the ActionEvent triggered by the button
      */
     private void addAllButtonAction(ActionEvent evt) {
         while (availableElements.getItemCount() > 0) {
@@ -181,8 +185,8 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
 
     /**
      * Moves all options from the selected list to the available list.
-     * 
-     * @param evt
+     *
+     * @param evt the ActionEvent triggered by the button
      */
     private void removeAllButtonAction(ActionEvent evt) {
         while (selectedElements.getItemCount() > 0) {
@@ -190,11 +194,21 @@ public class MultipleChoiceListPanel<T> extends KeyPanel<List<T>> {
         }
     }
 
+    /**
+     * Retrieves the current value of the panel.
+     *
+     * @return a list of selected elements
+     */
     @Override
     public List<T> getValue() {
         return getElements(selectedElements);
     }
 
+    /**
+     * Sets the value of the panel.
+     *
+     * @param value the list of elements to set as selected
+     */
     @Override
     public <ET extends List<T>> void setValue(ET value) {
         for (var element : value) {

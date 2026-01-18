@@ -1,11 +1,11 @@
 /*
  * Copyright 2011 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -24,81 +24,36 @@ import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Utility methods related to XStreamPlus package.
- * 
- * <p>
- * Ex.: reading and writing ObjectXml objects to and from XML files.
- * 
- * @author Joao Bispo
+ * Utility methods related to XStreamPlus package, such as reading and writing
+ * ObjectXml objects to and from XML files.
  */
 public class XStreamUtils {
 
+    /**
+     * Creates a new XStream instance with default permissions and converters.
+     *
+     * @return a configured XStream instance
+     */
     public static XStream newXStream() {
-
         var xstream = new XStream();
         xstream.addPermission(new AnyTypePermission());
-        // xstream.registerConverter(new OptionalConverter(xstream));
         xstream.registerConverter(new OptionalConverter());
-        // var xstream = new XStream(new DomDriver());
-
-        // XStream.setupDefaultSecurity(xstream);
-        // xstream.allowTypesByWildcard(new String[] {
-        // "java.**"
-        // });
-
         return xstream;
-
-        // return new XStream();
-        // return new XStream(new DomDriver());
-
-        // Taken from here: https://github.com/x-stream/xstream/issues/101#issuecomment-514760040
-        // XStream xstream = new XStream(new StaxDriver() {
-        // @Override
-        // public HierarchicalStreamWriter createWriter(Writer out) {
-        // return new PrettyPrintWriter(out, " ");
-        // }
-        // }) {
-        // // only register the converters we need; other converters generate a private access warning in the console
-        // // on Java9+...
-        // @Override
-        // protected void setupConverters() {
-        // registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
-        // registerConverter(new IntConverter(), PRIORITY_NORMAL);
-        // registerConverter(new FloatConverter(), PRIORITY_NORMAL);
-        // registerConverter(new DoubleConverter(), PRIORITY_NORMAL);
-        // registerConverter(new LongConverter(), PRIORITY_NORMAL);
-        // registerConverter(new ShortConverter(), PRIORITY_NORMAL);
-        // registerConverter(new BooleanConverter(), PRIORITY_NORMAL);
-        // registerConverter(new ByteConverter(), PRIORITY_NORMAL);
-        // registerConverter(new StringConverter(), PRIORITY_NORMAL);
-        // registerConverter(new DateConverter(), PRIORITY_NORMAL);
-        // registerConverter(new CollectionConverter(getMapper()), PRIORITY_NORMAL);
-        // registerConverter(new ReflectionConverter(getMapper(), getReflectionProvider()), PRIORITY_VERY_LOW);
-        // }
-        // };
-        // xstream.autodetectAnnotations(true);
-        //
-        // // setup proper security by limiting which classes can be loaded by XStream
-        // // xstream.addPermission(NoTypePermission.NONE);
-        // // xstream.addPermission(new WildcardTypePermission(new String[] { "com.mycompany.**" }));
-        //
-        // return xstream;
-
     }
 
-    /*
-     * public static boolean write(File file, XmlSerializable object) { return
-     * write(file, object, object.getXmlSerializer()); }
+    /**
+     * Writes an object to a file using the provided ObjectXml stream.
+     *
+     * @param file   the file to write to
+     * @param object the object to write
+     * @param stream the ObjectXml stream to use for serialization
+     * @param <T>    the type of the object
+     * @return true if the write operation was successful, false otherwise
      */
-
-    public static <T> boolean write(File file, Object object,
-            ObjectXml<T> stream) {
-        // public static <T> boolean write(File file, T object, ObjectXml<T>
-        // stream) {
-
+    public static <T> boolean write(File file, Object object, ObjectXml<T> stream) {
         String xmlContents = stream.toXml(object);
         if (xmlContents == null) {
-            SpecsLogs.getLogger().warning("Could not generate XML.");
+            SpecsLogs.warn("Could not generate XML.");
             return false;
         }
 
@@ -106,24 +61,20 @@ public class XStreamUtils {
     }
 
     /**
-     * Generic implementation of write method, without user-defined mappings.
-     * 
-     * @param file
-     * @param object
-     * @return
+     * Writes an object to a file using a generic implementation without
+     * user-defined mappings.
+     *
+     * @param file        the file to write to
+     * @param object      the object to write
+     * @param objectClass the class of the object
+     * @param <T>         the type of the object
+     * @return true if the write operation was successful, false otherwise
      */
-    // public static boolean write(File file, final Object object) {
-    public static <T> boolean write(File file, final T object,
-            final Class<T> objectClass) {
-        // ObjectXml<T> objXml = new ObjectXml<T>() {
-        ObjectXml<T> objXml = new ObjectXml<T>() {
-
-            // @SuppressWarnings("unchecked")
-            // @Override
+    public static <T> boolean write(File file, final T object, final Class<T> objectClass) {
+        ObjectXml<T> objXml = new ObjectXml<>() {
             @Override
             public Class<T> getTargetClass() {
                 return objectClass;
-                // return (Class<?>)object.getClass();
             }
         };
 
@@ -131,71 +82,55 @@ public class XStreamUtils {
     }
 
     /**
-     * The XML representation of the object.
-     * 
-     * TODO: Change name to toXml, after errors are corrected
-     * 
-     * @param file
-     * @param object
-     * @return
+     * Converts an object to its XML representation.
+     *
+     * @param object the object to convert
+     * @return the XML representation of the object
      */
     public static String toString(final Object object) {
-        // public static <T> String toString(final T object) {
-        // ObjectXml<T> objXml = new ObjectXml<T>() {
-        /*
-         * ObjectXml<?> objXml = new ObjectXml<Object>() {
-         * 
-         * @Override //public Class<?> getTargetClass() { public Class<Object>
-         * getTargetClass() { return (Class<Object>) object.getClass(); //
-         * Class<?> aClass = object.getClass(); // return aClass; } };
-         * 
-         * 
-         * return objXml.toXml(object);
-         */
         XStream xstream = XStreamUtils.newXStream();
         return xstream.toXML(object);
     }
 
+    /**
+     * Reads an object from a file using the provided ObjectXml stream.
+     *
+     * @param file   the file to read from
+     * @param stream the ObjectXml stream to use for deserialization
+     * @param <T>    the type of the object
+     * @return the deserialized object, or null if the operation failed
+     */
     public static <T> T read(File file, ObjectXml<T> stream) {
-        // public static T read(File file, ObjectXml stream) {
-        // public static Object read(File file, ObjectXml stream) {
         String xmlContents = SpecsIo.read(file);
         T newObject = stream.fromXml(xmlContents);
-        // T newObject = stream.fromXml(xmlContents);
-        if (newObject == null) {
-            // LoggingUtils.getLogger().
-            // warning("Could not get object from XML.");
-            return null;
-        }
 
         return newObject;
     }
 
     /**
-     * Generic implementation of read method, without user-defined mappings.
-     * 
-     * @param file
-     * @param objectClass
-     * @return
+     * Reads an object from a file using a generic implementation without
+     * user-defined mappings.
+     *
+     * @param file        the file to read from
+     * @param objectClass the class of the object
+     * @param <T>         the type of the object
+     * @return the deserialized object
      */
-    // public static <T> T read(File file, final Class<T> objectClass) {
     public static <T> T read(File file, final Class<T> objectClass) {
         String contents = SpecsIo.read(file);
         return from(contents, objectClass);
-        /*
-         * //ObjectXml<T> objXml = new ObjectXml<T>() { ObjectXml objXml = new
-         * ObjectXml() {
-         * 
-         * @Override public Class<?> getTargetClass() { return objectClass; } };
-         * 
-         * Object anObj = read(file, objXml); return objectClass.cast(anObj);
-         * //return read(file, objXml);
-         */
     }
 
+    /**
+     * Converts an XML string to an object of the specified class.
+     *
+     * @param contents    the XML string
+     * @param objectClass the class of the object
+     * @param <T>         the type of the object
+     * @return the deserialized object
+     */
     public static <T> T from(String contents, final Class<T> objectClass) {
-        ObjectXml<T> objXml = new ObjectXml<T>() {
-
+        ObjectXml<T> objXml = new ObjectXml<>() {
             @Override
             public Class<T> getTargetClass() {
                 return objectClass;
@@ -203,16 +138,13 @@ public class XStreamUtils {
         };
 
         return objXml.fromXml(contents);
-        /*
-         * Object anObj = objXml.fromXml(contents);
-         * 
-         * return objectClass.cast(anObj);
-         */
     }
 
     /**
-     * @param aspectDataFile
-     * @param aspectData
+     * Writes an object to a file.
+     *
+     * @param file  the file to write to
+     * @param value the object to write
      */
     public static void write(File file, Object value) {
         String xml = toString(value);
@@ -220,10 +152,11 @@ public class XStreamUtils {
     }
 
     /**
-     * Copies an object.
-     * 
-     * @param object
-     * @return
+     * Copies an object by serializing and deserializing it.
+     *
+     * @param object the object to copy
+     * @param <T>    the type of the object
+     * @return a copy of the object
      */
     @SuppressWarnings("unchecked")
     public static <T> T copy(T object) {

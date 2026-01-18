@@ -25,6 +25,9 @@ public class XmlElement extends AXmlNode {
     private final Element element;
 
     public XmlElement(Element element) {
+        if (element == null) {
+            throw new NullPointerException("XmlElement requires a non-null Element");
+        }
         this.element = element;
     }
 
@@ -39,10 +42,13 @@ public class XmlElement extends AXmlNode {
 
     /**
      * 
-     * @param name
-     * @return the value of the attribute with the given name, or empty string if no attribute with that name is present
+     * @return the value of the attribute with the given name, or empty string if no
+     *         attribute with that name is present
      */
     public String getAttribute(String name) {
+        if (name == null) {
+            return "";
+        }
         return element.getAttribute(name);
     }
 
@@ -53,9 +59,8 @@ public class XmlElement extends AXmlNode {
 
     /**
      * 
-     * @param name
-     * @return the value of the attribute with the given name, or throws exception if no attribute with that name is
-     *         present
+     * @return the value of the attribute with the given name, or throws exception
+     *         if no attribute with that name is present
      */
     public String getAttributeStrict(String name) {
         var result = getAttribute(name);
@@ -69,13 +74,19 @@ public class XmlElement extends AXmlNode {
 
     /**
      * 
-     * @param name
-     * @param value
-     * @return the previous value set to the given name, of null if no value was set for that name
+     * @return the previous value set to the given name, of null if no value was set
+     *         for that name
      */
     public String setAttribute(String name, String value) {
+        if (name == null) {
+            throw new NullPointerException("Attribute name cannot be null");
+        }
         var previousValue = getAttribute(name);
-        element.setAttribute(name, value);
+        if (value == null) {
+            element.removeAttribute(name);
+        } else {
+            element.setAttribute(name, value);
+        }
         return previousValue;
     }
 

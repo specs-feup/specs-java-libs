@@ -95,7 +95,7 @@ public class GlobalOptionsPanel extends GuiTab {
 	SetupData newMap = GlobalOptionsUtils.loadData(globalSetup);
 	// SetupData newMap = GuiHelperUtils.loadData(file);
 	if (newMap == null) {
-	    SpecsLogs.getLogger().warning(
+	    SpecsLogs.warn(
 		    "Could not load global options from '" + globalSetup.getName() + "'");
 	    return;
 	}

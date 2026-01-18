@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.gui.panels.option;
 
 import java.awt.FlowLayout;
+import java.io.Serial;
 
 import javax.swing.JTextField;
 
@@ -25,11 +26,14 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
 
 /**
+ * Panel for editing integer values using a JTextField.
  *
- * @author Joao Bispo
+ * <p>
+ * This panel provides a text field for integer DataKey values in the GUI.
  */
 public class IntegerPanel extends KeyPanel<Integer> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -37,6 +41,12 @@ public class IntegerPanel extends KeyPanel<Integer> {
      */
     private final JTextField value;
 
+    /**
+     * Constructs an IntegerPanel for the given DataKey and DataStore.
+     *
+     * @param key  the DataKey
+     * @param data the DataStore
+     */
     public IntegerPanel(DataKey<Integer> key, DataStore data) {
 
         super(key, data);
@@ -47,14 +57,29 @@ public class IntegerPanel extends KeyPanel<Integer> {
         setLayout(new FlowLayout(FlowLayout.LEFT));
     }
 
+    /**
+     * Sets the text of the text field.
+     *
+     * @param text the text to set
+     */
     private void setText(String text) {
         value.setText(text);
     }
 
+    /**
+     * Gets the text from the text field.
+     *
+     * @return the text in the field
+     */
     private String getText() {
         return value.getText();
     }
 
+    /**
+     * Returns the current integer value from the text field.
+     *
+     * @return the integer value
+     */
     @Override
     public Integer getValue() {
         String stringValue = getText();
@@ -73,6 +98,11 @@ public class IntegerPanel extends KeyPanel<Integer> {
         return result;
     }
 
+    /**
+     * Sets the value of the text field.
+     *
+     * @param value the integer value to set
+     */
     @Override
     public void setValue(Integer value) {
         setText(value.toString());

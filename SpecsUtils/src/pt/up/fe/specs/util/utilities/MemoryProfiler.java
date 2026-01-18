@@ -21,7 +21,6 @@ import java.io.OutputStreamWriter;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import pt.up.fe.specs.util.SpecsIo;
@@ -30,7 +29,8 @@ import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 
 /**
- * Launches a thread that periodically calls the garbage collector and reads the memory used after collection.
+ * Launches a thread that periodically calls the garbage collector and reads the
+ * memory used after collection.
  * 
  * @author JBispo
  *
@@ -40,6 +40,10 @@ public class MemoryProfiler {
     private final long period;
     private final TimeUnit timeUnit;
     private final File outputFile;
+    
+    // Lifecycle management
+    private volatile boolean running = false;
+    private Thread workerThread;
 
     public MemoryProfiler(long period, TimeUnit timeUnit, File outputFile) {
         this.period = period;
@@ -48,31 +52,85 @@ public class MemoryProfiler {
     }
 
     /**
-     * Helper constructor, which measure memory every 500 milliseconds, to a file "memory_profile.csv" in the current
-     * working directory.
+     * Helper constructor, which measure memory every 500 milliseconds, to a file
+     * "memory_profile.csv" in the current working directory.
      */
     public MemoryProfiler() {
         this(500, TimeUnit.MILLISECONDS, new File("memory_profile.csv"));
     }
 
-    // public static void run(long period, TimeUnit timeUnit, ) {
-    // ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    // scheduler.scheduleAtFixedRate(yourRunnable, 0, period, timeUnit);
-    // }
+    public synchronized void execute() {
+        // Backwards-compatible alias for start()
+        start();
+    }
 
-    public void execute() {
+    /**
+     * Starts the memory profiling in a dedicated daemon thread. If the profiler is already running this call is a
+     * no-op.
+     */
+    public synchronized void start() {
+        if (running) {
+            return; // already running
+        }
 
-        // Launch thread
-        var threadExecutor = Executors.newSingleThreadExecutor();
-        threadExecutor.execute(this::profile);
-        threadExecutor.shutdown();
+        if (outputFile != null) {
+            try {
+                var parent = outputFile.getParentFile();
+                if (parent == null || parent.exists()) {
+                    boolean created = outputFile.createNewFile();
+                    if (!created && !outputFile.exists()) {
+                        SpecsLogs.info(
+                                "Could not create memory profile output file before starting: "
+                                        + SpecsIo.getCanonicalPath(outputFile));
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                SpecsLogs.info("Could not create memory profile output file before starting: " + e.getMessage());
+                return;
+            }
+        }
 
+        running = true;
+        workerThread = new Thread(this::profile, "MemoryProfiler");
+        workerThread.setDaemon(true); // Do not prevent JVM shutdown
+        workerThread.start();
+    }
+
+    /**
+     * Stops the profiling thread, if it is running. This method is idempotent.
+     */
+    public synchronized void stop() {
+        running = false;
+        if (workerThread != null) {
+            workerThread.interrupt();
+        }
+    }
+
+    /**
+     * Returns true if the profiling worker thread is currently alive.
+     */
+    public boolean isRunning() {
+        return running && workerThread != null && workerThread.isAlive();
+    }
+
+    /**
+     * Exposes the underlying worker thread mainly for testing purposes.
+     */
+    public Thread getWorkerThread() {
+        return workerThread;
     }
 
     private void profile() {
+        if (outputFile == null) {
+            SpecsLogs.info("MemoryProfiler started with a null output file, aborting.");
+            running = false;
+            return;
+        }
+
         long totalMillis = TimeUnit.MILLISECONDS.convert(period, timeUnit);
         long totalNanos = TimeUnit.NANOSECONDS.convert(period, timeUnit);
-        long totalNanosTruncated = totalMillis * 1_000_000l;
+        long totalNanosTruncated = totalMillis * 1_000_000L;
         long partialNanos = totalNanos - totalNanosTruncated;
 
         long totalTime = totalNanosTruncated + partialNanos;
@@ -92,27 +150,15 @@ public class MemoryProfiler {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile, true),
                 SpecsIo.DEFAULT_CHAR_SET))) {
 
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        writer.close();
-                    } catch (IOException e) {
-                        SpecsLogs.info("Memory profile failed, " + e.getMessage());
-                    }
-                }
-            });
-
-            while (true) {
-                // Sleep
-                // SpecsLogs.info("Sleeping...");
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
-                    Thread.sleep(totalMillis, (int) partialNanos);
-                } catch (InterruptedException e) {
-                    SpecsLogs.info("Interrupting memory profile");
-                    break;
+                    writer.close();
+                } catch (IOException e) {
+                    SpecsLogs.info("Memory profile failed, " + e.getMessage());
                 }
+            }));
 
+            while (running && !Thread.currentThread().isInterrupted()) {
                 // Get used memory, in Mb, calling the garbage collector before
                 var usedMemory = SpecsSystem.getUsedMemoryMb(true);
 
@@ -125,15 +171,25 @@ public class MemoryProfiler {
 
                 // Write to file
                 writer.write(line, 0, line.length());
-                // writer.flush();
-                // System.out.println("WROTE " + line);
+
+                // Ensure data is flushed so other threads can read it
+                writer.flush();
+
+                // Sleep
+                try {
+                    Thread.sleep(totalMillis, (int) partialNanos);
+                } catch (InterruptedException e) {
+                    // Respect interruption
+                    SpecsLogs.info("Interrupting memory profile");
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
 
         } catch (Exception e) {
             SpecsLogs.info("Interrupting memory profile, " + e.getMessage());
+        } finally {
+            running = false;
         }
-
-        // SpecsIo.append(file, contents)
-        // try()
     }
 }

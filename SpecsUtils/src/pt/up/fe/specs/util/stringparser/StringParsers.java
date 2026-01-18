@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -41,17 +42,14 @@ public class StringParsers {
     }
 
     /**
-     * Receives a string starting with generic string separated by a whitespace, or the complete string if no whitespace
-     * is found.
+     * Receives a string starting with generic string separated by a whitespace, or
+     * the complete string if no whitespace is found.
      *
-     * @param string
-     * @return
      */
     public static ParserResult<String> parseWord(StringSlice string) {
         int endIndex = string.indexOf(' ');
         if (endIndex == -1) {
             endIndex = string.length();
-            // throw new RuntimeException("Expected a space in string '" + string + "'");
         }
 
         String element = string.substring(0, endIndex).toString();
@@ -63,11 +61,9 @@ public class StringParsers {
     }
 
     /**
-     * Receives a string starting with generic string separated by a whitespace, or the complete string if no whitespace
-     * is found.
+     * Receives a string starting with generic string separated by a whitespace, or
+     * the complete string if no whitespace is found.
      *
-     * @param string
-     * @return
      */
     public static ParserResult<Boolean> hasWord(StringSlice string, String word) {
         return hasWord(string, word, true);
@@ -100,7 +96,7 @@ public class StringParsers {
     }
 
     public static ParserResult<Optional<Character>> checkCharacter(StringSlice string, Character aChar) {
-        return checkCharacter(string, Arrays.asList(aChar));
+        return checkCharacter(string, List.of(aChar));
     }
 
     public static ParserResult<Optional<Character>> checkCharacter(StringSlice string,
@@ -129,27 +125,20 @@ public class StringParsers {
 
     public static ParserResult<Optional<Character>> checkHexDigit(StringSlice string) {
         return checkCharacter(string, HEXDIGITS_LOWER);
-
     }
 
     /**
      * Helper method which sets case-sensitiveness to true.
      *
-     * @param string
-     * @param prefix
-     * @return
      */
     public static ParserResult<Optional<String>> checkStringStarts(StringSlice string, String prefix) {
         return checkStringStarts(string, prefix, true);
     }
 
     /**
-     * Returns an optional with the string if it starts with the given prefix, removes it from parsing.
+     * Returns an optional with the string if it starts with the given prefix,
+     * removes it from parsing.
      *
-     * @param string
-     * @param prefix
-     * @param caseSensitive
-     * @return
      */
     public static ParserResult<Optional<String>> checkStringStarts(StringSlice string, String prefix,
             boolean caseSensitive) {
@@ -183,12 +172,9 @@ public class StringParsers {
     }
 
     /**
-     * Checks if it starts with the given String, but does not change the contents if it is either true of false.
+     * Checks if it starts with the given String, but does not change the contents
+     * if it is either true of false.
      *
-     * @param string
-     * @param prefix
-     * @param caseSensitive
-     * @return
      */
     public static ParserResult<Boolean> peekStartsWith(StringSlice string, String prefix,
             boolean caseSensitive) {
@@ -200,9 +186,9 @@ public class StringParsers {
     }
 
     /**
-     * String must start with double quote, and appends characters until there is an unescaped double quote.
+     * String must start with double quote, and appends characters until there is an
+     * unescaped double quote.
      * 
-     * @param string
      * @return the contents inside the double quoted string
      */
     public static ParserResult<String> parseDoubleQuotedString(StringSlice string) {
@@ -224,7 +210,7 @@ public class StringParsers {
                 currentString = currentString.substring(escapeString.length());
 
                 Preconditions.checkArgument(!currentString.isEmpty());
-                char escapedChar = (char) currentString.charAt(0);
+                char escapedChar = currentString.charAt(0);
                 currentString = currentString.substring(1);
 
                 contents.append(escapeString).append(escapedChar);
@@ -234,10 +220,10 @@ public class StringParsers {
             if (currentString.startsWith(endString)) {
                 // Drop end string
                 currentString = currentString.substring(endString.length());
-                return new ParserResult<String>(currentString, contents.toString());
+                return new ParserResult<>(currentString, contents.toString());
             }
 
-            char aChar = (char) currentString.charAt(0);
+            char aChar = currentString.charAt(0);
             currentString = currentString.substring(1);
             contents.append(aChar);
         }
@@ -247,11 +233,9 @@ public class StringParsers {
     }
 
     /**
-     * Receives a string starting with the given prefix, returns the prefix. Throws exception if the prefix is not
-     * found.
+     * Receives a string starting with the given prefix, returns the prefix. Throws
+     * exception if the prefix is not found.
      *
-     * @param string
-     * @return
      */
     public static ParserResult<String> parseString(StringSlice string, String prefix) {
         if (!string.startsWith(prefix)) {
@@ -264,18 +248,12 @@ public class StringParsers {
     }
 
     /**
-     * Parses a string between the given begin and end characters, trims the slice in the end.
-     * 
-     * @param string
-     * @param begin
-     * @param end
-     * @param endPredicate
-     * @return
+     * Parses a string between the given begin and end characters, trims the slice
+     * in the end.
+     *
      */
     public static ParserResult<String> parseNested(StringSlice string, char begin, char end,
             BiPredicate<StringSlice, Integer> endPredicate) {
-
-        // string = string.trim();
 
         Preconditions.checkArgument(!string.isEmpty());
 
@@ -289,7 +267,6 @@ public class StringParsers {
             endIndex++;
 
             // If found end char, decrement
-            // if (string.charAt(endIndex) == end) {
             if (endPredicate.test(string, endIndex)) {
                 counter--;
                 continue;
@@ -318,11 +295,9 @@ public class StringParsers {
     /**
      * Parses a string inside primes ('), separated by spaces.
      * <p>
-     * Receives a string starting with "'{element}' ( '{element}')*", returns a list with the elements, without the
-     * primes.
-     * 
-     * @param string
-     * @return
+     * Receives a string starting with "'{element}' ( '{element}')*", returns a list
+     * with the elements, without the primes.
+     *
      */
     public static ParserResult<String> parseNested(StringSlice string, char begin, char end) {
         BiPredicate<StringSlice, Integer> endPredicate = (slice, endIndex) -> slice.charAt(endIndex) == end;
@@ -338,16 +313,10 @@ public class StringParsers {
         return string.substring(0, string.length() - suffix.length());
     }
 
-    // public static <K extends Enum<K>> ParserResult<K> parseEnum(StringSlice string, Class<K> enumClass) {
-    // return parseEnum(string, enumClass, null, Collections.emptyMap());
-    // }
-
     /**
-     * Helper method which does not use the example value as a default value. Throws exception if the enum is not found.
-     * 
-     * @param string
-     * @param exampleValue
-     * @return
+     * Helper method which does not use the example value as a default value. Throws
+     * exception if the enum is not found.
+     *
      */
     public static <K extends Enum<K> & StringProvider> ParserResult<K> parseEnum(
             StringSlice string, EnumHelperWithValue<K> enumHelper) {
@@ -355,22 +324,14 @@ public class StringParsers {
         return parseEnum(string, enumHelper, null);
     }
 
-    /**
-     * 
-     * @param string
-     * @param exampleValue
-     * @param useAsDefault
-     *            if true, uses the given value as the default
-     * @return
-     */
     public static <K extends Enum<K> & StringProvider> ParserResult<K> parseEnum(
             StringSlice string, EnumHelperWithValue<K> enumHelper, K defaultValue) {
 
         // Try parsing the enum
         ParserResult<Optional<K>> result = checkEnum(string, enumHelper);
 
-        if (result.getResult().isPresent()) {
-            return new ParserResult<>(result.getModifiedString(), result.getResult().get());
+        if (result.result().isPresent()) {
+            return new ParserResult<>(result.modifiedString(), result.result().get());
         }
 
         // No value found, check if should use the given example value as default
@@ -379,31 +340,21 @@ public class StringParsers {
         }
 
         throw new RuntimeException(
-                "Could not convert string '" + StringParsers.parseWord(new StringSlice(string)).getResult()
+                "Could not convert string '" + StringParsers.parseWord(new StringSlice(string)).result()
                         + "' to enum '"
                         + enumHelper.getValuesTranslationMap() + "'");
 
     }
 
     /**
-     * Helper method which converts the word to upper case (enum values by convention should be uppercase).
-     * 
-     * @param string
-     * @param enumClass
-     * @return
+     * Helper method which converts the word to upper case (enum values by
+     * convention should be uppercase).
+     *
      */
     public static <K extends Enum<K>> ParserResult<K> parseEnum(StringSlice string, Class<K> enumClass,
             K defaultValue) {
 
         return parseEnum(string, enumClass, defaultValue, Collections.emptyMap());
-        /*
-        ParserResult<Optional<K>> enumTry = checkEnum(string, enumClass, true, Collections.emptyMap());
-        
-        K result = enumTry.getResult().orElseThrow(() -> new RuntimeException("Could not convert string '"
-            + parseWord(string) + "' to enum '" + Arrays.toString(enumClass.getEnumConstants()) + "'"));
-        
-        return new ParserResult<>(enumTry.getModifiedString(), result);
-        */
     }
 
     public static <K extends Enum<K>> ParserResult<K> parseEnum(StringSlice string, Class<K> enumClass) {
@@ -416,23 +367,16 @@ public class StringParsers {
         // Copy StringSlice, in case the function does not found the enum
         ParserResult<String> word = StringParsers.parseWord(new StringSlice(string));
 
-        // String wordToTest = word.getResult();
-
-        // Convert to upper case if needed
-        // if (toUpper) {
-        // wordToTest = wordToTest.toUpperCase();
-        // }
-
         // Check if enumeration contains element with the same name as the string
-        K anEnum = SpecsEnums.valueOf(enumClass, word.getResult().toUpperCase());
+        K anEnum = SpecsEnums.valueOf(enumClass, word.result().toUpperCase());
         if (anEnum != null) {
-            return new ParserResult<>(word.getModifiedString(), anEnum);
+            return new ParserResult<>(word.modifiedString(), anEnum);
         }
 
         // Check if there are any custom mappings for the word
-        K customMapping = customMappings.get(word.getResult());
+        K customMapping = customMappings.get(word.result());
         if (customMapping != null) {
-            return new ParserResult<>(word.getModifiedString(), customMapping);
+            return new ParserResult<>(word.modifiedString(), customMapping);
         }
 
         // Check if there is a default value
@@ -442,7 +386,7 @@ public class StringParsers {
         }
 
         throw new RuntimeException(
-                "Could not convert string '" + StringParsers.parseWord(new StringSlice(string)).getResult()
+                "Could not convert string '" + StringParsers.parseWord(new StringSlice(string)).result()
                         + "' to enum '"
                         + Arrays.toString(enumClass.getEnumConstants()) + "'");
 
@@ -450,26 +394,20 @@ public class StringParsers {
 
     /**
      * Helper method which accepts a default value.
-     * 
-     * @param string
-     * @param enumHelper
-     * @param defaultValue
-     * @return
+     *
      */
     public static <K extends Enum<K> & StringProvider> ParserResult<K> checkEnum(
             StringSlice string, EnumHelperWithValue<K> enumHelper, K defaultValue) {
 
         ParserResult<Optional<K>> result = checkEnum(string, enumHelper);
-        K value = result.getResult().orElse(defaultValue);
-        return new ParserResult<>(result.getModifiedString(), value);
+        K value = result.result().orElse(defaultValue);
+        return new ParserResult<>(result.modifiedString(), value);
     }
 
     /**
-     * Checks if string starts with a word representing an enumeration of the given example value.
-     * 
-     * @param string
-     * @param exampleValue
-     * @return
+     * Checks if string starts with a word representing an enumeration of the given
+     * example value.
+     *
      */
     public static <K extends Enum<K> & StringProvider> ParserResult<Optional<K>> checkEnum(
             StringSlice string, EnumHelperWithValue<K> enumHelper) {
@@ -478,10 +416,10 @@ public class StringParsers {
         ParserResult<String> word = StringParsers.parseWord(new StringSlice(string));
 
         // Check if there are any custom mappings for the word
-        Optional<K> result = enumHelper.fromValueTry(word.getResult());
+        Optional<K> result = enumHelper.fromValueTry(word.result());
 
         // Prepare return value
-        StringSlice modifiedString = result.isPresent() ? word.getModifiedString() : string;
+        StringSlice modifiedString = result.isPresent() ? word.modifiedString() : string;
 
         return new ParserResult<>(modifiedString, result);
     }

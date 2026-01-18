@@ -5,7 +5,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
     private boolean inited = false;
     private boolean isClosed = false;
     private T currentT, nextT;
-    private T poison;
+    private final T poison;
 
     public AObjectStream(T poison) {
         this.currentT = null;
@@ -14,7 +14,8 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
     }
 
     /*
-     * MUST be implemented by children (e.g., may come from a ConcurrentChannel, or Linestream, etc
+     * MUST be implemented by children (e.g., may come from a ConcurrentChannel, or
+     * Linestream, etc
      */
     protected abstract T consumeFromProvider();
 
@@ -38,12 +39,12 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
     public T next() {
 
         /*
-         * First call of getNext is done here instead of the constructor, since 
-         * the channel may block if this ObjectStream is used (as it should) 
+         * First call of getNext is done here instead of the constructor, since
+         * the channel may block if this ObjectStream is used (as it should)
          * to read from a ChannelProducer<T> which executes in another thread
          * which may not have yet been launched
          */
-        if (this.inited == false) {
+        if (!this.inited) {
             this.nextT = this.getNext();
             this.inited = true;
         }
@@ -65,7 +66,7 @@ public abstract class AObjectStream<T> implements ObjectStream<T> {
 
     @Override
     public boolean hasNext() {
-        if (this.inited == false)
+        if (!this.inited)
             return true;
         else
             return this.nextT != null;

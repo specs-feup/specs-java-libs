@@ -31,148 +31,119 @@ public abstract class Graph<GN extends GraphNode<GN, N, C>, N, C> {
     private final Map<String, GN> graphNodes;
 
     public Graph() {
-	this.nodeList = new ArrayList<>();
-	this.graphNodes = new HashMap<>();
+        this.nodeList = new ArrayList<>();
+        this.graphNodes = new HashMap<>();
     }
 
-    /**
-     * @param nodeList
-     * @param graphNodes
-     */
     protected Graph(List<GN> nodeList, Map<String, GN> graphNodes) {
-	this.nodeList = nodeList;
-	this.graphNodes = graphNodes;
+        this.nodeList = nodeList;
+        this.graphNodes = graphNodes;
     }
 
     /**
      * Returns an unmodifiable view of this graph.
-     * 
-     * @return
+     *
      */
-    // public abstract GraphV2<N, C> getUnmodifiableGraph();
     public abstract Graph<GN, N, C> getUnmodifiableGraph();
-
-    /*
-    public GraphV2<N, C> getUnmodifiableGraph() {
-    GraphV2<N, C> unmodGraph = new GraphV2<N, C>();
-    unmodGraph.nodeList = Collections.unmodifiableList(this.nodeList);
-    unmodGraph.graphNodes = Collections.unmodifiableMap(this.graphNodes);
-
-    return unmodGraph;
-    }
-     */
 
     protected abstract GN newNode(String operationId, N nodeInfo);
 
-    public GN addNode(String operationId, N nodeInfo) {
-	// public T addNode(T newNode) {
-	// Check if node is already in the graph
-	// String operationId = newNode.getId();
-	// GraphNodeV2<N, C> oldNode = getNode(operationId);
-	GN oldNode = getNode(operationId);
-	if (oldNode != null) {
-	    SpecsLogs.getLogger().warning("Node with id '" + operationId + "' already in the graph.");
-	    return oldNode;
-	}
+    public synchronized GN addNode(String operationId, N nodeInfo) {
+        GN oldNode = getNode(operationId);
+        if (oldNode != null) {
+            SpecsLogs.warn("Node with id '" + operationId + "' already in the graph.");
+            return oldNode;
+        }
 
-	// T newNode = new GraphNodeV2<N, C>(operationId, nodeInfo);
-	GN newNode = newNode(operationId, nodeInfo);
+        GN newNode = newNode(operationId, nodeInfo);
 
-	this.graphNodes.put(operationId, newNode);
-	this.nodeList.add(newNode);
+        this.graphNodes.put(operationId, newNode);
+        this.nodeList.add(newNode);
 
-	return newNode;
+        return newNode;
     }
 
     public void addConnection(String sourceId, String sinkId, C connInfo) {
 
-	// Get source node
-	GN sourceNode = this.graphNodes.get(sourceId);
-	if (sourceNode == null) {
-	    SpecsLogs.getLogger().warning("Could not find node with id '" + sourceId + "'.");
-	    return;
-	}
+        // Get source node
+        GN sourceNode = this.graphNodes.get(sourceId);
+        if (sourceNode == null) {
+            SpecsLogs.warn("Could not find node with id '" + sourceId + "'.");
+            return;
+        }
 
-	// Get destination node
-	GN sinkNode = this.graphNodes.get(sinkId);
-	if (sinkNode == null) {
-	    SpecsLogs.getLogger().warning("Could not find node with id '" + sinkId + "'.");
-	    return;
-	}
+        // Get destination node
+        GN sinkNode = this.graphNodes.get(sinkId);
+        if (sinkNode == null) {
+            SpecsLogs.warn("Could not find node with id '" + sinkId + "'.");
+            return;
+        }
 
-	sourceNode.addChild(sinkNode, connInfo);
+        sourceNode.addChild(sinkNode, connInfo);
     }
 
     public GN getNode(String nodeId) {
-	GN node = this.graphNodes.get(nodeId);
-	if (node == null) {
-	    return null;
-	}
 
-	return node;
+        return this.graphNodes.get(nodeId);
     }
 
     public List<GN> getNodeList() {
-	return this.nodeList;
+        return this.nodeList;
     }
 
     public Map<String, GN> getGraphNodes() {
-	return this.graphNodes;
+        return this.graphNodes;
     }
 
     @Override
     public String toString() {
-	return this.nodeList.toString();
+        return this.nodeList.toString();
     }
 
     /**
      * Removes a node from the graph.
-     * 
-     * @param node
+     *
      */
     public void remove(String nodeId) {
-	GN node = this.graphNodes.get(nodeId);
-	if (node == null) {
-	    SpecsLogs.getLogger().warning("Given node does not belong to the graph:" + node);
-	    return;
-	}
+        GN node = this.graphNodes.get(nodeId);
+        if (node == null) {
+            SpecsLogs.warn("Given node does not belong to the graph:" + node);
+            return;
+        }
 
-	remove(node);
+        remove(node);
     }
 
     /**
      * Removes a node from the graph.
-     * 
-     * @param node
+     *
      */
     public void remove(GN node) {
-	// Check if node is part of the graph
-	if (this.graphNodes.get(node.getId()) != node) {
-	    SpecsLogs.getLogger().warning("Given node does not belong to the graph:" + node);
-	    return;
-	}
+        // Check if node is part of the graph
+        if (this.graphNodes.get(node.getId()) != node) {
+            SpecsLogs.warn("Given node does not belong to the graph:" + node);
+            return;
+        }
 
-	List<C> childrenConnections = node.getChildrenConnections();
-	List<GN> children = node.getChildren();
-	// Remove parent connection from children
-	for (int i = 0; i < childrenConnections.size(); i++) {
-	    children.get(i).getParentConnections().remove(childrenConnections.get(i));
-	    children.get(i).getParents().remove(node);
-	}
+        List<C> childrenConnections = node.getChildrenConnections();
+        List<GN> children = node.getChildren();
+        // Remove parent connection from children
+        for (int i = 0; i < childrenConnections.size(); i++) {
+            children.get(i).getParentConnections().remove(childrenConnections.get(i));
+            children.get(i).getParents().remove(node);
+        }
 
-	List<C> parentConnections = node.getParentConnections();
-	List<GN> parents = node.getParents();
-	// Remove child connection from parents
-	for (int i = 0; i < parentConnections.size(); i++) {
-	    parents.get(i).getChildrenConnections().remove(parentConnections.get(i));
-	    parents.get(i).getChildren().remove(node);
-	}
+        List<C> parentConnections = node.getParentConnections();
+        List<GN> parents = node.getParents();
+        // Remove child connection from parents
+        for (int i = 0; i < parentConnections.size(); i++) {
+            parents.get(i).getChildrenConnections().remove(parentConnections.get(i));
+            parents.get(i).getChildren().remove(node);
+        }
 
-	// Remove node
-	String id = node.getId();
-	this.nodeList.remove(node);
-	this.graphNodes.put(id, null);
-
+        // Remove node
+        String id = node.getId();
+        this.nodeList.remove(node);
+        this.graphNodes.put(id, null);
     }
-
 }

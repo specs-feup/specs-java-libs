@@ -19,8 +19,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.providers.StringProvider;
 
 /**
- * A StringProvider backed by the given File. The provider will return the contents of the file.
- * 
+ * A StringProvider backed by the given File. The provider will return the
+ * contents of the file.
  * 
  * @author JoaoBispo
  *
@@ -31,23 +31,23 @@ public class CachedStringProvider implements StringProvider {
     private Optional<String> contents;
 
     public CachedStringProvider(StringProvider provider) {
-	this.provider = provider;
-	this.contents = Optional.empty();
+        this.provider = provider;
+        this.contents = Optional.empty();
     }
 
     @Override
     public String getString() {
-	// Load file, if not loaded yet
-	if (!this.contents.isPresent()) {
-	    String string = this.provider.getString();
-	    if (string == null) {
-		SpecsLogs.warn("Could not get contents from provider");
-	    }
+        // Load file, if not loaded yet
+        if (this.contents.isEmpty()) {
+            String string = this.provider.getString();
+            if (string == null) {
+                SpecsLogs.warn("Could not get contents from provider");
+            }
 
-	    this.contents = Optional.of(string);
-	}
+            this.contents = Optional.ofNullable(string);
+        }
 
-	return this.contents.get();
+        return this.contents.orElse(null);
     }
 
 }

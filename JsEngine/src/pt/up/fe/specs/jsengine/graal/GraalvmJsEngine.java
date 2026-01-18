@@ -40,6 +40,7 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Source.Builder;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.io.FileSystem;
+import org.graalvm.polyglot.io.IOAccess;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import com.oracle.truffle.polyglot.SpecsPolyglot;
@@ -50,6 +51,10 @@ import pt.up.fe.specs.jsengine.JsFileType;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
+/**
+ * JavaScript engine implementation using GraalVM.
+ * Provides methods for executing JavaScript code in a GraalVM context.
+ */
 public class GraalvmJsEngine extends AJsEngine {
 
     private static final String NEW_ARRAY = "[]"; // Faster
@@ -58,56 +63,79 @@ public class GraalvmJsEngine extends AJsEngine {
     private final GraalJSScriptEngine engine;
     private final Set<String> forbiddenClasses;
     private final boolean nashornCompatibility;
-    
+
+    /**
+     * Constructs a GraalvmJsEngine with the given blacklisted classes.
+     *
+     * @param blacklistedClasses a collection of classes to blacklist
+     */
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses) {
         this(blacklistedClasses, false);
     }
 
+    /**
+     * Constructs a GraalvmJsEngine with the given blacklisted classes and Nashorn compatibility.
+     *
+     * @param blacklistedClasses a collection of classes to blacklist
+     * @param nashornCompatibility whether Nashorn compatibility is enabled
+     */
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility) {
         this(blacklistedClasses, nashornCompatibility, null);
     }
 
+    /**
+     * Constructs a GraalvmJsEngine with the given blacklisted classes, Nashorn compatibility, and working directory.
+     *
+     * @param blacklistedClasses a collection of classes to blacklist
+     * @param nashornCompatibility whether Nashorn compatibility is enabled
+     * @param engineWorkingDirectory the working directory for the engine
+     */
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
             Path engineWorkingDirectory) {
         this(blacklistedClasses, nashornCompatibility, engineWorkingDirectory, null, System.out);
     }
 
+    /**
+     * Constructs a GraalvmJsEngine with the given parameters.
+     *
+     * @param blacklistedClasses a collection of classes to blacklist
+     * @param nashornCompatibility whether Nashorn compatibility is enabled
+     * @param engineWorkingDirectory the working directory for the engine
+     * @param nodeModulesFolder the folder containing node modules
+     * @param laraiOutputStream the output stream for the engine
+     */
     public GraalvmJsEngine(Collection<Class<?>> blacklistedClasses, boolean nashornCompatibility,
             Path engineWorkingDirectory, File nodeModulesFolder, OutputStream laraiOutputStream) {
         this.forbiddenClasses = blacklistedClasses.stream().map(Class::getName).collect(Collectors.toSet());
         this.nashornCompatibility = nashornCompatibility;
-        
+
         Context.Builder contextBuilder = createBuilder(engineWorkingDirectory, nodeModulesFolder);
-        
+
         var baseEngine = Engine.newBuilder()
                 .option("engine.WarnInterpreterOnly", "false")
                 .build();
 
         this.engine = GraalJSScriptEngine.create(baseEngine, contextBuilder);
-        
-        this.engine.getContext().setWriter(new PrintWriter(laraiOutputStream, true));            
+
+        this.engine.getContext().setWriter(new PrintWriter(laraiOutputStream, true));
         this.engine.getContext().setErrorWriter(new PrintWriter(laraiOutputStream, true));
-        
-        /**
-         * DO NOT REMOVE
-         * Code that executes a nothing burger just to force the GraalJSScriptEngine to set the output streams.
-         * This is needed because we are not using the Script Engine as recommended because we had to do some
-         * custom stuff.
-         * 
-         * @see https://github.com/oracle/graaljs/issues/720
-         */
+
         try {
             engine.eval("42");
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
-        
-        // Add rule to ignore polyglot values
+
         addToJsRule(Value.class, this::valueToJs);
     }
 
+    /**
+     * Converts a GraalVM Value to a JavaScript object.
+     *
+     * @param value the GraalVM Value
+     * @return the JavaScript object
+     */
     private Object valueToJs(Value value) {
-        // If a host object, convert (is this necessary?)
         if (value.isHostObject()) {
             SpecsLogs.debug(
                     () -> "GraalvmJsEngie.valueToJs(): Case where we have a Value that is a host object, check if ok. "
@@ -115,42 +143,31 @@ public class GraalvmJsEngine extends AJsEngine {
             return toJs(value.asHostObject());
         }
 
-        // Otherwise, already converted
         return value;
-
     }
 
+    /**
+     * Creates a Context.Builder for the GraalVM engine.
+     *
+     * @param engineWorkingDirectory the working directory for the engine
+     * @param nodeModulesFolder the folder containing node modules
+     * @return the Context.Builder
+     */
     private Context.Builder createBuilder(Path engineWorkingDirectory, File nodeModulesFolder) {
-
-        // var hostAccess = HostAccess.newBuilder()
-        // .targetTypeMapping(Object.class, Object.class, v -> true, GraalvmJsEngine::test)
-        // .build();
-
         Context.Builder contextBuilder = Context.newBuilder("js")
-                // .allowHostAccess(hostAccess)
                 .allowAllAccess(true)
-                .allowHostAccess(HostAccess.ALL)    
-                // .option("js.load-from-url", "true")
-                // .allowIO(true)
-                // .allowCreateThread(true)
-                // .allowNativeAccess(true)
-                // .allowPolyglotAccess(PolyglotAccess.ALL)
+                .allowHostAccess(HostAccess.ALL)
                 .allowHostClassLookup(name -> !forbiddenClasses.contains(name));
 
-        if (engineWorkingDirectory != null) {
+        if (nodeModulesFolder != null) {
             FileSystem fs = FileSystem.newDefaultFileSystem();
-            fs.setCurrentWorkingDirectory(engineWorkingDirectory);
-            contextBuilder.fileSystem(fs);
-
-            // Path path = Paths.get(engineWorkingDirectory + "/node_modules");
-
+            fs.setCurrentWorkingDirectory(nodeModulesFolder.toPath());
+            contextBuilder.allowIO(IOAccess.newBuilder().fileSystem(fs).build());
         }
 
         if (nodeModulesFolder != null) {
-            // Check folder is called 'node_modules' or if contains a folder 'node_modules'
             if (!nodeModulesFolder.getName().equals("node_modules")
                     && !(new File(nodeModulesFolder, "node_modules").isDirectory())) {
-
                 throw new RuntimeException(
                         "Given node modules folder is not called node_modules, nor contains a node_modules folder: "
                                 + nodeModulesFolder.getAbsolutePath());
@@ -160,7 +177,6 @@ public class GraalvmJsEngine extends AJsEngine {
             contextBuilder.option("js.commonjs-require-cwd", nodeModulesFolder.getAbsolutePath());
         }
 
-        // Set JS version
         contextBuilder.option("js.ecmascript-version", "2022");
 
         if (this.nashornCompatibility) {
@@ -169,6 +185,9 @@ public class GraalvmJsEngine extends AJsEngine {
         return contextBuilder;
     }
 
+    /**
+     * Constructs a GraalvmJsEngine with no blacklisted classes.
+     */
     public GraalvmJsEngine() {
         this(Collections.emptyList());
     }
@@ -184,10 +203,14 @@ public class GraalvmJsEngine extends AJsEngine {
         return eval(graalSource, type);
     }
 
+    /**
+     * Evaluates JavaScript code with the specified type.
+     *
+     * @param graalSource the source builder for the code
+     * @param type the type of the JavaScript code
+     * @return the result of the evaluation
+     */
     private Object eval(Builder graalSource, JsFileType type) {
-        // GraalVM documentation indicates that only .mjs files should be loaded as modules
-        // https://www.graalvm.org/reference-manual/js/Modules/
-
         switch (type) {
         case NORMAL:
             try {
@@ -206,7 +229,6 @@ public class GraalvmJsEngine extends AJsEngine {
         default:
             throw new NotImplementedException(type);
         }
-
     }
 
     @Override
@@ -216,79 +238,36 @@ public class GraalvmJsEngine extends AJsEngine {
 
     @Override
     public Value eval(String code, String source) {
-
         try {
-            return eval(Source.newBuilder("js", new StringBuilder(code), source)
-                    // .mimeType("application/javascript+module")
-                    .build());
+            return eval(Source.newBuilder("js", new StringBuilder(code), source).build());
         } catch (IOException e) {
             throw new RuntimeException("Could not load JS code", e);
         }
     }
 
+    /**
+     * Evaluates JavaScript code from a Source object.
+     *
+     * @param code the Source object containing the code
+     * @return the result of the evaluation
+     */
     private Value eval(Source code) {
         try {
-            // var writer = new StringWriter();
-            // code.getReader().transferTo(writer);
-            // writer.close();
-            // System.out.println("EVAL CODE:\n" + writer.toString());
-
-            // Value value = asValue(engine.eval(code));
-            // Value value = engine.getPolyglotContext().eval("js", code);
-
             Value value = engine.getPolyglotContext().eval(code);
-
-            // if (value.hasMembers() || value.hasArrayElements()) {
-            // return asBindings(value);
-            // }
-
             return value;
-
         } catch (PolyglotException e) {
-
-            // System.out.println("CUASE: " + e.getCause());
-            // System.out.println("Is host ex? " + ((PolyglotException) e).isHostException());
-            // System.out.println("Is guest ex? " + ((PolyglotException) e).isGuestException());
             if (e.isHostException()) {
-                Throwable hostException = null;
-                try {
-                    hostException = e.asHostException();
-                } catch (Exception unreachableException) {
-                    // Will not take this branch since it is a host exception
-                    throw new RuntimeException("Should not launch this exception", unreachableException);
-                }
-
-                // System.out.println("PE:" + e.getClass());
-                // System.out.println("PE CAUSE: " + e.getCause());
-                // System.out.println("PE STACK:");
-                // e.getPolyglotStackTrace();
-                // System.out.println("NORMAL STACK:");
-                // e.printStackTrace();
-                // System.out.println("HOST:");
-                hostException.printStackTrace();
+                Throwable hostException = e.asHostException();
                 throw new RuntimeException(e.getMessage(), hostException);
             }
-
-            // Throwable currentEx = e;
-            // // System.out.println("CAUSE: " + e.getCause());
-            // while (currentEx != null) {
-            // currentEx.printStackTrace();
-            // currentEx = currentEx.getCause();
-            // }
-
             throw new RuntimeException("Polyglot exception while evaluating JavaScript code", e);
-        }
-
-        catch (Exception e) {
-            // System.out.println("class: " + e.getClass());
-            // e.printStackTrace();
+        } catch (Exception e) {
             throw new RuntimeException("Could not evaluate JavaScript code", e);
         }
     }
 
     @Override
     public Object evalFile(File jsFile, JsFileType type, String content) {
-
         var builder = Source.newBuilder("js", jsFile);
         if (content != null) {
             builder.content(content);
@@ -312,66 +291,32 @@ public class GraalvmJsEngine extends AJsEngine {
         for (int i = 0; i < values.length; i++) {
             array.setArrayElement(i, toJs(values[i]));
         }
-
         return array;
     }
 
-    /**
-     * Based on this site: http://programmaticallyspeaking.com/nashorns-jsobject-in-context.html
-     *
-     * @return
-     */
     @Override
     public Object getUndefined() {
         var array = engine.getPolyglotContext().eval("js", "[undefined]");
-
         return array.getArrayElement(0);
     }
 
     @Override
     public String stringify(Object object) {
         Value json = eval("JSON");
-
         return json.invokeMember("stringify", object).toString();
-        // return json.invokeMember("stringify", asValue(object).asProxyObject()).toString();
     }
 
     @Override
     public Value getBindings() {
-        // return asValue(engine.getBindings(ScriptContext.ENGINE_SCOPE));
         return engine.getPolyglotContext().getBindings("js");
-        // return engine.getPolyglotContext().getPolyglotBindings();
     }
 
-    // @Override
-    // public Object put(Bindings object, String member, Object value) {
-    // Value valueObject = asValue(object);
-    // Value previousValue = valueObject.getMember(member);
-    // valueObject.putMember(member, value);
-    // return previousValue;
-    // }
-    //
-    // @Override
-    // public Object remove(Bindings object, Object key) {
-    // Value valueObject = asValue(object);
-    // Value previousValue = valueObject.getMember(key.toString());
-    // valueObject.removeMember(key.toString());
-    // return previousValue;
-    // }
-
-    /**
-     * Adds the members in the given scope before evaluating the code.
-     */
     @Override
     public Object eval(String code, Object scope, JsFileType type, String source) {
-
         Value scopeValue = asValue(scope);
-
         Map<String, Object> previousValues = new HashMap<>();
 
-        // Add scope code, save previous values
         for (String key : scopeValue.getMemberKeys()) {
-
             if (asBoolean(eval("typeof variable === 'undefined'"))) {
                 previousValues.put(key, null);
             } else {
@@ -379,25 +324,18 @@ public class GraalvmJsEngine extends AJsEngine {
             }
 
             Value value = scopeValue.getMember(key);
-
-            // If value is undefined, set the key as undefined
             if (value.isNull()) {
                 eval(key + " = undefined");
                 continue;
             }
-
-            // Otherwise, add the value
             put(key, value);
         }
 
-        // Execute new code
         var result = eval(code, type, source);
 
-        // Restore previous values
         for (var entry : previousValues.entrySet()) {
             var value = entry.getValue();
             if (value == null) {
-                // Should remove entry or is undefined enough?
                 eval(entry.getKey() + " = undefined");
             } else {
                 put(entry.getKey(), value);
@@ -407,25 +345,29 @@ public class GraalvmJsEngine extends AJsEngine {
         return result;
     }
 
+    /**
+     * Converts an object to a GraalVM Value.
+     *
+     * @param object the object to convert
+     * @return the GraalVM Value
+     */
     public Value asValue(Object object) {
         if (object instanceof GraalvmBindings) {
             return ((GraalvmBindings) object).getValue();
         }
-
         return engine.getPolyglotContext().asValue(object);
     }
 
     /**
-     * Convenience method to handle JS maps.
-     * 
-     * @param value
-     * @return
+     * Converts an object to Bindings.
+     *
+     * @param value the object to convert
+     * @return the Bindings
      */
     private Bindings asBindings(Object value) {
         if (value instanceof GraalvmBindings) {
             return (Bindings) value;
         }
-
         return new GraalvmBindings(this.asValue(value));
     }
 
@@ -437,11 +379,6 @@ public class GraalvmJsEngine extends AJsEngine {
     @Override
     public double asDouble(Object value) {
         return asValue(value).asDouble();
-    }
-
-    @Override
-    public void nashornWarning(String message) {
-        SpecsLogs.warn(message);
     }
 
     @Override
@@ -457,7 +394,6 @@ public class GraalvmJsEngine extends AJsEngine {
     @Override
     public boolean isObject(Object object) {
         return asValue(object).hasMembers();
-
     }
 
     @Override
@@ -468,7 +404,6 @@ public class GraalvmJsEngine extends AJsEngine {
     @Override
     public boolean isBoolean(Object object) {
         return asValue(object).isBoolean();
-
     }
 
     @Override
@@ -484,12 +419,6 @@ public class GraalvmJsEngine extends AJsEngine {
             return Arrays.asList(value.asHostObject());
         }
 
-        // // Collection
-        // if (object instanceof Collection<?>) {
-        // return (Collection<Object>) object;
-        // }
-
-        // Array
         if (value.hasArrayElements()) {
             return LongStream.range(0, value.getArraySize())
                     .mapToObj(index -> asValue(value.getArrayElement(index)))
@@ -497,7 +426,6 @@ public class GraalvmJsEngine extends AJsEngine {
                     .collect(Collectors.toList());
         }
 
-        // Map
         if (value.hasMembers()) {
             return value.getMemberKeys().stream()
                     .map(key -> asValue(value.getMember(key)))
@@ -510,54 +438,42 @@ public class GraalvmJsEngine extends AJsEngine {
 
     @Override
     public Object toJava(Object jsValue) {
-
         var value = asValue(jsValue);
 
-        // Java object
         if (value.isHostObject()) {
             return value.asHostObject();
         }
 
-        // String
         if (value.isString()) {
             return value.asString();
         }
 
-        // Number
         if (value.isNumber()) {
             return value.asDouble();
         }
 
-        // Boolean
         if (value.isBoolean()) {
             return value.asBoolean();
         }
 
-        // Array
         if (value.hasArrayElements()) {
             return LongStream.range(0, value.getArraySize())
                     .mapToObj(index -> toJava(value.getArrayElement(index)))
                     .collect(Collectors.toList());
         }
 
-        // Map
         if (value.hasMembers()) {
             Map<String, Object> map = new LinkedHashMap<>();
-
             for (var key : value.getMemberKeys()) {
                 map.put(key, toJava(value.getMember(key)));
             }
-
             return map;
         }
 
-        // null
         if (value.isNull()) {
             return null;
         }
 
-        // Jenkins could not find the symbol getMetaQualifiedName() for some reason
-        // throw new NotImplementedException(value.getMetaQualifiedName());
         throw new NotImplementedException("Not implemented for value " + value);
     }
 
@@ -566,15 +482,8 @@ public class GraalvmJsEngine extends AJsEngine {
         return asValue(object).as(targetClass);
     }
 
-    /// Bindings-like operations
-
     @Override
     public Object put(Object bindings, String key, Object value) {
-        // Value bindingsValue = asValue(bindings);
-        //
-        // Object previousValue = bindingsValue.getMember(memberName);
-        // bindingsValue.putMember(memberName, value);
-        // return previousValue;
         return asBindings(bindings).put(key, value);
     }
 
@@ -586,15 +495,12 @@ public class GraalvmJsEngine extends AJsEngine {
     @Override
     public Set<String> keySet(Object bindings) {
         return asBindings(bindings).keySet();
-
     }
 
     @Override
     public Object get(Object bindings, String key) {
         return asBindings(bindings).get(key);
     }
-
-    /// Engine related engine-scope operations
 
     @Override
     public void put(String key, Object value) {
@@ -603,18 +509,12 @@ public class GraalvmJsEngine extends AJsEngine {
 
     @Override
     public boolean supportsProperties() {
-        // TODO: use nashorn compatibility
         return false;
     }
 
     @Override
     public Optional<Throwable> getException(Object possibleError) {
         var exception = SpecsPolyglot.getException(possibleError);
-        /*
-            	if(exception != null) {
-            		exception.printJSStackTrace();
-            	}
-          */
         return Optional.ofNullable(exception);
     }
 
@@ -632,7 +532,6 @@ public class GraalvmJsEngine extends AJsEngine {
     @Override
     public boolean isFunction(Object object) {
         var functionValue = asValue(object);
-
         return functionValue.canExecute();
     }
 }

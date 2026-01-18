@@ -30,11 +30,9 @@ public interface TransformRule<K extends TreeNode<K>, T extends TransformResult>
      * Applies a transformation over a TreeNode instance.
      * 
      * <p>
-     * IMPORTANT: The tree itself should not be modified inside this method, instead the method must queue the changes
-     * using methods from the 'queue' object.
-     * 
-     * @param node
-     * @param queue
+     * IMPORTANT: The tree itself should not be modified inside this method, instead
+     * the method must queue the changes using methods from the 'queue' object.
+     *
      * 
      */
     T apply(K node, TransformQueue<K> queue);
@@ -42,7 +40,7 @@ public interface TransformRule<K extends TreeNode<K>, T extends TransformResult>
     TraversalStrategy getTraversalStrategy();
 
     default void visit(K node) {
-	getTraversalStrategy().apply(node, this);
+        getTraversalStrategy().apply(node, this);
     }
 
 }

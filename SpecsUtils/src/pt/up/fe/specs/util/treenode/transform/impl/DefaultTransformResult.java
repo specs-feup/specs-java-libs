@@ -15,17 +15,6 @@ package pt.up.fe.specs.util.treenode.transform.impl;
 
 import pt.up.fe.specs.util.treenode.transform.TransformResult;
 
-public class DefaultTransformResult implements TransformResult {
-
-    private final boolean visitChildren;
-
-    public DefaultTransformResult(boolean visitChildren) {
-	this.visitChildren = visitChildren;
-    }
-
-    @Override
-    public boolean visitChildren() {
-	return visitChildren;
-    }
+public record DefaultTransformResult(boolean visitChildren) implements TransformResult {
 
 }

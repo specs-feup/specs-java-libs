@@ -68,15 +68,6 @@ public interface TagLogger<T> {
         // Obtain logger
         Logger logger = SpecsLoggers.getLogger(getLoggerName(tag));
         logger.log(level, SpecsLogging.parseMessage(tag, message, logSourceInfo, stackTrace));
-        /*        
-            // Obtain stack trace
-        
-            // Log using stack trace
-        
-        } else {
-            logger.log(level, SpecsLogging.parseMessage(tag, message));
-        }
-        */
     }
 
     default void log(Level level, String message) {
@@ -85,37 +76,18 @@ public interface TagLogger<T> {
 
     default void info(T tag, String message) {
         log(Level.INFO, tag, message);
-        /*
-        // LogsHelper.logMessage(getLoggerName(tag), tag, message, (logger, msg) -> logger.info(msg));
-        
-        // String prefix = SpecsLogging.getPrefix(tag);
-        
-        Logger logger = SpecsLoggers.getLogger(getLoggerName(tag));
-        // System.out.println("LEVEL:" + logger.getJavaLogger().getLevel());
-        
-        logger.info(SpecsLogging.parseMessage(tag, message));
-        // System.out.println("ADASD");
-        // logging.accept(logger, prefix + message);
-        */
-
     }
 
     default void info(String message) {
         info(null, message);
     }
 
-    // default void debug(String message) {
-    // debug(message, true);
-    // }
-    //
-    // default void debug(String message, boolean sourceInfo) {
     default void debug(String message) {
         debug(() -> message);
     }
 
     default void debug(Supplier<String> message) {
         if (SpecsSystem.isDebug()) {
-            // LogSourceInfo sourceInfoLevel = sourceInfo ? LogSourceInfo.SOURCE : LogSourceInfo.NONE));
             log(Level.INFO, null, "[DEBUG] " + message.get());
         }
     }
@@ -137,129 +109,12 @@ public interface TagLogger<T> {
     }
 
     /**
-     * Adds a class to the ignore list when printing the stack trace, or the source code location.
-     * 
-     * @param aClass
+     * Adds a class to the ignore list when printing the stack trace, or the source
+     * code location.
+     *
      */
     default TagLogger<T> addToIgnoreList(Class<?> aClass) {
         SpecsLogging.addClassToIgnore(aClass);
         return this;
     }
-
-    /*
-    default void warn(T tag, String msg, List<StackTraceElement> elements, int startIndex, boolean appendCallingClass) {
-    
-        msg = "[WARNING]: " + msg;
-        msg = parseMessage(msg);
-        msg = buildErrorMessage(msg, elements.subList(startIndex, elements.size()));
-    
-        if (appendCallingClass) {
-            logger = logger == null ? getLoggerDebug() : logger;
-            logger.warning(msg);
-            // getLoggerDebug().warning(msg);
-        } else {
-            logger = logger == null ? getLogger() : logger;
-            logger.warning(msg);
-            // getLogger().warning(msg);
-        }
-    }
-    */
-
-    /**
-     * Writes a message to the logger with name defined by LOGGING_TAG.
-     *
-     * <p>
-     * Messages written with this method are recorded as a log at warning level. Use this level to show a message for
-     * cases that are supposed to never happen if the code is well used.
-     *
-     * @param msg
-     */
-    /*
-    public static void msgWarn(String msg) {
-    
-        final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
-        final int startIndex = 2;
-    
-        msgWarn(msg, elements, startIndex, true, null);
-    }
-    
-    public static void msgWarn(Logger logger, String msg) {
-    
-        final List<StackTraceElement> elements = Arrays.asList(Thread.currentThread().getStackTrace());
-        final int startIndex = 2;
-    
-        msgWarn(msg, elements, startIndex, true, logger);
-    }
-    
-    private static void msgWarn(String msg, List<StackTraceElement> elements, int startIndex,
-            boolean appendCallingClass, Logger logger) {
-    
-        msg = "[WARNING]: " + msg;
-        msg = parseMessage(msg);
-        msg = buildErrorMessage(msg, elements.subList(startIndex, elements.size()));
-    
-        if (appendCallingClass) {
-            logger = logger == null ? getLoggerDebug() : logger;
-            logger.warning(msg);
-            // getLoggerDebug().warning(msg);
-        } else {
-            logger = logger == null ? getLogger() : logger;
-            logger.warning(msg);
-            // getLogger().warning(msg);
-        }
-    }
-    
-    public static void msgWarn(String msg, Throwable ourCause) {
-    
-        // Get the root cause
-        while (ourCause.getCause() != null) {
-            ourCause = ourCause.getCause();
-        }
-    
-        // Save current place where message is being issued
-        final List<StackTraceElement> currentElements = Arrays.asList(Thread.currentThread().getStackTrace());
-        final StackTraceElement currentElement = currentElements.get(2);
-        final String msgSource = "\n\n[Catch]:\n" + currentElement;
-    
-        String causeString = ourCause.getMessage();
-        if (causeString == null) {
-            causeString = ourCause.toString();
-        }
-    
-        final String causeMsg = causeString + msgSource;
-    
-        // msg = msg + "\nCause: [" + ourCause.getClass().getSimpleName() + "] " + ourCause.getMessage() + msgSource;
-        msg = msg + "\nCause: " + causeMsg;
-    
-        final List<StackTraceElement> elements = Arrays.asList(ourCause.getStackTrace());
-        final int startIndex = 0;
-    
-        msgWarn(msg, elements, startIndex, false, null);
-    }
-    
-    public static void msgWarn(Throwable cause) {
-    
-        final List<StackTraceElement> elements = Arrays.asList(cause.getStackTrace());
-        final int startIndex = 0;
-    
-        final String msg = cause.getClass().getName() + ": " + cause.getMessage();
-    
-        msgWarn(msg, elements, startIndex, false, null);
-    
-    }
-    
-    */
-
-    // static <T extends Enum<T>> TagLogger<T> newInstance(Class<T> enumClass) {
-    // return () -> enumClass;
-    // }
-
-    // default void warn(T tag, String message) {
-    // LogsHelper.logMessage(getClass().getName(), tag, message, (logger, msg) -> logger.warn(msg));
-    // }
-    //
-    // default void warn(String message) {
-    // warn(null, message);
-    // }
-
 }

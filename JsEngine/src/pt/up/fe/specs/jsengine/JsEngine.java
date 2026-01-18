@@ -24,105 +24,125 @@ import pt.up.fe.specs.util.classmap.FunctionClassMap;
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 
 /**
+ * Main class for JavaScript engine integration and execution.
  * Represents the JavaScript engine used by LARA.
- * 
- * TODO: Replace 'Bindings' with 'Object'. Only JsEngine should manipulate JS objects
  * 
  * @author JoaoBispo
  *
  */
 public interface JsEngine {
 
-    // ScriptEngine getEngine();
-
+    /**
+     * Retrieves the type of "for-of" loop supported by the engine.
+     * 
+     * @return the type of "for-of" loop
+     */
     ForOfType getForOfType();
 
     /**
      * Based on this site: http://programmaticallyspeaking.com/nashorns-jsobject-in-context.html
      *
-     * @return
+     * @return the undefined object representation
      */
     Object getUndefined();
 
+    /**
+     * Checks if the given object is undefined.
+     * 
+     * @param object the object to check
+     * @return true if the object is undefined, false otherwise
+     */
     boolean isUndefined(Object object);
 
+    /**
+     * Converts the given object to its string representation.
+     * 
+     * @param object the object to stringify
+     * @return the string representation of the object
+     */
     String stringify(Object object);
 
     /// ENGINE FEATURES
 
     /**
+     * Checks if the engine supports automatic property transformation.
      * 
-     * @return if true, the engine can automatically transform obj.prop to obj.getProp(). False otherwise
+     * @return true if the engine supports properties, false otherwise
      */
     boolean supportsProperties();
 
     /// TYPE CONVERSIONS
 
-    // Bindings asBindings(Object value);
-
+    /**
+     * Converts the given value to a boolean.
+     * 
+     * @param value the value to convert
+     * @return the boolean representation of the value
+     */
     boolean asBoolean(Object value);
 
+    /**
+     * Converts the given value to a double.
+     * 
+     * @param value the value to convert
+     * @return the double representation of the value
+     */
     double asDouble(Object value);
 
     /**
-     * Attempts to convert a JS bindings value to a Java object.
+     * Attempts to convert a JavaScript bindings value to a Java object.
      * 
-     * @param value
-     * @return
+     * @param value the value to convert
+     * @return the Java object representation of the value
      */
     Object toJava(Object value);
 
     /**
+     * Retrieves the bindings of the engine scope.
      * 
-     * @return the Bindings of the engine scope
+     * @return the bindings object
      */
     Object getBindings();
 
     /**
      * Creates a new JavaScript array.
-     *
      * 
-     * @return a
+     * @return a new JavaScript array
      */
     Object newNativeArray();
 
     /**
      * Creates a new JavaScript map.
-     *
      * 
-     * @return a
+     * @return a new JavaScript map
      */
     Object newNativeMap();
 
     /**
-     * Converts an array of objects to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of objects to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     Object toNativeArray(Object[] values);
 
     /**
-     * Converts a list of objects to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts a collection of objects to a JavaScript array.
+     * 
+     * @param values the collection of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(Collection<? extends Object> values) {
         return toNativeArray(values.toArray());
     }
 
     /**
-     * Converts an array of ints to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of ints to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(int[] values) {
-
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             newObject[i] = values[i];
@@ -131,14 +151,12 @@ public interface JsEngine {
     }
 
     /**
-     * Converts an array of longs to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of longs to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(long[] values) {
-
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             newObject[i] = values[i];
@@ -147,14 +165,12 @@ public interface JsEngine {
     }
 
     /**
-     * Converts an array of floats to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of floats to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(float[] values) {
-
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             newObject[i] = values[i];
@@ -163,14 +179,12 @@ public interface JsEngine {
     }
 
     /**
-     * Converts an array of doubles to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of doubles to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(double[] values) {
-
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             newObject[i] = values[i];
@@ -179,14 +193,12 @@ public interface JsEngine {
     }
 
     /**
-     * Converts an array of booleans to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of booleans to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(boolean[] values) {
-
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             newObject[i] = values[i];
@@ -195,14 +207,12 @@ public interface JsEngine {
     }
 
     /**
-     * Converts an array of chars to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of chars to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(char[] values) {
-
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             newObject[i] = values[i];
@@ -211,14 +221,12 @@ public interface JsEngine {
     }
 
     /**
-     * Converts an array of bytes to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of bytes to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(byte[] values) {
-
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             newObject[i] = values[i];
@@ -227,14 +235,12 @@ public interface JsEngine {
     }
 
     /**
-     * Converts an array of shorts to a JavaScript array
-     *
-     * @param values
-     *            the array of values
-     * @return a javascript array containing all the elements in values, with the same indexes
+     * Converts an array of shorts to a JavaScript array.
+     * 
+     * @param values the array of values
+     * @return a JavaScript array containing all the elements in values, with the same indexes
      */
     default Object toNativeArray(short[] values) {
-
         Object[] newObject = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             newObject[i] = values[i];
@@ -246,129 +252,150 @@ public interface JsEngine {
      * Evaluates the given string of JavaScript code. It is preferable to use the version that accepts a string with a
      * description of the source.
      * 
-     * @param code
-     * @return
+     * @param code the JavaScript code to evaluate
+     * @return the result of the evaluation
      */
     default Object eval(String code) {
         return eval(code, "unnamed_js_code");
     }
 
     /**
+     * Evaluates the given string of JavaScript code with a specified source description.
      * 
-     * @param code
-     * @param source
-     *            a String identifying the source
-     * @return
+     * @param code the JavaScript code to evaluate
+     * @param source a string identifying the source
+     * @return the result of the evaluation
      */
     Object eval(String code, String source);
 
     /**
+     * Evaluates the given script with a specified scope, type, and source description.
      * 
-     * @param script
-     * @param scope
-     * @param type
-     * @param source
-     *            a String identifying the source. If the code is loaded as module and this function has been called
-     *            before with the same value for source, it might consider the module is already in cache
-     * @return
+     * @param script the JavaScript script to evaluate
+     * @param scope the scope in which to evaluate the script
+     * @param type the type of the script
+     * @param source a string identifying the source
+     * @return the result of the evaluation
      */
     Object eval(String script, Object scope, JsFileType type, String source);
 
+    /**
+     * Evaluates the given string of JavaScript code with a specified type and source description.
+     * 
+     * @param code the JavaScript code to evaluate
+     * @param type the type of the script
+     * @param source a string identifying the source
+     * @return the result of the evaluation
+     */
     default Object eval(String code, JsFileType type, String source) {
         throw new NotImplementedException(this);
     }
 
+    /**
+     * Evaluates the given JavaScript file.
+     * 
+     * @param jsFile the JavaScript file to evaluate
+     * @return the result of the evaluation
+     */
     default Object evalFile(File jsFile) {
         return evalFile(jsFile, JsFileType.NORMAL);
     }
 
+    /**
+     * Evaluates the given JavaScript file with a specified type.
+     * 
+     * @param jsFile the JavaScript file to evaluate
+     * @param type the type of the script
+     * @return the result of the evaluation
+     */
     default Object evalFile(File jsFile, JsFileType type) {
         return evalFile(jsFile, type, null);
     }
 
     /**
+     * Evaluates the given JavaScript file with a specified type and content.
      * 
-     * @param jsFile
-     * @param type
-     * @param content
-     *            if the contents of the file need to be changed, but you need to load as a file, so that the relative
-     *            paths in imports keep working
-     * @return
+     * @param jsFile the JavaScript file to evaluate
+     * @param type the type of the script
+     * @param content the content of the file
+     * @return the result of the evaluation
      */
     default Object evalFile(File jsFile, JsFileType type, String content) {
         throw new NotImplementedException(this);
     }
 
+    /**
+     * Calls the given function with the specified arguments.
+     * 
+     * @param function the function to call
+     * @param args the arguments to pass to the function
+     * @return the result of the function call
+     */
     Object call(Object function, Object... args);
 
-    // default Bindings createBindings() {
-    // return getEngine().createBindings();
-    // }
-
-    default void nashornWarning(String message) {
-        // Do nothing
-    }
-
     /**
+     * Checks if the given object is an array.
      * 
-     * @param object
-     * @return true if the given object is an array, false otherwise
+     * @param object the object to check
+     * @return true if the object is an array, false otherwise
      */
     boolean isArray(Object object);
 
     /**
+     * Checks if the given object is a number.
      * 
-     * @param object
-     * @return true if the given object is a number, false otherwise
+     * @param object the object to check
+     * @return true if the object is a number, false otherwise
      */
     boolean isNumber(Object object);
 
     /**
+     * Checks if the given object has members.
      * 
-     * @param object
-     * @return true if the given object has members, false otherwise
+     * @param object the object to check
+     * @return true if the object has members, false otherwise
      */
     boolean isObject(Object object);
 
     /**
+     * Checks if the given object is a string.
      * 
-     * @param object
-     * @return true if the given object is a string, false otherwise
+     * @param object the object to check
+     * @return true if the object is a string, false otherwise
      */
     boolean isString(Object object);
 
     /**
+     * Checks if the given object is a boolean.
      * 
-     * @param object
-     * @return true if the given object is a boolean, false otherwise
+     * @param object the object to check
+     * @return true if the object is a boolean, false otherwise
      */
     boolean isBoolean(Object object);
 
     /**
+     * Checks if the given object can be called (executed).
      * 
-     * @param object
-     * @return true if the object can be called (executed)
+     * @param object the object to check
+     * @return true if the object can be called, false otherwise
      */
     boolean isFunction(Object object);
 
-    // Object put(Bindings var, String member, Object value);
-
-    // public Object remove(Bindings object, Object key);
-
     /**
+     * Retrieves the values inside the given object (e.g., map, array).
      * 
-     * @param object
-     * @return the value inside the given object (e.g., map, array)
+     * @param object the object to retrieve values from
+     * @return a collection of values inside the object
      */
     Collection<Object> getValues(Object object);
 
     /**
      * Converts an object to the given Java class.
      * 
-     * @param <T>
-     * @param object
-     * @param toConvert
-     * @return
+     * @param <T> the target class type
+     * @param object the object to convert
+     * @param targetClass the target class
+     * @return the converted object
      */
     <T> T convert(Object object, Class<T> targetClass);
 
@@ -377,53 +404,105 @@ public interface JsEngine {
     /**
      * Sets the specified value with the specified key in the ENGINE_SCOPE Bindings of the protected context field.
      *
-     * @param key
-     * @param value
+     * @param key the key to set
+     * @param value the value to set
      */
     void put(String key, Object value);
 
     /// Bindings-like operations
 
+    /**
+     * Sets the specified value with the specified key in the given bindings object.
+     * 
+     * @param bindings the bindings object
+     * @param key the key to set
+     * @param value the value to set
+     * @return the previous value associated with the key, or null if there was no mapping for the key
+     */
     Object put(Object bindings, String key, Object value);
 
+    /**
+     * Removes the specified key from the given bindings object.
+     * 
+     * @param bindings the bindings object
+     * @param key the key to remove
+     * @return the value associated with the key, or null if there was no mapping for the key
+     */
     Object remove(Object bindings, String key);
 
+    /**
+     * Retrieves the set of keys in the given bindings object.
+     * 
+     * @param bindings the bindings object
+     * @return the set of keys in the bindings object
+     */
     Set<String> keySet(Object bindings);
 
+    /**
+     * Retrieves the value associated with the specified key in the given bindings object.
+     * 
+     * @param bindings the bindings object
+     * @param key the key to retrieve
+     * @return the value associated with the key, or null if there was no mapping for the key
+     */
     Object get(Object bindings, String key);
 
+    /**
+     * Retrieves the value associated with the specified key in the given bindings object and converts it to the target class.
+     * 
+     * @param <T> the target class type
+     * @param bindings the bindings object
+     * @param key the key to retrieve
+     * @param targetClass the target class
+     * @return the converted value associated with the key
+     */
     default <T> T get(Object bindings, String key, Class<T> targetClass) {
         return convert(get(bindings, key), targetClass);
     }
 
+    /**
+     * Retrieves the value associated with the specified key in the engine scope bindings.
+     * 
+     * @param key the key to retrieve
+     * @return the value associated with the key, or null if there was no mapping for the key
+     */
     default Object get(String key) {
         return get(getBindings(), key);
     }
 
+    /**
+     * Retrieves the value associated with the specified key in the engine scope bindings and converts it to the target class.
+     * 
+     * @param <T> the target class type
+     * @param key the key to retrieve
+     * @param targetClass the target class
+     * @return the converted value associated with the key
+     */
     default <T> T get(String key, Class<T> targetClass) {
         return get(getBindings(), key, targetClass);
     }
 
     /**
-     * Adds a JS conversion rule for objects that are instances of a given class.
+     * Adds a JavaScript conversion rule for objects that are instances of a given class.
      * 
-     * @param key
-     * @param rule
+     * @param <VS> the base class type
+     * @param <KS> the specific class type
+     * @param key the class to add the rule for
+     * @param rule the conversion rule
      */
-    // void addToJsRule(Class<?> key, BiFunction<Object, JsEngine, Object> rule);
     <VS, KS extends VS> void addToJsRule(Class<KS> key, Function<VS, Object> rule);
 
     /**
-     * Maps classes to JS conversion rules.
+     * Maps classes to JavaScript conversion rules.
      * 
-     * @return
+     * @return the function class map containing the conversion rules
      */
     FunctionClassMap<Object, Object> getToJsRules();
 
     /**
      * Converts a given Java object to a more compatible type in JavaScript.
      * 
-     * New conversion rules can be added with the method
+     * New conversion rules can be added with the method {@link #addToJsRule(Class, Function)}.
      * 
      * Conversions currently supported by default:<br>
      * - null to undefined;<br>
@@ -432,11 +511,10 @@ public interface JsEngine {
      * - Java Set to JS array;<br>
      * - JsonArray to JS array;<br>
      * 
-     * @param javaObject
-     * @return
+     * @param javaObject the Java object to convert
+     * @return the converted JavaScript object
      */
     default Object toJs(Object javaObject) {
-
         // Null
         if (javaObject == null) {
             return getUndefined();
@@ -497,9 +575,10 @@ public interface JsEngine {
     }
 
     /**
+     * Retrieves a Throwable if the given object is an error generated by the engine.
      * 
-     * @param possibleError
-     * @return a Throwable if the given object is an error generated by the engine.
+     * @param possibleError the object to check
+     * @return an Optional containing the Throwable if the object is an error, or an empty Optional otherwise
      */
     default Optional<Throwable> getException(Object possibleError) {
         throw new NotImplementedException(this);

@@ -16,6 +16,7 @@ package pt.up.fe.specs.util.utilities;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Iterator;
+import java.util.Objects;
 
 import pt.up.fe.specs.util.collections.pushingqueue.MixedPushingQueue;
 import pt.up.fe.specs.util.collections.pushingqueue.PushingQueue;
@@ -33,17 +34,15 @@ public class PatternDetector {
      */
     private final int maxPatternSize;
     private final BitSet[] matchQueues;
-    // private PushingQueue<Integer> queue;
     private final PushingQueue<Integer> queue2;
     private int currentPatternSize;
     private PatternState state;
     private final boolean priorityToBiggerPatterns;
 
     /**
-     * Creates a new PatternFinder which will try to find patterns of maximum size 'maxPatternSize', in the given
-     * integer values.
-     * 
-     * @param maxPatternSize
+     * Creates a new PatternFinder which will try to find patterns of maximum size
+     * 'maxPatternSize', in the given integer values.
+     *
      */
     public PatternDetector(int maxPatternSize, boolean priorityToBiggerPatterns) {
         this.currentPatternSize = 0;
@@ -57,18 +56,13 @@ public class PatternDetector {
         for (int i = 0; i < maxPatternSize; i++) {
             this.matchQueues[i] = new BitSet();
         }
-        // queue = new PushingQueue<Integer>(maxPatternSize + 1);
-        // queue2 = new PushingQueueOld<>(maxPatternSize + 1);
+
         this.queue2 = new MixedPushingQueue<>(maxPatternSize + 1);
 
         // Initialize Queue
         for (int i = 0; i < this.queue2.size(); i++) {
             this.queue2.insertElement(null);
         }
-        // for (int i = 0; i < queue.size(); i++) {
-        // queue.insertElement(null);
-        // }
-
     }
 
     public int getMaxPatternSize() {
@@ -77,17 +71,14 @@ public class PatternDetector {
 
     /**
      * Gives another value to check for pattern.
-     * 
-     * @param value
+     *
      */
     public PatternState step(Integer hashValue) {
         // Insert new element
-        // queue.insertElement(hashValue);
         this.queue2.insertElement(hashValue);
 
         // Compare first element with all other elements and store result on
         // match queues
-        // List<Integer> elements = queue.getElements(1, maxPatternSize + 1);
         Iterator<Integer> iterator = this.queue2.iterator();
 
         // Ignore first element of the queue
@@ -95,10 +86,9 @@ public class PatternDetector {
 
         for (int i = 0; i < this.maxPatternSize; i++) {
 
-            // Check if there is a match
-            // if (hashValue.equals(queue.getElement(i + 1))) {
-            if (hashValue.equals(iterator.next())) {
-                // if (hashValue.equals(elements.get(i))) {
+            // Check if there is a match (null-safe)
+            Integer other = iterator.next();
+            if (Objects.equals(hashValue, other)) {
                 // We have a match.
                 // Shift match queue to the left
                 this.matchQueues[i] = this.matchQueues[i].get(1, i + 1);
@@ -125,63 +115,6 @@ public class PatternDetector {
         this.currentPatternSize = newPatternSize;
         return this.state;
     }
-
-    /**
-     * Gives another value to check for pattern.
-     * 
-     * @param value
-     */
-    /*
-    public PatternState step2(Integer hashValue) {
-        // Insert new element
-        this.queue2.insertElement(hashValue);
-     
-        // Ignore first element of the queue
-        IntStream.range(1, queue2.size())
-        .forEach(i -> );
-    
-        // this.queue2.stream()
-        
-        // .skip(1)
-        // .
-        // Compare first element with all other elements and store result on
-        // match queues
-        Iterator<Integer> iterator = this.queue2.iterator();
-    
-        // Ignore first element of the queue
-        iterator.next();
-    
-        for (int i = 0; i < this.maxPatternSize; i++) {
-    
-            // Check if there is a match
-            if (hashValue.equals(iterator.next())) {
-                // We have a match.
-                // Shift match queue to the left
-                this.matchQueues[i] = this.matchQueues[i].get(1, i + 1);
-                // Set the bit.
-                this.matchQueues[i].set(i);
-            } else {
-                // Reset queue
-                this.matchQueues[i].clear();
-            }
-        }
-    
-        // Put all the results in a single bit array
-        BitSet bitArray = new BitSet();
-        for (int i = 0; i < this.matchQueues.length; i++) {
-            if (this.matchQueues[i].get(0)) {
-                bitArray.set(i);
-            } else {
-                bitArray.clear(i);
-            }
-        }
-    
-        int newPatternSize = calculatePatternSize(bitArray, this.currentPatternSize, this.priorityToBiggerPatterns);
-        this.state = calculateState(this.currentPatternSize, newPatternSize);
-        this.currentPatternSize = newPatternSize;
-        return this.state;
-    }
-    */
 
     public int getPatternSize() {
         return this.currentPatternSize;
@@ -212,7 +145,7 @@ public class PatternDetector {
     }
 
     public static PatternState calculateState(int previousPatternSize, int patternSize) {
-        PatternState newState = null;
+        PatternState newState;
         // Check if pattern state has changed
         if (previousPatternSize != patternSize) {
             // If previous pattern size was 0, a new pattern started
@@ -238,7 +171,9 @@ public class PatternDetector {
         return newState;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

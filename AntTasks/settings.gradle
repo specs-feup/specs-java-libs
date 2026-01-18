@@ -1,0 +1,4 @@
+rootProject.name = 'AntTasks'
+
+includeBuild("../jOptions")
+includeBuild("../SpecsUtils")

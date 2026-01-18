@@ -41,11 +41,7 @@ public class StringSplitter {
 
     /**
      * Internal method that does the heavy work.
-     * 
-     * @param rule
-     * @param predicate
-     * @param updateString
-     * @return
+     *
      */
     private <T> Optional<T> check(SplitRule<T> rule, Predicate<T> predicate, boolean updateString) {
         SplitResult<T> result = rule.apply(currentString);
@@ -56,26 +52,25 @@ public class StringSplitter {
         }
 
         // Test predicate
-        if (!predicate.test(result.getValue())) {
+        if (!predicate.test(result.value())) {
             return Optional.empty();
         }
 
         // Return if string should not be updated
         if (!updateString) {
-            return Optional.of(result.getValue());
+            return Optional.of(result.value());
         }
 
         // Update string
-        currentString = result.getModifiedSlice();
+        currentString = result.modifiedSlice();
 
-        return Optional.of(result.getValue());
+        return Optional.of(result.value());
     }
 
     /**
-     * Similar to {@link StringSplitter#parseTry(SplitRule)}, but throws exception if the rule does not match.
-     * 
-     * @param rule
-     * @return
+     * Similar to {@link StringSplitter#parseTry(SplitRule)}, but throws exception
+     * if the rule does not match.
+     *
      */
     public <T> T parse(SplitRule<T> rule) {
         return parseTry(rule)
@@ -99,11 +94,10 @@ public class StringSplitter {
     }
 
     /**
-     * Applies the rule over the current string. If the rule matches, returns the match and consumes the corresponding
-     * string. Otherwise, returns an empty Optional and leaves the current string unchanged.
-     * 
-     * @param rule
-     * @return
+     * Applies the rule over the current string. If the rule matches, returns the
+     * match and consumes the corresponding string. Otherwise, returns an empty
+     * Optional and leaves the current string unchanged.
+     *
      */
     public <T> Optional<T> parseTry(SplitRule<T> rule) {
         // Use check with a predicate that always returns true
@@ -111,22 +105,19 @@ public class StringSplitter {
     }
 
     /**
-     * Applies the given rule, and if it matches, checks if the results passes the predicate. The current string is only
-     * consumed if both the rule and the predicate match.
-     * 
-     * @param rule
-     * @param checker
-     * @return
+     * Applies the given rule, and if it matches, checks if the results passes the
+     * predicate. The current string is only consumed if both the rule and the
+     * predicate match.
+     *
      */
     public <T> Optional<T> parseIf(SplitRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate, true);
     }
 
     /**
-     * Applies the rule over the current string, but does not consume the string even if the rule matches.
-     * 
-     * @param rule
-     * @return
+     * Applies the rule over the current string, but does not consume the string
+     * even if the rule matches.
+     *
      */
     public <T> Optional<T> peek(SplitRule<T> rule) {
         return peekIf(rule, result -> true);
@@ -134,36 +125,27 @@ public class StringSplitter {
 
     /**
      * Overload that accepts a Predicate.
-     * 
-     * @param rule
-     * @param predicate
-     * @return
+     *
      */
     public <T> Optional<T> peekIf(SplitRule<T> rule, Predicate<T> predicate) {
         return check(rule, predicate, false);
     }
 
     /**
-     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards the result and returns if the value
-     * is present or not, consuming the corresponding string.
-     * 
-     * @param rule
-     * @param predicate
-     * @return
+     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards
+     * the result and returns if the value is present or not, consuming the
+     * corresponding string.
+     *
      */
     public <T> boolean check(SplitRule<T> rule, Predicate<T> predicate) {
         return parseIf(rule, predicate).isPresent();
     }
 
-    // boolean hasWord4 = parser.check(StringSplitterRules::string, string -> string.equals("word4"));
-
     /**
-     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards the result and throws exception if
-     * the value is not present, consuming the corresponding string.
-     * 
-     * @param <T>
-     * @param rule
-     * @param predicate
+     * Similar to {@link StringSplitter#parseIf(SplitRule, Predicate)}, but discards
+     * the result and throws exception if the value is not present, consuming the
+     * corresponding string.
+     *
      */
     public void consume(String string) {
         var success = check(StringSplitterRules::string, s -> s.equals(string));

@@ -14,50 +14,44 @@
 package pt.up.fe.specs.util.jar;
 
 /**
- * The purpose of this class is to provide to the user some methods helping to manage the parameters while running an
- * application (.jar, .exe...).
+ * The purpose of this class is to provide to the user some methods helping to
+ * manage the parameters while running an application (.jar, .exe...).
  * 
  * @author remi
  *
  */
 public class JarParametersUtils {
 
-    // --------------------------------------------------------------------- attributes
-    // ---------- - - - - - - - - - - - - - - - - - - - - - - - - - - ---------- static
-
     /** The values the arguments can have for requiring help. */
     private static final String[] HELP_ARG = { "-help", "-h", ".?", "/?", "?" };
 
-    // ----------------------------------------------------------------- public_Methods
-    // ---------- - - - - - - - - - - - - - - - - - - - - - - - - - - ---------- static
-
     /**
-     * Returns true if the argument represents an help requirement (value "-help", "-h", "/?"...). Returns false
+     * Returns true if the argument represents an help requirement (value "-help",
+     * "-h", "/?"...). Returns false
      * otherwise.
      * 
-     * @param help
-     *            The string the user wants to know if it is an help requirement.
-     * @return true if the argument represents an help requirement (value "-help", "-h", "/?"...). Returns false
+     * @param help The string the user wants to know if it is an help requirement.
+     * @return true if the argument represents an help requirement (value "-help",
+     *         "-h", "/?"...). Returns false
      *         otherwise.
      */
     public static boolean isHelpRequirement(String help) {
-	for (String help_arg : JarParametersUtils.HELP_ARG) {
-	    if (help.equals(help_arg)) {
-		return true;
-	    }
-	}
-	return false;
+        for (String help_arg : JarParametersUtils.HELP_ARG) {
+            if (help.equals(help_arg)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Returns the String "for any help > 'className' -help".
      * 
-     * @param jarName
-     *            The name the .jar file the help is required in.
+     * @param jarName The name the .jar file the help is required in.
      * @return the String "for any help > 'jarName' -help".
      */
     public static String askForHelp(String jarName) {
-	return "for any help > " + jarName + " " + JarParametersUtils.HELP_ARG[0];
+        return "for any help > " + jarName + " " + JarParametersUtils.HELP_ARG[0];
     }
 
 }

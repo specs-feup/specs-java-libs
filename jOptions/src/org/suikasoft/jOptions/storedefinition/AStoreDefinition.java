@@ -1,20 +1,19 @@
 /**
  * Copyright 2016 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.suikasoft.jOptions.storedefinition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,37 +23,37 @@ import java.util.Set;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
+/**
+ * Abstract base class for {@link StoreDefinition} implementations.
+ */
 public abstract class AStoreDefinition implements StoreDefinition {
 
     private final String appName;
-    // private final List<DataKey<?>> options;
     private final List<StoreSection> sections;
     private final DataStore defaultData;
-    // private final transient Map<String, DataKey<?>> keyMap = new HashMap<>();
     private final Map<String, DataKey<?>> keyMap = new HashMap<>();
 
     /**
-     * @param appName
-     * @param options
+     * Creates a new store definition with the given name and options.
+     *
+     * @param appName the name of the store
+     * @param options the list of keys
      */
     protected AStoreDefinition(String appName, List<DataKey<?>> options) {
-        this(appName, Arrays.asList(StoreSection.newInstance(options)), null);
+        this(appName, List.of(StoreSection.newInstance(options)), null);
     }
 
-    // protected AStoreDefinition(String appName, List<DataKey<?>> options, DataStore defaultData) {
-    //
-    // options = parseOptions(options);
-    //
-    // this.appName = appName;
-    // this.options = options;
-    // this.defaultData = defaultData;
-    // }
-
+    /**
+     * Creates a new store definition with the given name, sections, and default
+     * data.
+     *
+     * @param appName     the name of the store
+     * @param sections    the sections
+     * @param defaultData the default data
+     */
     protected AStoreDefinition(String appName, List<StoreSection> sections, DataStore defaultData) {
         check(sections);
-
         this.appName = appName;
-        // To control list, and avoid Arrays.asList(), which is not serializable by XStream
         this.sections = new ArrayList<>(sections);
         this.defaultData = defaultData;
     }
@@ -64,54 +63,23 @@ public abstract class AStoreDefinition implements StoreDefinition {
         if (keyMap.isEmpty()) {
             keyMap.putAll(StoreDefinition.super.getKeyMap());
         }
-
         return keyMap;
     }
 
     /**
-     * Checks if all options have different names.
-     * 
-     * @param options
-     * @return
-     */
-    /*
-    private static List<DataKey<?>> parseOptions(List<DataKey<?>> options) {
-    Map<String, DataKey<?>> optionMap = FactoryUtils.newLinkedHashMap();
-    
-    for (DataKey<?> def : options) {
-        DataKey<?> previousDef = optionMap.get(def.getName());
-        if (previousDef != null) {
-    	LoggingUtils.msgWarn("DataKey name clash between '" + previousDef
-    		+ "' and '" + def + "'");
-    	continue;
-        }
-    
-        optionMap.put(def.getName(), def);
-    }
-    
-    return FactoryUtils.newArrayList(optionMap.values());
-    }
-    */
-
-    /**
-     * Checks if all options have different names.
-     * 
-     * @param options
-     * @return
+     * Checks if all sections have different key names.
+     *
+     * @param sections the sections to check
      */
     private static void check(List<StoreSection> sections) {
-        Set<String> seenKeys = new HashSet<>();
-
-        List<DataKey<?>> options = StoreSection.getAllKeys(sections);
-
-        for (DataKey<?> def : options) {
-            if (seenKeys.contains(def.getName())) {
-                throw new RuntimeException("DataKey clash for name '" + def.getName() + "'");
+        Set<String> keyNames = new HashSet<>();
+        for (StoreSection section : sections) {
+            for (DataKey<?> key : section.getKeys()) {
+                if (!keyNames.add(key.getName())) {
+                    throw new RuntimeException("Duplicate key name: '" + key.getName() + "'");
+                }
             }
-
-            seenKeys.add(def.getName());
         }
-
     }
 
     @Override
@@ -119,23 +87,36 @@ public abstract class AStoreDefinition implements StoreDefinition {
         return appName;
     }
 
+    /**
+     * Retrieves all keys from the store definition.
+     *
+     * @return a list of keys
+     */
     @Override
     public List<DataKey<?>> getKeys() {
         return StoreSection.getAllKeys(sections);
     }
 
+    /**
+     * Retrieves all sections from the store definition.
+     *
+     * @return a list of sections
+     */
     @Override
     public List<StoreSection> getSections() {
-        return sections;
+        return new ArrayList<>(sections);
     }
 
+    /**
+     * Retrieves the default values for the store definition.
+     *
+     * @return the default data store
+     */
     @Override
     public DataStore getDefaultValues() {
         if (defaultData != null) {
             return defaultData;
         }
-
         return StoreDefinition.super.getDefaultValues();
     }
-
 }

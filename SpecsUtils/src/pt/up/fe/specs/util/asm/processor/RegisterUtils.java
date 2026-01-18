@@ -24,8 +24,7 @@ import pt.up.fe.specs.util.SpecsStrings;
 public class RegisterUtils {
 
     public static String buildRegisterBit(RegisterId regId, int bitPosition) {
-	// return regId.getName() + REGISTER_BIT_OPEN + bitPosition + REGISTER_BIT_CLOSE;
-	return regId.getName() + RegisterUtils.REGISTER_BIT_START + bitPosition;
+        return regId.getName() + RegisterUtils.REGISTER_BIT_START + bitPosition;
     }
 
     /**
@@ -33,48 +32,64 @@ public class RegisterUtils {
      * <p>
      * Example: if given the string MSR[29], returns 29.
      * 
-     * @param registerFlagName
-     * @return
+     * @return the bit position as an Integer, or null if the input is invalid or
+     *         null
      */
     public static Integer decodeFlagBit(String registerFlagName) {
-	// int beginIndex = registerFlagName.indexOf(REGISTER_BIT_OPEN);
-	int beginIndex = registerFlagName.indexOf(RegisterUtils.REGISTER_BIT_START);
-	// int endIndex = registerFlagName.indexOf(REGISTER_BIT_CLOSE);
+        // Handle null input gracefully
+        if (registerFlagName == null) {
+            SpecsLogs.warn("Cannot decode flag bit from null input");
+            return null;
+        }
 
-	// if(beginIndex == -1 || endIndex == -1) {
-	if (beginIndex == -1) {
-	    SpecsLogs.getLogger().
-		    warning("Flag '" + registerFlagName + "' does not represent "
-			    + "a valid flag.");
-	    return null;
-	}
+        int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
 
-	// String bitNumber = registerFlagName.substring(beginIndex+1, endIndex);
-	String bitNumber = registerFlagName.substring(beginIndex + 1);
-	return SpecsStrings.parseInteger(bitNumber);
+        if (beginIndex == -1) {
+            SpecsLogs.warn("Flag '" + registerFlagName + "' does not represent "
+                    + "a valid flag.");
+            return null;
+        }
+
+        String bitNumber = registerFlagName.substring(beginIndex + 1);
+        return SpecsStrings.parseInteger(bitNumber);
     }
 
     /**
-     * <p>
-     * Example: if given the string MSR[29], returns MSR.
+     * Example: if given the string MSR_29, returns MSR.
      * 
-     * @param registerFlagName
-     * @return
+     * Note: For register names containing underscores (e.g.,
+     * "COMPLEX_REG_NAME_15"), this method returns everything before the LAST
+     * underscore ("COMPLEX_REG_NAME"), which is consistent with decodeFlagBit()
+     * that extracts from the last underscore.
+     * This allows round-trip operations to work correctly.
+     * 
+     * @param registerFlagName the flag notation string (e.g., "MSR_29")
+     * @return the register name portion, or null if the input is invalid or null
      */
     public static String decodeFlagName(String registerFlagName) {
-	// int beginIndex = registerFlagName.indexOf(REGISTER_BIT_OPEN);
-	int beginIndex = registerFlagName.indexOf(RegisterUtils.REGISTER_BIT_START);
-	if (beginIndex == -1) {
-	    SpecsLogs.getLogger().
-		    warning("Flag '" + registerFlagName + "' does not represent "
-			    + "a valid flag.");
-	    return null;
-	}
+        if (registerFlagName == null) {
+            SpecsLogs.warn("Cannot decode flag name from null input");
+            return null;
+        }
 
-	return registerFlagName.substring(0, beginIndex);
+        int beginIndex = registerFlagName.lastIndexOf(RegisterUtils.REGISTER_BIT_START);
+        if (beginIndex == -1) {
+            SpecsLogs.warn("Flag '" + registerFlagName + "' does not represent "
+                    + "a valid flag.");
+            return null;
+        }
+
+        // Validate that the bit portion is numeric
+        String bitPortion = registerFlagName.substring(beginIndex + 1);
+        Integer bitValue = SpecsStrings.parseInteger(bitPortion);
+        if (bitValue == null) {
+            SpecsLogs.warn("Flag '" + registerFlagName + "' has invalid bit portion: '"
+                    + bitPortion + "' is not a valid integer.");
+            return null;
+        }
+
+        return registerFlagName.substring(0, beginIndex);
     }
 
     private static final String REGISTER_BIT_START = "_";
-    // private static final String REGISTER_BIT_OPEN = "[";
-    // private static final String REGISTER_BIT_CLOSE = "]";
 }

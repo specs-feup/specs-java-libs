@@ -1,20 +1,21 @@
 /*
  * Copyright 2013 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 package org.specs.generators.java.members;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.specs.generators.java.IGenerate;
@@ -28,10 +29,9 @@ import org.specs.generators.java.utils.Utils;
 import tdrc.utils.StringUtils;
 
 /**
- * Constructor declaration for a {@link JavaClass}
- * 
+ * Represents a constructor declaration for a Java class or enum.
+ *
  * @author Tiago
- * 
  */
 public class Constructor implements IGenerate {
     private Privacy privacy;
@@ -42,33 +42,34 @@ public class Constructor implements IGenerate {
     private StringBuffer methodBody;
 
     /**
-     * Generate a public, empty constructor for the {@link JavaClass}
-     * 
-     * @param javaClass
-     *            the class pertaining the constructor
+     * Generates a public, empty constructor for the specified Java class.
+     *
+     * @param javaClass the class pertaining to the constructor
      */
     public Constructor(JavaClass javaClass) {
-        this.javaClass = javaClass;
+        setJavaClass(javaClass);
         privacy = Privacy.PUBLIC;
         init(javaClass);
     }
 
     /**
-     * Generate a private, empty constructor for the {@link JavaEnum}
+     * Generates a private, empty constructor for the specified Java enum.
      *
-     * @param javaEnum
-     *            the enum pertaining the constructor
+     * @param javaEnum the enum pertaining to the constructor
      */
     public Constructor(JavaEnum javaEnum) {
+        if (javaEnum == null) {
+            throw new IllegalArgumentException("Java enum cannot be null");
+        }
         this.javaEnum = javaEnum;
         privacy = Privacy.PRIVATE;
         init(javaEnum);
     }
 
     /**
-     * Initialize Constructor instance
-     * 
-     * @param javaClass
+     * Initializes the Constructor instance.
+     *
+     * @param javaClass the class pertaining to the constructor
      */
     private void init(JavaClass javaClass) {
         arguments = new ArrayList<>();
@@ -78,24 +79,23 @@ public class Constructor implements IGenerate {
     }
 
     /**
-     * Generate a empty constructor, with required privacy, for the {@link JavaClass}
-     * 
-     * @param privacy
-     *            the privacy level
-     * @param javaClass
-     *            the class pertaining the constructor
+     * Generates an empty constructor with the required privacy for the specified
+     * Java class.
+     *
+     * @param privacy   the privacy level
+     * @param javaClass the class pertaining to the constructor
      */
     public Constructor(Privacy privacy, JavaClass javaClass) {
-        this.javaClass = javaClass;
+        setJavaClass(javaClass);
         this.privacy = privacy;
         init(javaClass);
     }
 
     /**
-     * Add a new argument to the constructor's arguments
-     * 
-     * @param the
-     *            new modifier
+     * Adds a new argument to the constructor's arguments.
+     *
+     * @param classType the type of the argument
+     * @param name      the name of the argument
      */
     public void addArgument(JavaType classType, String name) {
         final Argument newArg = new Argument(classType, name);
@@ -103,10 +103,9 @@ public class Constructor implements IGenerate {
     }
 
     /**
-     * Add a new argument based on a field
-     * 
-     * @param the
-     *            new modifier
+     * Adds a new argument based on a field.
+     *
+     * @param field the field to add as an argument
      */
     public void addArgument(Field field) {
         final Argument newArg = new Argument(field.getType(), field.getName());
@@ -114,21 +113,19 @@ public class Constructor implements IGenerate {
     }
 
     /**
-     * Add a list of field as argument
-     * 
-     * @param the
-     *            new modifier
+     * Adds a list of fields as arguments.
+     *
+     * @param field the collection of fields to add as arguments
      */
     public void addArguments(Collection<Field> field) {
         field.forEach(this::addArgument);
     }
 
     /**
-     * Generate java source based on the privacy, arguments and name
-     * 
-     * @param indentiation
-     *            the code indentation
-     * @return the generated java constructor code
+     * Generates Java source code based on the privacy, arguments, and name.
+     *
+     * @param indentation the code indentation
+     * @return the generated Java constructor code
      */
     @Override
     public StringBuilder generateCode(int indentation) {
@@ -140,8 +137,10 @@ public class Constructor implements IGenerate {
         constructorStr.append(" ");
         if (javaEnum != null) {
             constructorStr.append(javaEnum.getName());
-        } else {
+        } else if (javaClass != null) {
             constructorStr.append(javaClass.getName());
+        } else {
+            throw new IllegalStateException("Constructor must be associated with a Java class or enum");
         }
         constructorStr.append("(");
 
@@ -151,25 +150,20 @@ public class Constructor implements IGenerate {
 
         constructorStr.append("{");
         final StringBuilder indent = Utils.indent(indentation + 1);
-        if (methodBody.length() != 0) {
+        if (!methodBody.isEmpty()) {
             constructorStr.append(ln() + indent);
             final String bodyCode = methodBody.toString().replace(ln(), ln() + indent).trim();
             constructorStr.append(bodyCode);
             constructorStr.append(ln() + indent0);
-        } else {
-            // constructorStr.append("// TODO Auto-generated constructor
-            // stub\n");
-            // constructorStr.append(Utils.indent(indentation));
         }
         constructorStr.append("}");
         return constructorStr;
     }
 
     /**
-     * Append text to the javadoc comment
-     * 
-     * @param comment
-     *            the text to append
+     * Appends text to the Javadoc comment.
+     *
+     * @param comment the text to append
      * @return the {@link StringBuilder} with the new comment
      */
     public StringBuilder appendComment(String comment) {
@@ -177,22 +171,19 @@ public class Constructor implements IGenerate {
     }
 
     /**
-     * Add a new javadoc tag to the comment, with no description
-     * 
-     * @param tag
-     *            the new tag to add
+     * Adds a new Javadoc tag to the comment, with no description.
+     *
+     * @param tag the new tag to add
      */
     public void addJavaDocTag(JDocTag tag) {
         javaDocComment.addTag(tag);
     }
 
     /**
-     * Add a new javadoc tag to the comment with description
-     * 
-     * @param tag
-     *            the new tag to add
-     * @param description
-     *            the tag description
+     * Adds a new Javadoc tag to the comment with a description.
+     *
+     * @param tag         the new tag to add
+     * @param description the tag description
      */
     public void addJavaDocTag(JDocTag tag, String description) {
         javaDocComment.addTag(tag, description);
@@ -204,90 +195,94 @@ public class Constructor implements IGenerate {
     }
 
     /**
-     * @return the privacy
+     * @return the privacy level
      */
     public Privacy getPrivacy() {
         return privacy;
     }
 
     /**
-     * @param privacy
-     *            the privacy to set
+     * Sets the privacy level.
+     *
+     * @param privacy the privacy to set
      */
     public void setPrivacy(Privacy privacy) {
         this.privacy = privacy;
     }
 
     /**
-     * @return the javaClass
+     * @return the Java class
      */
     public JavaClass getJavaClass() {
         return javaClass;
     }
 
     /**
-     * @param javaClass
-     *            the javaClass to set
+     * Sets the Java class.
+     *
+     * @param javaClass the Java class to set
      */
-    public void setJavaClass(JavaClass javaClass) {
+    public void setJavaClass(JavaClass javaClass) throws IllegalArgumentException {
+        if (javaClass == null) {
+            throw new IllegalArgumentException("Java class cannot be null");
+        }
         this.javaClass = javaClass;
     }
 
     /**
-     * @return the arguments
+     * @return the list of arguments
      */
     public List<Argument> getArguments() {
         return arguments;
     }
 
     /**
-     * @param arguments
-     *            the arguments to set
+     * Sets the list of arguments.
+     *
+     * @param arguments the arguments to set
      */
     public void setArguments(List<Argument> arguments) {
         this.arguments = arguments;
     }
 
     /**
-     * @return the methodBody
+     * @return the method body
      */
     public StringBuffer getMethodBody() {
         return methodBody;
     }
 
     /**
-     * @param methodBody
-     *            the methodBody to set
+     * Sets the method body.
+     *
+     * @param methodBody the method body to set
      */
     public void setMethodBody(StringBuffer methodBody) {
         this.methodBody = methodBody;
     }
 
     /**
-     * Append code to the method body
-     * 
-     * @param code
-     *            the code to append
+     * Appends code to the method body.
+     *
+     * @param code the code to append
      */
     public void appendCode(String code) {
         methodBody.append(code);
     }
 
     /**
-     * Append code to the method body
-     * 
-     * @param code
-     *            the code to append
+     * Appends code to the method body.
+     *
+     * @param code the code to append
      */
     public void appendCode(StringBuffer code) {
         methodBody.append(code);
     }
 
     /**
-     * Append default code based on the parameters of the constructor
-     * 
-     * @param useSetters
-     *            use the set methods instead of assignments;
+     * Appends default code based on the parameters of the constructor.
+     *
+     * @param useSetters use the set methods instead of assignments
      */
     public void appendDefaultCode(boolean useSetters) {
         Consumer<Argument> generateAssignment;
@@ -303,7 +298,27 @@ public class Constructor implements IGenerate {
         arguments.forEach(generateAssignment);
     }
 
+    /**
+     * Clears the method body.
+     */
     public void clearCode() {
         methodBody.delete(0, methodBody.length());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
+        Constructor that = (Constructor) obj;
+
+        return this.hashCode() == that.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(privacy, javaClass, javaEnum, javaDocComment, arguments, methodBody);
     }
 }

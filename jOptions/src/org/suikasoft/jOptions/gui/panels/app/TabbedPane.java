@@ -15,13 +15,12 @@ package org.suikasoft.jOptions.gui.panels.app;
 
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
@@ -29,16 +28,27 @@ import org.suikasoft.jOptions.Interfaces.DataStore;
 import org.suikasoft.jOptions.app.App;
 
 /**
- * Panel which contains the principal panels of the program and coordinates updates between panels.
+ * Panel which contains the principal panels of the program and coordinates
+ * updates between panels.
+ *
+ * <p>
+ * This panel manages the main tabs of the application, including program and
+ * options panels.
  * 
  * @author Joao Bispo
  */
 public class TabbedPane extends JPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private static final DataKey<String> APP_NAME = KeyFactory.string("tabbed pane app name");
 
+    /**
+     * Returns the DataKey for the application name.
+     *
+     * @return the DataKey for the app name
+     */
     public static DataKey<String> getAppNameKey() {
         return APP_NAME;
     }
@@ -49,6 +59,11 @@ public class TabbedPane extends JPanel {
 
     private final OptionsPanel optionsPanel;
 
+    /**
+     * Constructs a TabbedPane for the given application.
+     *
+     * @param application the application to display
+     */
     public TabbedPane(App application) {
         super(new GridLayout(1, 1));
 
@@ -75,16 +90,6 @@ public class TabbedPane extends JPanel {
             tabs.add(provider.getTab(tabData));
         }
 
-        // Check if program uses global options
-        /*
-        if (AppUsesGlobalOptions.class.isInstance(application)) {
-        GlobalOptionsPanel globalPanel = new GlobalOptionsPanel(
-        	    ((AppUsesGlobalOptions) application).getGlobalOptions());
-        
-        tabs.add(globalPanel);
-        }
-        */
-
         int baseMnemonic = KeyEvent.VK_1;
         int currentIndex = 0;
         for (GuiTab tab : tabs) {
@@ -94,23 +99,19 @@ public class TabbedPane extends JPanel {
         }
 
         // Register a change listener
-        tabbedPane.addChangeListener(new ChangeListener() {
-            // This method is called whenever the selected tab changes
+        // This method is called whenever the selected tab changes
+        tabbedPane.addChangeListener(evt -> {
+            JTabbedPane pane = (JTabbedPane) evt.getSource();
 
-            @Override
-            public void stateChanged(ChangeEvent evt) {
-                JTabbedPane pane = (JTabbedPane) evt.getSource();
+            // Get selected tab
+            int sel = pane.getSelectedIndex();
 
-                // Get selected tab
-                int sel = pane.getSelectedIndex();
-
-                // Exit current tab
-                currentTab.exitTab();
-                // Update current tab
-                currentTab = tabs.get(sel);
-                // Enter current tab
-                currentTab.enterTab();
-            }
+            // Exit current tab
+            currentTab.exitTab();
+            // Update current tab
+            currentTab = tabs.get(sel);
+            // Enter current tab
+            currentTab.enterTab();
         });
 
         // Set program panel as currentTab
@@ -125,6 +126,11 @@ public class TabbedPane extends JPanel {
 
     }
 
+    /**
+     * Returns the options panel associated with this TabbedPane.
+     *
+     * @return the options panel
+     */
     public OptionsPanel getOptionsPanel() {
         return optionsPanel;
     }

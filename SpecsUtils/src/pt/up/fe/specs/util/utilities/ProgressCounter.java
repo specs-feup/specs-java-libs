@@ -13,40 +13,67 @@
 
 package pt.up.fe.specs.util.utilities;
 
+import pt.up.fe.specs.util.Preconditions;
 import pt.up.fe.specs.util.SpecsLogs;
 
+/**
+ * Utility for tracking progress through a fixed number of steps.
+ *
+ * Behavior notes:
+ * - The constructor enforces a non-negative max count. Passing a negative value
+ * will throw an IllegalArgumentException (via
+ * {@link pt.up.fe.specs.util.Preconditions}).
+ * - The default constructor creates a counter with a very large maximum value
+ * (Integer.MAX_VALUE).
+ */
 public class ProgressCounter {
 
-    private final int max_count;
+    private final int maxCount;
     private int currentCount;
 
+    /**
+     * Creates a new ProgressCounter with the specified maximum count.
+     *
+     * The counter starts at 0. Each call to {@link #next()} or {@link #nextInt()}
+     * increments the internal current count only while it is below the maximum
+     * count. Once the counter reaches the configured maximum, further calls to
+     * {@link #next()} or {@link #nextInt()} will not increase the counter but
+     * will return the capped value and emit a warning.
+     *
+     * @param maxCount the maximum number of steps (must be non-negative)
+     * @throws IllegalArgumentException if {@code maxCount} is negative
+     */
     public ProgressCounter(int maxCount) {
-        this.max_count = maxCount;
+        Preconditions.checkArgument(maxCount >= 0, "maxCount should be non-negative");
+        this.maxCount = maxCount;
         this.currentCount = 0;
     }
 
-    public String next() {
-        // if (this.currentCount <= this.max_count) {
-        // this.currentCount += 1;
-        // } else {
-        // LoggingUtils.msgWarn("Already reached the maximum count (" + this.max_count + ")");
-        // }
+    /**
+     * Creates a new ProgressCounter with a default (very large) maximum value.
+     *
+     * The default maximum is {@link Integer#MAX_VALUE}, which effectively behaves
+     * as an unbounded counter for most practical use-cases. The same contract for
+     * incrementing and {@link #hasNext()} applies as with the parameterized
+     * constructor.
+     */
+    public ProgressCounter() {
+        this(Integer.MAX_VALUE);
+    }
 
+    public String next() {
         int currentCount = nextInt();
 
-        // String message = "(" + this.currentCount + "/" + this.max_count + ")";
-        String message = "(" + currentCount + "/" + this.max_count + ")";
-
-        return message;
+        return "(" + currentCount + "/" + this.maxCount + ")";
     }
 
     public int nextInt() {
-        if (this.currentCount <= this.max_count) {
+        if (this.currentCount < this.maxCount) {
             this.currentCount += 1;
-        } else {
-            SpecsLogs.warn("Already reached the maximum count (" + this.max_count + ")");
+            return this.currentCount;
         }
 
+        SpecsLogs.warn("Already reached the maximum count (" + this.maxCount + ")");
         return this.currentCount;
     }
 
@@ -55,10 +82,10 @@ public class ProgressCounter {
     }
 
     public int getMaxCount() {
-        return this.max_count;
+        return this.maxCount;
     }
 
     public boolean hasNext() {
-        return this.currentCount < this.max_count;
+        return this.currentCount < this.maxCount;
     }
 }

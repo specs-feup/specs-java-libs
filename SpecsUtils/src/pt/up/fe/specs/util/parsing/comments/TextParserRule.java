@@ -19,14 +19,11 @@ import java.util.Optional;
 public interface TextParserRule {
 
     /**
-     * For single line rules, the iterator will not be needed. In cases where the rule can spawn multiple lines, the
-     * rule must leave the iterator ready for returning the next line to be processed. This means that it can only
-     * consume the lines it will process.
-     * 
-     * @param line
-     * @param lineNumber
-     * @param iterator
-     * @return
+     * For single line rules, the iterator will not be needed. In cases where the
+     * rule can spawn multiple lines, the rule must leave the iterator ready for
+     * returning the next line to be processed. This means that it can only consume
+     * the lines it will process.
+     *
      */
     Optional<TextElement> apply(String line, Iterator<String> iterator);
 }

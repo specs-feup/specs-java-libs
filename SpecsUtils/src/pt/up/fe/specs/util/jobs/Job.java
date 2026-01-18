@@ -29,150 +29,79 @@ public class Job {
     /**
      * INSTANCE VARIABLES
      */
-    // private final List<ProcessExecution> executions;
-    // private final List<Execution> executions;
     private final Execution execution;
-    // private final List<String> commandArgs;
-    // String workingFoldername;
-
     boolean interrupted;
 
-    // private Job(List<Execution> executions) {
     private Job(Execution execution) {
-	this.execution = execution;
-	// this.executions = executions;
-	// this.commandArgs = commandArgs;
-	// this.workingFoldername = workingFoldername;
-
-	this.interrupted = false;
+        this.execution = execution;
+        this.interrupted = false;
     }
 
     /**
      * Launches the compilation job in a separate process.
-     * 
-     * @return
+     *
      */
     public int run() {
 
-	// for (ProcessExecution execution : executions) {
-	// for (Execution execution : executions) {
-	int result = this.execution.run();
+        int result = this.execution.run();
 
-	if (result != 0) {
-	    SpecsLogs.msgInfo("Execution returned with error value '" + result + "'");
-	    return -1;
-	}
+        // Check for interruption regardless of return code
+        if (this.execution.isInterrupted()) {
+            this.interrupted = true;
+            return 0;
+        }
 
-	if (this.execution.isInterrupted()) {
-	    this.interrupted = true;
-	    return 0;
-	}
-	// }
+        if (result != 0) {
+            SpecsLogs.msgInfo("Execution returned with error value '" + result + "'");
+            return -1;
+        }
 
-	return 0;
+        return 0;
     }
 
     public boolean isInterrupted() {
-	return this.interrupted;
+        return this.interrupted;
     }
 
-    /**
-     * @param commandArgs
-     * @param workingDir
-     * @return
-     */
     public static Job singleProgram(List<String> commandArgs, String workingDir) {
-	ProcessExecution exec = new ProcessExecution(commandArgs, workingDir);
-	// List<ProcessExecution> executions = Arrays.asList(exec);
-	// List<Execution> executions = FactoryUtils.newArrayList();
-	// executions.add(exec);
-
-	// return new Job(executions);
-	return new Job(exec);
+        ProcessExecution exec = new ProcessExecution(commandArgs, workingDir);
+        return new Job(exec);
     }
 
     public static Job singleJavaCall(Runnable runnable) {
-	return singleJavaCall(runnable, null);
+        return singleJavaCall(runnable, null);
     }
 
-    /**
-     * @param commandArgs
-     * @param workingDir
-     * @return
-     */
     public static Job singleJavaCall(Runnable runnable, String description) {
-	JavaExecution exec = new JavaExecution(runnable);
+        JavaExecution exec = new JavaExecution(runnable);
 
-	exec.setDescription(description);
+        exec.setDescription(description);
 
-	// List<Execution> executions = FactoryUtils.newArrayList();
-	// executions.add(exec);
-
-	// return new Job(executions);
-	return new Job(exec);
+        return new Job(exec);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-	return this.execution.toString();
-	/*
-	if (executions.size() == 1) {
-	    return executions.get(0).toString();
-	}
-
-	StringBuilder builder = new StringBuilder();
-	for (int i = 0; i < executions.size(); i++) {
-	    builder.append("Execution " + (i + 1) + ": ");
-	    builder.append(executions.get(i));
-	    builder.append("\n");
-	}
-
-	// return "Executions:" + executions;
-	return builder.toString();
-	 */
+        return this.execution.toString();
     }
 
     public String getCommandString() {
-	/*
-	if (executions.isEmpty()) {
-	    return "";
-	}
+        if (!(this.execution instanceof ProcessExecution pExecution)) {
+            SpecsLogs
+                    .msgInfo("First job is not of class 'ProcessExecution', returning empty string");
+            return "";
+        }
 
-	if (executions.size() > 1) {
-	    LoggingUtils
-		    .msgInfo("Job has more than one execution, returning the command of just the first execution.\n"
-			    + toString());
-	}
-
-	// ProcessExecution execution = executions.get(0);
-	Execution execution = executions.get(0);
-	*/
-	if (!(this.execution instanceof ProcessExecution)) {
-	    SpecsLogs
-	    .msgInfo("First job is not of class 'ProcessExecution', returning empty string");
-	    return "";
-	}
-
-	ProcessExecution pExecution = (ProcessExecution) this.execution;
-	// return execution.getCommandString();
-	return pExecution.getCommandString();
+        return pExecution.getCommandString();
     }
 
     public String getDescription() {
-	/*
-	if (executions.size() > 1) {
-	    LoggingUtils
-		    .msgInfo("Job has more than one execution, returning the command of just the first execution.\n"
-			    + toString());
-	}
-
-
-	return executions.get(0).getDescription();
-	 */
-	return this.execution.getDescription();
+        return this.execution.getDescription();
     }
 
 }

@@ -16,31 +16,38 @@ package org.suikasoft.jOptions.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
+ * Codec for handling multiple choice lists in jOptions.
+ *
  * @author JoaoBispo
  *
- * @param <T>
+ * @param <T> the type of elements in the list
  */
 public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
 
     private static final String SEPARATOR = "$$$";
 
-    // private final Class<T> anEnum;
-    // private final Map<String, T> decodeMap;
     private final StringCodec<T> elementCodec;
 
+    /**
+     * Constructs a MultipleChoiceListCodec with the given element codec.
+     *
+     * @param elementCodec the codec for individual elements
+     */
     public MultipleChoiceListCodec(StringCodec<T> elementCodec) {
-        // this.anEnum = anEnum;
-        // this.decodeMap = new HashMap<>();
         this.elementCodec = elementCodec;
-        // for (T enumValue : anEnum.getEnumConstants()) {
-        // decodeMap.put(enumValue.name(), enumValue);
-        // }
     }
 
+    /**
+     * Decodes a string into a list of elements.
+     *
+     * @param value the string to decode
+     * @return a list of decoded elements
+     */
     @Override
     public List<T> decode(String value) {
         List<T> decodedValues = new ArrayList<>();
@@ -49,7 +56,10 @@ public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
             return decodedValues;
         }
 
-        for (var singleValue : value.split(SEPARATOR)) {
+        // Use Pattern.quote to escape regex metacharacters and preserve trailing empty
+        // elements with limit -1
+        String escapedSeparator = Pattern.quote(SEPARATOR);
+        for (var singleValue : value.split(escapedSeparator, -1)) {
             decodedValues.add(decodeSingle(singleValue));
         }
 
@@ -58,20 +68,18 @@ public class MultipleChoiceListCodec<T> implements StringCodec<List<T>> {
 
     private T decodeSingle(String value) {
         return elementCodec.decode(value);
-        // T enumValue = decodeMap.get(value);
-        //
-        // if (enumValue == null) {
-        // throw new RuntimeException("Could not find enum '" + value + "' in class '" + anEnum
-        // + "'. Available values: " + decodeMap.keySet());
-        // }
-        //
-        // return enumValue;
     }
 
+    /**
+     * Encodes a list of elements into a string.
+     *
+     * @param value the list of elements to encode
+     * @return the encoded string
+     */
     @Override
     public String encode(List<T> value) {
         return value.stream()
-                .map(element -> elementCodec.encode(element))
+                .map(elementCodec::encode)
                 .collect(Collectors.joining(SEPARATOR));
     }
 

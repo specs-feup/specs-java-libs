@@ -17,6 +17,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,31 +34,44 @@ import org.suikasoft.jOptions.storedefinition.StoreSection;
 import pt.up.fe.specs.util.SpecsLogs;
 
 /**
- * Panel which will contain the options
+ * Panel which contains the options for a setup, organizing KeyPanels for each
+ * DataKey.
  *
+ * <p>
+ * This panel arranges option panels for each DataKey in a StoreDefinition,
+ * supporting indentation and sectioning.
  *
  * @author Joao Bispo
  */
 public class BaseSetupPanel extends JPanel {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    private final Map<String, KeyPanel<? extends Object>> panels;
+    private final Map<String, KeyPanel<?>> panels;
     private final StoreDefinition storeDefinition;
-    // private final DataStore data;
 
-    // private final int identationLevel;
-
-    public static final int IDENTATION_SIZE = 6;
-
+    /**
+     * Constructs a BaseSetupPanel for the given StoreDefinition and DataStore.
+     *
+     * @param keys the StoreDefinition
+     * @param data the DataStore
+     */
     public BaseSetupPanel(StoreDefinition keys, DataStore data) {
         this(keys, data, 0);
     }
 
+    /**
+     * Constructs a BaseSetupPanel for the given StoreDefinition, DataStore, and
+     * indentation level.
+     *
+     * @param keys            the StoreDefinition
+     * @param data            the DataStore
+     * @param identationLevel the indentation level
+     */
     public BaseSetupPanel(StoreDefinition keys, DataStore data, int identationLevel) {
         storeDefinition = keys;
         panels = new HashMap<>();
-        // this.data = data;
 
         if (keys == null) {
             throw new RuntimeException("StoreDefinition is null.");
@@ -94,7 +108,6 @@ public class BaseSetupPanel extends JPanel {
 
                     separatorC.gridy = labelC.gridy;
                     add(new javax.swing.JSeparator(), separatorC);
-                    // add(new javax.swing.JSeparator(), panelC);
                     labelC.gridy++;
                     panelC.gridy++;
 
@@ -115,7 +128,6 @@ public class BaseSetupPanel extends JPanel {
 
                 JLabel label = new JLabel(key.getLabel() + ": ");
                 add(label, labelC);
-                // add(new JLabel(": "));
                 add(panel, panelC);
 
                 labelC.gridy++;
@@ -136,10 +148,20 @@ public class BaseSetupPanel extends JPanel {
         add(new JPanel(), paddingVC);
     }
 
-    public Map<String, KeyPanel<? extends Object>> getPanels() {
+    /**
+     * Returns the map of KeyPanels associated with their respective DataKey names.
+     *
+     * @return a map of KeyPanels
+     */
+    public Map<String, KeyPanel<?>> getPanels() {
         return panels;
     }
 
+    /**
+     * Loads values from the given DataStore into the KeyPanels.
+     *
+     * @param map the DataStore containing values to load
+     */
     public void loadValues(DataStore map) {
         if (map == null) {
             map = DataStore.newInstance("empty_map");
@@ -148,24 +170,30 @@ public class BaseSetupPanel extends JPanel {
         for (DataKey<?> key : storeDefinition.getKeys()) {
             Object value = getValue(map, key);
             KeyPanel<?> panel = panels.get(key.getName());
-            // getValue() will return a value compatible with the key, which is compatible with the keyPanel
-            // if (key.getName().equals("Print Clava Info")) {
-            // System.out.println("SETTING: " + key.getName());
-            // System.out.println("VALUE: " + value);
-            // System.out.println("DEFAULT:" + key.getDefault());
-            // System.out.println("MAP:" + map);
-            // }
-
             uncheckedSet(panel, value);
         }
 
     }
 
+    /**
+     * Sets the value of a KeyPanel without type checking.
+     *
+     * @param <T>   the type of the KeyPanel
+     * @param panel the KeyPanel
+     * @param o     the value to set
+     */
     @SuppressWarnings("unchecked")
     private static <T> void uncheckedSet(KeyPanel<T> panel, Object o) {
         panel.setValue((T) o);
     }
 
+    /**
+     * Retrieves the value for a DataKey from the given DataStore.
+     *
+     * @param map the DataStore
+     * @param key the DataKey
+     * @return the value for the DataKey
+     */
     private static Object getValue(DataStore map, DataKey<?> key) {
 
         Optional<?> value = map.getTry(key);
@@ -173,12 +201,7 @@ public class BaseSetupPanel extends JPanel {
             return value.get();
         }
 
-        if (key.getName().equals("Print Clava Info")) {
-            System.out.println("NOT PRESENT");
-        }
-
         // Return default value
-        // This section of code was commented, do not know why. Was there some kind of problem?
         if (key.getDefault().isPresent()) {
             Object defaultValue = key.getDefault().get();
             SpecsLogs.msgInfo("Could not find a value for option '" + key.getName() + "', using default value '"
@@ -194,28 +217,20 @@ public class BaseSetupPanel extends JPanel {
         }
 
         throw new RuntimeException("Could not get a value for key '" + key
-                + "', please define a default value or a decoder thta supports 'null' string as input");
+                + "', please define a default value or a decoder that supports 'null' string as input");
     }
 
     /**
-     * Collects information in all the panels and returns a DataStore with the information.
+     * Collects information in all the panels and returns a DataStore with the
+     * information.
      *
-     * @return
+     * @return a DataStore containing the collected information
      */
     public DataStore getData() {
         DataStore dataStore = DataStore.newInstance(storeDefinition);
 
         for (KeyPanel<?> panel : panels.values()) {
             panel.store(dataStore);
-            // panel.getValue();
-            // AKeyPanel panel = panels.get(key);
-            // FieldValue value = panel.getOption();
-            // if (value == null) {
-            // LoggingUtils.getLogger().warning("value is null.");
-            // // No valid value for the table
-            // continue;
-            // }
-            // updatedMap.put(key, value);
         }
 
         return dataStore;

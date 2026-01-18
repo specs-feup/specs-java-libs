@@ -8,7 +8,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 package org.specs.generators.java.classtypes;
 
@@ -26,7 +26,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Java class generation
+ * Represents a Java class for code generation. Provides methods to manage
+ * fields, methods, constructors, and interfaces.
  *
  * @author Tiago
  */
@@ -41,17 +42,16 @@ public class JavaClass extends ClassType {
     private List<Constructor> constructors;
 
     /**
-     * Create a public class based on a {@link JavaType}
+     * Creates a public class based on a {@link JavaType}.
      *
-     * @param name         the name for the class
-     * @param classPackage the class package
+     * @param javaType the JavaType for the class
      */
     public JavaClass(JavaType javaType) {
         this(javaType.getName(), javaType.getPackage());
     }
 
     /**
-     * Create a public class with name and package
+     * Creates a public class with name and package.
      *
      * @param name         the name for the class
      * @param classPackage the class package
@@ -61,10 +61,11 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Create a public class with name and package
+     * Creates a public class with name, package, and modifier.
      *
      * @param name         the name for the class
      * @param classPackage the class package
+     * @param modifier     the class modifier
      */
     public JavaClass(String name, String classPackage, Modifier modifier) {
         super(name, classPackage);
@@ -72,9 +73,9 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Initialize the JavaClass' lists
+     * Initializes the JavaClass' lists.
      *
-     * @param modifier
+     * @param modifier the class modifier
      */
     private void init(Modifier modifier) {
 
@@ -89,10 +90,11 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Generate the corresponding java class code, containing the package, imports, fields methods, etc.
+     * Generates the corresponding Java class code, containing the package, imports,
+     * fields, methods, etc.
      *
-     * @param indentaton level of indentation
-     * @return the generated java class code
+     * @param indentation the indentation level
+     * @return the generated Java class code
      */
     @Override
     public StringBuilder generateCode(int indentation) {
@@ -118,6 +120,12 @@ public class JavaClass extends ClassType {
         return classGen;
     }
 
+    /**
+     * Adds methods to the class code generation.
+     *
+     * @param indentation the indentation level
+     * @param classGen    the StringBuilder for the class code
+     */
     protected void addMethods(int indentation, final StringBuilder classGen) {
 
         if (!methods.isEmpty()) {
@@ -133,6 +141,12 @@ public class JavaClass extends ClassType {
         }
     }
 
+    /**
+     * Adds constructors to the class code generation.
+     *
+     * @param indentation the indentation level
+     * @param classGen    the StringBuilder for the class code
+     */
     protected void addConstructors(int indentation, final StringBuilder classGen) {
         if (!constructors.isEmpty()) {
             final StringBuilder indent1 = Utils.indent(indentation + 1);
@@ -143,10 +157,15 @@ public class JavaClass extends ClassType {
             classGen.append(constStr.trim());
 
             classGen.append(ln());
-            // classGen.append(Utils.indent(1));
         }
     }
 
+    /**
+     * Adds fields to the class code generation.
+     *
+     * @param indentation the indentation level
+     * @param classGen    the StringBuilder for the class code
+     */
     protected void addFields(int indentation, final StringBuilder classGen) {
 
         if (!fields.isEmpty()) {
@@ -156,16 +175,16 @@ public class JavaClass extends ClassType {
             final String fieldsStr = StringUtils.join(fields, field -> field.generateCode(indentation + 1).toString(),
                     ln());
             classGen.append(fieldsStr.trim());
-            /*
-             * for (Field field : fields) { StringBuilder fieldBuf =
-             * field.generateCode(1); classGen.append(fieldBuf);
-             * classGen.append("\n"); }
-             */
             classGen.append(ln() + ln());
 
         }
     }
 
+    /**
+     * Adds implemented interfaces to the class code generation.
+     *
+     * @param classGen the StringBuilder for the class code
+     */
     protected void addImplements(final StringBuilder classGen) {
         if (!interfaces.isEmpty()) {
             classGen.append(" implements ");
@@ -176,7 +195,7 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Add a new interface to the class
+     * Adds a new interface to the class.
      *
      * @param interfaceClass the new interface
      * @return true if the interface was successfully added
@@ -191,7 +210,7 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Removes a interface from the class
+     * Removes an interface from the class.
      *
      * @param interfaceClass the interface to remove
      * @return true if the interface was successfully removed
@@ -207,9 +226,9 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Add a new constructor to the class
+     * Adds a new constructor to the class.
      *
-     * @param constructor the new contructor
+     * @param constructor the new constructor
      * @return true if the constructor was successfully added
      */
     public boolean add(Constructor constructor) {
@@ -223,9 +242,9 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Removes a constructor from the class
+     * Removes a constructor from the class.
      *
-     * @param interfaceClass the constructor to remove
+     * @param constructor the constructor to remove
      * @return true if the constructor was successfully removed
      */
     public boolean remove(Constructor constructor) {
@@ -233,7 +252,7 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Add a new field to the class
+     * Adds a new field to the class.
      *
      * @param field the new field
      * @return true if the field was successfully added
@@ -247,7 +266,7 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Removes a field from the class
+     * Removes a field from the class.
      *
      * @param field the field to remove
      * @return true if the field was successfully removed
@@ -257,7 +276,7 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Add a new method to the class
+     * Adds a new method to the class.
      *
      * @param method the new method
      * @return true if the method was successfully added
@@ -267,13 +286,13 @@ public class JavaClass extends ClassType {
         if (isAdded) {
             addImport(method.getReturnType());
             // Add the imports for the argument of the method
-            method.getParams().stream().forEach(arg -> addImport(arg.getClassType()));
+            method.getParams().forEach(arg -> addImport(arg.getClassType()));
         }
         return isAdded;
     }
 
     /**
-     * Removes a method from the class
+     * Removes a method from the class.
      *
      * @param method the method to remove
      * @return true if the method was successfully removed
@@ -290,6 +309,8 @@ public class JavaClass extends ClassType {
     }
 
     /**
+     * Sets the superClass.
+     *
      * @param superClass the superClass to set
      */
     public void setSuperClass(JavaType superClass) {
@@ -298,9 +319,9 @@ public class JavaClass extends ClassType {
     }
 
     /**
-     * Generate the interface code
+     * Generates the interface code.
      *
-     * @return
+     * @return the generated code
      */
     public StringBuilder generate() {
         return generateCode(0);
@@ -320,24 +341,34 @@ public class JavaClass extends ClassType {
         return methods;
     }
 
+    /**
+     * Adds all methods to the class.
+     *
+     * @param methods the methods to add
+     */
     public void addAll(Collection<Method> methods) {
-        methods.addAll(methods);
+        this.methods.addAll(methods);
     }
 
+    /**
+     * Creates or retrieves an empty constructor.
+     *
+     * @return the empty constructor
+     */
     public Constructor createOrGetEmptyConstructor() {
         for (final Constructor ctor : constructors) {
             if (ctor.getArguments().isEmpty()) {
                 return ctor;
             }
         }
-        return new Constructor(this); // already adding the constructor to
-        // this JavaClass
+        return new Constructor(this);
     }
 
     /**
-     * Create a constructor containing all the fields and generates the associated assignment code;
+     * Creates a constructor containing all the fields and generates the associated
+     * assignment code.
      *
-     * @return
+     * @return the full constructor
      */
     public Constructor createFullConstructor() {
         final Constructor newCtor = new Constructor(this);
@@ -346,26 +377,52 @@ public class JavaClass extends ClassType {
         return newCtor;
     }
 
+    /**
+     * @return the interfaces
+     */
     public List<JavaType> getInterfaces() {
         return interfaces;
     }
 
+    /**
+     * Sets the interfaces.
+     *
+     * @param interfaces the interfaces to set
+     */
     public void setInterfaces(List<JavaType> interfaces) {
         this.interfaces = interfaces;
     }
 
+    /**
+     * @return the constructors
+     */
     public List<Constructor> getConstructors() {
         return constructors;
     }
 
+    /**
+     * Sets the constructors.
+     *
+     * @param constructors the constructors to set
+     */
     public void setConstructors(List<Constructor> constructors) {
         this.constructors = constructors;
     }
 
+    /**
+     * Sets the fields.
+     *
+     * @param fields the fields to set
+     */
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 
+    /**
+     * Sets the methods.
+     *
+     * @param methods the methods to set
+     */
     public void setMethods(List<Method> methods) {
         this.methods = methods;
     }

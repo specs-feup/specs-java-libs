@@ -23,7 +23,7 @@ import pt.up.fe.specs.util.SpecsLogs;
 
 public class StreamToString implements Function<InputStream, String> {
 
-    private static final String NEW_LINE = System.getProperty("line.separator");
+    private static final String NEW_LINE = System.lineSeparator();
 
     private final boolean printOutput;
     private final boolean storeOutput;
@@ -49,14 +49,7 @@ public class StreamToString implements Function<InputStream, String> {
 
         try {
 
-            String stdline = null;
-
-            // int currentChar = -1;
-            // System.out.println("START: " + reader.read());
-            // while ((currentChar = reader.read()) != -1) {
-            // System.out.println("ADAS");
-            // type.print(String.valueOf((char) currentChar));
-            // }
+            String stdline;
 
             while ((stdline = reader.readLine()) != null) {
 
@@ -72,7 +65,6 @@ public class StreamToString implements Function<InputStream, String> {
 
             }
 
-            // inputStream.close();
             reader.close();
 
         } catch (IOException e) {

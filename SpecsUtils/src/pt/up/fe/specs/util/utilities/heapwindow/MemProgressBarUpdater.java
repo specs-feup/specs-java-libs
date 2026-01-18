@@ -13,7 +13,11 @@
 
 package pt.up.fe.specs.util.utilities.heapwindow;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
+
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 /**
@@ -23,18 +27,34 @@ import javax.swing.SwingWorker;
 class MemProgressBarUpdater extends SwingWorker<Object, Object> {
 
     public MemProgressBarUpdater(JProgressBar jProgressBar) {
+        Objects.requireNonNull(jProgressBar, "JProgressBar cannot be null");
+
         this.jProgressBar = jProgressBar;
-        this.jProgressBar.setStringPainted(true);
+
+        // Ensure UI changes happen on the EDT. If we're already on the EDT,
+        // set the property directly. Otherwise, try to apply it synchronously
+        // with invokeAndWait to provide deterministic behavior for callers.
+        if (SwingUtilities.isEventDispatchThread()) {
+            this.jProgressBar.setStringPainted(true);
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(() -> this.jProgressBar.setStringPainted(true));
+            } catch (InterruptedException | InvocationTargetException e) {
+                // If invokeAndWait fails (interrupted or invocation target),
+                // schedule asynchronously as a safe fallback to avoid blocking
+                // or deadlocking callers.
+                SwingUtilities.invokeLater(() -> this.jProgressBar.setStringPainted(true));
+            }
+        }
     }
 
     @Override
-    protected Object doInBackground() throws Exception {
+    protected Object doInBackground() {
         long heapSize = Runtime.getRuntime().totalMemory();
         long heapFreeSize = Runtime.getRuntime().freeMemory();
         long usedMemory = heapSize - heapFreeSize;
 
         long mbFactor = (long) Math.pow(1024, 2);
-        // long kbFactor = (long) Math.pow(1024, 1);
 
         heapSizeMb = (int) (heapSize / mbFactor);
         currentSizeMb = (int) (usedMemory / mbFactor);
@@ -48,8 +68,6 @@ class MemProgressBarUpdater extends SwingWorker<Object, Object> {
             MemProgressBarUpdater.this.jProgressBar.setMaximum(MemProgressBarUpdater.this.heapSizeMb);
             MemProgressBarUpdater.this.jProgressBar.setValue(MemProgressBarUpdater.this.currentSizeMb);
             MemProgressBarUpdater.this.jProgressBar.setString(barString);
-            // System.err.println("Heap Size:"+heapSizeMb);
-            // System.err.println("Current Size:"+currentSizeMb);
         });
 
         return null;
@@ -57,14 +75,6 @@ class MemProgressBarUpdater extends SwingWorker<Object, Object> {
 
     @Override
     protected void done() {
-        /*
-        jProgressBar.setMinimum(0);
-        jProgressBar.setMaximum(heapSizeMb);
-        jProgressBar.setValue(currentSizeMb);
-        System.err.println("Heap Size:"+heapSizeMb);
-        System.err.println("Current Size:"+currentSizeMb);
-         *
-         */
     }
 
     /**

@@ -33,81 +33,49 @@ public class ProcessExecution implements Execution {
     boolean interrupted;
 
     public ProcessExecution(List<String> commandArgs, String workingFoldername) {
-	this.commandArgs = commandArgs;
-	this.workingFoldername = workingFoldername;
+        this.commandArgs = commandArgs;
+        this.workingFoldername = workingFoldername;
 
-	this.interrupted = false;
+        this.interrupted = false;
     }
 
     /**
      * Launches the compilation job in a separate process.
-     * 
-     * @return
+     *
      */
     @Override
     public int run() {
-	return SpecsSystem.run(this.commandArgs, new File(this.workingFoldername));
-	/*
-	int result = -1;
-	try {
-	    // LoggingUtils.msgLib("Command:" + commandToString(commandArgs));
-	    // result = ProcessUtils.runProcess(commandArgs, IoUtils.getWorkingDir().getPath());
-	    result = ProcessUtils.runProcess(commandArgs, workingFoldername);
-
-	} catch (InterruptedException ex) {
-	    LoggingUtils.msgInfo("Command cancelled.");
-	    interrupted = true;
-	    Thread.currentThread().interrupt();
-	    return 0;
-	}
-	return result;
-	 */
+        return SpecsSystem.run(this.commandArgs, new File(this.workingFoldername));
     }
 
-    /*
-    public static String commandToString(List<String> command) {
-    if (command.isEmpty()) {
-        return "";
-    }
-
-    StringBuilder builder = new StringBuilder();
-    builder.append(command.get(0));
-    for (int i = 1; i < command.size(); i++) {
-        builder.append(" ");
-        builder.append(command.get(i));
-    }
-
-    return builder.toString();
-    }
-     */
     @Override
     public boolean isInterrupted() {
-	return this.interrupted;
+        return this.interrupted;
     }
 
     public String getCommandString() {
-	if (this.commandArgs.isEmpty()) {
-	    return "";
-	}
+        if (this.commandArgs.isEmpty()) {
+            return "";
+        }
 
-	StringBuilder builder = new StringBuilder();
-	builder.append(this.commandArgs.get(0));
-	for (int i = 1; i < this.commandArgs.size(); i++) {
-	    builder.append(" ");
-	    builder.append(this.commandArgs.get(i));
-	}
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.commandArgs.get(0));
+        for (int i = 1; i < this.commandArgs.size(); i++) {
+            builder.append(" ");
+            builder.append(this.commandArgs.get(i));
+        }
 
-	return builder.toString();
+        return builder.toString();
     }
 
     @Override
     public String toString() {
-	return getCommandString();
+        return getCommandString();
     }
 
     @Override
     public String getDescription() {
-	return "Run '" + this.commandArgs.get(0) + "'";
+        return "Run '" + this.commandArgs.get(0) + "'";
     }
 
 }

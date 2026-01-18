@@ -22,22 +22,24 @@ public interface JumpDetector {
 
     /**
      * Feeds an instruction to the detector.
-     * 
-     * @param instruction
+     *
      */
     public void giveInstruction(Object instruction);
 
     /**
-     * Detects if there was a jump between the given instruction and the instruction before the given instruction.
+     * Detects if there was a jump between the given instruction and the instruction
+     * before the given instruction.
      *
      * <p>
-     * Even if a branch is not taken (i.e. the given instruction is the instruction in the next address of the
-     * instruction given before), it counts as a jump.
+     * Even if a branch is not taken (i.e. the given instruction is the instruction
+     * in the next address of the instruction given before), it counts as a jump.
      *
      * <p>
-     * If the method returns true, this means that the given instruction is the start of a BasicBlock.
+     * If the method returns true, this means that the given instruction is the
+     * start of a BasicBlock.
      *
-     * @return true, if the given instruction is the first instruction after a jump. false otherwise
+     * @return true, if the given instruction is the first instruction after a jump.
+     *         false otherwise
      *
      */
     public boolean wasJumpPoint();
@@ -50,28 +52,31 @@ public interface JumpDetector {
 
     /**
      *
-     * @return true if the last given instruction is a jump and the jump is conditional, false if it is a jump but
+     * @return true if the last given instruction is a jump and the jump is
+     *         conditional, false if it is a jump but
      *         unconditional. Null if there was no jump.
      */
     public Boolean isConditionalJump();
 
     /**
      *
-     * @return true if there was a jump and the jump was conditional, false if it was not. Null if there was no jump.
+     * @return true if there was a jump and the jump was conditional, false if it
+     *         was not. Null if there was no jump.
      */
     public Boolean wasConditionalJump();
 
     /**
      *
-     * @return true if there was a jump and the jump direction was forward, false if it was not. Null if there was no
-     *         jump.
+     * @return true if there was a jump and the jump direction was forward, false if
+     *         it was not. Null if there was no jump.
      */
     public Boolean wasForwardJump();
 
     /**
      *
-     * @return true if there was a conditional jump and the jump was taken. false if it was not. Null if there was no
-     *         jump, or if the jump was not conditional.
+     * @return true if there was a conditional jump and the jump was taken. false if
+     *         it was not. Null if there was no jump, or if the jump was not
+     *         conditional.
      */
     public Boolean wasBranchTaken();
 

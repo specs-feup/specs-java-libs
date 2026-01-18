@@ -13,21 +13,23 @@
 
 package pt.up.fe.specs.util.parsing;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import pt.up.fe.specs.util.SpecsStrings;
 
+@DisplayName("ParseUtils Tests")
 public class ParseUtilsTest {
 
     @Test
+    @DisplayName("Should convert numbers to Excel column identifiers")
     public void testAlphaId() {
-        assertEquals("A", SpecsStrings.toExcelColumn(1));
-        assertEquals("Z", SpecsStrings.toExcelColumn(26));
-        assertEquals("AA", SpecsStrings.toExcelColumn(27));
-        assertEquals("AB", SpecsStrings.toExcelColumn(28));
-        assertEquals("AE", SpecsStrings.toExcelColumn(31));
+        assertThat(SpecsStrings.toExcelColumn(1)).isEqualTo("A");
+        assertThat(SpecsStrings.toExcelColumn(26)).isEqualTo("Z");
+        assertThat(SpecsStrings.toExcelColumn(27)).isEqualTo("AA");
+        assertThat(SpecsStrings.toExcelColumn(28)).isEqualTo("AB");
+        assertThat(SpecsStrings.toExcelColumn(31)).isEqualTo("AE");
     }
-
 }

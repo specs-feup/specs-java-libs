@@ -15,6 +15,7 @@ package pt.up.fe.specs.util.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -71,10 +72,7 @@ public class SpecsList<T> implements List<T>, SpecsCollection<T> {
      * 
      * <p>
      * If the element is null, list remains the same.
-     * 
-     * @param list
-     * @param element
-     * @return
+     *
      */
     public <K extends T> SpecsList<T> concat(K element) {
         return SpecsCollections.concat(list, element);
@@ -85,10 +83,7 @@ public class SpecsList<T> implements List<T>, SpecsCollection<T> {
      * 
      * <p>
      * If the element is null, list remains the same.
-     * 
-     * @param element
-     * @param list
-     * @return
+     *
      */
     public <K extends T> SpecsList<T> prepend(K element) {
         return SpecsCollections.concat(element, list);
@@ -97,18 +92,6 @@ public class SpecsList<T> implements List<T>, SpecsCollection<T> {
     public SpecsList<T> concat(Collection<? extends T> list) {
         return SpecsCollections.concat(this.list, list);
     }
-
-    // public <M> SpecsList<M> map(Function<? super T, M> mapper) {
-    // List<M> mappedList = list.stream()
-    // .map(mapper)
-    // .collect(Collectors.toList());
-    //
-    // return SpecsList.convert(mappedList);
-    // }
-
-    // public void addTo(Collection<? super T> receivingCollection) {
-    // receivingCollection.addAll(this);
-    // }
 
     public SpecsList<T> andAdd(T e) {
         list.add(e);
@@ -160,7 +143,7 @@ public class SpecsList<T> implements List<T>, SpecsCollection<T> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return list.containsAll(c);
+        return new HashSet<>(list).containsAll(c);
     }
 
     @Override

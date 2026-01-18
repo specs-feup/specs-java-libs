@@ -24,7 +24,6 @@ public class GenericFileResourceProvider implements FileResourceProvider {
     private final File existingFile;
     private final String version;
     private final boolean isVersioned;
-    // private final Lazy<File> versionedFile;
 
     public static GenericFileResourceProvider newInstance(File file) {
         return newInstance(file, null);
@@ -35,63 +34,27 @@ public class GenericFileResourceProvider implements FileResourceProvider {
      * 
      * <p>
      * Given file must exist, otherwhise an exception is thrown.
-     * 
-     * @param existingFile
-     * @param version
-     * @return
+     *
      */
     public static GenericFileResourceProvider newInstance(File existingFile, String version) {
-        // File fileWithoutVersion = existingFile;
-
-        // Remove version from file
-        // if (version != null) {
-        // String strippedFilename = SpecsIo.removeExtension(existingFile);
-        // Preconditions.checkArgument(strippedFilename.endsWith(version), "Given filename '" + existingFile
-        // + "' does not have the given version '" + version + "' as a suffix");
-        // }
-
-        // Create versioned file
-        // File versionedFile = getVersionedFile(fileWithoutVersion, version);
-
         if (!existingFile.isFile()) {
-            // if (!versionedFile.isFile()) {
-            // System.out.println("FILE:" + versionedFile.getAbsolutePath());
-            // throw new RuntimeException("File '" + versionedFile + "' does not exist");
             throw new RuntimeException("File '" + existingFile + "' does not exist");
         }
 
-        return new GenericFileResourceProvider(existingFile, version, false);
-        // return new GenericFileResourceProvider(fileWithoutVersion, version);
+        return new GenericFileResourceProvider(existingFile, version, version != null);
     }
-
-    // private static File getVersionedFile(File file, String version) {
-    // if (version == null) {
-    // return file;
-    // }
-    //
-    // // Create new file
-    // String filenameNoExt = SpecsIo.removeExtension(file);
-    // String extension = SpecsIo.getExtension(file);
-    // extension = extension.isEmpty() ? extension : "." + extension;
-    //
-    // String newFilename = filenameNoExt + version + extension;
-    //
-    // return new File(SpecsIo.getParent(file), newFilename);
-    // }
 
     private GenericFileResourceProvider(File existingFile, String version, boolean isVersioned) {
         this.existingFile = existingFile;
         this.version = version;
         this.isVersioned = isVersioned;
-        // this.versionedFile = Lazy.newInstance(() -> getVersionedFile(fileWithoutVersion, version));
     }
-
-    // public File getFile() {
-    // return
-    // }
 
     @Override
     public File write(File folder) {
+        if (folder == null) {
+            throw new IllegalArgumentException("Target folder cannot be null");
+        }
 
         // Check if folder is the same where the file
         if (SpecsIo.getParent(existingFile).equals(folder)) {
@@ -106,7 +69,7 @@ public class GenericFileResourceProvider implements FileResourceProvider {
     }
 
     @Override
-    public String getVersion() {
+    public String version() {
         return version;
     }
 
@@ -121,7 +84,8 @@ public class GenericFileResourceProvider implements FileResourceProvider {
     }
 
     /**
-     * Only implemented for non-versioned resources, always returns itself with updated version.
+     * Only implemented for non-versioned resources, always returns itself with
+     * updated version.
      */
     @Override
     public FileResourceProvider createResourceVersion(String version) {
@@ -131,17 +95,6 @@ public class GenericFileResourceProvider implements FileResourceProvider {
 
         // Create new versioned file
         return newInstance(existingFile, version);
-
-        // File newVersionedFile = getVersionedFile(fileWithoutVersion, version);
-        // String filenameNoExt = SpecsIo.removeExtension(fileWithoutVersion);
-        // String extension = SpecsIo.getExtension(fileWithoutVersion);
-        // extension = extension.isEmpty() ? extension : "." + extension;
-
-        // String newFilename = filenameNoExt + version + extension;
-
-        // File newFile = new File(SpecsIo.getParent(fileWithoutVersion), newFilename);
-        // FileResourceProvider provider = newInstance(newVersionedFile, version);
-        // return provider;
     }
 
 }

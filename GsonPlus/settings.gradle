@@ -1,3 +1,3 @@
 rootProject.name = 'GsonPlus'
 
-includeBuild("../../specs-java-libs/SpecsUtils")
+includeBuild("../SpecsUtils")

@@ -13,14 +13,26 @@
 
 package pt.up.fe.specs.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import pt.up.fe.specs.util.xml.XmlDocument;
 
+/**
+ * Test suite for XmlDocument and related XML utility classes.
+ * 
+ * This test class covers XML functionality including:
+ * - XML document parsing
+ * - Element retrieval by name
+ * - Attribute extraction
+ * - XML navigation and querying
+ */
+@DisplayName("XmlDocument Tests")
 public class XmlNodeTest {
 
     private final String XML_EXAMPLE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
@@ -57,14 +69,79 @@ public class XmlNodeTest {
             "\r\n" +
             "</manifest>";
 
-    @Test
-    public void test() {
-        XmlDocument document = XmlDocument.newInstance(XML_EXAMPLE);
-        var elementAttrs = document.getElementsByName("uses-permission").stream()
-                .map(element -> element.getAttribute("android:name"))
-                .collect(Collectors.joining(", "));
+    @Nested
+    @DisplayName("XML Document Parsing")
+    class XmlDocumentParsing {
 
-        assertEquals("android.permission.FOREGROUND_SERVICE, android.permission.ACCESS_FINE_LOCATION", elementAttrs);
+        @Test
+        @DisplayName("getElementsByName should retrieve elements and their attributes correctly")
+        void testGetElementsByName_RetrieveAttributes_ReturnsCorrectValues() {
+            XmlDocument document = XmlDocument.newInstance(XML_EXAMPLE);
+            var elementAttrs = document.getElementsByName("uses-permission").stream()
+                    .map(element -> element.getAttribute("android:name"))
+                    .collect(Collectors.joining(", "));
+
+            assertThat(elementAttrs).isEqualTo("android.permission.FOREGROUND_SERVICE, android.permission.ACCESS_FINE_LOCATION");
+        }
+
+        @Test
+        @DisplayName("getElementsByName should handle non-existent elements gracefully")
+        void testGetElementsByName_NonExistentElement_ReturnsEmptyList() {
+            XmlDocument document = XmlDocument.newInstance(XML_EXAMPLE);
+            var elements = document.getElementsByName("non-existent");
+            assertThat(elements).isEmpty();
+        }
+
+        @Test
+        @DisplayName("XmlDocument should throw exception for empty XML")
+        void testXmlDocument_EmptyXml_ShouldThrowException() {
+            assertThatThrownBy(() -> {
+                XmlDocument.newInstance("");
+            }).isInstanceOf(RuntimeException.class)
+              .hasMessageContaining("XML document not according to schema");
+        }
+
+        @Test
+        @DisplayName("XmlDocument should throw exception for null XML")
+        void testXmlDocument_NullXml_ShouldThrowException() {
+            assertThatThrownBy(() -> {
+                XmlDocument.newInstance((String) null);
+            }).isInstanceOf(NullPointerException.class);
+        }
+
+        @Test
+        @DisplayName("getElementsByName should find multiple elements of same type")
+        void testGetElementsByName_MultipleElements_ReturnsAllElements() {
+            XmlDocument document = XmlDocument.newInstance(XML_EXAMPLE);
+            var usesPermissionElements = document.getElementsByName("uses-permission");
+            assertThat(usesPermissionElements).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("getElementsByName should find nested elements correctly")
+        void testGetElementsByName_NestedElements_ReturnsCorrectElements() {
+            XmlDocument document = XmlDocument.newInstance(XML_EXAMPLE);
+            var actionElements = document.getElementsByName("action");
+            assertThat(actionElements).hasSize(2);
+            
+            // Verify the attributes of the action elements
+            var actionNames = actionElements.stream()
+                    .map(element -> element.getAttribute("android:name"))
+                    .collect(Collectors.toList());
+            assertThat(actionNames).contains("android.intent.action.MAIN", "android.intent.action.VIEW");
+        }
+
+        @Test
+        @DisplayName("getAttribute should handle non-existent attributes gracefully")
+        void testGetAttribute_NonExistentAttribute_ShouldHandleGracefully() {
+            XmlDocument document = XmlDocument.newInstance(XML_EXAMPLE);
+            var elements = document.getElementsByName("uses-permission");
+            if (!elements.isEmpty()) {
+                assertThatCode(() -> {
+                    elements.get(0).getAttribute("non-existent-attribute");
+                }).doesNotThrowAnyException();
+            }
+        }
     }
 
 }

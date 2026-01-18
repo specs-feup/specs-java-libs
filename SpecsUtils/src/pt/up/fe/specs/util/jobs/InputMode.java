@@ -20,53 +20,58 @@ import java.util.List;
 /**
  * Distinguishes between two situations about the given source folder:
  * 
- * 1) files: Each .c file inside the source folder is a program; 3) folders: Each folder inside the source folder is a
- * program; 1) singleFile: the source folder is interpreted as a single file, which corresponds to a program; 2)
+ * 1) files: Each .c file inside the source folder is a program; 3) folders:
+ * Each folder inside the source folder is a program; 1) singleFile: the source
+ * folder is interpreted as a single file, which corresponds to a program; 2)
  * singleFolder: The files inside the source folder is a program;
- * 
  * 
  * @author Joao Bispo
  */
 public enum InputMode {
     files,
     /**
-     * The given path represents a folder that contains several folders, and each folder is a project.
+     * The given path represents a folder that contains several folders, and each
+     * folder is a project.
      */
     folders,
     singleFile,
     singleFolder;
 
-    /**
-     * @param folderLevel
-     * @param sourcePathname
-     * @return
-     */
     public List<FileSet> getPrograms(File sourcePath, Collection<String> extensions, Integer folderLevel) {
-	switch (this) {
-	case folders:
-	    return JobUtils.getSourcesFoldersMode(sourcePath, extensions, folderLevel);
-	case files:
-	    return JobUtils.getSourcesFilesMode(sourcePath, extensions);
-	case singleFile:
-	    return JobUtils.getSourcesSingleFileMode(sourcePath, extensions);
-	case singleFolder:
-	    return JobUtils.getSourcesSingleFolderMode(sourcePath, extensions);
-	default:
-	    throw new RuntimeException("Case not supported:" + this);
-	}
+        switch (this) {
+            case folders:
+                if (folderLevel == null) {
+                    throw new IllegalArgumentException("FolderLevel cannot be null for folders mode");
+                }
+                if (extensions == null) {
+                    throw new IllegalArgumentException("Extensions collection cannot be null");
+                }
+                return JobUtils.getSourcesFoldersMode(sourcePath, extensions, folderLevel);
+            case files:
+                if (extensions == null) {
+                    throw new IllegalArgumentException("Extensions collection cannot be null");
+                }
+                return JobUtils.getSourcesFilesMode(sourcePath, extensions);
+            case singleFile:
+                // singleFile mode doesn't use extensions parameter, so null is allowed
+                return JobUtils.getSourcesSingleFileMode(sourcePath, extensions);
+            case singleFolder:
+                if (extensions == null) {
+                    throw new IllegalArgumentException("Extensions collection cannot be null");
+                }
+                return JobUtils.getSourcesSingleFolderMode(sourcePath, extensions);
+            default:
+                throw new RuntimeException("Case not supported:" + this);
+        }
     }
 
     /**
-     * Returns true if the path mode represents a folder. False, if it represents a file.
-     * 
-     * @return
+     * Returns true if the path mode represents a folder. False, if it represents a
+     * file.
+     *
      */
     public boolean isFolder() {
-	if (this == singleFile) {
-	    return false;
-	}
-
-	return true;
+        return (this != singleFile);
     }
 
 }

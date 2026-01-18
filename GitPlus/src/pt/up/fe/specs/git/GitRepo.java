@@ -1,14 +1,14 @@
 /**
  * Copyright 2022 SPeCS.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License. under the License.
+ * specific language governing permissions and limitations under the License.
  */
 
 package pt.up.fe.specs.git;
@@ -28,6 +28,11 @@ import pt.up.fe.specs.util.SpecsEnums;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
+/**
+ * Represents a local clone of a remote Git repository, with support for options
+ * such as commit and folder selection.
+ * Provides methods for preparing, cloning, and updating the repository.
+ */
 public class GitRepo {
 
     private final Map<GitUrlOption, String> options;
@@ -35,6 +40,12 @@ public class GitRepo {
     private final File repoFolder;
     private final File workFolder;
 
+    /**
+     * Creates a new GitRepo instance with the given repository URL and options.
+     *
+     * @param repoUrl the URL of the remote repository
+     * @param options a map of options for the repository, such as commit and folder
+     */
     public GitRepo(String repoUrl, Map<GitUrlOption, String> options) {
         this.repoUrl = repoUrl;
         this.options = options;
@@ -52,6 +63,11 @@ public class GitRepo {
         this.workFolder = createWorkFolder();
     }
 
+    /**
+     * Creates the working folder for the repository based on the options provided.
+     *
+     * @return the working folder
+     */
     private File createWorkFolder() {
         // Check folder option
         var foldername = options.get(GitUrlOption.FOLDER);
@@ -71,10 +87,21 @@ public class GitRepo {
         return workFolder;
     }
 
+    /**
+     * Creates a new GitRepo instance with the given repository URL and no options.
+     *
+     * @param repoUrl the URL of the remote repository
+     */
     public GitRepo(String repoUrl) {
         this(repoUrl, Collections.emptyMap());
     }
 
+    /**
+     * Creates a new GitRepo instance from a repository path.
+     *
+     * @param repositoryPath the path to the repository
+     * @return a new GitRepo instance
+     */
     public static GitRepo newInstance(String repositoryPath) {
         SpecsLogs.msgInfo("Processing git url '" + repositoryPath + "'");
 
@@ -109,13 +136,18 @@ public class GitRepo {
     }
 
     /**
-     * @return if option FOLDER was specified, returns the corresponding folder inside the repository. Otherwise,
-     *         returns the repo root folder.
+     * @return if option FOLDER was specified, returns the corresponding folder
+     *         inside the repository. Otherwise, returns the repo root folder.
      */
     public File getWorkFolder() {
         return workFolder;
     }
 
+    /**
+     * Creates the folder for the repository based on its name and options.
+     *
+     * @return the repository folder
+     */
     private File createRepoFolder() {
 
         // Get repo name
@@ -133,6 +165,12 @@ public class GitRepo {
         return new File(eclipseBuildFolder, repoName);
     }
 
+    /**
+     * Parses the repository URL and extracts options.
+     *
+     * @param repositoryPath the repository URL
+     * @return a map of options extracted from the URL
+     */
     private static Map<GitUrlOption, String> parseUrl(String repositoryPath) {
         var urlStringOptions = SpecsIo.parseUrl(repositoryPath)
                 .map(url -> SpecsIo.parseUrlQuery(url))
@@ -143,11 +181,14 @@ public class GitRepo {
     }
 
     /**
-     * Prepares the repository. If folder already exists but a problem is detected, deletes the folder.<br>
-     * If there is no folder, a clone is performed, otherwise open the repo using the existing folder.<br>
-     * If a clone was performed and the option COMMIT has a value, checkouts the commit.<br>
-     * A pull is performed if no clone was performed and, there is no COMMIT value, or the COMMIT value corresponds to a
-     * branch name.
+     * Prepares the repository. If folder already exists but a problem is detected,
+     * deletes the folder.<br>
+     * If there is no folder, a clone is performed, otherwise open the repo using
+     * the existing folder.<br>
+     * If a clone was performed and the option COMMIT has a value, checkouts the
+     * commit.<br>
+     * A pull is performed if no clone was performed and, there is no COMMIT value,
+     * or the COMMIT value corresponds to a branch name.
      */
     private void prepareRepo() {
 
@@ -170,11 +211,6 @@ public class GitRepo {
                 // Cloning repo from scratch, no pull needed
                 clonedRepo = true;
 
-                // Check if there is a login/pass in the url
-                // CredentialsProvider cp = getCredentials(repositoryPath);
-                // System.out.println("SETTING NULL");
-                // clone.setCredentialsProvider(null);
-                // clone.call();
             } catch (GitAPIException e) {
                 throw new RuntimeException("Could not clone repository '" + repoUrl + "'", e);
             }
@@ -204,14 +240,6 @@ public class GitRepo {
 
         // If the repo was just cloned, checkout the commit
         if (clonedRepo) {
-
-            // First, fetch branches
-            // SpecsLogs.info("Fetching branches");
-            // var fetchResult = repo.fetch()
-            // .setRefSpecs(new RefSpec("refs/heads/" + branch))
-            // .call();
-
-            // System.out.println("FETCH RESULT: " + fetchResult.getTrackingRefUpdates());
 
             // Only checkout if not in the correct branch
             String currentBranch = getCurrentBranch(repo);
@@ -256,69 +284,14 @@ public class GitRepo {
         if (isBranchName) {
             pull(repo, commit);
         }
-        /*
-        // If branch, checkout branch
-        
-        var branch = urlOptions.get(GitUrlOption.BRANCH);
-        
-        String currentBranch = null;
-        try {
-            currentBranch = repo.getRepository().getBranch();
-        } catch (IOException e) {
-            throw new RuntimeException("Could not get current branch", e);
-        }
-        
-        if (branch != null) {
-            try {
-        
-                // First, fetch branches
-                // SpecsLogs.info("Fetching branches");
-                // var fetchResult = repo.fetch()
-                // .setRefSpecs(new RefSpec("refs/heads/" + branch))
-                // .call();
-        
-                // System.out.println("FETCH RESULT: " + fetchResult.getTrackingRefUpdates());
-        
-                // Only checkout if not in the correct branch
-                if (!branch.equals(currentBranch)) {
-                    SpecsLogs.msgInfo("Checking out branch '" + branch + "'");
-                    repo.checkout()
-                            .setCreateBranch(true)
-                            .setName(branch)
-                            // .setStartPoint(commit)
-                            .call();
-                } else {
-                    SpecsLogs.msgInfo("Already in branch '" + branch + "'");
-                }
-            } catch (GitAPIException e) {
-                throw new RuntimeException(
-                        "Could not checkout branch '" + branch + "' in folder '" + repoFolder.getAbsolutePath() + "'",
-                        e);
-            }
-        }
-        
-        var commit = urlOptions.get(GitUrlOption.COMMIT);
-        if (commit != null) {
-        
-            try {
-                repo.checkout()
-                        .setCreateBranch(true)
-                        .setName(commit)
-                        // .setStartPoint(commit)
-                        .call();
-            } catch (GitAPIException e) {
-                throw new RuntimeException(
-                        "Could not checkout commit '" + commit + "' in folder '" + repoFolder.getAbsolutePath() + "'",
-                        e);
-            }
-            // (new RevWalk(repo, 0).parseCommit(null)
-        }
-        
-        return needsPull;
-        */
-
     }
 
+    /**
+     * Gets the current branch of the repository.
+     *
+     * @param repo the Git repository
+     * @return the name of the current branch
+     */
     private String getCurrentBranch(Git repo) {
         String currentBranch = null;
         try {
@@ -329,9 +302,13 @@ public class GitRepo {
         return currentBranch;
     }
 
+    /**
+     * Checks for problems in the repository folder and cleans it if necessary.
+     */
     private void checkRepoProblems() {
 
-        // If folder only contains a single .git folder, something might have gone wrong, delete folder
+        // If folder only contains a single .git folder, something might have gone
+        // wrong, delete folder
         if (repoFolder.isDirectory()) {
             var files = repoFolder.listFiles();
             if (files.length == 1 && files[0].getName().equals(".git")) {
@@ -342,11 +319,10 @@ public class GitRepo {
     }
 
     /**
-     * TODO: cleanRepoUrl here is needed because getRepoFolder receives the Query params, to avoid parsing them again.
-     * If there is a class just for a single repo url, this could be managed differently.
-     * 
-     * @param cleanRepoUrl
-     * @param repo
+     * Pulls the latest changes from the remote repository.
+     *
+     * @param repo   the Git repository
+     * @param branch the branch to pull, or null for the default branch
      */
     private void pull(Git repo, String branch) {
         try {

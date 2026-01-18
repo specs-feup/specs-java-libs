@@ -25,51 +25,51 @@ public class JsonWriter<K extends TreeNode<K>> {
     private final FunctionClassMap<K, String> jsonTranslators;
 
     public JsonWriter(FunctionClassMap<K, String> jsonTranslator) {
-	this.jsonTranslators = jsonTranslator;
+        this.jsonTranslators = jsonTranslator;
     }
 
     public String toJson(K node) {
-	return toJson(node, 0);
+        return toJson(node, 0);
     }
 
     private String toJson(K node, int identationLevel) {
-	BuilderWithIndentation builder = new BuilderWithIndentation(identationLevel);
+        BuilderWithIndentation builder = new BuilderWithIndentation(identationLevel, "  ");
 
-	builder.addLines("{");
-	builder.increaseIndentation();
+        builder.addLines("{");
+        builder.increaseIndentation();
 
-	// Get JSON for the node
-	String nodeJson = jsonTranslators.apply(node);
-	builder.addLines(nodeJson);
+        // Get JSON for the node
+        String nodeJson = jsonTranslators.apply(node);
+        builder.addLines(nodeJson);
 
-	// Add children
-	List<K> children = node.getChildren();
-	if (children.size() == 0) {
-	    builder.addLines("\"children\": []");
-	} else {
-	    StringBuilder childrenBuilder = new StringBuilder();
-	    childrenBuilder.append("\"children\": [\n");
+        // Add children
+        List<K> children = node.getChildren();
+        if (children.isEmpty()) {
+            builder.addLines("\"children\": []");
+        } else {
+            StringBuilder childrenBuilder = new StringBuilder();
+            childrenBuilder.append("\"children\": [\n");
 
-	    String childrenString = children.stream()
-		    .map(child -> toJson(child, builder.getCurrentIdentation() - 1))
-		    .collect(Collectors.joining(",\n"));
+            String childrenString = children.stream()
+                    .map(child -> toJson(child, builder.getCurrentIdentation() - 1))
+                    .collect(Collectors.joining(",\n"));
 
-	    childrenBuilder.append(childrenString);
-	    childrenBuilder.append("]");
+            childrenBuilder.append(childrenString);
+            childrenBuilder.append("]");
 
-	    builder.addLines(childrenBuilder.toString());
-	}
+            builder.addLines(childrenBuilder.toString());
+        }
 
-	builder.decreaseIndentation();
-	builder.add("}");
+        builder.decreaseIndentation();
+        builder.add("}");
 
-	return builder.toString();
+        return builder.toString();
     }
 
     public static String escape(String string) {
-	String escapedString = string.replace("\\", "\\\\");
-	escapedString = escapedString.replace("\"", "\\\"");
+        String escapedString = string.replace("\\", "\\\\");
+        escapedString = escapedString.replace("\"", "\\\"");
 
-	return escapedString;
+        return escapedString;
     }
 }

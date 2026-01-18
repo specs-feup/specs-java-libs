@@ -1,11 +1,11 @@
 /*
  * Copyright 2011 SPeCS Research Group.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License. under the License.
@@ -17,18 +17,34 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Utility methods with common mathematical operations.
+ * Utility methods for mathematical operations.
+ * <p>
+ * Provides static helper methods for arithmetic, rounding, and other
+ * math-related tasks.
+ * </p>
  *
  * @author Joao Bispo
  */
 public class SpecsMath {
 
-    // public static double zeroRatio(List<Number> values) {
+    /**
+     * Calculates the ratio of zero values in a collection of numbers.
+     *
+     * @param values the collection of numbers
+     * @return the ratio of zero values
+     */
     public static double zeroRatio(Collection<Number> values) {
         return zeroRatio(values, 0.0);
     }
 
-    // public static double zeroRatio(List<Number> values, double threshold) {
+    /**
+     * Calculates the ratio of values below a given threshold in a collection of
+     * numbers.
+     *
+     * @param values    the collection of numbers
+     * @param threshold the threshold value
+     * @return the ratio of values below the threshold
+     */
     public static double zeroRatio(Collection<Number> values, double threshold) {
         double numZeros = 0;
 
@@ -41,7 +57,12 @@ public class SpecsMath {
         return numZeros / values.size();
     }
 
-    // public static double arithmeticMean(List<Number> values) {
+    /**
+     * Calculates the arithmetic mean of a collection of numbers.
+     *
+     * @param values the collection of numbers
+     * @return the arithmetic mean
+     */
     public static double arithmeticMean(Collection<? extends Number> values) {
         if (values.isEmpty()) {
             return 0;
@@ -58,7 +79,14 @@ public class SpecsMath {
         return result;
     }
 
-    // public static double arithmeticMeanWithoutZeros(List<Number> values) {
+    /**
+     * Calculates the arithmetic mean of a collection of numbers, excluding zero
+     * values.
+     *
+     * @param values the collection of numbers
+     * @return the arithmetic mean excluding zeros, or null if the collection is
+     *         empty
+     */
     public static Double arithmeticMeanWithoutZeros(Collection<Number> values) {
         if (values.isEmpty()) {
             return null;
@@ -81,74 +109,18 @@ public class SpecsMath {
             return 0d;
         }
 
-        // result /= values.size();
         result /= numElements;
 
         return result;
     }
 
-    // public static double geometricMean(List<Number> values) {
-    /*
-    public static double geometricMean(Collection<Number> values) {
-       double result = 1;
-    
-       //int zeros = 0;
-       for(Number value : values) {
-          
-          if (!(value.doubleValue() > 0.0)) {
-             //zeros++;
-             //continue;
-             //value = 0.000000001;
-             value = Double.MIN_VALUE;
-          }
-          //System.out.println("Value:"+value);
-          result *= value.doubleValue();
-       }
-       //System.out.println("Piatorio:"+result);
-    
-       int numberOfElements = values.size();
-       
-       double power = (double)1 / (double)numberOfElements;
-       //double power = (double)1 / (double)values.size();
-       result = Math.pow(result, power);
-       //System.out.println("Final result:"+result);
-    
-       return result;
-    }
-    */
-    // public static double geometricMeanWithZeroCorrection(List<Number> values) {
-    /*
-    public static double geometricMeanWithZeroCorrection(Collection<Number> values) {
-       double result = 1;
-    
-       int zeros = 0;
-       for(Number value : values) {
-          if (!(value.doubleValue() > 0.0)) {
-             zeros++;
-             continue;
-          }
-          //System.out.println("Value:"+value);
-          result *= value.doubleValue();
-       }
-       //System.out.println("Piatorio:"+result);
-    
-       int numberOfElements = values.size() - zeros;
-       
-       double power = (double)1 / (double)numberOfElements;
-       //double power = (double)1 / (double)values.size();
-       result = Math.pow(result, power);
-       //System.out.println("Final result:"+result);
-    
-       return result;
-    }
-    */
-    // public static double geometricMeanWithZeroCorrection(List<Number> values) {
     /**
-     * 
-     * @param values
-     * @param withoutZeros
-     *            if false, performs geometric mean with zero correction. Otherwise, ignores the zero values.
-     * @return
+     * Calculates the geometric mean of a collection of numbers.
+     *
+     * @param values       the collection of numbers
+     * @param withoutZeros if false, performs geometric mean with zero correction;
+     *                     otherwise, ignores zero values
+     * @return the geometric mean
      */
     public static double geometricMean(Collection<Number> values, boolean withoutZeros) {
         double result = 1;
@@ -159,10 +131,8 @@ public class SpecsMath {
                 zeros++;
                 continue;
             }
-            // System.out.println("Value:"+value);
             result *= value.doubleValue();
         }
-        // System.out.println("Piatorio:"+result);
 
         int numberOfElements;
         if (withoutZeros) {
@@ -170,17 +140,21 @@ public class SpecsMath {
         } else {
             numberOfElements = values.size();
         }
-        // int numberOfElements = values.size() - zeros;
 
         double power = (double) 1 / (double) numberOfElements;
-        // double power = (double)1 / (double)values.size();
         result = Math.pow(result, power);
-        // System.out.println("Final result:"+result);
 
         return result;
     }
 
-    // public static double harmonicMean(List<Number> values, boolean useZeroCorrection) {
+    /**
+     * Calculates the harmonic mean of a collection of numbers.
+     *
+     * @param values            the collection of numbers
+     * @param useZeroCorrection if true, applies zero correction to the harmonic
+     *                          mean calculation
+     * @return the harmonic mean
+     */
     public static double harmonicMean(Collection<Number> values, boolean useZeroCorrection) {
         double result = 0;
         int zeros = 0;
@@ -188,10 +162,7 @@ public class SpecsMath {
             if (!(value.doubleValue() > 0.0) && !(value.doubleValue() < 0.0)) {
                 zeros++;
                 continue;
-                // value = 0.000000001;
-                // value = Double.MIN_VALUE;
             }
-            // System.out.println("Value:"+value);
             result += 1 / value.doubleValue();
         }
 
@@ -200,52 +171,29 @@ public class SpecsMath {
         if (numberOfElements == 0) {
             return 0.0;
         }
-        // int numberOfElements = values.size();
 
-        // result = (double)values.size() / result;
         result = numberOfElements / result;
 
-        // Zero value correction
-        // System.out.println("Number of zeros:"+zeros);
-        // System.out.println("BEfore correction:"+result);
         if (useZeroCorrection) {
             result *= (double) numberOfElements / (double) values.size();
         }
-        // System.out.println("AFter correction:"+result);
-        // result = (double)values.size() / result;
+
         return result;
     }
 
-    /*
-    public static double harmonicMeanWithZeroCorrection(List<Number> values) {
-       double result = 0;
-       int zeros = 0;
-       for(Number value : values) {
-          if(!(value.doubleValue() > 0.0)) {
-             zeros++;
-             continue;
-          }
-          //System.out.println("Value:"+value);
-          result += (double)1 / value.doubleValue();
-       }
-    
-       int numberOfElements = values.size() - zeros;
-       //int numberOfElements = values.size();
-       
-       result = (double)numberOfElements / result;
-       //result = (double)values.size() / result;
-       return result;
-    }
-    */
-
+    /**
+     * Finds the maximum value in a list of numbers.
+     *
+     * @param values      the list of numbers
+     * @param ignoreZeros if true, ignores zero values in the calculation
+     * @return the maximum value, or null if the list is null or empty
+     */
     public static Number max(List<? extends Number> values, boolean ignoreZeros) {
         if (values == null) {
-            // return 0;
             return null;
         }
 
         if (values.isEmpty()) {
-            // return 0;
             return null;
         }
 
@@ -270,14 +218,19 @@ public class SpecsMath {
         return max;
     }
 
+    /**
+     * Finds the minimum value in a list of numbers.
+     *
+     * @param values      the list of numbers
+     * @param ignoreZeros if true, ignores zero values in the calculation
+     * @return the minimum value, or null if the list is null or empty
+     */
     public static Number min(List<? extends Number> values, boolean ignoreZeros) {
         if (values == null) {
-            // return 0;
             return null;
         }
 
         if (values.isEmpty()) {
-            // return 0;
             return null;
         }
 
@@ -302,13 +255,12 @@ public class SpecsMath {
         return min;
     }
 
-    /*
-    public static Number sum(List<Number> graphOperationsPerIt) {
-       graphOperationsPerIt.get(0).
-    }
-     * 
+    /**
+     * Calculates the sum of a list of numbers.
+     *
+     * @param numbers the list of numbers
+     * @return the sum of the numbers
      */
-
     public static double sum(List<? extends Number> numbers) {
         double acc = 0;
         for (Number number : numbers) {
@@ -318,6 +270,12 @@ public class SpecsMath {
         return acc;
     }
 
+    /**
+     * Calculates the product of a list of numbers.
+     *
+     * @param numbers the list of numbers
+     * @return the product of the numbers
+     */
     public static double multiply(List<? extends Number> numbers) {
         double acc = 1;
         for (Number number : numbers) {
@@ -328,18 +286,23 @@ public class SpecsMath {
     }
 
     /**
-     * Taken from here: https://stackoverflow.com/a/7879559/1189808
-     * 
-     * @param number
-     * @return
+     * Calculates the factorial of a number.
+     *
+     * @param number the number
+     * @return the factorial of the number
      */
     public static long factorial(int number) {
         long result = 1;
+        boolean isNegative = number < 0;
+
+        if (isNegative) {
+            number = -number; // Convert to positive for factorial calculation
+        }
 
         for (int factor = 2; factor <= number; factor++) {
             result *= factor;
         }
-        // System.out.println("RESULT: " + result);
-        return result;
+
+        return isNegative ? -result : result;
     }
 }

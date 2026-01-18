@@ -18,30 +18,41 @@ import java.io.File;
 import org.suikasoft.jOptions.Interfaces.DataStore;
 
 /**
+ * Persistence utilities for jOptions applications.
+ * 
  * @author Joao Bispo
  * 
  */
 public interface AppPersistence {
 
+    /**
+     * Loads data from the specified file.
+     * 
+     * @param file the file to load data from
+     * @return the loaded data as a DataStore object
+     */
     public DataStore loadData(File file);
 
     /**
+     * Saves data to the specified file.
      * 
-     * @param file
-     * @param setup
-     * @param keepSetupFile
-     * @return
+     * @param file           the file to save data to
+     * @param data           the data to be saved
+     * @param keepConfigFile whether to keep the configuration file path in the
+     *                       persistent format
+     * @return true if the data was successfully saved, false otherwise
      */
     public boolean saveData(File file, DataStore data, boolean keepConfigFile);
 
     /**
-     * Helper method which does not save the config file path in the persistent format.
+     * Helper method which does not save the config file path in the persistent
+     * format.
      * 
-     * @param file
-     * @param data
-     * @return
+     * @param file the file to save data to
+     * @param data the data to be saved
+     * @return true if the data was successfully saved, false otherwise
      */
     default boolean saveData(File file, DataStore data) {
-	return saveData(file, data, false);
+        return saveData(file, data, false);
     }
 }

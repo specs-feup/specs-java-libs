@@ -15,39 +15,34 @@ package pt.up.fe.specs.util.system;
 
 public class ProcessOutputAsString extends ProcessOutput<String, String> {
 
-    /**
-     * @param returnValue
-     * @param stdOut
-     * @param stdErr
-     */
     public ProcessOutputAsString(int returnValue, String stdOut, String stdErr) {
-        super(returnValue, stdOut == null ? "" : stdOut, stdErr == null ? "" : stdErr);
+        super(returnValue, stdOut, stdErr);
     }
 
     /**
-     * Returns the contents of the standard output, followed by the contents of the standard error.
-     * 
-     * @return
+     * Returns the contents of the standard output, followed by the contents of the
+     * standard error.
+     *
      */
     public String getOutput() {
-        StringBuilder builder = new StringBuilder();
-
         String out = getStdOut();
-
         String err = getStdErr();
-        if (err.isEmpty()) {
-            return out;
-        }
-
-        // Add new line if standard out does not end with a newline, and if both standard output and standard error is
-        // not empty.
-        builder.append(out);
-        if (!out.isEmpty() && !out.endsWith("\n")) {
+        
+        // Convert null values to "null" string for display
+        String outStr = (out == null) ? "null" : out;
+        String errStr = (err == null) ? "null" : err;
+        
+        StringBuilder builder = new StringBuilder();
+        builder.append(outStr);
+        
+        // Add separator newline between stdout and stderr
+        // Always add one newline if stdout doesn't end with newline
+        if (!outStr.isEmpty() && !outStr.endsWith("\n")) {
             builder.append("\n");
         }
-
-        builder.append(err);
-
+        
+        builder.append(errStr);
+        
         return builder.toString();
     }
 

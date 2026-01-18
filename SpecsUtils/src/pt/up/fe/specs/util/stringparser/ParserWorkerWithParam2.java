@@ -29,10 +29,8 @@ public interface ParserWorkerWithParam2<T, U, V> {
     /**
      * Applies this function to the given arguments.
      *
-     * @param t
-     *            the first function argument
-     * @param u
-     *            the second function argument
+     * @param s the first function argument
+     * @param u the second function argument
      * @return the function result
      */
     ParserResult<T> apply(StringSlice s, U u, V v);

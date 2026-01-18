@@ -20,6 +20,9 @@ public class XmlGenericNode extends AXmlNode {
     private final Node node;
 
     public XmlGenericNode(Node node) {
+        if (node == null) {
+            throw new NullPointerException("XmlGenericNode requires a non-null Node");
+        }
         this.node = node;
     }
 

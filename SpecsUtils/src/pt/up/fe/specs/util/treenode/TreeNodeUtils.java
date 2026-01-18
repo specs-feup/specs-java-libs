@@ -26,28 +26,22 @@ public class TreeNodeUtils {
     /**
      * Ensures that the token has a null parent.
      * 
-     * @param token
-     * @return the given token if it does not have a parent, or a copy of the token if it has (a copy of a token does
-     *         not have a parent)
+     * @return the given token if it does not have a parent, or a copy of the token
+     *         if it has (a copy of a token does not have a parent)
      */
-    // public static <E extends Enum<E>, K extends TreeNode<E, K>> K sanitizeToken(K token) {
     public static <K extends TreeNode<K>> K sanitizeNode(K token) {
         if (!token.hasParent()) {
             return token;
         }
 
         // Copy token
-        K tokenCopy = token.copy();
-        return tokenCopy;
+        return token.copy();
     }
 
-    // public static <K extends TreeNode<E, K>, E extends Enum<E>> String toString(K token, String prefix) {
     public static <K extends TreeNode<K>> String toString(K token, String prefix) {
         StringBuilder builder = new StringBuilder();
 
-        // builder.append(prefix).append(token.getType());
         builder.append(prefix);
-        // builder.append(token.toNodeString() + "(" + token.getClass().getSimpleName() + ")");
         builder.append(token.toNodeString());
 
         builder.append("\n");
@@ -63,10 +57,7 @@ public class TreeNodeUtils {
 
     /**
      * Gets all the descendants of a certain type from a collection of nodes.
-     * 
-     * @param aClass
-     * @param nodes
-     * @return
+     *
      */
     public static <I extends K, O extends K, K extends TreeNode<K>> List<O> getDescendants(Class<O> aClass,
             Collection<I> nodes) {
@@ -77,12 +68,10 @@ public class TreeNodeUtils {
     }
 
     /**
-     * Gets all the descendants of a certain type from a collection of nodes. In addition, if any of the provided nodes
-     * are of that class, then they are returned as well.
-     * 
-     * @param aClass
-     * @param nodes
-     * @return
+     * Gets all the descendants of a certain type from a collection of nodes. In
+     * addition, if any of the provided nodes are of that class, then they are
+     * returned as well.
+     *
      */
     public static <I extends K, O extends K, K extends TreeNode<K>> List<O> getDescendantsAndSelves(Class<O> aClass,
             Collection<I> nodes) {
@@ -94,53 +83,19 @@ public class TreeNodeUtils {
 
     /**
      * Returns the index of the last token that is not of the given types.
-     * 
-     * @param currentTokens
-     * @param space
-     * @return
+     *
      */
     public static <K extends TreeNode<K>> Optional<K> lastNodeExcept(List<K> nodes,
             Collection<Class<? extends K>> exceptions) {
 
         Optional<Integer> index = TreeNodeIndexUtils.lastIndexExcept(nodes, exceptions);
-        if (!index.isPresent()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(nodes.get(index.get()));
-
-        /*
-        	return currentTokens.get(index);
-        
-        	int currentIndex = nodes.size() - 1;
-        	while (currentIndex >= 0) {
-        	    K token = nodes.get(currentIndex);
-        
-        	    boolean isException = false;
-        	    for (Class<?> exception : exceptions) {
-        		if (exception.isInstance(token)) {
-        		    isException = true;
-        		}
-        	    }
-        
-        	    if (!isException) {
-        		return Optional.of(nodes.get(currentIndex));
-        	    }
-        
-        	    currentIndex -= 1;
-        	}
-        
-        	return Optional.empty();
-        	*/
+        return index.map(nodes::get);
     }
 
     /**
-     * Tests two nodes, to check if one is ancestor of the other. If this is the case, returns the ancestor, otherwise
-     * returns Optional.empty().
-     * 
-     * @param node1
-     * @param node2
-     * @return
+     * Tests two nodes, to check if one is ancestor of the other. If this is the
+     * case, returns the ancestor, otherwise returns Optional.empty().
+     *
      */
     public static <K extends TreeNode<K>> Optional<K> getAncestor(K node1, K node2) {
         if (node1.isAncestor(node2)) {
@@ -159,11 +114,6 @@ public class TreeNodeUtils {
         return nodes.stream()
                 .map(node -> (EK) node.copy())
                 .collect(Collectors.toList());
-        // public List<IncludeDecl> getIncludesList() {
-        // return getIncludes().getIncludes().stream()
-        // .map(includeDecl -> (IncludeDecl) includeDecl.copy())
-        // .collect(Collectors.toList());
-        // }
     }
 
 }

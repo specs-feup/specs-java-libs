@@ -31,8 +31,7 @@ class ExtensionFilter implements FilenameFilter {
 
     /**
      * Note: By default follows symlinks.
-     * 
-     * @param extension
+     *
      */
     public ExtensionFilter(String extension) {
         this(extension, true);
@@ -40,7 +39,6 @@ class ExtensionFilter implements FilenameFilter {
 
     public ExtensionFilter(String extension, boolean followSymlinks) {
         this.extension = extension;
-        // this.separator = SpecsIo.DEFAULT_EXTENSION_SEPARATOR;
         this.separator = ".";
         this.followSymlinks = followSymlinks;
     }
@@ -62,5 +60,4 @@ class ExtensionFilter implements FilenameFilter {
 
         return name.toLowerCase().endsWith(suffix);
     }
-
 }
