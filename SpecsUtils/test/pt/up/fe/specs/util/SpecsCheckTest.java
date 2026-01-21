@@ -3,8 +3,6 @@ package pt.up.fe.specs.util;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -212,97 +210,6 @@ class SpecsCheckTest {
         }
     }
 
-    @Nested
-    @DisplayName("Collection Size Range Validation")
-    class CollectionSizeRangeTests {
-
-        @ParameterizedTest
-        @ValueSource(ints = { 1, 2, 3 })
-        @DisplayName("checkSizeRange should pass for collection within range")
-        void testCheckSizeRangeCollectionValid(int size) {
-            // Arrange
-            Collection<String> collection = createCollectionOfSize(size);
-
-            // Execute & Verify - should not throw
-            assertThatCode(() -> SpecsCheck.checkSizeRange(collection, 1, 3))
-                    .doesNotThrowAnyException();
-        }
-
-        @ParameterizedTest
-        @ValueSource(ints = { 0, 4, 5 })
-        @DisplayName("checkSizeRange should throw for collection outside range")
-        void testCheckSizeRangeCollectionInvalid(int size) {
-            // Arrange
-            Collection<String> collection = createCollectionOfSize(size);
-
-            // Execute & Verify
-            assertThatThrownBy(() -> SpecsCheck.checkSizeRange(collection, 1, 3))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("Expected collection to have size between '1' and '3'")
-                    .hasMessageContaining("its current size is '" + size + "'");
-        }
-
-        @Test
-        @DisplayName("checkSizeRange should handle edge cases")
-        void testCheckSizeRangeEdgeCases() {
-            // Single element range
-            Collection<String> single = Arrays.asList("a");
-            assertThatCode(() -> SpecsCheck.checkSizeRange(single, 1, 1))
-                    .doesNotThrowAnyException();
-
-            // Zero minimum
-            Collection<String> empty = Collections.emptyList();
-            assertThatCode(() -> SpecsCheck.checkSizeRange(empty, 0, 2))
-                    .doesNotThrowAnyException();
-        }
-
-        private Collection<String> createCollectionOfSize(int size) {
-            List<String> list = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                list.add("element" + i);
-            }
-            return list;
-        }
-    }
-
-    @Nested
-    @DisplayName("Array Size Range Validation")
-    class ArraySizeRangeTests {
-
-        @ParameterizedTest
-        @ValueSource(ints = { 1, 2, 3 })
-        @DisplayName("checkSizeRange should pass for array within range")
-        void testCheckSizeRangeArrayValid(int size) {
-            // Arrange
-            String[] array = createArrayOfSize(size);
-
-            // Execute & Verify - should not throw
-            assertThatCode(() -> SpecsCheck.checkSizeRange(array, 1, 3))
-                    .doesNotThrowAnyException();
-        }
-
-        @ParameterizedTest
-        @ValueSource(ints = { 0, 4, 5 })
-        @DisplayName("checkSizeRange should throw for array outside range")
-        void testCheckSizeRangeArrayInvalid(int size) {
-            // Arrange
-            String[] array = createArrayOfSize(size);
-
-            // Execute & Verify
-            assertThatThrownBy(() -> SpecsCheck.checkSizeRange(array, 1, 3))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("Expected collection to have size between '1' and '3'")
-                    .hasMessageContaining("its current size is '" + size + "'");
-        }
-
-        private String[] createArrayOfSize(int size) {
-            String[] array = new String[size];
-            for (int i = 0; i < size; i++) {
-                array[i] = "element" + i;
-            }
-            return array;
-        }
-    }
 
     @Nested
     @DisplayName("Type Validation")
@@ -385,19 +292,6 @@ class SpecsCheckTest {
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("[x, y]");
         }
-
-        @Test
-        @DisplayName("size range validation should include bounds in error message")
-        void testSizeRangeErrorMessageIncludesBounds() {
-            // Arrange
-            Collection<String> collection = Arrays.asList("a", "b", "c", "d", "e");
-
-            // Execute & Verify
-            assertThatThrownBy(() -> SpecsCheck.checkSizeRange(collection, 1, 3))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("between '1' and '3'")
-                    .hasMessageContaining("current size is '5'");
-        }
     }
 
     @Nested
@@ -416,9 +310,6 @@ class SpecsCheckTest {
             // Execute & Verify - should handle efficiently
             assertThatCode(() -> SpecsCheck.checkSize(large, 10000))
                     .doesNotThrowAnyException();
-
-            assertThatCode(() -> SpecsCheck.checkSizeRange(large, 5000, 15000))
-                    .doesNotThrowAnyException();
         }
 
         @Test
@@ -427,11 +318,6 @@ class SpecsCheckTest {
             // Test with Set
             Set<String> set = new HashSet<>(Arrays.asList("a", "b", "c"));
             assertThatCode(() -> SpecsCheck.checkSize(set, 3))
-                    .doesNotThrowAnyException();
-
-            // Test with Queue
-            Queue<String> queue = new LinkedList<>(Arrays.asList("x", "y"));
-            assertThatCode(() -> SpecsCheck.checkSizeRange(queue, 1, 3))
                     .doesNotThrowAnyException();
         }
 
