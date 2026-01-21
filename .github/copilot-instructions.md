@@ -101,7 +101,6 @@ ProjectName/
 
 **Development Tools:**
 - **JavaGenerator** - Java code generation utilities
-- **AntTasks** - Custom Ant build tasks
 
 ### Legacy Projects (No Gradle builds)
 - **SpecsHWUtils** - Hardware utilities (Eclipse project only)  
@@ -122,7 +121,7 @@ File: `.github/workflows/nightly.yml`
 5. Generates dependency graphs
 
 ### Tested Projects (in CI order):
-AntTasks, AsmParser, CommonsCompressPlus, CommonsLangPlus, GitlabPlus, GitPlus, Gprofer, GsonPlus, GuiHelper, JacksonPlus, JadxPlus, JavaGenerator, jOptions, JsEngine, LogbackPlus, MvelPlus, SlackPlus, SpecsUtils, SymjaPlus, tdrcLibrary, XStreamPlus
+CommonsLangPlus, GitPlus, GsonPlus, GuiHelper, JacksonPlus, JadxPlus, JavaGenerator, jOptions, JsEngine, SpecsUtils, SymjaPlus, tdrcLibrary, XStreamPlus
 
 ### Local Validation Steps
 1. **Build specific project**: `cd ProjectName && gradle build`

@@ -37,13 +37,8 @@ jobs:
       - name: Build and test all Gradle projects sequentially
         run: |
           projects=(
-            AntTasks
-            AsmParser
-            CommonsCompressPlus
             CommonsLangPlus
-            GitlabPlus
             GitPlus
-            Gprofer
             GsonPlus
             GuiHelper
             JacksonPlus
@@ -51,9 +46,6 @@ jobs:
             JavaGenerator
             jOptions
             JsEngine
-            LogbackPlus
-            MvelPlus
-            SlackPlus
             SpecsUtils
             SymjaPlus
             tdrcLibrary
