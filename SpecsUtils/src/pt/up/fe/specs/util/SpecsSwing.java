@@ -21,12 +21,8 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -34,9 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.table.TableModel;
-
-import pt.up.fe.specs.util.swing.MapModel;
 
 /**
  * Utility methods for Java Swing operations.
@@ -172,78 +165,6 @@ public class SpecsSwing {
         }
 
         return alternativeLookAndFeel;
-    }
-
-    /**
-     * Builds TableModels from Maps, splitting into multiple tables if necessary.
-     *
-     * @param map                 the map to convert into TableModels
-     * @param maxElementsPerTable the maximum number of elements per table
-     * @param rowWise             whether the table should be row-wise
-     * @param valueClass          the class of the values in the map
-     * @return a list of TableModels
-     */
-    public static <K extends Comparable<? super K>, V> List<TableModel> getTables(Map<K, V> map,
-            int maxElementsPerTable, boolean rowWise, Class<V> valueClass) {
-        List<TableModel> tableModels = new ArrayList<>();
-
-        List<K> keys = new ArrayList<>(map.keySet());
-        Collections.sort(keys);
-
-        List<K> currentKeys = new ArrayList<>();
-        for (K k : keys) {
-            currentKeys.add(k);
-
-            if (currentKeys.size() < maxElementsPerTable) {
-                continue;
-            }
-
-            // Build map
-            Map<K, V> newMap = new HashMap<>();
-            for (K key : currentKeys) {
-                newMap.put(key, map.get(key));
-            }
-            tableModels.add(new MapModel<>(newMap, rowWise, valueClass));
-
-            currentKeys = new ArrayList<>();
-        }
-
-        if (!currentKeys.isEmpty()) {
-            // Build map
-            Map<K, V> newMap = new HashMap<>();
-            for (K key : currentKeys) {
-                newMap.put(key, map.get(key));
-            }
-            tableModels.add(new MapModel<>(newMap, rowWise, valueClass));
-        }
-
-        return tableModels;
-    }
-
-    /**
-     * Builds a single TableModel from a Map.
-     *
-     * @param map        the map to convert into a TableModel
-     * @param rowWise    whether the table should be row-wise
-     * @param valueClass the class of the values in the map
-     * @return a TableModel
-     */
-    public static <K extends Comparable<? super K>, V> TableModel getTable(Map<K, V> map,
-            boolean rowWise, Class<V> valueClass) {
-
-        List<K> keys = new ArrayList<>(map.keySet());
-        Collections.sort(keys);
-
-        List<K> currentKeys = new ArrayList<>();
-        currentKeys.addAll(keys);
-
-        // Build map
-        Map<K, V> newMap = new LinkedHashMap<>();
-        for (K key : currentKeys) {
-            newMap.put(key, map.get(key));
-        }
-
-        return new MapModel<>(newMap, rowWise, valueClass);
     }
 
     /**

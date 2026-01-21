@@ -282,58 +282,8 @@ public class BufferedStringBuilderTest {
     }
 
     @Nested
-    @DisplayName("Null String Builder Tests")
-    class NullStringBuilderTests {
-
-        @Test
-        @DisplayName("Should create null string builder")
-        void testNullStringBuilderCreation() {
-            BufferedStringBuilder nullBuilder = BufferedStringBuilder.nullStringBuilder();
-
-            assertThat(nullBuilder).isNotNull();
-            assertThat(nullBuilder).isInstanceOf(NullStringBuilder.class);
-        }
-
-        @Test
-        @DisplayName("Should handle append operations in null builder")
-        void testNullBuilderAppend() {
-            BufferedStringBuilder nullBuilder = BufferedStringBuilder.nullStringBuilder();
-
-            BufferedStringBuilder result = nullBuilder.append("test");
-
-            assertThat(result).isSameAs(nullBuilder); // Should return self
-
-            // No file operations should occur
-            nullBuilder.close();
-        }
-
-        @Test
-        @DisplayName("Should handle save operations in null builder")
-        void testNullBuilderSave() {
-            BufferedStringBuilder nullBuilder = BufferedStringBuilder.nullStringBuilder();
-
-            // Should not throw exception
-            nullBuilder.save();
-            nullBuilder.close();
-        }
-    }
-
-    @Nested
     @DisplayName("ToString Method Tests")
     class BufferedStringBuilderToStringTest {
-
-        @Test
-        void nullStringBuilderToStringIsEmpty() {
-            try (NullStringBuilder builder = new NullStringBuilder()) {
-                assertThat(builder.toString()).isEmpty();
-
-                builder.append("test");
-                assertThat(builder.toString()).isEmpty();
-
-                builder.save();
-                assertThat(builder.toString()).isEmpty();
-            }
-        }
 
         @Test
         void bufferOnlyToStringShowsBuffer(@TempDir Path tempDir) {

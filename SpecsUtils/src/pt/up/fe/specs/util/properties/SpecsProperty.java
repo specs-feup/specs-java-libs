@@ -30,7 +30,6 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSwing;
-import pt.up.fe.specs.util.utilities.heapwindow.HeapWindow;
 
 /**
  * Global properties which can be applied to a program.
@@ -52,12 +51,6 @@ public enum SpecsProperty {
      * value.
      */
     ShowStackTrace,
-    /**
-     * Opens a Swing window (if available) showing information about memory usage of
-     * the application. Receives a boolean
-     * value.
-     */
-    ShowMemoryHeap,
     /**
      * Sets a custom Look&Feel, can use name or classname.
      */
@@ -149,23 +142,6 @@ public enum SpecsProperty {
             }
 
             SpecsLogs.setPrintStackTrace(bool);
-            return;
-        }
-
-        // Show memory heap - SWING option
-        if (this == ShowMemoryHeap) {
-            Boolean bool = SpecsStrings.parseBoolean(value);
-
-            if (bool == null) {
-                return;
-            }
-
-            boolean apply = bool && SpecsSwing.isSwingAvailable() && !SpecsSwing.isHeadless();
-            if (!apply) {
-                return;
-            }
-
-            (new HeapWindow()).run();
             return;
         }
 

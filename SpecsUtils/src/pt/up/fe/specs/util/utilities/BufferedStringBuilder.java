@@ -19,10 +19,6 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class BufferedStringBuilder implements AutoCloseable {
 
-    public static BufferedStringBuilder nullStringBuilder() {
-        return new NullStringBuilder();
-    }
-
     /**
      * INSTANCE VARIABLES
      */

@@ -17,8 +17,6 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,16 +24,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryStream;
@@ -46,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -57,9 +50,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -68,7 +58,6 @@ import java.util.zip.ZipOutputStream;
 
 import pt.up.fe.specs.util.collections.SpecsList;
 import pt.up.fe.specs.util.providers.ResourceProvider;
-import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 /**
  * Utility methods for input/output operations.
@@ -85,30 +74,6 @@ public class SpecsIo {
             Arrays.asList('\\', '/', ':', '*', '?', '"', '<', '>', '|'));
 
     private static final String UNIVERSAL_PATH_SEPARATOR = ";";
-
-    /**
-     * Helper class for methods that copy resources.
-     *
-     * @author JoaoBispo
-     *
-     */
-    public static class ResourceCopyData {
-        private final File writtenFile;
-        private final boolean newFile;
-
-        public ResourceCopyData(File writtenFile, boolean newFile) {
-            this.writtenFile = writtenFile;
-            this.newFile = newFile;
-        }
-
-        public File getFile() {
-            return writtenFile;
-        }
-
-        public boolean isNewFile() {
-            return newFile;
-        }
-    }
 
     public static String getNewline() {
         // return "\n";
@@ -286,43 +251,15 @@ public class SpecsIo {
             return null;
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-
-        // Try to read the contents of the file into the StringBuilder
-
-        try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file),
-                SpecsIo.DEFAULT_CHAR_SET))) {
-
-            // Read first character. It can't be cast to "char", otherwise the
-            // -1 will be converted in a character.
-            // First test for -1, then cast.
-            int intChar = bufferedReader.read();
-            while (intChar != -1) {
-                char character = (char) intChar;
-                stringBuilder.append(character);
-                intChar = bufferedReader.read();
-            }
-
-        } catch (FileNotFoundException ex) {
-            SpecsLogs.msgInfo("FileNotFoundException: " + ex.getMessage());
-            return null;
-
-        } catch (IOException ex) {
-            SpecsLogs.msgInfo("IOException: " + ex.getMessage());
+        FileInputStream inputStream;
+        try {
+            inputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            SpecsLogs.warn("FileNotFoundException", e);
             return null;
         }
 
-        return stringBuilder.toString();
-    }
-
-    public static void close(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                SpecsLogs.warn("Problem while closing resource", e);
-            }
-        }
+        return SpecsIo.readHelper(inputStream);
     }
 
     /**
@@ -330,6 +267,11 @@ public class SpecsIo {
      *
      */
     public static String read(InputStream inputStream) {
+        var result = SpecsIo.readHelper(inputStream);
+        return result == null ? "" : result;
+    }
+
+    private static String readHelper(InputStream inputStream) {
         StringBuilder stringBuilder = new StringBuilder();
 
         // Try to read the contents of the input stream into the StringBuilder
@@ -352,10 +294,10 @@ public class SpecsIo {
 
         } catch (FileNotFoundException ex) {
             SpecsLogs.warn("FileNotFoundException", ex);
-            stringBuilder = new StringBuilder(0);
+            return null;
         } catch (IOException ex) {
             SpecsLogs.warn("IOException", ex);
-            stringBuilder = new StringBuilder(0);
+            return null;
         }
 
         return stringBuilder.toString();
@@ -486,7 +428,7 @@ public class SpecsIo {
      * @param separator the extension separator
      * @return the name of the file without the extension and the separator
      */
-    public static String removeExtension(String filename, String separator) {
+    private static String removeExtension(String filename, String separator) {
         int extIndex = filename.lastIndexOf(separator);
         if (extIndex < 0) {
             return filename;
@@ -533,7 +475,7 @@ public class SpecsIo {
         return getFilesRecursive(path, extensions, true);
     }
 
-    public static List<File> getFilesRecursive(File folder, Collection<String> extensions, boolean followSymlinks) {
+    private static List<File> getFilesRecursive(File folder, Collection<String> extensions, boolean followSymlinks) {
         return getFilesRecursive(folder, extensions, followSymlinks, path -> false);
     }
 
@@ -546,7 +488,7 @@ public class SpecsIo {
      * @return all the files inside the given folder, excluding other folders, that
      *         have a certain extension as determined by the set.
      */
-    public static List<File> getFilesRecursive(File path, Collection<String> extensions, boolean followSymlinks,
+    private static List<File> getFilesRecursive(File path, Collection<String> extensions, boolean followSymlinks,
             Predicate<File> cutoffFolders) {
 
         // Make extensions lower-case
@@ -632,8 +574,6 @@ public class SpecsIo {
      * @return all the files inside the given folder, excluding other folders.
      */
     public static List<File> getFilesRecursive(File path) {
-        // return getFilesRecursive(path, Collections.emptySet(), true, folder ->
-        // false);
         return getFilesRecursive(path, true);
     }
 
@@ -733,31 +673,6 @@ public class SpecsIo {
         return fileList;
     }
 
-    public static List<File> getFilesWithExtension(List<File> files, String extension) {
-        Set<String> extensions = new HashSet<>();
-        extensions.add(extension);
-
-        return getFilesWithExtension(files, extensions);
-    }
-
-    public static List<File> getFilesWithExtension(List<File> files, Collection<String> extensions) {
-        List<File> mFiles = new ArrayList<>();
-        for (File file : files) {
-            String fileExtension = SpecsStrings.getExtension(file.getName());
-            if (fileExtension == null) {
-                continue;
-            }
-
-            if (!extensions.contains(fileExtension)) {
-                continue;
-            }
-
-            mFiles.add(file);
-        }
-
-        return mFiles;
-    }
-
     /**
      * Convenience method which overwrites files by default
      *
@@ -770,7 +685,7 @@ public class SpecsIo {
      * Copies the contents of a folder to another folder.
      *
      */
-    public static List<File> copyFolder(File source, File destination, boolean verbose, boolean overwrite) {
+    private static List<File> copyFolder(File source, File destination, boolean verbose, boolean overwrite) {
         if (!source.isDirectory()) {
             throw new RuntimeException("Source '" + source + "' is not a folder");
         }
@@ -818,7 +733,7 @@ public class SpecsIo {
      * If verbose is true, warns when overwriting files.
      *
      */
-    public static boolean copy(File source, File destination, boolean verbose) {
+    private static boolean copy(File source, File destination, boolean verbose) {
         // Check if source is a file
         if (!source.isFile()) {
             SpecsLogs.msgInfo("Copy: source file '" + source + "' does not exist.");
@@ -861,7 +776,7 @@ public class SpecsIo {
      * After copy, the source stream is closed.
      *
      */
-    public static boolean copy(InputStream source, File destination) {
+    private static boolean copy(InputStream source, File destination) {
         boolean success = true;
 
         // Create folders for f2
@@ -890,7 +805,7 @@ public class SpecsIo {
         return deleteFolderContents(folder, true);
     }
 
-    public static boolean deleteFolderContents(File folder, boolean recursive) {
+    private static boolean deleteFolderContents(File folder, boolean recursive) {
         if (!folder.exists()) {
             return true;
         }
@@ -958,7 +873,7 @@ public class SpecsIo {
      * Example, if input is 'package/resource.ext', returns 'resource.ext'.
      *
      */
-    public static String getResourceName(String resource) {
+    private static String getResourceName(String resource) {
         // Try backslash
         int indexOfLastSlash = resource.lastIndexOf('/');
 
@@ -996,15 +911,6 @@ public class SpecsIo {
 
     }
 
-    public static boolean extractZipResource(String resource, File folder) {
-        try (InputStream stream = SpecsIo.class.getResourceAsStream(resource)) {
-            return extractZipResource(stream, folder);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not unzip resource '" + resource + "'", e);
-        }
-
-    }
-
     public static boolean extractZip(File zipFile, File folder) {
         try (InputStream stream = new FileInputStream(zipFile)) {
             return extractZipResource(stream, folder);
@@ -1014,7 +920,7 @@ public class SpecsIo {
 
     }
 
-    public static boolean extractZipResource(InputStream resource, File folder) {
+    private static boolean extractZipResource(InputStream resource, File folder) {
         boolean success = true;
         if (!folder.isDirectory()) {
             SpecsLogs.warn("Given folder '" + folder.getPath() + "' does not exist.");
@@ -1072,82 +978,12 @@ public class SpecsIo {
         }
     }
 
-    /**
-     * Converts an object to an array of bytes.
-     *
-     */
-    public static byte[] getBytes(Object obj) {
-
-        try (ObjectOutputStream oos = new ObjectOutputStream(new ByteArrayOutputStream())) {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-            oos.writeObject(obj);
-            oos.flush();
-            return bos.toByteArray();
-
-        } catch (IOException ex) {
-            SpecsLogs.warn("IOException while reading bytes from object '" + obj + "'", ex);
-            return null;
-        }
-
-    }
-
-    /**
-     * Recovers a String List from an array of bytes.
-     *
-     */
-    public static Object getObject(byte[] bytes) {
-
-        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
-            return ois.readObject();
-        } catch (ClassNotFoundException | IOException ex) {
-            SpecsLogs.warn(ex.toString());
-            return null;
-        }
-
-    }
-
-    /**
-     * Serializes an object to a file.
-     *
-     */
-    public static boolean writeObject(File file, Object serializableObject) {
-        // Transform object into byte array
-
-        try (ObjectOutputStream obj_out = new ObjectOutputStream(new FileOutputStream(file))) {
-
-            obj_out.writeObject(serializableObject);
-            SpecsLogs.msgLib("Object written to file '" + file + "'.");
-
-        } catch (IOException ex) {
-            SpecsLogs.warn("IOException while writing an object to file '" + file + "'", ex);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Deserializes an object from a file.
-     *
-     */
-    public static Object readObject(File file) {
-        try (FileInputStream stream = new FileInputStream(file);
-                ObjectInputStream in = new ObjectInputStream(stream)) {
-            return in.readObject();
-        } catch (ClassNotFoundException | IOException ex) {
-            SpecsLogs.warn(ex.toString());
-        }
-
-        return null;
-    }
-
-    public static byte[] readAsBytes(File file) {
+    private static byte[] readAsBytes(File file) {
         int numBytes = (int) file.length();
         return readAsBytes(file, numBytes);
     }
 
-    public static byte[] readAsBytes(File file, int numBytes) {
+    private static byte[] readAsBytes(File file, int numBytes) {
         // Using 'finally' style 2 as described in
         // http://www.javapractices.com/topic/TopicAction.do?Id=25
         try (InputStream inStream = new FileInputStream(file)) {
@@ -1158,44 +994,6 @@ public class SpecsIo {
 
         } catch (Exception ex) {
             SpecsLogs.warn("Exception while reading bytes from file '" + file + "'", ex);
-        }
-
-        return null;
-    }
-
-    /**
-     * When we don't know the size of the input stream, read until the stream is
-     * empty.
-     *
-     * <p>
-     * Closes the stream after reading.
-     *
-     */
-    public static byte[] readAsBytes(InputStream inStream) {
-
-        List<Byte> bytes = new ArrayList<>();
-
-        // Using 'finally' style 2 as described in
-        // http://www.javapractices.com/topic/TopicAction.do?Id=25
-        try {
-            try (inStream) {
-                int aByte;
-                while ((aByte = inStream.read()) != -1) {
-                    bytes.add((byte) aByte);
-                }
-            }
-
-            byte[] byteArray = new byte[bytes.size()];
-            for (int i = 0; i < byteArray.length; i++) {
-                byteArray[i] = bytes.get(i);
-            }
-
-            return byteArray;
-
-        } catch (FileNotFoundException ex) {
-            SpecsLogs.warn("File not found", ex);
-        } catch (IOException ex) {
-            SpecsLogs.warn("IOException", ex);
         }
 
         return null;
@@ -1253,79 +1051,6 @@ public class SpecsIo {
     public static File resourceCopy(String resource, File destinationFolder, boolean useResourcePath) {
 
         return resourceCopy(resource, destinationFolder, useResourcePath, true);
-    }
-
-    /**
-     * Helper method which uses the package of the ResourceProvider as the Context.
-     *
-     * @return the file that was written
-     */
-    public static ResourceCopyData resourceCopyVersioned(ResourceProvider resource, File destinationFolder,
-            boolean useResourcePath) {
-        return resourceCopyVersioned(resource, destinationFolder, useResourcePath, resource.getClass());
-    }
-
-    /**
-     * Copies the given resource to the destination folder. If the file already
-     * exists, uses ResourceProvider version method to determine if the file should
-     * be overwritten or not.
-     *
-     * <p>
-     * If the file already exists but no versioning information is available in the
-     * system, the file is overwritten.
-     *
-     * <p>
-     * The method will use the package of the class indicated in 'context' as the
-     * location to store the information about versioning. Keep in mind that calls
-     * using the same context will refer to the same local copy of the resource.
-     *
-     * @return the file that was written
-     */
-    public static ResourceCopyData resourceCopyVersioned(ResourceProvider resource, File destinationFolder,
-            boolean useResourcePath, Class<?> context) {
-
-        // Create file
-        String resourceOutput = resource.getResource();
-        if (!useResourcePath) {
-            resourceOutput = SpecsIo.getResourceName(resourceOutput);
-        }
-
-        File destination = new File(destinationFolder, resourceOutput);
-
-        // If file does not exist, just write and return
-        if (!destination.exists()) {
-            return new ResourceCopyData(resourceCopy(resource.getResource(), destinationFolder, useResourcePath, false),
-                    true);
-        }
-
-        Preferences prefs = Preferences.userNodeForPackage(context);
-
-        // Check version information
-        String key = resource.getClass().getSimpleName() + "." + resource.getResource();
-        String NOT_FOUND = "<NOT FOUND>";
-        String version = prefs.get(key, NOT_FOUND);
-
-        // If current version is the same as the version of the resource just return the
-        // existing file
-        if (version.equals(resource.version())) {
-            return new ResourceCopyData(destination, false);
-        }
-
-        // Warn when there is not version information available
-        if (version.equals(NOT_FOUND)) {
-            SpecsLogs.msgInfo("Resource '" + resource
-                    + "' already exists, but no versioning information is available. Overwriting file '" + key
-                    + "' and storing information.");
-        }
-
-        // Copy resource and store version information
-        File writtenFile = resourceCopy(resource.getResource(), destinationFolder, useResourcePath, true);
-        prefs.put(key, resource.version());
-
-        assert writtenFile.equals(destination);
-
-        return new ResourceCopyData(writtenFile, true);
-
     }
 
     public static File resourceCopy(String resource, File destinationFolder, boolean useResourcePath,
@@ -1387,30 +1112,6 @@ public class SpecsIo {
         }
 
         return true;
-    }
-
-    /**
-     * If baseInput path is "C:\inputpath";
-     * If inputFile is "C:\inputpath\aFolder\inputFile.txt";
-     * If outputFolder is "C:\anotherFolder";
-     *
-     * Returns the String "C:\anotherFolder\aFolder\"
-     *
-     */
-    public static String getExtendedFoldername(File baseInputPath, File inputFile, File outputFolder) {
-
-        String baseInputPathname = baseInputPath.getAbsolutePath();
-        String baseInputFileParent = inputFile.getParentFile().getAbsolutePath();
-
-        if (!baseInputFileParent.startsWith(baseInputPathname)) {
-            SpecsLogs.warn("Base parent '" + baseInputFileParent + "' does not start with " + "'"
-                    + baseInputPathname + "'");
-            return null;
-        }
-
-        String programFolder = baseInputFileParent.substring(baseInputPathname.length());
-
-        return outputFolder.getPath() + programFolder;
     }
 
     /**
@@ -1812,7 +1513,7 @@ public class SpecsIo {
      * Replaces characters that are illegal for filenames with '_'.
      *
      */
-    public static String escapeFilename(String filename) {
+    private static String escapeFilename(String filename) {
         StringBuilder escapedFilename = new StringBuilder(filename.length());
         for (char aChar : filename.toCharArray()) {
 
@@ -1850,23 +1551,6 @@ public class SpecsIo {
         deleteOnExit(randomFile);
 
         return randomFile;
-    }
-
-    /**
-     * A randomly named folder in the OS temporary folder that is deleted when the
-     * virtual machine exits.
-     *
-     */
-    public static File newRandomFolder() {
-        File tempFolder = getTempFolder();
-
-        // Get a random foldername
-        File randomFolder = new File(tempFolder, UUID.randomUUID().toString());
-        SpecsIo.mkdir(randomFolder);
-
-        deleteOnExit(randomFolder);
-
-        return randomFolder;
     }
 
     /**
@@ -1910,135 +1594,6 @@ public class SpecsIo {
         return mkdir(systemTemp, folderName);
     }
 
-    /**
-     * List directory contents for a resource folder. Not recursive. This is
-     * basically a brute-force implementation.
-     * Works for regular files and also JARs.
-     *
-     * @author Greg Briggs
-     * @param aClass Any java class that lives in the same place as the resources
-     *               you want.
-     * @param path   Should end with "/", but not start with one.
-     * @return Just the name of each member item, not the full paths.
-     */
-    String[] getResourceListing(Class<?> aClass, String path) throws URISyntaxException, IOException {
-        URL dirURL = aClass.getClassLoader().getResource(path);
-        if (dirURL != null && dirURL.getProtocol().equals("file")) {
-            /* A file path: easy enough */
-            return new File(dirURL.toURI()).list();
-        }
-
-        if (dirURL == null) {
-            /*
-             * In case of a jar file, we can't actually find a directory.
-             * Have to assume the same jar as clazz.
-             */
-            String me = aClass.getName().replace(".", "/") + ".class";
-            dirURL = aClass.getClassLoader().getResource(me);
-        }
-
-        if (dirURL.getProtocol().equals("jar")) {
-            /* A JAR path */
-            String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); // strip out only the JAR
-            // file
-            try (JarFile jar = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8))) {
-
-                Enumeration<JarEntry> entries = jar.entries(); // gives ALL entries in jar
-                Set<String> result = new HashSet<>(); // avoid duplicates in case it is a subdirectory
-                while (entries.hasMoreElements()) {
-                    String name = entries.nextElement().getName();
-                    if (name.startsWith(path)) { // filter according to the path
-                        String entry = name.substring(path.length());
-                        int checkSubdir = entry.indexOf("/");
-                        if (checkSubdir >= 0) {
-                            // if it is a subdirectory, we just return the directory name
-                            entry = entry.substring(0, checkSubdir);
-                        }
-                        result.add(entry);
-                    }
-                }
-
-                return result.toArray(new String[result.size()]);
-            }
-
-        }
-
-        throw new UnsupportedOperationException("Cannot list files for URL " + dirURL);
-    }
-
-    /**
-     * Returns a File object pointing to the given file path. If the returned object
-     * is different than null, the file exists.
-     *
-     * <p>
-     * The method tries to build a File object using the following order of
-     * approaches:<br>
-     * - If the given file path is absolute, uses only that information; <br>
-     * - If the given parent folder is different than null, uses it as base folder.
-     * Otherwise, uses the path alone, relative to the current working folder;
-     *
-     */
-    public static File getFile(File parentFolder, String filepath) {
-
-        // Try using absolute path
-        File absolutePath = new File(filepath);
-        if (absolutePath.isAbsolute()) {
-            return existingFile(filepath);
-        }
-
-        // Try using parent folder
-        return existingFile(parentFolder, filepath);
-    }
-
-    public static File getFolder(File parentFolder, String folderpath, boolean exists) {
-        // Try using absolute path
-        File absoluteFolder = new File(folderpath);
-        if (absoluteFolder.isAbsolute()) {
-            return getFolderPrivate(null, folderpath, exists);
-        }
-
-        // Try using setup file location
-        if (parentFolder != null) {
-
-            return getFolderPrivate(parentFolder, folderpath, exists);
-        }
-
-        if (exists) {
-            File folder = SpecsIo.existingFolder(null, folderpath);
-
-            if (folder == null) {
-                SpecsLogs.msgInfo("Could not get existing folder with path '" + folderpath + "'.");
-                return null;
-            }
-
-            return folder;
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns null if could not return a valid folder.
-     *
-     */
-    private static File getFolderPrivate(File parentFolder, String folderpath, boolean exists) {
-
-        File folder = null;
-        if (exists) {
-            folder = SpecsIo.existingFolder(parentFolder, folderpath);
-        } else {
-            folder = SpecsIo.mkdir(parentFolder, folderpath);
-        }
-
-        if (folder == null) {
-            SpecsLogs.msgInfo("Could not get folder '" + folder + "', which should exist.");
-            return null;
-        }
-
-        return folder;
-
-    }
-
     public static Optional<URL> parseUrl(String urlString) {
         if (urlString == null) {
             return Optional.empty();
@@ -2049,25 +1604,6 @@ public class SpecsIo {
         } catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
             return Optional.empty();
         }
-    }
-
-    public static String getUrl(String urlString) {
-
-        try {
-            URL url = new URI(urlString).toURL();
-            URLConnection con = url.openConnection();
-            con.setConnectTimeout(10000);
-            con.setReadTimeout(10000);
-
-            try (InputStream in = con.getInputStream()) {
-                return SpecsIo.read(in);
-            }
-
-        } catch (Exception e) {
-            SpecsLogs.warn("Exception while getting the contents of URL '" + urlString + "'", e);
-        }
-
-        return null;
     }
 
     /**
@@ -2275,10 +1811,8 @@ public class SpecsIo {
         try (FileOutputStream outStream = new FileOutputStream(zipFile);
                 ZipOutputStream zip = new ZipOutputStream(outStream)) {
 
-            ProgressCounter progress = new ProgressCounter(entries.size());
             SpecsLogs.msgInfo("Zipping " + entries.size() + " files to '" + zipFile.getAbsolutePath() + "'");
             for (File entry : entries) {
-                SpecsLogs.msgInfo("Zipping '" + entry.getAbsolutePath() + "'... " + progress.next());
                 // Get relative path, to create ZipEntry
                 Optional<String> entryPath = SpecsIo.getRelativePath(entry, basePath, true);
 
@@ -2343,20 +1877,6 @@ public class SpecsIo {
         return false;
     }
 
-    public static void closeStreamAfterError(OutputStream stream) {
-        // Do nothing if no stream
-        if (stream == null) {
-            return;
-        }
-
-        // Close the stream
-        try {
-            stream.close();
-        } catch (IOException e) {
-            SpecsLogs.warn("Exception while closing a stream", e);
-        }
-    }
-
     /**
      * Tests if a folder can be written.
      *
@@ -2417,19 +1937,6 @@ public class SpecsIo {
         }
 
         return Optional.empty();
-    }
-
-    /**
-     * Reads a single byte from System.in;
-     *
-     */
-    public static int read() {
-
-        try {
-            return System.in.read();
-        } catch (IOException e) {
-            throw new RuntimeException("Could not read input", e);
-        }
     }
 
     public static File removeCommonPath(File file, File base) {
@@ -2511,17 +2018,6 @@ public class SpecsIo {
         return query;
     }
 
-    public static File sanitizeWorkingDir(String workingDir) {
-
-        File workingFolder = new File(workingDir);
-        if (!workingFolder.isDirectory()) {
-            SpecsLogs.info("Provided an non-existing working directory: " + workingDir);
-            return SpecsIo.getWorkingDir();
-        }
-
-        return workingFolder;
-    }
-
     /**
      * The depth of a given File. If file has the path foo/bar/a.cpp, depth is 3.
      *
@@ -2542,59 +2038,6 @@ public class SpecsIo {
         }
 
         return depth;
-    }
-
-    /**
-     * @return the first folder in java.library.path that is writable. Throws
-     *         exception if no folder that can be written is found
-     */
-    public static File getFirstLibraryFolder() {
-        var libraryFolders = getLibraryFolders();
-        for (var libraryFolder : libraryFolders) {
-            if (SpecsIo.canWrite(libraryFolder)) {
-                return libraryFolder;
-            }
-        }
-
-        throw new RuntimeException(
-                "Could not find a writtable library path folder, please execute with more elevated privileges. Found folders: "
-                        + libraryFolders);
-    }
-
-    public static boolean canWrite(File folder) {
-        if (!folder.isDirectory()) {
-            return false;
-        }
-
-        // Fallback
-        var testFile = new File(folder, "__test__specs__can__write__.dummy");
-
-        // If exists, try deleting it
-        if (testFile.isFile()) {
-            return testFile.delete();
-        }
-
-        // If it does not exist, create file
-        try {
-            var success = testFile.createNewFile();
-            testFile.delete();
-            return success;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     *
-     * @return the list of folders in java.library.path
-     */
-    public static List<File> getLibraryFolders() {
-        // Get a directory that is on the Java library path
-        var libraryPaths = System.getProperty("java.library.path");
-        var fileSeparator = File.pathSeparator;
-        var libraryFolders = libraryPaths.split(fileSeparator);
-
-        return Arrays.stream(libraryFolders).map(File::new).collect(Collectors.toList());
     }
 
     /**
