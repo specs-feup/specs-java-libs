@@ -126,6 +126,7 @@ public class StringUtils {
      * @param separator  the separator to use between elements
      * @return the joined string
      */
+    @Deprecated
     public static String joinStrings(Collection<String> collection, String separator) {
         return String.join(separator, collection);
     }
@@ -141,9 +142,7 @@ public class StringUtils {
      * @return the joined string
      */
     public static <T> String join(Collection<T> collection, Function<T, String> mapper, String separator) {
-
         return collection.stream().map(mapper).collect(Collectors.joining(separator));
-
     }
 
     /**
@@ -155,11 +154,7 @@ public class StringUtils {
      * @return the joined string
      */
     public static <T> String join(Collection<T> collection, String separator) {
-
-        final String joinedArguments = collection.stream()
-                .map(obj -> obj == null ? "null" : obj.toString())
-                .collect(Collectors.joining(separator));
-        return joinedArguments;
+        return join(collection, obj -> obj == null ? "null" : obj.toString(), separator);
     }
 
     /**
@@ -208,16 +203,7 @@ public class StringUtils {
      */
     @Deprecated
     public static String repeat(String toRepeat, int repeat) {
-        if (toRepeat == null || repeat < 0) {
-            return null;
-        }
-        if (repeat == 0) {
-            return "";
-        }
-        if (toRepeat.isEmpty() || repeat == 1) {
-            return toRepeat;
-        }
-        return new String(new char[repeat]).replace("\0", toRepeat);
+        return toRepeat.repeat(repeat);
     }
 
     /**
