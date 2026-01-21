@@ -132,38 +132,4 @@ public class ListUtils {
             tuplesFromListAux(arraysToCombine, position + 1, newTuple, tuples, tupleSize);
         }
     }
-
-    /**
-     * Combine two arrays to create a list of pairs.
-     * 
-     * @param left  The first array.
-     * @param right The second array.
-     * @param <T>   The type of elements in the first array.
-     * @param <V>   The type of elements in the second array.
-     * @return A list of pairs combining elements from both arrays.
-     */
-    public static <T, V> List<Pair<T, V>> createPairs(T[] left, V[] right) {
-        List<Pair<T, V>> pairs = new ArrayList<>(left.length * right.length);
-        for (T t : left) {
-            for (V v : right) {
-                pairs.add(new Pair<>(t, v));
-            }
-        }
-        return pairs;
-    }
-
-    /**
-     * Combine two lists to create a list of pairs.
-     * 
-     * @param left  The first list.
-     * @param right The second list.
-     * @param <T>   The type of elements in the first list.
-     * @param <V>   The type of elements in the second list.
-     * @return A list of pairs combining elements from both lists.
-     */
-    public static <T, V> List<Pair<T, V>> createPairs(List<T> left, List<V> right) {
-        List<Pair<T, V>> pairs = new ArrayList<>(left.size() * right.size());
-        left.forEach(l -> right.forEach(r -> pairs.add(new Pair<>(l, r))));
-        return pairs;
-    }
 }

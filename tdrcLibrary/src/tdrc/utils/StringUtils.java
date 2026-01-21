@@ -13,22 +13,10 @@
 
 package tdrc.utils;
 
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
 
 /**
  * Utility class for string operations in tdrcLibrary.
@@ -120,19 +108,6 @@ public class StringUtils {
 
     /**
      * Joins the elements of a collection into a single string, separated by the
-     * given separator.
-     * 
-     * @param collection the collection of strings to join
-     * @param separator  the separator to use between elements
-     * @return the joined string
-     */
-    @Deprecated
-    public static String joinStrings(Collection<String> collection, String separator) {
-        return String.join(separator, collection);
-    }
-
-    /**
-     * Joins the elements of a collection into a single string, separated by the
      * given separator. This method requires a mapping function to convert the
      * elements into strings.
      * 
@@ -158,19 +133,6 @@ public class StringUtils {
     }
 
     /**
-     * Compares the package of two classes.
-     * 
-     * @param firstClassName  the name of the first class
-     * @param secondClassName the name of the second class
-     * @return true if both classes are in the same package, false otherwise
-     */
-    public static boolean inSamePackage(String firstClassName, String secondClassName) {
-        final String firstPackage = getPackage(firstClassName);
-        final String secondPackage = getPackage(secondClassName);
-        return firstPackage.equals(secondPackage);
-    }
-
-    /**
      * Gets the package from a given class name.
      * 
      * @param className the name of the class
@@ -183,62 +145,5 @@ public class StringUtils {
             return className.substring(0, lastDot);
         }
         return "";
-    }
-
-    /**
-     * Repeats a given string a specified number of times.
-     * <p>
-     * Conditions:<br>
-     * - toRepeat == <b>null</b> || repeat < 0 -> <b>null</b><br>
-     * - repeat == 0 -> ""<br>
-     * - toRepeat.isEmpty || repeat == 1 -> toRepeat<br>
-     * - else -> toRepeat * repeat
-     * 
-     * @param toRepeat the string to repeat
-     * @param repeat   the number of times to repeat the string
-     * @return the repeated string
-     * 
-     * @deprecated Use {@link String#repeat(int)} instead, which is available in
-     *             Java 11 and later.
-     */
-    @Deprecated
-    public static String repeat(String toRepeat, int repeat) {
-        return toRepeat.repeat(repeat);
-    }
-
-    /**
-     * Converts an XML Document to a StringBuffer with the specified indentation
-     * amount.
-     * 
-     * @param doc         the XML Document to convert
-     * @param identAmount the amount of indentation
-     * @return the StringBuffer representation of the XML Document
-     * @throws IllegalArgumentException             if doc is null
-     * @throws TransformerFactoryConfigurationError if there is a configuration
-     *                                              error in the TransformerFactory
-     * @throws TransformerConfigurationException    if there is a configuration
-     *                                              error in the Transformer
-     * @throws TransformerException                 if there is an error during the
-     *                                              transformation
-     */
-    public static StringBuffer xmlToStringBuffer(Document doc, int identAmount)
-            throws IllegalArgumentException, TransformerFactoryConfigurationError, TransformerConfigurationException,
-            TransformerException {
-        if (doc == null) {
-            throw new IllegalArgumentException("Document cannot be null");
-        }
-        final TransformerFactory transfac = TransformerFactory.newInstance();
-        final Transformer trans = transfac.newTransformer();
-
-        trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        trans.setOutputProperty(OutputKeys.INDENT, "yes");
-        trans.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(identAmount));
-        // create string from xml tree
-        final StringWriter sw = new StringWriter();
-        final StreamResult result = new StreamResult(sw);
-        final DOMSource source = new DOMSource(doc);
-        trans.transform(source, result);
-        final StringBuffer xmlString = sw.getBuffer();
-        return xmlString;
     }
 }
