@@ -93,59 +93,6 @@ class SpecsCollectionsTest {
             List<String> empty = Collections.emptyList();
             assertThat(SpecsCollections.lastTry(empty)).isEmpty();
         }
-
-        @Test
-        @DisplayName("singleTry should return Optional for single element lists")
-        void testSingleTry() {
-            // Single element
-            List<String> single = Arrays.asList("only");
-            assertThat(SpecsCollections.singleTry(single)).isPresent().contains("only");
-
-            // Multiple elements
-            List<String> multiple = Arrays.asList("first", "second");
-            assertThat(SpecsCollections.singleTry(multiple)).isEmpty();
-
-            // Empty list
-            List<String> empty = Collections.emptyList();
-            assertThat(SpecsCollections.singleTry(empty)).isEmpty();
-        }
-    }
-
-    @Nested
-    @DisplayName("Map Operations")
-    class MapOperationsTests {
-
-        @Test
-        @DisplayName("invertMap should swap keys and values")
-        void testInvertMap() {
-            // Arrange
-            Map<String, Integer> original = new HashMap<>();
-            original.put("one", 1);
-            original.put("two", 2);
-            original.put("three", 3);
-
-            // Execute
-            Map<Integer, String> inverted = SpecsCollections.invertMap(original);
-
-            // Verify
-            assertThat(inverted).hasSize(3);
-            assertThat(inverted.get(1)).isEqualTo("one");
-            assertThat(inverted.get(2)).isEqualTo("two");
-            assertThat(inverted.get(3)).isEqualTo("three");
-        }
-
-        @Test
-        @DisplayName("invertMap should handle empty map")
-        void testInvertMapEmpty() {
-            // Arrange
-            Map<String, Integer> empty = Collections.emptyMap();
-
-            // Execute
-            Map<Integer, String> result = SpecsCollections.invertMap(empty);
-
-            // Verify
-            assertThat(result).isEmpty();
-        }
     }
 
     @Nested
@@ -171,20 +118,6 @@ class SpecsCollectionsTest {
 
             // Verify
             assertThat(result).isEmpty();
-        }
-
-        @Test
-        @DisplayName("newSorted should create sorted list from collection")
-        void testNewSorted() {
-            // Arrange
-            Collection<Integer> unsorted = Arrays.asList(3, 1, 4, 1, 5, 9, 2);
-
-            // Execute
-            List<Integer> sorted = SpecsCollections.newSorted(unsorted);
-
-            // Verify
-            assertThat(sorted).containsExactly(1, 1, 2, 3, 4, 5, 9);
-            assertThat(sorted).hasSize(7); // Duplicates preserved
         }
     }
 
@@ -266,66 +199,6 @@ class SpecsCollectionsTest {
             // Verify
             assertThat(removed).isEqualTo("c");
             assertThat(list).containsExactly("a", "b");
-        }
-    }
-
-    @Nested
-    @DisplayName("Type-Based Operations")
-    class TypeBasedOperationsTests {
-
-        @Test
-        @DisplayName("getFirstIndex should find first occurrence of type")
-        void testGetFirstIndex() {
-            // Arrange
-            List<Object> list = Arrays.asList("string", 42, "another", 3.14);
-
-            // Execute
-            int index = SpecsCollections.getFirstIndex(list, String.class);
-
-            // Verify
-            assertThat(index).isEqualTo(0);
-        }
-
-        @Test
-        @DisplayName("getFirstIndex should return -1 when type not found")
-        void testGetFirstIndexNotFound() {
-            // Arrange
-            List<Object> list = Arrays.asList(42, 3.14, true);
-
-            // Execute
-            int index = SpecsCollections.getFirstIndex(list, String.class);
-
-            // Verify
-            assertThat(index).isEqualTo(-1);
-        }
-
-        @Test
-        @DisplayName("getFirst should return first element of specified type")
-        void testGetFirst() {
-            // Arrange
-            List<Object> list = Arrays.asList(42, "string", 3.14, "another");
-
-            // Execute
-            String result = SpecsCollections.getFirst(list, String.class);
-
-            // Verify
-            assertThat(result).isEqualTo("string");
-        }
-
-        @Test
-        @DisplayName("areOfType should check if all elements are of specified type")
-        void testAreOfType() {
-            // All strings
-            List<Object> allStrings = Arrays.asList("a", "b", "c");
-            assertThat(SpecsCollections.areOfType(String.class, allStrings)).isTrue();
-
-            // Mixed types
-            List<Object> mixed = Arrays.asList("a", 42, "c");
-            assertThat(SpecsCollections.areOfType(String.class, mixed)).isFalse();
-
-            // Empty list
-            List<Object> empty = Collections.emptyList();
-            assertThat(SpecsCollections.areOfType(String.class, empty)).isTrue();
         }
     }
 
@@ -451,53 +324,6 @@ class SpecsCollectionsTest {
     }
 
     @Nested
-    @DisplayName("Pop Operations")
-    class PopOperationsTests {
-
-        @Test
-        @DisplayName("pop should extract consecutive elements of specified type from head")
-        void testPopByType() {
-            // Arrange - strings only at the beginning
-            List<Object> list = new ArrayList<>(Arrays.asList("a", 42, "b", 3.14, "c"));
-
-            // Execute - pop only extracts consecutive elements of type from the beginning
-            List<String> popped = SpecsCollections.pop(list, String.class);
-
-            // Verify - only gets first string "a" since 42 breaks the sequence
-            assertThat(popped).containsExactly("a");
-            assertThat(list).containsExactly(42, "b", 3.14, "c"); // "a" removed from beginning
-        }
-
-        @Test
-        @DisplayName("pop should extract specified number of elements")
-        void testPopByCount() {
-            // Arrange
-            List<String> list = new ArrayList<>(Arrays.asList("a", "b", "c", "d", "e"));
-
-            // Execute
-            SpecsList<String> popped = SpecsCollections.pop(list, 3);
-
-            // Verify
-            assertThat(popped).containsExactly("a", "b", "c");
-            assertThat(list).containsExactly("d", "e"); // First 3 elements removed
-        }
-
-        @Test
-        @DisplayName("popSingle should extract and return first element of type")
-        void testPopSingle() {
-            // Arrange - string at the beginning
-            List<Object> list = new ArrayList<>(Arrays.asList("single", 42, 3.14));
-
-            // Execute
-            String popped = SpecsCollections.popSingle(list, String.class);
-
-            // Verify
-            assertThat(popped).isEqualTo("single");
-            assertThat(list).containsExactly(42, 3.14); // String removed from beginning
-        }
-    }
-
-    @Nested
     @DisplayName("Casting Operations")
     class CastingOperationsTests {
 
@@ -549,7 +375,6 @@ class SpecsCollectionsTest {
 
             // Execute operations that should not modify original
             SpecsCollections.subList(original, 1);
-            SpecsCollections.newSorted(original);
             SpecsCollections.map(original, String::toUpperCase);
 
             // Verify original unchanged

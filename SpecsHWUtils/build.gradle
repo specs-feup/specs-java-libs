@@ -16,7 +16,9 @@ repositories {
 }
 
 dependencies {
-    implementation ':SpecsUtils'
+    implementation ":SpecsUtils"
+    implementation ":jOptions"
+    implementation ":XStreamPlus"
 }
 
 // Project sources

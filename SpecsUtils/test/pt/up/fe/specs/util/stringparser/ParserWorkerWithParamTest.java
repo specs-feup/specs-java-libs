@@ -40,23 +40,6 @@ public class ParserWorkerWithParamTest {
         }
 
         @Test
-        @DisplayName("Should handle numeric parameter")
-        void testNumericParameter() {
-            // Create a parser that multiplies parsed integer by parameter
-            ParserWorkerWithParam<Integer, Integer> parser = (slice, multiplier) -> {
-                ParserResult<Integer> intResult = StringParsersLegacy.parseInt(slice);
-                Integer result = intResult.result() * multiplier;
-                return new ParserResult<>(intResult.modifiedString(), result);
-            };
-
-            StringSlice input = new StringSlice("5 remainder");
-            ParserResult<Integer> result = parser.apply(input, 3);
-
-            assertThat(result.result()).isEqualTo(15);
-            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
-        }
-
-        @Test
         @DisplayName("Should support BiFunction interface")
         void testBiFunctionInterface() {
             // ParserWorkerWithParam extends BiFunction, so we can use it as such
@@ -266,36 +249,6 @@ public class ParserWorkerWithParamTest {
             assertThat(result.result()).isEqualTo(">>TEST->>TEST->>TEST");
             assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
         }
-
-        @Test
-        @DisplayName("Should handle complex computational logic")
-        void testComplexComputationalLogic() {
-            // Create a parser that performs complex operations with four parameters
-            ParserWorkerWithParam4<Integer, Integer, Integer, String, Boolean> parser = (slice, base, multiplier,
-                    operation, addLength) -> {
-                ParserResult<Integer> intResult = StringParsersLegacy.parseInt(slice);
-                int value = intResult.result();
-
-                int result = switch (operation) {
-                    case "add" -> base + value * multiplier;
-                    case "subtract" -> base - value * multiplier;
-                    case "multiply" -> base * value * multiplier;
-                    default -> value;
-                };
-
-                if (addLength) {
-                    result += slice.toString().length();
-                }
-
-                return new ParserResult<>(intResult.modifiedString(), result);
-            };
-
-            StringSlice input = new StringSlice("5 remainder");
-            ParserResult<Integer> result = parser.apply(input, 10, 3, "add", false);
-
-            assertThat(result.result()).isEqualTo(25); // 10 + (5 * 3)
-            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
-        }
     }
 
     @Nested
@@ -334,23 +287,6 @@ public class ParserWorkerWithParamTest {
             ParserResult<String> result3 = parser3.apply(result2.modifiedString(), "3", "(", ")");
             assertThat(result3.result()).isEqualTo("3(test)");
         }
-
-        @Test
-        @DisplayName("Should support different generic type combinations")
-        void testGenericTypeCombinations() {
-            StringSlice input = new StringSlice("42 remainder");
-
-            // Parser that converts string to integer with parameters
-            ParserWorkerWithParam2<Integer, String, Integer> parser = (slice, prefix, multiplier) -> {
-                ParserResult<Integer> intResult = StringParsersLegacy.parseInt(slice);
-                Integer result = Integer.parseInt(prefix + intResult.result()) * multiplier;
-                return new ParserResult<>(intResult.modifiedString(), result);
-            };
-
-            ParserResult<Integer> result = parser.apply(input, "1", 2);
-            assertThat(result.result()).isEqualTo(284); // (1 + 42) * 2 = 86, but string concat: "142" * 2 = 284
-            assertThat(result.modifiedString().toString()).isEqualTo(" remainder");
-        }
     }
 
     @Nested
@@ -373,26 +309,6 @@ public class ParserWorkerWithParamTest {
 
             assertThat(result.result()).isEqualTo("PREFIX_EMPTY");
             assertThat(result.modifiedString().toString()).isEqualTo("");
-        }
-
-        @Test
-        @DisplayName("Should handle exception scenarios")
-        void testExceptionHandling() {
-            ParserWorkerWithParam2<String, Integer, String> parser = (slice, divider, fallback) -> {
-                try {
-                    ParserResult<Integer> intResult = StringParsersLegacy.parseInt(slice);
-                    String result = String.valueOf(intResult.result() / divider);
-                    return new ParserResult<>(intResult.modifiedString(), result);
-                } catch (Exception e) {
-                    return new ParserResult<>(slice, fallback);
-                }
-            };
-
-            // Test division by zero
-            StringSlice input = new StringSlice("10 remainder");
-            ParserResult<String> result = parser.apply(input, 0, "ERROR");
-
-            assertThat(result.result()).isEqualTo("ERROR");
         }
 
         @Test

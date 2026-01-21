@@ -1,15 +1,12 @@
 package pt.up.fe.specs.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -229,20 +226,6 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("removeExtension with custom separator should work correctly")
-        void testRemoveExtensionCustomSeparator() {
-            // Arrange
-            String filename = "file_v1_0_final";
-            String separator = "_";
-
-            // Execute
-            String result = SpecsIo.removeExtension(filename, separator);
-
-            // Verify - removes from last occurrence of separator (actual behavior)
-            assertThat(result).isEqualTo("file_v1_0");
-        }
-
-        @Test
         @DisplayName("removeExtension for File should work correctly")
         void testRemoveExtensionFile(@TempDir Path tempDir) throws IOException {
             // Arrange
@@ -350,32 +333,6 @@ public class SpecsIoTest {
             assertThat(codeFiles).extracting(File::getName)
                     .containsExactlyInAnyOrder("code.java", "script.py", "program.cpp");
         }
-
-        @Test
-        @DisplayName("getFilesWithExtension should filter file lists")
-        void testGetFilesWithExtension(@TempDir Path tempDir) throws IOException {
-            // Arrange
-            File txtFile = tempDir.resolve("document.txt").toFile();
-            File javaFile = tempDir.resolve("code.java").toFile();
-            File pyFile = tempDir.resolve("script.py").toFile();
-
-            txtFile.createNewFile();
-            javaFile.createNewFile();
-            pyFile.createNewFile();
-
-            List<File> allFiles = Arrays.asList(txtFile, javaFile, pyFile);
-
-            // Execute
-            List<File> txtFiles = SpecsIo.getFilesWithExtension(allFiles, "txt");
-            List<File> codeFiles = SpecsIo.getFilesWithExtension(allFiles, Arrays.asList("java", "py"));
-
-            // Verify
-            assertThat(txtFiles).hasSize(1);
-            assertThat(txtFiles.get(0).getName()).isEqualTo("document.txt");
-
-            assertThat(codeFiles).hasSize(2);
-            assertThat(codeFiles).extracting(File::getName).containsExactlyInAnyOrder("code.java", "script.py");
-        }
     }
 
     @Nested
@@ -390,23 +347,6 @@ public class SpecsIoTest {
 
             // Verify
             assertThat(newline).isEqualTo(System.lineSeparator());
-        }
-
-        @Test
-        @DisplayName("close should handle null gracefully")
-        void testCloseNull() {
-            // Execute & Verify - should not throw exception
-            assertThatCode(() -> SpecsIo.close(null)).doesNotThrowAnyException();
-        }
-
-        @Test
-        @DisplayName("close should handle valid Closeable")
-        void testCloseValid() throws IOException {
-            // Arrange
-            ByteArrayInputStream stream = new ByteArrayInputStream("test".getBytes());
-
-            // Execute & Verify - should not throw exception
-            assertThatCode(() -> SpecsIo.close(stream)).doesNotThrowAnyException();
         }
     }
 
@@ -483,16 +423,6 @@ public class SpecsIoTest {
 
             // Verify
             assertThat(result).isEqualTo(filename);
-        }
-
-        @Test
-        @DisplayName("getFilesWithExtension should handle empty lists")
-        void testGetFilesWithExtensionEmptyList() {
-            // Execute
-            List<File> result = SpecsIo.getFilesWithExtension(Collections.emptyList(), "txt");
-
-            // Verify
-            assertThat(result).isEmpty();
         }
 
         @Test
@@ -592,25 +522,6 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("Test getFirstLibraryFolder")
-        void testGetFirstLibraryFolder() {
-            try {
-                SpecsIo.getFirstLibraryFolder();
-                // Can be null if no library folder found - just verify no exception
-            } catch (RuntimeException e) {
-                // Expected in some environments
-                assertThat(e).isNotNull();
-            }
-        }
-
-        @Test
-        @DisplayName("Test getLibraryFolders")
-        void testGetLibraryFolders() {
-            List<File> libraryFolders = SpecsIo.getLibraryFolders();
-            assertThat(libraryFolders).isNotNull();
-        }
-
-        @Test
         @DisplayName("Test getDepth")
         void testGetDepth(@TempDir Path tempDir) {
             File deepFile = tempDir.resolve("a").resolve("b").resolve("c").resolve("file.txt").toFile();
@@ -669,18 +580,6 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("Test extractZipResource with String")
-        void testExtractZipResourceString(@TempDir Path tempDir) {
-            try {
-                boolean result = SpecsIo.extractZipResource("test.zip", tempDir.toFile());
-                assertThat(result).isIn(true, false);
-            } catch (RuntimeException e) {
-                // Expected if resource doesn't exist
-                assertThat(e).isNotNull();
-            }
-        }
-
-        @Test
         @DisplayName("Test read(String) method")
         void testReadString(@TempDir Path tempDir) throws IOException {
             File testFile = tempDir.resolve("read-test.txt").toFile();
@@ -715,16 +614,6 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("Test closeStreamAfterError")
-        void testCloseStreamAfterError(@TempDir Path tempDir) throws IOException {
-            File testFile = tempDir.resolve("stream-test.txt").toFile();
-            OutputStream stream = new FileOutputStream(testFile);
-
-            SpecsIo.closeStreamAfterError(stream);
-            // Verify method completes without exception
-        }
-
-        @Test
         @DisplayName("Test toInputStream methods")
         void testToInputStreamMethods(@TempDir Path tempDir) throws IOException {
             InputStream stream1 = SpecsIo.toInputStream("test string");
@@ -737,25 +626,6 @@ public class SpecsIoTest {
             InputStream stream2 = SpecsIo.toInputStream(testFile);
             assertThat(stream2).isNotNull();
             stream2.close();
-        }
-
-        @Test
-        @DisplayName("Test sanitizeWorkingDir")
-        void testSanitizeWorkingDir() {
-            File result = SpecsIo.sanitizeWorkingDir("some/path/../dir");
-            assertThat(result).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Test read() method")
-        void testReadMethod() {
-            try {
-                int result = SpecsIo.read();
-                assertThat(result).isGreaterThanOrEqualTo(-1);
-            } catch (Exception e) {
-                // Expected in test environment without System.in input
-                assertThat(e).isNotNull();
-            }
         }
 
         @Test
@@ -783,30 +653,6 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("Test resourceCopyVersioned variants")
-        void testResourceCopyVersionedVariants(@TempDir Path tempDir) {
-            File destination = tempDir.resolve("versioned-resource.txt").toFile();
-            ResourceProvider provider = () -> "test-resource.txt";
-
-            try {
-                SpecsIo.ResourceCopyData result1 = SpecsIo.resourceCopyVersioned(provider, destination, false,
-                        SpecsIoTest.class);
-                assertThat(result1).isNotNull();
-            } catch (RuntimeException e) {
-                // Expected if resource doesn't exist
-                assertThat(e).isNotNull();
-            }
-
-            try {
-                SpecsIo.ResourceCopyData result2 = SpecsIo.resourceCopyVersioned(provider, destination, false);
-                assertThat(result2).isNotNull();
-            } catch (RuntimeException e) {
-                // Expected if resource doesn't exist
-                assertThat(e).isNotNull();
-            }
-        }
-
-        @Test
         @DisplayName("Test fileMapper and related methods")
         void testFileMapperMethods(@TempDir Path tempDir) throws IOException {
             Files.createDirectories(tempDir.resolve("subdir"));
@@ -821,31 +667,6 @@ public class SpecsIoTest {
 
             SpecsList<File> files2 = SpecsIo.getFiles(sources, true, extensions);
             assertThat(files2).isNotEmpty();
-        }
-
-        @Test
-        @DisplayName("Test getResourceListing")
-        void testGetResourceListing() {
-            try {
-                SpecsIo specsIo = new SpecsIo();
-                String[] listing = specsIo.getResourceListing(SpecsIoTest.class, "");
-                assertThat(listing).isNotNull();
-            } catch (Exception e) {
-                // May fail if resources are not available in test environment
-                assertThat(e).isNotNull();
-            }
-        }
-
-        @Test
-        @DisplayName("Test getExtendedFoldername")
-        void testGetExtendedFoldername(@TempDir Path tempDir) {
-            File baseFolder = tempDir.toFile();
-            File targetFile = tempDir.resolve("target.txt").toFile();
-            File workingFolder = tempDir.resolve("work").toFile();
-            workingFolder.mkdirs();
-
-            String extendedName = SpecsIo.getExtendedFoldername(baseFolder, targetFile, workingFolder);
-            assertThat(extendedName).isNotNull();
         }
 
         @Test
@@ -897,9 +718,6 @@ public class SpecsIoTest {
             boolean folderExists = SpecsIo.checkFolder(tempDir.toFile());
             assertThat(folderExists).isTrue();
 
-            boolean canWrite = SpecsIo.canWrite(testFile);
-            assertThat(canWrite).isInstanceOf(Boolean.class);
-
             boolean canWriteFolder = SpecsIo.canWriteFolder(tempDir.toFile());
             assertThat(canWriteFolder).isTrue();
 
@@ -940,20 +758,6 @@ public class SpecsIoTest {
             boolean copyResult = SpecsIo.copy(sourceFile, destFile);
             assertThat(copyResult).isTrue();
             assertThat(destFile.exists()).isTrue();
-
-            // Test copy with verbose
-            File destFile2 = tempDir.resolve("dest2.txt").toFile();
-            boolean verboseCopyResult = SpecsIo.copy(sourceFile, destFile2, true);
-            assertThat(verboseCopyResult).isTrue();
-
-            // Test copy with InputStream
-            String content = "stream content";
-            try (InputStream is = new ByteArrayInputStream(content.getBytes())) {
-                File streamDest = tempDir.resolve("stream.txt").toFile();
-                boolean streamCopyResult = SpecsIo.copy(is, streamDest);
-                assertThat(streamCopyResult).isTrue();
-                assertThat(Files.readString(streamDest.toPath())).isEqualTo(content);
-            }
         }
 
         @Test
@@ -998,28 +802,6 @@ public class SpecsIoTest {
 
             String cleanedUrl = SpecsIo.cleanUrl("https://example.com:8080/path");
             assertThat(cleanedUrl).isEqualTo("https://example.com/path");
-
-            String escaped = SpecsIo.escapeFilename("file<>name");
-            assertThat(escaped).doesNotContain("<", ">");
-        }
-
-        @Test
-        @DisplayName("Test byte operations")
-        void testByteOperations(@TempDir Path tempDir) throws IOException {
-            File testFile = tempDir.resolve("bytes.txt").toFile();
-            String content = "byte content test";
-            Files.write(testFile.toPath(), content.getBytes());
-
-            byte[] allBytes = SpecsIo.readAsBytes(testFile);
-            assertThat(new String(allBytes)).isEqualTo(content);
-
-            byte[] limitedBytes = SpecsIo.readAsBytes(testFile, 4);
-            assertThat(limitedBytes).hasSize(4);
-
-            try (InputStream is = Files.newInputStream(testFile.toPath())) {
-                byte[] streamBytes = SpecsIo.readAsBytes(is);
-                assertThat(new String(streamBytes)).isEqualTo(content);
-            }
         }
 
         @Test
@@ -1036,9 +818,6 @@ public class SpecsIoTest {
             File tempFolder = SpecsIo.getTempFolder();
             assertThat(tempFolder).isNotNull();
             assertThat(tempFolder.isDirectory()).isTrue();
-
-            File randomFolder = SpecsIo.newRandomFolder();
-            assertThat(randomFolder).isNotNull();
         }
 
         @Test
@@ -1061,29 +840,10 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("Test serialization operations")
-        void testSerializationOperations(@TempDir Path tempDir) throws IOException {
-            String testObject = "test serializable object";
-            File objectFile = tempDir.resolve("object.ser").toFile();
-
-            boolean writeResult = SpecsIo.writeObject(objectFile, testObject);
-            assertThat(writeResult).isTrue();
-
-            Object readResult = SpecsIo.readObject(objectFile);
-            assertThat(readResult).isEqualTo(testObject);
-
-            byte[] bytes = SpecsIo.getBytes(testObject);
-            assertThat(bytes).isNotNull();
-        }
-
-        @Test
         @DisplayName("Test utility methods")
         void testUtilityMethods(@TempDir Path tempDir) throws IOException {
             String newline = SpecsIo.getNewline();
             assertThat(newline).isEqualTo(System.lineSeparator());
-
-            // Test close with null - should not throw
-            SpecsIo.close(null);
 
             // Test empty folder detection
             assertThat(SpecsIo.isEmptyFolder(tempDir.toFile())).isTrue();
@@ -1102,40 +862,6 @@ public class SpecsIoTest {
     @Nested
     @DisplayName("High-Impact Zero Coverage Methods")
     class HighImpactZeroCoverageMethods {
-
-        @Test
-        @DisplayName("getResourceListing(Class, String) - 91 instructions")
-        void testGetResourceListing() throws Exception {
-            // Test getting resource listing - this is an instance method, so we need to
-            // create an instance
-            try {
-                SpecsIo specsIo = new SpecsIo();
-                String[] resources = specsIo.getResourceListing(SpecsIoTest.class, "");
-
-                // Should return some resources (may be empty but shouldn't throw)
-                assertThat(resources).isNotNull();
-            } catch (Exception e) {
-                // If method is not accessible or has different signature, just verify it
-                // doesn't crash
-                assertThat(e).isNotNull();
-            }
-        }
-
-        @Test
-        @DisplayName("resourceCopyVersioned(ResourceProvider, File, boolean, Class) - 75 instructions")
-        void testResourceCopyVersioned(@TempDir Path tempDir) throws Exception {
-            File targetFile = tempDir.resolve("versioned.txt").toFile();
-
-            // Create a test resource provider
-            ResourceProvider provider = () -> "test-resource.txt";
-
-            try {
-                SpecsIo.resourceCopyVersioned(provider, targetFile, true, SpecsIoTest.class);
-            } catch (Exception e) {
-                // Expected if resource doesn't exist - we're testing the method execution
-                assertThat(e).isNotNull();
-            }
-        }
 
         @Test
         @DisplayName("getFilesPrivate(File) - 58 instructions")
@@ -1178,44 +904,6 @@ public class SpecsIoTest {
         }
 
         @Test
-        @DisplayName("getFolder(File, String, boolean) - 39 instructions")
-        void testGetFolder(@TempDir Path tempDir) throws Exception {
-            File parentDir = tempDir.toFile();
-            String folderName = "test-folder";
-
-            // Test getting folder that doesn't exist
-            File folder = SpecsIo.getFolder(parentDir, folderName, false);
-            assertThat(folder).isNotNull();
-            assertThat(folder.getName()).isEqualTo(folderName);
-
-            // Test creating folder
-            File createdFolder = SpecsIo.getFolder(parentDir, folderName, true);
-            assertThat(createdFolder).exists();
-            assertThat(createdFolder.isDirectory()).isTrue();
-        }
-
-        @Test
-        @DisplayName("getFilesWithExtension(List, Collection) - 33 instructions")
-        void testGetFilesWithExtensionListCollection(@TempDir Path tempDir) throws Exception {
-            // Create test files
-            File txtFile = tempDir.resolve("test.txt").toFile();
-            File javaFile = tempDir.resolve("Test.java").toFile();
-            File otherFile = tempDir.resolve("other.dat").toFile();
-
-            txtFile.createNewFile();
-            javaFile.createNewFile();
-            otherFile.createNewFile();
-
-            List<File> inputFiles = Arrays.asList(txtFile, javaFile, otherFile);
-            Collection<String> extensions = Arrays.asList("txt", "java");
-
-            List<File> filtered = SpecsIo.getFilesWithExtension(inputFiles, extensions);
-            assertThat(filtered).hasSize(2);
-            assertThat(filtered).contains(txtFile, javaFile);
-            assertThat(filtered).doesNotContain(otherFile);
-        }
-
-        @Test
         @DisplayName("Should handle parseUrlQuery method")
         void testParseUrlQuery() throws Exception {
             try {
@@ -1238,9 +926,6 @@ public class SpecsIoTest {
             try {
                 List<File> files1 = SpecsIo.getFilesRecursive(testDir, new ArrayList<String>());
                 assertThat(files1).isNotNull();
-
-                List<File> files2 = SpecsIo.getFilesRecursive(testDir, new ArrayList<String>(), true);
-                assertThat(files2).isNotNull();
             } catch (Exception e) {
                 // Expected for this test
                 assertThat(e).isNotNull();
@@ -1265,9 +950,6 @@ public class SpecsIoTest {
                 ResourceProvider provider = () -> "test.txt";
                 File result4 = SpecsIo.resourceCopy(provider, testFile);
                 assertThat(result4).isNotNull();
-
-                SpecsIo.ResourceCopyData result5 = SpecsIo.resourceCopyVersioned(provider, testFile, true);
-                assertThat(result5).isNotNull();
             } catch (Exception e) {
                 // Expected for this test - resources don't exist
                 assertThat(e).isNotNull();
@@ -1327,21 +1009,6 @@ public class SpecsIoTest {
 
             List<File> files = SpecsIo.getFilesRecursive(tempDir.toFile(), "txt");
             assertThat(files).hasSize(2);
-        }
-
-        @Test
-        @DisplayName("getFilesWithExtension(List, String) - 12 instructions")
-        void testGetFilesWithExtensionString(@TempDir Path tempDir) throws Exception {
-            File txtFile = tempDir.resolve("test.txt").toFile();
-            File javaFile = tempDir.resolve("Test.java").toFile();
-            txtFile.createNewFile();
-            javaFile.createNewFile();
-
-            List<File> inputFiles = Arrays.asList(txtFile, javaFile);
-            List<File> txtFiles = SpecsIo.getFilesWithExtension(inputFiles, "txt");
-
-            assertThat(txtFiles).hasSize(1);
-            assertThat(txtFiles.get(0)).isEqualTo(txtFile);
         }
 
         @Test
@@ -1457,20 +1124,6 @@ public class SpecsIoTest {
 
             try {
                 SpecsIo.resourceCopy("test.txt", targetFile, true);
-            } catch (Exception e) {
-                // Expected if resource doesn't exist
-                assertThat(e).isNotNull();
-            }
-        }
-
-        @Test
-        @DisplayName("resourceCopyVersioned(ResourceProvider, File, boolean) - 7 instructions")
-        void testResourceCopyVersionedSimple(@TempDir Path tempDir) throws Exception {
-            ResourceProvider provider = () -> "test.txt";
-            File targetFile = tempDir.resolve("versioned2.txt").toFile();
-
-            try {
-                SpecsIo.resourceCopyVersioned(provider, targetFile, true);
             } catch (Exception e) {
                 // Expected if resource doesn't exist
                 assertThat(e).isNotNull();

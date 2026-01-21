@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import pt.up.fe.specs.util.exceptions.NotImplementedException;
 import pt.up.fe.specs.util.utilities.ClassMapper;
@@ -39,6 +40,14 @@ public class BiFunctionClassMap<T, U, R> {
         this.map = new HashMap<>();
         // this.supportInterfaces = true;
         this.classMapper = new ClassMapper();
+    }
+
+    public <ER extends R> BiFunctionClassMap(BiFunctionClassMap<T, U, ER> other) {
+        this.map = new HashMap<>();
+        for (var keyPair : other.map.entrySet()) {
+            this.map.put(keyPair.getKey(), (BiFunction<T, U, R>) keyPair.getValue());
+        }
+        this.classMapper = new ClassMapper(other.classMapper);
     }
 
     /**
