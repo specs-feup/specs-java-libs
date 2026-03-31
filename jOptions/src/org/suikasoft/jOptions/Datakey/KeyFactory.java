@@ -315,11 +315,11 @@ public class KeyFactory {
             throw new RuntimeException("Path '" + currentFile + "' does not exist");
         }
 
-        if (workingFolder.isPresent() && dataStore.get(JOptionKeys.USE_RELATIVE_PATHS)) {
+        if (workingFolder.isPresent() && dataStore.getTry(JOptionKeys.USE_RELATIVE_PATHS).orElse(false)) {
             currentFile = new File(SpecsIo.getRelativePath(currentFile, new File(workingFolder.get())));
         }
 
-        if (!dataStore.get(JOptionKeys.USE_RELATIVE_PATHS) && workingFolder.isPresent()) {
+        if (!dataStore.getTry(JOptionKeys.USE_RELATIVE_PATHS).orElse(false) && workingFolder.isPresent()) {
             currentFile = SpecsIo.getCanonicalFile(currentFile);
         }
 
