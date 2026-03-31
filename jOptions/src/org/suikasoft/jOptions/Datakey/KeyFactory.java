@@ -1,11 +1,11 @@
 /**
  * Copyright 2014 SPeCS.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
@@ -13,51 +13,32 @@
 
 package org.suikasoft.jOptions.Datakey;
 
-import java.io.File;
-import java.io.Serial;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.Supplier;
-
-import javax.swing.JFileChooser;
-
-import org.suikasoft.jOptions.JOptionKeys;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import org.suikasoft.jOptions.Datakey.customkeys.MultipleChoiceListKey;
 import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.JOptionKeys;
 import org.suikasoft.jOptions.Options.FileList;
 import org.suikasoft.jOptions.Utils.EnumCodec;
 import org.suikasoft.jOptions.Utils.MultipleChoiceListCodec;
-import org.suikasoft.jOptions.gui.panels.option.BooleanPanel;
-import org.suikasoft.jOptions.gui.panels.option.DoublePanel;
-import org.suikasoft.jOptions.gui.panels.option.EnumMultipleChoicePanel;
-import org.suikasoft.jOptions.gui.panels.option.FilePanel;
-import org.suikasoft.jOptions.gui.panels.option.FilesWithBaseFoldersPanel;
-import org.suikasoft.jOptions.gui.panels.option.IntegerPanel;
-import org.suikasoft.jOptions.gui.panels.option.MultipleChoiceListPanel;
-import org.suikasoft.jOptions.gui.panels.option.SetupListPanel;
-import org.suikasoft.jOptions.gui.panels.option.StringListPanel;
-import org.suikasoft.jOptions.gui.panels.option.StringPanel;
+import org.suikasoft.jOptions.gui.panels.option.*;
 import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionProvider;
 import org.suikasoft.jOptions.values.SetupList;
-
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-
 import pt.up.fe.specs.util.SpecsCheck;
 import pt.up.fe.specs.util.SpecsCollections;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.parsing.StringCodec;
 import pt.up.fe.specs.util.utilities.StringList;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.Serial;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 /**
  * Factory for creating common {@link DataKey} types and utility methods for key
@@ -243,7 +224,7 @@ public class KeyFactory {
      * @return a {@link DataKey} for File values
      */
     private static DataKey<File> file(String id, boolean isFolder, boolean create, boolean exists,
-            Collection<String> extensions) {
+                                      Collection<String> extensions) {
         int fileChooser;
         if (isFolder) {
             fileChooser = JFileChooser.DIRECTORIES_ONLY;
@@ -295,7 +276,7 @@ public class KeyFactory {
      * @return a custom getter for file paths
      */
     public static CustomGetter<File> customGetterFile(boolean canBeFolder, boolean canBeFile, boolean create,
-            boolean exists) {
+                                                      boolean exists) {
         return (file, dataStore) -> new File(
                 SpecsIo.normalizePath(customGetterFile(file, dataStore, canBeFolder, canBeFile, create, exists)));
     }
@@ -313,14 +294,14 @@ public class KeyFactory {
      * @return the processed file
      */
     public static File customGetterFile(File file, DataStore dataStore, boolean isFolder, boolean isFile,
-            boolean create, boolean exists) {
+                                        boolean create, boolean exists) {
         if (file.getPath().isEmpty() && !isFolder && isFile && !create) {
             return file;
         }
 
         File currentFile = file;
 
-        var workingFolder = dataStore.get(JOptionKeys.CURRENT_FOLDER_PATH);
+        var workingFolder = dataStore.getTry(JOptionKeys.CURRENT_FOLDER_PATH).orElse(Optional.empty());
         if (workingFolder.isPresent()) {
             if (!currentFile.isAbsolute()) {
                 File parentFolder = new File(workingFolder.get());
@@ -727,7 +708,7 @@ public class KeyFactory {
      * @return a {@link DataKey} for a list of multiple-choice values
      */
     public static <T> DataKey<List<T>> multiplechoiceList(String id, StringCodec<T> codec,
-            List<T> availableChoices) {
+                                                          List<T> availableChoices) {
         SpecsCheck.checkArgument(!availableChoices.isEmpty(), () -> "Must give at least one element");
 
         return new MultipleChoiceListKey<>(id, availableChoices)
