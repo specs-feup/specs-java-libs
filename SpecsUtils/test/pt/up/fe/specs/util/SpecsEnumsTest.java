@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -164,41 +163,6 @@ public class SpecsEnumsTest {
             // Verify
             assertThat(result.name()).isEqualTo(enumName);
         }
-
-        @Test
-        @DisplayName("containsEnum should return true for valid enum names")
-        void testContainsEnum_ValidNames() {
-            // Execute & Verify
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "RED")).isTrue();
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "GREEN")).isTrue();
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "BLUE")).isTrue();
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "YELLOW")).isTrue();
-        }
-
-        @Test
-        @DisplayName("containsEnum should return true even for invalid names (due to valueOf behavior)")
-        void testContainsEnum_InvalidNames() {
-            // Execute & Verify - containsEnum returns true because valueOf returns first
-            // element for invalid names
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "PURPLE")).isTrue();
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "INVALID")).isTrue();
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "")).isTrue();
-            // Note: null will throw exception, not return false
-        }
-
-        @Test
-        @DisplayName("getValues should return correct enum values for list of names")
-        void testGetValues() {
-            // Arrange
-            List<String> names = Arrays.asList("RED", "BLUE", "INVALID", "GREEN");
-
-            // Execute
-            List<TestColor> result = SpecsEnums.getValues(TestColor.class, names);
-
-            // Verify - INVALID returns first element (RED), so we get RED, BLUE, RED, GREEN
-            assertThat(result).hasSize(4);
-            assertThat(result).containsExactly(TestColor.RED, TestColor.BLUE, TestColor.RED, TestColor.GREEN);
-        }
     }
 
     @Nested
@@ -267,32 +231,6 @@ public class SpecsEnumsTest {
         }
 
         @Test
-        @DisplayName("buildList should create list of enum names")
-        void testBuildList() {
-            // Execute
-            List<String> result = SpecsEnums.buildList(TestColor.values());
-
-            // Verify
-            assertThat(result).hasSize(4);
-            assertThat(result).containsExactly("RED", "GREEN", "BLUE", "YELLOW");
-        }
-
-        @Test
-        @DisplayName("buildListToString should create list of enum toString values")
-        void testBuildListToString() {
-            // Execute using array
-            List<String> result1 = SpecsEnums.buildListToString(TestColor.values());
-
-            // Execute using class
-            List<String> result2 = SpecsEnums.buildListToString(TestColor.class);
-
-            // Verify
-            assertThat(result1).hasSize(4);
-            assertThat(result1).containsExactly("RED", "GREEN", "BLUE", "YELLOW");
-            assertThat(result2).isEqualTo(result1);
-        }
-
-        @Test
         @DisplayName("buildMap with KeyProvider should create map from keys to enums")
         void testBuildMap_KeyProvider() {
             // Execute
@@ -332,28 +270,6 @@ public class SpecsEnumsTest {
         }
 
         @Test
-        @DisplayName("extractValuesV2 should return list of enum values")
-        void testExtractValuesV2() {
-            // Execute
-            List<TestColor> result = SpecsEnums.extractValuesV2(TestColor.class);
-
-            // Verify
-            assertThat(result).hasSize(4);
-            assertThat(result).containsExactly(TestColor.RED, TestColor.GREEN, TestColor.BLUE, TestColor.YELLOW);
-        }
-
-        @Test
-        @DisplayName("extractNames should return list of enum names")
-        void testExtractNames() {
-            // Execute
-            List<String> result = SpecsEnums.extractNames(TestColor.class);
-
-            // Verify
-            assertThat(result).hasSize(4);
-            assertThat(result).containsExactly("RED", "GREEN", "BLUE", "YELLOW");
-        }
-
-        @Test
         @DisplayName("extractValues with multiple enum classes should combine all values")
         void testExtractValues_MultipleClasses() {
             // Execute
@@ -364,114 +280,11 @@ public class SpecsEnumsTest {
             assertThat(result).contains(TestColor.RED, TestColor.GREEN, TestColor.BLUE, TestColor.YELLOW);
             assertThat(result).contains(TestSize.SMALL, TestSize.MEDIUM, TestSize.LARGE);
         }
-
-        @Test
-        @DisplayName("getClass should return class of enum array")
-        void testGetClass() {
-            // Execute
-            Class<?> result = SpecsEnums.getClass(TestColor.values());
-
-            // Verify
-            assertThat(result).isEqualTo(TestColor.class);
-        }
-
-        @Test
-        @DisplayName("getClass should handle empty array")
-        void testGetClass_EmptyArray() {
-            // Execute
-            Class<?> result = SpecsEnums.getClass(new TestColor[0]);
-
-            // Verify
-            assertThat(result).isNull();
-        }
-    }
-
-    @Nested
-    @DisplayName("Complement Operations")
-    class ComplementTests {
-
-        @Test
-        @DisplayName("getComplement should return EnumSet complement")
-        void testGetComplement_EnumSet() {
-            // Arrange
-            List<TestColor> values = Arrays.asList(TestColor.RED, TestColor.BLUE);
-
-            // Execute
-            EnumSet<TestColor> result = SpecsEnums.getComplement(values);
-
-            // Verify
-            assertThat(result).hasSize(2);
-            assertThat(result).contains(TestColor.GREEN, TestColor.YELLOW);
-            assertThat(result).doesNotContain(TestColor.RED, TestColor.BLUE);
-        }
-
-        @Test
-        @DisplayName("getComplement should return array complement")
-        void testGetComplement_Array() {
-            // Arrange
-            List<TestColor> values = Arrays.asList(TestColor.RED, TestColor.BLUE);
-            TestColor[] array = new TestColor[2];
-
-            // Execute
-            TestColor[] result = SpecsEnums.getComplement(array, values);
-
-            // Verify
-            assertThat(result).hasSize(2);
-            assertThat(result).contains(TestColor.GREEN, TestColor.YELLOW);
-        }
-
-        @Test
-        @DisplayName("getComplement should handle single value")
-        void testGetComplement_SingleValue() {
-            // Arrange
-            List<TestSize> values = Arrays.asList(TestSize.MEDIUM);
-
-            // Execute
-            EnumSet<TestSize> result = SpecsEnums.getComplement(values);
-
-            // Verify
-            assertThat(result).hasSize(2);
-            assertThat(result).contains(TestSize.SMALL, TestSize.LARGE);
-            assertThat(result).doesNotContain(TestSize.MEDIUM);
-        }
-
-        @Test
-        @DisplayName("getComplement should handle all values")
-        void testGetComplement_AllValues() {
-            // Arrange
-            List<TestSize> values = Arrays.asList(TestSize.SMALL, TestSize.MEDIUM, TestSize.LARGE);
-
-            // Execute
-            EnumSet<TestSize> result = SpecsEnums.getComplement(values);
-
-            // Verify
-            assertThat(result).isEmpty();
-        }
     }
 
     @Nested
     @DisplayName("Helper and Utility Operations")
     class HelperUtilityTests {
-
-        @Test
-        @DisplayName("getFirstEnum should return first enum value")
-        void testGetFirstEnum() {
-            // Execute
-            TestColor result = SpecsEnums.getFirstEnum(TestColor.class);
-
-            // Verify
-            assertThat(result).isEqualTo(TestColor.RED);
-        }
-
-        @Test
-        @DisplayName("getEnumOptions should return formatted string of options")
-        void testGetEnumOptions() {
-            // Execute
-            String result = SpecsEnums.getEnumOptions(TestSize.class);
-
-            // Verify
-            assertThat(result).isEqualTo("[small, medium, large]");
-        }
 
         @Test
         @DisplayName("fromName should work like valueOf")
@@ -494,27 +307,6 @@ public class SpecsEnumsTest {
         }
 
         @Test
-        @DisplayName("values should return all enum values")
-        void testValues() {
-            // Execute
-            TestColor[] result = SpecsEnums.values(TestColor.class);
-
-            // Verify
-            assertThat(result).hasSize(4);
-            assertThat(result).containsExactly(TestColor.RED, TestColor.GREEN, TestColor.BLUE, TestColor.YELLOW);
-        }
-
-        @Test
-        @DisplayName("nextEnum should return next enum in order")
-        void testNextEnum() {
-            // Execute & Verify
-            assertThat(SpecsEnums.nextEnum(TestColor.RED)).isEqualTo(TestColor.GREEN);
-            assertThat(SpecsEnums.nextEnum(TestColor.GREEN)).isEqualTo(TestColor.BLUE);
-            assertThat(SpecsEnums.nextEnum(TestColor.BLUE)).isEqualTo(TestColor.YELLOW);
-            assertThat(SpecsEnums.nextEnum(TestColor.YELLOW)).isEqualTo(TestColor.RED); // Wraps around
-        }
-
-        @Test
         @DisplayName("getHelper should return and cache enum helper")
         void testGetHelper() {
             // Execute
@@ -524,21 +316,6 @@ public class SpecsEnumsTest {
             // Verify
             assertThat(helper1).isNotNull();
             assertThat(helper2).isSameAs(helper1); // Should be cached
-        }
-
-        @Test
-        @DisplayName("toEnumTry should return Optional enum value")
-        void testToEnumTry() {
-            // Execute
-            Optional<TestColor> result1 = SpecsEnums.toEnumTry(TestColor.class, "RED");
-            Optional<TestColor> result2 = SpecsEnums.toEnumTry(TestColor.class, "INVALID");
-
-            // Verify
-            assertThat(result1).isPresent();
-            assertThat(result1.get()).isEqualTo(TestColor.RED);
-
-            // For invalid names, toEnumTry should return empty Optional (unlike valueOf)
-            assertThat(result2).isEmpty();
         }
 
         @Test
@@ -665,8 +442,6 @@ public class SpecsEnumsTest {
             // Execute & Verify
             assertThat(SpecsEnums.valueOf(SingleValue.class, "ONLY")).isEqualTo(SingleValue.ONLY);
             assertThat(SpecsEnums.valueOf(SingleValue.class, "INVALID")).isEqualTo(SingleValue.ONLY);
-            assertThat(SpecsEnums.getFirstEnum(SingleValue.class)).isEqualTo(SingleValue.ONLY);
-            assertThat(SpecsEnums.nextEnum(SingleValue.ONLY)).isEqualTo(SingleValue.ONLY);
         }
 
         @Test
@@ -716,9 +491,6 @@ public class SpecsEnumsTest {
             // Execute & Verify
             assertThatThrownBy(() -> SpecsEnums.valueOf(null, "TEST"))
                     .isInstanceOf(NullPointerException.class);
-
-            assertThatThrownBy(() -> SpecsEnums.getFirstEnum(null))
-                    .isInstanceOf(NullPointerException.class);
         }
 
         @ParameterizedTest
@@ -739,31 +511,13 @@ public class SpecsEnumsTest {
         }
 
         @Test
-        @DisplayName("complement operations should handle edge cases")
-        void testComplementEdgeCases() {
-            // Test with all values
-            List<TestSize> allValues = Arrays.asList(TestSize.SMALL, TestSize.MEDIUM, TestSize.LARGE);
-            EnumSet<TestSize> complement = SpecsEnums.getComplement(allValues);
-            assertThat(complement).isEmpty();
-
-            // Test with no values - this throws IllegalArgumentException because
-            // EnumSet.copyOf doesn't accept empty collections
-            List<TestSize> noValues = Arrays.asList();
-            assertThatThrownBy(() -> SpecsEnums.getComplement(noValues))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Collection is empty");
-        }
-
-        @Test
         @DisplayName("operations should preserve enum order")
         void testEnumOrder() {
             // Execute
             List<TestColor> values = SpecsEnums.extractValues(TestColor.class);
-            TestColor[] array = SpecsEnums.values(TestColor.class);
-
+            
             // Verify order is preserved
             assertThat(values).containsExactly(TestColor.RED, TestColor.GREEN, TestColor.BLUE, TestColor.YELLOW);
-            assertThat(array).containsExactly(TestColor.RED, TestColor.GREEN, TestColor.BLUE, TestColor.YELLOW);
         }
     }
 
@@ -795,113 +549,6 @@ public class SpecsEnumsTest {
             assertThat(map).containsEntry("GREEN", TestColor.GREEN);
             assertThat(map).containsEntry("BLUE", TestColor.BLUE);
             assertThat(map).doesNotContainKey("YELLOW");
-        }
-
-        @Test
-        @DisplayName("buildList should create string list from enum array")
-        void testBuildList() {
-            TestColor[] values = {TestColor.RED, TestColor.BLUE};
-            List<String> list = SpecsEnums.buildList(values);
-            
-            assertThat(list).hasSize(2);
-            assertThat(list).containsExactly("RED", "BLUE");
-        }
-
-        @Test
-        @DisplayName("buildListToString should create string list from enum class")
-        void testBuildListToString() {
-            List<String> list = SpecsEnums.buildListToString(TestColor.class);
-            
-            assertThat(list).hasSize(4);
-            assertThat(list).containsExactly("RED", "GREEN", "BLUE", "YELLOW");
-        }
-
-        @Test
-        @DisplayName("buildListToString with array should create string list")
-        void testBuildListToStringWithArray() {
-            TestColor[] values = {TestColor.GREEN, TestColor.RED};
-            List<String> list = SpecsEnums.buildListToString(values);
-            
-            assertThat(list).hasSize(2);
-            assertThat(list).containsExactly("GREEN", "RED");
-        }
-
-        @Test
-        @DisplayName("getClass should return enum class from array")
-        void testGetClass() {
-            TestColor[] values = TestColor.values();
-            Class<?> enumClass = SpecsEnums.getClass(values);
-            
-            assertThat(enumClass).isEqualTo(TestColor.class);
-        }
-
-        @Test
-        @DisplayName("extractValuesV2 should extract enum values as list")
-        void testExtractValuesV2() {
-            List<TestColor> values = SpecsEnums.extractValuesV2(TestColor.class);
-            
-            assertThat(values).hasSize(4);
-            assertThat(values).containsExactly(TestColor.RED, TestColor.GREEN, TestColor.BLUE, TestColor.YELLOW);
-        }
-
-        @Test
-        @DisplayName("extractNames should extract enum names as strings")
-        void testExtractNames() {
-            List<String> names = SpecsEnums.extractNames(TestColor.class);
-            
-            assertThat(names).hasSize(4);
-            assertThat(names).containsExactly("RED", "GREEN", "BLUE", "YELLOW");
-        }
-
-        @Test
-        @DisplayName("getComplement should return complement enum array")
-        void testGetComplementArray() {
-            // Create an appropriately sized array for the result 
-            TestColor[] resultArray = new TestColor[2]; // We expect 2 elements (GREEN, YELLOW)
-            List<TestColor> excluded = Arrays.asList(TestColor.RED, TestColor.BLUE);
-            TestColor[] complement = SpecsEnums.getComplement(resultArray, excluded);
-            
-            // The complement should contain GREEN and YELLOW
-            assertThat(complement).hasSize(2);
-            assertThat(complement).containsExactlyInAnyOrder(TestColor.GREEN, TestColor.YELLOW);
-        }
-
-        @Test
-        @DisplayName("getComplement should return complement EnumSet")
-        void testGetComplementEnumSet() {
-            List<TestColor> excluded = Arrays.asList(TestColor.RED);
-            EnumSet<TestColor> complement = SpecsEnums.getComplement(excluded);
-            
-            assertThat(complement).hasSize(3);
-            assertThat(complement).containsExactlyInAnyOrder(TestColor.GREEN, TestColor.BLUE, TestColor.YELLOW);
-        }
-
-        @Test
-        @DisplayName("getFirstEnum should return first enum constant")
-        void testGetFirstEnum() {
-            TestColor first = SpecsEnums.getFirstEnum(TestColor.class);
-            assertThat(first).isEqualTo(TestColor.RED);
-        }
-
-        @Test
-        @DisplayName("getValues should handle valid and invalid names")
-        void testGetValuesWithMixedNames() {
-            List<String> names = Arrays.asList("RED", "INVALID_NAME", "BLUE", "ANOTHER_INVALID");
-            List<TestColor> values = SpecsEnums.getValues(TestColor.class, names);
-            
-            // valueOf returns first element on error, so all names get converted to enums
-            assertThat(values).hasSize(4);
-            // RED -> RED, INVALID_NAME -> RED (first element), BLUE -> BLUE, ANOTHER_INVALID -> RED (first element)
-            assertThat(values).containsExactly(TestColor.RED, TestColor.RED, TestColor.BLUE, TestColor.RED);
-        }
-
-        @Test
-        @DisplayName("containsEnum should check if enum name exists")
-        void testContainsEnum() {
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "RED")).isTrue();
-            // containsEnum calls valueOf which returns first element on error, so it always returns true
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "INVALID")).isTrue(); // Returns first element
-            assertThat(SpecsEnums.containsEnum(TestColor.class, "red")).isTrue(); // Case sensitive, returns first element
         }
 
         @Test

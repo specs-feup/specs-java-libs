@@ -13,6 +13,7 @@
 
 package pt.up.fe.specs.util.events;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -50,7 +51,7 @@ public class EventSnippet {
 	     */
 	    @Override
 	    public Collection<EventId> getSupportedEvents() {
-		Collection<EventId> events = SpecsFactory.newArrayList();
+		Collection<EventId> events = new ArrayList<>();
 		events.addAll(Arrays.asList(EventSample.values()));
 		events.addAll(Arrays.asList(EventSample2.values()));
 

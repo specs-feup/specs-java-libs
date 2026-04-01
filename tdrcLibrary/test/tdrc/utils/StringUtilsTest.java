@@ -195,16 +195,6 @@ class StringUtilsTest {
     class JoiningTests {
 
         @Test
-        @DisplayName("Join string collection with separator")
-        void testJoinStrings_WithSeparator_JoinsCorrectly() {
-            Collection<String> items = Arrays.asList("apple", "banana", "cherry");
-
-            assertThat(StringUtils.joinStrings(items, ", ")).isEqualTo("apple, banana, cherry");
-            assertThat(StringUtils.joinStrings(items, "-")).isEqualTo("apple-banana-cherry");
-            assertThat(StringUtils.joinStrings(items, "")).isEqualTo("applebananacherry");
-        }
-
-        @Test
         @DisplayName("Join with function transformation")
         void testJoin_WithFunction_TransformsAndJoins() {
             Collection<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
@@ -231,7 +221,6 @@ class StringUtilsTest {
             Collection<String> empty = Collections.emptyList();
 
             assertThat(StringUtils.join(empty, ", ")).isEqualTo("");
-            assertThat(StringUtils.joinStrings(empty, ", ")).isEqualTo("");
         }
 
         @Test
@@ -240,7 +229,6 @@ class StringUtilsTest {
             Collection<String> single = List.of("alone");
 
             assertThat(StringUtils.join(single, ", ")).isEqualTo("alone");
-            assertThat(StringUtils.joinStrings(single, ", ")).isEqualTo("alone");
         }
 
         @Test
@@ -259,23 +247,6 @@ class StringUtilsTest {
     class PackageComparisonTests {
 
         @Test
-        @DisplayName("Compare equal package names")
-        void testInSamePackage_EqualPackages_ReturnsTrue() {
-            assertThat(StringUtils.inSamePackage("com.example.test.Class1", "com.example.test.Class2")).isTrue();
-            assertThat(StringUtils.inSamePackage("java.util.List", "java.util.ArrayList")).isTrue();
-            assertThat(StringUtils.inSamePackage("SimpleClass", "AnotherSimpleClass")).isTrue(); // Default package
-        }
-
-        @Test
-        @DisplayName("Compare different package names")
-        void testInSamePackage_DifferentPackages_ReturnsFalse() {
-            assertThat(StringUtils.inSamePackage("com.example.test.Class1", "com.example.other.Class2")).isFalse();
-            assertThat(StringUtils.inSamePackage("java.util.List", "java.lang.String")).isFalse();
-            assertThat(StringUtils.inSamePackage("com.test.Class", "SimpleClass")).isFalse(); // One in package, one
-                                                                                              // default
-        }
-
-        @Test
         @DisplayName("Get package from class name")
         void testGetPackage_ReturnsCorrectPackage() {
             assertThat(StringUtils.getPackage("com.example.test.MyClass")).isEqualTo("com.example.test");
@@ -289,71 +260,6 @@ class StringUtilsTest {
             assertThat(StringUtils.getPackage("")).isEqualTo("");
             assertThat(StringUtils.getPackage(".ClassName")).isEqualTo("");
             assertThat(StringUtils.getPackage("a.b.c.d.e.ClassName")).isEqualTo("a.b.c.d.e");
-        }
-    }
-
-    @Nested
-    @DisplayName("String Repeat Tests")
-    @SuppressWarnings("deprecation") // Testing deprecated repeat method
-    class StringRepeatTests {
-
-        @Test
-        @DisplayName("Repeat string multiple times")
-        void testRepeat_ValidInputs_RepeatsCorrectly() {
-            assertThat(StringUtils.repeat("abc", 3)).isEqualTo("abcabcabc");
-            assertThat(StringUtils.repeat("x", 5)).isEqualTo("xxxxx");
-            assertThat(StringUtils.repeat("hello", 2)).isEqualTo("hellohello");
-        }
-
-        @Test
-        @DisplayName("Repeat string zero times")
-        void testRepeat_ZeroTimes_ReturnsEmptyString() {
-            assertThat(StringUtils.repeat("test", 0)).isEqualTo("");
-            assertThat(StringUtils.repeat("hello", 0)).isEqualTo("");
-        }
-
-        @Test
-        @DisplayName("Repeat string once")
-        void testRepeat_OnceTimes_ReturnsOriginal() {
-            assertThat(StringUtils.repeat("test", 1)).isEqualTo("test");
-            assertThat(StringUtils.repeat("hello", 1)).isEqualTo("hello");
-        }
-
-        @Test
-        @DisplayName("Repeat empty string")
-        void testRepeat_EmptyString_ReturnsEmptyString() {
-            assertThat(StringUtils.repeat("", 5)).isEqualTo("");
-            assertThat(StringUtils.repeat("", 1)).isEqualTo("");
-        }
-
-        @Test
-        @DisplayName("Repeat with null and negative inputs")
-        void testRepeat_InvalidInputs_ReturnsNull() {
-            assertThat(StringUtils.repeat(null, 3)).isNull();
-            assertThat(StringUtils.repeat("test", -1)).isNull();
-            assertThat(StringUtils.repeat(null, -1)).isNull();
-        }
-    }
-
-    @Nested
-    @DisplayName("XML Conversion Tests")
-    class XmlConversionTests {
-
-        @Test
-        @DisplayName("XML to string buffer method exists")
-        void testXmlToStringBuffer_MethodExists() {
-            // Test that the method exists with correct signature
-            assertThat(StringUtils.class.getDeclaredMethods())
-                    .extracting("name")
-                    .contains("xmlToStringBuffer");
-        }
-
-        @Test
-        @DisplayName("XML to string buffer with null document")
-        void testXmlToStringBuffer_WithNullDocument_ThrowsException() {
-            // This would throw an exception if called with null
-            assertThatThrownBy(() -> StringUtils.xmlToStringBuffer(null, 4))
-                    .isInstanceOf(Exception.class);
         }
     }
 

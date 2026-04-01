@@ -1,4 +1,0 @@
-rootProject.name = 'GitlabPlus'
-
-includeBuild("../GsonPlus")
-includeBuild("../SpecsUtils")

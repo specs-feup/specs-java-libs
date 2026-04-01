@@ -105,77 +105,6 @@ public class StringParsersTest {
     }
 
     @Nested
-    @DisplayName("Integer Parsing Tests")
-    class IntegerParsingTests {
-
-        @Test
-        @DisplayName("Should parse positive integer")
-        void testParsePositiveInteger() {
-            StringSlice input = new StringSlice("123 remaining");
-            ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
-
-            assertThat(result.result()).isEqualTo(123);
-            assertThat(result.modifiedString().toString()).isEqualTo(" remaining");
-        }
-
-        @Test
-        @DisplayName("Should parse negative integer")
-        void testParseNegativeInteger() {
-            StringSlice input = new StringSlice("-456 after");
-            ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
-
-            assertThat(result.result()).isEqualTo(-456);
-            assertThat(result.modifiedString().toString()).isEqualTo(" after");
-        }
-
-        @Test
-        @DisplayName("Should parse integer at end of string")
-        void testParseIntegerAtEnd() {
-            StringSlice input = new StringSlice("789");
-            ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
-
-            assertThat(result.result()).isEqualTo(789);
-            assertThat(result.modifiedString().isEmpty()).isTrue();
-        }
-
-        @Test
-        @DisplayName("Should handle zero")
-        void testParseZero() {
-            StringSlice input = new StringSlice("0 next");
-            ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
-
-            assertThat(result.result()).isEqualTo(0);
-            assertThat(result.modifiedString().toString()).isEqualTo(" next");
-        }
-
-        @Test
-        @DisplayName("Should handle large integers")
-        void testParseLargeInteger() {
-            StringSlice input = new StringSlice("2147483647 max");
-            ParserResult<Integer> result = StringParsersLegacy.parseInt(input);
-
-            assertThat(result.result()).isEqualTo(Integer.MAX_VALUE);
-            assertThat(result.modifiedString().toString()).isEqualTo(" max");
-        }
-
-        @Test
-        @DisplayName("Should throw exception for invalid integer")
-        void testParseInvalidInteger() {
-            assertThatThrownBy(() -> StringParsersLegacy.parseInt(new StringSlice("abc")))
-                    .isInstanceOf(NumberFormatException.class);
-        }
-
-        @Test
-        @DisplayName("Should throw exception for empty string")
-        void testParseIntegerEmpty() {
-            // StringParsersLegacy.parseInt() returns 0 for empty strings, not exception
-            ParserResult<Integer> result = StringParsersLegacy.parseInt(new StringSlice(""));
-            assertThat(result.result()).isEqualTo(0); // Returns default value 0
-            assertThat(result.modifiedString().toString()).isEqualTo("");
-        }
-    }
-
-    @Nested
     @DisplayName("Enum Parsing Tests")
     class EnumParsingTests {
 
@@ -493,22 +422,18 @@ public class StringParsersTest {
         @Test
         @DisplayName("Should work with StringParser integration")
         void testStringParserIntegration() {
-            StringParser parser = new StringParser("value1 123 (nested content)");
+            StringParser parser = new StringParser("value1 (nested content)");
 
             EnumHelperWithValue<TestEnum> enumHelper = new EnumHelperWithValue<>(TestEnum.class);
 
             // Parse enum
             Optional<TestEnum> enumValue = parser.apply(StringParsers::checkEnum, enumHelper);
 
-            // Parse integer using legacy parser
-            Integer intValue = parser.apply(StringParsersLegacy::parseInt);
-
             // Parse nested content
             String nestedValue = parser.apply(StringParsers::parseNested, '(', ')');
 
             assertThat(enumValue).isPresent();
             assertThat(enumValue.get()).isEqualTo(TestEnum.VALUE1);
-            assertThat(intValue).isEqualTo(123);
             assertThat(nestedValue).isEqualTo("nested content");
         }
 

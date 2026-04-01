@@ -31,12 +31,11 @@ class SpecsPropertyTest {
         void testEnumValues() {
             SpecsProperty[] values = SpecsProperty.values();
 
-            assertThat(values).hasSize(5);
+            assertThat(values).hasSize(4);
             assertThat(values).containsExactlyInAnyOrder(
                     SpecsProperty.LoggingLevel,
                     SpecsProperty.WriteErroLog,
                     SpecsProperty.ShowStackTrace,
-                    SpecsProperty.ShowMemoryHeap,
                     SpecsProperty.LookAndFeel);
         }
 
@@ -188,16 +187,6 @@ class SpecsPropertyTest {
         void testApplyInvalidShowStackTrace() {
             assertThatCode(() -> SpecsProperty.ShowStackTrace.applyProperty("invalid"))
                     .doesNotThrowAnyException(); // Should handle gracefully
-        }
-
-        @Test
-        @DisplayName("Should apply ShowMemoryHeap property")
-        void testApplyShowMemoryHeap() {
-            assertThatCode(() -> SpecsProperty.ShowMemoryHeap.applyProperty("true"))
-                    .doesNotThrowAnyException();
-
-            assertThatCode(() -> SpecsProperty.ShowMemoryHeap.applyProperty("false"))
-                    .doesNotThrowAnyException();
         }
 
         @Test

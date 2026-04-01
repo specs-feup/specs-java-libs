@@ -20,7 +20,6 @@ import pt.up.fe.specs.util.system.OutputType;
 import pt.up.fe.specs.util.system.ProcessOutput;
 import pt.up.fe.specs.util.system.ProcessOutputAsString;
 import pt.up.fe.specs.util.system.StreamToString;
-import pt.up.fe.specs.util.utilities.JarPath;
 import pt.up.fe.specs.util.utilities.ProgressCounter;
 
 import java.io.File;
@@ -70,16 +69,8 @@ public class SpecsSystem {
     private static final Lazy<String> WINDOWS_POWERSHELL = Lazy.newInstance(SpecsSystem::findPwsh);
 
     private static boolean testIsDebug() {
-
         // Test if file debug exists in working directory
-        if (new File("debug").isFile()) {
-            return true;
-        }
-
-        // Test if file debug exists in JAR directory
-        return JarPath.getJarFolder()
-                .map(jarFolder -> new File(jarFolder, "debug").isFile())
-                .orElse(false);
+        return new File("debug").isFile();
     }
 
     /**

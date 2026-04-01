@@ -1,4 +1,0 @@
-rootProject.name = 'AsmParser'
-
-includeBuild("../SpecsUtils")
-includeBuild("../jOptions")

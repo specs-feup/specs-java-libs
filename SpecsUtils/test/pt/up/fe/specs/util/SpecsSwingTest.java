@@ -7,9 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,7 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.table.TableModel;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
@@ -27,8 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -296,102 +291,6 @@ class SpecsSwingTest {
     }
 
     @Nested
-    @DisplayName("Table Model Tests")
-    class TableModelTests {
-
-        @Test
-        @DisplayName("getTable should create TableModel from map")
-        void testGetTable() {
-            // Setup
-            Map<String, Integer> map = new LinkedHashMap<>();
-            map.put("key1", 10);
-            map.put("key2", 20);
-            map.put("key3", 30);
-
-            // Execute
-            TableModel model = SpecsSwing.getTable(map, true, Integer.class);
-
-            // Verify
-            assertThat(model).isNotNull();
-            assertThat(model.getRowCount()).isGreaterThan(0);
-            assertThat(model.getColumnCount()).isGreaterThan(0);
-        }
-
-        @Test
-        @DisplayName("getTable should handle empty map")
-        void testGetTableEmptyMap() {
-            // Setup
-            Map<String, Integer> map = new LinkedHashMap<>();
-
-            // Execute
-            TableModel model = SpecsSwing.getTable(map, true, Integer.class);
-
-            // Verify - MapModel always returns 2 rows when rowWise=true (header row + data
-            // row)
-            assertThat(model).isNotNull();
-            assertThat(model.getRowCount()).isEqualTo(2);
-        }
-
-        @Test
-        @DisplayName("getTables should split large maps")
-        void testGetTablesWithSplitting() {
-            // Setup
-            Map<String, Integer> map = new LinkedHashMap<>();
-            for (int i = 0; i < 10; i++) {
-                map.put("key" + i, i);
-            }
-
-            // Execute
-            List<TableModel> models = SpecsSwing.getTables(map, 3, true, Integer.class);
-
-            // Verify
-            assertThat(models).isNotEmpty();
-            assertThat(models.size()).isGreaterThan(1); // Should be split
-
-            // Total elements should match - each rowWise model has 2 rows regardless of
-            // content size
-            // The actual data validation should check the model structure, not raw row
-            // count
-            int totalModels = models.size();
-            assertThat(totalModels).isEqualTo(4); // 10 items with max 3 per table = 4 tables (3+3+3+1)
-        }
-
-        @Test
-        @DisplayName("getTables should handle single table when under limit")
-        void testGetTablesNoSplitting() {
-            // Setup
-            Map<String, Integer> map = new LinkedHashMap<>();
-            map.put("key1", 10);
-            map.put("key2", 20);
-
-            // Execute
-            List<TableModel> models = SpecsSwing.getTables(map, 5, true, Integer.class);
-
-            // Verify
-            assertThat(models).hasSize(1);
-            assertThat(models.get(0).getRowCount()).isEqualTo(map.size());
-        }
-
-        @ParameterizedTest
-        @ValueSource(booleans = { true, false })
-        @DisplayName("table models should work with both row-wise orientations")
-        void testTableModelOrientations(boolean rowWise) {
-            // Setup
-            Map<String, Integer> map = new LinkedHashMap<>();
-            map.put("key1", 10);
-            map.put("key2", 20);
-
-            // Execute
-            TableModel model = SpecsSwing.getTable(map, rowWise, Integer.class);
-
-            // Verify
-            assertThat(model).isNotNull();
-            assertThat(model.getRowCount()).isGreaterThan(0);
-            assertThat(model.getColumnCount()).isGreaterThan(0);
-        }
-    }
-
-    @Nested
     @DisplayName("Panel and Window Tests")
     class PanelWindowTests {
 
@@ -655,11 +554,6 @@ class SpecsSwingTest {
                 SpecsSwing.isHeadless();
                 SpecsSwing.getSystemLookAndFeel();
                 SpecsSwing.setSystemLookAndFeel();
-
-                // Table operations should work regardless of headless mode
-                Map<String, Integer> map = Map.of("key", 1);
-                SpecsSwing.getTable(map, true, Integer.class);
-                SpecsSwing.getTables(map, 10, true, Integer.class);
             }).doesNotThrowAnyException();
         }
 
