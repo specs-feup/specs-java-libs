@@ -41,6 +41,14 @@ public class BiFunctionClassMap<T, U, R> {
         this.classMapper = new ClassMapper();
     }
 
+    public <ER extends R> BiFunctionClassMap(BiFunctionClassMap<T, U, ER> other) {
+        this.map = new HashMap<>();
+        for (var keyPair : other.map.entrySet()) {
+            this.map.put(keyPair.getKey(), (BiFunction<T, U, R>) keyPair.getValue());
+        }
+        this.classMapper = new ClassMapper(other.classMapper);
+    }
+
     /**
      * Associates the specified value with the specified key.
      * 
