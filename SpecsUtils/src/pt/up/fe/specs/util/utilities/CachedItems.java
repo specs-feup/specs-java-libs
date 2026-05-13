@@ -1,17 +1,19 @@
 /**
  * Copyright 2018 SPeCS.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
 
 package pt.up.fe.specs.util.utilities;
+
+import pt.up.fe.specs.util.SpecsStrings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,15 +23,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
-import pt.up.fe.specs.util.SpecsStrings;
-
 /**
  * Caches items that can be built with a mapper function.
- * 
- * @author JoaoBispo
  *
  * @param <K>
  * @param <V>
+ * @author JoaoBispo
  */
 public class CachedItems<K, V> {
 
@@ -56,11 +55,18 @@ public class CachedItems<K, V> {
             // Use AtomicBoolean to track if this was a cache miss
             AtomicBoolean wasCacheMiss = new AtomicBoolean(false);
 
-            V result = cache.computeIfAbsent(key, k -> {
+            var result = cache.get(key);
+            if (result == null) {
                 wasCacheMiss.set(true);
                 cacheMisses.incrementAndGet();
-                return mapper.apply(k);
-            });
+//                result = mapper.apply(key);
+//                cache.put(key, result);
+                var newValue = mapper.apply(key);
+                // In case two threads try to put a value for the same key
+                var existing = cache.putIfAbsent(key, newValue);
+                result = existing != null ? existing : newValue;
+            }
+
 
             // If computeIfAbsent didn't call the function, it was a cache hit
             if (!wasCacheMiss.get()) {
