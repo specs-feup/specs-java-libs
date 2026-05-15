@@ -288,11 +288,7 @@ public class JavaType {
 
     @Override
     public String toString() {
-        String toString = (hasPackage() ? _package + "." : "") + name;
-        if (isArray()) {
-            toString += "[]".repeat(arrayDimension);
-        }
-        return toString;
+        return getCanonicalType();
     }
 
     /**
