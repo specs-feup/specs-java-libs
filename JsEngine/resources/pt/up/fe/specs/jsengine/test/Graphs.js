@@ -20,7 +20,7 @@ class Graphs {
 	}
 	
 	static addEdge(graph, sourceNode, targetNode, edgeData) {
-		const _edgeData = edgeData ?? new GraphEdge();
+		const _edgeData = edgeData ?? new EdgeData();
 		
 		_edgeData.source = sourceNode.id();
 		_edgeData.target = targetNode.id();
