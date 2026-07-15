@@ -22,6 +22,10 @@ dependencies {
     implementation 'com.google.guava:guava:33.4.0-jre'
     implementation 'org.eclipse.jgit:org.eclipse.jgit:7.1.0.202411261347-r'
 
+    // JGit uses SLF4J 1.7. Keep its logs intentionally disabled without the
+    // missing StaticLoggerBinder startup warning.
+    runtimeOnly 'org.slf4j:slf4j-nop:1.7.36'
+
     // JUnit 5 testing framework
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testImplementation 'org.mockito:mockito-core:5.5.0'
