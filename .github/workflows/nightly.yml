@@ -50,7 +50,6 @@ jobs:
             JadxPlus
             JavaGenerator
             jOptions
-            JsEngine
             LogbackPlus
             MvelPlus
             SlackPlus
