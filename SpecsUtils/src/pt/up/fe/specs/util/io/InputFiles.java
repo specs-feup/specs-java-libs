@@ -16,6 +16,7 @@ package pt.up.fe.specs.util.io;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
@@ -32,6 +33,13 @@ public record InputFiles(boolean isSingleFile, File inputPath, List<File> inputF
      * @param inputPath can be the path to a single file or to a folder
      */
     public static InputFiles newInstance(String inputPath) {
+        Objects.requireNonNull(inputPath, "inputPath");
+
+        if (inputPath.isEmpty()) {
+            SpecsLogs.warn("Input path is empty.");
+            return null;
+        }
+
         File inputPathFile = new File(inputPath);
         if (!inputPathFile.exists()) {
             SpecsLogs.warn("Input path '" + inputPathFile + "' does not exist.");
