@@ -34,6 +34,7 @@ public class CachedItems<K, V> {
 
     private final Map<K, V> cache;
     private final Function<K, V> mapper;
+    private final boolean isThreadSafe;
 
     private final AtomicLong cacheHits;
     private final AtomicLong cacheMisses;
@@ -43,6 +44,7 @@ public class CachedItems<K, V> {
     }
 
     public CachedItems(Function<K, V> mapper, boolean isThreadSafe) {
+        this.isThreadSafe = isThreadSafe;
         this.mapper = Objects.requireNonNull(mapper, "Mapper function cannot be null");
         this.cache = isThreadSafe ? new ConcurrentHashMap<>() : new HashMap<>();
         this.cacheHits = new AtomicLong(0);
@@ -51,29 +53,32 @@ public class CachedItems<K, V> {
 
     public V get(K key) {
         // For thread-safe caches, use computeIfAbsent to eliminate race conditions
-        if (cache instanceof ConcurrentHashMap) {
+        if (isThreadSafe) {
             // Use AtomicBoolean to track if this was a cache miss
             AtomicBoolean wasCacheMiss = new AtomicBoolean(false);
 
-            var result = cache.get(key);
-            if (result == null) {
-                wasCacheMiss.set(true);
-                cacheMisses.incrementAndGet();
+
+            synchronized (this) {
+                var result = cache.get(key);
+                if (result == null) {
+                    wasCacheMiss.set(true);
+                    cacheMisses.incrementAndGet();
 //                result = mapper.apply(key);
 //                cache.put(key, result);
-                var newValue = mapper.apply(key);
-                // In case two threads try to put a value for the same key
-                var existing = cache.putIfAbsent(key, newValue);
-                result = existing != null ? existing : newValue;
+                    var newValue = mapper.apply(key);
+                    // In case two threads try to put a value for the same key
+                    var existing = cache.putIfAbsent(key, newValue);
+                    result = existing != null ? existing : newValue;
+                }
+
+
+                // If computeIfAbsent didn't call the function, it was a cache hit
+                if (!wasCacheMiss.get()) {
+                    cacheHits.incrementAndGet();
+                }
+
+                return result;
             }
-
-
-            // If computeIfAbsent didn't call the function, it was a cache hit
-            if (!wasCacheMiss.get()) {
-                cacheHits.incrementAndGet();
-            }
-
-            return result;
         } else {
             // For non-thread-safe caches, use the original logic
             V object = cache.get(key);
