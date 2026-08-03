@@ -1577,12 +1577,12 @@ public class SpecsStrings {
 
         // Normalize new lines
         String normalizedString = fileContents.replaceAll("\r\n", "\n");
-        
+
         // Trim strings
         normalizedString = StringLines.getLines(normalizedString).stream()
                 .map(String::trim)
                 // Remove empty lines
-                .filter(line -> ignoreEmptyLines && !line.isEmpty())
+                .filter(line -> !(ignoreEmptyLines && line.isEmpty()))
                 .collect(Collectors.joining("\n"));
 
         return normalizedString;
