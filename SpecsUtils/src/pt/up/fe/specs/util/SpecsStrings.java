@@ -13,6 +13,12 @@
 
 package pt.up.fe.specs.util;
 
+import pt.up.fe.specs.util.collections.MultiMap;
+import pt.up.fe.specs.util.exceptions.OverflowException;
+import pt.up.fe.specs.util.parsing.LineParser;
+import pt.up.fe.specs.util.utilities.LineStream;
+import pt.up.fe.specs.util.utilities.StringLines;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
@@ -22,17 +28,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -40,12 +36,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
-
-import pt.up.fe.specs.util.collections.MultiMap;
-import pt.up.fe.specs.util.exceptions.OverflowException;
-import pt.up.fe.specs.util.parsing.LineParser;
-import pt.up.fe.specs.util.utilities.LineStream;
-import pt.up.fe.specs.util.utilities.StringLines;
 
 /**
  * Utility methods for parsing of values which, instead of throwing an
@@ -67,6 +57,7 @@ public class SpecsStrings {
     }
 
     private static final Map<TimeUnit, String> TIME_UNIT_SYMBOL;
+
     static {
         TIME_UNIT_SYMBOL = new HashMap<>();
         SpecsStrings.TIME_UNIT_SYMBOL.put(TimeUnit.DAYS, "days");
@@ -94,7 +85,7 @@ public class SpecsStrings {
      *
      * @param integer a String representing an integer.
      * @return the intenger represented by the string, or 0 if it couldn't be
-     *         parsed.
+     * parsed.
      */
     public static int parseInt(String integer) {
         int intResult = 0;
@@ -113,7 +104,7 @@ public class SpecsStrings {
      *
      * @param integer a String representing an integer.
      * @return the integer represented by the string, or null if it couldn't be
-     *         parsed.
+     * parsed.
      */
     public static Integer parseInteger(String integer) {
         try {
@@ -128,7 +119,7 @@ public class SpecsStrings {
      *
      * @param doublefloat a String representing a double.
      * @return the double represented by the string, or null if it couldn't be
-     *         parsed.
+     * parsed.
      */
     public static Optional<Double> valueOfDouble(String doublefloat) {
         try {
@@ -147,7 +138,7 @@ public class SpecsStrings {
      *
      * @param afloat a String representing a float.
      * @return the float represented by the string, or null if it couldn't be
-     *         parsed.
+     * parsed.
      */
     public static Float parseFloat(String afloat) {
         return parseFloat(afloat, true);
@@ -176,7 +167,7 @@ public class SpecsStrings {
      *
      * @param aDouble a String representing a double.
      * @return the double represented by the string, or null if it couldn't be
-     *         parsed.
+     * parsed.
      */
     public static Double parseDouble(String aDouble) {
         return parseDouble(aDouble, true);
@@ -188,7 +179,7 @@ public class SpecsStrings {
      *
      * @param aDouble a String representing a double.
      * @return the double represented by the string, or null if it couldn't be
-     *         parsed.
+     * parsed.
      */
     public static Double parseDouble(String aDouble, boolean isStrict) {
         try {
@@ -244,7 +235,7 @@ public class SpecsStrings {
      *
      * @param booleanString a String representing a Boolean.
      * @return the Boolean represented by the string, or null if it couldn't be
-     *         parsed.
+     * parsed.
      */
     public static Boolean parseBoolean(String booleanString) {
         booleanString = booleanString.toLowerCase();
@@ -320,7 +311,7 @@ public class SpecsStrings {
     /**
      * @param string a string
      * @return the index of the first whitespace found in the given String, or -1 if
-     *         none is found.
+     * none is found.
      */
     public static int indexOfFirstWhitespace(String string) {
         return indexOf(string, Character::isWhitespace, false);
@@ -1586,14 +1577,13 @@ public class SpecsStrings {
 
         // Normalize new lines
         String normalizedString = fileContents.replaceAll("\r\n", "\n");
-
-        // Remove empty lines
-        if (ignoreEmptyLines) {
-            normalizedString = StringLines.getLines(normalizedString).stream()
-                    .map(String::trim)
-                    .filter(line -> !line.isEmpty())
-                    .collect(Collectors.joining("\n"));
-        }
+        
+        // Trim strings
+        normalizedString = StringLines.getLines(normalizedString).stream()
+                .map(String::trim)
+                // Remove empty lines
+                .filter(line -> ignoreEmptyLines && !line.isEmpty())
+                .collect(Collectors.joining("\n"));
 
         return normalizedString;
 
@@ -1683,7 +1673,7 @@ public class SpecsStrings {
      * Splits the given String according to a separator, and removes blank String
      * that can be created from the splitting.
      *
-     * @param strip     if true, strips each splitted String
+     * @param strip if true, strips each splitted String
      */
     public static List<String> splitNonEmpty(String string, String separator, boolean strip) {
         return Arrays.stream(string.split(separator))
