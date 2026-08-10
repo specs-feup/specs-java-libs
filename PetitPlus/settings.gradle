@@ -1,0 +1,4 @@
+rootProject.name = 'PetitPlus'
+
+includeBuild("../SpecsUtils")
+includeBuild("../CommonsLangPlus")
