@@ -42,6 +42,108 @@ public class BiFunctionClassMapTest {
             assertThatThrownBy(() -> map.apply(new Object(), "test"))
                     .hasMessageContaining("BiConsumer not defined for class");
         }
+
+        @Test
+        @DisplayName("Should create copy with all mappings from original")
+        void testCopyConstructor() {
+            numberMap.put(Integer.class, (i, s) -> "Int: " + i + "-" + s);
+            numberMap.put(Double.class, (d, s) -> "Double: " + d + "-" + s);
+
+            BiFunctionClassMap<Number, String, String> copy = new BiFunctionClassMap<>(numberMap);
+
+            assertThat(copy.apply(42, "test")).isEqualTo("Int: 42-test");
+            assertThat(copy.apply(3.14, "test")).isEqualTo("Double: 3.14-test");
+        }
+
+        @Test
+        @DisplayName("Should create independent copy - changes to original don't affect copy")
+        void testCopyIndependenceOriginalToNew() {
+            numberMap.put(Integer.class, (i, s) -> "Original: " + i + "-" + s);
+
+            BiFunctionClassMap<Number, String, String> copy = new BiFunctionClassMap<>(numberMap);
+
+            // Modify original
+            numberMap.put(Integer.class, (i, s) -> "Modified: " + i + "-" + s);
+            numberMap.put(Double.class, (d, s) -> "New: " + d + "-" + s);
+
+            // Copy should retain original behavior
+            assertThat(copy.apply(42, "test")).isEqualTo("Original: 42-test");
+            
+            // Copy shouldn't have the new Double mapping
+            assertThatThrownBy(() -> copy.apply(3.14, "test"))
+                    .hasMessageContaining("BiConsumer not defined for class");
+        }
+
+        @Test
+        @DisplayName("Should create independent copy - changes to copy don't affect original")
+        void testCopyIndependenceNewToOriginal() {
+            numberMap.put(Integer.class, (i, s) -> "Original: " + i + "-" + s);
+
+            BiFunctionClassMap<Number, String, String> copy = new BiFunctionClassMap<>(numberMap);
+
+            // Modify copy
+            copy.put(Integer.class, (i, s) -> "Modified: " + i + "-" + s);
+            copy.put(Double.class, (d, s) -> "New: " + d + "-" + s);
+
+            // Original should retain original behavior
+            assertThat(numberMap.apply(42, "test")).isEqualTo("Original: 42-test");
+            
+            // Original shouldn't have the new Double mapping
+            assertThatThrownBy(() -> numberMap.apply(3.14, "test"))
+                    .hasMessageContaining("BiConsumer not defined for class");
+        }
+
+        @Test
+        @DisplayName("Should copy empty map successfully")
+        void testCopyEmptyMap() {
+            BiFunctionClassMap<Number, String, String> emptyMap = new BiFunctionClassMap<>();
+            BiFunctionClassMap<Number, String, String> copy = new BiFunctionClassMap<>(emptyMap);
+
+            assertThatThrownBy(() -> copy.apply(42, "test"))
+                    .hasMessageContaining("BiConsumer not defined for class");
+        }
+
+        @Test
+        @DisplayName("Should copy classMapper for hierarchy resolution")
+        void testCopyClassMapper() {
+            numberMap.put(Number.class, (n, s) -> "Number: " + n + "-" + s);
+            numberMap.put(Integer.class, (i, s) -> "Integer: " + i + "-" + s);
+
+            BiFunctionClassMap<Number, String, String> copy = new BiFunctionClassMap<>(numberMap);
+
+            // Hierarchy resolution should work in copy
+            assertThat(copy.apply(42, "test")).isEqualTo("Integer: 42-test");
+            assertThat(copy.apply(3.14, "test")).isEqualTo("Number: 3.14-test");
+            assertThat(copy.apply(42L, "test")).isEqualTo("Number: 42-test");
+        }
+
+        @Test
+        @DisplayName("Should handle covariant return type in copy constructor")
+        void testCovariantCopy() {
+            BiFunctionClassMap<Number, String, Integer> intResultMap = new BiFunctionClassMap<>();
+            intResultMap.put(Integer.class, (i, s) -> s.length() + i.intValue());
+
+            // Copy with covariant return type (Integer extends Number)
+            BiFunctionClassMap<Number, String, Number> copy = new BiFunctionClassMap<>(intResultMap);
+
+            Number result = copy.apply(10, "test");
+            assertThat(result).isEqualTo(14);
+        }
+
+        @Test
+        @DisplayName("Should copy map with multiple hierarchy levels")
+        void testCopyComplexHierarchy() {
+            BiFunctionClassMap<Exception, String, String> exceptionMap = new BiFunctionClassMap<>();
+            exceptionMap.put(Exception.class, (e, s) -> "Exception: " + s);
+            exceptionMap.put(RuntimeException.class, (e, s) -> "Runtime: " + s);
+            exceptionMap.put(IllegalArgumentException.class, (e, s) -> "IllegalArg: " + s);
+
+            BiFunctionClassMap<Exception, String, String> copy = new BiFunctionClassMap<>(exceptionMap);
+
+            assertThat(copy.apply(new Exception(), "test")).isEqualTo("Exception: test");
+            assertThat(copy.apply(new RuntimeException(), "test")).isEqualTo("Runtime: test");
+            assertThat(copy.apply(new IllegalArgumentException(), "test")).isEqualTo("IllegalArg: test");
+        }
     }
 
     @Nested

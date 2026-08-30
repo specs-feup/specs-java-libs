@@ -22,12 +22,15 @@ dependencies {
     implementation 'com.google.guava:guava:33.4.0-jre'
     implementation 'org.eclipse.jgit:org.eclipse.jgit:7.1.0.202411261347-r'
 
+    // JGit uses SLF4J 1.7. Keep its logs intentionally disabled without the
+    // missing StaticLoggerBinder startup warning.
+    runtimeOnly 'org.slf4j:slf4j-nop:1.7.36'
+
     // JUnit 5 testing framework
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-    testImplementation 'org.mockito:mockito-core:5.5.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+    testImplementation 'org.mockito:mockito-core:5.23.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.23.0'
     testImplementation 'org.assertj:assertj-core:3.24.2'
-    testImplementation 'org.mockito:mockito-inline:5.2.0' // For static mocking
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.0'
 }
 

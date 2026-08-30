@@ -19,6 +19,7 @@ import pt.up.fe.specs.util.providers.KeyProvider;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -318,6 +319,10 @@ public class SpecsCollections {
         return Arrays.stream(array)
                 .map(targetClass::cast) // Cast to String
                 .toArray(i -> (T[]) Array.newInstance(targetClass, i));
+    }
+
+    public static <T> T[] cast(Object[] array, IntFunction<T[]> arrayFactory) {
+        return Arrays.stream(array).toArray(arrayFactory);
     }
 
     /**
