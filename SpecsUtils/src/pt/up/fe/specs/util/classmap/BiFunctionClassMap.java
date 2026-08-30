@@ -41,6 +41,7 @@ public class BiFunctionClassMap<T, U, R> {
         this.classMapper = new ClassMapper();
     }
 
+    @SuppressWarnings("unchecked")
     public <ER extends R> BiFunctionClassMap(BiFunctionClassMap<T, U, ER> other) {
         this.map = new HashMap<>();
         for (var keyPair : other.map.entrySet()) {
