@@ -1,0 +1,5 @@
+rootProject.name = 'SpecsHWUtils'
+
+includeBuild("../jOptions")
+includeBuild("../SpecsUtils")
+includeBuild("../XStreamPlus")

@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -72,37 +70,6 @@ public class SpecsEnums {
 
     public static <T extends Enum<T>> Optional<T> valueOfTry(Class<T> enumType, String name) {
         return Optional.ofNullable(valueOf(enumType, name));
-    }
-
-    public static <T extends Enum<T>> List<T> getValues(Class<T> enumType, List<String> names) {
-        List<T> values = new ArrayList<>();
-
-        for (String name : names) {
-            T value = valueOf(enumType, name);
-            if (value == null) {
-                continue;
-            }
-
-            values.add(value);
-        }
-
-        return values;
-    }
-
-    /**
-     * Checks if a specific enum contains a constant with the given name.
-     *
-     * @param <T>      The Enum where the constant is
-     * @param enumType the Class object of the enum type from which to return a
-     *                 constant
-     * @param name     the name of the constant to return
-     * @return true if the Enum contains a constant with the same name, false
-     *         otherwise
-     */
-    public static <T extends Enum<T>> boolean containsEnum(Class<T> enumType, String name) {
-        T enumeration = valueOf(enumType, name);
-        return enumeration != null;
-
     }
 
     /**
@@ -153,50 +120,6 @@ public class SpecsEnums {
         return Collections.unmodifiableMap(aMap);
     }
 
-    /**
-     *
-     * @return a list with the names of the enums
-     */
-    public static <K extends Enum<K>> List<String> buildList(K[] values) {
-        List<String> aList = new ArrayList<>();
-        for (K anEnum : values) {
-            aList.add(anEnum.name());
-        }
-
-        return aList;
-    }
-
-    public static <K extends Enum<K>> List<String> buildListToString(Class<K> enumClass) {
-        return buildListToString(enumClass.getEnumConstants());
-    }
-
-    /**
-     *
-     * @return a list with the string representation of the enums
-     */
-    public static <K extends Enum<K>> List<String> buildListToString(K[] values) {
-        List<String> aList = new ArrayList<>();
-        for (K anEnum : values) {
-            aList.add(anEnum.toString());
-        }
-
-        return aList;
-    }
-
-    /**
-     * Returns the class of the enum correspondent to the values of the given array.
-     *
-     * @return the class correspondent to the given array of enums
-     */
-    public static <K extends Enum<K>> Class<?> getClass(K[] values) {
-        if (values.length == 0) {
-            SpecsLogs.warn("Given array is empty");
-            return null;
-        }
-
-        return values[0].getClass();
-    }
-
     public static <T> List<T> extractValues(List<Class<? extends T>> enumClasses) {
         return enumClasses.stream()
                 .map(SpecsEnums::extractValues)
@@ -219,29 +142,6 @@ public class SpecsEnums {
         // Get enums
         T[] enumKeys = anEnumClass.getEnumConstants();
         return Arrays.asList(enumKeys);
-    }
-
-    public static <T extends Enum<T>> List<T> extractValuesV2(Class<? extends T> anEnumClass) {
-        // Get enums
-        T[] enumKeys = anEnumClass.getEnumConstants();
-        return Arrays.asList(enumKeys);
-    }
-
-    /**
-     * If the class represents an enum, returns a list of Strings with the names of
-     * the values of that enum. Otherwise, returns null.
-     *
-     */
-    public static <T extends Enum<T>> List<String> extractNames(Class<? extends T> anEnumClass) {
-        List<T> values = extractValues(anEnumClass);
-
-        List<String> names = new ArrayList<>();
-
-        for (T value : values) {
-            names.add(value.name());
-        }
-
-        return names;
     }
 
     /**
@@ -268,26 +168,6 @@ public class SpecsEnums {
     }
 
     /**
-     *
-     * <p>
-     * The following code can be used to dump the complement collection into a newly
-     * allocated array:
-     * <p>
-     * AnEnum[] y = EnumUtils.getComplement(new AnEnum[0], anEnum1, anEnum2);
-     *
-     */
-    public static <K extends Enum<K>> K[] getComplement(K[] a, List<K> values) {
-        EnumSet<K> complementSet = SpecsEnums.getComplement(values);
-        return complementSet.toArray(a);
-    }
-
-    public static <K extends Enum<K>> EnumSet<K> getComplement(List<K> values) {
-        EnumSet<K> originalSet = EnumSet.copyOf(values);
-
-        return EnumSet.complementOf(originalSet);
-    }
-
-    /**
      * Build a map from an enumeration class which implements a KeyProvider.
      *
      */
@@ -300,24 +180,6 @@ public class SpecsEnums {
         return enumMap;
     }
 
-    /**
-     * Returns the first enumeration of a class than extends enum.
-     *
-     * <p>
-     * If the given class has no enums, throws a Runtime Exception.
-     *
-     */
-    public static <T extends Enum<T>> T getFirstEnum(Class<T> anEnumClass) {
-
-        T[] enums = anEnumClass.getEnumConstants();
-
-        if (enums.length == 0) {
-            throw new RuntimeException("Class '" + anEnumClass + "' has no enum values.");
-        }
-
-        return enums[0];
-    }
-
     public static <T, K extends Enum<K> & KeyProvider<T>> List<T> getKeys(Class<K> enumClass) {
         K[] enums = enumClass.getEnumConstants();
 
@@ -328,21 +190,6 @@ public class SpecsEnums {
         }
 
         return resources;
-    }
-
-    /**
-     * Returns a string representing the enum options using ',' as delimiter and '['
-     * and ']' and prefix and suffix, respectively.
-     *
-     */
-    public static <E extends Enum<E>> String getEnumOptions(Class<E> anEnumClass) {
-        StringJoiner joiner = new StringJoiner(", ", "[", "]");
-
-        for (E anEnum : anEnumClass.getEnumConstants()) {
-            joiner.add(anEnum.name().toLowerCase());
-        }
-
-        return joiner.toString();
     }
 
     public static <T extends Enum<T>> T fromName(Class<T> enumType, String name) {
@@ -363,28 +210,6 @@ public class SpecsEnums {
         }
 
         return (EnumHelper<T>) helper;
-    }
-
-    public static <T extends Enum<T>> T[] values(Class<T> enumClass) {
-        return getHelper(enumClass).values();
-    }
-
-    /**
-     *
-     * @return the next enum, according to the ordinal order, or the first enum if
-     *         this one is the last
-     */
-    public static <T extends Enum<T>> T nextEnum(T anEnum) {
-        @SuppressWarnings("unchecked")
-        var enums = ((Class<T>) anEnum.getClass()).getEnumConstants();
-
-        var ordinal = anEnum.ordinal();
-
-        if (ordinal < enums.length - 1) {
-            return enums[ordinal + 1];
-        }
-
-        return enums[0];
     }
 
     /**
@@ -418,7 +243,7 @@ public class SpecsEnums {
      * Uses enum helpers, supports interface StringProvider.
      *
      */
-    public static <T extends Enum<T>> Optional<T> toEnumTry(Class<T> enumClass, String name) {
+    private static <T extends Enum<T>> Optional<T> toEnumTry(Class<T> enumClass, String name) {
         return getHelper(enumClass).fromNameTry(name);
     }
 

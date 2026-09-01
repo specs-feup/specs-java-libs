@@ -102,48 +102,6 @@ public class SpecsCheck {
     }
 
     /**
-     * Validates that the size of the given collection is within the specified
-     * range. Throws an IllegalArgumentException if the size is outside the range.
-     *
-     * @param collection the collection to check
-     * @param minSize    the minimum size
-     * @param maxSize    the maximum size
-     */
-    public static void checkSizeRange(Collection<?> collection, int minSize, int maxSize) {
-        checkSizeRange(minSize, maxSize, collection.size(), collection::toString);
-    }
-
-    /**
-     * Validates that the size of the given array is within the specified range.
-     * Throws an IllegalArgumentException if the size is outside the range.
-     *
-     * @param objects the array to check
-     * @param minSize the minimum size
-     * @param maxSize the maximum size
-     */
-    public static void checkSizeRange(Object[] objects, int minSize, int maxSize) {
-        checkSizeRange(minSize, maxSize, objects.length, () -> Arrays.toString(objects));
-    }
-
-    /**
-     * Validates that the size of a collection or array is within the specified
-     * range. Throws an IllegalArgumentException if the size is outside the range.
-     *
-     * @param minSize            the minimum size
-     * @param maxSize            the maximum size
-     * @param actualSize         the actual size
-     * @param collectionContents a supplier providing the contents of the collection
-     *                           or array
-     */
-    private static void checkSizeRange(int minSize, int maxSize, int actualSize, Supplier<String> collectionContents) {
-        if (actualSize < minSize || actualSize > maxSize) {
-            throw new IllegalArgumentException(
-                    "Expected collection to have size between '" + minSize + "' and '" + maxSize + "'"
-                            + "', its current size is '" + actualSize + "'\nCollection:" + collectionContents.get());
-        }
-    }
-
-    /**
      * Validates that the given value is an instance of the specified class. Throws
      * an IllegalArgumentException if the value is not an instance of the class.
      *

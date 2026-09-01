@@ -66,14 +66,8 @@ While you can use any IDE that supports Gradle projects, here are some recommend
 
 The repository includes the following libraries:
 
-- **AntTasks** - Custom Ant tasks
-- **AsmParser** - Assembly parsing utilities  
-- **CommonsCompressPlus** - Extended Apache Commons Compress
 - **CommonsLangPlus** - Extended Apache Commons Lang
-- **GearmanPlus** - Extended Gearman client
-- **GitlabPlus** - GitLab API integration
 - **GitPlus** - Git utilities
-- **Gprofer** - Profiling utilities
 - **GsonPlus** - Extended Google Gson
 - **GuiHelper** - GUI utility classes
 - **JacksonPlus** - Extended Jackson JSON processing
@@ -81,9 +75,6 @@ The repository includes the following libraries:
 - **JavaGenerator** - Java code generation utilities
 - **jOptions** - Command-line options parser
 - **JsEngine** - JavaScript engine integration (GraalVM)
-- **LogbackPlus** - Extended Logback logging
-- **MvelPlus** - Extended MVEL expression language
-- **SlackPlus** - Slack API integration
 - **SpecsHWUtils** - Hardware utilities
 - **SpecsUtils** - Core utilities library
 - **SymjaPlus** - Extended Symja symbolic math
