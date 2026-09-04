@@ -247,19 +247,6 @@ public class SpecsSystem {
             newCommand.addAll(builder.command());
 
             builder.command(newCommand);
-        } else if (isLinux()) {
-            // Update command
-            List<String> newCommand = new ArrayList<>(4);
-            newCommand.add("bash");
-            // Same user
-            newCommand.add("-l");
-            // Command
-            newCommand.add("-c");
-            newCommand.add(builder.command().stream()
-                    .map(arg -> arg.replace(" ", "\\ "))
-                    .collect(Collectors.joining(" ")));
-
-            builder.command(newCommand);
         }
 
     }
