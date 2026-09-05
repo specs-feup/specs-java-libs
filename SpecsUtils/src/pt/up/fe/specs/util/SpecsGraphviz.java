@@ -29,8 +29,13 @@ public class SpecsGraphviz {
     private static final Lazy<Boolean> IS_DOT_AVAILABLE = Lazy.newInstance(SpecsGraphviz::checkDot);
 
     private static boolean checkDot() {
-        var result = SpecsSystem.runProcess(Arrays.asList("dot", "-?"), false, false);
-        return result.getReturnValue() == 0;
+        try {
+            var result = SpecsSystem.runProcess(Arrays.asList("dot", "-?"), false, false);
+            return result.getReturnValue() == 0;
+        } catch (RuntimeException e) {
+            // The launch itself failed, e.g. Graphviz is not installed
+            return false;
+        }
     }
 
     public static boolean isDotAvailable() {
@@ -47,9 +52,19 @@ public class SpecsGraphviz {
         var command = Arrays.asList("dot", format.getFlag(), dotFile.getAbsolutePath(), "-o",
                 outputFile.getAbsolutePath());
 
-        var result = SpecsSystem.runProcess(command, false, false);
-        if (result.getReturnValue() == 0) {
-            SpecsLogs.debug(() -> "Rendered dot file '" + dotFile.getAbsolutePath() + "' as " + format);
+        try {
+            var result = SpecsSystem.runProcess(command, false, false);
+            if (result.getReturnValue() == 0) {
+                SpecsLogs.debug(() -> "Rendered dot file '" + dotFile.getAbsolutePath() + "' as " + format);
+            }
+        } catch (RuntimeException e) {
+            // Only a missing Graphviz installation is skipped; any other
+            // failure is rethrown
+            if (!SpecsSystem.isLaunchFailure(e)) {
+                throw e;
+            }
+
+            SpecsLogs.msgInfo("Graphviz not available, could not render dot file '" + dotFile.getAbsolutePath() + "'");
         }
     }
 

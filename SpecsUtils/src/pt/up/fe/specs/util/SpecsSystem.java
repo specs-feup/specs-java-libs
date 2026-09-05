@@ -190,15 +190,7 @@ public class SpecsSystem {
 
         Process process;
         try {
-            // Experiment: Calling Garbage Collector before starting process in order to
-            // reduce memory required to fork VM
-            // http://www.bryanmarty.com/2012/01/14/forking-jvm/
-            long totalMemBefore = Runtime.getRuntime().totalMemory();
-            System.gc();
-            long totalMemAfter = Runtime.getRuntime().totalMemory();
-            SpecsLogs.msgLib("Preparing to run process, memory before -> after GC: "
-                    + SpecsStrings.parseSize(totalMemBefore) + " -> " + SpecsStrings.parseSize(totalMemAfter));
-            process = builder.start();
+        process = builder.start();
 
         } catch (IOException e) {
             throw new RuntimeException("Could not start process", e);
@@ -253,19 +245,6 @@ public class SpecsSystem {
             newCommand.add("cmd");
             newCommand.add("/c");
             newCommand.addAll(builder.command());
-
-            builder.command(newCommand);
-        } else if (isLinux()) {
-            // Update command
-            List<String> newCommand = new ArrayList<>(4);
-            newCommand.add("bash");
-            // Same user
-            newCommand.add("-l");
-            // Command
-            newCommand.add("-c");
-            newCommand.add(builder.command().stream()
-                    .map(arg -> arg.replace(" ", "\\ "))
-                    .collect(Collectors.joining(" ")));
 
             builder.command(newCommand);
         }
@@ -598,6 +577,26 @@ public class SpecsSystem {
         }
 
     }
+
+    /**
+     * Checks if the throwable was caused by a failure to launch the process
+     * itself (e.g., command not found or not executable), as opposed to a
+     * failure after a successful launch.
+     *
+     * @param throwable
+     * @return
+     */
+    public static boolean isLaunchFailure(Throwable throwable) {
+        for (Throwable currentThrowable = throwable; currentThrowable != null; currentThrowable = currentThrowable
+                .getCause()) {
+            if (currentThrowable instanceof IOException) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     /**
      * Adds a path to the java.library.path property, and flushes the path cache so
