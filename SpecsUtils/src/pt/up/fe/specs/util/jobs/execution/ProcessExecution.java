@@ -16,6 +16,7 @@ package pt.up.fe.specs.util.jobs.execution;
 import java.io.File;
 import java.util.List;
 
+import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSystem;
 
 /**
@@ -45,7 +46,20 @@ public class ProcessExecution implements Execution {
      */
     @Override
     public int run() {
-        return SpecsSystem.run(this.commandArgs, new File(this.workingFoldername));
+        try {
+            return SpecsSystem.run(this.commandArgs, new File(this.workingFoldername));
+        } catch (RuntimeException e) {
+            // Only a launch failure due to a missing command maps to a return
+            // code (the shell convention of 127, 'command not found'). Any
+            // other failure is not representable as an exit code and is
+            // rethrown, as the process may even have been running.
+            if (!SpecsSystem.isLaunchFailure(e)) {
+                throw e;
+            }
+
+            SpecsLogs.msgInfo("Could not run command '" + getCommandString() + "': " + e.getMessage());
+            return 127;
+        }
     }
 
     @Override

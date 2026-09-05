@@ -579,6 +579,26 @@ public class SpecsSystem {
     }
 
     /**
+     * Checks if the throwable was caused by a failure to launch the process
+     * itself (e.g., command not found or not executable), as opposed to a
+     * failure after a successful launch.
+     *
+     * @param throwable
+     * @return
+     */
+    public static boolean isLaunchFailure(Throwable throwable) {
+        for (Throwable currentThrowable = throwable; currentThrowable != null; currentThrowable = currentThrowable
+                .getCause()) {
+            if (currentThrowable instanceof IOException) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
      * Adds a path to the java.library.path property, and flushes the path cache so
      * that subsequent System.load calls
      * can find it.
