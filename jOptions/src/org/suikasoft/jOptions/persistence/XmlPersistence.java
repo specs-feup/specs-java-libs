@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.suikasoft.XStreamPlus.ObjectXml;
@@ -32,9 +31,6 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 import com.google.common.base.Preconditions;
 
-import pt.up.fe.specs.guihelper.SetupDataXml;
-import pt.up.fe.specs.guihelper.BaseTypes.FieldValue;
-import pt.up.fe.specs.guihelper.BaseTypes.SetupData;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.utilities.LineStream;
 
@@ -122,11 +118,6 @@ public class XmlPersistence implements AppPersistence {
 
                 if (line.isEmpty()) {
                     continue;
-                }
-
-                // Previous format, for compatibility
-                if (line.equals("<SetupData>")) {
-                    return loadSetupData(file);
                 }
 
                 // Check if
@@ -275,40 +266,6 @@ public class XmlPersistence implements AppPersistence {
         DataKey<?> key = definition.getKey(prop.name());
 
         baseData.setString(key, prop.value());
-    }
-
-    /**
-     * Loads setup data from the given file.
-     *
-     * @param file the file to load
-     * @return the loaded DataStore object
-     */
-    private DataStore loadSetupData(File file) {
-        SpecsLogs.msgInfo("!Found old version of configuration file, trying to translate it");
-        SetupData parsedObject = XStreamUtils.read(file, new SetupDataXml());
-        if (parsedObject == null) {
-            SpecsLogs.msgInfo("Could not parse file '" + file.getPath()
-                    + "' into a SetupData object.");
-            return null;
-        }
-
-        StoreDefinition definition = StoreDefinition.newInstance(parsedObject.getSetupName(), options);
-        DataStore data = DataStore.newInstance(definition);
-
-        // Set AppPersistence
-        data.setPersistence(this);
-
-        // Add values
-        for (Entry<String, FieldValue> entry : parsedObject.getDataset().entrySet()) {
-            @SuppressWarnings("unchecked")
-            DataKey<Object> key = (DataKey<Object>) definition.getKey(entry.getKey());
-
-            // Try to decode raw value, higher changes of compatibility
-            String rawValue = entry.getValue().getRawValue().toString();
-            data.set(key, key.getDecoder().get().decode(rawValue));
-        }
-
-        return data;
     }
 
     /**
