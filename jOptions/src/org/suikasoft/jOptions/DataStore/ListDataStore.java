@@ -215,7 +215,8 @@ public class ListDataStore implements DataStore {
      */
     @Override
     public <T> T get(DataKey<T> key) {
-        Object valueRaw = get(toIndex(key));
+        int index = toIndex(key);
+        Object valueRaw = resolveValue(index, get(index));
         if (strict && valueRaw == null) {
             throw new RuntimeException(
                     "No value present in DataStore '" + getName() + "' " + " for key '" + key.getName() + "'");
@@ -350,7 +351,18 @@ public class ListDataStore implements DataStore {
      */
     @Override
     public Object get(String id) {
-        return get(toIndex(id));
+        int index = toIndex(id);
+        return resolveValue(index, get(index));
+    }
+
+    /** Allows backed stores to materialize a value only when it is read. Presence checks stay raw. */
+    protected Object resolveValue(int index, Object value) {
+        return value;
+    }
+
+    /** Raw slot access for copies that must preserve deferred values without reading them. */
+    protected final Object getRawValue(int index) {
+        return get(index);
     }
 
     /**
