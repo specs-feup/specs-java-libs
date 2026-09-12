@@ -20,6 +20,7 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 import org.suikasoft.jOptions.storedefinition.StoreDefinitionIndexes;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implementation of DataStore that uses a List to store the data.
@@ -32,7 +33,7 @@ import java.util.*;
  */
 public class ListDataStore implements DataStore {
 
-    private static final Map<StoreDefinition, StoreDefinitionIndexes> KEY_TO_INDEXES = new HashMap<>();
+    private static final Map<StoreDefinition, StoreDefinitionIndexes> KEY_TO_INDEXES = new ConcurrentHashMap<>();
 
     private final StoreDefinition keys;
     private final List<Object> values;
@@ -335,12 +336,7 @@ public class ListDataStore implements DataStore {
      * @return the StoreDefinitionIndexes
      */
     private StoreDefinitionIndexes getIndexes() {
-        StoreDefinitionIndexes indexes = KEY_TO_INDEXES.get(keys);
-        if (indexes == null) {
-            indexes = new StoreDefinitionIndexes(keys);
-            KEY_TO_INDEXES.put(keys, indexes);
-        }
-        return indexes;
+        return KEY_TO_INDEXES.computeIfAbsent(keys, StoreDefinitionIndexes::new);
     }
 
     /**
