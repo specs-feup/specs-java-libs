@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -1908,6 +1909,58 @@ public class SpecsIo {
         }
 
         return mkdir(systemTemp, folderName);
+    }
+
+    /**
+     * An empty, uniquely-named directory in the OS temporary folder, allocated by
+     * the operating system.
+     *
+     * <p>
+     * The directory is registered for deletion when the virtual machine exits, as a
+     * backstop. Owners should still delete it as soon as its lifecycle ends.
+     *
+     * @param prefix the directory name prefix, must be at least three characters
+     *               long
+     * @return the newly created directory
+     */
+    public static File createTempDirectory(String prefix) {
+        try {
+            File tempFolder = Files.createTempDirectory(getTempFolder().toPath(), prefix).toFile();
+
+            // Backstop deletion, in case the owner does not get the chance to delete it
+            deleteOnExit(tempFolder);
+
+            return tempFolder;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not create temporary directory with prefix '" + prefix + "'", e);
+        }
+    }
+
+    /**
+     * The user-level cache folder, following the operating system's conventions.
+     *
+     * <p>
+     * Linux and other Unix-likes use '$XDG_CACHE_HOME', falling back to '~/.cache';
+     * macOS uses '~/Library/Caches'; Windows uses '%LOCALAPPDATA%', falling back to
+     * '~/AppData/Local'.
+     *
+     * @return the existing or newly created OS cache folder
+     */
+    public static File getOsCacheFolder() {
+        String cacheDir;
+        if (SpecsSystem.isWindows()) {
+            String localAppData = System.getenv("LOCALAPPDATA");
+            cacheDir = localAppData != null && !localAppData.isBlank() ? localAppData
+                    : new File(System.getProperty("user.home"), "AppData/Local").getAbsolutePath();
+        } else if (SpecsSystem.isMac()) {
+            cacheDir = new File(System.getProperty("user.home"), "Library/Caches").getAbsolutePath();
+        } else {
+            String xdgCacheHome = System.getenv("XDG_CACHE_HOME");
+            cacheDir = xdgCacheHome != null && !xdgCacheHome.isBlank() ? xdgCacheHome
+                    : new File(System.getProperty("user.home"), ".cache").getAbsolutePath();
+        }
+
+        return SpecsIo.mkdir(new File(cacheDir));
     }
 
     /**

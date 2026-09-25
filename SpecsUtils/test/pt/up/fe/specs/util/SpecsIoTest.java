@@ -1042,6 +1042,29 @@ public class SpecsIoTest {
         }
 
         @Test
+        @DisplayName("Test OS-created temp directory")
+        void testCreateTempDirectory() {
+            File tempFolder = SpecsIo.createTempDirectory("specs-test-");
+            assertThat(tempFolder).isNotNull();
+            assertThat(tempFolder.isDirectory()).isTrue();
+            assertThat(tempFolder.getName()).startsWith("specs-test-");
+            assertThat(tempFolder.getParentFile()).isEqualTo(SpecsIo.getTempFolder());
+            assertThat(SpecsIo.createTempDirectory("specs-test-"))
+                    .isNotEqualTo(SpecsIo.createTempDirectory("specs-test-"));
+        }
+
+        @Test
+        @DisplayName("Test OS cache folder")
+        void testGetOsCacheFolder() {
+            File cacheFolder = SpecsIo.getOsCacheFolder();
+            assertThat(cacheFolder).isNotNull();
+            assertThat(cacheFolder.isDirectory()).isTrue();
+
+            // Same call returns the same location
+            assertThat(SpecsIo.getOsCacheFolder()).isEqualTo(cacheFolder);
+        }
+
+        @Test
         @DisplayName("Test ZIP operations")
         void testZipOperations(@TempDir Path tempDir) throws IOException {
             // Create files to zip
