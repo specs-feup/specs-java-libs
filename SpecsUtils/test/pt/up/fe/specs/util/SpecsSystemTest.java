@@ -16,10 +16,15 @@ package pt.up.fe.specs.util;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadFactory;
+
+import jdk.jfr.Recording;
+import jdk.jfr.consumer.RecordingFile;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -442,6 +447,27 @@ public class SpecsSystemTest {
     @Nested
     @DisplayName("Memory and Performance")
     class MemoryPerformance {
+
+        @Test
+        @DisplayName("getUsedMemory should only request GC when asked")
+        void testGetUsedMemoryGcRequests(@TempDir Path tempDir) throws IOException {
+            assertThat(countGcRequests(false, tempDir.resolve("without-gc.jfr"))).isZero();
+            assertThat(countGcRequests(true, tempDir.resolve("with-gc.jfr"))).isEqualTo(1);
+        }
+
+        private long countGcRequests(boolean callGc, Path recordingPath) throws IOException {
+            try (var recording = new Recording()) {
+                recording.enable("jdk.SystemGC");
+                recording.start();
+                SpecsSystem.getUsedMemory(callGc);
+                recording.stop();
+                recording.dump(recordingPath);
+            }
+
+            return RecordingFile.readAllEvents(recordingPath).stream()
+                    .filter(event -> event.getEventType().getName().equals("jdk.SystemGC"))
+                    .count();
+        }
 
         @Test
         @DisplayName("getUsedMemory should return positive value")
