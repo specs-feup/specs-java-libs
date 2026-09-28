@@ -1042,6 +1042,34 @@ public class SpecsIoTest {
         }
 
         @Test
+        @DisplayName("Test OS-created temp directory")
+        void testCreateTempDirectory() {
+            File first = SpecsIo.createTempDirectory("specs-test-");
+            File second = SpecsIo.createTempDirectory("specs-test-");
+            try {
+                assertThat(first).isDirectory();
+                assertThat(first.getName()).startsWith("specs-test-");
+                assertThat(first.getParentFile())
+                        .isEqualTo(new File(System.getProperty("java.io.tmpdir")).getAbsoluteFile());
+                assertThat(second).isNotEqualTo(first);
+            } finally {
+                SpecsIo.deleteFolder(first);
+                SpecsIo.deleteFolder(second);
+            }
+        }
+
+        @Test
+        @DisplayName("Test OS cache folder")
+        void testGetOsCacheFolder() {
+            File cacheFolder = SpecsIo.getOsCacheFolder();
+            assertThat(cacheFolder).isNotNull();
+            assertThat(cacheFolder.isDirectory()).isTrue();
+
+            // Same call returns the same location
+            assertThat(SpecsIo.getOsCacheFolder()).isEqualTo(cacheFolder);
+        }
+
+        @Test
         @DisplayName("Test ZIP operations")
         void testZipOperations(@TempDir Path tempDir) throws IOException {
             // Create files to zip

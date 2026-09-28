@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -1908,6 +1909,38 @@ public class SpecsIo {
         }
 
         return mkdir(systemTemp, folderName);
+    }
+
+    /** Creates a unique OS temporary directory. The caller deletes it when done. */
+    public static File createTempDirectory(String prefix) {
+        try {
+            return Files.createTempDirectory(prefix).toFile();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not create temporary directory with prefix '" + prefix + "'", e);
+        }
+    }
+
+    /** Returns the user cache directory, creating it if needed. */
+    public static File getOsCacheFolder() {
+        String cacheDir;
+        if (SpecsSystem.isWindows()) {
+            String localAppData = System.getenv("LOCALAPPDATA");
+            cacheDir = localAppData != null && !localAppData.isBlank() ? localAppData
+                    : new File(System.getProperty("user.home"), "AppData/Local").getAbsolutePath();
+        } else if (SpecsSystem.isMac()) {
+            cacheDir = new File(System.getProperty("user.home"), "Library/Caches").getAbsolutePath();
+        } else {
+            String xdgCacheHome = System.getenv("XDG_CACHE_HOME");
+            String home = System.getenv("HOME");
+            String fallbackHome = home != null && !home.isBlank() && new File(home).isAbsolute()
+                    ? home
+                    : System.getProperty("user.home");
+            cacheDir = xdgCacheHome != null && !xdgCacheHome.isBlank() && new File(xdgCacheHome).isAbsolute()
+                    ? xdgCacheHome
+                    : new File(fallbackHome, ".cache").getAbsolutePath();
+        }
+
+        return SpecsIo.mkdir(new File(cacheDir));
     }
 
     /**

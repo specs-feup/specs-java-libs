@@ -61,6 +61,7 @@ public class SpecsSystem {
 
     private static final boolean IS_LINUX = System.getProperty("os.name").toLowerCase().startsWith("linux");
     private static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+    private static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().contains("mac");
 
     private static final Map<String, Method> CACHED_METHODS = new HashMap<>();
     private static final Map<String, Optional<Field>> CACHED_FIELDS = new HashMap<>();
@@ -872,6 +873,14 @@ public class SpecsSystem {
      */
     public static boolean isWindows() {
         return IS_WINDOWS;
+    }
+
+    /**
+     * @return true if the JVM is currently executing in a macOS system, false
+     *         otherwise
+     */
+    public static boolean isMac() {
+        return IS_MAC;
     }
 
     /**
