@@ -40,9 +40,13 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1917,6 +1921,35 @@ public class SpecsIo {
             return Files.createTempDirectory(prefix).toFile();
         } catch (IOException e) {
             throw new UncheckedIOException("Could not create temporary directory with prefix '" + prefix + "'", e);
+        }
+    }
+
+    /** Deletes a temporary directory and its contents without following symbolic links. */
+    public static void deleteTempDirectory(File directory) {
+        Path root = directory.toPath();
+        if (Files.notExists(root, LinkOption.NOFOLLOW_LINKS)) {
+            return;
+        }
+
+        try {
+            Files.walkFileTree(root, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path folder, IOException error) throws IOException {
+                    if (error != null) {
+                        throw error;
+                    }
+                    Files.delete(folder);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not delete temporary directory '" + directory + "'", e);
         }
     }
 
