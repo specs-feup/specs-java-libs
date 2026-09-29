@@ -40,11 +40,9 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -1924,33 +1922,30 @@ public class SpecsIo {
         }
     }
 
-    /** Deletes a temporary directory and its contents without following symbolic links. */
+    /** Deletes a temporary directory and its contents without traversing links. */
     public static void deleteTempDirectory(File directory) {
-        Path root = directory.toPath();
-        if (Files.notExists(root, LinkOption.NOFOLLOW_LINKS)) {
-            return;
-        }
-
         try {
-            Files.walkFileTree(root, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path folder, IOException error) throws IOException {
-                    if (error != null) {
-                        throw error;
-                    }
-                    Files.delete(folder);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
+            deleteTempDirectory(directory.toPath());
         } catch (IOException e) {
             throw new UncheckedIOException("Could not delete temporary directory '" + directory + "'", e);
         }
+    }
+
+    private static void deleteTempDirectory(Path path) throws IOException {
+        if (Files.notExists(path, LinkOption.NOFOLLOW_LINKS)) {
+            return;
+        }
+
+        BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+        // Windows junctions are directories and "other"; delete the link without opening it.
+        if (attributes.isDirectory() && !attributes.isOther()) {
+            try (DirectoryStream<Path> children = Files.newDirectoryStream(path)) {
+                for (Path child : children) {
+                    deleteTempDirectory(child);
+                }
+            }
+        }
+        Files.delete(path);
     }
 
     /** Returns the user cache directory, creating it if needed. */
