@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,8 +41,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1908,6 +1911,64 @@ public class SpecsIo {
         }
 
         return mkdir(systemTemp, folderName);
+    }
+
+    /** Creates a unique OS temporary directory. The caller deletes it when done. */
+    public static File createTempDirectory(String prefix) {
+        try {
+            return Files.createTempDirectory(prefix).toFile();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not create temporary directory with prefix '" + prefix + "'", e);
+        }
+    }
+
+    /** Deletes a temporary directory and its contents without traversing links. */
+    public static void deleteTempDirectory(File directory) {
+        try {
+            deleteTempDirectory(directory.toPath());
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not delete temporary directory '" + directory + "'", e);
+        }
+    }
+
+    private static void deleteTempDirectory(Path path) throws IOException {
+        if (Files.notExists(path, LinkOption.NOFOLLOW_LINKS)) {
+            return;
+        }
+
+        BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+        // Windows junctions are directories and "other"; delete the link without opening it.
+        if (attributes.isDirectory() && !attributes.isOther()) {
+            try (DirectoryStream<Path> children = Files.newDirectoryStream(path)) {
+                for (Path child : children) {
+                    deleteTempDirectory(child);
+                }
+            }
+        }
+        Files.delete(path);
+    }
+
+    /** Returns the user cache directory, creating it if needed. */
+    public static File getOsCacheFolder() {
+        String cacheDir;
+        if (SpecsSystem.isWindows()) {
+            String localAppData = System.getenv("LOCALAPPDATA");
+            cacheDir = localAppData != null && !localAppData.isBlank() ? localAppData
+                    : new File(System.getProperty("user.home"), "AppData/Local").getAbsolutePath();
+        } else if (SpecsSystem.isMac()) {
+            cacheDir = new File(System.getProperty("user.home"), "Library/Caches").getAbsolutePath();
+        } else {
+            String xdgCacheHome = System.getenv("XDG_CACHE_HOME");
+            String home = System.getenv("HOME");
+            String fallbackHome = home != null && !home.isBlank() && new File(home).isAbsolute()
+                    ? home
+                    : System.getProperty("user.home");
+            cacheDir = xdgCacheHome != null && !xdgCacheHome.isBlank() && new File(xdgCacheHome).isAbsolute()
+                    ? xdgCacheHome
+                    : new File(fallbackHome, ".cache").getAbsolutePath();
+        }
+
+        return SpecsIo.mkdir(new File(cacheDir));
     }
 
     /**
