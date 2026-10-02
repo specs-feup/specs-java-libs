@@ -13,7 +13,6 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.suikasoft.jOptions.DataStore.ListDataStore;
-import org.suikasoft.jOptions.DataStore.MemoizedDataStore;
 import org.suikasoft.jOptions.Datakey.DataKey;
 import org.suikasoft.jOptions.Datakey.KeyFactory;
 
@@ -52,8 +51,8 @@ class AStoreDefinitionConcurrencyTest {
                         ListDataStore eager = new ListDataStore(definition);
                         eager.setRaw(firstKey.getName(), "eager");
                         eager.get(firstKey.getName());
-                        MemoizedDataStore lazy = new MemoizedDataStore(definition, List.of(secondKey), key -> "lazy");
-                        lazy.get(secondKey.getName());
+                        eager.setRaw(secondKey.getName(), "second");
+                        eager.get(secondKey.getName());
 
                         return map.size();
                     }));
