@@ -31,7 +31,7 @@ public abstract class AStoreDefinition implements StoreDefinition {
     private final String appName;
     private final List<StoreSection> sections;
     private final DataStore defaultData;
-    private final Map<String, DataKey<?>> keyMap = new HashMap<>();
+    private final Map<String, DataKey<?>> keyMap;
 
     /**
      * Creates a new store definition with the given name and options.
@@ -56,13 +56,11 @@ public abstract class AStoreDefinition implements StoreDefinition {
         this.appName = appName;
         this.sections = new ArrayList<>(sections);
         this.defaultData = defaultData;
+        this.keyMap = new HashMap<>(StoreDefinition.super.getKeyMap());
     }
 
     @Override
     public Map<String, DataKey<?>> getKeyMap() {
-        if (keyMap.isEmpty()) {
-            keyMap.putAll(StoreDefinition.super.getKeyMap());
-        }
         return keyMap;
     }
 
