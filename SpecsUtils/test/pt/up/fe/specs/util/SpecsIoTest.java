@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -1044,13 +1046,53 @@ public class SpecsIoTest {
         @Test
         @DisplayName("Test OS-created temp directory")
         void testCreateTempDirectory() {
-            File tempFolder = SpecsIo.createTempDirectory("specs-test-");
-            assertThat(tempFolder).isNotNull();
-            assertThat(tempFolder.isDirectory()).isTrue();
-            assertThat(tempFolder.getName()).startsWith("specs-test-");
-            assertThat(tempFolder.getParentFile()).isEqualTo(SpecsIo.getTempFolder());
-            assertThat(SpecsIo.createTempDirectory("specs-test-"))
-                    .isNotEqualTo(SpecsIo.createTempDirectory("specs-test-"));
+            File first = SpecsIo.createTempDirectory("specs-test-");
+            File second = SpecsIo.createTempDirectory("specs-test-");
+            try {
+                assertThat(first).isDirectory();
+                assertThat(first.getName()).startsWith("specs-test-");
+                assertThat(first.getParentFile())
+                        .isEqualTo(new File(System.getProperty("java.io.tmpdir")).getAbsoluteFile());
+                assertThat(second).isNotEqualTo(first);
+            } finally {
+                SpecsIo.deleteTempDirectory(first);
+                SpecsIo.deleteTempDirectory(second);
+            }
+        }
+
+        @Test
+        @DisplayName("Temp cleanup deletes nested contents")
+        void testDeleteTempDirectory() throws IOException {
+            File directory = SpecsIo.createTempDirectory("specs-test-");
+            try {
+                Path nested = Files.createDirectory(directory.toPath().resolve("nested"));
+                Files.writeString(nested.resolve("file.txt"), "content");
+
+                SpecsIo.deleteTempDirectory(directory);
+                assertThat(directory).doesNotExist();
+            } finally {
+                SpecsIo.deleteTempDirectory(directory);
+            }
+        }
+
+        @Test
+        @DisplayName("Temp cleanup does not follow directory symlinks")
+        void testDeleteTempDirectorySymlink(@TempDir Path fixture) throws IOException {
+            Path outsideFile = Files.writeString(fixture.resolve("keep.txt"), "keep");
+            File directory = SpecsIo.createTempDirectory("specs-test-");
+            try {
+                try {
+                    Files.createSymbolicLink(directory.toPath().resolve("outside"), fixture);
+                } catch (FileSystemException | UnsupportedOperationException | SecurityException e) {
+                    Assumptions.assumeTrue(false, "Symbolic links unavailable: " + e.getMessage());
+                }
+
+                SpecsIo.deleteTempDirectory(directory);
+                assertThat(directory).doesNotExist();
+                assertThat(outsideFile).exists();
+            } finally {
+                SpecsIo.deleteTempDirectory(directory);
+            }
         }
 
         @Test
