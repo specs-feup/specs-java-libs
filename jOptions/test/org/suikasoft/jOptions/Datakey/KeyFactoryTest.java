@@ -5,11 +5,14 @@ import static org.assertj.core.api.Assertions.*;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.DisplayName;
 import pt.up.fe.specs.util.utilities.StringList;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.suikasoft.jOptions.Interfaces.DataStore;
+import org.suikasoft.jOptions.storedefinition.StoreDefinition;
 
 /**
  * Comprehensive test suite for KeyFactory static factory methods.
@@ -217,6 +220,64 @@ class KeyFactoryTest {
 
             assertThat(key.getName()).isEqualTo("default.stringlist");
             assertThat(key.getValueClass()).isEqualTo(StringList.class);
+        }
+
+        @Test
+        @DisplayName("list defaults are present, mutable, and independent across stores")
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        void testListFactory_DefaultsAreIndependentAcrossStores_AndSetterValidatesElements() {
+            DataKey<List<String>> key = KeyFactory.list("typed.list", String.class);
+            StoreDefinition definition = StoreDefinition.newInstance("Typed Lists", key);
+            DataStore simpleFirst = DataStore.newInstance(definition);
+            DataStore simpleSecond = DataStore.newInstance(definition);
+            DataStore closedFirst = DataStore.newInstance(definition, true);
+            DataStore closedSecond = DataStore.newInstance(definition, true);
+
+            List<String> simpleFirstValue = simpleFirst.get(key);
+            List<String> simpleSecondValue = simpleSecond.get(key);
+            List<String> closedFirstValue = closedFirst.get(key);
+            List<String> closedSecondValue = closedSecond.get(key);
+            List<List<String>> defaults = List.of(simpleFirstValue, simpleSecondValue,
+                    closedFirstValue, closedSecondValue);
+
+            assertThat(key.hasDefaultValue()).isTrue();
+            assertThat(key.getDefault()).hasValueSatisfying(value -> assertThat(value).isEmpty());
+            assertThat(defaults).allSatisfy(value -> assertThat(value).isEmpty());
+
+            for (int i = 0; i < defaults.size(); i++) {
+                for (int j = i + 1; j < defaults.size(); j++) {
+                    assertThat(defaults.get(i)).isNotSameAs(defaults.get(j));
+                }
+            }
+
+            simpleFirstValue.add("mutable");
+            assertThat(simpleSecondValue).isEmpty();
+            assertThat(closedFirstValue).isEmpty();
+            assertThat(closedSecondValue).isEmpty();
+
+            assertThatThrownBy(() -> simpleFirst.set(key, (List) List.of(1)))
+                    .isInstanceOf(ClassCastException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("Generic Key Factory")
+    class GenericFactoryTests {
+
+        @Test
+        @DisplayName("generic factory retains and invokes its default supplier")
+        void testGenericFactory_RetainsDefaultSupplier() {
+            AtomicInteger supplierCalls = new AtomicInteger();
+
+            DataKey<String> key = KeyFactory.generic("supplier.default", () -> {
+                supplierCalls.incrementAndGet();
+                return "default";
+            });
+
+            assertThat(supplierCalls).hasValue(1);
+            assertThat(key.hasDefaultValue()).isTrue();
+            assertThat(key.getDefault()).hasValue("default");
+            assertThat(supplierCalls).hasValue(2);
         }
     }
 
