@@ -118,6 +118,26 @@ class AStoreDefinitionTest {
             assertThatThrownBy(() -> new TestStoreDefinition("NullSections", null, null))
                     .isInstanceOf(NullPointerException.class);
         }
+
+        @Test
+        void constructionDoesNotCallSubclassKeyAccessors() {
+            class DefinitionWithInitializedKeys extends AStoreDefinition {
+                private final List<DataKey<?>> initializedKeys;
+
+                DefinitionWithInitializedKeys(List<DataKey<?>> keys) {
+                    super("subclass", keys);
+                    initializedKeys = keys;
+                }
+
+                @Override
+                public List<DataKey<?>> getKeys() {
+                    return List.copyOf(initializedKeys);
+                }
+            }
+
+            var definition = new DefinitionWithInitializedKeys(testKeys);
+            assertThat(definition.getKeyMap().values()).containsExactlyElementsOf(testKeys);
+        }
     }
 
     @Nested
@@ -176,6 +196,15 @@ class AStoreDefinitionTest {
             var keyMap2 = storeDefinition.getKeyMap();
 
             assertThat(keyMap1).isSameAs(keyMap2);
+        }
+
+        @Test
+        void keyMapPreservesOrderAcrossSections() {
+            var first = StoreSection.newInstance(List.of(testBoolKey, testStringKey));
+            var second = StoreSection.newInstance(List.of(testIntKey));
+            var definition = new TestStoreDefinition("ordered", List.of(first, second), null);
+
+            assertThat(definition.getKeyMap().keySet()).containsExactly("testBool", "testString", "testInt");
         }
 
         @Test
