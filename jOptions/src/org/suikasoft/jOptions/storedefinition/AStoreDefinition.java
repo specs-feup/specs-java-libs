@@ -14,6 +14,7 @@
 package org.suikasoft.jOptions.storedefinition;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public abstract class AStoreDefinition implements StoreDefinition {
                 keysByName.put(key.getName(), key);
             }
         }
-        this.keyMap = keysByName;
+        this.keyMap = Collections.unmodifiableMap(keysByName);
     }
 
     @Override
