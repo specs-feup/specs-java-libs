@@ -199,6 +199,13 @@ class AStoreDefinitionTest {
         }
 
         @Test
+        void publishedKeyMapCannotBeMutated() {
+            assertThatThrownBy(() -> storeDefinition.getKeyMap().remove(testStringKey.getName()))
+                    .isInstanceOf(UnsupportedOperationException.class);
+            assertThat(storeDefinition.getKeyMap()).containsKey(testStringKey.getName());
+        }
+
+        @Test
         void keyMapPreservesOrderAcrossSections() {
             var first = StoreSection.newInstance(List.of(testBoolKey, testStringKey));
             var second = StoreSection.newInstance(List.of(testIntKey));
