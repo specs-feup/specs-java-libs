@@ -14,8 +14,8 @@
 package org.suikasoft.jOptions.storedefinition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +56,13 @@ public abstract class AStoreDefinition implements StoreDefinition {
         this.appName = appName;
         this.sections = new ArrayList<>(sections);
         this.defaultData = defaultData;
-        this.keyMap = new HashMap<>(StoreDefinition.super.getKeyMap());
+        Map<String, DataKey<?>> keysByName = new LinkedHashMap<>();
+        for (StoreSection section : this.sections) {
+            for (DataKey<?> key : section.getKeys()) {
+                keysByName.put(key.getName(), key);
+            }
+        }
+        this.keyMap = keysByName;
     }
 
     @Override
