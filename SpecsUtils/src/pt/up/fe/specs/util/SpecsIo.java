@@ -41,8 +41,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1911,41 +1913,43 @@ public class SpecsIo {
         return mkdir(systemTemp, folderName);
     }
 
-    /**
-     * An empty, uniquely-named directory in the OS temporary folder, allocated by
-     * the operating system.
-     *
-     * <p>
-     * The directory is registered for deletion when the virtual machine exits, as a
-     * backstop. Owners should still delete it as soon as its lifecycle ends.
-     *
-     * @param prefix the directory name prefix, must be at least three characters
-     *               long
-     * @return the newly created directory
-     */
+    /** Creates a unique OS temporary directory. The caller deletes it when done. */
     public static File createTempDirectory(String prefix) {
         try {
-            File tempFolder = Files.createTempDirectory(getTempFolder().toPath(), prefix).toFile();
-
-            // Backstop deletion, in case the owner does not get the chance to delete it
-            deleteOnExit(tempFolder);
-
-            return tempFolder;
+            return Files.createTempDirectory(prefix).toFile();
         } catch (IOException e) {
             throw new UncheckedIOException("Could not create temporary directory with prefix '" + prefix + "'", e);
         }
     }
 
-    /**
-     * The user-level cache folder, following the operating system's conventions.
-     *
-     * <p>
-     * Linux and other Unix-likes use '$XDG_CACHE_HOME', falling back to '~/.cache';
-     * macOS uses '~/Library/Caches'; Windows uses '%LOCALAPPDATA%', falling back to
-     * '~/AppData/Local'.
-     *
-     * @return the existing or newly created OS cache folder
-     */
+    /** Deletes a temporary directory and its contents without traversing links. */
+    public static void deleteTempDirectory(File directory) {
+        try {
+            deleteTempDirectory(directory.toPath());
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not delete temporary directory '" + directory + "'", e);
+        }
+    }
+
+    private static void deleteTempDirectory(Path path) throws IOException {
+        if (Files.notExists(path, LinkOption.NOFOLLOW_LINKS)) {
+            return;
+        }
+
+        BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class,
+                LinkOption.NOFOLLOW_LINKS);
+        // Windows junctions are directories and "other"; delete the link without opening it.
+        if (attributes.isDirectory() && !attributes.isOther()) {
+            try (DirectoryStream<Path> children = Files.newDirectoryStream(path)) {
+                for (Path child : children) {
+                    deleteTempDirectory(child);
+                }
+            }
+        }
+        Files.delete(path);
+    }
+
+    /** Returns the user cache directory, creating it if needed. */
     public static File getOsCacheFolder() {
         String cacheDir;
         if (SpecsSystem.isWindows()) {
@@ -1956,8 +1960,13 @@ public class SpecsIo {
             cacheDir = new File(System.getProperty("user.home"), "Library/Caches").getAbsolutePath();
         } else {
             String xdgCacheHome = System.getenv("XDG_CACHE_HOME");
-            cacheDir = xdgCacheHome != null && !xdgCacheHome.isBlank() ? xdgCacheHome
-                    : new File(System.getProperty("user.home"), ".cache").getAbsolutePath();
+            String home = System.getenv("HOME");
+            String fallbackHome = home != null && !home.isBlank() && new File(home).isAbsolute()
+                    ? home
+                    : System.getProperty("user.home");
+            cacheDir = xdgCacheHome != null && !xdgCacheHome.isBlank() && new File(xdgCacheHome).isAbsolute()
+                    ? xdgCacheHome
+                    : new File(fallbackHome, ".cache").getAbsolutePath();
         }
 
         return SpecsIo.mkdir(new File(cacheDir));
