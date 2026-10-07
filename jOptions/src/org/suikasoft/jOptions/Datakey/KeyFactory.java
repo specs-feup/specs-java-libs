@@ -590,8 +590,7 @@ public class KeyFactory {
      */
     public static <T, E extends T> DataKey<T> generic(String id, Supplier<E> defaultSupplier) {
         DataKey<T> datakey = new GenericKey<>(id, defaultSupplier.get());
-        datakey.setDefault(defaultSupplier);
-        return datakey;
+        return datakey.setDefault(defaultSupplier);
     }
 
     /**
