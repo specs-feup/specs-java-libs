@@ -1140,6 +1140,71 @@ public class SpecsStringsTest {
         }
     }
 
+    @Nested
+    @DisplayName("normalizeFileContents")
+    class NormalizeFileContents {
+
+        @Test
+        @DisplayName("trims whitespace-only lines to empty strings")
+        void testWhitespaceOnlyLinesAreTrimmed() {
+            String input = "hello\n   \nworld";
+            // ignoreEmptyLines=false: whitespace-only lines become empty lines, preserved
+            assertThat(SpecsStrings.normalizeFileContents(input, false)).isEqualTo("hello\n\nworld");
+        }
+
+        @Test
+        @DisplayName("preserves empty lines when ignoreEmptyLines is false")
+        void testPreservesEmptyLinesWhenNotIgnoring() {
+            String input = "line1\n\nline2\n\nline3";
+            assertThat(SpecsStrings.normalizeFileContents(input, false)).isEqualTo("line1\n\nline2\n\nline3");
+        }
+
+        @Test
+        @DisplayName("removes empty lines when ignoreEmptyLines is true")
+        void testRemovesEmptyLinesWhenIgnoring() {
+            String input = "line1\n\nline2\n\nline3";
+            assertThat(SpecsStrings.normalizeFileContents(input, true)).isEqualTo("line1\nline2\nline3");
+        }
+
+        @Test
+        @DisplayName("removes whitespace-only lines when ignoreEmptyLines is true")
+        void testRemovesWhitespaceOnlyLinesWhenIgnoring() {
+            String input = "line1\n   \nline2";
+            assertThat(SpecsStrings.normalizeFileContents(input, true)).isEqualTo("line1\nline2");
+        }
+
+        @Test
+        @DisplayName("preserves trailing empty line (from double newline) when ignoreEmptyLines is false")
+        void testTrailingEmptyLinePreservedWhenNotIgnoring() {
+            // A double trailing newline produces an empty last line that should be preserved
+            String input = "line1\nline2\n\n";
+            assertThat(SpecsStrings.normalizeFileContents(input, false)).isEqualTo("line1\nline2\n");
+        }
+
+        @Test
+        @DisplayName("removes trailing empty line (from double newline) when ignoreEmptyLines is true")
+        void testTrailingEmptyLineRemovedWhenIgnoring() {
+            // A double trailing newline produces an empty last line that should be removed
+            String input = "line1\nline2\n\n";
+            assertThat(SpecsStrings.normalizeFileContents(input, true)).isEqualTo("line1\nline2");
+        }
+
+        @Test
+        @DisplayName("normalizes CRLF line endings")
+        void testNormalizesCrLf() {
+            String input = "line1\r\nline2\r\nline3";
+            assertThat(SpecsStrings.normalizeFileContents(input, false)).isEqualTo("line1\nline2\nline3");
+        }
+
+        @Test
+        @DisplayName("single-argument overload delegates to ignoreEmptyLines=false")
+        void testSingleArgOverload() {
+            String input = "line1\n\nline2";
+            assertThat(SpecsStrings.normalizeFileContents(input))
+                    .isEqualTo(SpecsStrings.normalizeFileContents(input, false));
+        }
+    }
+
     // Static data providers for parameterized tests
     static List<Arguments> validIntegerInputs() {
         return Arrays.asList(
