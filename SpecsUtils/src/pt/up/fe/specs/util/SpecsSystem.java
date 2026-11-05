@@ -505,14 +505,13 @@ public class SpecsSystem {
     }
 
     /**
+     * @param callGc whether to request garbage collection before measuring
      * @return the current amount of memory, in bytes
      */
     public static long getUsedMemory(boolean callGc) {
         if (callGc) {
             System.gc();
         }
-
-        System.gc();
 
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     }
