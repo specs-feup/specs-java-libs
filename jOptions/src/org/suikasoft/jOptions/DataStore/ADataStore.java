@@ -35,11 +35,11 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
  */
 public abstract class ADataStore implements DataStore {
 
-    private final String name;
-    private final Map<String, Object> values;
-    private StoreDefinition definition;
-    private AppPersistence persistence;
-    private File configFile;
+    private String name;
+    private Map<String, Object> values;
+    private transient StoreDefinition definition;
+    private transient AppPersistence persistence;
+    private transient File configFile;
     private boolean strict;
 
     /**

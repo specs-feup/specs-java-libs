@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.thoughtworks.xstream.XStream;
 
 /**
  * Comprehensive unit tests for {@link XStreamUtils}.
@@ -27,45 +26,6 @@ import com.thoughtworks.xstream.XStream;
  */
 @DisplayName("XStreamUtils Tests")
 class XStreamUtilsTest {
-
-    @Nested
-    @DisplayName("XStream Instance Creation")
-    class XStreamInstanceCreationTests {
-
-        @Test
-        @DisplayName("newXStream() should create configured XStream instance")
-        void testNewXStream_ShouldCreateConfiguredInstance() {
-            // When
-            XStream xstream = XStreamUtils.newXStream();
-
-            // Then
-            assertThat(xstream)
-                    .as("XStream instance should not be null")
-                    .isNotNull();
-
-            // Verify it's properly configured (permissions and converters are set
-            // internally)
-            assertThat(xstream.getClassLoader())
-                    .as("XStream should have a class loader")
-                    .isNotNull();
-        }
-
-        @Test
-        @DisplayName("newXStream() should create instances with proper permissions")
-        void testNewXStream_ShouldHaveProperPermissions() {
-            // When
-            XStream xstream = XStreamUtils.newXStream();
-
-            // Then - Test by trying to serialize a simple object
-            TestObject testObj = new TestObject("test", 42);
-            String xml = xstream.toXML(testObj);
-
-            assertThat(xml)
-                    .as("Should be able to serialize objects with AnyTypePermission")
-                    .contains("test")
-                    .contains("42");
-        }
-    }
 
     @Nested
     @DisplayName("String Conversion Operations")
@@ -85,7 +45,7 @@ class XStreamUtilsTest {
                     () -> assertThat(xml).isNotNull(),
                     () -> assertThat(xml).contains("testName"),
                     () -> assertThat(xml).contains("123"),
-                    () -> assertThat(xml).contains("<"));
+                    () -> assertThat(xml).contains("specs-config"));
         }
 
         @Test
@@ -406,6 +366,8 @@ class XStreamUtilsTest {
 
     // Test helper classes
     private static class TestObject {
+        private TestObject() {}
+
         public String name;
         public int value;
 
@@ -416,6 +378,8 @@ class XStreamUtilsTest {
     }
 
     private static class ComplexTestObject {
+        private ComplexTestObject() {}
+
         public String name;
         public Optional<String> optional;
         public TestObject nested;

@@ -76,7 +76,7 @@ class JOptionsUtilsTest {
                         .thenReturn("test-path");
 
                 // Mock DataStore static method
-                try (MockedStatic<DataStore> dataStoreMock = mockStatic(DataStore.class)) {
+                try (MockedStatic<DataStore> dataStoreMock = mockStatic(DataStore.class, org.mockito.Mockito.CALLS_REAL_METHODS)) {
                     dataStoreMock.when(() -> DataStore.newInstance(mockStoreDefinition))
                             .thenReturn(mockDataStore);
 
@@ -106,7 +106,7 @@ class JOptionsUtilsTest {
                 specsIoMock.when(() -> SpecsIo.getCanonicalPath(any(File.class)))
                         .thenReturn("test-path");
 
-                try (MockedStatic<DataStore> dataStoreMock = mockStatic(DataStore.class)) {
+                try (MockedStatic<DataStore> dataStoreMock = mockStatic(DataStore.class, org.mockito.Mockito.CALLS_REAL_METHODS)) {
                     dataStoreMock.when(() -> DataStore.newInstance(mockStoreDefinition))
                             .thenReturn(mockDataStore);
 

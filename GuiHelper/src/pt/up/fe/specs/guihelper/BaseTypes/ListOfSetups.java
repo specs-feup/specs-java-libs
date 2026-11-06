@@ -32,10 +32,11 @@ public class ListOfSetups {
 
     // Consider replace with LinkedHashMap
     private List<SetupData> setupList;
-    private Map<String, SetupData> mapOfSetups;
+    private transient Map<String, SetupData> mapOfSetups;
     private Integer preferredIndex;
 
-    public ListOfSetups(List<SetupData> listOfSetups) {
+    @com.fasterxml.jackson.annotation.JsonCreator
+    public ListOfSetups(@com.fasterxml.jackson.annotation.JsonProperty("setupList") List<SetupData> listOfSetups) {
 	this.mapOfSetups = new LinkedHashMap<>();
 	for (SetupData setup : listOfSetups) {
 	    this.mapOfSetups.put(setup.getSetupName(), setup);
@@ -44,6 +45,21 @@ public class ListOfSetups {
 
 	// this.listOfSetups = listOfSetups;
 	preferredIndex = null;
+    }
+
+    // Persist the source list and rebuild the lookup map through the constructor.
+    // Both accessors expose mutable containers, so reject divergence rather than losing map-only changes.
+    @com.fasterxml.jackson.annotation.JsonProperty("setupList")
+    private List<SetupData> getConfigurationSetups() {
+        Map<String, SetupData> expected = new LinkedHashMap<>();
+        for (SetupData setup : setupList) {
+            expected.put(setup.getSetupName(), setup);
+        }
+        if (!expected.keySet().equals(mapOfSetups.keySet())
+                || expected.entrySet().stream().anyMatch(entry -> mapOfSetups.get(entry.getKey()) != entry.getValue())) {
+            throw new IllegalStateException("Cannot save ListOfSetups: mapOfSetups no longer matches setupList");
+        }
+        return setupList;
     }
 
     public static ListOfSetups create(ListOfSetupDefinitions listOfSetupDefinitions) {

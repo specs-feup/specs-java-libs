@@ -22,7 +22,6 @@ dependencies {
 
     implementation 'com.google.guava:guava:33.4.0-jre'
     implementation 'com.google.code.gson:gson:2.12.1'
-    implementation 'com.thoughtworks.xstream:xstream:1.4.21'
 
     // Testing dependencies
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'

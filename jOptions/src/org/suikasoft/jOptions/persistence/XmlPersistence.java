@@ -289,22 +289,28 @@ public class XmlPersistence implements AppPersistence {
     @Override
     public boolean saveData(File file, DataStore data, boolean keepConfigFile) {
 
-        // When saving, set config file and use relative paths
-        data.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
-        data.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
-        data.set(JOptionKeys.USE_RELATIVE_PATHS, true);
-
-        // DataStore to write. Use same name to avoid conflicts
-        DataStore storeToSave = getDataStoreToSave(data);
-
-        boolean result = XStreamUtils.write(file, storeToSave, xmlMappings);
-
-        // Remove
-        data.remove(AppKeys.CONFIG_FILE);
-        data.remove(JOptionKeys.CURRENT_FOLDER_PATH);
-        data.remove(JOptionKeys.USE_RELATIVE_PATHS);
-
-        return result;
+        var temporaryKeys = List.<DataKey<?>>of(AppKeys.CONFIG_FILE, JOptionKeys.CURRENT_FOLDER_PATH,
+                JOptionKeys.USE_RELATIVE_PATHS);
+        var previous = new java.util.LinkedHashMap<DataKey<?>, Object>();
+        for (var key : temporaryKeys) {
+            if (data.hasValue(key)) {
+                previous.put(key, data.get(key.getName()));
+            }
+        }
+        try {
+            data.set(AppKeys.CONFIG_FILE, file.getAbsoluteFile());
+            data.set(JOptionKeys.CURRENT_FOLDER_PATH, Optional.of(file.getAbsoluteFile().getParent()));
+            data.set(JOptionKeys.USE_RELATIVE_PATHS, true);
+            return XStreamUtils.write(file, getDataStoreToSave(data), xmlMappings);
+        } finally {
+            for (var key : temporaryKeys) {
+                if (previous.containsKey(key)) {
+                    data.setRaw(key, previous.get(key));
+                } else {
+                    data.remove(key);
+                }
+            }
+        }
 
     }
 

@@ -13,10 +13,9 @@
 
 package org.suikasoft.jOptions.persistence;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.suikasoft.GsonPlus.JsonStringListXstreamConverter;
 import org.suikasoft.XStreamPlus.ObjectXml;
 import org.suikasoft.jOptions.DataStore.SimpleDataStore;
 import org.suikasoft.jOptions.Interfaces.DataStore;
@@ -29,7 +28,7 @@ public class DataStoreXml extends ObjectXml<DataStore> {
     private static final Map<String, Class<?>> LIBRARY_CLASSES;
 
     static {
-        LIBRARY_CLASSES = new HashMap<>();
+        LIBRARY_CLASSES = new LinkedHashMap<>();
 
         LIBRARY_CLASSES.put("StringList", StringList.class);
         LIBRARY_CLASSES.put("SimpleDataStore", SimpleDataStore.class);
@@ -40,12 +39,6 @@ public class DataStoreXml extends ObjectXml<DataStore> {
             throw new NullPointerException("StoreDefinition cannot be null");
         }
         addMappings(LIBRARY_CLASSES);
-        configureXstream(storeDefinition);
-    }
-
-    private void configureXstream(StoreDefinition storeDefinition) {
-        // For compatibility with old Clava config files
-        getXStreamFile().getXstream().registerConverter(new JsonStringListXstreamConverter());
     }
 
     @Override
@@ -53,11 +46,24 @@ public class DataStoreXml extends ObjectXml<DataStore> {
         return DataStore.class;
     }
 
+    // Retain the typed entry point for callers compiled against the existing API.
     public String toXml(DataStore dataStore) {
+        return toXml((Object) dataStore);
+    }
+
+    @Override
+    public String toXml(Object object) {
+        if (object != null && !(object instanceof DataStore)) {
+            return super.toXml(object);
+        }
+        DataStore dataStore = (DataStore) object;
         if (dataStore == null) {
             throw new NullPointerException("DataStore cannot be null");
         }
-        return super.toXml(dataStore);
+
+        // Save only the keys of the store definition, like the save operation
+        // of the AppPersistence does
+        return super.toXml(XmlPersistence.getDataStoreToSave(dataStore));
     }
 
 }

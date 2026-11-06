@@ -25,6 +25,10 @@ import org.suikasoft.jOptions.storedefinition.StoreDefinition;
  */
 public class SimpleDataStore extends ADataStore {
 
+    // Used by the configuration object mapper.
+    private SimpleDataStore() { super(""); }
+
+
     /**
      * Constructs a SimpleDataStore with the given name.
      *

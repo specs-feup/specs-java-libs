@@ -39,7 +39,7 @@ public class FileList {
     private static final DataKey<File> KEY_FOLDER = KeyFactory.folder("Folder");
     private static final DataKey<StringList> KEY_FILENAMES = KeyFactory.stringList("Filenames");
 
-    private final DataStore data;
+    private DataStore data;
 
     private static final String DATA_NAME = "FileList DataStore";
 

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.thoughtworks.xstream.XStream;
 
 /**
  * Comprehensive unit tests for {@link XStreamFile}.
@@ -37,7 +36,7 @@ class XStreamFileTest {
             // Then
             assertAll(
                     () -> assertThat(xstreamFile).isNotNull(),
-                    () -> assertThat(xstreamFile.getXstream()).isNotNull(),
+                    () -> assertThat(xstreamFile.toXml(new TestObject("test", 1))).isNotNull(),
                     () -> assertThat(xstreamFile.useCompactRepresentation).isFalse());
         }
 
@@ -53,7 +52,7 @@ class XStreamFileTest {
             // Then
             assertAll(
                     () -> assertThat(xstreamFile).isNotNull(),
-                    () -> assertThat(xstreamFile.getXstream()).isNotNull(),
+                    () -> assertThat(xstreamFile.toXml(new TestObject("test", 1))).isNotNull(),
                     () -> assertThat(xstreamFile.useCompactRepresentation).isFalse());
         }
 
@@ -71,7 +70,8 @@ class XStreamFileTest {
             // Then
             assertAll(
                     () -> assertThat(file1).isNotSameAs(file2),
-                    () -> assertThat(file1.getXstream()).isNotSameAs(file2.getXstream()));
+                    () -> assertThat(file1.toXml(new TestObject("test", 1)))
+                            .isNotSameAs(file2.toXml(new TestObject("test", 1))));
         }
     }
 
@@ -160,7 +160,7 @@ class XStreamFileTest {
                     () -> assertThat(xml).isNotNull(),
                     () -> assertThat(xml).contains("serialize"),
                     () -> assertThat(xml).contains("123"),
-                    () -> assertThat(xml).contains("<"));
+                    () -> assertThat(xml).contains("specs-config"));
         }
 
         @Test
@@ -224,7 +224,7 @@ class XStreamFileTest {
         @DisplayName("fromXml() should return null for incompatible XML")
         void testFromXml_IncompatibleXml_ShouldReturnNull() {
             // Given
-            String incompatibleXml = "<string>Not a TestObject</string>";
+            String incompatibleXml = XStreamUtils.toString("Not a TestObject");
 
             // When
             TestObject result = xstreamFile.fromXml(incompatibleXml);
@@ -306,37 +306,22 @@ class XStreamFileTest {
     }
 
     @Nested
-    @DisplayName("XStream Configuration")
+    @DisplayName("Configuration")
     class XStreamConfigurationTests {
 
         @Test
-        @DisplayName("getXstream() should return configured XStream instance")
-        void testGetXstream_ShouldReturnConfiguredInstance() {
+        @DisplayName("toXml() should serialize compatible objects")
+        void testToXml_ShouldSerializeCompatibleObject() {
             // Given
             TestObjectXml objectXml = new TestObjectXml();
             XStreamFile<TestObject> xstreamFile = new XStreamFile<>(objectXml);
-
-            // When
-            XStream xstream = xstreamFile.getXstream();
-
-            // Then
-            assertThat(xstream).isNotNull();
-        }
-
-        @Test
-        @DisplayName("XStream should have proper permissions configured")
-        void testXStreamPermissions_ShouldBeConfigured() {
-            // Given
-            TestObjectXml objectXml = new TestObjectXml();
-            XStreamFile<TestObject> xstreamFile = new XStreamFile<>(objectXml);
-
-            // When
-            XStream xstream = xstreamFile.getXstream();
             TestObject testObj = new TestObject("permission", 123);
 
+            // When
+            String xml = xstreamFile.toXml(testObj);
+
             // Then - Should be able to serialize without security issues
-            String xml = xstream.toXML(testObj);
-            assertThat(xml).contains("permission").contains("123");
+            assertThat(xml).isNotNull().contains("permission").contains("123");
         }
     }
 
@@ -366,12 +351,14 @@ class XStreamFileTest {
 
             // Then - Should create without issues, reserved alias should be skipped
             assertThat(xstreamFile).isNotNull();
-            assertThat(xstreamFile.getXstream()).isNotNull();
+            assertThat(xstreamFile.toXml(new TestObject("test", 1))).isNotNull();
         }
     }
 
     // Test helper classes
     private static class TestObject {
+        private TestObject() {}
+
         public String name;
         public int value;
 
@@ -389,6 +376,8 @@ class XStreamFileTest {
     }
 
     private static class ComplexObject {
+        private ComplexObject() {}
+
         public String name;
         public TestObject nested;
         public String[] array;

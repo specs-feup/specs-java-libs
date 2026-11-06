@@ -60,7 +60,7 @@ class ObjectXmlTest {
                     () -> assertThat(xml).isNotNull(),
                     () -> assertThat(xml).contains("test"),
                     () -> assertThat(xml).contains("42"),
-                    () -> assertThat(xml).contains("<"));
+                    () -> assertThat(xml).contains("specs-config"));
         }
 
         @Test
@@ -323,8 +323,8 @@ class ObjectXmlTest {
             XStreamFile<TestObject> xstreamFile = objectXml.getXStreamFile();
 
             // Then
-            assertThat(xstreamFile.getXstream())
-                    .as("XStream instance should not be null")
+            assertThat(xstreamFile.toXml(new TestObject("test", 1)))
+                    .as("XStreamFile should serialize compatible objects")
                     .isNotNull();
         }
     }
@@ -380,6 +380,8 @@ class ObjectXmlTest {
 
     // Test helper classes
     private static class TestObject {
+        private TestObject() {}
+
         public String name;
         public int value;
 
@@ -415,6 +417,8 @@ class ObjectXmlTest {
     }
 
     private static class ComplexTestObject {
+        private ComplexTestObject() {}
+
         public String name;
         public CustomType customField;
 

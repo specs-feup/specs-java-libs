@@ -433,11 +433,9 @@ class DataStoreXmlTest {
             // Set a complex object
             data.set(complexKey, new Object());
 
-            // Should handle serialization attempt
-            assertThatNoException().isThrownBy(() -> {
-                var xmlString = xmlWithComplex.toXml(data);
-                assertThat(xmlString).isNotNull();
-            });
+            // Unsupported values must fail instead of producing an empty, misleading configuration.
+            assertThatThrownBy(() -> xmlWithComplex.toXml(data))
+                    .isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test

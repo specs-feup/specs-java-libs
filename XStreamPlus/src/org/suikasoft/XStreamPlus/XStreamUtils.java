@@ -15,11 +15,6 @@ package org.suikasoft.XStreamPlus;
 
 import java.io.File;
 
-import org.suikasoft.XStreamPlus.converters.OptionalConverter;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.security.AnyTypePermission;
-
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 
@@ -28,18 +23,6 @@ import pt.up.fe.specs.util.SpecsLogs;
  * ObjectXml objects to and from XML files.
  */
 public class XStreamUtils {
-
-    /**
-     * Creates a new XStream instance with default permissions and converters.
-     *
-     * @return a configured XStream instance
-     */
-    public static XStream newXStream() {
-        var xstream = new XStream();
-        xstream.addPermission(new AnyTypePermission());
-        xstream.registerConverter(new OptionalConverter());
-        return xstream;
-    }
 
     /**
      * Writes an object to a file using the provided ObjectXml stream.
@@ -88,8 +71,14 @@ public class XStreamUtils {
      * @return the XML representation of the object
      */
     public static String toString(final Object object) {
-        XStream xstream = XStreamUtils.newXStream();
-        return xstream.toXML(object);
+        ObjectXml<Object> objXml = new ObjectXml<>() {
+            @Override
+            public Class<Object> getTargetClass() {
+                return Object.class;
+            }
+        };
+
+        return objXml.toXml(object);
     }
 
     /**
@@ -160,9 +149,12 @@ public class XStreamUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T copy(T object) {
-        XStream xstream = XStreamUtils.newXStream();
+        if (object == null) {
+            return null;
+        }
 
-        String stringObject = xstream.toXML(object);
-        return (T) xstream.fromXML(stringObject);
+        String xml = toString(object);
+
+        return (T) XStreamUtils.from(xml, Object.class);
     }
 }

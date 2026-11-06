@@ -34,6 +34,10 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class FieldValue implements Serializable {
 
+    // Used by the configuration object mapper.
+    private FieldValue() {}
+
+
     private FieldValue(Object value, FieldType type) {
 	this.rawValue = value;
 	this.type = type;

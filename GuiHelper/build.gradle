@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.3'
     implementation ':SpecsUtils'
     implementation ':XStreamPlus'
 }

@@ -22,7 +22,8 @@ import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.parsing.StringCodec;
 
 /**
- * Base for transforming an object to and from XML.
+ * Historical XML wrapper API for versioned Jackson JSON configurations.
+ * Old XML files must be migrated with scripts/convert-xstream-config.mjs.
  *
  * <p>
  * When implementing this class do not let the XStreamFile object escape to
@@ -64,7 +65,7 @@ public abstract class ObjectXml<T> {
             throw new RuntimeException("Mapping for name '" + name + "' already present");
         }
         mappings.put(name, aClass);
-        xstreamFile.getXstream().alias(name, aClass);
+        xstreamFile.addAlias(name, aClass);
     }
 
     /**
@@ -154,6 +155,6 @@ public abstract class ObjectXml<T> {
      * @param converter      the converter implementation
      */
     public <V> void registerConverter(Class<V> supportedClass, StringCodec<V> converter) {
-        getXStreamFile().getXstream().registerConverter(new StringConverter<>(supportedClass, converter));
+        getXStreamFile().registerCodec(supportedClass, converter);
     }
 }

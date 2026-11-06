@@ -34,8 +34,12 @@ import pt.up.fe.specs.util.SpecsLogs;
  */
 public class SetupData implements Serializable {
 
-    private final Map<String, FieldValue> dataset;
-    private final String setupName;
+    // Used by the configuration object mapper.
+    private SetupData() { this(""); }
+
+
+    private Map<String, FieldValue> dataset;
+    private String setupName;
     private File setupFile;
 
     // Variable needed for serialization.
